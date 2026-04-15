@@ -44,11 +44,13 @@ static bool mouse_within_rect(int x, int y, int width, int height)
 cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
     cGameState(game, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_settings(services->settings),
+    m_dataCampaign(dataCompaign),
     m_previewMaps(std::move(previewMaps)),
-    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
-    m_dataCampaign(dataCompaign)
+    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
     assert(services != nullptr);
+    assert(m_settings != nullptr);
     assert(m_dataCampaign != nullptr);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
@@ -74,7 +76,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, s
     randomMapGenerator = std::make_unique<cRandomMapGenerator>();
     generateRandomMap();
 
-    mouse = m_game.getMouse();
+    m_mouse = m_game.getMouse();
 
     spawnWorms = 2;
     techLevel = 9;
@@ -100,8 +102,8 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, s
     mapItemButtonWidth = 145;
 
     // Screen
-    screen_x = m_game.m_gameSettings->getScreenW();
-    screen_y = m_game.m_gameSettings->getScreenH();
+    screen_x = m_settings->getScreenW();
+    screen_y = m_settings->getScreenH();
 
     // Rectangles for GUI interaction
     int topBarWidth = screen_x + 4;
@@ -413,7 +415,7 @@ void cSetupSkirmishState::draw() const
     previousMapButton->draw();
 
     // MOUSE
-    mouse->draw();
+    m_mouse->draw();
 }
 
 void cSetupSkirmishState::drawTeams(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &teamsRect) const
@@ -439,7 +441,7 @@ void cSetupSkirmishState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, c
 
 Color cSetupSkirmishState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
 {
-    if (rect.isPointWithin(mouse->getX(), mouse->getY())) {
+    if (rect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
         Color colorSelectedRedFade = m_game.getColorFadeSelected(255, 0, 0);
         Color colorDisabledFade = m_game.getColorFadeSelected(128, 128, 128);
         return sSkirmishPlayer.bPlaying ? colorSelectedRedFade : colorDisabledFade;
@@ -475,7 +477,7 @@ void cSetupSkirmishState::drawStartPoints(int iStartingPoints, const cRectangle 
 {
     Color textColor = Color::White;
     if (iSkirmishMap == 0) { // random map selected
-        if (startPoints.isPointWithin(mouse->getX(), mouse->getY())) {
+        if (startPoints.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
             textColor = Color::Red;
         }
     }
@@ -511,7 +513,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
         else {
             // render the 'random generated skirmish map'
             cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
-            if (previewMapRect.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (previewMapRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                     m_renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
             } else {
                 m_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), dst);
@@ -532,7 +534,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
 void cSetupSkirmishState::drawDetonateBlooms(const cRectangle &detonateBloomsRect) const
 {
     if (spawnBlooms) {
-        Color textColor = detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::Red : Color::White;
+        Color textColor = detonateBloomsRect.isPointWithin(m_mouse->getX(), m_mouse->getY()) ? Color::Red : Color::White;
         m_textDrawer->drawText(detonateBloomsRect.getX(), detonateBloomsRect.getY(), textColor,
                             std::format("Auto-detonate : {}", detonateBlooms ? "YES" : "NO"));
     }
@@ -543,21 +545,21 @@ void cSetupSkirmishState::drawDetonateBlooms(const cRectangle &detonateBloomsRec
 
 void cSetupSkirmishState::drawBlooms(const cRectangle &bloomsRect) const
 {
-    Color textColor = bloomsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::Red : Color::White;
+    Color textColor = bloomsRect.isPointWithin(m_mouse->getX(), m_mouse->getY()) ? Color::Red : Color::White;
     m_textDrawer->drawText(bloomsRect.getX(), bloomsRect.getY(), textColor,
                         std::format("Spice blooms : {}", spawnBlooms ? "YES" : "NO"));
 }
 
 void cSetupSkirmishState::drawWorms(const cRectangle &wormsRect) const
 {
-    Color textColor = wormsRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::Red : Color::White;
+    Color textColor = wormsRect.isPointWithin(m_mouse->getX(), m_mouse->getY()) ? Color::Red : Color::White;
     m_textDrawer->drawText(wormsRect.getX(), wormsRect.getY(), textColor,
                         std::format("Worms? : {}", spawnWorms));
 }
 
 void cSetupSkirmishState::drawTechLevel(const cRectangle &techLevelRect) const
 {
-    Color textColor = techLevelRect.isPointWithin(mouse->getX(), mouse->getY()) ? Color::Red : Color::White;
+    Color textColor = techLevelRect.isPointWithin(m_mouse->getX(), m_mouse->getY()) ? Color::Red : Color::White;
     m_textDrawer->drawText(techLevelRect.getX(), techLevelRect.getY(), textColor,
                         std::format("TechLevel : {}", techLevel));
 }
@@ -572,7 +574,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     m_game.setupPlayers();
 
     // Starting skirmish mode
-    m_game.m_gameSettings->setSkirmish(true);
+    m_settings->setSkirmish(true);
 
     /* set up starting positions */
     std::vector<int> iStartPositions;
@@ -595,7 +597,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
     mapEditor.smoothMap();
 
-    if (m_game.m_gameSettings->isDebugMode()) {
+    if (m_settings->isDebugMode()) {
         logbook("Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
@@ -605,7 +607,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     logbook("Shuffling starting positions");
     std::shuffle(iStartPositions.begin(), iStartPositions.end(), RNG::getGenerator());
 
-    if (m_game.m_gameSettings->isDebugMode()) {
+    if (m_settings->isDebugMode()) {
         logbook("Starting positions after shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
             logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
@@ -613,11 +615,11 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     int maxThinkingAIs = MAX_PLAYERS;
-    if (m_game.m_gameSettings->isOneAi()) {
+    if (m_settings->isOneAi()) {
         maxThinkingAIs = 1;
     }
 
-    if (m_game.m_gameSettings->isDisableAI()) {
+    if (m_settings->isDisableAI()) {
         maxThinkingAIs = 0;
     }
 
@@ -690,7 +692,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
         }
         else if (p == AI_CPU6) {
-            if (!m_game.m_gameSettings->isDisableWormAi()) {
+            if (!m_settings->isDisableWormAi()) {
                 pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
             }
             else {
@@ -902,7 +904,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
             const int houseY = iDrawY;
             cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
             // on click:
-            if (houseRec.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (houseRec.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.iHouse--;
                 if (p > 0) {
                     if (sSkirmishPlayer.iHouse < 0) {
@@ -922,7 +924,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
             cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
 
             // on click:
-            if (creditsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (creditsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.iCredits -= 500;
                 if (sSkirmishPlayer.iCredits < 1000) {
                     sSkirmishPlayer.iCredits = 10000;
@@ -934,7 +936,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
             const int startingUnitsY = iDrawY;
             cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
             // on click:
-            if (startingUnitsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (startingUnitsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.startingUnits--;
                 if (sSkirmishPlayer.startingUnits < 1) {
                     sSkirmishPlayer.startingUnits = 10;
@@ -946,7 +948,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
             const int teamsY = iDrawY;
             cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
             // on click:
-            if (teamsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (teamsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.team--;
                 if (sSkirmishPlayer.team < 1) {
                     sSkirmishPlayer.team = iStartingPoints;
@@ -980,7 +982,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
             cRectangle brainRect = cRectangle(iDrawX, iDrawY, 73, 16);
             // on click:
             // only allow changing 'playing' state of CPU 2 or 3 (not 1, as there should always be one playing CPU)
-            if (brainRect.isPointWithin(mouse->getX(),mouse->getY())) {
+            if (brainRect.isPointWithin(m_mouse->getX(),m_mouse->getY())) {
                 if (p > 1) {
                     if (sSkirmishPlayer.bPlaying) {
                         sSkirmishPlayer.bPlaying = false;
@@ -1000,7 +1002,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
             int houseY = iDrawY;
             cRectangle houseRec = cRectangle(houseX, houseY, 76, 16);
             // on click:
-            if (houseRec.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (houseRec.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.iHouse++;
 
                 // Only human player can be Sardaukar?
@@ -1021,7 +1023,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
             int creditsY = iDrawY;
             cRectangle creditsRect = cRectangle(creditsX, creditsY, 56, 16);
             // on click:
-            if (creditsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (creditsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.iCredits += 500;
                 if (sSkirmishPlayer.iCredits > 10000) {
                     sSkirmishPlayer.iCredits = 1000;
@@ -1033,7 +1035,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
             int startingUnitsY = iDrawY;
             cRectangle startingUnitsRect = cRectangle(startingUnitsX, startingUnitsY, 21, 16);
             // on click:
-            if (startingUnitsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (startingUnitsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.startingUnits++;
                 if (sSkirmishPlayer.startingUnits > 10) {
                     sSkirmishPlayer.startingUnits = 1;
@@ -1045,7 +1047,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
             int teamsY = iDrawY;
             cRectangle teamsRect = cRectangle(teamsX, teamsY, 21, 16);
             //  on click:
-            if (teamsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+            if (teamsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.team++;
                 if (sSkirmishPlayer.team > iStartingPoints) {
                     sSkirmishPlayer.team = 1;
@@ -1058,7 +1060,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
 void cSetupSkirmishState::onMouseLeftButtonClickedAtDetonateBlooms()
 {
     if (spawnBlooms) {
-        if (detonateBloomsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+        if (detonateBloomsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
             detonateBlooms = !detonateBlooms;
         }
     }
@@ -1066,14 +1068,14 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtDetonateBlooms()
 
 void cSetupSkirmishState::onMouseLeftButtonClickedAtSpawnBlooms()
 {
-    if (bloomsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+    if (bloomsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
         spawnBlooms = !spawnBlooms;
     }
 }
 
 void cSetupSkirmishState::onMouseLeftButtonClickedAtWorms()
 {
-    if (wormsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+    if (wormsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
         spawnWorms += 1;
         if (spawnWorms > 4) {
             spawnWorms = 0;
@@ -1084,7 +1086,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtWorms()
 void cSetupSkirmishState::onMouseLeftButtonClickedAtStartPoints()
 {
     if (iSkirmishMap == 0) { // random map selected
-        if (startPointsRect.isPointWithin(mouse->getX(), mouse->getY())) {
+        if (startPointsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
             iStartingPoints++;
 
             if (iStartingPoints > 4) {
@@ -1119,7 +1121,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
         }
 
         cRectangle rect = cRectangle(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-        const bool mouseHoversOverMapTile = rect.isPointWithin(m_game.getMouse()->getMouseCoords());
+        const bool mouseHoversOverMapTile = rect.isPointWithin(m_mouse->getMouseCoords());
 
         if (mapToConsiderClickedAt.validMap && mouseHoversOverMapTile) {
             // Mark map as selected
@@ -1212,7 +1214,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
 
         Color textColor = bHover ? Color::Red : Color::White;
 
-        if (bHover && mapToRender.validMap && mouse->isLeftButtonClicked()) {
+        if (bHover && mapToRender.validMap && m_mouse->isLeftButtonClicked()) {
             // RENDERS (AGAIN)!
             guiDrawFramePressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
@@ -1256,7 +1258,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
 void cSetupSkirmishState::onMouseRightButtonClickedAtStartPoints()
 {
     if (iSkirmishMap == 0) { // random map selected
-        if (startPointsRect.isPointWithin(mouse->getMouseCoords())) {
+        if (startPointsRect.isPointWithin(m_mouse->getMouseCoords())) {
             iStartingPoints--;
 
             if (iStartingPoints < 2) { // < 2 startpoints is not allowed
@@ -1270,7 +1272,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtStartPoints()
 
 void cSetupSkirmishState::onMouseRightButtonClickedAtWorms()
 {
-    if (wormsRect.isPointWithin(mouse->getMouseCoords())) {
+    if (wormsRect.isPointWithin(m_mouse->getMouseCoords())) {
         spawnWorms -= 1;
         if (spawnWorms < 0) {
             spawnWorms = 4;
@@ -1281,7 +1283,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtWorms()
 
 void cSetupSkirmishState::onMouseRightButtonClickedAtTechLevel()
 {
-    if (techLevelRect.isPointWithin(mouse->getMouseCoords())) {
+    if (techLevelRect.isPointWithin(m_mouse->getMouseCoords())) {
         techLevel--;
 
         if (techLevel < 2) { // < 2 techlevel is not allowed
@@ -1292,7 +1294,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtTechLevel()
 
 void cSetupSkirmishState::onMouseLeftButtonClickedAtTechLevel()
 {
-    if (techLevelRect.isPointWithin(mouse->getX(), mouse->getY())) {
+    if (techLevelRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
         techLevel++;
         if (techLevel > 9) {
             techLevel = 2;

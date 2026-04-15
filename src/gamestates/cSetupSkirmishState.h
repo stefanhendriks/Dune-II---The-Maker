@@ -47,8 +47,14 @@ public:
 
 private:
     cTextDrawer* m_textDrawer = nullptr;
-    s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS] = {};
+    cGameSettings* m_settings = nullptr;
+    s_DataCampaign* m_dataCampaign = nullptr;
     std::shared_ptr<cPreviewMaps> m_previewMaps;
+    Graphics* m_gfxinter = nullptr;
+    cMouse *m_mouse = nullptr;
+
+    s_SkirmishPlayer skirmishPlayer[MAX_PLAYERS] = {};
+    
     std::unique_ptr<cRandomMapGenerator> randomMapGenerator;
 
     bool guiDrawFrame(int x, int y, int width, int height) const ;
@@ -57,7 +63,6 @@ private:
     std::function<void()> nextFunction;
     std::function<void()> previousFunction;
 
-    cMouse *mouse;
     int mapStartingIndexToDisplay;          // index of which maps are currently being displayed in the map list
     int maxMapsInSelectArea = 0;            // maximum number of maps that can be displayed in the select area
     int maxMapsInSelectAreaHorizontally;    // maximum number of maps that can be displayed in the select area, horizontally
@@ -111,7 +116,6 @@ private:
     std::unique_ptr<GuiButton> modifyButton;
     std::unique_ptr<GuiButton> nextMapButton;
     std::unique_ptr<GuiButton> previousMapButton;
-    Graphics* m_gfxinter;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
@@ -165,5 +169,4 @@ private:
 
     void onMouseLeftButtonClickedAtTechLevel();
     void onMouseRightButtonClickedAtTechLevel();
-    s_DataCampaign* m_dataCampaign;
 };
