@@ -18,16 +18,18 @@
 
 cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
+    m_settings(services->settings),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
 {
-    assert(services != nullptr);
+    assert(m_settings != nullptr);
+    assert(m_textDrawer != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;
 
-    int centerOfScreen = m_game.m_gameSettings->getScreenW() / 2;
+    int centerOfScreen = m_settings->getScreenW() / 2;
 
     logoX = centerOfScreen - (logoWidth / 2);
     logoY = (logoHeight/10);
@@ -50,7 +52,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
     int buttonWidth = m_textDrawer->getTextLength("CREDITS") / 2;
     int buttonHeight = m_textDrawer->getFontHeight() + 4; // a bit more space
 
-    int creditsX = (m_game.m_gameSettings->getScreenW() / 2) - buttonWidth;
+    int creditsX = (m_settings->getScreenW() / 2) - buttonWidth;
     const cRectangle &creditsRect = cRectangle(creditsX, 0, buttonWidth, buttonHeight);
 
     gui_btn_credits = std::move(GuiButtonBuilder()
@@ -194,17 +196,17 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_game.m_gameSettings->setPlaying(false);
+                m_settings->setPlaying(false);
                 m_game.initiateFadingOut();})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Exit));
 
     // prepare to drawing in cache texture
-    if (m_game.m_gameSettings->isDebugMode()) {
-        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_game.m_gameSettings->getScreenW(), m_game.m_gameSettings->getScreenH());
+    if (m_settings->isDebugMode()) {
+        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_settings->getScreenW(), m_settings->getScreenH());
         m_renderDrawer->beginDrawingToTexture(backGroundDebug);
-        for (int x = 0; x < m_game.m_gameSettings->getScreenW(); x += 60) {
-            for (int y = 0; y < m_game.m_gameSettings->getScreenH(); y += 20) {
+        for (int x = 0; x < m_settings->getScreenW(); x += 60) {
+            for (int y = 0; y < m_settings->getScreenH(); y += 20) {
                 m_textDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }
         }
@@ -215,7 +217,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
 cMainMenuState::~cMainMenuState()
 {
     // Smart pointers handle cleanup
-    if (m_game.m_gameSettings->isDebugMode()) {
+    if (m_settings->isDebugMode()) {
         delete backGroundDebug;
     }
 }
@@ -226,7 +228,7 @@ void cMainMenuState::thinkFast()
 
 void cMainMenuState::draw() const
 {
-    if (m_game.m_gameSettings->isDebugMode()) {
+    if (m_settings->isDebugMode()) {
         m_renderDrawer->renderSprite(backGroundDebug,0,0);
     }
 
@@ -239,7 +241,7 @@ void cMainMenuState::draw() const
     m_textDrawer->drawTextBottomRight(D2TM_VERSION,20);
     m_textDrawer->drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
 
-    if (m_game.m_gameSettings->isDebugMode()) {
+    if (m_settings->isDebugMode()) {
         auto m_mouse = m_game.getMouse();
         m_textDrawer->drawText(0, 0, std::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
     }
@@ -264,7 +266,7 @@ void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_game.m_gameSettings->setPlaying(false);
+            m_settings->setPlaying(false);
         }
 
         if (event.isAction(eKeyAction::TOGGLE_MUSIC) || event.hasKey(SDL_SCANCODE_MUTE)) {
