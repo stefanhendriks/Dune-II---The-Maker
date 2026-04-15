@@ -23,26 +23,30 @@ cChooseHouseState::cChooseHouseState(cGame &theGame, sGameServices* services) :
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
-    assert(services != nullptr);
-    backButtonRect = m_textDrawer->getAsRectangle(0, m_game.m_gameSettings->getScreenH() - m_textDrawer->getFontHeight(), " BACK");
+    assert(m_textDrawer != nullptr);
+    assert(m_gfxinter != nullptr);
+    auto settings =services->settings;
+    assert(settings != nullptr);
+
+    backButtonRect = m_textDrawer->getAsRectangle(0, settings->getScreenH() - m_textDrawer->getFontHeight(), " BACK");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);
 
-    int duneAtTheRight = m_game.m_gameSettings->getScreenW() - bmp_Dune->w;
-    int duneAlmostAtBottom = m_game.m_gameSettings->getScreenH() - (bmp_Dune->h * 0.90);
+    int duneAtTheRight = settings->getScreenW() - bmp_Dune->w;
+    int duneAlmostAtBottom = settings->getScreenH() - (bmp_Dune->h * 0.90);
     coords_Dune = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
     bmp_SelectYourHouseTitle = m_gfxinter->getTexture(BMP_SELECT_YOUR_HOUSE);
 
-    selectYourHouseXCentered = (m_game.m_gameSettings->getScreenW() / 2) - bmp_SelectYourHouseTitle->w / 2;
+    selectYourHouseXCentered = (settings->getScreenW() / 2) - bmp_SelectYourHouseTitle->w / 2;
     coords_SelectYourHouseTitle = cPoint(selectYourHouseXCentered, 0);
 
     bmp_HouseAtreides = m_gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
     bmp_HouseOrdos = m_gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
     bmp_HouseHarkonnen = m_gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
 
-    int selectYourHouseY = m_game.m_gameSettings->getScreenH() * 0.25f;
+    int selectYourHouseY = settings->getScreenH() * 0.25f;
 
-    int columnWidth = m_game.m_gameSettings->getScreenW() / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
+    int columnWidth = settings->getScreenW() / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
 
     int offset = (columnWidth / 2) - (bmp_HouseAtreides->w / 2);
 
