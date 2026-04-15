@@ -279,6 +279,7 @@ void cOrderProcesser::setOrderHasBeenProcessed()
 {
     m_orderPlaced = false;
     m_frigateSent = false;
+    m_secondsUntilArrival = -1;
     removeAllItems();
     m_unitIdOfFrigateSent = -1;
 }
