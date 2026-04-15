@@ -132,6 +132,7 @@ if (APPLE)
         "-Wpedantic"
         "-Wzero-as-null-pointer-constant"
         "-Wextra-semi"
+        "-Werror"
     )
 elseif (UNIX)
     target_compile_options(${PROJECT_NAME}
@@ -145,6 +146,7 @@ elseif (UNIX)
         "-Wredundant-tags"
         "-Wzero-as-null-pointer-constant"
         "-Wextra-semi"
+        "-Werror"
         #"-Wsuggest-override"
         #"-Wmismatched-tags"
         #"-Wdeprecated-declarations"
@@ -161,6 +163,7 @@ else()
         "-Wredundant-tags"
         "-Wzero-as-null-pointer-constant"
         "-Wextra-semi"
+        "-Werror"
     )
   	target_link_libraries(${PROJECT_NAME}
   	PRIVATE
