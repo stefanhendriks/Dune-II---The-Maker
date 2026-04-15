@@ -26,6 +26,9 @@ public:
     eGameStateType getType() override;
 
 private:
+    cGameSettings * m_settings = nullptr;
+    cTextDrawer* m_textDrawer = nullptr;
+
     int logoX;
     int logoY;
 
@@ -34,7 +37,6 @@ private:
     int mainMenuWidth;
     int mainMenuHeight;
 
-    cTextDrawer* m_textDrawer=nullptr;
     cRectangle sdl2power;
 
     std::unique_ptr<GuiWindow> gui_window;
