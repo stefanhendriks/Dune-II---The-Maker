@@ -29,6 +29,7 @@ public:
 
 private:
     cTextDrawer* m_textDrawer = nullptr;
+    cGameSettings* m_settings = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
     void constructWindow();
     GuiTextInput* m_inputName = nullptr;

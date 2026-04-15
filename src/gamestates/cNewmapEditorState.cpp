@@ -15,19 +15,21 @@
 cNewMapEditorState::cNewMapEditorState(cGame &theGame, sGameServices* services)
     : cGameState(theGame, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_settings(services->settings),
     m_guiWindow(nullptr)
 {
-    assert(services != nullptr);
+    assert(m_textDrawer != nullptr);
+    assert(m_settings != nullptr);
     constructWindow();
 }
 
 void cNewMapEditorState::constructWindow()
 {
-    int margin = m_game.m_gameSettings->getScreenH() * 0.3;
+    int margin = m_settings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = m_game.m_gameSettings->getScreenW() - (margin * 2);
-    int mainMenuHeight = m_game.m_gameSettings->getScreenH() - (margin * 2);
+    int mainMenuWidth = m_settings->getScreenW() - (margin * 2);
+    int mainMenuHeight = m_settings->getScreenH() - (margin * 2);
 
     margin = 4;
     int buttonHeight = (m_textDrawer->getFontHeight() + margin);
