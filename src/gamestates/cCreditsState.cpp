@@ -12,6 +12,7 @@
 #include "drawers/cTextDrawer.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <cassert>
@@ -19,9 +20,11 @@
 cCreditsState::cCreditsState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
     m_moveSpeed(0.15f),
-    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_settings(services->settings)
 {
     assert(services != nullptr);
+    assert(m_settings != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);

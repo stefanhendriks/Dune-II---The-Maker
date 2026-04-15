@@ -13,6 +13,7 @@
 class Texture;
 class cGame;
 class cTextDrawer;
+class cGameSettings;
 
 struct s_CreditLine {
     std::string name;
@@ -43,6 +44,7 @@ private:
     int m_titleHeight;
 
     cTextDrawer* m_textDrawer = nullptr;
+    cGameSettings* m_settings = nullptr;
 
     std::vector<s_CreditLine> m_lines;
 
