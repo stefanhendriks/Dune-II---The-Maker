@@ -11,6 +11,8 @@ class SpriteEditor:
         (208, 214), (224, 230), (240, 246)
     ]
     ZOOM_DEFAULT = 20
+    ZOOM_MAX = 25
+    ZOOM_MIN = 10
     PALETTE_CELL_SIZE = 20
 
     def __init__(self, root, image_path):
@@ -37,6 +39,7 @@ class SpriteEditor:
 
         self.width, self.height = self.image.size
         self.zoom = self.ZOOM_DEFAULT
+        self.zoom_var = tk.IntVar(value=self.ZOOM_DEFAULT) # Variable pour le slider de zoom
         self.current_color_index = 1
         self.undo_stack = []
         self.current_undo_data = None
@@ -73,7 +76,7 @@ class SpriteEditor:
         )
         self.sprite_canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
-        # Définir la zone de défilement totale dès le début
+        # Définir la zone de défilement totale dès le début (utilise la valeur initiale du zoom)
         self.sprite_canvas.config(scrollregion=(0, 0, self.width * self.zoom, self.height * self.zoom))
 
         self.h_scroll.config(command=self.on_scroll_h)
@@ -119,6 +122,19 @@ class SpriteEditor:
         self.apply_color_btn = tk.Button(right_frame, text="Appliquer Couleur", command=self.update_palette_color)
         self.apply_color_btn.pack(pady=5)
 
+        # Contrôle du Zoom
+        zoom_frame = tk.Frame(right_frame)
+        zoom_frame.pack(pady=5)
+        tk.Label(zoom_frame, text="Zoom:").pack(side=tk.LEFT)
+        self.zoom_slider = tk.Scale(
+            zoom_frame,
+            from_=self.ZOOM_MIN, to=self.ZOOM_MAX, orient=tk.HORIZONTAL,
+            variable=self.zoom_var,
+            command=self.on_zoom_change,
+            resolution=1
+        )
+        self.zoom_slider.pack(side=tk.LEFT, padx=5)
+
         save_btn = tk.Button(right_frame, text="Sauvegarder l'image", command=self.save_image)
         save_btn.pack(side=tk.BOTTOM, pady=20)
 
@@ -155,6 +171,13 @@ class SpriteEditor:
         self.sprite_canvas.xview(*args)
         self.draw_sprite()
 
+    def on_zoom_change(self, val):
+        """Met à jour le zoom et redessine le sprite."""
+        self.zoom = int(val)
+        # Mettre à jour la scrollregion avec le nouveau zoom
+        self.sprite_canvas.config(scrollregion=(0, 0, self.width * self.zoom, self.height * self.zoom))
+        self.draw_sprite()
+
     def on_scroll_v(self, *args):
         """Gère le défilement vertical et redessine les pixels visibles."""
         self.sprite_canvas.yview(*args)
@@ -187,7 +210,7 @@ class SpriteEditor:
 
         pixels = self.image.load()
         for y in range(start_y, end_y):
-            for x in range(start_x, end_x):
+            for x in range(start_x, end_x): # self.zoom est maintenant mis à jour par le slider
                 self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, pixels[x, y], f"pixel_{x}_{y}")
 
     def draw_palette(self):
