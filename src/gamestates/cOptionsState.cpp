@@ -70,7 +70,7 @@ void cOptionsState::constructWindow(int prevState)
                 .withTextDrawer(m_textDrawer)
                 .withRenderer(m_renderDrawer)
                 .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-                .withTheme(cGuiThemeBuilder().light().withTextColor(Color::yellow()).build())
+                .withTheme(cGuiThemeBuilder().light().withTextColor(Color::Yellow).build())
                 .withRect(cheatRect)
                 .build();
         m_guiWindow->addGuiObject(std::move(gui_cheatLabel));

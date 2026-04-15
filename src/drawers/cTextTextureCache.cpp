@@ -26,7 +26,7 @@ cTextTextureCache::~cTextTextureCache()
 std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color, const std::string &msg) const
 {
     auto newCacheEntry = std::make_unique<textCacheEntry>();
-    SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), Color::black().toSDL());
+    SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), Color::Black.toSDL());
     newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
     SDL_FreeSurface(textSurface);
 

@@ -61,40 +61,40 @@ cCreditsState::cCreditsState(cGame &theGame, GameContext* ctx) :
 
 void cCreditsState::prepareCrawlerLines()
 {
-    Color colorHeadlines = Color::green();
+    Color colorHeadlines = Color::Green;
 
     int fontHeightWithALittlePadding = m_textDrawer->getFontHeight() + 4;
     int spacerAfterHeadline = fontHeightWithALittlePadding + m_textDrawer->getFontHeight();
     auto spacer = s_CreditLine {
         .name = "",
         .txt = "",
-        .color = Color::black(),
+        .color = Color::Black,
         .height = 40
     };
 
     m_lines.push_back(s_CreditLine {
         .name = "",
         .txt = std::format("Version {}", D2TM_VERSION),
-        .color = Color::yellow(),
+        .color = Color::Yellow,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "",
         .txt = "by Stefan Hendriks",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(spacer);
     m_lines.push_back(s_CreditLine {
         .name = "",
         .txt = "a remake of",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "",
         .txt = "Dune 2 - The Building of a Dynasty (by Westwood Studios)",
-        .color = Color::red(),
+        .color = Color::Red,
         .height = spacerAfterHeadline
     });
 
@@ -109,61 +109,61 @@ void cCreditsState::prepareCrawlerLines()
     m_lines.push_back(s_CreditLine {
         .name = "Paul",
         .txt = "Developer",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Arjen",
         .txt = "Developer & Sparring partner",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
         m_lines.push_back(s_CreditLine {
         .name = "Mira",
         .txt = "Developer",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Rozmy",
         .txt = "Graphics",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Nema Fakei",
         .txt = "Graphics",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Vidiware",
         .txt = "Graphics",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Timenn",
         .txt = "Graphics",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "MrFlibble",
         .txt = "Graphics",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Ripps",
         .txt = "Support at Discord, testing & Skirmish Maps",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Bruno",
         .txt = "For your lifelong support & valuable feedback",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
 
@@ -178,25 +178,25 @@ void cCreditsState::prepareCrawlerLines()
     m_lines.push_back(s_CreditLine {
         .name = "Westwood Studios",
         .txt = "for producing Dune 2",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Allegro",
         .txt = "by Shawn Hargreaves (et al)",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "AlFONT",
         .txt = "by Javier Gonzalez",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "",
         .txt = "Dune Legacy, Dune Dynasty and Dune The Golden Path",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
 
@@ -211,61 +211,61 @@ void cCreditsState::prepareCrawlerLines()
     m_lines.push_back(s_CreditLine {
         .name = "Fedaygin",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Morto",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "The General",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "Bastian",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "Florian",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "Aleksandar",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "Bruno",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "Dan Greene",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "Sergio Muad'Dib",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(s_CreditLine {
         .name = "saif3r",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
     m_lines.push_back(spacer);
@@ -279,67 +279,67 @@ void cCreditsState::prepareCrawlerLines()
     m_lines.push_back(s_CreditLine {
         .name = "Gobalopper",
         .txt = "for Dune2K, and hosting arrakis.dune2k.com",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Jpexs",
         .txt = "for help with the Dune 2 Seed Generator",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Rene",
         .txt = "for the D2TM Java Map Editor",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Mira",
         .txt = "for porting D2TM to SDL2",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Guillaume Lavoie",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Dennis Stansert",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Ash",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Ruurd Nijdam",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "rphl",
         .txt = "",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Non sono Mandrake",
         .txt = "for nudging me to work on D2TM again in C++",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
         .name = "Dune2k.com",
         .txt = "For all the good times at the arrakis forums",
-        .color = Color::white(),
+        .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
 
@@ -350,7 +350,7 @@ void cCreditsState::prepareCrawlerLines()
     m_lines.push_back(s_CreditLine {
         .name = "",
         .txt = "Thank you for playing",
-        .color = Color::white(),
+        .color = Color::White,
         .height = spacerAfterHeadline
     });
 }

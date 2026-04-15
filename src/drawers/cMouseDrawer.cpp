@@ -160,7 +160,7 @@ void cMouseDrawer::drawToolTipBackground()
     blue = std::max(blue - 64, 0);
 
     color = Color{red, green, blue,128};
-    auto black = Color::black();
+    auto black = Color::Black;
     black.a = 128;
     global_renderDrawer->renderRectFillColor(x, y, width, height, color);
     int shadowX = x + width;

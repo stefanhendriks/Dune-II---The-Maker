@@ -292,7 +292,7 @@ void cSideBarDrawer::drawPowerUsage() const
     int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     //cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
-    m_renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::black()); //renderDrawer->getColor_BLACK());
+    m_renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::Black); //renderDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = game.m_infoContext->getStructureInfo(WINDTRAP).power_give;

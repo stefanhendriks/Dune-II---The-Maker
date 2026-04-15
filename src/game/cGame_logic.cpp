@@ -1319,20 +1319,20 @@ Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, b
     return m_cScreenFader->getColorFadeSelected(r,g,b,rFlag,gFlag,bFlag);
 }
 
-Color cGame::getColorPlaceNeutral()
-{
-    return Color{242, 174, 36,64};
-}
+// Color cGame::getColorPlaceNeutral()
+// {
+//     return Color{242, 174, 36,64};
+// }
 
-Color cGame::getColorPlaceBad()
-{
-    return Color{160, 0, 0,64};
-}
+// Color cGame::getColorPlaceBad()
+// {
+//     return Color{160, 0, 0,64};
+// }
 
-Color cGame::getColorPlaceGood()
-{
-    return Color{64, 255, 64,64};
-}
+// Color cGame::getColorPlaceGood()
+// {
+//     return Color{64, 255, 64,64};
+// }
 
 void cGame::setWinFlags(int value)
 {
@@ -1764,15 +1764,15 @@ int cGame::getCurrentState() const
 
 void cGame::drawTextFps() const
 {
-    m_textDrawer->drawText(180,8, Color::black(), std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
+    m_textDrawer->drawText(180,8, Color::Black, std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
 }
 
 void cGame::drawTextTime() const
 {
     auto time = m_timeManager->getCurrentTime();
-    m_textDrawer->drawText(game.m_gameSettings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::white(), time);
+    m_textDrawer->drawText(game.m_gameSettings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::White, time);
     time = m_timeManager->getCurrentTimer();
-    m_textDrawer->drawText(game.m_gameSettings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::white(), time);
+    m_textDrawer->drawText(game.m_gameSettings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::White, time);
 }
 
 void cGame::checkMissionWinOrFail()

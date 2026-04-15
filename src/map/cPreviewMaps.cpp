@@ -114,7 +114,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (previewMap.terrain == nullptr) {
         previewMap.terrain = SDL_CreateRGBSurface(0,previewMap.width, previewMap.height,32,0,0,0,255);
     }
-    m_renderDrawer->FillWithColor(previewMap.terrain, Color::black());
+    m_renderDrawer->FillWithColor(previewMap.terrain, Color::Black);
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -122,7 +122,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             int iCll = mapGeom.makeCell((iX + 1), (iY + 1));
             if (iCll < 0) continue; // skip invalid cells
 
-            Color iColor = Color::white();
+            Color iColor = Color::White;
             int terrainType = -1; // unknown
 
             char letter = mapLine[iX];
@@ -175,7 +175,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = mapGeom.getCellX(startCell);
             int y = mapGeom.getCellY(startCell);
-            m_renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::white());
+            m_renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::White);
         }
     }
     if (previewMap.terrain!= nullptr){
