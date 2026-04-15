@@ -68,6 +68,8 @@ struct s_PreviewMap;
 // thinkSlow_....() --> for now used to distinguish certain speed of "thinking" / invocations
 // state_...() --> because elegible for moving away
 
+class sGameServices;
+
 class cGame : public cScenarioObserver, cInputObserver {
 
 public:
@@ -280,4 +282,6 @@ private:
     std::unique_ptr<s_DataCampaign> m_dataCampaign;
     std::unique_ptr<cGameConditionChecker> m_gameConditionChecker;
     std::unique_ptr<cScreenFader> m_cScreenFader;
+
+    std::unique_ptr<sGameServices> m_services;
 };

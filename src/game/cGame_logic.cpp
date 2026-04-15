@@ -107,6 +107,7 @@
 #include <iostream>
 
 #include "data/gfxaudio.h"
+#include "include/sGameServices.h"
 
 cGame::cGame()
 {
@@ -160,6 +161,12 @@ cGame::cGame()
     m_structureFactory = std::make_unique<cStructureFactory>();
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
+
+    m_services = std::make_unique<sGameServices>();
+    m_services->ctx = ctx.get();
+    m_services->objects = m_gameObjectsContext.get();
+    m_services->info = m_infoContext.get();
+    m_services->settings = m_gameSettings.get();
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
