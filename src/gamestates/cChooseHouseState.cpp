@@ -13,6 +13,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "drawers/cTextDrawer.h"
+#include "game/cGameInterface.h"
 #include <algorithm>
 #include <cassert>
 
@@ -21,10 +22,12 @@
 cChooseHouseState::cChooseHouseState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
-    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
+    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
+    m_interface(m_ctx->getGameInterface())
 {
     assert(m_textDrawer != nullptr);
     assert(m_gfxinter != nullptr);
+    assert(m_interface != nullptr);
     auto settings =services->settings;
     assert(settings != nullptr);
 
@@ -120,26 +123,30 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
 {
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
-        m_game.prepareMentatToTellAboutHouse(ATREIDES);
-        m_game.playSound(SOUND_ATREIDES);
-        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        m_game.initiateFadingOut();
+        m_interface->prepareMentatToTellAboutHouse(ATREIDES);
+        // m_game.prepareMentatToTellAboutHouse(ATREIDES);
+        // m_game.playSound(SOUND_ATREIDES);
+        // m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        // m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(&houseOrdos)) {
-        m_game.prepareMentatToTellAboutHouse(ORDOS);
-        m_game.playSound(SOUND_ORDOS);
-        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        m_game.initiateFadingOut();
+        m_interface->prepareMentatToTellAboutHouse(ORDOS);
+        // m_game.prepareMentatToTellAboutHouse(ORDOS);
+        // m_game.playSound(SOUND_ORDOS);
+        // m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        // m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
-        m_game.prepareMentatToTellAboutHouse(HARKONNEN);
-        m_game.playSound(SOUND_HARKONNEN);
-        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        m_game.initiateFadingOut();
+        m_interface->prepareMentatToTellAboutHouse(HARKONNEN);
+        // m_game.prepareMentatToTellAboutHouse(HARKONNEN);
+        // m_game.playSound(SOUND_HARKONNEN);
+        // m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
+        // m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(backButtonRect)) {
-        m_game.setNextStateToTransitionTo(GAME_MENU);
-        m_game.initiateFadingOut();
+        m_interface->setTransitionToWithFadingOut(GAME_MENU);
+        // m_game.setNextStateToTransitionTo(GAME_MENU);
+        // m_game.initiateFadingOut();
     }
 }
 
@@ -152,8 +159,9 @@ void cChooseHouseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_game.setNextStateToTransitionTo(GAME_MENU);
-            m_game.initiateFadingOut();
+            m_interface->setTransitionToWithFadingOut(GAME_MENU);
+            // m_game.setNextStateToTransitionTo(GAME_MENU);
+            // m_game.initiateFadingOut();
         }
     }
 }
