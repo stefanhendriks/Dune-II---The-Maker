@@ -158,11 +158,9 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     newUnit.guardTimer.reset(20 + RNG::rnd(70));
     newUnit.recreateDimensions();
 
-    // set (Correct!?) player id, when type is SANDWORM (!?)
+    // Sandworm units are always owned by AI_WORM. INI files typically specify "Fremen"
+    // as the house (player 5), but sandworms must be owned by AI_WORM (player 6).
     if (unitType == SANDWORM) {
-        if (iPlayer != AI_WORM) {
-            newUnit.log("ERROR: Wanted to create sandworm for player other than AI_WORM!?");
-        }
         iPlayer = AI_WORM;
     }
 
