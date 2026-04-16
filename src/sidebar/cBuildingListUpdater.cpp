@@ -445,6 +445,9 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType)
             pProcesser->clear();
             cBuildingList *listStarport = sideBar->getList(eListType::LIST_STARPORT);
             listStarport->resetTimesOrderedForAllItems();
+            if (sideBar->getSelectedListID() == eListTypeAsInt(eListType::LIST_STARPORT)) {
+                sideBar->findFirstActiveListAndSelectIt();
+            }
         }
     }
 

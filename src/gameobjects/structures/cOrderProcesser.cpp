@@ -71,6 +71,7 @@ bool cOrderProcesser::acceptsOrders()
 {
     int freeSlot = getFreeSlot();
     bool result = m_frigateSent == false && m_orderPlaced == false && freeSlot > -1;
+    result = result && m_player->hasAtleastOneStructure(STARPORT);
     return result;
 }
 
