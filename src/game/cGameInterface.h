@@ -10,6 +10,7 @@ public:
     virtual ~cGameInterface() = default;
 
     cMouse* getMouse() const;
+    void drawCursor() const;
 
     void prepareMentatToTellAboutHouse(int house) const;
 
