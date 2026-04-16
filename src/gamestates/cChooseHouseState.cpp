@@ -1,23 +1,18 @@
+#include "include/definitions.h"
+#include "controls/cMouse.h"
 #include "gamestates/cChooseHouseState.h"
 #include "game/cGameSettings.h"
-
 #include "controls/eKeyAction.h"
-#include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
-#include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
-#include <SDL2/SDL.h>
 #include "include/Texture.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/cGameInterface.h"
-#include <algorithm>
 #include <cassert>
-
-#include "data/gfxaudio.h"
 
 cChooseHouseState::cChooseHouseState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
