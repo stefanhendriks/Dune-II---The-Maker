@@ -10,7 +10,7 @@ cGameInterface::cGameInterface(cGame* game)
 {
 }
 
-void cGameInterface::prepareMentatToTellAboutHouse(int house)
+void cGameInterface::prepareMentatToTellAboutHouse(int house) const
 {
     switch(house) {
     case ATREIDES:
