@@ -4,6 +4,7 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
+#include "gameobjects/structures/cOrderProcesser.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
@@ -251,7 +252,9 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             if (list->getType() == eListType::LIST_STARPORT) {
                 // only for starport show you can't pay it, as we allow building units when you cannot pay it (ie partial
                 // payment/progress)
-                if (cannotPayIt) {
+                cOrderProcesser *orderProcesser = m_player->getOrderProcesser();
+                bool orderIsAwaitingFrigate = orderProcesser->isOrderPlaced() || orderProcesser->isFrigateSent();
+                if (cannotPayIt || orderIsAwaitingFrigate) {
                     m_renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
                     Color errorFadingColor = m_player->getErrorFadingColor();
                     m_renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
