@@ -47,7 +47,7 @@ void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
 
     bool canOrder = orderProcesser->canPlaceOrder();
     if (!canOrder) {
-        m_renderDrawer->renderRectColor(m_buttonRect,0,0,0,128);
+        m_renderDrawer->renderRectFillColor(m_buttonRect, Color::Black, 128);
     }
 
     if (m_isMouseOverOrderButton && canOrder) {
