@@ -79,7 +79,7 @@ void cChooseHouseState::thinkFast()
 
 void cChooseHouseState::draw() const
 {
-    cMouse *mouse = m_game.getMouse();
+    cMouse *mouse = m_interface->getMouse();
 
     // Render the planet Dune a bit downward
     m_renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
