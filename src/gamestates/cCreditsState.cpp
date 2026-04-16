@@ -4,7 +4,7 @@
 #include "controls/eKeyAction.h"
 // #include "include/d2tmc.h"
 #include "config.h"
-#include "controls/cMouse.h"
+// #include "controls/cMouse.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -417,7 +417,8 @@ void cCreditsState::draw() const
 
     // MOUSE
     // m_game.getMouse()->draw();
-    m_interface->getMouse()->draw();
+    // m_interface->getMouse()->draw();
+    m_interface->drawCursor();
 }
 
 void cCreditsState::onNotifyMouseEvent(const s_MouseEvent &event)

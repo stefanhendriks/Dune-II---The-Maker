@@ -1,9 +1,9 @@
 #include "include/definitions.h"
-#include "controls/cMouse.h"
+// #include "controls/cMouse.h"
 #include "gamestates/cChooseHouseState.h"
 #include "game/cGameSettings.h"
 #include "controls/eKeyAction.h"
-#include "include/d2tmc.h"
+// #include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -74,7 +74,7 @@ void cChooseHouseState::thinkFast()
 
 void cChooseHouseState::draw() const
 {
-    cMouse *mouse = m_interface->getMouse();
+    // cMouse *mouse = m_interface->getMouse();
 
     // Render the planet Dune a bit downward
     m_renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
@@ -92,7 +92,8 @@ void cChooseHouseState::draw() const
     m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " BACK");
 
     // MOUSE
-    mouse->draw();
+    // mouse->draw();
+    m_interface->drawCursor();
 }
 
 eGameStateType cChooseHouseState::getType()
