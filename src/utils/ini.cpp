@@ -1065,20 +1065,9 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
                     }
                 }
                 else if (iPart == 1) {
-                    // Figure out the cell shit of this GEN
-                    char cCell[5];
-                    for (int cc = 0; cc < 5; cc++)
-                        cCell[cc] = '\0';
-
-                    int iCC = 0;
-                    for (int cc = 3; cc < iIS; cc++) {
-                        cCell[iCC] = linefeed[cc];
-                        iCC++;
-                    }
-
-                    int iGenCell = atoi(cCell);
-
-                    iCell = iGenCell;
+                    // Extract cell number from GEN key: format is GEN<cell>=<house>,<structureType>
+                    // iIS is the position of '=', so the cell number sits between position 3 and iIS
+                    iCell = std::stoi(slinefeed.substr(3, iIS - 3));
 
                     if (strcmp(chunk, "Wall") == 0) iType = WALL;
                     if (strcmp(chunk, "Concrete") == 0) iType = SLAB1;
