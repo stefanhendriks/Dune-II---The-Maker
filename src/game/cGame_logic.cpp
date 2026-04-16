@@ -108,6 +108,7 @@
 
 #include "data/gfxaudio.h"
 #include "include/sGameServices.h"
+#include "game/cGameInterface.h"
 
 cGame::cGame()
 {
@@ -126,6 +127,8 @@ cGame::cGame()
     m_mapCamera = nullptr;
     m_drawManager = nullptr;
 
+    std::unique_ptr<cGameInterface> gameInterface = std::make_unique<cGameInterface>(this);
+
     m_structureUtils = std::make_unique<cStructureUtils>();
 
     // create GameContext
@@ -136,6 +139,7 @@ cGame::cGame()
     m_timeManager = timeManager.get();
     // send to GameContext
     ctx->setTimeManager(std::move(timeManager));
+    ctx->setGameInterface(std::move(gameInterface));
     // focus manager
     m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
 
