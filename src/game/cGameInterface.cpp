@@ -2,12 +2,18 @@
 #include "data/gfxaudio.h"
 #include "game/cGame.h"
 #include "utils/cLog.h"
+#include "controls/cMouse.h"
 
 #include <format>
 
 cGameInterface::cGameInterface(cGame* game)
     : m_igame(game)
 {
+}
+
+cMouse* cGameInterface::getMouse() const
+{
+    return m_igame->getMouse();
 }
 
 void cGameInterface::prepareMentatToTellAboutHouse(int house) const

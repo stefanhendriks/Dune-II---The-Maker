@@ -1,12 +1,15 @@
 #pragma once
 
 class cGame;
+class cMouse;
 
 class cGameInterface
 {
 public:
     cGameInterface(cGame* game);
     virtual ~cGameInterface() = default;
+
+    cMouse* getMouse() const;
 
     void prepareMentatToTellAboutHouse(int house) const;
 
