@@ -9,6 +9,7 @@ struct SDL_Surface;
 class Texture;
 class cGame;
 class GameContext;
+class cGameInterface;
 class cTextDrawer;
 class Graphics;
 
@@ -28,6 +29,7 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     Graphics *m_gfxinter = nullptr;
+    cGameInterface* m_interface = nullptr;
     cRectangle *backButtonRect;
 
     Texture *bmp_Dune;
