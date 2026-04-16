@@ -403,6 +403,13 @@ void cBuildingList::removeAllSublistItems(int sublistId)
     }
 }
 
+void cBuildingList::clearList()
+{
+    while (m_maxItems > 0) {
+        removeItemFromList(m_maxItems - 1);
+    }
+}
+
 void cBuildingList::resetTimesOrderedForAllItems()
 {
     for (int i = 0; i < MAX_ITEMS; i++) {
