@@ -43,15 +43,14 @@ void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
     cOrderProcesser *orderProcesser = thePlayer->getOrderProcesser();
 
     assert(orderProcesser);
-    if (orderProcesser->isOrderPlaced()) { //grey
-        m_renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
+    m_renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
+
+    bool canOrder = orderProcesser->canPlaceOrder();
+    if (!canOrder) {
         m_renderDrawer->renderRectColor(m_buttonRect,0,0,0,128);
     }
-    else {
-        m_renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
-    }
 
-    if (m_isMouseOverOrderButton) {
+    if (m_isMouseOverOrderButton && canOrder) {
         drawRectangleOrderButton();
     }
 }
