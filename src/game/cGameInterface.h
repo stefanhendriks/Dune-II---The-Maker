@@ -10,6 +10,7 @@ public:
 
     void prepareMentatToTellAboutHouse(int house) const;
 
+    void setTransitionToWithFadingOut(int newState) const;
 private:
     cGame* m_igame = nullptr;
 };
