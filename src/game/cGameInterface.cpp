@@ -32,3 +32,9 @@ void cGameInterface::prepareMentatToTellAboutHouse(int house) const
     m_igame->setNextStateToTransitionTo(GAME_TELLHOUSE);
     m_igame->initiateFadingOut();
 }
+
+void cGameInterface::setTransitionToWithFadingOut(int newState) const
+{
+        m_igame->setNextStateToTransitionTo(newState);
+        m_igame->initiateFadingOut();
+}
