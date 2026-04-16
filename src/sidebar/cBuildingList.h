@@ -136,6 +136,8 @@ public:
 
     void removeAllSublistItems(int sublistId);
 
+    void clearList();
+
     void resetTimesOrderedForAllItems();
 
     void setItemBuilder(cItemBuilder *value);
