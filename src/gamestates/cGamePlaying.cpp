@@ -221,7 +221,7 @@ void cGamePlaying::evaluatePlayerStatus()
                     .player = &player
                 };
 
-                game.onNotifyGameEvent(event);
+                m_interface->onNotifyGameEvent(event);
             }
             // TODO: event : Player joined/became alive, etc?
         }
