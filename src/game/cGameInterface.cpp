@@ -49,3 +49,18 @@ void cGameInterface::drawCursor() const
 {
     m_igame->getMouse()->draw();
 }
+
+cDrawManager* cGameInterface::getDrawManager() const
+{
+    return m_igame->m_drawManager;
+}
+
+cMapCamera* cGameInterface::getMapCamera() const 
+{
+    return m_igame->m_mapCamera;
+}
+
+void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const
+{
+    m_igame->setPlayerToInteractFor(pPlayer);
+}
