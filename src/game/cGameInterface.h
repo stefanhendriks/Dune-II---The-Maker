@@ -29,6 +29,8 @@ public:
     void setTransitionToWithFadingOut(int newState) const;
 
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
+
+    void checkMissionWinOrFail() const;
 private:
     cGame* m_igame = nullptr;
 };
