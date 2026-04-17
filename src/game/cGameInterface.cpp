@@ -91,3 +91,13 @@ void cGameInterface::checkMissionWinOrFail() const
 {
     m_igame->checkMissionWinOrFail();
 }
+
+void cGameInterface::drawTextFps() const
+{
+    m_igame->drawTextFps();
+}
+
+void cGameInterface::drawTextTime() const
+{
+    m_igame->drawTextTime();
+}
