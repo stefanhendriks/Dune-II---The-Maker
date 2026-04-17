@@ -86,3 +86,8 @@ void cGameInterface::onNotifyGameEvent(const s_GameEvent &event) const
 {
     m_igame->onNotifyGameEvent(event);
 }
+
+void cGameInterface::checkMissionWinOrFail() const
+{
+    m_igame->checkMissionWinOrFail();
+}

@@ -227,7 +227,7 @@ void cGamePlaying::evaluatePlayerStatus()
         m_TIMER_evaluatePlayerStatus = 2;
     }
 
-    game.checkMissionWinOrFail();
+    m_interface->checkMissionWinOrFail();
 }
 
 void cGamePlaying::drawCombatMouse() const
