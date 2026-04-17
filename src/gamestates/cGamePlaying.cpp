@@ -158,13 +158,13 @@ void cGamePlaying::draw() const
 {
     game.m_drawManager->drawCombatState();
     if (m_settings->shouldDrawFps()) {
-        game.drawTextFps();
+        m_interface->drawTextFps();
     }
 
     drawCombatMouse();
 
     if (m_settings->shouldDrawTime()) {
-        game.drawTextTime();
+        m_interface->drawTextTime();
     }
     // MOUSE
     game.m_drawManager->drawCombatMouse();

@@ -31,6 +31,9 @@ public:
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
 
     void checkMissionWinOrFail() const;
+
+    void drawTextFps() const;
+    void drawTextTime() const;
 private:
     cGame* m_igame = nullptr;
 };
