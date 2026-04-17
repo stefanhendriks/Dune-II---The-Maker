@@ -34,6 +34,8 @@ public:
 
     void drawTextFps() const;
     void drawTextTime() const;
+
+    void reduceShaking() const;
 private:
     cGame* m_igame = nullptr;
 };
