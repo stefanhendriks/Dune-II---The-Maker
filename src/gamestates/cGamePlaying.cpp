@@ -26,6 +26,7 @@
 #include "controls/cGameControlsContext.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameInterface.h"
 #include "controls/eKeyAction.h"
 #include "map/cMapCamera.h"
 #include "map/cMap.h"
@@ -44,6 +45,12 @@ cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) :
     m_TIMER_evaluatePlayerStatus = 5;
     //game.m_pathsCreated = 0;
     m_settings->setPathsCreated(0);
+    
+    //fix others pointers
+    m_interface = m_ctx->getGameInterface();
+    assert(m_interface != nullptr);
+    m_mapCamera = m_interface->getMapCamera();
+    assert(m_mapCamera != nullptr);
 }
 
 cGamePlaying::~cGamePlaying()
@@ -55,7 +62,7 @@ void cGamePlaying::thinkFast()
 {
     game.m_drawManager->thinkFast_statePlaying();
 
-    game.m_mapCamera->thinkFast();
+    m_mapCamera->thinkFast();
 
     for (cPlayer &pPlayer : m_objects->getPlayers()) {
         pPlayer.thinkFast();
@@ -273,17 +280,17 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::ZOOM_RESET)) {
-        game.m_mapCamera->resetZoom();
+        m_mapCamera->resetZoom();
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
-        game.m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
-            game.m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
@@ -306,7 +313,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::TOGGLE_TIME_DISPLAY)) {
-        m_settings->setDrawTime(! m_game.m_gameSettings->shouldDrawTime());
+        m_settings->setDrawTime(! m_settings->shouldDrawTime());
     }
 
     if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
@@ -324,13 +331,13 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
-        game.m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
-            game.m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
@@ -359,19 +366,19 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
         game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(0));
-        game.setPlayerToInteractFor(&m_objects->getPlayer(0));
+        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(0));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
         game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(1));
-        game.setPlayerToInteractFor(&m_objects->getPlayer(1));
+        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(1));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
         game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(2));
-        game.setPlayerToInteractFor(&m_objects->getPlayer(2));
+        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(2));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
         game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(3));
-        game.setPlayerToInteractFor(&m_objects->getPlayer(3));
+        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(3));
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
