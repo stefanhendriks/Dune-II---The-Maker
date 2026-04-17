@@ -832,9 +832,11 @@ int cPlayer::getPowerUsage()
  */
 void cPlayer::dumpCredits(int amount)
 {
-    giveCredits(amount);
-    if (credits > maxCredits_) {
-        credits = maxCredits_;
+//    giveCredits(amount);
+    float oldCredit = credits;
+    credits += amount;
+    if (credits > std::max(oldCredit, maxCredits_)) {
+        credits = std::max(oldCredit, maxCredits_);
     }
 }
 
