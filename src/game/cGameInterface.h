@@ -18,6 +18,8 @@ public:
     cDrawManager* getDrawManager() const;
     cMapCamera* getMapCamera() const;
     cReinforcements* getReinforcements() const;
+    void setMissionWon() const;
+    void setMissionLost() const;
 
     void prepareMentatToTellAboutHouse(int house) const;
 

@@ -70,3 +70,13 @@ cReinforcements* cGameInterface::getReinforcements() const
 {
     return m_igame->getReinforcements();
 }
+
+void cGameInterface::setMissionWon() const
+{
+    m_igame->setMissionWon();
+}
+
+void cGameInterface::setMissionLost() const
+{
+    m_igame->setMissionLost();
+}

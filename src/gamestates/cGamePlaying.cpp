@@ -381,11 +381,11 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
-        game.setMissionWon();
+        m_interface->setMissionWon();
     }
 
     if (event.isAction(eKeyAction::DEBUG_LOSE)) {
-        game.setMissionLost();
+        m_interface->setMissionLost();
     }
 
     if (event.isAction(eKeyAction::DEBUG_GIVE_CREDITS)) {
