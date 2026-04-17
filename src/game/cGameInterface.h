@@ -27,7 +27,7 @@ public:
     void prepareMentatToTellAboutHouse(int house) const;
 
     void setTransitionToWithFadingOut(int newState) const;
-
+    void setNextStateToTransitionTo(int newState) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
 
     void checkMissionWinOrFail() const;

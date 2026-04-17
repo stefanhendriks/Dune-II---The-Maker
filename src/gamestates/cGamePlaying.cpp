@@ -292,7 +292,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::OPEN_MENU)) {
-        game.setNextStateToTransitionTo(GAME_OPTIONS);
+        m_interface->setNextStateToTransitionTo(GAME_OPTIONS);
     }
 
     if (event.isAction(eKeyAction::TOGGLE_FPS)) {
