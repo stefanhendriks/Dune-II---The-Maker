@@ -40,8 +40,6 @@ cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) :
 {
     assert(m_objects != nullptr);
     assert(m_settings != nullptr);
-    m_reinforcements = game.getReinforcements();
-    assert(m_reinforcements != nullptr);
     m_TIMER_evaluatePlayerStatus = 5;
     //game.m_pathsCreated = 0;
     m_settings->setPathsCreated(0);
@@ -51,11 +49,12 @@ cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) :
     assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
     assert(m_mapCamera != nullptr);
+    m_reinforcements = m_interface->getReinforcements();
+    assert(m_reinforcements != nullptr);
 }
 
 cGamePlaying::~cGamePlaying()
 {
-
 }
 
 void cGamePlaying::thinkFast()

@@ -3,6 +3,7 @@
 #include "game/cGame.h"
 #include "utils/cLog.h"
 #include "controls/cMouse.h"
+#include "gameobjects/units/cReinforcements.h"
 
 #include <format>
 
@@ -63,4 +64,9 @@ cMapCamera* cGameInterface::getMapCamera() const
 void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const
 {
     m_igame->setPlayerToInteractFor(pPlayer);
+}
+
+cReinforcements* cGameInterface::getReinforcements() const
+{
+    return m_igame->getReinforcements();
 }
