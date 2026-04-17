@@ -4,6 +4,7 @@
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/cBullets.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cUnits.h"
 #include "player/cPlayers.h"
 #include "map/cMap.h"
@@ -15,5 +16,7 @@ std::unique_ptr<cGameObjectContext> cGameObjectsContextCreator::create() {
         std::make_unique<cParticles>(),
         std::make_unique<cStructures>(),
         std::make_unique<cUnits>(),
-        std::make_unique<cMap>());
+        std::make_unique<cMap>(),
+        std::make_unique<cStructureFactory>()
+    );
 }
