@@ -101,3 +101,8 @@ void cGameInterface::drawTextTime() const
 {
     m_igame->drawTextTime();
 }
+
+void cGameInterface::reduceShaking() const
+{
+    m_igame->reduceShaking();
+}
