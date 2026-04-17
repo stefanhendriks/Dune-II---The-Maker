@@ -5,6 +5,7 @@ class cMouse;
 class cPlayer;
 class cDrawManager;
 class cMapCamera;
+class cReinforcements;
 
 class cGameInterface
 {
@@ -16,6 +17,7 @@ public:
     void drawCursor() const;
     cDrawManager* getDrawManager() const;
     cMapCamera* getMapCamera() const;
+    cReinforcements* getReinforcements() const;
 
     void prepareMentatToTellAboutHouse(int house) const;
 
