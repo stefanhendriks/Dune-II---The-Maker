@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include "map/MapGeometry.hpp"
+#include <cmath>
 
 // All tests use a standard 64x64 map (the size used by the game)
 static constexpr int MAP_W = 64;
