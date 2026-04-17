@@ -51,6 +51,8 @@ cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) :
     assert(m_mapCamera != nullptr);
     m_reinforcements = m_interface->getReinforcements();
     assert(m_reinforcements != nullptr);
+    m_structureFactory = services->objects->getStructureFactory();
+    assert(m_structureFactory != nullptr);
 }
 
 cGamePlaying::~cGamePlaying()
@@ -77,7 +79,7 @@ void cGamePlaying::thinkFast()
         }
 
         if (pStructure->isDead()) {
-            game.m_structureFactory->deleteStructureInstance(pStructure);
+            m_structureFactory->deleteStructureInstance(pStructure);
         }
     }
 

@@ -33,7 +33,7 @@
 
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
-#include "gameobjects/structures/cStructureFactory.h"
+// #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/particles/cParticles.h"
@@ -162,7 +162,7 @@ cGame::cGame()
 
     m_gameObjectsContext = cGameObjectsContextCreator::create();
 
-    m_structureFactory = std::make_unique<cStructureFactory>();
+    // m_structureFactory = std::make_unique<cStructureFactory>();
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
 

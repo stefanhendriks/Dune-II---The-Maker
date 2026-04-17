@@ -1473,7 +1473,7 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
 
 cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage)
 {
-    cStructureFactory *pStructureFactory = game.m_structureFactory.get();
+    cStructureFactory *pStructureFactory = game.m_gameObjectsContext->getStructureFactory();
     bool canPlace = canPlaceStructureAt(destinationCell, iStructureTypeId).success;
     if (!canPlace) {
         return nullptr;
@@ -1495,7 +1495,7 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
 cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *itemToPlace)
 {
     int iStructureTypeId = itemToPlace->getBuildId();
-    cStructureFactory *pStructureFactory = game.m_structureFactory.get();
+    cStructureFactory *pStructureFactory = game.m_gameObjectsContext->getStructureFactory();
 
     bool canPlace = canPlaceStructureAt(destinationCell, iStructureTypeId).success;
     if (!canPlace) {
