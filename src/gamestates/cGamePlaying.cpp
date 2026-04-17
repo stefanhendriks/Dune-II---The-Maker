@@ -41,7 +41,7 @@ cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) :
     assert(m_objects != nullptr);
     assert(m_settings != nullptr);
     m_TIMER_evaluatePlayerStatus = 5;
-    //game.m_pathsCreated = 0;
+
     m_settings->setPathsCreated(0);
     
     //fix others pointers
@@ -132,7 +132,6 @@ void cGamePlaying::thinkSlow()
 {
     evaluatePlayerStatus(); // so we can call non-const from a const :S
 
-    //game.m_pathsCreated = 0;
     m_settings->setPathsCreated(0);
 
     //@mira
@@ -233,7 +232,7 @@ void cGamePlaying::evaluatePlayerStatus()
 
 void cGamePlaying::drawCombatMouse() const
 {
-    auto m_mouse = game.getMouse();
+    auto m_mouse = m_interface->getMouse();
     if (m_mouse->isBoxSelecting()) {
         m_renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(),255,255,255,255);
     }
@@ -248,7 +247,6 @@ void cGamePlaying::drawCombatMouse() const
 
 void cGamePlaying::missionInit()
 {
-    // game.m_pathsCreated = 0;
     m_settings->setPathsCreated(0);
     m_TIMER_evaluatePlayerStatus = 5;
 }
