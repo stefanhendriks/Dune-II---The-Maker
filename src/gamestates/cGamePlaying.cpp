@@ -90,7 +90,7 @@ void cGamePlaying::thinkFast()
 
     m_objects->getMap().thinkFast();
 
-    game.reduceShaking();
+    m_interface->reduceShaking();
 
     // units think (move only)
     for (cUnit &cUnit : m_objects->getUnits()) {
