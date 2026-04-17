@@ -47,6 +47,11 @@ void cGameInterface::setTransitionToWithFadingOut(int newState) const
         m_igame->initiateFadingOut();
 }
 
+void cGameInterface::setNextStateToTransitionTo(int newState) const
+{
+    m_igame->setNextStateToTransitionTo(newState);
+}
+
 void cGameInterface::drawCursor() const
 {
     m_igame->getMouse()->draw();
