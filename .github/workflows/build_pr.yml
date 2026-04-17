@@ -37,6 +37,10 @@ jobs:
         run: |
           cd "${{ github.workspace }}\build"
           cmake --build . --target all -- -j -l 3
+      - name: Test
+        run: |
+          cd "${{ github.workspace }}\build"
+          ctest --output-on-failure
   Ubuntu:
     name: Ubuntu (x86)
     runs-on: [ ubuntu-latest ]
@@ -66,6 +70,10 @@ jobs:
         run: |
           cd "${{ github.workspace }}/build"
           make -j4
+      - name: Test
+        run: |
+          cd "${{ github.workspace }}/build"
+          ctest --output-on-failure
   MACOSX:
     name: Mac OS X (Arm64)
     runs-on: [ macos-15 ]
@@ -87,6 +95,10 @@ jobs:
         run: |
           cd "${{ github.workspace }}/build"
           make -j4
+      - name: Test
+        run: |
+          cd "${{ github.workspace }}/build"
+          ctest --output-on-failure
   MACOSX_INTEL:
     name: Mac OS X (Intel)
     runs-on: [ macos-15-intel ]
@@ -108,3 +120,7 @@ jobs:
         run: |
           cd "${{ github.workspace }}/build"
           make -j4
+      - name: Test
+        run: |
+          cd "${{ github.workspace }}/build"
+          ctest --output-on-failure
