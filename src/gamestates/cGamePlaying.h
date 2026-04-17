@@ -9,7 +9,8 @@ class Texture;
 class cGame;
 class cReinforcements;
 class cTextDrawer;
-
+class cMapCamera;
+class cGameInterface;
 
 class cGamePlaying : public cGameState {
 public:
@@ -32,6 +33,8 @@ private:
     cGameObjectContext* m_objects = nullptr;
     cGameSettings* m_settings = nullptr;
     cReinforcements* m_reinforcements = nullptr;
+    cGameInterface* m_interface = nullptr;
+    cMapCamera* m_mapCamera = nullptr;
     void evaluatePlayerStatus();
     void drawCombatMouse() const;
     int m_TIMER_evaluatePlayerStatus;
