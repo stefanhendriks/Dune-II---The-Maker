@@ -1,31 +1,41 @@
 include(FetchContent)
 
-# On Apple Intel macs, the root CMakeLists.txt sets CMAKE_CXX_COMPILER / CMAKE_C_COMPILER
-# to bare names (e.g. "clang++") after its own project() call.  When FetchContent brings
-# in Catch2, that sub-project calls project() which requires an absolute compiler path.
+# The root CMakeLists.txt sets CMAKE_CXX_COMPILER / CMAKE_C_COMPILER after its own
+# project() call. CMake's initial compiler detection writes the system default (e.g.
+# /usr/bin/c++) into the cache. The root then overwrites the variable (e.g. to
+# /opt/homebrew/bin/g++-15 on arm64, or "clang++" on Intel). When FetchContent brings
+# in Catch2, that sub-project calls project() which re-detects the compiler from the
+# cache and may restore the system default, causing CMake to detect a "variables changed"
+# mismatch and re-run configure indefinitely (infinite loop on Apple Silicon).
 #
-# Fix: resolve bare names to absolute paths in this scope so child scopes (FetchContent)
-# inherit the absolute path. IS_ABSOLUTE is a no-op when the path is already absolute
-# (arm64 uses /opt/homebrew/bin/g++-15; Linux/Windows are detected with absolute paths).
+# Fix: before FetchContent runs, resolve any bare names to absolute paths and then
+# unconditionally force-update the cache to match the current variable value. This
+# ensures Catch2's project() call sees the intended compiler and does not re-detect.
 foreach(_lang CXX C)
     set(_compiler_var "CMAKE_${_lang}_COMPILER")
+    if("${${_compiler_var}}" STREQUAL "")
+        continue()
+    endif()
+
+    # Resolve bare names to absolute paths (needed on Apple Intel where "clang++"
+    # is set instead of a full path).
     if(NOT IS_ABSOLUTE "${${_compiler_var}}")
         find_program(_compiler_abs "${${_compiler_var}}"
             PATHS /usr/bin /usr/local/bin /opt/homebrew/bin
             NO_DEFAULT_PATH)
         if(NOT _compiler_abs)
-            # Fallback: let find_program search PATH normally
             find_program(_compiler_abs "${${_compiler_var}}")
         endif()
         if(_compiler_abs)
-            # Set normal variable in this scope — this shadows the parent's bare name
-            # and is inherited by any add_subdirectory() called from here (FetchContent).
             set(${_compiler_var} "${_compiler_abs}")
-            # Also update the cache so subsequent cmake runs see the absolute path.
-            set(${_compiler_var} "${_compiler_abs}" CACHE FILEPATH "${_lang} compiler" FORCE)
         endif()
         unset(_compiler_abs CACHE)
     endif()
+
+    # Force the cache to match the current value. Without this, Catch2's project()
+    # call re-detects the compiler and may write a different value, which triggers
+    # an infinite configure loop (observed on Apple Silicon / arm64).
+    set(${_compiler_var} "${${_compiler_var}}" CACHE FILEPATH "${_lang} compiler" FORCE)
 endforeach()
 unset(_lang)
 unset(_compiler_var)
