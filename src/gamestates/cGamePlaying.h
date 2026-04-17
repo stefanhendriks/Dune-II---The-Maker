@@ -11,6 +11,7 @@ class cReinforcements;
 class cTextDrawer;
 class cMapCamera;
 class cGameInterface;
+class cStructureFactory;
 
 class cGamePlaying : public cGameState {
 public:
@@ -35,6 +36,7 @@ private:
     cReinforcements* m_reinforcements = nullptr;
     cGameInterface* m_interface = nullptr;
     cMapCamera* m_mapCamera = nullptr;
+    cStructureFactory* m_structureFactory = nullptr;
     void evaluatePlayerStatus();
     void drawCombatMouse() const;
     int m_TIMER_evaluatePlayerStatus;
