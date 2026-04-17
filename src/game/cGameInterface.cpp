@@ -4,6 +4,7 @@
 #include "utils/cLog.h"
 #include "controls/cMouse.h"
 #include "gameobjects/units/cReinforcements.h"
+#include "include/sGameEvent.h"
 
 #include <format>
 
@@ -79,4 +80,9 @@ void cGameInterface::setMissionWon() const
 void cGameInterface::setMissionLost() const
 {
     m_igame->setMissionLost();
+}
+
+void cGameInterface::onNotifyGameEvent(const s_GameEvent &event) const
+{
+    m_igame->onNotifyGameEvent(event);
 }

@@ -6,6 +6,7 @@ class cPlayer;
 class cDrawManager;
 class cMapCamera;
 class cReinforcements;
+class s_GameEvent;
 
 class cGameInterface
 {
@@ -20,6 +21,8 @@ public:
     cReinforcements* getReinforcements() const;
     void setMissionWon() const;
     void setMissionLost() const;
+
+    void onNotifyGameEvent(const s_GameEvent &event) const;
 
     void prepareMentatToTellAboutHouse(int house) const;
 
