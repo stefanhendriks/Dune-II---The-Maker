@@ -13,6 +13,8 @@ class Texture;
 class Graphics;
 class GameContext;
 class SDLDrawer;
+class cGameInterface;
+class cGameSettings;
 
 struct s_DataCampaign;
 enum eRegionState {
@@ -49,7 +51,7 @@ class cSelectYourNextConquestState : public cGameState {
 public:
     explicit cSelectYourNextConquestState(cGame &theGame, sGameServices* services, s_DataCampaign* dataCompaign);
     ~cSelectYourNextConquestState() override;
-static constexpr int MAX_REGIONS = 27;
+    static constexpr int MAX_REGIONS = 27;
 
     
     void thinkFast() override;
@@ -84,6 +86,12 @@ static constexpr int MAX_REGIONS = 27;
     void fastForwardUntilMission(int missionNr, int house);
 
 private:
+    cGameSettings* m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
+    cTextDrawer* m_textDrawer = nullptr;
+    s_DataCampaign* m_dataCompaign;
+    Graphics* m_gfxworld;
+    Graphics* m_gfxinter;
     eRegionState state;
 
     eRegionSceneState regionSceneState;
@@ -134,9 +142,5 @@ private:
     void loadScenarioAndTransitionToNextState(int iMission);
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
-    cTextDrawer* m_textDrawer = nullptr;
-    Graphics* m_gfxworld;
-    Graphics* m_gfxinter;
-    s_DataCampaign* m_dataCompaign;
     mutable std::array<cRegion, MAX_REGIONS> world;
 };
