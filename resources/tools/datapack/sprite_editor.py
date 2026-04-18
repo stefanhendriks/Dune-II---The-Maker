@@ -423,6 +423,7 @@ class SpriteEditor:
             # The self.image object is maintained in 'P' (Palette) mode.
             # Pillow therefore automatically saves in 8 bits indexed with the current palette.
             try:
+                self.image.info["transparency"] = 223
                 self.image.save(path)
                 messagebox.showinfo("Success", f"Image saved in 8-bit indexed format in:\n{path}")
             except Exception as e:
