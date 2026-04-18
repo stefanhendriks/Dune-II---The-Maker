@@ -10,27 +10,37 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "game/cGameInterface.h"
 #include <SDL2/SDL.h>
 #include <format>
 #include <cassert>
 
 cWinLoseState::cWinLoseState(cGame &theGame, sGameServices* services, Outcome value) : 
-    cGameState(theGame, services), m_statement(value)
+    cGameState(theGame, services),
+    m_settings(services->settings),
+    m_statement(value)
 {
     assert(services != nullptr);
-    if (m_game.getScreenTexture() != nullptr)
-        m_backgroundTexture = m_game.getScreenTexture();
+    assert(m_settings != nullptr);
+
+    auto ctx = services->ctx;
+    m_interface = ctx->getGameInterface();
+    assert(m_interface != nullptr);
+    auto gfxinter = ctx->getGraphicsContext()->gfxinter;
+    assert(gfxinter != nullptr);
+
+    if (m_interface->getScreenTexture() != nullptr)
+        m_backgroundTexture = m_interface->getScreenTexture();
     
     if (m_statement == Outcome::Lose) {
-        m_tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
+        m_tex = gfxinter->getTexture(BMP_LOSING);
     } else {
-        m_tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_WINNING);
+        m_tex = gfxinter->getTexture(BMP_WINNING);
     }
 }
 
 cWinLoseState::~cWinLoseState()
 {
-
 }
 
 void cWinLoseState::thinkFast()
@@ -42,13 +52,11 @@ void cWinLoseState::draw() const
     if (m_backgroundTexture)
         m_renderDrawer->renderSprite(m_backgroundTexture,0,0);
 
-    // auto tex = m_ctx->getGraphicsContext()->gfxinter->getTexture(BMP_LOSING);
-    int posW = (game.m_gameSettings->getScreenW()-m_tex->w)/2;
-    int posH = (game.m_gameSettings->getScreenH()-m_tex->h)/2;
+    int posW = (m_settings->getScreenW()-m_tex->w)/2;
+    int posH = (m_settings->getScreenH()-m_tex->h)/2;
     m_renderDrawer->renderSprite(m_tex,posW, posH);
 
-    // MOUSE
-    m_game.getMouse()->draw();
+    m_interface->drawCursor();
 }
 
 void cWinLoseState::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -69,16 +77,15 @@ eGameStateType cWinLoseState::getType()
 
 void cWinLoseState::onNotifyKeyboardEvent(const cKeyboardEvent &)
 {
-
 }
 
 void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &) const
 {
     if (m_statement == Outcome::Lose) {
-        game.goingToWinLoseBrief(GAME_LOSEBRIEF);
+        m_interface->goingToWinLoseBrief(GAME_LOSEBRIEF);
     } else {
-        game.goingToWinLoseBrief(GAME_WINBRIEF);
+        m_interface->goingToWinLoseBrief(GAME_WINBRIEF);
     }
     // FADE OUT
-    game.initiateFadingOut();
+    m_interface->initiateFadingOut();
 }
