@@ -9,7 +9,6 @@ echo  ---  Installing dependencies  ---
 echo  ---                           ---
 echo  ---------------------------------
 
-brew install gcc
 brew install cmake
 brew install ninja
 brew install pkg-config
