@@ -9,6 +9,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "game/cGameInterface.h"
 #include "map/cPreviewMaps.h"
 #include "data/gfxeditor.h"
 #include <SDL2/SDL.h>
@@ -27,11 +28,13 @@ cEditorState::cEditorState(cGame &theGame, sGameServices* services)
     : cGameState(theGame, services),
     m_gfxdata(m_ctx->getGraphicsContext()->gfxdata.get()),
     m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get()),
-    m_settings(services->settings)
+    m_settings(services->settings),
+    m_interface(m_ctx->getGameInterface())
 {
     assert(m_gfxdata != nullptr);
     assert(m_gfxeditor != nullptr);
     assert(m_settings != nullptr);
+    assert(m_interface != nullptr);
 
     const cRectangle &selectRect = cRectangle(0, 0, m_settings->getScreenW(), heightBarSize);
     const cRectangle &modifRect = cRectangle(m_settings->getScreenW()-heightBarSize, heightBarSize, heightBarSize, m_settings->getScreenH()-heightBarSize);
@@ -298,7 +301,7 @@ void cEditorState::draw() const
         drawStartCells();
     m_selectBar->draw();
     m_currentBar->draw();
-    m_game.getMouse()->draw();
+    m_interface->drawCursor();
 }
 
 void cEditorState::zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction)
@@ -364,15 +367,13 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (m_mapData == nullptr) {
         if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
-            m_game.setNextStateToTransitionTo(GAME_MENU);
-            m_game.initiateFadingOut();
+            m_interface->setTransitionToWithFadingOut(GAME_MENU);
         }
         return;
     }
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_game.setNextStateToTransitionTo(GAME_MENU);
-            m_game.initiateFadingOut();
+            m_interface->setTransitionToWithFadingOut(GAME_MENU);
         }
         if (event.isAction(eKeyAction::EDITOR_SAVE)) {
             //std::cout << "Save" << std::endl;
