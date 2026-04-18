@@ -62,13 +62,11 @@ jobs:
           SHORT_SHA=$(git rev-parse --short HEAD)
           TAG="bleeding-edge-${SHORT_SHA}"
           DATE=$(date -u +'%Y-%m-%d %H:%M UTC')
+          NOTES=$(printf 'Automated bleeding edge build from master branch.\n\nCommit: ${{ github.sha }}\nDate: %s' "${DATE}")
           gh release create "$TAG" \
             --prerelease \
             --title "Bleeding Edge - ${DATE} - ${SHORT_SHA}" \
-            --notes "Automated bleeding edge build from master branch.
-
-Commit: ${{ github.sha }}
-Date: ${DATE}" \
+            --notes "$NOTES" \
             2>/dev/null || true
           gh release upload "$TAG" bin/d2tm.zip --clobber --display-name d2tm-windows.zip
         env:
