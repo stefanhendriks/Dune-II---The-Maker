@@ -3,6 +3,7 @@
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/cBullets.h"
 #include "gameobjects/structures/cStructures.h"
+#include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cUnits.h"
 #include "player/cPlayers.h"
 #include "map/cMap.h"
@@ -15,13 +16,21 @@ cGameObjectContext::cGameObjectContext(
     std::unique_ptr<cParticles> particles,
     std::unique_ptr<cStructures> structures,
     std::unique_ptr<cUnits> units,
-    std::unique_ptr<cMap> map)
+    std::unique_ptr<cMap> map,
+    std::unique_ptr<cStructureFactory> structureFactory)
     : m_Bullets(std::move(bullets))
     , m_Players(std::move(players))
     , m_particles(std::move(particles))
     , m_pStructures(std::move(structures))
     , m_Units(std::move(units))
-    , m_map(std::move(map)) {
+    , m_map(std::move(map))
+    , m_structureFactory(std::move(structureFactory))
+{
+    //hack: I didn't want to do, but I want to clear out all existing structures when creating a new context,
+    // otherwise we might have leftover structures from previous games.
+    // This is because the structure factory is shared across games, and it holds pointers to all existing structures,
+    // so we need to clear them out when creating a new context because cMap has it
+    m_structureFactory->deleteAllExistingStructures();
 }
 
 cGameObjectContext::~cGameObjectContext() = default;
@@ -86,4 +95,12 @@ cPlayer& cGameObjectContext::getPlayer(int index)
 const cPlayer& cGameObjectContext::getPlayer(int index) const
 {
     return (*m_Players)[index];
+}
+
+cStructureFactory* cGameObjectContext::getStructureFactory() const
+{
+    if (m_structureFactory == nullptr) {
+        throw std::runtime_error("cStructureFactory not initialized in cGameObjectContext");
+    }
+    return m_structureFactory.get();
 }

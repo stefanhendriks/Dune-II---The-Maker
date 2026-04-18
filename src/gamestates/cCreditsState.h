@@ -14,6 +14,7 @@ class Texture;
 class cGame;
 class cTextDrawer;
 class cGameSettings;
+class cGameInterface;
 
 struct s_CreditLine {
     std::string name;
@@ -39,6 +40,7 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
 
     int m_titleX;
     float m_crawlerY;

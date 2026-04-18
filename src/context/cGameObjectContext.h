@@ -11,6 +11,7 @@ class cUnits;
 class cMap;
 class cPlayer;
 class cUnit;
+class cStructureFactory;
 
 class cGameObjectContext {
 public:
@@ -20,7 +21,8 @@ public:
         std::unique_ptr<cParticles> particles,
         std::unique_ptr<cStructures> structures,
         std::unique_ptr<cUnits> units,
-        std::unique_ptr<cMap> map);
+        std::unique_ptr<cMap> map,
+        std::unique_ptr<cStructureFactory> structureFactory);
     ~cGameObjectContext();
 
     cBullets& getBullets() const;
@@ -35,6 +37,8 @@ public:
     cUnit& getUnit(int index);
     const cUnit& getUnit(int index) const;
 
+    cStructureFactory* getStructureFactory() const;
+
 private:
     std::unique_ptr<cBullets> m_Bullets;
     std::unique_ptr<cPlayers> m_Players;
@@ -42,4 +46,5 @@ private:
     std::unique_ptr<cStructures> m_pStructures;
     std::unique_ptr<cUnits> m_Units;
     std::unique_ptr<cMap> m_map;
+    std::unique_ptr<cStructureFactory> m_structureFactory;
 };

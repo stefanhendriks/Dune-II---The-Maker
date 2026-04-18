@@ -33,7 +33,7 @@
 
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
-#include "gameobjects/structures/cStructureFactory.h"
+// #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/particles/cParticles.h"
@@ -108,6 +108,7 @@
 
 #include "data/gfxaudio.h"
 #include "include/sGameServices.h"
+#include "game/cGameInterface.h"
 
 cGame::cGame()
 {
@@ -126,6 +127,8 @@ cGame::cGame()
     m_mapCamera = nullptr;
     m_drawManager = nullptr;
 
+    std::unique_ptr<cGameInterface> gameInterface = std::make_unique<cGameInterface>(this);
+
     m_structureUtils = std::make_unique<cStructureUtils>();
 
     // create GameContext
@@ -136,6 +139,7 @@ cGame::cGame()
     m_timeManager = timeManager.get();
     // send to GameContext
     ctx->setTimeManager(std::move(timeManager));
+    ctx->setGameInterface(std::move(gameInterface));
     // focus manager
     m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
 
@@ -158,7 +162,7 @@ cGame::cGame()
 
     m_gameObjectsContext = cGameObjectsContextCreator::create();
 
-    m_structureFactory = std::make_unique<cStructureFactory>();
+    // m_structureFactory = std::make_unique<cStructureFactory>();
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
 

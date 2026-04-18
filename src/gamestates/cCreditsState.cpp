@@ -2,9 +2,9 @@
 #include "game/cGameSettings.h"
 
 #include "controls/eKeyAction.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+// #include "include/d2tmc.h"
 #include "config.h"
+// #include "controls/cMouse.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -12,21 +12,23 @@
 #include "drawers/cTextDrawer.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "game/cGameInterface.h"
 
-#include <SDL2/SDL.h>
-#include <iostream>
 #include <cassert>
 
 cCreditsState::cCreditsState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
+    m_interface(m_ctx->getGameInterface()),
     m_moveSpeed(0.15f)
 {
     assert(m_textDrawer != nullptr);
     assert(m_settings != nullptr);
+    assert(m_interface != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     assert(gfxinter != nullptr);
+
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);
     int duneAtTheRight = m_settings->getScreenW() - (m_duneBmp->w * 1.1f);
@@ -54,8 +56,7 @@ cCreditsState::cCreditsState(cGame &theGame, sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_MENU);
-                m_game.initiateFadingOut();
+                m_interface->setTransitionToWithFadingOut(GAME_MENU);
             })
             .build();
 
@@ -411,9 +412,7 @@ void cCreditsState::draw() const
     }
 
     backButton->draw();
-
-    // MOUSE
-    m_game.getMouse()->draw();
+    m_interface->drawCursor();
 }
 
 void cCreditsState::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -436,7 +435,6 @@ eGameStateType cCreditsState::getType()
 void cCreditsState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
-        m_game.setNextStateToTransitionTo(GAME_MENU);
-        m_game.initiateFadingOut();
+        m_interface->setTransitionToWithFadingOut(GAME_MENU);
     }
 }

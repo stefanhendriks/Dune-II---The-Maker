@@ -1,7 +1,7 @@
 #include "cOptionsState.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+// #include "game/cGame.h"
+// #include "include/d2tmc.h"
 #include "config.h"
 
 #include "gui/GuiButton.h"
@@ -13,6 +13,8 @@
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
+#include "game/cGameInterface.h"
+#include "game/cGameSettings.h"
 
 #include <cassert>
 
@@ -20,12 +22,16 @@ cOptionsState::cOptionsState(cGame &theGame, sGameServices* services, int prevSt
     : cGameState(theGame, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
+    m_interface(m_ctx->getGameInterface()),
     m_prevState(prevState),
     m_guiWindow(nullptr)
 {
-    assert(services != nullptr);
+    assert(m_textDrawer != nullptr);
+    assert(m_settings != nullptr);
+    assert(m_interface != nullptr);
+
     refresh();
-    m_backgroundTexture = m_game.getScreenTexture();
+    m_backgroundTexture = m_interface->getScreenTexture();
 }
 
 void cOptionsState::constructWindow(int prevState)
@@ -59,8 +65,8 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_MENU);
-                m_game.initiateFadingOut();})
+                m_interface->setTransitionToWithFadingOut(GAME_MENU);
+            })
             .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_toMenu));
 
@@ -89,7 +95,8 @@ void cOptionsState::constructWindow(int prevState)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_settings->setPlaying(false);
-                m_game.initiateFadingOut();})
+                m_interface->initiateFadingOut();
+            })
             .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Quit));
 
@@ -104,8 +111,9 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,prevState](){
-                m_game.setNextStateToTransitionTo(prevState);})
-            .build();
+                m_interface->setNextStateToTransitionTo(prevState);
+            })
+                .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));
 
     // Mission select from options menu, only when playing the game
@@ -121,7 +129,8 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_MISSIONSELECT);})
+                m_interface->setNextStateToTransitionTo(GAME_MISSIONSELECT);
+            })
             .build();
         m_guiWindow->addGuiObject(std::move(gui_btn_toMissionSelect));
     }
@@ -254,7 +263,6 @@ cOptionsState::~cOptionsState()
 
 void cOptionsState::thinkFast()
 {
-
 }
 
 void cOptionsState::draw() const
@@ -265,7 +273,7 @@ void cOptionsState::draw() const
     m_guiWindow->draw();
 
     // MOUSE
-    m_game.getMouse()->draw();
+    m_interface->drawCursor();
 }
 
 void cOptionsState::onNotifyMouseEvent(const s_MouseEvent &event)

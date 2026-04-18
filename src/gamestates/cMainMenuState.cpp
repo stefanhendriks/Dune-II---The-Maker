@@ -1,28 +1,33 @@
 #include "cMainMenuState.h"
+#include "controls/cMouse.h"
 
+#include "gui/GuiButton.h"
+#include "gui/GuiWindow.h"
 #include "controls/eKeyAction.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+//#include "game/cGame.h"
 #include "config.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-#include "context/GraphicsContext.hpp"
+//#include "context/GraphicsContext.hpp"
 #include "utils/cSoundPlayer.h"
+#include "game/cGameInterface.h"
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL_scancode.h>
 #include <format>
 #include <cassert>
 
 cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
     m_settings(services->settings),
-    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_interface(m_ctx->getGameInterface())
 {
     assert(m_settings != nullptr);
     assert(m_textDrawer != nullptr);
+    assert(m_interface != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
@@ -63,8 +68,8 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_CREDITS);
-                m_game.initiateFadingOut();})
+                m_interface->setTransitionToWithFadingOut(GAME_CREDITS);
+                })
             .build();
 
     /////////////////////////////////
@@ -94,8 +99,8 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
-                m_game.initiateFadingOut();})
+                m_interface->setTransitionToWithFadingOut(GAME_SELECT_HOUSE);
+                })
             .build();
     gui_window->addGuiObject(std::move(gui_btn_SelectHouse));
 
@@ -109,10 +114,10 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_game.loadSkirmishMaps();
-                m_game.initSkirmish();
-                m_game.setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
-                m_game.initiateFadingOut();})
+                m_interface->loadSkirmishMaps();
+                m_interface->initSkirmish();
+                m_interface->setTransitionToWithFadingOut(GAME_SETUPSKIRMISH);
+                })
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Skirmish));
 
@@ -125,7 +130,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_game.initiateFadingOut();})
+            .onClick([this](){m_interface->initiateFadingOut();})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Multiplayer));
 
@@ -139,7 +144,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_game.initiateFadingOut();})
+            .onClick([this](){m_interface->initiateFadingOut();})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Load));
 
@@ -153,7 +158,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_game.setNextStateToTransitionTo(GAME_NEW_MAP_EDITOR);})
+            .onClick([this](){m_interface->setTransitionToWithFadingOut(GAME_NEW_MAP_EDITOR);})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Editor));
 
@@ -167,7 +172,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_game.setNextStateToTransitionTo(GAME_OPTIONS);})
+            .onClick([this](){m_interface->setNextStateToTransitionTo(GAME_OPTIONS);})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Options));
 
@@ -181,7 +186,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_game.initiateFadingOut();})
+            .onClick([this](){m_interface->initiateFadingOut();})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Hof));
 
@@ -197,7 +202,7 @@ cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_settings->setPlaying(false);
-                m_game.initiateFadingOut();})
+                m_interface->initiateFadingOut();})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Exit));
 
@@ -242,12 +247,12 @@ void cMainMenuState::draw() const
     m_textDrawer->drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
 
     if (m_settings->isDebugMode()) {
-        auto m_mouse = m_game.getMouse();
+        auto m_mouse = m_interface->getMouse();
         m_textDrawer->drawText(0, 0, std::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
     }
 
     // MOUSE
-    m_game.getMouse()->draw();
+    m_interface->drawCursor();
 
 }
 
@@ -271,8 +276,8 @@ void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
         if (event.isAction(eKeyAction::TOGGLE_MUSIC) || event.hasKey(SDL_SCANCODE_MUTE)) {
             auto m_soundPlayer = m_ctx->getSoundPlayer();
-            game.m_gameSettings->setPlayMusic(!game.m_gameSettings->isPlayMusic());
-            if (!game.m_gameSettings->isPlayMusic()) {
+            m_settings->setPlayMusic(!m_settings->isPlayMusic());
+            if (!m_settings->isPlayMusic()) {
                 m_soundPlayer->stopMusic();
             }
         }

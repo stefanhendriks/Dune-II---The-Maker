@@ -4,6 +4,7 @@
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
+#include "game/cGameInterface.h"
 
 GameContext::~GameContext() {
 }
@@ -84,4 +85,18 @@ SDLDrawer *GameContext::getSDLDrawer() const {
         return m_SDLDrawer.get();
     }
     throw std::runtime_error("SDLDrawer not defined");
+}
+
+void GameContext::setGameInterface(std::unique_ptr<cGameInterface> gameInterface) {
+    if (!gameInterface) {
+        throw std::runtime_error("cGameInterface is not initialized!");
+    }
+    m_gameInterface = std::move(gameInterface);
+}
+
+cGameInterface *GameContext::getGameInterface() const {
+    if (m_gameInterface) {
+        return m_gameInterface.get();
+    }
+    throw std::runtime_error("cGameInterface not defined");
 }
