@@ -2,8 +2,7 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "gui/GuiButton.h"
-#include "gui/GuiWindow.h"
+#include "utils/cRectangle.h"
 #include "sMouseEvent.h"
 
 #include <memory>
@@ -12,6 +11,8 @@ class Texture;
 class cGame;
 class cTextDrawer;
 class cGameInterface;
+class GuiButton;
+class GuiWindow;
 
 class cMainMenuState : public cGameState {
 public:
