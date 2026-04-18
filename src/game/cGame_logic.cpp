@@ -770,6 +770,7 @@ bool cGame::setupGame()
     //     delete game.m_drawManager;
     // }
     game.m_drawManager = new cDrawManager(ctx.get(), humanPlayer);
+    //game.m_drawManager->reset();
 
     // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
     m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
@@ -1017,8 +1018,9 @@ void cGame::setState(int newState)
                 else {
                     newStatePtr = new cGamePlaying(*this, m_services.get());
                     // re-create drawManager
-                    delete game.m_drawManager;
-                    game.m_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
+                    // delete game.m_drawManager;
+                    //game.m_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
+                    game.m_drawManager->reset();
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
