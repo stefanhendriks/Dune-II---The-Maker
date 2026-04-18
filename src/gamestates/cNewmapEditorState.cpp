@@ -5,6 +5,7 @@
 #include "gui/GuiWindow.h"
 #include "gui/GuiLabel.hpp"
 #include "gui/GuiTextInput.h"
+#include "gui/GuiCycleButton.h"
 #include "context/GameContext.hpp"
 #include "drawers/cTextDrawer.h"
 #include "map/cPreviewMaps.h"
