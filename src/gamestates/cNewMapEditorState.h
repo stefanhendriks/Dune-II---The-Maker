@@ -9,10 +9,9 @@
 
 #include <memory>
 
-struct SDL_Surface;
 class cGame;
-class GameContext;
 class cTextDrawer;
+class cGameInterface;
 
 class cNewMapEditorState : public cGameState {
 public:
@@ -30,6 +29,7 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
     void constructWindow();
     GuiTextInput* m_inputName = nullptr;

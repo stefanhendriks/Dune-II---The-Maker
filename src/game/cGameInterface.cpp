@@ -67,6 +67,11 @@ void cGameInterface::initSkirmish() const
     m_igame->initSkirmish();
 }
 
+void cGameInterface::loadMapFromEditor(s_PreviewMap *map) const
+{
+    m_igame->loadMapFromEditor(map);
+}
+
 void cGameInterface::drawCursor() const
 {
     m_igame->getMouse()->draw();

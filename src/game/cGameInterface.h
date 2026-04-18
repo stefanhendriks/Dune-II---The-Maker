@@ -7,6 +7,7 @@ class cDrawManager;
 class cMapCamera;
 class cReinforcements;
 struct s_GameEvent;
+struct s_PreviewMap;
 
 class cGameInterface
 {
@@ -33,6 +34,7 @@ public:
     void setNextStateToTransitionTo(int newState) const;
     void loadSkirmishMaps() const;
     void initSkirmish() const;
+    void loadMapFromEditor(s_PreviewMap *map) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
 
     void checkMissionWinOrFail() const;

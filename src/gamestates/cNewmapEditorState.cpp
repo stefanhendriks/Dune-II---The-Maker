@@ -1,6 +1,5 @@
 #include "gamestates/cNewMapEditorState.h"
-
-#include "game/cGame.h"
+#include "game/cGameInterface.h"
 
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
@@ -16,10 +15,12 @@ cNewMapEditorState::cNewMapEditorState(cGame &theGame, sGameServices* services)
     : cGameState(theGame, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
+    m_interface(m_ctx->getGameInterface()),
     m_guiWindow(nullptr)
 {
     assert(m_textDrawer != nullptr);
     assert(m_settings != nullptr);
+    assert(m_interface != nullptr);
     constructWindow();
 }
 
@@ -156,8 +157,8 @@ void cNewMapEditorState::constructWindow()
         .withTextAlign(GuiTextAlignHorizontal::CENTER)
         .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this]() {
-            m_game.setNextStateToTransitionTo(GAME_MENU);
-            m_game.initiateFadingOut();})
+            m_interface->setTransitionToWithFadingOut(GAME_MENU);
+        })
         .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Quit));
 
@@ -179,8 +180,8 @@ void cNewMapEditorState::constructWindow()
             int width = m_cycleWidth->getSelectedValue();
             int height = m_cycleHeight->getSelectedValue();
             s_PreviewMap newMap = cPreviewMaps::createEmptyMap(name, author, desc, width, height);
-            m_game.loadMapFromEditor(&newMap);
-            m_game.initiateFadingOut();
+            m_interface->loadMapFromEditor(&newMap);
+            m_interface->initiateFadingOut();
             })
         .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));
@@ -199,9 +200,7 @@ void cNewMapEditorState::thinkFast()
 void cNewMapEditorState::draw() const
 {
     m_guiWindow->draw();
-
-    // MOUSE
-    m_game.getMouse()->draw();
+    m_interface->drawCursor();
 }
 
 void cNewMapEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
