@@ -3,16 +3,14 @@
 #include "gui/GuiBar.h"
 #include "gui/GuiStateButton.h"
 #include "gui/GuiButtonGroup.h"
-#include "game/cGame.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-#include "context/GraphicsContext.hpp"
 #include "game/cGameInterface.h"
 #include "map/cPreviewMaps.h"
 #include "data/gfxeditor.h"
-#include <SDL2/SDL.h>
+
 #include <cassert>
 #include <iostream>
 #include <fstream>
