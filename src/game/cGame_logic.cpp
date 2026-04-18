@@ -927,6 +927,25 @@ void cGame::setState(int newState)
                     pState->refresh(); // rebuilds UI windows, but keeps background
                 }
             }
+            else if (newState == GAME_PLAYING) {
+                    game.m_drawManager->reset();
+                    // evaluate all players, so we have initial 'alive' values set properly
+                    for (int i = 1; i < MAX_PLAYERS; i++) {
+                        cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
+                        player.evaluateStillAlive();
+                    }
+                    m_gameObjectsContext->getParticles().reset();
+                    // in-between solution until we have a proper combat state object
+                    game.m_drawManager->init();
+
+                    // handle update
+                    s_GameEvent event {
+                        .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+                    };
+                    // the game is about to begin!
+                    game.onNotifyGameEvent(event);
+                    m_timeManager->startTimer();
+            }
 
             m_currentState = existingStatePtr;
         }
