@@ -1,18 +1,21 @@
 #include "cMainMenuState.h"
+#include "controls/cMouse.h"
 
+#include "gui/GuiButton.h"
+#include "gui/GuiWindow.h"
 #include "controls/eKeyAction.h"
-#include "game/cGame.h"
+//#include "game/cGame.h"
 #include "config.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-#include "context/GraphicsContext.hpp"
+//#include "context/GraphicsContext.hpp"
 #include "utils/cSoundPlayer.h"
 #include "game/cGameInterface.h"
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL_scancode.h>
 #include <format>
 #include <cassert>
 
