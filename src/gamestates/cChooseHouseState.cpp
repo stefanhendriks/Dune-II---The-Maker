@@ -1,9 +1,7 @@
 #include "include/definitions.h"
-// #include "controls/cMouse.h"
 #include "gamestates/cChooseHouseState.h"
 #include "game/cGameSettings.h"
 #include "controls/eKeyAction.h"
-// #include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -69,13 +67,10 @@ cChooseHouseState::~cChooseHouseState()
 
 void cChooseHouseState::thinkFast()
 {
-
 }
 
 void cChooseHouseState::draw() const
 {
-    // cMouse *mouse = m_interface->getMouse();
-
     // Render the planet Dune a bit downward
     m_renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
 
@@ -92,7 +87,6 @@ void cChooseHouseState::draw() const
     m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " BACK");
 
     // MOUSE
-    // mouse->draw();
     m_interface->drawCursor();
 }
 
@@ -120,29 +114,15 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
         m_interface->prepareMentatToTellAboutHouse(ATREIDES);
-        // m_game.prepareMentatToTellAboutHouse(ATREIDES);
-        // m_game.playSound(SOUND_ATREIDES);
-        // m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        // m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(&houseOrdos)) {
         m_interface->prepareMentatToTellAboutHouse(ORDOS);
-        // m_game.prepareMentatToTellAboutHouse(ORDOS);
-        // m_game.playSound(SOUND_ORDOS);
-        // m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        // m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
         m_interface->prepareMentatToTellAboutHouse(HARKONNEN);
-        // m_game.prepareMentatToTellAboutHouse(HARKONNEN);
-        // m_game.playSound(SOUND_HARKONNEN);
-        // m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        // m_game.initiateFadingOut();
     }
     else if (event.coords.isWithinRectangle(backButtonRect)) {
         m_interface->setTransitionToWithFadingOut(GAME_MENU);
-        // m_game.setNextStateToTransitionTo(GAME_MENU);
-        // m_game.initiateFadingOut();
     }
 }
 
@@ -156,8 +136,6 @@ void cChooseHouseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
             m_interface->setTransitionToWithFadingOut(GAME_MENU);
-            // m_game.setNextStateToTransitionTo(GAME_MENU);
-            // m_game.initiateFadingOut();
         }
     }
 }

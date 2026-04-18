@@ -57,8 +57,6 @@ cCreditsState::cCreditsState(cGame &theGame, sGameServices* services) :
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_interface->setTransitionToWithFadingOut(GAME_MENU);
-                // m_game.setNextStateToTransitionTo(GAME_MENU);
-                // m_game.initiateFadingOut();
             })
             .build();
 
@@ -414,10 +412,6 @@ void cCreditsState::draw() const
     }
 
     backButton->draw();
-
-    // MOUSE
-    // m_game.getMouse()->draw();
-    // m_interface->getMouse()->draw();
     m_interface->drawCursor();
 }
 
@@ -442,7 +436,5 @@ void cCreditsState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
         m_interface->setTransitionToWithFadingOut(GAME_MENU);
-        // m_game.setNextStateToTransitionTo(GAME_MENU);
-        // m_game.initiateFadingOut();
     }
 }
