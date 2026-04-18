@@ -152,3 +152,8 @@ Texture* cGameInterface::getScreenTexture() const
 {
     return m_igame->getScreenTexture();
 }
+
+void cGameInterface::jumpToSelectYourNextConquestMission(int index) const
+{
+    m_igame->jumpToSelectYourNextConquestMission(index);
+}
