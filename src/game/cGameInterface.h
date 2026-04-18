@@ -21,6 +21,8 @@ public:
     cReinforcements* getReinforcements() const;
     void setMissionWon() const;
     void setMissionLost() const;
+    void missionInit() const;
+    void setupPlayers() const;
 
     void onNotifyGameEvent(const s_GameEvent &event) const;
 

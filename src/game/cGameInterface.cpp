@@ -102,6 +102,16 @@ void cGameInterface::setMissionLost() const
     m_igame->setMissionLost();
 }
 
+void cGameInterface::missionInit() const
+{
+    m_igame->missionInit();
+}
+
+void cGameInterface::setupPlayers() const
+{
+    m_igame->setupPlayers();
+}
+
 void cGameInterface::onNotifyGameEvent(const s_GameEvent &event) const
 {
     m_igame->onNotifyGameEvent(event);
