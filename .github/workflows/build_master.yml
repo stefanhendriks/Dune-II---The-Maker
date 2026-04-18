@@ -68,7 +68,8 @@ jobs:
             --title "Bleeding Edge - ${DATE} - ${SHORT_SHA}" \
             --notes "$NOTES" \
             2>/dev/null || true
-          gh release upload "$TAG" bin/d2tm.zip --clobber --display-name d2tm-windows.zip
+          cp bin/d2tm.zip bin/d2tm-windows.zip
+          gh release upload "$TAG" bin/d2tm-windows.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -118,7 +119,8 @@ jobs:
       - name: Upload Linux binary to bleeding edge release
         run: |
           TAG="bleeding-edge-$(git rev-parse --short HEAD)"
-          gh release upload "$TAG" bin/d2tm.zip --clobber --display-name d2tm-linux.zip
+          cp bin/d2tm.zip bin/d2tm-linux.zip
+          gh release upload "$TAG" bin/d2tm-linux.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -160,7 +162,8 @@ jobs:
       - name: Upload macOS binary to bleeding edge release
         run: |
           TAG="bleeding-edge-$(git rev-parse --short HEAD)"
-          gh release upload "$TAG" bin/d2tm.zip --clobber --display-name d2tm-macos.zip
+          cp bin/d2tm.zip bin/d2tm-macos.zip
+          gh release upload "$TAG" bin/d2tm-macos.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
