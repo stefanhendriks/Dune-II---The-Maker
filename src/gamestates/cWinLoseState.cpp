@@ -1,18 +1,12 @@
 #include "gamestates/cWinLoseState.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
-#include "config.h"
 #include "data/gfxinter.h"
-#include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
-#include "drawers/cTextDrawer.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-#include "context/GraphicsContext.hpp"
 #include "game/cGameInterface.h"
+
 #include <SDL2/SDL.h>
-#include <format>
 #include <cassert>
 
 cWinLoseState::cWinLoseState(cGame &theGame, sGameServices* services, Outcome value) : 

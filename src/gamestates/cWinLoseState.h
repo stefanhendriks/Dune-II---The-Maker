@@ -6,7 +6,6 @@
 
 class Texture;
 class cGame;
-class cTextDrawer;
 class cGameSettings;
 class cGameInterface;
 
