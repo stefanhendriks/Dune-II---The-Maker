@@ -6,6 +6,7 @@
 #include <memory>
 
 struct s_DataCampaign;
+class cMouse;
 
 class cTellHouseState : public cGameState {
 public:
@@ -24,5 +25,6 @@ public:
 private:
     std::unique_ptr<AbstractMentat> m_mentat;
     int m_house = -1;
-    s_DataCampaign* m_dataCampaign;
+    s_DataCampaign* m_dataCampaign = nullptr;
+    cMouse* m_mouse = nullptr;
 };
