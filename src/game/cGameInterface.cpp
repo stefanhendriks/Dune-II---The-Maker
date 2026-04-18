@@ -2,6 +2,7 @@
 #include "data/gfxaudio.h"
 #include "game/cGame.h"
 #include "utils/cLog.h"
+#include "include/Texture.hpp"
 #include "controls/cMouse.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "include/sGameEvent.h"
@@ -140,4 +141,14 @@ void cGameInterface::drawTextTime() const
 void cGameInterface::reduceShaking() const
 {
     m_igame->reduceShaking();
+}
+
+void cGameInterface::goingToWinLoseBrief(int winOrLoseBrief) const
+{
+    m_igame->goingToWinLoseBrief(winOrLoseBrief);
+}
+
+Texture* cGameInterface::getScreenTexture() const
+{
+    return m_igame->getScreenTexture();
 }
