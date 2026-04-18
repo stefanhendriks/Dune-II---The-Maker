@@ -68,8 +68,8 @@ jobs:
             --title "Bleeding Edge - ${DATE}" \
             --notes "$NOTES" \
             2>/dev/null || true
-          cp bin/d2tm.zip bin/d2tm-windows.zip
-          gh release upload "$TAG" bin/d2tm-windows.zip --clobber
+          cp bin/d2tm.zip bin/d2tm-windows-${SHORT_SHA}.zip
+          gh release upload "$TAG" bin/d2tm-windows-${SHORT_SHA}.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -118,9 +118,10 @@ jobs:
           zip -vr d2tm.zip . -x "*.DS_Store"
       - name: Upload Linux binary to bleeding edge release
         run: |
-          TAG="bleeding-edge-$(git rev-parse --short HEAD)"
-          cp bin/d2tm.zip bin/d2tm-linux.zip
-          gh release upload "$TAG" bin/d2tm-linux.zip --clobber
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          TAG="bleeding-edge-${SHORT_SHA}"
+          cp bin/d2tm.zip bin/d2tm-linux-${SHORT_SHA}.zip
+          gh release upload "$TAG" bin/d2tm-linux-${SHORT_SHA}.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -161,9 +162,10 @@ jobs:
           zip -vr d2tm.zip . -x "*.DS_Store"
       - name: Upload macOS binary to bleeding edge release
         run: |
-          TAG="bleeding-edge-$(git rev-parse --short HEAD)"
-          cp bin/d2tm.zip bin/d2tm-macos.zip
-          gh release upload "$TAG" bin/d2tm-macos.zip --clobber
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          TAG="bleeding-edge-${SHORT_SHA}"
+          cp bin/d2tm.zip bin/d2tm-macos-${SHORT_SHA}.zip
+          gh release upload "$TAG" bin/d2tm-macos-${SHORT_SHA}.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
