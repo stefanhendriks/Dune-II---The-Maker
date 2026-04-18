@@ -13,14 +13,15 @@
 #include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
-#include "player/cPlayers.h"
+// #include "player/cPlayers.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-#include "context/cInfoContext.h"
+// #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "context/GameContext.hpp"
+// #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
+#include "drawers/cTextDrawer.h"
 
 #include <SDL2/SDL.h>
 #include <iostream>
