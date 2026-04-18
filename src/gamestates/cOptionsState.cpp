@@ -1,7 +1,7 @@
 #include "cOptionsState.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+// #include "game/cGame.h"
+// #include "include/d2tmc.h"
 #include "config.h"
 
 #include "gui/GuiButton.h"
@@ -263,7 +263,6 @@ cOptionsState::~cOptionsState()
 
 void cOptionsState::thinkFast()
 {
-
 }
 
 void cOptionsState::draw() const
