@@ -51,5 +51,4 @@ cp resources/bin/settings.ini bin
 echo "13. Copy txt files"
 cp resources/doc/versionhistory.txt bin
 cp resources/doc/controls.txt bin
-cp resources/bin/d2tm.cfg bin
 echo "Done."
