@@ -1038,9 +1038,9 @@ void cGame::setState(int newState)
                     m_timeManager->startTimer();
                 }
             }
-            else if (newState == GAME_PLAYING) {
-                newStatePtr = new cGamePlaying(*this, m_services.get());
-            }
+            // else if (newState == GAME_PLAYING) {
+            //     newStatePtr = new cGamePlaying(*this, m_services.get());
+            // }
             else if (newState == GAME_LOSING) {
                 newStatePtr = new cWinLoseState(*this, m_services.get(), Outcome::Lose);
             }
