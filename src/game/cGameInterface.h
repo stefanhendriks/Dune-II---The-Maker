@@ -6,7 +6,7 @@ class cPlayer;
 class cDrawManager;
 class cMapCamera;
 class cReinforcements;
-class s_GameEvent;
+struct s_GameEvent;
 
 class cGameInterface
 {
