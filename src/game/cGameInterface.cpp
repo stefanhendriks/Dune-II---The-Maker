@@ -163,6 +163,16 @@ void cGameInterface::loadMapFromEditor(int iSkirmishMap) const
     m_igame->loadMapFromEditor(iSkirmishMap);
 }
 
+void cGameInterface::prepareMentatForPlayer() const
+{
+    m_igame->prepareMentatForPlayer();
+}
+
+void cGameInterface::loadScenario() const
+{
+    m_igame->loadScenario();
+}
+
 Color cGameInterface::getColorFadeSelected(int r, int g, int b) const
 {
     return m_igame->getColorFadeSelected(r, g, b);
