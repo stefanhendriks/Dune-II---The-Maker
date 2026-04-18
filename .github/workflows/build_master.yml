@@ -62,7 +62,7 @@ jobs:
           SHORT_SHA=$(git rev-parse --short HEAD)
           TAG="bleeding-edge-${SHORT_SHA}"
           DATE=$(date -u +'%Y-%m-%d %H:%M UTC')
-          NOTES=$(printf 'Automated bleeding edge build from master branch.\n\nCommit: ${{ github.sha }}\nDate: %s' "${DATE}")
+          NOTES=$(printf 'Automated bleeding edge build from master branch.\n\nCommit: %s\nDate: %s' "${SHORT_SHA}" "${DATE}")
           gh release create "$TAG" \
             --prerelease \
             --title "Bleeding Edge - ${DATE} - ${SHORT_SHA}" \
