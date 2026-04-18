@@ -8,6 +8,7 @@ class cMapCamera;
 class cReinforcements;
 struct s_GameEvent;
 struct s_PreviewMap;
+class Texture;
 
 class cGameInterface
 {
@@ -38,7 +39,8 @@ public:
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
 
     void checkMissionWinOrFail() const;
-
+    void goingToWinLoseBrief(int winOrLoseBrief) const;
+    Texture* getScreenTexture() const;
     void drawTextFps() const;
     void drawTextTime() const;
 
