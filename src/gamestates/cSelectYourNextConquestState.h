@@ -8,6 +8,7 @@
 class cGame;
 class GuiButton;
 struct SDL_Surface;
+class cMouse;
 
 class Texture;
 class Graphics;
@@ -89,9 +90,10 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
-    s_DataCampaign* m_dataCompaign;
-    Graphics* m_gfxworld;
-    Graphics* m_gfxinter;
+    s_DataCampaign* m_dataCompaign = nullptr;
+    Graphics* m_gfxworld = nullptr;
+    Graphics* m_gfxinter = nullptr;
+    cMouse* m_mouse = nullptr;
     eRegionState state;
 
     eRegionSceneState regionSceneState;
