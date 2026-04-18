@@ -19,6 +19,8 @@
 #include "context/GameContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/GameContext.hpp"
+#include "game/cGameInterface.h"
 
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -50,10 +52,12 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
 
 cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, sGameServices* services, s_DataCampaign* dataCompaign) :
     cGameState(theGame, services),
+    m_settings(services->settings),
+    m_interface(m_ctx->getGameInterface()),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_dataCompaign(dataCompaign),
     m_gfxworld(m_ctx->getGraphicsContext()->gfxworld.get()),
-    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
-    m_dataCompaign(dataCompaign)
+    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
     assert(services != nullptr);
     assert(m_dataCompaign != nullptr);
