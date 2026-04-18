@@ -1,18 +1,13 @@
 #include "gamestates/cTellHouseState.h"
-#include "game/cGame.h"
-#include "mentat/AtreidesMentat.h"
-#include "mentat/HarkonnenMentat.h"
-#include "mentat/OrdosMentat.h"
 #include "mentat/BeneMentat.h"
 #include "utils/ini.h"
-#include "include/d2tmc.h"
+#include "controls/cMouse.h"
 #include "include/iniDefine.h"
 #include "include/sDataCampaign.h"
 #include "data/gfxdata.h"
-#include "utils/RNG.hpp"
-#include "player/cPlayer.h"
 #include "game/cGameInterface.h"
 #include "context/GameContext.hpp"
+#include "include/definitions.h"
 
 #include <cassert>
 
