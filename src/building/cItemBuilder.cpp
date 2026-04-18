@@ -325,7 +325,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                     break;
                             }
                             // change cell
-                            cPoint::split(x, y) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(x, y);
+                            cPoint::split(x, y) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(x, y);
 
                             iCll = game.m_gameObjectsContext->getMap().getGeometry().makeCell(x, y);
                         }
