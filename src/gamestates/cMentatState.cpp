@@ -4,7 +4,6 @@
 #include "mentat/OrdosMentat.h"
 #include "mentat/BeneMentat.h"
 #include "context/GameContext.hpp"
-// #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
@@ -13,11 +12,9 @@
 #include "include/iniDefine.h"
 #include "utils/RNG.hpp"
 #include "player/cPlayer.h"
-// #include "player/cPlayers.h"
 #include "data/gfxdata.h"
 #include "include/sDataCampaign.h"
 
-// #include <iostream>
 #include <cassert>
 
 cMentatState::cMentatState(cGame &game, sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign)
@@ -48,13 +45,8 @@ eGameStateType cMentatState::getType()
 void cMentatState::prepareMentat(int house)
 {
     auto& humanPlayer = m_objets->getPlayer(HUMAN);
-    // int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
-    //std::cout << "house I " << house << std::endl;
     house = (m_house != -1) ? m_house : humanPlayer.getHouse();
-    //std::cout << "house After " << house << std::endl;
     bool allowMissionSelect = !m_settings->isSkirmish();
-    // allowMissionSelect ? std::cout << "true"<<std::endl : std::cout << "False" <<std::endl;
-    //std::cout << "allowMissionSelect " << allowMissionSelect <<std::endl ;
     switch (m_mode) {
         case MentatMode::Briefing:
             if (house == ATREIDES)
@@ -67,7 +59,7 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
             m_interface->missionInit();
             m_interface->setupPlayers();
-            cIni::loadScenario(/*house, m_dataCampaign->region,*/ m_mentat.get(), m_interface->getReinforcements(),m_dataCampaign);
+            cIni::loadScenario(m_mentat.get(), m_interface->getReinforcements(),m_dataCampaign);
             cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat.get());
             break;
         case MentatMode::WinBrief:
@@ -131,7 +123,7 @@ void cMentatState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cMentatState::loadScenario(cReinforcements *reinforcements)
 {
-    cIni::loadScenario(/*m_dataCampaign->housePlayer, m_dataCampaign->region,*/ m_mentat.get(), reinforcements, m_dataCampaign);
+    cIni::loadScenario(m_mentat.get(), reinforcements, m_dataCampaign);
 }
 
 void cMentatState::loadBriefing(int iScenarioFind, int iSectionFind)
