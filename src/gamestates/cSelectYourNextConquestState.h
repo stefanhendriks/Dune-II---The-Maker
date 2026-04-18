@@ -2,8 +2,6 @@
 
 #include "definitions.h"
 #include "cGameState.h"
-// #include "definitions.h"
-#include "drawers/cTextDrawer.h"
 
 class cGame;
 class GuiButton;
@@ -16,6 +14,7 @@ class GameContext;
 class SDLDrawer;
 class cGameInterface;
 class cGameSettings;
+class cTextDrawer;
 
 struct s_DataCampaign;
 enum eRegionState {
