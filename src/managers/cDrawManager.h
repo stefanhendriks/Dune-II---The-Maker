@@ -25,6 +25,7 @@ class GameContext;
 class Graphics;
 class SDLDrawer;
 class cSideBarDrawer;
+class GameContext;
 
 /**
  * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing
@@ -119,11 +120,12 @@ private:
     Texture *m_btnOptions;
     bool m_drawToolTip = false;
     // TODO: bullet/projectile drawer
-    cPlayer *m_player;
+    cPlayer *m_player = nullptr;
+    GameContext *m_ctx = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
-    SDLDrawer* m_renderDrawer;
-    Graphics* m_gfxinter;
-    Graphics* m_gfxdata;
+    SDLDrawer* m_renderDrawer = nullptr;
+    Graphics* m_gfxinter = nullptr;
+    Graphics* m_gfxdata = nullptr;
     cMouseDrawer* m_mouseDrawer = nullptr;
 
     void onKeyDown(const cKeyboardEvent &event);
