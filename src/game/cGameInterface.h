@@ -31,6 +31,8 @@ public:
     void onNotifyGameEvent(const s_GameEvent &event) const;
 
     void prepareMentatToTellAboutHouse(int house) const;
+    void prepareMentatForPlayer() const;
+    void loadScenario() const;
 
     void setTransitionToWithFadingOut(int newState) const;
     void initiateFadingOut() const;
