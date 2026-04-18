@@ -11,6 +11,8 @@ class cGame;
 class GameContext;
 class cTextDrawer;
 class GuiWindow;
+class cGameSettings;
+class cGameInterface;
 
 class cSelectMissionState : public cGameState {
 public:
@@ -27,6 +29,7 @@ public:
 
 private:
     cTextDrawer *m_textDrawer = nullptr;
-
+    cGameSettings* m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
     std::unique_ptr<GuiWindow> gui_window;
 };
