@@ -42,14 +42,25 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     assert(m_renderDrawer != nullptr);
     assert(m_gfxdata != nullptr);
     assert(m_gfxinter != nullptr);
+    this->reset();
+}
+
+void cDrawManager::reset()
+{
+    m_sidebarColor = Color{214, 149, 20,255};
+    m_sidebarDrawer = std::make_unique<cSideBarDrawer>(m_ctx, m_player);
+    m_creditsDrawer = std::make_unique<CreditsDrawer>(m_ctx, m_player);
+    m_orderDrawer = std::make_unique<cOrderDrawer>(m_ctx, m_player);
+    m_mapDrawer = std::make_unique<cMapDrawer>(m_ctx, &game.m_gameObjectsContext->getMap(), m_player, game.m_mapCamera);
+    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(m_ctx, &game.m_gameObjectsContext->getMap(), m_player, game.m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
-    m_messageDrawer = std::make_unique<cMessageDrawer>(ctx);
-    m_placeitDrawer = std::make_unique<cPlaceItDrawer>(ctx,thePlayer);
-    m_structureDrawer = std::make_unique<cStructureDrawer>(ctx);
+    m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx);
+    m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx,m_player);
+    m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx);
     m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(
-        thePlayer, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
+        m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );
-    m_mouseDrawer = new cMouseDrawer(thePlayer, ctx->getTextContext()->getSmallTextDrawer());
+    m_mouseDrawer = new cMouseDrawer(m_player, m_ctx->getTextContext()->getSmallTextDrawer());
 }
 
 cDrawManager::~cDrawManager()
