@@ -174,17 +174,13 @@ jobs:
     name: Cleanup old bleeding edge releases
     runs-on: ubuntu-latest
     steps:
-      - name: Delete bleeding edge releases older than 90 days
+      - name: Keep only the last 10 bleeding edge releases
         run: |
-          cutoff=$(date -u -d '90 days ago' +%s)
           gh release list --repo ${{ github.repository }} --limit 200 --json tagName,publishedAt \
-            | jq -r '.[] | select(.tagName | startswith("bleeding-edge-")) | [.tagName, .publishedAt] | @tsv' \
-            | while IFS=$'\t' read -r tag published; do
-                epoch=$(date -u -d "$published" +%s)
-                if [ "$epoch" -lt "$cutoff" ]; then
-                  echo "Deleting old release: $tag"
-                  gh release delete "$tag" --cleanup-tag --yes
-                fi
+            | jq -r '[.[] | select(.tagName | startswith("bleeding-edge-"))] | sort_by(.publishedAt) | reverse | .[10:] | .[].tagName' \
+            | while read -r tag; do
+                echo "Deleting old bleeding edge release: $tag"
+                gh release delete "$tag" --cleanup-tag --yes
               done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
