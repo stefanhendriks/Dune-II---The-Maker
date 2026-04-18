@@ -27,7 +27,10 @@ public:
     void prepareMentatToTellAboutHouse(int house) const;
 
     void setTransitionToWithFadingOut(int newState) const;
+    void initiateFadingOut() const;
     void setNextStateToTransitionTo(int newState) const;
+    void loadSkirmishMaps() const;
+    void initSkirmish() const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
 
     void checkMissionWinOrFail() const;
