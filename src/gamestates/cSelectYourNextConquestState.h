@@ -15,6 +15,7 @@ class SDLDrawer;
 class cGameInterface;
 class cGameSettings;
 class cTextDrawer;
+class cGameObjectContext;
 
 struct s_DataCampaign;
 enum eRegionState {
@@ -89,6 +90,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
+    cGameObjectContext* m_objects = nullptr;
     s_DataCampaign* m_dataCompaign = nullptr;
     Graphics* m_gfxworld = nullptr;
     Graphics* m_gfxinter = nullptr;
