@@ -2916,6 +2916,10 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
                     }
                 }
             }
+            else if (combat.iAttackStructure > -1 || combat.iAttackCell > -1) {
+                // structure/cell targets also need to resume attack mode after each chase step
+                setAction(eActionType::ATTACK_CHASE);
+            }
         }
 
         // movement to cell complete
