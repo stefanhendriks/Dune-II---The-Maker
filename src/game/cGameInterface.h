@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils/Color.hpp"
+
 class cGame;
 class cMouse;
 class cPlayer;
@@ -38,7 +40,7 @@ public:
     void loadMapFromEditor(s_PreviewMap *map) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
     void jumpToSelectYourNextConquestMission(int index) const;
-
+    void loadMapFromEditor(int iSkirmishMap) const;
     void checkMissionWinOrFail() const;
     void goingToWinLoseBrief(int winOrLoseBrief) const;
     Texture* getScreenTexture() const;
@@ -46,6 +48,10 @@ public:
     void drawTextTime() const;
 
     void reduceShaking() const;
+    Color getColorFadeSelected(int r, int g, int b) const;
+    void setWinFlags(int value) const;
+    void setLoseFlags(int value) const;
+    bool playMusicByType(int iType) const;
 private:
     cGame* m_igame = nullptr;
 };

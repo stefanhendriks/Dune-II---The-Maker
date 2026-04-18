@@ -157,3 +157,28 @@ void cGameInterface::jumpToSelectYourNextConquestMission(int index) const
 {
     m_igame->jumpToSelectYourNextConquestMission(index);
 }
+
+void cGameInterface::loadMapFromEditor(int iSkirmishMap) const
+{
+    m_igame->loadMapFromEditor(iSkirmishMap);
+}
+
+Color cGameInterface::getColorFadeSelected(int r, int g, int b) const
+{
+    return m_igame->getColorFadeSelected(r, g, b);
+}
+
+void cGameInterface::setWinFlags(int value) const
+{
+    m_igame->setWinFlags(value);
+}
+
+void cGameInterface::setLoseFlags(int value) const
+{
+    m_igame->setLoseFlags(value);
+}
+
+bool cGameInterface::playMusicByType(int iType) const
+{
+    return m_igame->playMusicByType(iType);
+}
