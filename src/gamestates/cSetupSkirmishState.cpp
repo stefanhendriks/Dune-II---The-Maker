@@ -292,8 +292,8 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, s
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
-                    m_game.loadMapFromEditor(iSkirmishMap);
-                    m_game.initiateFadingOut();
+                    m_interface->loadMapFromEditor(iSkirmishMap);
+                    m_interface->initiateFadingOut();
                 }
             })
             .build();
@@ -446,8 +446,8 @@ void cSetupSkirmishState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, c
 Color cSetupSkirmishState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
 {
     if (rect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-        Color colorSelectedRedFade = m_game.getColorFadeSelected(255, 0, 0);
-        Color colorDisabledFade = m_game.getColorFadeSelected(128, 128, 128);
+        Color colorSelectedRedFade = m_interface->getColorFadeSelected(255, 0, 0);
+        Color colorDisabledFade = m_interface->getColorFadeSelected(128, 128, 128);
         return sSkirmishPlayer.bPlaying ? colorSelectedRedFade : colorDisabledFade;
     }
 
@@ -574,7 +574,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     // this needs to be before setupPlayers :/
     m_dataCampaign->mission = techLevel;
 
-    m_game.setupPlayers();
+    m_interface->setupPlayers();
 
     // Starting skirmish mode
     m_settings->setSkirmish(true);
@@ -588,14 +588,13 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         iStartPositions.push_back(startPosition);
     }
 
-
     startCellsOnSkirmishMap = iStartPositions.size();
 
     // REGENERATE MAP DATA FROM INFO
-    game.m_gameObjectsContext->getMap().init(selectedMap.width, selectedMap.height);
+    m_objects->getMap().init(selectedMap.width, selectedMap.height);
 
-    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
-    for (int c = 0; c < game.m_gameObjectsContext->getMap().getMaxCells(); c++) {
+    auto mapEditor = cMapEditor(m_objects->getMap());
+    for (int c = 0; c < m_objects->getMap().getMaxCells(); c++) {
         mapEditor.createCell(c, selectedMap.terrainType[c], 0);
     }
     mapEditor.smoothMap();
@@ -638,7 +637,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         if (playableFaction) {
             if (!sSkirmishPlayer.bPlaying) {
                 // make sure it is a brain dead AI...
-                cPlayer &cPlayer = game.m_gameObjectsContext->getPlayer(p);
+                cPlayer &cPlayer = m_objects->getPlayer(p);
                 cPlayer.init(p, nullptr);
                 continue;
             }
@@ -664,7 +663,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                             houseInUse = true;
                         }
 
-                        if (game.m_gameObjectsContext->getPlayer(pl).getHouse() == iHouse) {
+                        if (m_objects->getPlayer(pl).getHouse() == iHouse) {
                             // already in use by a already-setup player
                             houseInUse = true;
                         }
@@ -722,7 +721,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
         // Set map position
         if (p == HUMAN) {
-            game.m_mapCamera->centerAndJumpViewPortToCell(pPlayer.getFocusCell());
+            m_interface->getMapCamera()->centerAndJumpViewPortToCell(pPlayer.getFocusCell());
         }
 
         // create constyard
@@ -754,7 +753,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         int iType = RNG::rnd(12);
 
         for (int p = 0; p < MAX_PLAYERS; p++) {
-            cPlayer &pPlayer = game.m_gameObjectsContext->getPlayer(p);
+            cPlayer &pPlayer = m_objects->getPlayer(p);
             s_SkirmishPlayer &pSkirmishPlayer = skirmishPlayer[p];
 
             if (!pSkirmishPlayer.bPlaying) continue; // skip non playing players
@@ -767,7 +766,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
             int minRange = 3;
             int maxRange = 12;
-            int cell = game.m_gameObjectsContext->getMap().getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
+            int cell = m_objects->getMap().getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
                        minRange,
                        maxRange,
                        iPlayerUnitType);
@@ -784,7 +783,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        cPlayer &player = game.m_gameObjectsContext->getPlayer(p);
+        cPlayer &player = m_objects->getPlayer(p);
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
         if (p == HUMAN) {
             player.setTeam(sSkirmishPlayer.team);
@@ -802,33 +801,33 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        cPlayer &player = game.m_gameObjectsContext->getPlayer(p);
+        cPlayer &player = m_objects->getPlayer(p);
         if (player.getHouse() == ATREIDES) {
-            game.m_gameObjectsContext->getPlayer(AI_CPU5).setTeam(player.getTeam());
+            m_objects->getPlayer(AI_CPU5).setTeam(player.getTeam());
         }
     }
 
 
     // default flags (destroy everyone but me/my team)
-    m_game.setWinFlags(3);
-    m_game.setLoseFlags(1);
+    m_interface->setWinFlags(3);
+    m_interface->setLoseFlags(1);
 
-    m_game.playMusicByType(MUSIC_PEACE);
+    m_interface->playMusicByType(MUSIC_PEACE);
 
-    game.m_gameObjectsContext->getMap().setAutoSpawnSpiceBlooms(spawnBlooms);
-    game.m_gameObjectsContext->getMap().setAutoDetonateSpiceBlooms(detonateBlooms);
-    game.m_gameObjectsContext->getMap().setDesiredAmountOfWorms(spawnWorms);
+    m_objects->getMap().setAutoSpawnSpiceBlooms(spawnBlooms);
+    m_objects->getMap().setAutoDetonateSpiceBlooms(detonateBlooms);
+    m_objects->getMap().setDesiredAmountOfWorms(spawnWorms);
 
     // spawn requested amount of worms at start
     if (spawnWorms > 0) {
         int worms = spawnWorms;
         int minDistance = worms * 12; // so on 64x64 maps this still could work
         int maxDistance = worms * 32; // 128 / 4
-        int wormCell = game.m_gameObjectsContext->getMap().getRandomCell();
+        int wormCell = m_objects->getMap().getRandomCell();
         int failures = 0;
         logbook(std::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
         while (worms > 0) {
-            int cell = game.m_gameObjectsContext->getMap().getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
+            int cell = m_objects->getMap().getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
                        SANDWORM);
             if (cell < 0) {
                 // retry
@@ -1311,8 +1310,7 @@ void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_game.setNextStateToTransitionTo(GAME_MENU);
-            m_game.initiateFadingOut();
+            m_interface->setTransitionToWithFadingOut(GAME_MENU);
         }
         if (event.isAction(eKeyAction::SCROLL_LEFT)) {
             previousFunction();
