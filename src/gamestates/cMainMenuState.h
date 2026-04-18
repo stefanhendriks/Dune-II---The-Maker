@@ -11,6 +11,7 @@
 class Texture;
 class cGame;
 class cTextDrawer;
+class cGameInterface;
 
 class cMainMenuState : public cGameState {
 public:
@@ -28,6 +29,7 @@ public:
 private:
     cGameSettings * m_settings = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
+    cGameInterface* m_interface = nullptr;    
 
     int logoX;
     int logoY;
