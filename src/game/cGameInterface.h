@@ -37,6 +37,7 @@ public:
     void initSkirmish() const;
     void loadMapFromEditor(s_PreviewMap *map) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
+    void jumpToSelectYourNextConquestMission(int index) const;
 
     void checkMissionWinOrFail() const;
     void goingToWinLoseBrief(int winOrLoseBrief) const;

@@ -6,18 +6,23 @@
 #include "gui/GuiTheme.hpp"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
+#include "game/cGameInterface.h"
+#include "game/cGameSettings.h"
+
 #include <cassert>
 
 cSelectMissionState::cSelectMissionState(cGame &theGame, sGameServices* services, int prevState) :
     cGameState(theGame, services),
-    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_settings(services->settings),
+    m_interface(m_ctx->getGameInterface())
 {
     assert(services != nullptr);
-    int margin = m_game.m_gameSettings->getScreenH() * 0.3;
+    int margin = m_settings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
-    int mainMenuWidth = m_game.m_gameSettings->getScreenW() - (margin * 2);
-    int mainMenuHeight = m_game.m_gameSettings->getScreenH() - (margin * 2);
+    int mainMenuWidth = m_settings->getScreenW() - (margin * 2);
+    int mainMenuHeight = m_settings->getScreenH() - (margin * 2);
 
     margin = 4;
     int buttonHeight = m_textDrawer->getFontHeight() + margin;
@@ -44,9 +49,9 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, sGameServices* services
             .withRenderer(m_renderDrawer)    
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,i]() {
-                m_game.jumpToSelectYourNextConquestMission(i);
-                m_game.setNextStateToTransitionTo(GAME_REGION);
-                m_game.initiateFadingOut();})
+                m_interface->jumpToSelectYourNextConquestMission(i);
+                m_interface->setTransitionToWithFadingOut(GAME_REGION);
+            })
             .build();   
         gui_window->addGuiObject(std::move(btnMission));
 
@@ -64,7 +69,7 @@ cSelectMissionState::cSelectMissionState(cGame &theGame, sGameServices* services
             .withRenderer(m_renderDrawer)    
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,prevState]() {
-                m_game.setNextStateToTransitionTo(prevState);
+                m_interface->setNextStateToTransitionTo(prevState);
             })
             .build();  
     gui_window->addGuiObject(std::move(gui_btn_Back));
@@ -86,7 +91,7 @@ void cSelectMissionState::draw() const
     gui_window->draw();
 
     // MOUSE
-    m_game.getMouse()->draw();
+    m_interface->drawCursor();
 }
 
 void cSelectMissionState::onNotifyMouseEvent(const s_MouseEvent &event)
