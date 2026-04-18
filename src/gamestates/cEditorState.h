@@ -16,6 +16,7 @@ struct s_PreviewMap;
 class GuiBar;
 class GuiButtonGroup;
 class cTextDrawer;
+class cGameInterface;
 
 class cEditorState : public cGameState {
 public:
@@ -34,6 +35,7 @@ private:
     Graphics *m_gfxdata = nullptr;
     Graphics *m_gfxeditor = nullptr;
     cGameSettings *m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
     enum class ZoomDirection : char {
         zoomIn,
         zoomOut
