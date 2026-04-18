@@ -86,6 +86,7 @@ public:
 
     bool hasMessage();
 
+    void reset();
 protected:
     void drawSidebar();
 
