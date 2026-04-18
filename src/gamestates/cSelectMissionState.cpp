@@ -1,6 +1,6 @@
 #include "cSelectMissionState.h"
 #include "context/GameContext.hpp"
-#include "game/cGame.h"
+//#include "game/cGame.h"
 #include "config.h"
 #include "drawers/cTextDrawer.h"
 #include "gui/GuiTheme.hpp"
