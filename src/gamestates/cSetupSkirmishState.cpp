@@ -23,6 +23,7 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameInterface.h"
 #include "include/sDataCampaign.h"
 #include "gameobjects/units/cUnits.h"
 
@@ -44,12 +45,16 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, s
     cGameState(game, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
+    m_interface(m_ctx->getGameInterface()),
+    m_objects(services->objects),
     m_dataCampaign(dataCompaign),
     m_previewMaps(std::move(previewMaps)),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
     assert(m_textDrawer != nullptr);
     assert(m_settings != nullptr);
+    assert(m_interface != nullptr);
+    assert(m_objects != nullptr);
     assert(m_dataCampaign != nullptr);
     assert(m_gfxinter != nullptr);
     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -76,7 +81,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, s
     randomMapGenerator = std::make_unique<cRandomMapGenerator>();
     generateRandomMap();
 
-    m_mouse = m_game.getMouse();
+    m_mouse = m_interface->getMouse();
 
     spawnWorms = 2;
     techLevel = 9;
@@ -248,8 +253,7 @@ cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, s
             .withTheme(theme)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_game.setNextStateToTransitionTo(GAME_MENU);
-                m_game.initiateFadingOut();
+                m_interface->setTransitionToWithFadingOut(GAME_MENU);
             })
             .build();
 
@@ -527,7 +531,6 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
                             colorDarkerYellow, std::format("{}", m_previewMaps->getMapSize(iSkirmishMap)));
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+30,
                             Color::White, std::format("{}", selectedMap.description));
-        
     }
 }
 
@@ -849,9 +852,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     game.m_drawManager->missionInit();
-
-    m_game.initiateFadingOut();
-    m_game.setNextStateToTransitionTo(GAME_PLAYING); // this deletes the current state object
+    m_interface->setTransitionToWithFadingOut(GAME_PLAYING);
 }
 
 eGameStateType cSetupSkirmishState::getType()
