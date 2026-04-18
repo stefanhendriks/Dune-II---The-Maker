@@ -2,16 +2,18 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "gui/GuiWindow.h"
-#include "gui/GuiCycleButton.h"
-#include "gui/GuiTextInput.h"
 #include "sMouseEvent.h"
 
 #include <memory>
+#include <vector>
 
 class cGame;
 class cTextDrawer;
 class cGameInterface;
+class GuiWindow;
+class GuiCycleButton;
+class GuiTextInput;
+
 
 class cNewMapEditorState : public cGameState {
 public:
