@@ -880,6 +880,10 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
 
 void cUnit::attackAt(int cell)
 {
+    if (!isAttackingUnit()) {
+        return;
+    }
+
     log(std::format("attackAt() : cell target is [{}]", cell));
 
     if (!game.m_gameObjectsContext->getMap().isWithinBoundaries(cell)) {
