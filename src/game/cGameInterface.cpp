@@ -47,9 +47,24 @@ void cGameInterface::setTransitionToWithFadingOut(int newState) const
         m_igame->initiateFadingOut();
 }
 
+void cGameInterface::initiateFadingOut() const
+{
+    m_igame->initiateFadingOut();
+}
+
 void cGameInterface::setNextStateToTransitionTo(int newState) const
 {
     m_igame->setNextStateToTransitionTo(newState);
+}
+
+void cGameInterface::loadSkirmishMaps() const
+{
+    m_igame->loadSkirmishMaps();
+}
+
+void cGameInterface::initSkirmish() const
+{
+    m_igame->initSkirmish();
 }
 
 void cGameInterface::drawCursor() const
