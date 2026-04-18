@@ -33,7 +33,7 @@
 
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
-#include "gameobjects/structures/cStructureFactory.h"
+// #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/particles/cParticles.h"
@@ -108,6 +108,7 @@
 
 #include "data/gfxaudio.h"
 #include "include/sGameServices.h"
+#include "game/cGameInterface.h"
 
 cGame::cGame()
 {
@@ -126,6 +127,8 @@ cGame::cGame()
     m_mapCamera = nullptr;
     m_drawManager = nullptr;
 
+    std::unique_ptr<cGameInterface> gameInterface = std::make_unique<cGameInterface>(this);
+
     m_structureUtils = std::make_unique<cStructureUtils>();
 
     // create GameContext
@@ -136,6 +139,7 @@ cGame::cGame()
     m_timeManager = timeManager.get();
     // send to GameContext
     ctx->setTimeManager(std::move(timeManager));
+    ctx->setGameInterface(std::move(gameInterface));
     // focus manager
     m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
 
@@ -158,7 +162,7 @@ cGame::cGame()
 
     m_gameObjectsContext = cGameObjectsContextCreator::create();
 
-    m_structureFactory = std::make_unique<cStructureFactory>();
+    // m_structureFactory = std::make_unique<cStructureFactory>();
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
 
@@ -766,6 +770,7 @@ bool cGame::setupGame()
     //     delete game.m_drawManager;
     // }
     game.m_drawManager = new cDrawManager(ctx.get(), humanPlayer);
+    //game.m_drawManager->reset();
 
     // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
     m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
@@ -923,6 +928,25 @@ void cGame::setState(int newState)
                     pState->refresh(); // rebuilds UI windows, but keeps background
                 }
             }
+            else if (newState == GAME_PLAYING) {
+                    game.m_drawManager->reset();
+                    // evaluate all players, so we have initial 'alive' values set properly
+                    for (int i = 1; i < MAX_PLAYERS; i++) {
+                        cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
+                        player.evaluateStillAlive();
+                    }
+                    m_gameObjectsContext->getParticles().reset();
+                    // in-between solution until we have a proper combat state object
+                    game.m_drawManager->init();
+
+                    // handle update
+                    s_GameEvent event {
+                        .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+                    };
+                    // the game is about to begin!
+                    game.onNotifyGameEvent(event);
+                    m_timeManager->startTimer();
+            }
 
             m_currentState = existingStatePtr;
         }
@@ -994,8 +1018,9 @@ void cGame::setState(int newState)
                 else {
                     newStatePtr = new cGamePlaying(*this, m_services.get());
                     // re-create drawManager
-                    delete game.m_drawManager;
-                    game.m_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
+                    // delete game.m_drawManager;
+                    //game.m_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
+                    game.m_drawManager->reset();
 
                     // evaluate all players, so we have initial 'alive' values set properly
                     for (int i = 1; i < MAX_PLAYERS; i++) {
@@ -1015,9 +1040,9 @@ void cGame::setState(int newState)
                     m_timeManager->startTimer();
                 }
             }
-            else if (newState == GAME_PLAYING) {
-                newStatePtr = new cGamePlaying(*this, m_services.get());
-            }
+            // else if (newState == GAME_PLAYING) {
+            //     newStatePtr = new cGamePlaying(*this, m_services.get());
+            // }
             else if (newState == GAME_LOSING) {
                 newStatePtr = new cWinLoseState(*this, m_services.get(), Outcome::Lose);
             }

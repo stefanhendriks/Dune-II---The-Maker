@@ -99,7 +99,7 @@ public:
     //todo: this should get moved to private, but not yet.
     std::unique_ptr<cGameSettings> m_gameSettings;
 
-    std::unique_ptr<cStructureFactory> m_structureFactory;
+    // std::unique_ptr<cStructureFactory> m_structureFactory;
     std::unique_ptr<cSideBarFactory> m_sideBarFactory;
     std::unique_ptr<cBuildingListFactory> m_buildingListFactory;
 

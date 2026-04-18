@@ -9,23 +9,18 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/projectiles/cBullets.h"
-#include "config.h"
-#include "data/gfxinter.h"
-#include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-#include "context/GraphicsContext.hpp"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
 #include <SDL2/SDL.h>
-#include <format>
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "controls/cGameControlsContext.h"
-#include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameInterface.h"
 #include "controls/eKeyAction.h"
 #include "map/cMapCamera.h"
 #include "map/cMap.h"
@@ -39,23 +34,30 @@ cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) :
 {
     assert(m_objects != nullptr);
     assert(m_settings != nullptr);
-    m_reinforcements = game.getReinforcements();
-    assert(m_reinforcements != nullptr);
     m_TIMER_evaluatePlayerStatus = 5;
-    //game.m_pathsCreated = 0;
+
     m_settings->setPathsCreated(0);
+    
+    //fix others pointers
+    m_interface = m_ctx->getGameInterface();
+    assert(m_interface != nullptr);
+    m_mapCamera = m_interface->getMapCamera();
+    assert(m_mapCamera != nullptr);
+    m_reinforcements = m_interface->getReinforcements();
+    assert(m_reinforcements != nullptr);
+    m_structureFactory = services->objects->getStructureFactory();
+    assert(m_structureFactory != nullptr);
 }
 
 cGamePlaying::~cGamePlaying()
 {
-
 }
 
 void cGamePlaying::thinkFast()
 {
     game.m_drawManager->thinkFast_statePlaying();
 
-    game.m_mapCamera->thinkFast();
+    m_mapCamera->thinkFast();
 
     for (cPlayer &pPlayer : m_objects->getPlayers()) {
         pPlayer.thinkFast();
@@ -71,7 +73,7 @@ void cGamePlaying::thinkFast()
         }
 
         if (pStructure->isDead()) {
-            game.m_structureFactory->deleteStructureInstance(pStructure);
+            m_structureFactory->deleteStructureInstance(pStructure);
         }
     }
 
@@ -84,7 +86,7 @@ void cGamePlaying::thinkFast()
 
     m_objects->getMap().thinkFast();
 
-    game.reduceShaking();
+    m_interface->reduceShaking();
 
     // units think (move only)
     for (cUnit &cUnit : m_objects->getUnits()) {
@@ -126,7 +128,6 @@ void cGamePlaying::thinkSlow()
 {
     evaluatePlayerStatus(); // so we can call non-const from a const :S
 
-    //game.m_pathsCreated = 0;
     m_settings->setPathsCreated(0);
 
     //@mira
@@ -153,13 +154,13 @@ void cGamePlaying::draw() const
 {
     game.m_drawManager->drawCombatState();
     if (m_settings->shouldDrawFps()) {
-        game.drawTextFps();
+        m_interface->drawTextFps();
     }
 
     drawCombatMouse();
 
     if (m_settings->shouldDrawTime()) {
-        game.drawTextTime();
+        m_interface->drawTextTime();
     }
     // MOUSE
     game.m_drawManager->drawCombatMouse();
@@ -215,19 +216,19 @@ void cGamePlaying::evaluatePlayerStatus()
                     .player = &player
                 };
 
-                game.onNotifyGameEvent(event);
+                m_interface->onNotifyGameEvent(event);
             }
             // TODO: event : Player joined/became alive, etc?
         }
         m_TIMER_evaluatePlayerStatus = 2;
     }
 
-    game.checkMissionWinOrFail();
+    m_interface->checkMissionWinOrFail();
 }
 
 void cGamePlaying::drawCombatMouse() const
 {
-    auto m_mouse = game.getMouse();
+    auto m_mouse = m_interface->getMouse();
     if (m_mouse->isBoxSelecting()) {
         m_renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(),255,255,255,255);
     }
@@ -242,7 +243,6 @@ void cGamePlaying::drawCombatMouse() const
 
 void cGamePlaying::missionInit()
 {
-    // game.m_pathsCreated = 0;
     m_settings->setPathsCreated(0);
     m_TIMER_evaluatePlayerStatus = 5;
 }
@@ -273,22 +273,22 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::ZOOM_RESET)) {
-        game.m_mapCamera->resetZoom();
+        m_mapCamera->resetZoom();
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
-        game.m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
-            game.m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
     if (event.isAction(eKeyAction::OPEN_MENU)) {
-        game.setNextStateToTransitionTo(GAME_OPTIONS);
+        m_interface->setNextStateToTransitionTo(GAME_OPTIONS);
     }
 
     if (event.isAction(eKeyAction::TOGGLE_FPS)) {
@@ -306,7 +306,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::TOGGLE_TIME_DISPLAY)) {
-        m_settings->setDrawTime(! m_game.m_gameSettings->shouldDrawTime());
+        m_settings->setDrawTime(! m_settings->shouldDrawTime());
     }
 
     if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
@@ -324,13 +324,13 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
-        game.m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
         cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
         if (selectedStructure) {
-            game.m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
+            m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
@@ -359,27 +359,27 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
         game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(0));
-        game.setPlayerToInteractFor(&m_objects->getPlayer(0));
+        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(0));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
         game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(1));
-        game.setPlayerToInteractFor(&m_objects->getPlayer(1));
+        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(1));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
         game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(2));
-        game.setPlayerToInteractFor(&m_objects->getPlayer(2));
+        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(2));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
         game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(3));
-        game.setPlayerToInteractFor(&m_objects->getPlayer(3));
+        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(3));
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
-        game.setMissionWon();
+        m_interface->setMissionWon();
     }
 
     if (event.isAction(eKeyAction::DEBUG_LOSE)) {
-        game.setMissionLost();
+        m_interface->setMissionLost();
     }
 
     if (event.isAction(eKeyAction::DEBUG_GIVE_CREDITS)) {

@@ -19,6 +19,8 @@ class cRandomMapGenerator;
 class Graphics;
 class SDLDrawer;
 class cTextDrawer;
+class cGameSettings;
+class cGameInterface;
 
 struct s_DataCampaign;
 
@@ -48,6 +50,8 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
+    cGameObjectContext* m_objects = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
     std::shared_ptr<cPreviewMaps> m_previewMaps;
     Graphics* m_gfxinter = nullptr;

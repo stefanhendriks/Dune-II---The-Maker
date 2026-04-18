@@ -101,7 +101,8 @@ void cMap::init(int width, int height)
     // clear out all cells
     clearAllCells();
 
-    game.m_structureFactory->deleteAllExistingStructures();
+    // moved in cGameObjectContext
+    //game.m_gameObjectsContext->getStructureFactory()->deleteAllExistingStructures();
 
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;

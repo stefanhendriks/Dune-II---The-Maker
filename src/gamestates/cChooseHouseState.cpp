@@ -1,30 +1,26 @@
+#include "include/definitions.h"
 #include "gamestates/cChooseHouseState.h"
 #include "game/cGameSettings.h"
-
 #include "controls/eKeyAction.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
-#include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
-#include <SDL2/SDL.h>
 #include "include/Texture.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "drawers/cTextDrawer.h"
-#include <algorithm>
+#include "game/cGameInterface.h"
 #include <cassert>
-
-#include "data/gfxaudio.h"
 
 cChooseHouseState::cChooseHouseState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
-    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
+    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
+    m_interface(m_ctx->getGameInterface())
 {
     assert(m_textDrawer != nullptr);
     assert(m_gfxinter != nullptr);
+    assert(m_interface != nullptr);
     auto settings =services->settings;
     assert(settings != nullptr);
 
@@ -71,13 +67,10 @@ cChooseHouseState::~cChooseHouseState()
 
 void cChooseHouseState::thinkFast()
 {
-
 }
 
 void cChooseHouseState::draw() const
 {
-    cMouse *mouse = m_game.getMouse();
-
     // Render the planet Dune a bit downward
     m_renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
 
@@ -94,7 +87,7 @@ void cChooseHouseState::draw() const
     m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " BACK");
 
     // MOUSE
-    mouse->draw();
+    m_interface->drawCursor();
 }
 
 eGameStateType cChooseHouseState::getType()
@@ -120,26 +113,16 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
 {
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
-        m_game.prepareMentatToTellAboutHouse(ATREIDES);
-        m_game.playSound(SOUND_ATREIDES);
-        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        m_game.initiateFadingOut();
+        m_interface->prepareMentatToTellAboutHouse(ATREIDES);
     }
     else if (event.coords.isWithinRectangle(&houseOrdos)) {
-        m_game.prepareMentatToTellAboutHouse(ORDOS);
-        m_game.playSound(SOUND_ORDOS);
-        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        m_game.initiateFadingOut();
+        m_interface->prepareMentatToTellAboutHouse(ORDOS);
     }
     else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
-        m_game.prepareMentatToTellAboutHouse(HARKONNEN);
-        m_game.playSound(SOUND_HARKONNEN);
-        m_game.setNextStateToTransitionTo(GAME_TELLHOUSE);
-        m_game.initiateFadingOut();
+        m_interface->prepareMentatToTellAboutHouse(HARKONNEN);
     }
     else if (event.coords.isWithinRectangle(backButtonRect)) {
-        m_game.setNextStateToTransitionTo(GAME_MENU);
-        m_game.initiateFadingOut();
+        m_interface->setTransitionToWithFadingOut(GAME_MENU);
     }
 }
 
@@ -152,8 +135,7 @@ void cChooseHouseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_game.setNextStateToTransitionTo(GAME_MENU);
-            m_game.initiateFadingOut();
+            m_interface->setTransitionToWithFadingOut(GAME_MENU);
         }
     }
 }

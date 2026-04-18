@@ -2,17 +2,18 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "gui/GuiWindow.h"
-#include "gui/GuiCycleButton.h"
-#include "gui/GuiTextInput.h"
 #include "sMouseEvent.h"
 
 #include <memory>
+#include <vector>
 
-struct SDL_Surface;
 class cGame;
-class GameContext;
 class cTextDrawer;
+class cGameInterface;
+class GuiWindow;
+class GuiCycleButton;
+class GuiTextInput;
+
 
 class cNewMapEditorState : public cGameState {
 public:
@@ -30,6 +31,7 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
     void constructWindow();
     GuiTextInput* m_inputName = nullptr;

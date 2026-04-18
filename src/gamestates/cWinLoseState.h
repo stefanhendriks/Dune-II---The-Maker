@@ -6,7 +6,8 @@
 
 class Texture;
 class cGame;
-class cTextDrawer;
+class cGameSettings;
+class cGameInterface;
 
 enum class Outcome : char {Win, Lose};
 
@@ -25,8 +26,10 @@ public:
     eGameStateType getType() override;
 
 private:
-    Texture *m_backgroundTexture;
-    Texture *m_tex;
+    cGameSettings* m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
+    Texture *m_backgroundTexture = nullptr;
+    Texture *m_tex = nullptr;
     Outcome m_statement;
     void onMouseLeftButtonClicked(const s_MouseEvent &event) const;
 };

@@ -6,6 +6,8 @@
 
 struct s_DataCampaign;
 class cReinforcements;
+class cGameInterface;
+class cGameSettings;
 
 enum class MentatMode {
     Briefing,
@@ -31,6 +33,9 @@ public:
 private:
     std::unique_ptr<AbstractMentat> m_mentat;
     s_DataCampaign* m_dataCampaign = nullptr;
+    cGameSettings* m_settings = nullptr;
+    cGameInterface* m_interface = nullptr;
+    cGameObjectContext* m_objets = nullptr;
     MentatMode m_mode;
     int m_house;
 };
