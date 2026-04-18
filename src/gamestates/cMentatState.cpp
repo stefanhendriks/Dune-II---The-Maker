@@ -1,14 +1,15 @@
 #include "gamestates/cMentatState.h"
-#include "game/cGame.h"
 #include "mentat/AtreidesMentat.h"
 #include "mentat/HarkonnenMentat.h"
 #include "mentat/OrdosMentat.h"
 #include "mentat/BeneMentat.h"
+#include "context/GameContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
+#include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 #include "utils/ini.h"
-#include "include/d2tmc.h"
 #include "include/iniDefine.h"
 #include "utils/RNG.hpp"
 #include "player/cPlayer.h"
@@ -20,10 +21,19 @@
 #include <cassert>
 
 cMentatState::cMentatState(cGame &game, sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign)
-    : cGameState(game, services), m_dataCampaign(dataCampaign), m_mode(mode), m_house(dataCampaign->housePlayer)
+    : cGameState(game, services),
+      m_dataCampaign(dataCampaign),
+      m_settings(services->settings),
+      m_interface(m_ctx->getGameInterface()),
+      m_objets(services->objects),
+      m_mode(mode),
+      m_house(dataCampaign->housePlayer)
 {
     assert(services != nullptr);
     assert(m_dataCampaign != nullptr);
+    assert(m_settings != nullptr);
+    assert(m_interface != nullptr);
+    assert(m_objets != nullptr);
     prepareMentat(m_house);
 }
 
@@ -37,12 +47,12 @@ eGameStateType cMentatState::getType()
 
 void cMentatState::prepareMentat(int house)
 {
+    auto& humanPlayer = m_objets->getPlayer(HUMAN);
     // int house = (m_house != -1) ? m_house : players[HUMAN].getHouse();
     //std::cout << "house I " << house << std::endl;
-    house = (m_house != -1) ? m_house : game.m_gameObjectsContext->getPlayer(HUMAN).getHouse();
+    house = (m_house != -1) ? m_house : humanPlayer.getHouse();
     //std::cout << "house After " << house << std::endl;
-    //std::cout << "skirmish ? " << m_game.m_gameSettings->isSkirmish()<< std::endl;
-    bool allowMissionSelect = !m_game.m_gameSettings->isSkirmish();
+    bool allowMissionSelect = !m_settings->isSkirmish();
     // allowMissionSelect ? std::cout << "true"<<std::endl : std::cout << "False" <<std::endl;
     //std::cout << "allowMissionSelect " << allowMissionSelect <<std::endl ;
     switch (m_mode) {
@@ -55,9 +65,9 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = std::make_unique<OrdosMentat>(m_ctx, allowMissionSelect);
             else 
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
-            m_game.missionInit();
-            m_game.setupPlayers();
-            cIni::loadScenario(/*house, m_dataCampaign->region,*/ m_mentat.get(), m_game.getReinforcements(),m_dataCampaign);
+            m_interface->missionInit();
+            m_interface->setupPlayers();
+            cIni::loadScenario(/*house, m_dataCampaign->region,*/ m_mentat.get(), m_interface->getReinforcements(),m_dataCampaign);
             cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat.get());
             break;
         case MentatMode::WinBrief:
@@ -104,9 +114,9 @@ void cMentatState::thinkFast()
 
 void cMentatState::draw() const
 {
-    m_game.getMouse()->setTile(MOUSE_NORMAL);
+    m_interface->getMouse()->setTile(MOUSE_NORMAL);
     if (m_mentat) m_mentat->draw();
-    m_game.getMouse()->draw();
+    m_interface->drawCursor();
 }
 
 void cMentatState::onNotifyMouseEvent(const s_MouseEvent &event)
