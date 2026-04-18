@@ -11,6 +11,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "utils/cSoundPlayer.h"
+#include "game/cGameInterface.h"
 
 #include <SDL2/SDL.h>
 #include <format>
@@ -19,10 +20,12 @@
 cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
     cGameState(theGame, services),
     m_settings(services->settings),
-    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_interface(m_ctx->getGameInterface())
 {
     assert(m_settings != nullptr);
     assert(m_textDrawer != nullptr);
+    assert(m_interface != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
