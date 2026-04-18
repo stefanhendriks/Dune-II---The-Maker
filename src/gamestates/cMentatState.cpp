@@ -4,7 +4,7 @@
 #include "mentat/OrdosMentat.h"
 #include "mentat/BeneMentat.h"
 #include "context/GameContext.hpp"
-#include "context/cInfoContext.h"
+// #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
@@ -13,11 +13,11 @@
 #include "include/iniDefine.h"
 #include "utils/RNG.hpp"
 #include "player/cPlayer.h"
-#include "player/cPlayers.h"
+// #include "player/cPlayers.h"
 #include "data/gfxdata.h"
 #include "include/sDataCampaign.h"
 
-#include <iostream>
+// #include <iostream>
 #include <cassert>
 
 cMentatState::cMentatState(cGame &game, sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign)
