@@ -2,8 +2,6 @@
 
 #include "controls/eKeyAction.h"
 #include "controls/cMouse.h"
-// #include "game/cGame.h"
-// #include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"

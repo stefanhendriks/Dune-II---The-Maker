@@ -3,7 +3,7 @@
 #include "definitions.h"
 #include "cGameState.h"
 
-class cGame;
+
 class GuiButton;
 struct SDL_Surface;
 class cMouse;
