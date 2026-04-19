@@ -95,7 +95,7 @@ public:
     void destroyAllegroBitmaps();
 
     void onNotifyGameEvent(const s_GameEvent& event);
-
+    void evaluateStillAliveForAI();
 private:
     std::array<cPlayer, MAX_PLAYERS_CAPACITY> m_players;
 };

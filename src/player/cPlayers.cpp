@@ -68,6 +68,13 @@ void cPlayers::onNotifyGameEvent(const s_GameEvent& event)
     }
 }
 
+void cPlayers::evaluateStillAliveForAI()
+{
+    for (int i = 1; i < MAX_PLAYERS_CAPACITY; i++) {
+        m_players[i].evaluateStillAlive();
+    }
+}
+
 void cPlayers::destroyAllegroBitmaps()
 {
     for (auto& player : m_players) {
