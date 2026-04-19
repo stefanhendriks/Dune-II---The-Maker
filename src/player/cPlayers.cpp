@@ -21,6 +21,8 @@
 #include "include/sDataCampaign.h"
 #include "definitions.h"
 
+#include "include/sGameEvent.h"
+
 cPlayers::cPlayers() {
     // Players will be initialized through default constructors of std::array
 }
@@ -57,6 +59,13 @@ cPlayer& cPlayers::getHumanPlayer() {
 
 const cPlayer& cPlayers::getHumanPlayer() const {
     return m_players[0];  // HUMAN is typically player 0
+}
+
+void cPlayers::onNotifyGameEvent(const s_GameEvent& event)
+{
+    for (auto& player : m_players) {
+        player.onNotifyGameEvent(event);
+    }
 }
 
 void cPlayers::destroyAllegroBitmaps()
