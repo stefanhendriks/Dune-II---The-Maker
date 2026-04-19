@@ -235,7 +235,7 @@ void cGame::init()
 
     map.init(64, 64);
 
-    initPlayers(false);
+    m_gameObjectsContext->getPlayers().initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
 
     for (int i = 0; i < m_gameObjectsContext->getUnits().size(); i++) {
         m_gameObjectsContext->getUnits()[i].init(i);
@@ -287,60 +287,9 @@ void cGame::missionInit()
         bullet.init();
     }
 
-    initPlayers(true);
+    m_gameObjectsContext->getPlayers().initPlayers(true, m_gameSettings.get(), m_dataCampaign.get());
 
     game.m_drawManager->missionInit();
-}
-
-void cGame::initPlayers(bool rememberHouse) const
-{
-    int maxThinkingAIs = MAX_PLAYERS;
-    if (m_gameSettings->m_oneAi) {
-        maxThinkingAIs = 1;
-    }
-
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer &pPlayer = game.m_gameObjectsContext->getPlayer(i);
-
-        int h = pPlayer.getHouse();
-
-        brains::cPlayerBrain *brain = nullptr;
-        bool autoSlabStructures = false;
-
-        if (i > HUMAN && i < AI_CPU5) {
-            // TODO: playing attribute? (from ai player class?)
-            if (!game.m_gameSettings->isDisableAI()) {
-                if (maxThinkingAIs > 0) {
-                    if (game.m_gameSettings->isSkirmish()) {
-                        brain = new brains::cPlayerBrainSkirmish(&pPlayer);
-                    }
-                    else {
-                        brain = new brains::cPlayerBrainCampaign(&pPlayer, m_dataCampaign.get());
-                        autoSlabStructures = true;  // campaign based AI's autoslab structures...
-                    }
-                }
-            }
-            maxThinkingAIs--;
-        }
-        else if (i == AI_CPU5) {
-            brain = new brains::cPlayerBrainFremenSuperWeapon(&pPlayer);
-        }
-        else if (i == AI_CPU6) {
-            if (!game.m_gameSettings->isDisableWormAi()) {
-                brain = new brains::cPlayerBrainSandworm(&pPlayer);
-            }
-        }
-
-        pPlayer.init(i, brain);
-        pPlayer.setAutoSlabStructures(autoSlabStructures);
-        if (rememberHouse) {
-            pPlayer.setHouse(h);
-        }
-
-        if (m_gameSettings->m_skirmish) {
-            pPlayer.setCredits(2500);
-        }
-    }
 }
 
 
@@ -941,7 +890,7 @@ void cGame::setState(int newState)
                 newStatePtr = pState;
             }
             else if (newState == GAME_SETUPSKIRMISH) {
-                initPlayers(false);
+                m_gameObjectsContext->getPlayers().initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
                 newStatePtr = new cSetupSkirmishState(m_services.get(), m_PreviewMaps, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }

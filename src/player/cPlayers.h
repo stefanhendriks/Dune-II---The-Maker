@@ -13,6 +13,8 @@
 #pragma once
 
 #include <array>
+class cGameSettings;
+struct s_DataCampaign;
 #include "cPlayer.h"
 
 /**
@@ -81,6 +83,14 @@ public:
      */
     auto end() { return m_players.end(); }
     auto end() const { return m_players.end(); }
+
+    /**
+     * Initialize all players with their brains and settings
+     * @param rememberHouse Whether to preserve the player's house assignment
+     * @param gameSettings Game settings (for AI and difficulty configuration)
+     * @param dataCampaign Campaign data (for campaign-specific AI brain initialization)
+     */
+    void initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign);
 
 private:
     std::array<cPlayer, MAX_PLAYERS_CAPACITY> m_players;
