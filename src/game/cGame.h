@@ -31,6 +31,7 @@ class cGameState;
 class cInteractionManager;
 class cPlatformLayerInit;
 class cPlayer;
+class cPlayers;
 class cSoundPlayer;
 class cScreenInit;
 class cHousesInfo;
@@ -231,6 +232,9 @@ private:
 
     std::shared_ptr<cReinforcements> m_reinforcements;
     std::unique_ptr<InitialGameSettings> m_initialGameSettings;
+
+    // Non-owning shortcut to the players container (owned by m_gameObjectsContext)
+    cPlayers* m_players = nullptr;
 
     cMouse *m_mouse;
     cKeyboard *m_keyboard;
