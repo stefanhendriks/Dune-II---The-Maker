@@ -21,6 +21,7 @@ cPlatformLayerInit::cPlatformLayerInit()
     else {
         logger->log(LOG_INFO, COMP_SDL2, "SDL2 init", "Initialized successfully", OUTC_SUCCESS);
     }
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
     if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) { //Initialisation de l'API Mixer
         logger->log(LOG_FATAL, COMP_SDL2, "SDL2 mixer", Mix_GetError(), OUTC_FAILED);
