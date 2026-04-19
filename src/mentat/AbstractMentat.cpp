@@ -374,8 +374,22 @@ void AbstractMentat::resetSpeak()
 
 void AbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    // Always keep button hover state current so focus is correct when buttons re-appear
+    if (event.eventType == MOUSE_MOVED_TO) {
+        if (m_guiBtnToMissionSelect) {
+            m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
+        }
+        if (leftGuiButton) {
+            leftGuiButton->onNotifyMouseEvent(event);
+        }
+        if (rightGuiButton) {
+            rightGuiButton->onNotifyMouseEvent(event);
+        }
+        return;
+    }
+
     if (state == SPEAKING) {
-        if (event.eventType==MOUSE_LEFT_BUTTON_CLICKED) {
+        if (event.eventType == MOUSE_LEFT_BUTTON_CLICKED) {
             if (TIMER_Speaking > 0) {
                 TIMER_Speaking = 1;
             }
