@@ -197,3 +197,8 @@ cDrawManager* cGameInterface::getRenderDrawManager() const
 {
     return m_igame->m_drawManager;
 }
+
+int cGameInterface::getCurrentState() const
+{
+    return m_igame->getCurrentState();
+}
