@@ -511,9 +511,7 @@ void cGame::shutdown()
 
     delete m_mapCamera;
 
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        game.m_gameObjectsContext->getPlayer(i).destroyAllegroBitmaps();
-    }
+    m_players->destroyAllegroBitmaps();
 
     delete m_mouse;
     delete m_keyboard;
