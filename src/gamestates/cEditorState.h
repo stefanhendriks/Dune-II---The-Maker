@@ -11,7 +11,7 @@
 
 class Texture;
 class Graphics;
-class cGame;
+
 struct s_PreviewMap;
 class GuiBar;
 class GuiButtonGroup;

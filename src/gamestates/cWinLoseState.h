@@ -5,7 +5,7 @@
 #include "sMouseEvent.h"
 
 class Texture;
-class cGame;
+
 class cGameSettings;
 class cGameInterface;
 

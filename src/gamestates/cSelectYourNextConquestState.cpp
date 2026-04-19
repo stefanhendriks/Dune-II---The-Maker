@@ -2,8 +2,6 @@
 
 #include "controls/eKeyAction.h"
 #include "controls/cMouse.h"
-// #include "game/cGame.h"
-// #include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "data/gfxworld.h"
@@ -14,13 +12,10 @@
 #include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
 #include "player/cPlayer.h"
-// #include "player/cPlayers.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-// #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-// #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
 #include "drawers/cTextDrawer.h"
 

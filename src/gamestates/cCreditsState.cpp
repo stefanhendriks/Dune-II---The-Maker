@@ -2,9 +2,7 @@
 #include "game/cGameSettings.h"
 
 #include "controls/eKeyAction.h"
-// #include "include/d2tmc.h"
 #include "config.h"
-// #include "controls/cMouse.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
