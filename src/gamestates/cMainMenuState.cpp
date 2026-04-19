@@ -19,8 +19,8 @@
 #include <format>
 #include <cassert>
 
-cMainMenuState::cMainMenuState(cGame &theGame, sGameServices* services) :
-    cGameState(theGame, services),
+cMainMenuState::cMainMenuState(sGameServices* services) :
+    cGameState(services),
     m_settings(services->settings),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_interface(m_ctx->getGameInterface())

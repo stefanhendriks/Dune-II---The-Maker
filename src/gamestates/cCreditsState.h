@@ -26,7 +26,7 @@ struct s_CreditLine {
 class cCreditsState : public cGameState {
 
 public:
-    explicit cCreditsState(cGame &theGame, sGameServices* services);
+    explicit cCreditsState(sGameServices* services);
     ~cCreditsState() override;
 
     void thinkFast() override;

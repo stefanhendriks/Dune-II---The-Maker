@@ -17,7 +17,7 @@ class GuiTextInput;
 
 class cNewMapEditorState : public cGameState {
 public:
-    explicit cNewMapEditorState(cGame &theGame, sGameServices* services);
+    explicit cNewMapEditorState(sGameServices* services);
     ~cNewMapEditorState() override;
 
     void thinkFast() override;

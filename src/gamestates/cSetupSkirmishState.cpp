@@ -41,8 +41,8 @@ static bool mouse_within_rect(cMouse* mouse, int x, int y, int width, int height
             && (mouse->getY() >= y && mouse->getY() <= (y + height)));
 }
 
-cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
-    cGameState(game, services),
+cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
+    cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),

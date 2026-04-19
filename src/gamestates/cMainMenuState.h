@@ -16,7 +16,7 @@ class GuiWindow;
 
 class cMainMenuState : public cGameState {
 public:
-    explicit cMainMenuState(cGame &theGame, sGameServices* services);
+    explicit cMainMenuState(sGameServices* services);
     ~cMainMenuState() override;
 
     void thinkFast() override;

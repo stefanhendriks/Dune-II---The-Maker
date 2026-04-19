@@ -16,7 +16,7 @@ class cGameInterface;
 
 class cSelectMissionState : public cGameState {
 public:
-    cSelectMissionState(cGame &theGame, sGameServices* services, int prevState);
+    cSelectMissionState(sGameServices* services, int prevState);
     ~cSelectMissionState() override;
 
     void thinkFast() override;

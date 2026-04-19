@@ -42,7 +42,7 @@ enum eGameStateType {
 class cGameState : cInputObserver {
 
 public:
-    explicit cGameState(cGame &theGame, sGameServices* services);
+    explicit cGameState(sGameServices* services);
     virtual ~cGameState() = default;
 
     virtual void thinkFast() = 0;
@@ -58,10 +58,8 @@ public:
     virtual void update();
 
 protected:
-    // the state of the game itself
-    cGame &m_game;
     GameContext* m_ctx=nullptr;
-    SDLDrawer* m_renderDrawer;
+    SDLDrawer* m_renderDrawer=nullptr;
 private:
 
 };

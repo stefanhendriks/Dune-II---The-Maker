@@ -52,8 +52,8 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(cGame &theGame, sGameServices* services, s_DataCampaign* dataCompaign) :
-    cGameState(theGame, services),
+cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* services, s_DataCampaign* dataCompaign) :
+    cGameState(services),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),

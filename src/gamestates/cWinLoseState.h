@@ -14,7 +14,7 @@ enum class Outcome : char {Win, Lose};
 
 class cWinLoseState : public cGameState {
 public:
-    explicit cWinLoseState(cGame &theGame, sGameServices* services, Outcome value);
+    explicit cWinLoseState(sGameServices* services, Outcome value);
     ~cWinLoseState() override;
 
     void thinkFast() override;
