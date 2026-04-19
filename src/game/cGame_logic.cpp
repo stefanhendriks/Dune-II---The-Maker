@@ -847,10 +847,7 @@ void cGame::setState(int newState)
             else if (newState == GAME_PLAYING) {
                     game.m_drawManager->reset();
                     // evaluate all players, so we have initial 'alive' values set properly
-                    for (int i = 1; i < MAX_PLAYERS; i++) {
-                        cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
-                        player.evaluateStillAlive();
-                    }
+                    m_players->evaluateStillAliveForAI();
                     m_gameObjectsContext->getParticles().reset();
                     // in-between solution until we have a proper combat state object
                     game.m_drawManager->init();
@@ -937,10 +934,7 @@ void cGame::setState(int newState)
                     game.m_drawManager->reset();
 
                     // evaluate all players, so we have initial 'alive' values set properly
-                    for (int i = 1; i < MAX_PLAYERS; i++) {
-                        cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
-                        player.evaluateStillAlive();
-                    }
+                    m_players->evaluateStillAliveForAI();
                     m_gameObjectsContext->getParticles().reset();
                     // in-between solution until we have a proper combat state object
                     game.m_drawManager->init();
