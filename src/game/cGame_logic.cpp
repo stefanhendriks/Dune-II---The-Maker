@@ -18,7 +18,6 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
-#include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "include/eGameState.h"
 
@@ -31,14 +30,12 @@
 #include "game/cTimeCounter.h"
 #include "utils/cStructureUtils.h"
 
-#include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/projectiles/cBullets.h"
-#include "player/cPlayers.h"
 
 #include "gamestates/cChooseHouseState.h"
 #include "gamestates/cCreditsState.h"
@@ -55,7 +52,6 @@
 #include "gamestates/cWinLoseState.h"
 
 #include "include/sDataCampaign.h"
-#include "include/Texture.hpp"
 #include "iniDefine.h"
 #include "managers/cDrawManager.h"
 #include "managers/cInteractionManager.h"
@@ -85,9 +81,6 @@
 #include "utils/Graphics.hpp"
 #include "utils/ini.h"
 #include "utils/RNG.hpp"
-#include "utils/cIniFile.h"
-#include "map/cPreviewMaps.h"
-#include "observers/cScenarioObserver.h"
 
 #include "controls/cGameControlsContext.h"
 #include "controls/eKeyAction.h"
@@ -98,8 +91,6 @@
 #include "context/cGameObjectContext.h"
 
 #include <format>
-
-
 #include <algorithm>
 #include <random>
 #include <vector>
