@@ -3,11 +3,9 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "definitions.h"
-#include "gui/GuiButton.h"
 #include "sMouseEvent.h"
 #include "utils/cRectangle.h"
-#include "map/cPreviewMaps.h"
-
+#include "utils/Color.hpp"
 #include <memory>
 #include <functional>
 
@@ -21,6 +19,7 @@ class SDLDrawer;
 class cTextDrawer;
 class cGameSettings;
 class cGameInterface;
+class GuiButton;
 
 struct s_DataCampaign;
 
