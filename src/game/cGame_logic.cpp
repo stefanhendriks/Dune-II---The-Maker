@@ -127,6 +127,10 @@ cGame::cGame()
     m_mapCamera = nullptr;
     m_drawManager = nullptr;
 
+    m_cameraDragMoveSpeed=0.5f;
+    m_cameraBorderOrKeyMoveSpeed=0.5;
+    m_cameraEdgeMove = true;
+
     std::unique_ptr<cGameInterface> gameInterface = std::make_unique<cGameInterface>(this);
 
     m_structureUtils = std::make_unique<cStructureUtils>();
@@ -249,10 +253,6 @@ void cGame::init()
 
     //m_musicType = -1;
     m_gameSettings->m_musicType = -1;
-
-    m_cameraDragMoveSpeed=0.5f;
-    m_cameraBorderOrKeyMoveSpeed=0.5;
-    m_cameraEdgeMove = true;
 
     map.init(64, 64);
 
