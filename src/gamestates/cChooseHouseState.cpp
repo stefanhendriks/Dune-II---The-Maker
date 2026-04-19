@@ -12,8 +12,8 @@
 #include "game/cGameInterface.h"
 #include <cassert>
 
-cChooseHouseState::cChooseHouseState(cGame &theGame, sGameServices* services) :
-    cGameState(theGame, services),
+cChooseHouseState::cChooseHouseState(sGameServices* services) :
+    cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
     m_interface(m_ctx->getGameInterface())

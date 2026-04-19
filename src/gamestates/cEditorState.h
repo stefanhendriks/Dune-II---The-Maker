@@ -20,7 +20,7 @@ class cGameInterface;
 
 class cEditorState : public cGameState {
 public:
-    explicit cEditorState(cGame &theGame, sGameServices* services);
+    explicit cEditorState(sGameServices* services);
     ~cEditorState() override;
 
     void thinkFast() override;

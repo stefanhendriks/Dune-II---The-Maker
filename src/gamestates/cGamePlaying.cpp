@@ -27,8 +27,8 @@
 
 #include <cassert>
 
-cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) :
-    cGameState(theGame, services),
+cGamePlaying::cGamePlaying(sGameServices* services) :
+    cGameState(services),
     m_objects(services->objects),
     m_settings(services->settings)
 {

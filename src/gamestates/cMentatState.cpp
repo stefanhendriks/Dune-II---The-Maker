@@ -17,8 +17,8 @@
 
 #include <cassert>
 
-cMentatState::cMentatState(cGame &game, sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign)
-    : cGameState(game, services),
+cMentatState::cMentatState(sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign)
+    : cGameState(services),
       m_dataCampaign(dataCampaign),
       m_settings(services->settings),
       m_interface(m_ctx->getGameInterface()),

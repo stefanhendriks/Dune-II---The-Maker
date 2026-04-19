@@ -18,8 +18,8 @@
 
 #include <cassert>
 
-cOptionsState::cOptionsState(cGame &theGame, sGameServices* services, int prevState)
-    : cGameState(theGame, services),
+cOptionsState::cOptionsState(sGameServices* services, int prevState)
+    : cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),

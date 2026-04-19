@@ -22,8 +22,8 @@ const int maxTileSize = 64;
 const int deltaTileSize = 4;
 
 
-cEditorState::cEditorState(cGame &theGame, sGameServices* services) 
-    : cGameState(theGame, services),
+cEditorState::cEditorState(sGameServices* services) 
+    : cGameState(services),
     m_gfxdata(m_ctx->getGraphicsContext()->gfxdata.get()),
     m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get()),
     m_settings(services->settings),
