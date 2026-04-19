@@ -115,8 +115,7 @@ cGame::cGame()
 
     m_nextState = -1;
     m_currentState = nullptr;
-    // m_screenW = -1;
-    // m_gameSettings->m_screenH = -1;
+
     m_windowed = false;
     m_playSound = true;
     context = nullptr;
@@ -153,7 +152,7 @@ cGame::cGame()
     m_cScreenFader = std::make_unique<cScreenFader>();
 
     m_gameSettings = std::make_unique<cGameSettings>();
-    // m_playMusic = true;
+
     m_gameSettings->m_playMusic = true;
     m_gameSettings->m_drawFps = false;
     m_gameSettings->m_drawTime = false;
@@ -161,7 +160,6 @@ cGame::cGame()
 
     m_gameObjectsContext = cGameObjectsContextCreator::create();
 
-    // m_structureFactory = std::make_unique<cStructureFactory>();
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
 
@@ -174,43 +172,35 @@ cGame::cGame()
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 {
-    // keep settings alive after initialization
-    // m_screenW = gs->screenW;
     m_gameSettings->m_screenW = gs->screenW;
 
-    // m_screenH = gs->screenH;
     m_gameSettings->m_screenH = gs->screenH;
 
     m_cameraDragMoveSpeed = gs->cameraDragMoveSpeed;
     m_cameraBorderOrKeyMoveSpeed = gs->cameraBorderOrKeyMoveSpeed;
     m_cameraEdgeMove = gs->cameraEdgeMove;
     m_windowed = gs->windowed;
-    // m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
+
     m_gameSettings->m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
     m_turretsDownOnLowPower = gs->turretsDownOnLowPower;
     m_rocketTurretsDownOnLowPower = gs->rocketTurretsDownOnLowPower;
-    // m_playMusic = gs->playMusic;
+
     m_gameSettings->m_playMusic = gs->playMusic;
 
     m_playSound = gs->playSound;
-    // m_debugMode = gs->debugMode;
+
     m_gameSettings->m_debugMode = gs->debugMode;
-    // m_drawUnitDebug = gs->drawUnitDebug;
+
     m_gameSettings->m_drawUnitDebug = gs->drawUnitDebug;
     m_pauseWhenLosingFocus = gs->pauseWhenLosingFocus;
-    //m_disableAI = gs->disableAI;
+
     m_gameSettings->m_disableAI = gs->disableAI;
 
-    // m_oneAi = gs->oneAi;
     m_gameSettings->m_oneAi = gs->oneAi;
-    // m_disableWormAi = gs->disableWormAi;
     m_gameSettings->m_disableWormAi = gs->disableWormAi;
 
-    // m_disableReinforcements = gs->disableReinforcements;
     m_gameSettings->m_disableReinforcements = gs->disableReinforcements;
-    // m_noAiRest = gs->noAiRest;
     m_gameSettings->m_noAiRest = gs->noAiRest;
-    // m_drawUsages = gs->drawUsages;
     m_gameSettings->m_drawUsages = gs->drawUsages;
     m_gameFilename = gs->gameFilename;
 
@@ -246,7 +236,6 @@ void cGame::init()
 
     m_screenShake->reset();
 
-    //m_musicType = -1;
     m_gameSettings->m_musicType = -1;
 
     m_cameraDragMoveSpeed=0.5f;
@@ -584,14 +573,10 @@ void cGame::shutdown()
 
     delete m_mapCamera;
 
-    // cStructureFactory::destroy();
-    // cSideBarFactory::destroy();
-    // cBuildingListFactory::destroy();
-
     for (int i = 0; i < MAX_PLAYERS; i++) {
         game.m_gameObjectsContext->getPlayer(i).destroyAllegroBitmaps();
     }
-    //delete global#renderDrawer;
+
     delete m_mouse;
     delete m_keyboard;
 
@@ -765,11 +750,7 @@ bool cGame::setupGame()
     game.m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos());
     cPlayer *humanPlayer = &game.m_gameObjectsContext->getPlayer(HUMAN);
 
-    // if (m_drawManager!=nullptr) {
-    //     delete game.m_drawManager;
-    // }
     game.m_drawManager = new cDrawManager(ctx.get(), humanPlayer);
-    //game.m_drawManager->reset();
 
     // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
     m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
@@ -1016,9 +997,7 @@ void cGame::setState(int newState)
                 }
                 else {
                     newStatePtr = new cGamePlaying(m_services.get());
-                    // re-create drawManager
-                    // delete game.m_drawManager;
-                    //game.m_drawManager = new cDrawManager(ctx.get(), &humanPlayer);
+
                     game.m_drawManager->reset();
 
                     // evaluate all players, so we have initial 'alive' values set properly
@@ -1039,9 +1018,6 @@ void cGame::setState(int newState)
                     m_timeManager->startTimer();
                 }
             }
-            // else if (newState == GAME_PLAYING) {
-            //     newStatePtr = new cGamePlaying(m_services.get());
-            // }
             else if (newState == GAME_LOSING) {
                 newStatePtr = new cWinLoseState(m_services.get(), Outcome::Lose);
             }
