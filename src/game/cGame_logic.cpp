@@ -1128,9 +1128,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     }
 
     // players handle events
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        game.m_gameObjectsContext->getPlayer(i).onNotifyGameEvent(event);
-    }
+    m_players->onNotifyGameEvent(event);
 }
 
 void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
