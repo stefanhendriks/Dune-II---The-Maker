@@ -16,7 +16,7 @@ class cDrawManager;
 
 class cGamePlaying : public cGameState {
 public:
-    explicit cGamePlaying(cGame &theGame, sGameServices* services);
+    explicit cGamePlaying(sGameServices* services);
     ~cGamePlaying() override;
 
     void thinkFast() override;

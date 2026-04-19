@@ -9,8 +9,8 @@
 #include <SDL2/SDL.h>
 #include <cassert>
 
-cWinLoseState::cWinLoseState(cGame &theGame, sGameServices* services, Outcome value) : 
-    cGameState(theGame, services),
+cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) : 
+    cGameState(services),
     m_settings(services->settings),
     m_statement(value)
 {

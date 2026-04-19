@@ -16,8 +16,8 @@
 
 #include <cassert>
 
-cCreditsState::cCreditsState(cGame &theGame, sGameServices* services) :
-    cGameState(theGame, services),
+cCreditsState::cCreditsState(sGameServices* services) :
+    cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),

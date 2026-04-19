@@ -4,8 +4,7 @@
 
 #include <cassert>
 
-cGameState::cGameState(cGame &theGame, sGameServices* services) :
-    m_game(theGame),
+cGameState::cGameState(sGameServices* services) :
     m_ctx(services->ctx),
     m_renderDrawer(m_ctx->getSDLDrawer())
 {

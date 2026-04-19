@@ -10,7 +10,7 @@ class cMouse;
 
 class cTellHouseState : public cGameState {
 public:
-    cTellHouseState(cGame &game, sGameServices* services, s_DataCampaign* dataCampaign);
+    cTellHouseState(sGameServices* services, s_DataCampaign* dataCampaign);
     ~cTellHouseState() override;
 
     void thinkFast() override;

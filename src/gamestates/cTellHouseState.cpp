@@ -11,8 +11,8 @@
 
 #include <cassert>
 
-cTellHouseState::cTellHouseState(cGame &game, sGameServices* services, s_DataCampaign* dataCampaign)
-    : cGameState(game, services),
+cTellHouseState::cTellHouseState(sGameServices* services, s_DataCampaign* dataCampaign)
+    : cGameState(services),
     m_house(dataCampaign->housePlayer),
     m_dataCampaign(dataCampaign)
 {

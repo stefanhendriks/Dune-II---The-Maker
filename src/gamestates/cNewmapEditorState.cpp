@@ -12,8 +12,8 @@
 
 #include <cassert>
 
-cNewMapEditorState::cNewMapEditorState(cGame &theGame, sGameServices* services)
-    : cGameState(theGame, services),
+cNewMapEditorState::cNewMapEditorState(sGameServices* services)
+    : cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),

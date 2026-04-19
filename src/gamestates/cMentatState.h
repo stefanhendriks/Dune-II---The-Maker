@@ -17,7 +17,7 @@ enum class MentatMode {
 
 class cMentatState : public cGameState {
 public:
-    cMentatState(cGame &game, sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign);
+    cMentatState(sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign);
     ~cMentatState() override;
 
     void thinkFast() override;
