@@ -50,6 +50,7 @@ public:
     Texture* getScreenTexture() const;
     void drawTextFps() const;
     void drawTextTime() const;
+    int getCurrentState() const;
 
     void reduceShaking() const;
     Color getColorFadeSelected(int r, int g, int b) const;
