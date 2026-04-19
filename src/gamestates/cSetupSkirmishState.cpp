@@ -34,11 +34,10 @@
 
 #include "config.h"
 
-static bool mouse_within_rect(int x, int y, int width, int height)
+static bool mouse_within_rect(cMouse* mouse, int x, int y, int width, int height)
 {
-    auto m_mouse = game.getMouse();
-    return ((m_mouse->getX() >= x && m_mouse->getX() < (x + width))
-            && (m_mouse->getY() >= y && m_mouse->getY() <= (y + height)));
+    return ((mouse->getX() >= x && mouse->getX() < (x + width))
+            && (mouse->getY() >= y && mouse->getY() <= (y + height)));
 }
 
 cSetupSkirmishState::cSetupSkirmishState(cGame &game, sGameServices* services, std::shared_ptr<cPreviewMaps> previewMaps,s_DataCampaign* dataCompaign) :
@@ -308,7 +307,7 @@ bool cSetupSkirmishState::guiDrawFrame(int x, int y, int width, int height) cons
 {
     cRectangle rect = cRectangle(x, y, width, height);
     m_renderDrawer->gui_DrawRect(rect, colorLightBackground, colorDarkishBorder, colorOtherBorder);
-    return mouse_within_rect(x, y, width, height);
+    return mouse_within_rect(m_mouse, x, y, width, height);
 }
 
 bool cSetupSkirmishState::guiDrawFramePressed(int x1, int y1, int width, int height) const
@@ -320,7 +319,7 @@ bool cSetupSkirmishState::guiDrawFramePressed(int x1, int y1, int width, int hei
     m_renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, colorDarkishBorder);
     m_renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, colorDarkishBorder);
 
-    return mouse_within_rect(x1, y1, width, height);
+    return mouse_within_rect(m_mouse, x1, y1, width, height);
 }
 
 void cSetupSkirmishState::thinkFast()
