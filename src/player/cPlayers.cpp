@@ -59,6 +59,13 @@ const cPlayer& cPlayers::getHumanPlayer() const {
     return m_players[0];  // HUMAN is typically player 0
 }
 
+void cPlayers::destroyAllegroBitmaps()
+{
+    for (auto& player : m_players) {
+        player.destroyAllegroBitmaps();
+    }
+}
+
 void cPlayers::initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign)
 {
     int maxThinkingAIs = MAX_PLAYERS_CAPACITY;

@@ -92,6 +92,8 @@ public:
      */
     void initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign);
 
+    void destroyAllegroBitmaps();
+
 private:
     std::array<cPlayer, MAX_PLAYERS_CAPACITY> m_players;
 };
