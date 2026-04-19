@@ -1914,6 +1914,8 @@ void cUnit::shoot(int iTargetCell)
                 game.m_gameObjectsContext->getBullets()[iBull].TIMER_homing = 200;
             }
         }
+    } else {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_UNITS, "units", "E1 - Shooting without a valid target unit");
     }
 }
 
@@ -1946,6 +1948,7 @@ int cUnit::getNextCellToMoveTo()
 void cUnit::think_hit(int iShotUnit, int iShotStructure)
 {
     if (!isValid()) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_UNITS, "units", "E2 - Invalid unit shooted");
         return;
     }
 
@@ -1962,6 +1965,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
     if (iShotUnit > -1) {
         cUnit &unitWhoShotMe = game.m_gameObjectsContext->getUnit(iShotUnit);
         if (!unitWhoShotMe.isValid()) {
+            cLogger::getInstance()->log(LOG_ERROR, COMP_UNITS, "units", "E3 - Invalid unit shoot me");
             return;
         }
         if (unitWhoShotMe.getPlayer()->isSameTeamAs(getPlayer())) return; // ignore friendly fire

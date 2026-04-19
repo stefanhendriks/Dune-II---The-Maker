@@ -28,6 +28,7 @@
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
+#include "utils/cLog.h"
 #include <format>
 #include <cmath>
 
@@ -458,10 +459,16 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
     if (!game.m_gameObjectsContext->getMap().isValidCell(cell)) return false;
     int id = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(cell);
     if (id < 0) return false;
-    if (iOwnerUnit >= 0 && id == iOwnerUnit) return false; // do not damage self
+    if (iOwnerUnit >= 0 && id == iOwnerUnit) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_UNITS, "bullet", "E4 - Shooting myself with bullet");
+        return false; // do not damage self
+    }
 
     cUnit &groundUnitTakingDamage = game.m_gameObjectsContext->getUnits()[id];
-    if (!groundUnitTakingDamage.isValid()) return false;
+    if (!groundUnitTakingDamage.isValid()) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_UNITS, "bullet", "E5 - Shooting by invalid ground unit");
+        return false;
+    }
 
     float iDamage = getDamageToInflictToUnit(groundUnitTakingDamage) * factor;
     int originUnitId = (iOwnerUnit > -1 && game.m_gameObjectsContext->getUnits()[iOwnerUnit].isValid()) ? iOwnerUnit : -1;
@@ -680,6 +687,8 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
         if (game.m_gameObjectsContext->getUnit(iOwnerUnit).isValid()) {
             pUnit = &game.m_gameObjectsContext->getUnit(iOwnerUnit);
             originId = iOwnerUnit;
+        } else {
+            cLogger::getInstance()->log(LOG_ERROR, COMP_UNITS, "bullet", "E6 - Bullet has invalid owner unit when trying to damage structure");
         }
     }
 
