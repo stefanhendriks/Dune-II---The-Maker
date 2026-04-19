@@ -11,6 +11,7 @@ class cReinforcements;
 struct s_GameEvent;
 struct s_PreviewMap;
 class Texture;
+class cDrawManager;
 
 class cGameInterface
 {
@@ -23,6 +24,7 @@ public:
     cDrawManager* getDrawManager() const;
     cMapCamera* getMapCamera() const;
     cReinforcements* getReinforcements() const;
+    cDrawManager* getRenderDrawManager() const;
     void setMissionWon() const;
     void setMissionLost() const;
     void missionInit() const;

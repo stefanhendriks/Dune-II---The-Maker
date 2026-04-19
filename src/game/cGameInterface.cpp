@@ -192,3 +192,8 @@ bool cGameInterface::playMusicByType(int iType) const
 {
     return m_igame->playMusicByType(iType);
 }
+
+cDrawManager* cGameInterface::getRenderDrawManager() const
+{
+    return m_igame->m_drawManager;
+}
