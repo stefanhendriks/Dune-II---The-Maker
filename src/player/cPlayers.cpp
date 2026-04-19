@@ -21,6 +21,7 @@
 #include "include/sDataCampaign.h"
 #include "definitions.h"
 
+#include "cHousesInfo.h"
 #include "include/sGameEvent.h"
 
 cPlayers::cPlayers() {
@@ -59,6 +60,14 @@ cPlayer& cPlayers::getHumanPlayer() {
 
 const cPlayer& cPlayers::getHumanPlayer() const {
     return m_players[0];  // HUMAN is typically player 0
+}
+
+void cPlayers::setupPlayers(std::shared_ptr<cHousesInfo> housesInfo)
+{
+    for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
+        m_players[i].init(i, nullptr);
+        m_players[i].setHousesInfo(housesInfo);
+    }
 }
 
 void cPlayers::onNotifyGameEvent(const s_GameEvent& event)
