@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-class cGame;
+
 class cTextDrawer;
 class cGameInterface;
 class GuiWindow;

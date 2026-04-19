@@ -15,7 +15,6 @@
 #include "gamestates/cOptionsState.h"
 #include "game/cGameInterface.h"
 
-#include "game/cGame.h"
 #include "context/GameContext.hpp"
 #include <cassert>
 

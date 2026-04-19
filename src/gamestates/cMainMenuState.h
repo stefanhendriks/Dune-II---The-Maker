@@ -8,7 +8,6 @@
 #include <memory>
 
 class Texture;
-class cGame;
 class cTextDrawer;
 class cGameInterface;
 class GuiButton;

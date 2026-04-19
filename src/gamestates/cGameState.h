@@ -6,7 +6,6 @@
 #include "include/eGameState.h"
 #include "include/sGameServices.h"
 
-class cGame;
 class GameContext;
 class SDLDrawer;
 

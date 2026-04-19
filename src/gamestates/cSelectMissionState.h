@@ -7,7 +7,7 @@
 #include <memory>
 
 struct SDL_Surface;
-class cGame;
+
 class GameContext;
 class cTextDrawer;
 class GuiWindow;

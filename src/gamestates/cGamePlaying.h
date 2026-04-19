@@ -6,7 +6,7 @@
 #include "sMouseEvent.h"
 
 class Texture;
-class cGame;
+
 class cReinforcements;
 class cTextDrawer;
 class cMapCamera;
