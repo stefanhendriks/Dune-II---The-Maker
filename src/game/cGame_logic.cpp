@@ -154,6 +154,8 @@ cGame::cGame()
     m_gameSettings->m_allowRepeatingReinforcements = false;
 
     m_gameObjectsContext = cGameObjectsContextCreator::create();
+    m_players = &m_gameObjectsContext->getPlayers();
+    assert(m_players != nullptr);
 
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
@@ -235,7 +237,7 @@ void cGame::init()
 
     map.init(64, 64);
 
-    m_gameObjectsContext->getPlayers().initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
+    m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
 
     for (int i = 0; i < m_gameObjectsContext->getUnits().size(); i++) {
         m_gameObjectsContext->getUnits()[i].init(i);
@@ -287,7 +289,7 @@ void cGame::missionInit()
         bullet.init();
     }
 
-    m_gameObjectsContext->getPlayers().initPlayers(true, m_gameSettings.get(), m_dataCampaign.get());
+    m_players->initPlayers(true, m_gameSettings.get(), m_dataCampaign.get());
 
     game.m_drawManager->missionInit();
 }
@@ -890,7 +892,7 @@ void cGame::setState(int newState)
                 newStatePtr = pState;
             }
             else if (newState == GAME_SETUPSKIRMISH) {
-                m_gameObjectsContext->getPlayers().initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
+                m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
                 newStatePtr = new cSetupSkirmishState(m_services.get(), m_PreviewMaps, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
