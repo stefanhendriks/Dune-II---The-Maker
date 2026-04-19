@@ -13,6 +13,7 @@
 #pragma once
 
 #include <array>
+#include <memory>
 class cGameSettings;
 struct s_DataCampaign;
 #include "cPlayer.h"
@@ -91,6 +92,8 @@ public:
      * @param dataCampaign Campaign data (for campaign-specific AI brain initialization)
      */
     void initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign);
+
+    void setupPlayers(std::shared_ptr<cHousesInfo> housesInfo);
 
     void destroyAllegroBitmaps();
 
