@@ -1,8 +1,9 @@
 #include "gamestates/cSetupSkirmishState.h"
 
 #include "controls/eKeyAction.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "controls/cMouse.h"
+// #include "game/cGame.h"
+// #include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
@@ -683,7 +684,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             }
         }
 
-        cPlayer &pPlayer = game.m_gameObjectsContext->getPlayer(p);
+        cPlayer &pPlayer = m_objects->getPlayer(p);
 
         // TEAM Logic
         if (p == HUMAN) {
@@ -849,7 +850,8 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         logbook("Skirmish game without sandworms");
     }
 
-    game.m_drawManager->missionInit();
+    auto drawManager = m_interface->getDrawManager();
+    drawManager->missionInit();
     m_interface->setTransitionToWithFadingOut(GAME_PLAYING);
 }
 
