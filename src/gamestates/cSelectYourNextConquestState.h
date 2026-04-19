@@ -16,6 +16,7 @@ class cGameInterface;
 class cGameSettings;
 class cTextDrawer;
 class cGameObjectContext;
+class cDrawManager;
 
 struct s_DataCampaign;
 enum eRegionState {
@@ -95,6 +96,7 @@ private:
     Graphics* m_gfxworld = nullptr;
     Graphics* m_gfxinter = nullptr;
     cMouse* m_mouse = nullptr;
+    cDrawManager *m_drawManager = nullptr;
     eRegionState state;
 
     eRegionSceneState regionSceneState;
