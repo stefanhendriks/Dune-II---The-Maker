@@ -267,8 +267,6 @@ private:
 
     void shakeScreenAndBlitBuffer();
 
-    void initPlayers(bool rememberHouse) const;
-
     void saveBmpScreenToDisk();
 
     void onKeyDownGame(const cKeyboardEvent &event);

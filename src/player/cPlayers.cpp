@@ -13,6 +13,13 @@
 #include "cPlayer.h"
 #include "cPlayers.h"
 #include "utils/cLog.h"
+#include "brains/cPlayerBrainSkirmish.h"
+#include "brains/cPlayerBrainCampaign.h"
+#include "brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
+#include "brains/cPlayerBrainSandworm.h"
+#include "game/cGameSettings.h"
+#include "include/sDataCampaign.h"
+#include "definitions.h"
 
 cPlayers::cPlayers() {
     // Players will be initialized through default constructors of std::array
@@ -50,4 +57,55 @@ cPlayer& cPlayers::getHumanPlayer() {
 
 const cPlayer& cPlayers::getHumanPlayer() const {
     return m_players[0];  // HUMAN is typically player 0
+}
+
+void cPlayers::initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign)
+{
+    int maxThinkingAIs = MAX_PLAYERS_CAPACITY;
+    if (gameSettings->isOneAi()) {
+        maxThinkingAIs = 1;
+    }
+
+    for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
+        cPlayer &pPlayer = m_players[i];
+
+        int h = pPlayer.getHouse();
+
+        brains::cPlayerBrain *brain = nullptr;
+        bool autoSlabStructures = false;
+
+        if (i > HUMAN && i < AI_CPU5) {
+            // TODO: playing attribute? (from ai player class?)
+            if (!gameSettings->isDisableAI()) {
+                if (maxThinkingAIs > 0) {
+                    if (gameSettings->isSkirmish()) {
+                        brain = new brains::cPlayerBrainSkirmish(&pPlayer);
+                    }
+                    else {
+                        brain = new brains::cPlayerBrainCampaign(&pPlayer, dataCampaign);
+                        autoSlabStructures = true;  // campaign based AI's autoslab structures...
+                    }
+                }
+            }
+            maxThinkingAIs--;
+        }
+        else if (i == AI_CPU5) {
+            brain = new brains::cPlayerBrainFremenSuperWeapon(&pPlayer);
+        }
+        else if (i == AI_CPU6) {
+            if (!gameSettings->isDisableWormAi()) {
+                brain = new brains::cPlayerBrainSandworm(&pPlayer);
+            }
+        }
+
+        pPlayer.init(i, brain);
+        pPlayer.setAutoSlabStructures(autoSlabStructures);
+        if (rememberHouse) {
+            pPlayer.setHouse(h);
+        }
+
+        if (gameSettings->isSkirmish()) {
+            pPlayer.setCredits(2500);
+        }
+    }
 }
