@@ -1,6 +1,6 @@
 #include "gamestates/cGamePlaying.h"
-#include "include/d2tmc.h"
-#include "game/cGame.h"
+// #include "include/d2tmc.h"
+// #include "game/cGame.h"
 #include "include/definitions.h"
 #include "building/cItemBuilder.h"
 #include "gameobjects/structures/cStructureFactory.h"
@@ -47,6 +47,8 @@ cGamePlaying::cGamePlaying(cGame &theGame, sGameServices* services) :
     assert(m_reinforcements != nullptr);
     m_structureFactory = services->objects->getStructureFactory();
     assert(m_structureFactory != nullptr);
+    m_drawManager = m_interface->getRenderDrawManager();
+    assert(m_drawManager != nullptr);
 }
 
 cGamePlaying::~cGamePlaying()
@@ -55,7 +57,7 @@ cGamePlaying::~cGamePlaying()
 
 void cGamePlaying::thinkFast()
 {
-    game.m_drawManager->thinkFast_statePlaying();
+    m_drawManager->thinkFast_statePlaying();
 
     m_mapCamera->thinkFast();
 
@@ -117,7 +119,7 @@ void cGamePlaying::thinkNormal()
             }
         }
 
-        game.m_drawManager->think();
+        m_drawManager->think();
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
             m_objects->getPlayer(i).think();
@@ -152,7 +154,7 @@ void cGamePlaying::thinkSlow()
 
 void cGamePlaying::draw() const
 {
-    game.m_drawManager->drawCombatState();
+    m_drawManager->drawCombatState();
     if (m_settings->shouldDrawFps()) {
         m_interface->drawTextFps();
     }
@@ -163,7 +165,7 @@ void cGamePlaying::draw() const
         m_interface->drawTextTime();
     }
     // MOUSE
-    game.m_drawManager->drawCombatMouse();
+    m_drawManager->drawCombatMouse();
 }
 
 void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent& )
@@ -179,7 +181,7 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     logbook(event.toString());
 
-    game.m_drawManager->onNotifyKeyboardEvent(event);
+    m_drawManager->onNotifyKeyboardEvent(event);
 
     switch (event.getType()) {
         case eKeyEventType::HOLD:
@@ -358,19 +360,19 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     const cPlayer &humanPlayer = m_objects->getPlayer(HUMAN);
 
     if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
-        game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(0));
+        m_drawManager->setPlayerToDraw(&m_objects->getPlayer(0));
         m_interface->setPlayerToInteractFor(&m_objects->getPlayer(0));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
-        game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(1));
+        m_drawManager->setPlayerToDraw(&m_objects->getPlayer(1));
         m_interface->setPlayerToInteractFor(&m_objects->getPlayer(1));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
-        game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(2));
+        m_drawManager->setPlayerToDraw(&m_objects->getPlayer(2));
         m_interface->setPlayerToInteractFor(&m_objects->getPlayer(2));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
-        game.m_drawManager->setPlayerToDraw(&m_objects->getPlayer(3));
+        m_drawManager->setPlayerToDraw(&m_objects->getPlayer(3));
         m_interface->setPlayerToInteractFor(&m_objects->getPlayer(3));
     }
 
