@@ -663,10 +663,7 @@ bool cGame::setupGame()
     m_Houses->installHouses(gamesCfg);
     // A few messages for the player
     logbook("Initializing:  PLAYERS");
-    for (int i = 0; i < MAX_PLAYERS; i++) {
-        game.m_gameObjectsContext->getPlayer(i).init(i, nullptr);
-        game.m_gameObjectsContext->getPlayer(i).setHousesInfo(m_Houses);
-    }
+    m_players->setupPlayers(m_Houses);
     cInfoContextCreator infoCreator;
     infoCreator.installInfos(*game.m_infoContext);
 
