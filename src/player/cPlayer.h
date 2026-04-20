@@ -74,6 +74,10 @@ struct s_PlaceResult {
 };
 
 struct sGameServices;
+class cGameSettings;
+class cInfoContext;
+class cGameObjectContext;
+class cGameInterface;
 
 class cPlayer : public cScenarioObserver {
 
@@ -539,6 +543,10 @@ private:
     int id;    // this id is the reference to the player array
     int iTeam;
 
+    cGameSettings *m_settings = nullptr;
+    cInfoContext *m_infos = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cGameInterface *m_interface = nullptr;
 
     Texture *bmp_structure[MAX_STRUCTURE_BMPS];
     Texture *bmp_flag;
