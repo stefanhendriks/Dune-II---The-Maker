@@ -9,11 +9,4 @@ echo  ---  Installing dependencies  ---
 echo  ---                           ---
 echo  ---------------------------------
 
-brew install cmake
-brew install ninja
-brew install pkg-config
-brew install sdl2
-brew install sdl2_ttf
-brew install sdl2_image
-brew install sdl2_mixer
-brew install catch2
+brew install --quiet cmake ninja pkg-config sdl2 sdl2_ttf sdl2_image sdl2_mixer catch2
