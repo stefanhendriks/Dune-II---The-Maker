@@ -81,23 +81,22 @@ void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMo
     assert(sideBarFactory != nullptr);
     assert(mouse != nullptr);
 
-    for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+    for (int i = HUMAN; i < MAX_PLAYERS_CAPACITY; i++) {
         cPlayer* player = &m_players[i];
 
-        auto* buildingListUpdater = new cBuildingListUpdater(player);
-        player->setBuildingListUpdater(buildingListUpdater);
+        auto buildingListUpdater = std::make_unique<cBuildingListUpdater>(player);
+        auto itemBuilder = std::make_unique<cItemBuilder>(player, buildingListUpdater.get());
+        player->setBuildingListUpdater(std::move(buildingListUpdater));
+        player->setItemBuilder(std::move(itemBuilder));
 
-        auto* itemBuilder = new cItemBuilder(player, buildingListUpdater);
-        player->setItemBuilder(itemBuilder);
-
-        auto* sidebar = sideBarFactory->createSideBar(player);
+        auto sidebar = sideBarFactory->createSideBar(player);
         player->setSideBar(sidebar);
 
-        auto* orderProcesser = new cOrderProcesser(player);
-        player->setOrderProcesser(orderProcesser);
+        auto orderProcesser = std::make_unique<cOrderProcesser>(player);
+        player->setOrderProcesser(std::move(orderProcesser));
 
-        auto* gameControlsContext = new cGameControlsContext(player, mouse);
-        player->setGameControlsContext(gameControlsContext);
+        auto gameControlsContext = std::make_unique<cGameControlsContext>(player, mouse);
+        player->setGameControlsContext(std::move(gameControlsContext));
 
         player->setTechLevel(techLevel);
     }
