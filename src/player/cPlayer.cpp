@@ -467,9 +467,15 @@ int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
  */
 Texture *cPlayer::getStructureBitmap(int index)
 {
+    if (index < 0 || index >= MAX_STRUCTURE_BMPS) {
+        assert(false && "getStructureBitmap called with invalid index");
+        return nullptr;
+    }
+
     if (bmp_structure[index]) {
         return bmp_structure[index];
     }
+
     return nullptr;
 }
 
@@ -481,6 +487,11 @@ Texture *cPlayer::getStructureBitmap(int index)
  */
 Texture *cPlayer::getStructureBitmapFlash(int index)
 {
+    if (index < 0 || index >= MAX_STRUCTURETYPES) {
+        assert(false && "getStructureBitmapFlash called with invalid structure type index");
+        return nullptr;
+    }
+
     return getStructureBitmap(MAX_STRUCTURETYPES + index); // by convention flash bmp's are stored starting at MAX + index
 }
 
@@ -502,9 +513,15 @@ Texture *cPlayer::getFlagSmallBitmap()
  */
 Texture *cPlayer::getUnitBitmap(int index)
 {
+    if (index < 0 || index >= MAX_UNITTYPES) {
+        assert(false && "getUnitBitmap called with invalid index");
+        return nullptr;
+    }
+
     if (bmp_unit[index]) {
         return bmp_unit[index];
     }
+
     return nullptr;
 }
 
@@ -516,17 +533,29 @@ Texture *cPlayer::getUnitBitmap(int index)
  */
 Texture *cPlayer::getUnitTopBitmap(int index)
 {
+    if (index < 0 || index >= MAX_UNITTYPES) {
+        assert(false && "getUnitTopBitmap called with invalid index");
+        return nullptr;
+    }
+
     if (bmp_unit_top[index]) {
         return bmp_unit_top[index];
     }
+
     return nullptr;
 }
 
 Texture *cPlayer::getUnitShadowBitmap(int index)
 {
+    if (index < 0 || index >= MAX_UNITTYPES) {
+        assert(false && "getUnitShadowBitmap called with invalid index");
+        return nullptr;
+    }
+
     if (m_infos->getUnitInfo(index).shadow) {
         return m_infos->getUnitInfo(index).shadow;
-    } else
+    }
+    else
         return nullptr;
 }
 
