@@ -12,6 +12,12 @@
 
 #include "cPlayer.h"
 #include "cPlayers.h"
+#include "building/cItemBuilder.h"
+#include "controls/cGameControlsContext.h"
+#include "controls/cMouse.h"
+#include "gameobjects/structures/cOrderProcesser.h"
+#include "sidebar/cBuildingListUpdater.h"
+#include "sidebar/cSideBarFactory.h"
 #include "utils/cLog.h"
 #include "brains/cPlayerBrainSkirmish.h"
 #include "brains/cPlayerBrainCampaign.h"
@@ -67,6 +73,33 @@ void cPlayers::setupPlayers(std::shared_ptr<cHousesInfo> housesInfo)
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
         m_players[i].init(i, nullptr);
         m_players[i].setHousesInfo(housesInfo);
+    }
+}
+
+void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMouse* mouse, int techLevel)
+{
+    assert(sideBarFactory != nullptr);
+    assert(mouse != nullptr);
+
+    for (int i = HUMAN; i < MAX_PLAYERS; i++) {
+        cPlayer* player = &m_players[i];
+
+        auto* buildingListUpdater = new cBuildingListUpdater(player);
+        player->setBuildingListUpdater(buildingListUpdater);
+
+        auto* itemBuilder = new cItemBuilder(player, buildingListUpdater);
+        player->setItemBuilder(itemBuilder);
+
+        auto* sidebar = sideBarFactory->createSideBar(player);
+        player->setSideBar(sidebar);
+
+        auto* orderProcesser = new cOrderProcesser(player);
+        player->setOrderProcesser(orderProcesser);
+
+        auto* gameControlsContext = new cGameControlsContext(player, mouse);
+        player->setGameControlsContext(gameControlsContext);
+
+        player->setTechLevel(techLevel);
     }
 }
 

@@ -16,6 +16,8 @@
 #include <memory>
 class cGameSettings;
 struct s_DataCampaign;
+class cMouse;
+class cSideBarFactory;
 #include "cPlayer.h"
 
 /**
@@ -94,6 +96,9 @@ public:
     void initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign);
 
     void setupPlayers(std::shared_ptr<cHousesInfo> housesInfo);
+
+    // Initialize per-player runtime helpers used during gameplay.
+    void setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMouse* mouse, int techLevel);
 
     void destroyAllegroBitmaps();
 
