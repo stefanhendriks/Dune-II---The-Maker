@@ -31,7 +31,16 @@
 #include "include/sGameEvent.h"
 
 cPlayers::cPlayers() {
-    // Players will be initialized through default constructors of std::array
+    for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
+        m_players[i] = new cPlayer();
+    }
+}
+
+cPlayers::~cPlayers() {
+    for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
+        delete m_players[i];
+        m_players[i] = nullptr;
+    }
 }
 
 cPlayer* cPlayers::operator[](int index) {
