@@ -37,8 +37,10 @@ cPlayers::cPlayers()
     }
 }
 
+void cPlayers::serviceInit(sGameServices* services)
+{
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
-        m_players[i] = new cPlayer(services);
+        m_players[i]->serviceInit(services);
     }
 }
 
