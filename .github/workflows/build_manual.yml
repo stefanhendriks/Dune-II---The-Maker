@@ -67,6 +67,7 @@ jobs:
           gh release create "$TAG" \
             --title "$TAG" \
             --notes "Release $TAG" \
+            --latest=false \
             2>/dev/null || true
           cp bin/d2tm.zip bin/d2tm-windows-${{ inputs.tag }}.zip
           gh release upload "$TAG" bin/d2tm-windows-${{ inputs.tag }}.zip --clobber

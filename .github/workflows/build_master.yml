@@ -64,9 +64,9 @@ jobs:
           DATE=$(date -u +'%Y-%m-%d %H:%M')
           NOTES=$(printf 'Automated bleeding edge build from master branch.\n\nCommit: %s\nDate: %s' "${SHORT_SHA}" "${DATE}")
           gh release create "$TAG" \
-            --prerelease \
             --title "Bleeding Edge - ${DATE}" \
             --notes "$NOTES" \
+            --latest=false \
             2>/dev/null || true
           cp bin/d2tm.zip bin/d2tm-windows-${SHORT_SHA}.zip
           gh release upload "$TAG" bin/d2tm-windows-${SHORT_SHA}.zip --clobber
