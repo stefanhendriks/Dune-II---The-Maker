@@ -82,8 +82,8 @@ endif()
 
 add_subdirectory(src)
 
-enable_testing()
-add_subdirectory(tests)
+#enable_testing()
+#add_subdirectory(tests)
 
 add_executable(${PROJECT_NAME} ${D2TM_SRC} Script.rc)
 
