@@ -6,15 +6,43 @@ on:
       tag:
         required: true
         type: string
-        description: Tag
+        description: Tag or commit SHA
 
 concurrency:
   group: master-builds
   cancel-in-progress: false   # wait until the current run finishes
 
 jobs:
+  Prepare:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.resolve.outputs.tag }}
+    steps:
+      - name: Resolve tag name
+        id: resolve
+        run: |
+          INPUT="${{ inputs.tag }}"
+          if [[ "$INPUT" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "tag=manual-${INPUT:0:7}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=$INPUT" >> $GITHUB_OUTPUT
+          fi
+      - name: Create release
+        run: |
+          TAG="${{ steps.resolve.outputs.tag }}"
+          gh release view "$TAG" > /dev/null 2>&1 || \
+            gh release create "$TAG" \
+              --title "$TAG" \
+              --notes "Release from ${{ inputs.tag }}" \
+              --latest=false \
+              --target "${{ inputs.tag }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   MSYS2:
     name: Windows-msys2-mingw64
+    needs: Prepare
     runs-on: [ windows-latest ]
     defaults:
       run:
@@ -43,7 +71,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DENV_D2TM_VERSION=${{ inputs.tag }} -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
+          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
       - name: Build
         run: |
           cd "${{ github.workspace }}\build"
@@ -60,23 +88,18 @@ jobs:
         run: |
           cd "${{ github.workspace }}/bin"
           zip -vr d2tm.zip . -x "*.DS_Store"
-      - name: Create release and upload Windows binary
+      - name: Upload Windows binary to release
         shell: bash
         run: |
-          TAG="${{ inputs.tag }}"
-          gh release create "$TAG" \
-            --title "$TAG" \
-            --notes "Release $TAG" \
-            --latest=false \
-            2>/dev/null || true
-          cp bin/d2tm.zip bin/d2tm-windows-${{ inputs.tag }}.zip
-          gh release upload "$TAG" bin/d2tm-windows-${{ inputs.tag }}.zip --clobber
+          TAG="${{ needs.Prepare.outputs.tag }}"
+          cp bin/d2tm.zip bin/d2tm-windows-${TAG}.zip
+          gh release upload "$TAG" bin/d2tm-windows-${TAG}.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   Ubuntu:
     name: Ubuntu (x86)
-    needs: MSYS2
+    needs: [Prepare, MSYS2]
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Set up GCC
@@ -100,7 +123,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DENV_D2TM_VERSION=${{ inputs.tag }} -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -119,14 +142,15 @@ jobs:
           zip -vr d2tm.zip . -x "*.DS_Store"
       - name: Upload Linux binary to release
         run: |
-          cp bin/d2tm.zip bin/d2tm-linux-${{ inputs.tag }}.zip
-          gh release upload "${{ inputs.tag }}" bin/d2tm-linux-${{ inputs.tag }}.zip --clobber
+          TAG="${{ needs.Prepare.outputs.tag }}"
+          cp bin/d2tm.zip bin/d2tm-linux-${TAG}.zip
+          gh release upload "$TAG" bin/d2tm-linux-${TAG}.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   MACOSX:
     name: Mac OS X (Arm64)
-    needs: Ubuntu
+    needs: [Prepare, Ubuntu]
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
@@ -143,7 +167,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DENV_D2TM_VERSION=${{ inputs.tag }} -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -162,14 +186,15 @@ jobs:
           zip -vr d2tm.zip . -x "*.DS_Store"
       - name: Upload macOS ARM binary to release
         run: |
-          cp bin/d2tm.zip bin/d2tm-macos-arm-${{ inputs.tag }}.zip
-          gh release upload "${{ inputs.tag }}" bin/d2tm-macos-arm-${{ inputs.tag }}.zip --clobber
+          TAG="${{ needs.Prepare.outputs.tag }}"
+          cp bin/d2tm.zip bin/d2tm-macos-arm-${TAG}.zip
+          gh release upload "$TAG" bin/d2tm-macos-arm-${TAG}.zip --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   MACOSX_INTEL:
     name: Mac OS X (Intel)
-    needs: MACOSX
+    needs: [Prepare, MACOSX]
     runs-on: [ macos-15-intel ]
     steps:
       - name: Checkout
@@ -186,7 +211,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DENV_D2TM_VERSION=${{ inputs.tag }} -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=Release
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -205,7 +230,27 @@ jobs:
           zip -vr d2tm.zip . -x "*.DS_Store"
       - name: Upload macOS Intel binary to release
         run: |
-          cp bin/d2tm.zip bin/d2tm-macos-intel-${{ inputs.tag }}.zip
-          gh release upload "${{ inputs.tag }}" bin/d2tm-macos-intel-${{ inputs.tag }}.zip --clobber
+          TAG="${{ needs.Prepare.outputs.tag }}"
+          cp bin/d2tm.zip bin/d2tm-macos-intel-${TAG}.zip
+          gh release upload "$TAG" bin/d2tm-macos-intel-${TAG}.zip --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  Cleanup:
+    name: Prune old manual releases
+    needs: [MSYS2, Ubuntu, MACOSX, MACOSX_INTEL]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete manual releases older than 30 days
+        run: |
+          CUTOFF=$(date -d '30 days ago' --utc +%Y-%m-%dT%H:%M:%SZ)
+          gh release list --repo ${{ github.repository }} --limit 100 --json tagName,createdAt \
+            | jq -r --arg cutoff "$CUTOFF" \
+                '.[] | select(.tagName | startswith("manual-")) | select(.createdAt < $cutoff) | .tagName' \
+            | while read TAG; do
+                echo "Deleting release and tag: $TAG"
+                gh release delete "$TAG" --yes --cleanup-tag
+              done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
