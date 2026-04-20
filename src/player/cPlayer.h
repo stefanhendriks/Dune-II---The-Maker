@@ -123,23 +123,23 @@ public:
     void setHouse(int iHouse);
 
     // ---
-    void setItemBuilder(cItemBuilder *theItemBuilder);
+    void setItemBuilder(std::unique_ptr<cItemBuilder> theItemBuilder);
 
     void setSideBar(cSideBar *theSideBar);
 
-    void setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader);
+    void setBuildingListUpdater(std::unique_ptr<cBuildingListUpdater> theBuildingListUpgrader);
 
     void setTechLevel(int theTechLevel) {
         techLevel = theTechLevel;
     }
 
-    void setOrderProcesser(cOrderProcesser *theOrderProcesser);
+    void setOrderProcesser(std::unique_ptr<cOrderProcesser> theOrderProcesser);
 
-    void setGameControlsContext(cGameControlsContext *theGameControlsContext);
+    void setGameControlsContext(std::unique_ptr<cGameControlsContext> theGameControlsContext);
 
     // get
     cBuildingListUpdater *getBuildingListUpdater() const {
-        return buildingListUpdater;
+        return buildingListUpdater.get();
     }
 
     cPlayerDifficultySettings *getDifficultySettings() const {
@@ -147,7 +147,7 @@ public:
     }
 
     cItemBuilder *getItemBuilder() const {
-        return itemBuilder;
+        return itemBuilder.get();
     }
 
     cSideBar *getSideBar() const {
@@ -175,11 +175,11 @@ public:
     }
 
     cOrderProcesser *getOrderProcesser() const {
-        return orderProcesser;
+        return orderProcesser.get();
     }
 
     cGameControlsContext *getGameControlsContext() const {
-        return gameControlsContext;
+        return gameControlsContext.get();
     }
 
     void setContextMouseState(eMouseState newState);
@@ -518,19 +518,16 @@ private:
     bool m_Human;
 
     // TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
-    // TODO: redundant? OBSELETE. Since we're getting more properties for units and thereby
+    // TODO: redundant? OBSOLETE. Since we're getting more properties for units and thereby
     // can/should create units specific for houses.
     cPlayerDifficultySettings *difficultySettings;
-
     // these have all state, and need to be recreated for each mission.
     cSideBar *sidebar;            // each player has a sidebar (lists of what it can build)
-    cItemBuilder *itemBuilder; // each player can build items
-
-    cBuildingListUpdater *buildingListUpdater; // modifies list of sidebar on upgrades
-    cOrderProcesser *orderProcesser; // process orders for starport
+    std::unique_ptr<cItemBuilder> itemBuilder; // each player can build items
+    std::unique_ptr<cBuildingListUpdater> buildingListUpdater; // modifies list of sidebar on upgrades
+    std::unique_ptr<cOrderProcesser> orderProcesser; // process orders for starport
     std::shared_ptr<cHousesInfo> m_HousesInfo;
-
-    cGameControlsContext *gameControlsContext;
+    std::unique_ptr<cGameControlsContext> gameControlsContext;
 
     int techLevel;        // technology level
     int house;

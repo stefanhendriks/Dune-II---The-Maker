@@ -58,21 +58,21 @@ cPlayer::cPlayer()
 
 cPlayer::~cPlayer()
 {
-    if (itemBuilder) {
-        delete itemBuilder;
-    }
-    if (orderProcesser) {
-        delete orderProcesser;
-    }
+    // if (itemBuilder) {
+    //     delete itemBuilder;
+    // }
+    // if (orderProcesser) {
+    //     delete orderProcesser;
+    // }
     if (sidebar) {
         delete sidebar;
     }
-    if (buildingListUpdater) {
-        delete buildingListUpdater;
-    }
-    if (gameControlsContext) {
-        delete gameControlsContext;
-    }
+    // if (buildingListUpdater) {
+    //     delete buildingListUpdater;
+    // }
+    // if (gameControlsContext) {
+    //     delete gameControlsContext;
+    // }
     if (difficultySettings) {
         delete difficultySettings;
     }
@@ -158,51 +158,51 @@ void cPlayer::setSideBar(cSideBar *theSideBar)
     sidebar = theSideBar;
 }
 
-void cPlayer::setItemBuilder(cItemBuilder *theItemBuilder)
+void cPlayer::setItemBuilder(std::unique_ptr<cItemBuilder> theItemBuilder)
 {
-    assert(theItemBuilder);
+    // assert(theItemBuilder);
 
-    // delete old reference
-    if (itemBuilder) {
-        delete itemBuilder;
-    }
+    // // delete old reference
+    // if (itemBuilder) {
+    //     delete itemBuilder;
+    // }
 
-    itemBuilder = theItemBuilder;
+    itemBuilder = std::move(theItemBuilder);
 }
 
-void cPlayer::setOrderProcesser(cOrderProcesser *theOrderProcesser)
+void cPlayer::setOrderProcesser(std::unique_ptr<cOrderProcesser> theOrderProcesser)
 {
-    assert(theOrderProcesser);
+    // assert(theOrderProcesser);
 
-    if (orderProcesser) {
-        delete orderProcesser;
-    }
+    // if (orderProcesser) {
+    //     delete orderProcesser;
+    // }
 
-    orderProcesser = theOrderProcesser;
+    orderProcesser = std::move(theOrderProcesser);
 }
 
-void cPlayer::setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader)
+void cPlayer::setBuildingListUpdater(std::unique_ptr<cBuildingListUpdater> theBuildingListUpgrader)
 {
-    assert(theBuildingListUpgrader);
+    // assert(theBuildingListUpgrader);
 
-    // delete old reference
-    if (buildingListUpdater) {
-        delete buildingListUpdater;
-    }
+    // // delete old reference
+    // if (buildingListUpdater) {
+    //     delete buildingListUpdater;
+    // }
 
-    buildingListUpdater = theBuildingListUpgrader;
+    buildingListUpdater = std::move(theBuildingListUpgrader);
 }
 
-void cPlayer::setGameControlsContext(cGameControlsContext *theGameControlsContext)
+void cPlayer::setGameControlsContext(std::unique_ptr<cGameControlsContext> theGameControlsContext)
 {
-    assert(theGameControlsContext);
+    // assert(theGameControlsContext);
 
-    // delete old reference
-    if (gameControlsContext) {
-        delete gameControlsContext;
-    }
+    // // delete old reference
+    // if (gameControlsContext) {
+    //     delete gameControlsContext;
+    // }
 
-    gameControlsContext = theGameControlsContext;
+    gameControlsContext = std::move(theGameControlsContext);
 }
 
 void cPlayer::init(int id, brains::cPlayerBrain *brain)
