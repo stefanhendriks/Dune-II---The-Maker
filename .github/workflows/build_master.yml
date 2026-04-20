@@ -24,7 +24,7 @@ jobs:
           update: true
           install: git gzip zip unzip mingw-w64-x86_64-toolchain mingw64/mingw-w64-x86_64-SDL2 mingw64/mingw-w64-x86_64-SDL2_mixer mingw64/mingw-w64-x86_64-SDL2_image mingw64/mingw-w64-x86_64-SDL2_ttf mingw64/mingw-w64-x86_64-cmake mingw-w64-x86_64-catch
       - name: configure Pagefile
-        uses: al-cheb/configure-pagefile-action@v1.3
+        uses: al-cheb/configure-pagefile-action@v1.5
         with:
           minimum-size: 16GB
           maximum-size: 16GB
