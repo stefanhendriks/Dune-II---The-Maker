@@ -6,6 +6,7 @@
 #include "controls/cMouse.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "include/sGameEvent.h"
+#include "utils/cStructureUtils.h"
 
 #include <format>
 
@@ -191,6 +192,41 @@ void cGameInterface::setLoseFlags(int value) const
 bool cGameInterface::playMusicByType(int iType) const
 {
     return m_igame->playMusicByType(iType);
+}
+
+bool cGameInterface::playMusicByType(int iType, int playerId, bool triggerWithVoice) const
+{
+    return m_igame->playMusicByType(iType, playerId, triggerWithVoice);
+}
+
+void cGameInterface::playVoice(int sampleId, int playerId) const
+{
+    m_igame->playVoice(sampleId, playerId);
+}
+
+void cGameInterface::playSound(int sampleId) const
+{
+    m_igame->playSound(sampleId);
+}
+
+int cGameInterface::getTotalPowerUsageForPlayer(cPlayer *pPlayer) const
+{
+    return m_igame->m_structureUtils->getTotalPowerUsageForPlayer(pPlayer);
+}
+
+int cGameInterface::getTotalPowerOutForPlayer(cPlayer *pPlayer) const
+{
+    return m_igame->m_structureUtils->getTotalPowerOutForPlayer(pPlayer);
+}
+
+int cGameInterface::getTotalSpiceCapacityForPlayer(cPlayer *pPlayer) const
+{
+    return m_igame->m_structureUtils->getTotalSpiceCapacityForPlayer(pPlayer);
+}
+
+int cGameInterface::getStructureTypeByUnitBuildId(int unitBuildId) const
+{
+    return m_igame->m_structureUtils->getStructureTypeByUnitBuildId(unitBuildId);
 }
 
 cDrawManager* cGameInterface::getRenderDrawManager() const
