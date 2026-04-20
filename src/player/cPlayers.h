@@ -33,7 +33,7 @@ public:
      * Default constructor
      */
     cPlayers();
-
+    ~cPlayers();
     /**
      * Non-copyable
      */
