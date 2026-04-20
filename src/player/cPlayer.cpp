@@ -76,9 +76,9 @@ cPlayer::~cPlayer()
     if (difficultySettings) {
         delete difficultySettings;
     }
-    if (brain_) {
-        delete brain_;
-    }
+    // if (brain_) {
+    //     delete brain_;
+    // }
 }
 
 void cPlayer::destroyAllegroBitmaps()
@@ -205,7 +205,7 @@ void cPlayer::setGameControlsContext(std::unique_ptr<cGameControlsContext> theGa
     gameControlsContext = std::move(theGameControlsContext);
 }
 
-void cPlayer::init(int id, brains::cPlayerBrain *brain)
+void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
 {
     if (id < 0 || id >= MAX_PLAYERS) {
         // no log(), as house still has to be set up
@@ -221,7 +221,7 @@ void cPlayer::init(int id, brains::cPlayerBrain *brain)
 
     spiceQuota = 0;
 
-    setBrain(brain);
+    setBrain(std::move(brain));
 
     house = GENERALHOUSE;
 
@@ -878,14 +878,14 @@ void cPlayer::thinkFast()
 }
 
 
-void cPlayer::setBrain(brains::cPlayerBrain *brain)
+void cPlayer::setBrain(std::unique_ptr<brains::cPlayerBrain> brain)
 {
     // delete old brain object if it was set before
-    if (brain_) {
-        delete brain_;
-    }
+    // if (brain_) {
+        // delete brain_;
+    // }
     // set new brain
-    brain_ = brain;
+    brain_ = std::move(brain);
 }
 
 bool cPlayer::isStructureTypeAvailableForConstruction(int iStructureType) const
