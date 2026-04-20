@@ -48,9 +48,6 @@ cPlayer::cPlayer()
     gameControlsContext = nullptr;
     bmp_flag = nullptr;
     bmp_flag_small = nullptr;
-    // no log(), because we can't assume player is fully initialized yet
-    logbook(std::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
-                        MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(SDL_Surface *)));
     memset(bmp_structure, 0, sizeof(bmp_structure));
     memset(bmp_unit, 0, sizeof(bmp_unit));
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
@@ -71,6 +68,8 @@ void cPlayer::serviceInit(sGameServices* services)
     assert(m_interface != nullptr);
     m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
     assert(m_gfxdata != nullptr);
+    logbook(std::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
+                        MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(SDL_Surface *)));
 }
 
 cPlayer::~cPlayer()
