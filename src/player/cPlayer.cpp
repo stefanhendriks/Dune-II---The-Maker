@@ -2,6 +2,7 @@
 
 #include "building/cItemBuilder.h"
 #include "game/cGame.h"
+#include "game/cGameInterface.h"
 #include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "data/gfxdata.h"
@@ -41,6 +42,7 @@
 
 cPlayer::cPlayer(sGameServices* services)
 {
+    assert(services != nullptr);
     m_settings = services->settings;
     assert(m_settings != nullptr);
     m_infos = services->info;
@@ -611,7 +613,7 @@ Color cPlayer::getPrimaryBuildingFadingColor() const
  */
 Color cPlayer::getSelectFadingColor() const
 {
-    return game.getColorFadeSelected(255, 255, 255);
+    return m_interface->getColorFadeSelected(255, 255, 255);
 }
 
 eHouseBitFlag cPlayer::getHouseBitFlag()
@@ -736,10 +738,10 @@ bool cPlayer::isSameTeamAs(const cPlayer *pPlayer)
  */
 void cPlayer::update()
 {
-    powerUsage_ = game.m_structureUtils->getTotalPowerUsageForPlayer(this);
-    powerProduce_ = game.m_structureUtils->getTotalPowerOutForPlayer(this);
+    powerUsage_ = m_interface->getTotalPowerUsageForPlayer(this);
+    powerProduce_ = m_interface->getTotalPowerOutForPlayer(this);
     // update spice capacity
-    maxCredits_ = game.m_structureUtils->getTotalSpiceCapacityForPlayer(this);
+    maxCredits_ = m_interface->getTotalSpiceCapacityForPlayer(this);
 }
 
 int cPlayer::getCredits()
@@ -1228,7 +1230,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
         return eCantBuildReason::ALREADY_BUILDING;
     }
 
-    int iStrucType = game.m_structureUtils->getStructureTypeByUnitBuildId(iUnitType);
+    int iStrucType = m_interface->getStructureTypeByUnitBuildId(iUnitType);
 
     // Do the reality-check, do we have the building needed?
     if (!hasAtleastOneStructure(iStrucType)) {
@@ -1854,7 +1856,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event)
     bool mayPlayVoice = true;
     if (triggerMusic) {
         if (m_settings->getMusicType() != MUSIC_ATTACK) {
-            mayPlayVoice = game.playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay);
+            mayPlayVoice = m_interface->playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay);
         }
         else {
             mayPlayVoice = false;
@@ -1862,7 +1864,7 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event)
     }
 
     if (mayPlayVoice && hasVoiceToPlay) {
-        game.playVoice(voiceId, getId());
+        m_interface->playVoice(voiceId, getId());
     }
 }
 
@@ -2223,11 +2225,11 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
     }
 
     if (unitSelected) {
-        game.playSound(SOUND_REPORTING);
+        m_interface->playSound(SOUND_REPORTING);
     }
 
     if (infantrySelected) {
-        game.playSound(SOUND_YESSIR);
+        m_interface->playSound(SOUND_YESSIR);
     }
 
     // return true if we selected any unit
