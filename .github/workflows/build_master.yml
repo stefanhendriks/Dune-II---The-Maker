@@ -30,7 +30,7 @@ jobs:
           maximum-size: 16GB
           disk-root: "C:"
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0   # fetch full history to see all files
@@ -85,7 +85,7 @@ jobs:
           platform: x86
       #          platform: x64
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0   # fetch full history to see all files
@@ -131,7 +131,7 @@ jobs:
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           fetch-depth: 0   # fetch full history to see all files
