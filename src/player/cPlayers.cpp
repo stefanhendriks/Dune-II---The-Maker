@@ -34,12 +34,12 @@ cPlayers::cPlayers() {
     // Players will be initialized through default constructors of std::array
 }
 
-cPlayer& cPlayers::operator[](int index) {
+cPlayer* cPlayers::operator[](int index) {
     assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::operator[] out of bounds");
     return m_players[index];
 }
 
-const cPlayer& cPlayers::operator[](int index) const {
+const cPlayer* cPlayers::operator[](int index) const {
     assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::operator[] const out of bounds");
     return m_players[index];
 }
@@ -49,7 +49,7 @@ cPlayer* cPlayers::getPlayer(int index) {
     if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
         return nullptr;
     }
-    return &m_players[index];
+    return m_players[index];
 }
 
 const cPlayer* cPlayers::getPlayer(int index) const {
@@ -57,22 +57,22 @@ const cPlayer* cPlayers::getPlayer(int index) const {
     if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
         return nullptr;
     }
-    return &m_players[index];
+    return m_players[index];
 }
 
-cPlayer& cPlayers::getHumanPlayer() {
+cPlayer* cPlayers::getHumanPlayer() {
     return m_players[0];  // HUMAN is typically player 0
 }
 
-const cPlayer& cPlayers::getHumanPlayer() const {
+const cPlayer* cPlayers::getHumanPlayer() const {
     return m_players[0];  // HUMAN is typically player 0
 }
 
 void cPlayers::setupPlayers(std::shared_ptr<cHousesInfo> housesInfo)
 {
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
-        m_players[i].init(i, nullptr);
-        m_players[i].setHousesInfo(housesInfo);
+        m_players[i]->init(i, nullptr);
+        m_players[i]->setHousesInfo(housesInfo);
     }
 }
 
@@ -82,9 +82,9 @@ void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMo
     assert(mouse != nullptr);
 
     for (int i = HUMAN; i < MAX_PLAYERS_CAPACITY; i++) {
-        cPlayer* player = &m_players[i];
+        cPlayer* player = m_players[i];
 
-        auto buildingListUpdater = std::make_unique<cBuildingListUpdater>(player);
+       auto buildingListUpdater = std::make_unique<cBuildingListUpdater>(player);
         auto itemBuilder = std::make_unique<cItemBuilder>(player, buildingListUpdater.get());
         player->setBuildingListUpdater(std::move(buildingListUpdater));
         player->setItemBuilder(std::move(itemBuilder));
@@ -105,21 +105,21 @@ void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMo
 void cPlayers::onNotifyGameEvent(const s_GameEvent& event)
 {
     for (auto& player : m_players) {
-        player.onNotifyGameEvent(event);
+        player->onNotifyGameEvent(event);
     }
 }
 
 void cPlayers::evaluateStillAliveForAI()
 {
     for (int i = 1; i < MAX_PLAYERS_CAPACITY; i++) {
-        m_players[i].evaluateStillAlive();
+        m_players[i]->evaluateStillAlive();
     }
 }
 
 void cPlayers::destroyAllegroBitmaps()
 {
     for (auto& player : m_players) {
-        player.destroyAllegroBitmaps();
+        player->destroyAllegroBitmaps();
     }
 }
 
@@ -131,9 +131,9 @@ void cPlayers::initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_Da
     }
 
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
-        cPlayer &pPlayer = m_players[i];
+        cPlayer* pPlayer = m_players[i];
 
-        int h = pPlayer.getHouse();
+        int h = pPlayer->getHouse();
 
         std::unique_ptr<brains::cPlayerBrain> brain;
         bool autoSlabStructures = false;
@@ -143,10 +143,10 @@ void cPlayers::initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_Da
             if (!gameSettings->isDisableAI()) {
                 if (maxThinkingAIs > 0) {
                     if (gameSettings->isSkirmish()) {
-                        brain = std::make_unique<brains::cPlayerBrainSkirmish>(&pPlayer);
+                        brain = std::make_unique<brains::cPlayerBrainSkirmish>(pPlayer);
                     }
                     else {
-                        brain = std::make_unique<brains::cPlayerBrainCampaign>(&pPlayer, dataCampaign);
+                        brain = std::make_unique<brains::cPlayerBrainCampaign>(pPlayer, dataCampaign);
                         autoSlabStructures = true;  // campaign based AI's autoslab structures...
                     }
                 }
@@ -154,22 +154,22 @@ void cPlayers::initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_Da
             maxThinkingAIs--;
         }
         else if (i == AI_CPU5) {
-            brain = std::make_unique<brains::cPlayerBrainFremenSuperWeapon>(&pPlayer);
+            brain = std::make_unique<brains::cPlayerBrainFremenSuperWeapon>(pPlayer);
         }
         else if (i == AI_CPU6) {
             if (!gameSettings->isDisableWormAi()) {
-                brain = std::make_unique<brains::cPlayerBrainSandworm>(&pPlayer);
+                brain = std::make_unique<brains::cPlayerBrainSandworm>(pPlayer);
             }
         }
 
-        pPlayer.init(i, std::move(brain));
-        pPlayer.setAutoSlabStructures(autoSlabStructures);
+        pPlayer->init(i, std::move(brain));
+        pPlayer->setAutoSlabStructures(autoSlabStructures);
         if (rememberHouse) {
-            pPlayer.setHouse(h);
+            pPlayer->setHouse(h);
         }
 
         if (gameSettings->isSkirmish()) {
-            pPlayer.setCredits(2500);
+            pPlayer->setCredits(2500);
         }
     }
 }

@@ -42,11 +42,11 @@ cBullets& cGameObjectContext::getBullets() const {
     return *m_Bullets;
 }
 
-cPlayers& cGameObjectContext::getPlayers() const {
+cPlayers* cGameObjectContext::getPlayers() const {
     if (!m_Players) {
         throw std::runtime_error("cPlayers not initialized in cGameObjectContext");
     }
-    return *m_Players;
+    return m_Players.get();
 }
 
 cParticles& cGameObjectContext::getParticles() const {
@@ -87,14 +87,14 @@ const cUnit& cGameObjectContext::getUnit(int index) const
     return (*m_Units)[index];
 }
 
-cPlayer& cGameObjectContext::getPlayer(int index)
+cPlayer* cGameObjectContext::getPlayer(int index)
 {
-    return (*m_Players)[index];
+    return m_Players->getPlayer(index);
 }
 
-const cPlayer& cGameObjectContext::getPlayer(int index) const
+const cPlayer* cGameObjectContext::getPlayer(int index) const
 {
-    return (*m_Players)[index];
+    return m_Players->getPlayer(index);
 }
 
 cStructureFactory* cGameObjectContext::getStructureFactory() const

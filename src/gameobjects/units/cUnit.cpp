@@ -740,12 +740,12 @@ void cUnit::draw()
     int start_x = bmp_body * bmp_width;
     int start_y = bmp_height * rendering.iFrame;
 
-    cPlayer &cPlayer = game.m_gameObjectsContext->getPlayer(this->iPlayer);
+    cPlayer *cPlayer = game.m_gameObjectsContext->getPlayer(this->iPlayer);
 
     const float scaledWidth = game.m_mapCamera->factorZoomLevel(bmp_width);
     const float scaledHeight = game.m_mapCamera->factorZoomLevel(bmp_height);
 
-    Texture *shadow = cPlayer.getUnitShadowBitmap(iType);
+    Texture *shadow = cPlayer->getUnitShadowBitmap(iType);
     int roundedScaledWidth = static_cast<int>(round(scaledWidth));
     int roundedScaledHeight = static_cast<int>(round(scaledHeight));
     if (shadow) {
@@ -758,7 +758,7 @@ void cUnit::draw()
     }
 
     // Draw BODY
-    Texture *bitmap = cPlayer.getUnitBitmap(iType);
+    Texture *bitmap = cPlayer->getUnitBitmap(iType);
     if (bitmap) {
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
         cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
@@ -770,7 +770,7 @@ void cUnit::draw()
 
 
     // Draw TOP
-    Texture *top = cPlayer.getUnitTopBitmap(iType);
+    Texture *top = cPlayer->getUnitTopBitmap(iType);
     if (top && iHitPoints > -1) {
         // recalculate start_x using head instead of body
         start_x = bmp_head * bmp_width;
@@ -2098,7 +2098,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
 void cUnit::log(const std::string &txt) const
 {
     // logs unit stuff, but gives unit information
-    game.m_gameObjectsContext->getPlayer(iPlayer).log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, movement.iGoalCell = {}] '{}'",
+    game.m_gameObjectsContext->getPlayer(iPlayer)->log(std::format("[UNIT[{}]: type = {}(={}), iCell = {}, movement.iGoalCell = {}] '{}'",
                                      iID, iType, game.m_infoContext->getUnitInfo(iType).name, position.iCell, movement.iGoalCell, txt));
 }
 
@@ -2816,7 +2816,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
     int cellType = game.m_gameObjectsContext->getMap().getCellType(position.iCell);
     int iSlowDown = game.m_gameObjectsContext->getMap().getCellSlowDown(position.iCell);
 
-    cPlayerDifficultySettings *difficultySettings = game.m_gameObjectsContext->getPlayer(iPlayer).getDifficultySettings();
+    cPlayerDifficultySettings *difficultySettings = game.m_gameObjectsContext->getPlayer(iPlayer)->getDifficultySettings();
     if (moveTimer.get() < ((difficultySettings->getMoveSpeed(iType, iSlowDown)))) {
         return eUnitMoveToCellResult::MOVERESULT_SLOWDOWN; // get out
     }
@@ -2958,7 +2958,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
             }
         }
 
-        if (iPlayer == AI_CPU5 && game.m_gameObjectsContext->getPlayer(HUMAN).isHouse(ATREIDES)) {
+        if (iPlayer == AI_CPU5 && game.m_gameObjectsContext->getPlayer(HUMAN)->isHouse(ATREIDES)) {
             // TODO: make this work for all allied forces
             // hackish way to get Fog of war clearance by allied fremen units (super weapon).
             game.m_gameObjectsContext->getMap().clearShroud(position.iCell, game.m_infoContext->getUnitInfo(iType).sight, HUMAN);
@@ -3086,7 +3086,7 @@ bool cUnit::canBeSquished()
 
 cPlayer *cUnit::getPlayer()
 {
-    return &game.m_gameObjectsContext->getPlayer(iPlayer);
+    return game.m_gameObjectsContext->getPlayer(iPlayer);
 }
 
 bool cUnit::isSaboteur()
@@ -3716,7 +3716,7 @@ void cUnit::think_harvester()
             bFindRefinery = true;
 
         // when we should harvest...
-        cPlayerDifficultySettings *difficultySettings = game.m_gameObjectsContext->getPlayer(iPlayer).getDifficultySettings();
+        cPlayerDifficultySettings *difficultySettings = game.m_gameObjectsContext->getPlayer(iPlayer)->getDifficultySettings();
         if (harvestTimer.get() > (difficultySettings->getHarvestSpeed(game.m_infoContext->getUnitInfo(iType).harvesting_speed)) &&
                 iCredits < getUnitInfo().credit_capacity) {
             harvestTimer.reset(1);
