@@ -406,7 +406,7 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnits()[i];
+        cUnit &pUnit = m_objects->getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
         if (!pUnit.belongsTo(this)) continue;
@@ -423,7 +423,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnits()[i];
+        cUnit &pUnit = m_objects->getUnit(i);
         if (!pUnit.isValid()) continue;
         if (pUnit.isDead()) continue;
         if (!pUnit.belongsTo(this)) continue;
@@ -449,7 +449,7 @@ int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
 {
     int count = 0;
     for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &cUnit = m_objects->getUnits()[i];
+        cUnit &cUnit = m_objects->getUnit(i);
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != this->getId()) continue;
         if (std::find(unitTypes.begin(), unitTypes.end(), cUnit.iType) != unitTypes.end()) {
@@ -1317,7 +1317,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
     int maxTargets = 0;
 
     for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &cUnit = m_objects->getUnits()[i];
+        cUnit &cUnit = m_objects->getUnit(i);
         if (!cUnit.isValid()) continue;
         if (cUnit.iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
@@ -1748,7 +1748,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 
             int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(cll);
             if (idOfUnitAtCell > -1) {
-                if (m_objects->getUnits()[idOfUnitAtCell].isValid() && m_objects->getUnits()[idOfUnitAtCell].getPlayer() != this) {
+                if (m_objects->getUnit(idOfUnitAtCell).isValid() && m_objects->getUnit(idOfUnitAtCell).getPlayer() != this) {
                     foundUnitFromOtherPlayerThanMe = true;
                 }
                 if (iUnitIDToIgnore > -1) {
