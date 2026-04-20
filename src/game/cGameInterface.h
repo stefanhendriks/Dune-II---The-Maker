@@ -57,6 +57,14 @@ public:
     void setWinFlags(int value) const;
     void setLoseFlags(int value) const;
     bool playMusicByType(int iType) const;
+    bool playMusicByType(int iType, int playerId, bool triggerWithVoice) const;
+    void playVoice(int sampleId, int playerId) const;
+    void playSound(int sampleId) const;
+
+    int getTotalPowerUsageForPlayer(cPlayer *pPlayer) const;
+    int getTotalPowerOutForPlayer(cPlayer *pPlayer) const;
+    int getTotalSpiceCapacityForPlayer(cPlayer *pPlayer) const;
+    int getStructureTypeByUnitBuildId(int unitBuildId) const;
 private:
     cGame* m_igame = nullptr;
 };
