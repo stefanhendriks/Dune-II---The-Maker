@@ -85,7 +85,8 @@ public:
 
     void setBrain(std::unique_ptr<brains::cPlayerBrain> brain);
 
-    void setHousesInfo(std::shared_ptr<cHousesInfo> housesInfo) {
+    void setHousesInfo(cHousesInfo* housesInfo) {
+        assert(housesInfo != nullptr);
         m_HousesInfo = housesInfo;
     }
 
@@ -526,7 +527,7 @@ private:
     std::unique_ptr<cItemBuilder> itemBuilder; // each player can build items
     std::unique_ptr<cBuildingListUpdater> buildingListUpdater; // modifies list of sidebar on upgrades
     std::unique_ptr<cOrderProcesser> orderProcesser; // process orders for starport
-    std::shared_ptr<cHousesInfo> m_HousesInfo;
+    cHousesInfo* m_HousesInfo;
     std::unique_ptr<cGameControlsContext> gameControlsContext;
 
     int techLevel;        // technology level

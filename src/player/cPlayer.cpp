@@ -125,21 +125,11 @@ void cPlayer::clearUnitTypeBitmaps()
 {
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         if (bmp_unit[i]) {
-            // if (game.m_gameSettings->isDebugMode()) {
-//                char msg[255];
-//                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit for index [%d].", i);
-//                log(msg);
-            // }
             delete (bmp_unit[i]);
         }
         bmp_unit[i] = nullptr;
 
         if (bmp_unit_top[i]) {
-            // if (game.m_gameSettings->isDebugMode()) {
-//                char msg[255];
-//                sprintf(msg, "clearUnitTypeBitmaps: Destroying bmp_unit_top for index [%d].", i);
-//                log(msg);
-            // }
             delete (bmp_unit_top[i]);
         }
         bmp_unit_top[i] = nullptr;
@@ -160,48 +150,21 @@ void cPlayer::setSideBar(cSideBar *theSideBar)
 
 void cPlayer::setItemBuilder(std::unique_ptr<cItemBuilder> theItemBuilder)
 {
-    // assert(theItemBuilder);
-
-    // // delete old reference
-    // if (itemBuilder) {
-    //     delete itemBuilder;
-    // }
-
     itemBuilder = std::move(theItemBuilder);
 }
 
 void cPlayer::setOrderProcesser(std::unique_ptr<cOrderProcesser> theOrderProcesser)
 {
-    // assert(theOrderProcesser);
-
-    // if (orderProcesser) {
-    //     delete orderProcesser;
-    // }
-
     orderProcesser = std::move(theOrderProcesser);
 }
 
 void cPlayer::setBuildingListUpdater(std::unique_ptr<cBuildingListUpdater> theBuildingListUpgrader)
 {
-    // assert(theBuildingListUpgrader);
-
-    // // delete old reference
-    // if (buildingListUpdater) {
-    //     delete buildingListUpdater;
-    // }
-
     buildingListUpdater = std::move(theBuildingListUpgrader);
 }
 
 void cPlayer::setGameControlsContext(std::unique_ptr<cGameControlsContext> theGameControlsContext)
 {
-    // assert(theGameControlsContext);
-
-    // // delete old reference
-    // if (gameControlsContext) {
-    //     delete gameControlsContext;
-    // }
-
     gameControlsContext = std::move(theGameControlsContext);
 }
 
@@ -543,33 +506,6 @@ Texture *cPlayer::getUnitTopBitmap(int index)
     return nullptr;
 }
 
-/**
- * Returns the shadow bitmap of unit type "index", using bodyFacing and animationFrame.
- * !!! Be sure to destroy the bitmap returned from here !!!
- * @param index
- * @return
- */
-// SDL_Surface *cPlayer::getUnitShadowBitmap(int index, int bodyFacing, int animationFrame)
-// {
-// if (game.m_infoContext->getUnitInfo(index).shadow) {
-// int bmp_width = game.m_infoContext->getUnitInfo(index).bmp_width;
-// int bmp_height = game.m_infoContext->getUnitInfo(index).bmp_height;
-// int start_x = bodyFacing * bmp_width;
-// int start_y = bmp_height * animationFrame;
-//
-// //Carry-all has a bit different offset for shadow
-// if (index == CARRYALL) {
-// start_x += 2;
-// start_y += 2;
-// }
-//
-// SDL_Surface *shadow = SDL_CreateRGBSurface(0, bmp_width, bmp_height,32,0,0,0,255);
-// renderDrawer->FillWithColor(shadow, Color{255,0,255,255});
-// renderDrawer->blit(game.m_infoContext->getUnitInfo(index).shadow, shadow, start_x, start_y, 0, 0, bmp_width, bmp_height);
-// return shadow;
-// }
-// return nullptr;
-// }
 Texture *cPlayer::getUnitShadowBitmap(int index)
 {
     if (game.m_infoContext->getUnitInfo(index).shadow) {
@@ -577,7 +513,6 @@ Texture *cPlayer::getUnitShadowBitmap(int index)
     } else
         return nullptr;
 }
-
 
 bool cPlayer::hasWor() const
 {
@@ -880,16 +815,6 @@ void cPlayer::thinkFast()
 
 void cPlayer::setBrain(std::unique_ptr<brains::cPlayerBrain> brain)
 {
-    // if (brain == nullptr) {
-    //     brain_ = nullptr;
-    //     return;
-    // }
-    //assert(brain != nullptr);
-    // delete old brain object if it was set before
-    // if (brain_) {
-        // delete brain_;
-    // }
-    // set new brain
     brain_ = std::move(brain);
 }
 
@@ -2324,7 +2249,6 @@ void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
 {
     buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
 
-    //
     if (event.entitySpecificType == REFINERY) {
         reinforceHarvesterIfNeeded(event.atCell);
     }

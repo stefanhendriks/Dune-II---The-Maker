@@ -246,7 +246,7 @@ private:
     cTimeManager* m_timeManager;
     SDLDrawer *m_renderDrawer = nullptr;
 
-    std::shared_ptr<cHousesInfo> m_Houses;
+    std::unique_ptr<cHousesInfo> m_Houses;
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
     int m_newMusicSample;

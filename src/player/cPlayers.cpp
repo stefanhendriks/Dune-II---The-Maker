@@ -77,8 +77,9 @@ const cPlayer* cPlayers::getHumanPlayer() const {
     return m_players[0];  // HUMAN is typically player 0
 }
 
-void cPlayers::setupPlayers(std::shared_ptr<cHousesInfo> housesInfo)
+void cPlayers::setupPlayers(cHousesInfo* housesInfo)
 {
+    assert(housesInfo != nullptr);
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
         m_players[i]->init(i, nullptr);
         m_players[i]->setHousesInfo(housesInfo);
