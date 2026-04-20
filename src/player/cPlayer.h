@@ -81,9 +81,9 @@ public:
 
     ~cPlayer();
 
-    void init(int id, brains::cPlayerBrain *brain);
+    void init(int id, std::unique_ptr<brains::cPlayerBrain> brain);
 
-    void setBrain(brains::cPlayerBrain *brain);
+    void setBrain(std::unique_ptr<brains::cPlayerBrain> brain);
 
     void setHousesInfo(std::shared_ptr<cHousesInfo> housesInfo) {
         m_HousesInfo = housesInfo;
@@ -556,7 +556,7 @@ private:
 
     int focusCell_;        // this is the cell that will be showed in the game centralized upon map loading
 
-    brains::cPlayerBrain *brain_;
+    std::unique_ptr<brains::cPlayerBrain> brain_;
 
     bool m_autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 

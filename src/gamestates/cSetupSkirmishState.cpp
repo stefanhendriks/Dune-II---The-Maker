@@ -689,11 +689,11 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             pPlayer.init(p, nullptr);
         }
         else if (p == AI_CPU5) {
-            pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
+            pPlayer.init(p, std::make_unique<brains::cPlayerBrainFremenSuperWeapon>(&pPlayer));
         }
         else if (p == AI_CPU6) {
             if (!m_settings->isDisableWormAi()) {
-                pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
+                pPlayer.init(p, std::make_unique<brains::cPlayerBrainSandworm>(&pPlayer));
             }
             else {
                 pPlayer.init(p, nullptr);
@@ -701,7 +701,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         }
         else {
             if (maxThinkingAIs > 0) {
-                pPlayer.init(p, new brains::cPlayerBrainSkirmish(&pPlayer));
+                pPlayer.init(p, std::make_unique<brains::cPlayerBrainSkirmish>(&pPlayer));
                 maxThinkingAIs--;
             }
             else {
