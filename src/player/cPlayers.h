@@ -35,6 +35,10 @@ public:
      */
     cPlayers();
 
+    /**
+     * Propagates services to every cPlayer.
+     */
+    void serviceInit(sGameServices* services);
     ~cPlayers();
     /**
      * Non-copyable

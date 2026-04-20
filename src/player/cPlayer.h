@@ -43,6 +43,7 @@ class cSideBar;
 class cPlayerDifficultySettings;
 class cOrderProcesser;
 class cGameControlsContext;
+class Graphics;
 
 
 struct sEntityForDistance {
@@ -86,6 +87,11 @@ public:
     cPlayer();
 
     ~cPlayer();
+
+    /**
+     * Injects services that weren't available at construction time.
+     */
+    void serviceInit(sGameServices* services);
 
     void init(int id, std::unique_ptr<brains::cPlayerBrain> brain);
 
@@ -547,6 +553,7 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
+    Graphics *m_gfxdata = nullptr;
 
     Texture *bmp_structure[MAX_STRUCTURE_BMPS];
     Texture *bmp_flag;

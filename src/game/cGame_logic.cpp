@@ -204,6 +204,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 void cGame::init()
 {
     m_infoContext->initializeDefaultInfos();
+
     auto &map = m_gameObjectsContext->getMap();
     map.setTerrainInfo(m_infoContext->getTerrainInfo());
     m_newMusicSample = MUSIC_MENU;
@@ -696,6 +697,9 @@ bool cGame::setupGame()
 
     // I need m_renderDrawer to create cPreviewMaps
     m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer, m_gameSettings->m_debugMode);
+
+    // Injection of services
+    m_players->serviceInit(m_services.get());
 
     // all has installed well. Let's rock and roll.
     SDL_ShowCursor(false);

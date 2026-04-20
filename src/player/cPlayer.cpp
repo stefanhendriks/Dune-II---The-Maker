@@ -1,9 +1,9 @@
 #include "cPlayer.h"
 
 #include "building/cItemBuilder.h"
-#include "game/cGame.h"
+// #include "game/cGame.h"
 #include "game/cGameInterface.h"
-#include "include/d2tmc.h"
+// #include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "data/gfxdata.h"
 #include "gameobjects/units/cReinforcements.h"
@@ -46,6 +46,7 @@ cPlayer::cPlayer()
     m_infos = nullptr;
     m_objects = nullptr;
     m_interface = nullptr;
+    m_gfxdata = nullptr;
 
     itemBuilder = nullptr;
     orderProcesser = nullptr;
@@ -62,6 +63,21 @@ cPlayer::cPlayer()
     memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
     brain_ = nullptr;
     m_autoSlabStructures = false;
+}
+
+void cPlayer::serviceInit(sGameServices* services)
+{
+    assert(services != nullptr);
+    m_settings = services->settings;
+    assert(m_settings != nullptr);
+    m_infos = services->info;
+    assert(m_infos != nullptr);
+    m_objects = services->objects;
+    assert(m_objects != nullptr);
+    m_interface = services->ctx->getGameInterface();
+    assert(m_interface != nullptr);
+    m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
+    assert(m_gfxdata != nullptr);
 }
 
 cPlayer::~cPlayer()
@@ -250,8 +266,8 @@ void cPlayer::setHouse(int iHouse)
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
-        bmp_flag = createPlayerTextureFromIndexedSurfaceWithPalette(this, gfxdata->getSurface(BUILDING_FLAG_LARGE),TransparentColorIndex);
-        bmp_flag_small = createPlayerTextureFromIndexedSurfaceWithPalette(this, gfxdata->getSurface(BUILDING_FLAG_SMALL),TransparentColorIndex);
+        bmp_flag = createPlayerTextureFromIndexedSurfaceWithPalette(this, m_gfxdata->getSurface(BUILDING_FLAG_LARGE),TransparentColorIndex);
+        bmp_flag_small = createPlayerTextureFromIndexedSurfaceWithPalette(this, m_gfxdata->getSurface(BUILDING_FLAG_SMALL),TransparentColorIndex);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
