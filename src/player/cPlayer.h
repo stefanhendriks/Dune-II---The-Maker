@@ -116,7 +116,7 @@ public:
     void substractCredits(int amount);
     void setCredits(int credits);
     void giveCredits(float amountToGive);
-    int getCredits();
+    int getCredits() const;
 
 
     // focus cell
@@ -207,7 +207,7 @@ public:
         return emblemBackgroundColor;
     }
 
-    bool isHuman() {
+    bool isHuman() const {
         return m_Human;
     }
 
@@ -215,7 +215,7 @@ public:
 
     int getAmountOfStructuresForType(int structureType) const;
 
-    int getAmountOfUnitsForType(std::vector<int> unitTypes) const;
+    int getAmountOfUnitsForType(const std::vector<int> &unitTypes) const;
 
     bool hasRadarAndEnoughPower() const;
 
@@ -283,7 +283,7 @@ public:
         iTeam = value;
     }
 
-    int getTeam() {
+    int getTeam() const {
         return iTeam;
     }
 
@@ -318,15 +318,15 @@ public:
 
     std::vector<int> getSelectedUnits() const;
 
-    bool isSameTeamAs(const cPlayer *pPlayer);
+    bool isSameTeamAs(const cPlayer *pPlayer) const;
 
     void update();
 
-    float getMaxCredits();
+    float getMaxCredits() const;
 
-    int getPowerProduced();
+    int getPowerProduced() const;
 
-    int getPowerUsage();
+    int getPowerUsage() const;
 
     void dumpCredits(int amount);
 

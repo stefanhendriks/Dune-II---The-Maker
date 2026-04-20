@@ -444,7 +444,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
  * @param unitTypes (vector of all unitTypes to check)
  * @return
  */
-int cPlayer::getAmountOfUnitsForType(std::vector<int> unitTypes) const
+int cPlayer::getAmountOfUnitsForType(const std::vector<int> &unitTypes) const
 {
     int count = 0;
     for (int i = 0; i < m_objects->getUnits().size(); i++) {
@@ -759,7 +759,7 @@ std::vector<int> cPlayer::getAllMyStructuresAsIdForType(int structureType)
     return ids;
 }
 
-bool cPlayer::isSameTeamAs(const cPlayer *pPlayer)
+bool cPlayer::isSameTeamAs(const cPlayer *pPlayer) const
 {
     if (pPlayer == nullptr) return false;
     return pPlayer->iTeam == iTeam;
@@ -776,7 +776,7 @@ void cPlayer::update()
     maxCredits_ = m_interface->getTotalSpiceCapacityForPlayer(this);
 }
 
-int cPlayer::getCredits()
+int cPlayer::getCredits() const
 {
     return credits;
 }
@@ -791,17 +791,17 @@ void cPlayer::substractCredits(int amount)
     credits -= amount;
 }
 
-float cPlayer::getMaxCredits()
+float cPlayer::getMaxCredits() const
 {
     return maxCredits_;
 }
 
-int cPlayer::getPowerProduced()
+int cPlayer::getPowerProduced() const
 {
     return powerProduce_;
 }
 
-int cPlayer::getPowerUsage()
+int cPlayer::getPowerUsage() const
 {
     return powerUsage_;
 }
