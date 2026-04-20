@@ -44,8 +44,8 @@ eGameStateType cMentatState::getType()
 
 void cMentatState::prepareMentat(int house)
 {
-    auto& humanPlayer = m_objets->getPlayer(HUMAN);
-    house = (m_house != -1) ? m_house : humanPlayer.getHouse();
+    auto* humanPlayer = m_objets->getPlayer(HUMAN);
+    house = (m_house != -1) ? m_house : humanPlayer->getHouse();
     bool allowMissionSelect = !m_settings->isSkirmish();
     switch (m_mode) {
         case MentatMode::Briefing:

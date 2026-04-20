@@ -43,16 +43,16 @@ void cGameConditionChecker::setLoseFlags(int value)
 
 bool cGameConditionChecker::isMissionWon() const
 {
-    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+    cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
     if (hasGameOverConditionHarvestForSpiceQuota()) {
-        if (humanPlayer.hasMetQuota()) {
+        if (humanPlayer->hasMetQuota()) {
             return true;
         }
     }
 
     if (hasGameOverConditionPlayerHasNoBuildings()) {
         if (hasWinConditionHumanMustLoseAllBuildings()) {
-            if (!humanPlayer.isAlive()) {
+            if (!humanPlayer->isAlive()) {
                 return true;
             }
         }
@@ -78,16 +78,16 @@ bool cGameConditionChecker::isMissionFailed() const
     if (hasGameOverConditionHarvestForSpiceQuota()) {
         // check for non-human players if they have met spice quota, if so, they win (and thus human player loses)
         for (int i = 1; i < MAX_PLAYERS; i++) {
-            cPlayer &player = game.m_gameObjectsContext->getPlayer(i);
-            if (player.isAlive() && player.hasMetQuota()) {
+            cPlayer *player = game.m_gameObjectsContext->getPlayer(i);
+            if (player->isAlive() && player->hasMetQuota()) {
                 return true;
             }
         }
     }
 
     if (hasGameOverConditionPlayerHasNoBuildings()) {
-        cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
-        if (!humanPlayer.isAlive()) {
+        cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+        if (!humanPlayer->isAlive()) {
             /**
              * If any of the bits in “LoseFlags” is set and the corresponding condition holds true
              * the player has won (and the computer has lost)
@@ -113,12 +113,12 @@ bool cGameConditionChecker::isMissionFailed() const
 
 bool cGameConditionChecker::allEnemyAIPlayersAreDestroyed() const
 {
-    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+    cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (i == HUMAN || i == AI_WORM || i == AI_CPU5) continue; // do not evaluate these players
-        cPlayer *player = &game.m_gameObjectsContext->getPlayer(i);
+        cPlayer *player = game.m_gameObjectsContext->getPlayer(i);
         if (!player->isAlive()) continue;
-        if (humanPlayer.isSameTeamAs(player)) continue; // skip allied AI players
+        if (humanPlayer->isSameTeamAs(player)) continue; // skip allied AI players
         return false;
     }
     return true;

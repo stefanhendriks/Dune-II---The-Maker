@@ -170,9 +170,9 @@ void cDrawManager::drawCredits()
 
 void cDrawManager::drawRallyPoint()
 {
-    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
-    if (humanPlayer.selected_structure < 0) return;
-    cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[humanPlayer.selected_structure];
+    cPlayer* humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+    if (humanPlayer->selected_structure < 0) return;
+    cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[humanPlayer->selected_structure];
     if (!theStructure) return;
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;
@@ -197,7 +197,7 @@ void cDrawManager::drawRallyPoint()
     int endX = drawX;
     int endY = drawY;
 
-    m_renderDrawer->renderLine( startX, startY, endX, endY, game.m_gameObjectsContext->getPlayer(HUMAN).getMinimapColor());
+    m_renderDrawer->renderLine( startX, startY, endX, endY, game.m_gameObjectsContext->getPlayer(HUMAN)->getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()

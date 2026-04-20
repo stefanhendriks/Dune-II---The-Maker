@@ -26,14 +26,14 @@ public:
     ~cGameObjectContext();
 
     cBullets& getBullets() const;
-    cPlayers& getPlayers() const;
+    cPlayers* getPlayers() const;
     cParticles& getParticles() const;
     cStructures& getStructures() const;
     cUnits& getUnits() const;
     cMap& getMap() const;
 
-    cPlayer& getPlayer(int index);
-    const cPlayer& getPlayer(int index) const;
+    cPlayer* getPlayer(int index);
+    const cPlayer* getPlayer(int index) const;
     cUnit& getUnit(int index);
     const cUnit& getUnit(int index) const;
 

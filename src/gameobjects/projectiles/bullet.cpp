@@ -655,7 +655,7 @@ s_BulletInfo cBullet::gets_Bullet() const
 
 cPlayer *cBullet::getPlayer() const
 {
-    return &game.m_gameObjectsContext->getPlayer(iPlayer);
+    return game.m_gameObjectsContext->getPlayer(iPlayer);
 }
 
 /**
