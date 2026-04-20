@@ -8,11 +8,13 @@
 #include "gameobjects/units/cUnits.h"
 #include "player/cPlayers.h"
 #include "map/cMap.h"
+#include "include/sGameServices.h"
 
-std::unique_ptr<cGameObjectContext> cGameObjectsContextCreator::create() {
+std::unique_ptr<cGameObjectContext> cGameObjectsContextCreator::create(sGameServices* services)
+{
     return std::make_unique<cGameObjectContext>(
         std::make_unique<cBullets>(),
-        std::make_unique<cPlayers>(),
+        std::make_unique<cPlayers>(services),
         std::make_unique<cParticles>(),
         std::make_unique<cStructures>(),
         std::make_unique<cUnits>(),
