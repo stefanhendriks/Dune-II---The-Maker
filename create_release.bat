@@ -54,5 +54,4 @@ echo 13. Copy txt files
 copy resources\bin\doc\versionhistory.txt bin
 copy resources\bin\doc\controls.txt bin
 copy resources\bin\windowed.bat bin
-copy resources\bin\d2tm.cfg bin
 echo Done.
