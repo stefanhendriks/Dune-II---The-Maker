@@ -83,7 +83,7 @@ class cPlayer : public cScenarioObserver {
 
 public:
     static constexpr int MAX_STRUCTURE_BMPS = MAX_STRUCTURETYPES*2;
-    cPlayer(sGameServices* services);
+    cPlayer();
 
     ~cPlayer();
 

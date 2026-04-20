@@ -40,17 +40,12 @@
 
 #include "data/gfxaudio.h"
 
-cPlayer::cPlayer(sGameServices* services)
+cPlayer::cPlayer()
 {
-    assert(services != nullptr);
-    m_settings = services->settings;
-    assert(m_settings != nullptr);
-    m_infos = services->info;
-    assert(m_infos != nullptr);
-    m_objects = services->objects;
-    assert(m_objects != nullptr);
-    m_interface = services->ctx->getGameInterface();
-    assert(m_interface != nullptr);
+    m_settings = nullptr;
+    m_infos = nullptr;
+    m_objects = nullptr;
+    m_interface = nullptr;
 
     itemBuilder = nullptr;
     orderProcesser = nullptr;

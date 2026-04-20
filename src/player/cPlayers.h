@@ -33,7 +33,8 @@ public:
     /**
      * Default constructor
      */
-    cPlayers(sGameServices* services);
+    cPlayers();
+
     ~cPlayers();
     /**
      * Non-copyable

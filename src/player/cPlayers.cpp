@@ -30,7 +30,13 @@
 #include "cHousesInfo.h"
 #include "include/sGameEvent.h"
 
-cPlayers::cPlayers(sGameServices* services) {
+cPlayers::cPlayers()
+{
+    for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
+        m_players[i] = new cPlayer();
+    }
+}
+
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
         m_players[i] = new cPlayer(services);
     }
