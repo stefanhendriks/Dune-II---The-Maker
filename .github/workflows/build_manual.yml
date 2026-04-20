@@ -33,13 +33,15 @@ jobs:
           else
             echo "tag=$INPUT" >> $GITHUB_OUTPUT
           fi
+          echo "date=$(date -u +'%Y-%m-%d %H:%M')" >> $GITHUB_OUTPUT
       - name: Create release
         run: |
           TAG="${{ steps.resolve.outputs.tag }}"
+          DATE="${{ steps.resolve.outputs.date }}"
           gh release view "$TAG" > /dev/null 2>&1 || \
             gh release create "$TAG" \
-              --title "$TAG" \
-              --notes "Release from ${{ inputs.tag }}" \
+              --title "Manual Build - ${DATE}" \
+              --notes "Manual build from ${{ inputs.tag }}" \
               --latest=false \
               --target "${{ inputs.tag }}"
         env:
