@@ -71,7 +71,7 @@ bool cReinforcement::isReady() const
 
 void cReinforcement::execute() const
 {
-    int focusCell = game.m_gameObjectsContext->getPlayer(m_playerId).getFocusCell();
+    int focusCell = game.m_gameObjectsContext->getPlayer(m_playerId)->getFocusCell();
     REINFORCE(m_playerId, m_unitType, m_cell, focusCell, true);
 }
 

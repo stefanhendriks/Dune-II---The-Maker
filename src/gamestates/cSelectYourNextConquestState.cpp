@@ -131,7 +131,7 @@ void cSelectYourNextConquestState::thinkFast()
             iRegionSceneAlpha = 255;
         }
 
-        int iHouse = m_objects->getPlayer(0).getHouse();
+        int iHouse = m_objects->getPlayer(0)->getHouse();
         int iMission = m_dataCompaign->mission;
 
         bool hasMessage = m_drawManager->hasMessage();
@@ -262,7 +262,7 @@ void cSelectYourNextConquestState::draw() const
     // 3. Click next region
     // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
 
-    int iHouse = m_objects->getPlayer(0).getHouse();
+    int iHouse = m_objects->getPlayer(0)->getHouse();
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
         drawStateIntroduction();
     }
@@ -441,8 +441,8 @@ void cSelectYourNextConquestState::regionSetupLostMission()
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
-        m_objects->getPlayer(i).init(i, nullptr);
-        m_objects->getPlayer(i).setHouse(i);
+        m_objects->getPlayer(i)->init(i, nullptr);
+        m_objects->getPlayer(i)->setHouse(i);
     }
 
     return;
@@ -473,8 +473,8 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
 
     // prepare players, so we know house index == player index (for colorizing region pieces)
     for (int i = 1; i < FREMEN; i++) {
-        m_objects->getPlayer(i).init(i, nullptr);
-        m_objects->getPlayer(i).setHouse(i);
+        m_objects->getPlayer(i)->init(i, nullptr);
+        m_objects->getPlayer(i)->setHouse(i);
     }
 
     return;
@@ -492,10 +492,10 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
     if (regionPiece.iHouse > -1) {
         // single player campaign has house ID == player ID, so we can do this hack and assume player with iHouse
         // is the player we want to get the correct house collor for this piece...
-        cPlayer &temp = m_objects->getPlayer(regionPiece.iHouse);
+        cPlayer* temp = m_objects->getPlayer(regionPiece.iHouse);
         // select_palette(temp.pal);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(&temp, regionPiece.bmp, TransparentColorIndex);
+            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(temp, regionPiece.bmp, TransparentColorIndex);
             regionPiece.oldHouse=regionPiece.iHouse;
         }
         drawRegion(regionPiece);
@@ -503,10 +503,10 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
 
     // select your next conquest... always draw them in the human playing house color
     if (regionPiece.bSelectable && state == eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) {
-        int iHouse = m_objects->getPlayer(HUMAN).getHouse();
-        cPlayer &temp = m_objects->getPlayer(iHouse);
+        int iHouse = m_objects->getPlayer(HUMAN)->getHouse();
+        cPlayer* temp = m_objects->getPlayer(iHouse);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(&temp, regionPiece.bmp, TransparentColorIndex);
+            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(temp, regionPiece.bmp, TransparentColorIndex);
         }
         drawRegion(regionPiece);
     }
