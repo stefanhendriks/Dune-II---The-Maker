@@ -880,7 +880,11 @@ void cPlayer::thinkFast()
 
 void cPlayer::setBrain(std::unique_ptr<brains::cPlayerBrain> brain)
 {
-    assert(brain != nullptr);
+    if (brain == nullptr) {
+        brain_ = nullptr;
+        return;
+    }
+    //assert(brain != nullptr);
     // delete old brain object if it was set before
     // if (brain_) {
         // delete brain_;
