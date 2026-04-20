@@ -148,7 +148,7 @@ cGame::cGame()
     m_gameSettings->m_drawTime = false;
     m_gameSettings->m_allowRepeatingReinforcements = false;
 
-    m_gameObjectsContext = cGameObjectsContextCreator::create();
+    m_gameObjectsContext = cGameObjectsContextCreator::create(m_services.get());
     m_players = m_gameObjectsContext->getPlayers();
     assert(m_players != nullptr);
 
