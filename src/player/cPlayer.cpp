@@ -27,6 +27,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
+#include "include/sGameServices.h"
 
 #include <SDL2/SDL.h>
 #include <format>
@@ -37,7 +38,7 @@
 
 #include "data/gfxaudio.h"
 
-cPlayer::cPlayer()
+cPlayer::cPlayer(sGameServices* )
 {
     itemBuilder = nullptr;
     orderProcesser = nullptr;
