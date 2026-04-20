@@ -47,7 +47,7 @@ void cStructureDrawer::drawStructuresSecondLayer()
 
 void cStructureDrawer::drawStructuresHealthBars()
 {
-    cGameControlsContext *context = game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext();
+    cGameControlsContext *context = game.m_gameObjectsContext->getPlayer(HUMAN)->getGameControlsContext();
 
     // DRAW HEALTH
     if (context->isMouseOverStructure()) {
@@ -159,11 +159,11 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
     // :-/
     if (game.m_gameSettings->isDebugMode()) {
-        cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
-        cAbstractStructure *pStructure = humanPlayer.getSelectedStructure();
+        cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+        cAbstractStructure *pStructure = humanPlayer->getSelectedStructure();
         if (pStructure && pStructure == structure) {
             cMouse *pMouse = game.getMouse();
-            cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
+            cGameControlsContext *pContext = humanPlayer->getGameControlsContext();
 
             int x1 = pMouse->getX();
             int y1 = pMouse->getY();
@@ -335,15 +335,15 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
             // draw
             drawStructureForLayer(theStructure, layer);
 
-            cPlayer &player = game.m_gameObjectsContext->getPlayer(HUMAN); // TODO: Pass it as variable? (instead of getting it from here)
+            cPlayer *player = game.m_gameObjectsContext->getPlayer(HUMAN); // TODO: Pass it as variable? (instead of getting it from here)
             // regardless if selected, render this so you know from which structure things will come?
-            if (player.isPrimaryStructureForStructureType(theStructure->getType(), i)) {
-                drawRectangleOfStructure(theStructure, player.getPrimaryBuildingFadingColor());
+            if (player->isPrimaryStructureForStructureType(theStructure->getType(), i)) {
+                drawRectangleOfStructure(theStructure, player->getPrimaryBuildingFadingColor());
                 continue;
             }
 
-            if (i == player.selected_structure) {
-                drawRectangleOfStructure(theStructure, player.getSelectFadingColor());
+            if (i == player->selected_structure) {
+                drawRectangleOfStructure(theStructure, player->getSelectFadingColor());
             }
         }
     }

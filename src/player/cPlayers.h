@@ -45,8 +45,8 @@ public:
      * @param index The player index
      * @return Reference to cPlayer object
      */
-    cPlayer& operator[](int index);
-    const cPlayer& operator[](int index) const;
+    cPlayer* operator[](int index);
+    const cPlayer* operator[](int index) const;
 
     /**
      * Safe access with bounds checking
@@ -60,8 +60,8 @@ public:
      * Get human player (player 0)
      * @return Reference to human player
      */
-    cPlayer& getHumanPlayer();
-    const cPlayer& getHumanPlayer() const;
+    cPlayer* getHumanPlayer();
+    const cPlayer* getHumanPlayer() const;
 
     /**
      * Get the capacity (maximum number of players)
@@ -105,5 +105,21 @@ public:
     void onNotifyGameEvent(const s_GameEvent& event);
     void evaluateStillAliveForAI();
 private:
-    std::array<cPlayer, MAX_PLAYERS_CAPACITY> m_players;
+    std::array<cPlayer*, MAX_PLAYERS_CAPACITY> m_players;
 };
+
+inline auto begin(cPlayers* players) {
+  return players->begin();
+}
+
+inline auto end(cPlayers* players) {
+  return players->end();
+}
+
+inline auto begin(const cPlayers* players) {
+  return players->begin();
+}
+
+inline auto end(const cPlayers* players) {
+  return players->end();
+}
