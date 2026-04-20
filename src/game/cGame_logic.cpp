@@ -80,7 +80,6 @@
 
 #include "controls/cGameControlsContext.h"
 #include "controls/eKeyAction.h"
-#include "gameobjects/structures/cOrderProcesser.h"
 #include "map/cMapCamera.h"
 #include "game/cTimeManager.h"
 #include "context/cInfoContext.h"
@@ -709,28 +708,7 @@ bool cGame::setupGame()
  */
 void cGame::setupPlayers()
 {
-    // make sure each player has an own item builder
-    for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-        cPlayer *thePlayer = &game.m_gameObjectsContext->getPlayer(i);
-
-        auto *buildingListUpdater = new cBuildingListUpdater(thePlayer);
-        thePlayer->setBuildingListUpdater(buildingListUpdater);
-
-        auto *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
-        thePlayer->setItemBuilder(itemBuilder);
-
-        auto *sidebar = m_sideBarFactory->createSideBar(thePlayer);
-        thePlayer->setSideBar(sidebar);
-
-        auto *orderProcesser = new cOrderProcesser(thePlayer);
-        thePlayer->setOrderProcesser(orderProcesser);
-
-        auto *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
-        thePlayer->setGameControlsContext(gameControlsContext);
-
-        // set tech level
-        thePlayer->setTechLevel(m_dataCampaign->mission);
-    }
+    m_players->setupRuntimePlayerComponents(m_sideBarFactory.get(), m_mouse, m_dataCampaign->mission);
     setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(0));
 }
 
