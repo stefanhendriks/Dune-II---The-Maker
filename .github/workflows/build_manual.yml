@@ -33,7 +33,7 @@ jobs:
           maximum-size: 16GB
           disk-root: "C:"
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.tag }}
           submodules: recursive
@@ -85,7 +85,7 @@ jobs:
           version: 14
           platform: x86
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.tag }}
           submodules: recursive
@@ -130,7 +130,7 @@ jobs:
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.tag }}
           submodules: recursive
@@ -173,7 +173,7 @@ jobs:
     runs-on: [ macos-15-intel ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.tag }}
           submodules: recursive
