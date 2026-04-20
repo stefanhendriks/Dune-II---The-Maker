@@ -16,6 +16,7 @@
 #include <memory>
 class cGameSettings;
 struct s_DataCampaign;
+struct sGameServices;
 class cMouse;
 class cSideBarFactory;
 #include "cPlayer.h"
@@ -32,7 +33,7 @@ public:
     /**
      * Default constructor
      */
-    cPlayers();
+    cPlayers(sGameServices* services);
     ~cPlayers();
     /**
      * Non-copyable
