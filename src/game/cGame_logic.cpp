@@ -658,11 +658,11 @@ bool cGame::setupGame()
     game.m_state = GAME_INITIALIZE;
 
     logbook("Setup:  HOUSES");
-    m_Houses = std::make_shared<cHousesInfo>();
+    m_Houses = std::make_unique<cHousesInfo>();
     m_Houses->installHouses(gamesCfg);
     // A few messages for the player
     logbook("Initializing:  PLAYERS");
-    m_players->setupPlayers(m_Houses);
+    m_players->setupPlayers(m_Houses.get());
     cInfoContextCreator infoCreator;
     infoCreator.installInfos(*game.m_infoContext);
 
