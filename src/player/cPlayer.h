@@ -73,11 +73,13 @@ struct s_PlaceResult {
     std::set<int> structureIds = std::set<int>();
 };
 
+struct sGameServices;
+
 class cPlayer : public cScenarioObserver {
 
 public:
     static constexpr int MAX_STRUCTURE_BMPS = MAX_STRUCTURETYPES*2;
-    cPlayer();
+    cPlayer(sGameServices* services);
 
     ~cPlayer();
 
