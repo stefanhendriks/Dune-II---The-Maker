@@ -1,21 +1,15 @@
 #include "cPlayer.h"
 
 #include "building/cItemBuilder.h"
-// #include "game/cGame.h"
 #include "game/cGameInterface.h"
-// #include "include/d2tmc.h"
 #include "map/cMap.h"
 #include "data/gfxdata.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureFactory.h"
-// #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
-#include "utils/cStructureUtils.h"
 #include "utils/common.h"
 #include "utils/texture_utils.h"
-#include "utils/cSoundPlayer.h"
 #include "player/cHousesInfo.h"
-#include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
@@ -35,7 +29,6 @@
 #include <format>
 #include <iostream>
 
-#include <vector>
 #include <algorithm>
 
 #include "data/gfxaudio.h"
