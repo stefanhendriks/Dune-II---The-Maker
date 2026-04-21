@@ -71,6 +71,13 @@ cUnits* cGameObjectContext::getUnits() const {
     return m_Units.get();
 }
 
+std::size_t cGameObjectContext::getUnitsSize() const {
+    if (!m_Units) {
+        throw std::runtime_error("cUnits not initialized in cGameObjectContext");
+    }
+    return static_cast<std::size_t>(m_Units->size());
+}
+
 cMap& cGameObjectContext::getMap() const {
     if (!m_map) {
         throw std::runtime_error("cMap not initialized in cGameObjectContext");
@@ -78,12 +85,17 @@ cMap& cGameObjectContext::getMap() const {
     return *m_map;
 }
 
-cUnit* cGameObjectContext::getUnit(int index)
+cUnit* cGameObjectContext::getUnit(std::size_t index)
 {
     if (!m_Units) return nullptr;
+    if (index >= static_cast<std::size_t>(m_Units->size())) return nullptr;
+    return &(*m_Units)[static_cast<int>(index)];
+}
+
+cUnit* cGameObjectContext::getUnit(int index)
+{
     if (index < 0) return nullptr;
-    if (index >= m_Units->size()) return nullptr;
-    return &(*m_Units)[index];
+    return getUnit(static_cast<std::size_t>(index));
 }
 
 cAbstractStructure* cGameObjectContext::getStructure(int index)
