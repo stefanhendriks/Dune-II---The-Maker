@@ -14,7 +14,7 @@
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "cMapCamera.h"
 #include "cMapEditor.h"
-#include "game/cGame.h"
+#include "game/cGameInterface.h"
 #include "include/d2tmc.h"
 #include "utils/cLog.h"
 #include "data/gfxdata.h"
@@ -214,7 +214,7 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType)
     if (iCell < 0 || iUnitType < 0)
         return false;
 
-    s_UnitInfo &unitToDeploy = game.m_infoContext->getUnitInfo(iUnitType);
+    s_UnitInfo &unitToDeploy = m_infos->getUnitInfo(iUnitType);
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
@@ -249,7 +249,7 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
     if (iCell < 0 || iUnitID < 0)
         return false;
 
-    cUnit &pUnit = game.m_gameObjectsContext->getUnits()[iUnitID];
+    cUnit &pUnit = m_objects->getUnits()[iUnitID];
     if (!pUnit.isAirbornUnit()) return false; // weird unit passed in
     if (pUnit.iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
 
@@ -266,7 +266,7 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
         return false;
     }
 
-    s_UnitInfo &unitToDeploy = game.m_infoContext->getUnitInfo(pUnit.iNewUnitType);
+    s_UnitInfo &unitToDeploy = m_infos->getUnitInfo(pUnit.iNewUnitType);
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
@@ -306,7 +306,7 @@ bool cMap::occupied(int iCll, int iUnitID)
     if (iCll < 0 || iUnitID < 0)
         return true;
 
-    cUnit &pUnit = game.m_gameObjectsContext->getUnits()[iUnitID];
+    cUnit &pUnit = m_objects->getUnits()[iUnitID];
 
     int structureIdOnMap = getCellIdStructuresLayer(iCll);
     if (structureIdOnMap > -1) {
@@ -367,7 +367,7 @@ void cMap::thinkAboutRespawningWorms()
     // timer hit exactly '1'
     m_iTIMER_respawnSandworms--;
 
-    int currentAmountOfWorms = game.m_gameObjectsContext->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM);
+    int currentAmountOfWorms = m_objects->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM);
     if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
         // spawn one worm, set timer again
         int failures = 0;
@@ -453,7 +453,7 @@ void cMap::thinkAutoDetonateSpiceBlooms()  // let spice bloom detonate after X a
 void cMap::draw_bullets()
 {
     // Loop through all units, check if they should be drawn, and if so, draw them
-    for (auto& bullet : game.m_gameObjectsContext->getBullets()) {
+    for (auto& bullet : m_objects->getBullets()) {
         if (bullet.bAlive) {
             bullet.draw();
         }
@@ -478,6 +478,8 @@ void cMap::clearShroud(int c, int size, int playerId)
 {
     if (!isWithinBoundaries(c)) return;
 
+    auto *mapCamera = m_interface->getMapCamera();
+
     setVisibleFor(c, playerId);
 
     // go around 360 fDegrees and calculate new stuff.
@@ -495,7 +497,7 @@ void cMap::clearShroud(int c, int size, int playerId)
             y = (y + dr2);
 
             // convert back
-            int cl = game.m_mapCamera->getCellFromAbsolutePosition(x, y);
+            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
 
@@ -504,33 +506,33 @@ void cMap::clearShroud(int c, int size, int playerId)
 
                 int structureId = getCellIdStructuresLayer(cl);
                 if (structureId > -1) {
-                    cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureId];
+                    cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
                     s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                         .entityType = eBuildType::STRUCTURE,
                         .entityID = structureId,
-                        .player = game.m_gameObjectsContext->getPlayer(playerId),
+                        .player = m_objects->getPlayer(playerId),
                         .entitySpecificType = pStructure->getType(),
                         .atCell = cl
                     };
 
-                    game.onNotifyGameEvent(event);
+                    m_interface->onNotifyGameEvent(event);
                 }
 
                 int unitId = getCellIdUnitLayer(cl);
                 if (unitId > -1) {
-                    cUnit &cUnit = game.m_gameObjectsContext->getUnits()[unitId];
+                    cUnit &cUnit = m_objects->getUnits()[unitId];
                     if (cUnit.isValid()) {
                         s_GameEvent event {
                             .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                             .entityType = eBuildType::UNIT,
                             .entityID = unitId,
-                            .player = game.m_gameObjectsContext->getPlayer(playerId),
+                            .player = m_objects->getPlayer(playerId),
                             .entitySpecificType = cUnit.getType(),
                             .atCell = cl
                         };
 
-                        game.onNotifyGameEvent(event);
+                        m_interface->onNotifyGameEvent(event);
                     }
                 }
             } // make visible
@@ -553,22 +555,24 @@ void cMap::remove_id(int iIndex, int iIDType)
 
 void cMap::draw_units()
 {
+    auto *mapViewport = m_interface->getMapViewport();
+
     //@Mira SDL2 blender
     //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits().size(); i++) {
+        cUnit &pUnit = m_objects->getUnits()[i];
         if (!pUnit.isValid()) continue;
 
         // DEBUG MODE: DRAW PATHS
-        if (game.m_gameSettings->isDrawUnitDebug()) {
+        if (m_settings->isDrawUnitDebug()) {
             pUnit.draw_path();
         }
 
         if (pUnit.iType != SANDWORM) continue;
 
-        if (pUnit.isWithinViewport(game.m_mapViewport)) {
+        if (pUnit.isWithinViewport(mapViewport)) {
             pUnit.draw();
         }
 
@@ -577,14 +581,14 @@ void cMap::draw_units()
     }
 
     // then: draw infantry units
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits().size(); i++) {
+        cUnit &pUnit = m_objects->getUnits()[i];
         if (!pUnit.isValid()) continue;
 
         if (!pUnit.isInfantryUnit())
             continue; // skip non-infantry units
 
-        if (pUnit.isWithinViewport(game.m_mapViewport)) {
+        if (pUnit.isWithinViewport(mapViewport)) {
             // draw
             pUnit.draw();
         }
@@ -593,8 +597,8 @@ void cMap::draw_units()
     }
 
     // then: draw ground units
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits().size(); i++) {
+        cUnit &pUnit = m_objects->getUnits()[i];
         if (!pUnit.isValid()) continue;
 
         if (pUnit.isAirbornUnit() ||
@@ -602,7 +606,7 @@ void cMap::draw_units()
                 pUnit.isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
-        if (pUnit.isWithinViewport(game.m_mapViewport)) {
+        if (pUnit.isWithinViewport(mapViewport)) {
             // draw
             pUnit.draw();
         }
@@ -613,7 +617,7 @@ void cMap::draw_units()
 
 void cMap::drawUnitDebug(cUnit &pUnit) const
 {
-    if (!game.m_gameSettings->isDrawUnitDebug()) return;
+    if (!m_settings->isDrawUnitDebug()) return;
 
     pUnit.draw_debug(m_textDrawer);
 }
@@ -621,12 +625,14 @@ void cMap::drawUnitDebug(cUnit &pUnit) const
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
 void cMap::draw_units_2nd()
 {
+    auto *mapViewport = m_interface->getMapViewport();
+
     // draw health of units
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits().size(); i++) {
+        cUnit &pUnit = m_objects->getUnits()[i];
         if (!pUnit.isValid()) continue;
         if (!pUnit.rendering.bHovered && !pUnit.isSelected()) continue;
-        if (!pUnit.isWithinViewport(game.m_mapViewport)) continue;
+        if (!pUnit.isWithinViewport(mapViewport)) continue;
         if (pUnit.isHidden()) continue;
 
         pUnit.draw_health();
@@ -638,16 +644,16 @@ void cMap::draw_units_2nd()
     }
 
     // draw airborn units
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits().size(); i++) {
+        cUnit &pUnit = m_objects->getUnits()[i];
         if (!pUnit.isValid()) continue;
         if (!pUnit.isAirbornUnit()) continue;
 
-        if (pUnit.isWithinViewport(game.m_mapViewport)) {
+        if (pUnit.isWithinViewport(mapViewport)) {
             pUnit.draw();
             // TODO: Only human players?
             pUnit.draw_health();
-            if (game.m_gameSettings->isDebugMode()) {
+            if (m_settings->isDebugMode()) {
                 drawUnitDebug(pUnit);
             }
         }
@@ -657,10 +663,11 @@ void cMap::draw_units_2nd()
 
 int cMap::mouse_draw_x()
 {
-    if (game.m_gameObjectsContext->getPlayer(HUMAN)->getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = game.m_gameObjectsContext->getPlayer(HUMAN)->getGameControlsContext()->getMouseCell();
+    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
+    if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
         int absX = getAbsoluteXPositionFromCell(mouseCell);
-        return game.m_mapCamera->getWindowXPosition(absX);
+        return m_interface->getMapCamera()->getWindowXPosition(absX);
     }
     return -1;
 }
@@ -668,10 +675,11 @@ int cMap::mouse_draw_x()
 int cMap::mouse_draw_y()
 {
     //@mira rewrite
-    if (game.m_gameObjectsContext->getPlayer(HUMAN)->getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = game.m_gameObjectsContext->getPlayer(HUMAN)->getGameControlsContext()->getMouseCell();
+    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
+    if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
         int absY = getAbsoluteYPositionFromCell(mouseCell);
-        return game.m_mapCamera->getWindowYPosition(absY);
+        return m_interface->getMapCamera()->getWindowYPosition(absY);
     }
     return -1;
 }
@@ -1019,7 +1027,7 @@ void cMap::createCell(int cell, int terrainType, int tile)
             .buildingList = nullptr
         };
 
-        game.onNotifyGameEvent(event);
+        m_interface->onNotifyGameEvent(event);
     }
 }
 
@@ -1240,6 +1248,7 @@ cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const //rip
 
 int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop)
 {
+    auto *mapCamera = m_interface->getMapCamera();
 
     if (minRange < 1) {
         minRange = 1;
@@ -1260,7 +1269,7 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
             y = (y + dr2);
 
             // convert back
-            int cl = game.m_mapCamera->getCellFromAbsolutePosition(x, y);
+            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
             if (!isWithinBoundaries(cl)) continue;
@@ -1280,6 +1289,8 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
 
 int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
 {
+    auto *mapCamera = m_interface->getMapCamera();
+
     // go around 360 fDegrees and calculate new stuff.
     for (float dr = 1; dr < range; dr++) { // go outwards
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
@@ -1295,7 +1306,7 @@ int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDr
             y = (y + dr2);
 
             // convert back
-            int cl = game.m_mapCamera->getCellFromAbsolutePosition(x, y);
+            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
 
@@ -1324,7 +1335,7 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
 
     const std::vector<int> &myStructuresAsId = player->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *pStructure = m_objects->getStructures()[i];
         if (pStructure == nullptr) continue;
         if (pStructure->getType() != structureType) continue;
 
@@ -1338,7 +1349,7 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
     }
 
     if (foundStructureId > -1) {
-        return game.m_gameObjectsContext->getStructures()[foundStructureId];
+        return m_objects->getStructures()[foundStructureId];
     }
 
     return nullptr;
@@ -1414,7 +1425,7 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
 
     const std::vector<int> &myStructuresAsId = pPlayer->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *pStructure = m_objects->getStructures()[i];
         if (pStructure == nullptr) continue;
         if (pStructure->getType() != structureType) continue;
         if (pStructure->hasUnitWithin()) continue; // already occupied
@@ -1429,7 +1440,7 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
     }
 
     if (foundStructureId > -1) {
-        return game.m_gameObjectsContext->getStructures()[foundStructureId];
+        return m_objects->getStructures()[foundStructureId];
     }
 
     return nullptr;
@@ -1449,7 +1460,7 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
 
     const std::vector<int> &myStructuresAsId = pPlayer->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *pStructure = m_objects->getStructures()[i];
         if (pStructure == nullptr) continue;
         if (pStructure->getOwner() != playerId) continue;
         if (pStructure->getType() != structureType) continue;
@@ -1467,7 +1478,7 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
     }
 
     if (foundStructureId > -1) {
-        return game.m_gameObjectsContext->getStructures()[foundStructureId];
+        return m_objects->getStructures()[foundStructureId];
     }
 
     return nullptr;
@@ -1478,10 +1489,10 @@ int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minR
     return findNearByValidDropLocation(cell, minRange, maxRange, unitType);
 }
 
-int cMap::findRandomCellToMoveToForSandworm() const {
+int cMap::findRandomCellToMoveToForSandworm() {
     for (int iTries = 0; iTries < 5; iTries++) {
         int iMoveTo = getRandomCellWithinMapWithSafeDistanceFromBorder(2);
-        if (game.m_gameObjectsContext->getMap().isCellPassableForWorm(iMoveTo)) {
+        if (isCellPassableForWorm(iMoveTo)) {
             return iMoveTo;
         }
     }
@@ -1522,7 +1533,7 @@ void cMap::detonateSpiceBloom(int cell)
     mapEditor.createCell(cell, TERRAIN_SAND, 0);
     int size = 75 + (RNG::rnd(100));
     mapEditor.createRandomField(cell, TERRAIN_SPICE, size);
-    game.shakeScreen(20);
+    m_interface->shakeScreen(20);
 
     s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW,
@@ -1535,7 +1546,7 @@ void cMap::detonateSpiceBloom(int cell)
         .buildingListItem = nullptr,
         .buildingList = nullptr
     };
-    game.onNotifyGameEvent(event);
+    m_interface->onNotifyGameEvent(event);
 
 }
 
@@ -1577,7 +1588,7 @@ void cMap::onEntityCreated(const s_GameEvent &event)
 
 void cMap::evaluateIfWeShouldSetTimerToRespawnWorm()
 {
-    int currentAmountOfWorms = game.m_gameObjectsContext->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM);
+    int currentAmountOfWorms = m_objects->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM);
 
     // as long as we don't have the desired amount, set respawn timer
     if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
