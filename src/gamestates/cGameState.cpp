@@ -6,9 +6,11 @@
 
 cGameState::cGameState(sGameServices* services) :
     m_ctx(services->ctx),
-    m_renderDrawer(m_ctx->getSDLDrawer())
+    m_renderDrawer(m_ctx->getSDLDrawer()),
+    m_log(m_ctx->getLog())
 {
     assert(m_ctx != nullptr);
+    assert(m_log != nullptr);
 }
 
 
