@@ -603,7 +603,7 @@ bool cGame::setupGame()
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !
     ctx->setTextContext(context->createTextContext());
-    m_gameObjectsContext->getMap().setGameContext(ctx.get());
+    //m_gameObjectsContext->getMap().setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
 
@@ -699,6 +699,7 @@ bool cGame::setupGame()
     // I need m_renderDrawer to create cPreviewMaps
     m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer, m_gameSettings->m_debugMode);
 
+    m_gameObjectsContext->getMap().setGameContext(ctx.get());
     // Injection of services
     m_gameObjectsContext->serviceInit(m_services.get());
 
