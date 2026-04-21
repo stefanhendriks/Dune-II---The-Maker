@@ -89,6 +89,11 @@ cMapCamera* cGameInterface::getMapCamera() const
     return m_igame->m_mapCamera;
 }
 
+cRectangle* cGameInterface::getMapViewport() const
+{
+    return m_igame->m_mapViewport;
+}
+
 void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const
 {
     m_igame->setPlayerToInteractFor(pPlayer);
@@ -142,6 +147,11 @@ void cGameInterface::drawTextTime() const
 void cGameInterface::reduceShaking() const
 {
     m_igame->reduceShaking();
+}
+
+void cGameInterface::shakeScreen(int duration) const
+{
+    m_igame->shakeScreen(duration);
 }
 
 void cGameInterface::goingToWinLoseBrief(int winOrLoseBrief) const
