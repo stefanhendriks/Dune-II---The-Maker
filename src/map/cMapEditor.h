@@ -43,4 +43,5 @@ private:
     int smoothWallCell(int cell);
 
     cMap &m_map;
+    MapGeometry *m_mapGeometry = nullptr;
 };
