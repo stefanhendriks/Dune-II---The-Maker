@@ -34,6 +34,98 @@ int MapGeometry::getCellY(int c) const
     return c / mapWidth;
 }
 
+int MapGeometry::getCellAbove(int c) const
+{
+    if (!isValidCell(c)) return -1;
+    int cellAbove = c - mapWidth;
+
+    if (cellAbove < 0) return -1;
+
+    return cellAbove;
+}
+
+int MapGeometry::getCellBelow(int c) const
+{
+    if (!isValidCell(c)) return -1;
+    int cellBelow = c + mapWidth;
+    if (cellBelow >= maxCells)
+        return -1;
+
+    return cellBelow;
+}
+
+int MapGeometry::getCellLeft(int c) const
+{
+    if (!isValidCell(c)) return -1;
+    int x = getCellX(c);
+    int cellLeft = x - 1;
+    if (cellLeft < 0) return -1;
+    return c - 1;
+}
+
+int MapGeometry::getCellRight(int c) const
+{
+    if (!isValidCell(c)) return -1;
+    int x = getCellX(c);
+    int cellRight = x + 1;
+    if (cellRight >= maxCells) return -1;
+    if (cellRight >= mapWidth) return -1;
+
+    return c + 1;
+}
+
+int MapGeometry::getCellUpperLeft(int c) const
+{
+    if (!isValidCell(c)) return -1;
+    int upperLeftCell = getCellAbove(c) - 1;
+    if (upperLeftCell < 0) return -1;
+
+    return upperLeftCell;
+}
+
+int MapGeometry::getCellUpperRight(int c) const
+{
+    if (!isValidCell(c)) return -1;
+    int upperRightCell = getCellAbove(c) + 1;
+    if (upperRightCell < 0) return -1;
+
+    return upperRightCell;
+}
+
+int MapGeometry::getCellLowerLeft(int c) const
+{
+    if (!isValidCell(c)) return -1;
+    int lowerLeftCell = getCellBelow(c) - 1;
+    if (lowerLeftCell < 0) return -1;
+    if (lowerLeftCell >= maxCells) return -1;
+    return lowerLeftCell;
+}
+
+int MapGeometry::getCellLowerRight(int c) const
+{
+    if (!isValidCell(c)) return -1;
+    int lowerRightCell = getCellBelow(c) + 1;
+    if (lowerRightCell >= maxCells) return -1;
+    if (lowerRightCell < 0) return -1;
+
+    return lowerRightCell;
+}
+
+bool MapGeometry::isCellAdjacentToOtherCell(int thisCell, int otherCell) const
+{
+    if (getCellAbove(thisCell) == otherCell) return true;
+    if (getCellBelow(thisCell) == otherCell) return true;
+    if (getCellLeft(thisCell) == otherCell) return true;
+    if (getCellRight(thisCell) == otherCell) return true;
+
+    if (getCellUpperLeft(thisCell) == otherCell) return true;
+    if (getCellUpperRight(thisCell) == otherCell) return true;
+    if (getCellLowerLeft(thisCell) == otherCell) return true;
+    if (getCellLowerRight(thisCell) == otherCell) return true;
+
+    return false;
+}
+
 int MapGeometry::getCellWithMapDimensions(int x, int y) const
 {
     if (x < 0) return -1;
@@ -78,6 +170,15 @@ double MapGeometry::distance(int cell1, int cell2) const
     return ABS_length(x1, y1, x2, y2);
 }
 
+double MapGeometry::distance(int x1, int y1, int x2, int y2) const
+{
+    if (x1 == x2 && y1 == y2) return 1;
+
+    int A = abs(x2 - x1) * abs(x2 - x1);
+    int B = abs(y2 - y1) * abs(y2 - y1);
+    return sqrt((double) (A + B));
+}
+
 int MapGeometry::getCellWithMapBorders(int x, int y) const
 {
     // internal vars are 1 based (ie 64x64 means 0-63, which really means 1...62 are valid)
@@ -112,6 +213,7 @@ int MapGeometry::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) 
 
 bool MapGeometry::isWithinBoundaries(int c) const //rip
 {
+    if (!isValidCell(c)) return false;
     return isWithinBoundaries(getCellX(c), getCellY(c));
 }
 
@@ -147,6 +249,15 @@ int MapGeometry::getRandomCellFromWithRandomDistance(int cell, int distance) con
     int newX = (startX - distance) + (RNG::rnd(distance * 2));
     int newY = (startY - distance) + (RNG::rnd(distance * 2));
     return getCellWithMapBorders(newX, newY);
+}
+
+int MapGeometry::getMaxDistanceInPixels() const
+{
+    int tileWidth = TILESIZE_WIDTH_PIXELS;
+    int tileHeight = TILESIZE_HEIGHT_PIXELS;
+    int maxWidthDistance = mapWidth * tileWidth;
+    int maxHeightDistance = mapHeight * tileHeight;
+    return ABS_length(0, 0, maxWidthDistance, maxHeightDistance);
 }
 
 bool MapGeometry::isAtMapBoundaries(int cell) const

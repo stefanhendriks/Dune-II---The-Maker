@@ -808,163 +808,111 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
 
 double cMap::distance(int x1, int y1, int x2, int y2)  //rip
 {
-    if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
-
-    int A = abs(x2 - x1) * abs(x2 - x1);
-    int B = abs(y2 - y1) * abs(y2 - y1);
-    return sqrt((double) (A + B)); // get C from A and B
+    return m_mapGeometry->distance(x1, y1, x2, y2);
 }
 
 int cMap::getCellY(int c) const//rip
 {
-    if (c < 0 || c >= m_maxCells) {
-        return -1;
-    }
-
-    return (c / m_width);
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellY(c);
 }
 
 int cMap::getCellX(int c) const//rip
 {
-    if (c < 0 || c >= m_maxCells) {
-        return -1;
-    }
-
-    int cellX = c - ((c / m_width) * m_width);
-    return cellX;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellX(c);
 }
 
 bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell)
 {
-    if (getCellAbove(thisCell) == otherCell) return true;
-    if (getCellBelow(thisCell) == otherCell) return true;
-    if (getCellLeft(thisCell) == otherCell) return true;
-    if (getCellRight(thisCell) == otherCell) return true;
-
-    //
-    if (getCellUpperLeft(thisCell) == otherCell) return true;
-    if (getCellUpperRight(thisCell) == otherCell) return true;
-    if (getCellLowerLeft(thisCell) == otherCell) return true;
-    if (getCellLowerRight(thisCell) == otherCell) return true;
-
-    return false;
+    return m_mapGeometry->isCellAdjacentToOtherCell(thisCell, otherCell);
 }
 
 int cMap::getCellLowerRight(int c)
 {
-    int lowerRightCell = getCellBelow(c) + 1;
-    if (lowerRightCell >= m_maxCells) return -1;
-    if (lowerRightCell < 0) return -1;
-
-    return lowerRightCell;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellLowerRight(c);
 }
 
 int cMap::getCellLowerLeft(int c)
 {
-    int lowerLeftCell = getCellBelow(c) - 1;
-    if (lowerLeftCell < 0) return -1;
-    if (lowerLeftCell >= m_maxCells) return -1;
-    return lowerLeftCell;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellLowerLeft(c);
 }
 
 int cMap::getCellUpperRight(int c)
 {
-    int upperRightCell = getCellAbove(c) + 1;
-    if (upperRightCell < 0) return -1;
-
-    return upperRightCell;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellUpperRight(c);
 }
 
 int cMap::getCellUpperLeft(int c)
 {
-    int upperLeftCell = getCellAbove(c) - 1;
-    if (upperLeftCell < 0) return -1;
-
-    return upperLeftCell;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellUpperLeft(c);
 }
 
 int cMap::getCellRight(int c)
 {
-    int x = getCellX(c);
-    int cellRight = x + 1;
-    if (cellRight >= m_maxCells) return -1;
-    if (cellRight >= m_width) return -1;
-
-    return c + 1;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellRight(c);
 }
 
 int cMap::getCellLeft(int c)
 {
-    if (c < 0) return -1;
-    int x = getCellX(c);
-    int cellLeft = x - 1;
-    if (cellLeft < 0) return -1;
-    return c - 1;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellLeft(c);
 }
 
 int cMap::getCellBelow(int c)
 {
-    if (c < 0) return -1;
-    int cellBelow = c + m_width;
-    if (cellBelow >= m_maxCells)
-        return -1;
-
-    return cellBelow;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellBelow(c);
 }
 
 int cMap::getCellAbove(int c)
 {
-    if (c < 0) return -1;
-    int cellAbove = c - m_width;
-
-    if (cellAbove < 0) return -1;
-
-    return cellAbove;
+    if (!isValidCell(c)) return -1;
+    return m_mapGeometry->getCellAbove(c);
 }
 
 int cMap::getAbsoluteYPositionFromCell(int cell) //rip
 {
-    if (cell < 0) return -1;
-    return getCellY(cell) * TILESIZE_HEIGHT_PIXELS;
+    if (!isValidCell(cell)) return -1;
+    return m_mapGeometry->getAbsoluteYPositionFromCell(cell);
 }
 
 int cMap::getAbsoluteXPositionFromCell(int cell)  //rip
 {
-    if (cell < 0) return -1;
-    return getCellX(cell) * TILESIZE_WIDTH_PIXELS;
+    if (!isValidCell(cell)) return -1;
+    return m_mapGeometry->getAbsoluteXPositionFromCell(cell);
 }
 
 int cMap::getAbsoluteXPositionFromCellCentered(int cell)  //rip
 {
-    return getAbsoluteXPositionFromCell(cell) + (TILESIZE_WIDTH_PIXELS / 2);
+    if (!isValidCell(cell)) return -1;
+    return m_mapGeometry->getAbsoluteXPositionFromCellCentered(cell);
 }
 
 int cMap::getAbsoluteYPositionFromCellCentered(int cell)  //rip
 {
-    return getAbsoluteYPositionFromCell(cell) + (TILESIZE_HEIGHT_PIXELS / 2);
+    if (!isValidCell(cell)) return -1;
+    return m_mapGeometry->getAbsoluteYPositionFromCellCentered(cell);
 }
 
 double cMap::distance(int cell1, int cell2) //rip
 {
-    int x1 = getCellX(cell1);
-    int y1 = getCellY(cell1);
-
-    int x2 = getCellX(cell2);
-    int y2 = getCellY(cell2);
-    return ABS_length(x1, y1, x2, y2);
+    if (!isValidCell(cell1) || !isValidCell(cell2)) return 0;
+    return m_mapGeometry->distance(cell1, cell2);
 }
 
 int cMap::getMaxDistanceInPixels() const {
-    int tileWidth = 32;
-    int tileHeight = 32;
-    int maxWidthDistance = m_width * tileWidth;
-    int maxHeightDistance = m_height * tileHeight;
-    return ABS_length(0, 0, maxWidthDistance, maxHeightDistance);
+    return m_mapGeometry->getMaxDistanceInPixels();
 }
 
 bool cMap::isValidCell(int c) const //rip
 {
-    return !(c < 0 || c >= m_maxCells);
+    return m_mapGeometry->isValidCell(c);
 }
 
 /**
@@ -973,7 +921,7 @@ bool cMap::isValidCell(int c) const //rip
  */
 int cMap::getRandomCell() //rip
 {
-    return RNG::rnd(m_maxCells);
+    return m_mapGeometry->getRandomCell();
 }
 
 void cMap::createCell(int cell, int terrainType, int tile)
@@ -1051,17 +999,12 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
 
 int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) const //rip
 {
-    // distance = 2
-    // m_width = 64
-    // => 2 + (64 - 4) => 2 + (...60) = min 2, max 62
-    return m_mapGeometry->getCellWithMapBorders(
-               distance + RNG::rnd(m_width - (distance * 2)),
-               distance + RNG::rnd(m_height - (distance * 2))
-           );
+    return m_mapGeometry->getRandomCellWithinMapWithSafeDistanceFromBorder(distance);
 }
 
 bool cMap::isWithinBoundaries(int c) //rip
 {
+    if (!isValidCell(c)) return false;
     return isWithinBoundaries(getCellX(c), getCellY(c));
 }
 
@@ -1162,13 +1105,8 @@ bool cMap::isValidTerrainForStructureAtCell(int cll)
  */
 int cMap::getRandomCellFrom(int cell, int distance) //rip
 {
-    int startX = getCellX(cell);
-    int startY = getCellY(cell);
-    int xDir = RNG::rnd(100) < 50 ? -1 : 1;
-    int yDir = RNG::rnd(100) < 50 ? -1 : 1;
-    int newX = (startX - distance) + (xDir * distance);
-    int newY = (startY - distance) + (yDir * distance);
-    return m_mapGeometry->getCellWithMapBorders(newX, newY);
+    if (!isValidCell(cell)) return -1;
+    return m_mapGeometry->getRandomCellFrom(cell, distance);
 }
 
 /**
@@ -1180,11 +1118,8 @@ int cMap::getRandomCellFrom(int cell, int distance) //rip
  */
 int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) //rip
 {
-    int startX = getCellX(cell);
-    int startY = getCellY(cell);
-    int newX = (startX - distance) + (RNG::rnd(distance * 2));
-    int newY = (startY - distance) + (RNG::rnd(distance * 2));
-    return m_mapGeometry->getCellWithMapBorders(newX, newY);
+    if (!isValidCell(cell)) return -1;
+    return m_mapGeometry->getRandomCellFromWithRandomDistance(cell, distance);
 }
 
 /**
@@ -1225,29 +1160,18 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer)
 
 bool cMap::isAtMapBoundaries(int cell)  //rip
 {
-    bool validCell = isValidCell(cell);
-    if (!validCell) return false;
-
-    int maxHeight = (m_height - 2); // hence the -2!
-    int maxWidth = (m_width - 2);
-
-    int x = getCellX(cell);
-    int y = getCellY(cell);
-
-    if (x == 1 || x == maxWidth) return true;
-    if (y == 1 || y == maxHeight) return true;
-
-    return false;
+    if (!isValidCell(cell)) return false;
+    return m_mapGeometry->isAtMapBoundaries(cell);
 }
 
 cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const //rip
 {
-    return {std::clamp(x, 1, getWidth() - 2), std::clamp(y, 1, getHeight() - 2)};
+    return m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(x, y);
 }
 
 cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const //rip
 {
-    return {std::clamp(x, 0, getWidth() - 1), std::clamp(y, 0, getHeight() - 1)};
+    return m_mapGeometry->fixCoordinatesToBeWithinMap(x, y);
 }
 
 int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop)
@@ -1649,5 +1573,6 @@ void cMap::onEntityDestroyed(const s_GameEvent &event)
 
 cPoint cMap::getAbsolutePositionFromCell(int cell)
 {
-    return cPoint(getAbsoluteXPositionFromCell(cell), getAbsoluteYPositionFromCell(cell));
+    if (!isValidCell(cell)) return {-1, -1};
+    return m_mapGeometry->getAbsolutePositionFromCell(cell);
 }
