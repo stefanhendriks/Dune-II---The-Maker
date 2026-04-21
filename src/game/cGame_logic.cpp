@@ -598,6 +598,7 @@ bool cGame::setupGame()
 
     // create ressources from scratch
     context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
+    ctx->setLog(m_log);
     // share Graphics to all class what use ctx !
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !

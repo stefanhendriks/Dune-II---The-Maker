@@ -11,6 +11,7 @@ class cTimeManager;
 class cSoundPlayer;
 class SDLDrawer;
 class cGameInterface;
+class cLog;
 
 class GameContext {
 public:
@@ -35,6 +36,9 @@ public:
     void setGameInterface(std::unique_ptr<cGameInterface> gameInterface);
     cGameInterface* getGameInterface() const;
 
+    void setLog(cLog *log);
+    cLog* getLog() const;
+
     void resetCache() const;
 private:
     std::unique_ptr<GraphicsContext> m_graphicsContext;
@@ -43,4 +47,5 @@ private:
     std::unique_ptr<TextContext> m_textContext;
     std::unique_ptr<SDLDrawer> m_SDLDrawer;
     std::unique_ptr<cGameInterface> m_gameInterface;
+    cLog *m_log = nullptr;
 };
