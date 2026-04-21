@@ -158,9 +158,8 @@ bool MapGeometry::isValidCell(int c) const {
 }
 
 bool MapGeometry::isWithinBoundaries(int x, int y) const {
-    return x >= 0 && x < mapWidth && y >= 0 && y < mapHeight;
+    return x >= 1 && x < mapWidth-1 && y >= 1 && y < mapHeight-1;
 }
-
 
 double MapGeometry::distance(int cell1, int cell2) const
 {
