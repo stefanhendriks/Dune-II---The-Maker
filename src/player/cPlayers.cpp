@@ -24,8 +24,10 @@
 #include "brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
 #include "brains/cPlayerBrainSandworm.h"
 #include "game/cGameSettings.h"
+#include "include/sGameServices.h"
 #include "include/sDataCampaign.h"
 #include "definitions.h"
+#include "context/GameContext.hpp"
 
 #include "cHousesInfo.h"
 #include "include/sGameEvent.h"
@@ -39,6 +41,10 @@ cPlayers::cPlayers()
 
 void cPlayers::serviceInit(sGameServices* services)
 {
+    assert(services != nullptr);
+    m_log = services->ctx->getLog();
+    assert(m_log != nullptr);
+
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
         m_players[i]->serviceInit(services);
     }

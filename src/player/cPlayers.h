@@ -19,6 +19,7 @@ struct s_DataCampaign;
 struct sGameServices;
 class cMouse;
 class cSideBarFactory;
+class cLog;
 #include "cPlayer.h"
 
 /**
@@ -112,6 +113,7 @@ public:
     void evaluateStillAliveForAI();
 private:
     std::array<cPlayer*, MAX_PLAYERS_CAPACITY> m_players;
+    cLog *m_log = nullptr;
 };
 
 inline auto begin(cPlayers* players) {
