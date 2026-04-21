@@ -127,8 +127,8 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell)
     if (cell < 0) cell = 0;
     if (cell >= game.m_gameObjectsContext->getMap().getMaxCells()) cell = (game.m_gameObjectsContext->getMap().getMaxCells()-1);
 
-    int mapCellX = m_pMap->getAbsoluteXPositionFromCell(cell);
-    int mapCellY = m_pMap->getAbsoluteYPositionFromCell(cell);
+    int mapCellX = m_pMap->getGeometry().getAbsoluteXPositionFromCell(cell);
+    int mapCellY = m_pMap->getGeometry().getAbsoluteYPositionFromCell(cell);
 
     // determine the half of our screen
     int halfViewportWidth = m_viewportWidth / 2;
@@ -368,11 +368,11 @@ void cMapCamera::onMouseRightButtonClicked(const s_MouseEvent &)
 }
 
 int cMapCamera::getWindowXPositionFromCellWithOffset(int cell, int offset) {
-    int absoluteXPosition = m_pMap->getAbsoluteXPositionFromCell(cell);
+    int absoluteXPosition = m_pMap->getGeometry().getAbsoluteXPositionFromCell(cell);
     return getWindowXPositionWithOffset(absoluteXPosition, offset);
 }
 
 int cMapCamera::getWindowYPositionFromCellWithOffset(int cell, int offset) {
-    int absoluteYPosition = m_pMap->getAbsoluteYPositionFromCell(cell);
+    int absoluteYPosition = m_pMap->getGeometry().getAbsoluteYPositionFromCell(cell);
     return getWindowYPositionWithOffset(absoluteYPosition, offset);
 }
