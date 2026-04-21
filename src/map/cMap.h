@@ -35,6 +35,12 @@ class cUnit;
 class cTextDrawer;
 struct sGameServices;
 
+class cGameSettings;
+class cInfoContext;
+class cGameObjectContext;
+class cGameInterface;
+class cLog;
+
 class cMap : public cScenarioObserver {
 
 public:
@@ -542,6 +548,11 @@ private:
 
     std::vector<tCell> m_cell;
     GameContext *m_ctx = nullptr;
+    cGameSettings *m_settings = nullptr;
+    cInfoContext *m_infos = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cLog *m_log = nullptr;    
     cTextDrawer *m_textDrawer = nullptr;
 
     std::unique_ptr<MapGeometry> m_mapGeometry;
