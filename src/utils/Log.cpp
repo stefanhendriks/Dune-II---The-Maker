@@ -7,6 +7,7 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <iostream>
 
 
 std::string getLogLevelString(eLogLevel level)
@@ -149,6 +150,11 @@ void cLog::flushPendingLine(bool forceFlush)
 
 void cLog::doLog(eLogLevel level, eLogComponent comp, std::string_view event, std::string_view message, int playerId, int houseId)
 {
+    if (!m_debugMode && (level == LOG_TRACE || level == LOG_DEBUG)) {
+        // trace and debug levels are only available in debug mode
+        return;
+    }
+
     const auto now = std::chrono::system_clock::now();
     const auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
 
@@ -160,6 +166,10 @@ void cLog::doLog(eLogLevel level, eLogComponent comp, std::string_view event, st
         (playerId >= 0 ? std::to_string(playerId) : ""),
         (houseId >= 0 ? getLogHouseString(houseId) : "")
     );
+
+    if (m_debugMode && (level == LOG_ERROR || level == LOG_FATAL) ) {
+        std::cout << payload << std::endl;
+    }
 
     if (m_hasPendingLine && payload == m_pendingPayload) {
         ++m_pendingCount;
