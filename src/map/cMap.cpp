@@ -38,6 +38,7 @@
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/units/cUnits.h"
 #include "drawers/cTextDrawer.h"
+#include "include/sGameServices.h"
 
 #include <format>
 #include <algorithm>
@@ -54,6 +55,12 @@ cMap::cMap()
     m_mapGeometry = std::make_unique<MapGeometry>(64,64);
     init(64, 64);
     m_terrainInfo = nullptr;
+
+    m_settings = nullptr;
+    m_infos = nullptr;
+    m_objects = nullptr;
+    m_interface = nullptr;
+    m_log = nullptr;
 }
 
 cMap::~cMap() = default;
@@ -72,7 +79,17 @@ void cMap::setGameContext(GameContext* ctx)
 void cMap::serviceInit(sGameServices* services)
 {
     assert(services != nullptr);
-    // nothing to do for now, but we might need this in the future when we want to inject services into cMap
+    m_log = services->ctx->getLog();
+    assert(m_log != nullptr);
+
+    m_settings = services->settings;
+    assert(m_settings != nullptr);
+    m_infos = services->info;
+    assert(m_infos != nullptr);
+    m_objects = services->objects;
+    assert(m_objects != nullptr);
+    m_interface = services->ctx->getGameInterface();
+    assert(m_interface != nullptr);
 }
 
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
