@@ -10,6 +10,7 @@ class Graphics;
 class SDLDrawer;
 class cMap;
 class cMapCamera;
+class MapGeometry;
 
 class cMapDrawer {
 public:
@@ -32,12 +33,13 @@ protected:
 
 
 private:
-    cMap *m_map;
-    cPlayer *m_player;
-    cMapCamera *m_camera;
-    GameContext *m_ctx;
-    SDLDrawer* m_renderDrawer;
-    Graphics *m_gfxdata;
+    cMap *m_map = nullptr;
+    MapGeometry *m_mapGeometry = nullptr;
+    cPlayer *m_player = nullptr;
+    cMapCamera *m_camera = nullptr;
+    GameContext *m_ctx = nullptr;
+    SDLDrawer* m_renderDrawer = nullptr;
+    Graphics *m_gfxdata = nullptr;
 
     bool m_drawWithoutShroudTiles;
     bool m_drawGrid;
