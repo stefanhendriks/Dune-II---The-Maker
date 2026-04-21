@@ -251,10 +251,10 @@ void cOrderProcesser::sendFrigate()
             }
 
             // STEP 2b: make sure its facing the starport directly
-            int iCellX = game.m_gameObjectsContext->getMap().getCellX(iStartCell);
-            int iCellY = game.m_gameObjectsContext->getMap().getCellY(iStartCell);
-            int cx = game.m_gameObjectsContext->getMap().getCellX(destinationCell);
-            int cy = game.m_gameObjectsContext->getMap().getCellY(destinationCell);
+            int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iStartCell);
+            int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iStartCell);
+            int cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(destinationCell);
+            int cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(destinationCell);
 
             int d = fDegrees(iCellX, iCellY, cx, cy);
             int f = faceAngle(d); // get the angle

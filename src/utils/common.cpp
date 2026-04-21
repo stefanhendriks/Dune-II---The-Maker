@@ -165,12 +165,12 @@ int iFindCloseBorderCell(int iCll)
 
 int distanceBetweenCellAndCenterOfScreen(int iCell)
 {
-    if (game.m_gameObjectsContext->getMap().isValidCell(iCell)) {
+    if (game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCell)) {
         int centerX = game.m_mapCamera->getViewportCenterX();
         int centerY = game.m_mapCamera->getViewportCenterY();
 
-        int cellX = game.m_gameObjectsContext->getMap().getAbsoluteXPositionFromCell(iCell);
-        int cellY = game.m_gameObjectsContext->getMap().getAbsoluteYPositionFromCell(iCell);
+        int cellX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCell(iCell);
+        int cellY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCell(iCell);
 
         return ABS_length(centerX, centerY, cellX, cellY);
     }
@@ -212,13 +212,13 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     newBullet.init();
 
     newBullet.iType = type;
-    newBullet.posX = game.m_gameObjectsContext->getMap().getAbsoluteXPositionFromCellCentered(fromCell);
-    newBullet.posY = game.m_gameObjectsContext->getMap().getAbsoluteYPositionFromCellCentered(fromCell);
+    newBullet.posX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCellCentered(fromCell);
+    newBullet.posY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCellCentered(fromCell);
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
-    newBullet.targetX = game.m_gameObjectsContext->getMap().getAbsoluteXPositionFromCellCentered(targetCell);
-    newBullet.targetY = game.m_gameObjectsContext->getMap().getAbsoluteYPositionFromCellCentered(targetCell);
+    newBullet.targetX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCellCentered(targetCell);
+    newBullet.targetY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCellCentered(targetCell);
 
     // if we start firing from a mountain, flag it so the bullet won't be blocked by mountains along
     // the way

@@ -293,7 +293,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     // Case: Fremen is deployed at random cell on the map
                     if (special.providesType == UNIT) {
                         // determine cell
-                        int iCll = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+                        int iCll = game.m_gameObjectsContext->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(4);
 
                         for (int j = 0; j < special.units; j++) {
                             bool passable = game.m_gameObjectsContext->getMap().isCellPassableForFootUnits(iCll);
@@ -305,8 +305,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
                             }
 
-                            int x = game.m_gameObjectsContext->getMap().getCellX(iCll);
-                            int y = game.m_gameObjectsContext->getMap().getCellY(iCll);
+                            int x = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll);
+                            int y = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
                             int amount = RNG::rnd(2) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right
@@ -325,7 +325,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                     break;
                             }
                             // change cell
-                            cPoint::split(x, y) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(x, y);
+                            cPoint::split(x, y) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(x, y);
 
                             iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(x, y);
                         }

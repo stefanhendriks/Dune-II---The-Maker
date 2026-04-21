@@ -172,11 +172,11 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
             m_renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
 
-            int mouseCellX = game.m_gameObjectsContext->getMap().getCellX(pContext->getMouseCell());
-            int mouseCellY = game.m_gameObjectsContext->getMap().getCellY(pContext->getMouseCell());
+            int mouseCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(pContext->getMouseCell());
+            int mouseCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(pContext->getMouseCell());
 
-            int cellX = game.m_gameObjectsContext->getMap().getCellX(structure->getCell());
-            int cellY = game.m_gameObjectsContext->getMap().getCellY(structure->getCell());
+            int cellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(structure->getCell());
+            int cellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(structure->getCell());
 
             float degrees = fDegrees(cellX, cellY, mouseCellX, mouseCellY);
 

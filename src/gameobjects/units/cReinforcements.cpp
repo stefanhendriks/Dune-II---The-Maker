@@ -168,7 +168,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     if (iPlr < 0 || iTpe < 0)
         return;
 
-    if (game.m_gameObjectsContext->getMap().isValidCell(iCll) == false)
+    if (game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCll) == false)
         return;
 
     if (iStart < 0)
@@ -201,10 +201,10 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     }
 
     // STEP 3: assign order to carryall
-    int iCellX = game.m_gameObjectsContext->getMap().getCellX(iStartCell);
-    int iCellY = game.m_gameObjectsContext->getMap().getCellY(iStartCell);
-    int cx = game.m_gameObjectsContext->getMap().getCellX(iCll);
-    int cy = game.m_gameObjectsContext->getMap().getCellY(iCll);
+    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iStartCell);
+    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iStartCell);
+    int cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll);
+    int cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
 
     int d = fDegrees(iCellX, iCellY, cx, cy);
     int f = faceAngle(d); // get the angle

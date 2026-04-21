@@ -1155,12 +1155,12 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
         }
         else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
             int precision = special.deployTargetPrecision;
-            int mouseCellX = m_gameObjectsContext->getMap().getCellX(iMouseCell) - precision;
-            int mouseCellY = m_gameObjectsContext->getMap().getCellY(iMouseCell) - precision;
+            int mouseCellX = m_gameObjectsContext->getMapGeometry()->getCellX(iMouseCell) - precision;
+            int mouseCellY = m_gameObjectsContext->getMapGeometry()->getCellY(iMouseCell) - precision;
 
             int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
-            cPoint::split(posX, posY) = m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(posX, posY);
+            cPoint::split(posX, posY) = m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(posX, posY);
 
             logbook(std::format(
                         "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
@@ -1372,7 +1372,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
     // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
     // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = m_mapCamera->divideByZoomLevel(m_gameObjectsContext->getMap().getMaxDistanceInPixels() / 2);
+    float maxDistance = m_mapCamera->divideByZoomLevel(m_gameObjectsContext->getMapGeometry()->getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
     float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
