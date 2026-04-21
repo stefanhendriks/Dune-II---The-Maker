@@ -17,6 +17,7 @@
 #include <cmath>
 
 class cMap;
+class MapGeometry;
 
 class cMapCamera : cInputObserver {
 
@@ -204,6 +205,7 @@ private:
 
     // the map this camera is viewing
     cMap *m_pMap;
+    MapGeometry *m_mapGeometry = nullptr;
 
     void adjustViewport(float screenX, float screenY);
 
