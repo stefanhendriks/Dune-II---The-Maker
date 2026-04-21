@@ -36,9 +36,8 @@ public:
     cStructures& getStructures() const;
     cAbstractStructure* getStructure(int index);
 
-    cUnits& getUnits() const;
-    cUnit& getUnit(int index);
-    const cUnit& getUnit(int index) const;
+    cUnits* getUnits() const;
+    cUnit* getUnit(int index);
 
     cPlayer* getPlayer(int index);
     const cPlayer* getPlayer(int index) const;

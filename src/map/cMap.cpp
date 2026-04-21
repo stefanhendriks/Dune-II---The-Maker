@@ -249,15 +249,16 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
     if (iCell < 0 || iUnitID < 0)
         return false;
 
-    cUnit &pUnit = m_objects->getUnits()[iUnitID];
-    if (!pUnit.isAirbornUnit()) return false; // weird unit passed in
-    if (pUnit.iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
+    cUnit *pUnit = m_objects->getUnit(iUnitID);
+    if (!pUnit) return false;
+    if (!pUnit->isAirbornUnit()) return false; // weird unit passed in
+    if (pUnit->iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
 
     int structureIdOnMap = getCellIdStructuresLayer(iCell);
     if (structureIdOnMap > -1) {
         // the cell contains a structure that the unit wants to enter (for repairment?)
-        if (pUnit.iStructureID > -1) {
-            if (structureIdOnMap == pUnit.iStructureID) {
+        if (pUnit->iStructureID > -1) {
+            if (structureIdOnMap == pUnit->iStructureID) {
                 return true;
             }
         }
@@ -266,7 +267,7 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
         return false;
     }
 
-    s_UnitInfo &unitToDeploy = m_infos->getUnitInfo(pUnit.iNewUnitType);
+    s_UnitInfo &unitToDeploy = m_infos->getUnitInfo(pUnit->iNewUnitType);
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
@@ -306,13 +307,14 @@ bool cMap::occupied(int iCll, int iUnitID)
     if (iCll < 0 || iUnitID < 0)
         return true;
 
-    cUnit &pUnit = m_objects->getUnits()[iUnitID];
+    cUnit *pUnit = m_objects->getUnit(iUnitID);
+    if (!pUnit) return true;
 
     int structureIdOnMap = getCellIdStructuresLayer(iCll);
     if (structureIdOnMap > -1) {
         // the cell contains a structure that the unit wants to enter
-        if (pUnit.iStructureID > -1) {
-            if (structureIdOnMap == pUnit.iStructureID) {
+        if (pUnit->iStructureID > -1) {
+            if (structureIdOnMap == pUnit->iStructureID) {
                 // the unit wants to enter this structure, so it does not block the unit
                 return false;
             }
@@ -323,7 +325,7 @@ bool cMap::occupied(int iCll, int iUnitID)
     }
 
     // non airborn units can block each other
-    if (!pUnit.isAirbornUnit() && !pUnit.isSandworm()) {
+    if (!pUnit->isAirbornUnit() && !pUnit->isSandworm()) {
         int cellIdOnMap = getCellIdUnitLayer(iCll);
         if (cellIdOnMap > -1 && cellIdOnMap != iUnitID) {
             return true; // other unit at cell
@@ -337,7 +339,7 @@ bool cMap::occupied(int iCll, int iUnitID)
 
     // mountains only block infantry
     if (getCellType(iCll) == TERRAIN_MOUNTAIN) {
-        if (!pUnit.isInfantryUnit() && !pUnit.isAirbornUnit()) {
+        if (!pUnit->isInfantryUnit() && !pUnit->isAirbornUnit()) {
             return true;
         }
     }
@@ -522,14 +524,14 @@ void cMap::clearShroud(int c, int size, int playerId)
 
                 int unitId = getCellIdUnitLayer(cl);
                 if (unitId > -1) {
-                    cUnit &cUnit = m_objects->getUnits()[unitId];
-                    if (cUnit.isValid()) {
+                    cUnit *cUnit = m_objects->getUnit(unitId);
+                    if (cUnit && cUnit->isValid()) {
                         s_GameEvent event {
                             .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                             .entityType = eBuildType::UNIT,
                             .entityID = unitId,
                             .player = m_objects->getPlayer(playerId),
-                            .entitySpecificType = cUnit.getType(),
+                            .entitySpecificType = cUnit->getType(),
                             .atCell = cl
                         };
 
@@ -562,8 +564,8 @@ void cMap::draw_units()
     //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit &pUnit = (*m_objects->getUnits())[i];
         if (!pUnit.isValid()) continue;
 
         // DEBUG MODE: DRAW PATHS
@@ -582,8 +584,8 @@ void cMap::draw_units()
     }
 
     // then: draw infantry units
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit &pUnit = (*m_objects->getUnits())[i];
         if (!pUnit.isValid()) continue;
 
         if (!pUnit.isInfantryUnit())
@@ -598,8 +600,8 @@ void cMap::draw_units()
     }
 
     // then: draw ground units
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit &pUnit = (*m_objects->getUnits())[i];
         if (!pUnit.isValid()) continue;
 
         if (pUnit.isAirbornUnit() ||
@@ -629,8 +631,8 @@ void cMap::draw_units_2nd()
     auto *mapViewport = m_interface->getMapViewport();
 
     // draw health of units
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit &pUnit = (*m_objects->getUnits())[i];
         if (!pUnit.isValid()) continue;
         if (!pUnit.rendering.bHovered && !pUnit.isSelected()) continue;
         if (!pUnit.isWithinViewport(mapViewport)) continue;
@@ -645,8 +647,8 @@ void cMap::draw_units_2nd()
     }
 
     // draw airborn units
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnits()[i];
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit &pUnit = (*m_objects->getUnits())[i];
         if (!pUnit.isValid()) continue;
         if (!pUnit.isAirbornUnit()) continue;
 
