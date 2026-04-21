@@ -88,6 +88,16 @@ const cUnit& cGameObjectContext::getUnit(int index) const
     return (*m_Units)[index];
 }
 
+cAbstractStructure* cGameObjectContext::getStructure(int index)
+{
+    if (index < 0) return nullptr;
+
+    auto &structures = getStructures();
+    if (index >= static_cast<int>(structures.size())) return nullptr;
+
+    return structures[index];
+}
+
 cPlayer* cGameObjectContext::getPlayer(int index)
 {
     return m_Players->getPlayer(index);
