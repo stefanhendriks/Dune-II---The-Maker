@@ -110,7 +110,7 @@ void cGamePlaying::thinkFast()
 void cGamePlaying::thinkNormal()
 {
         // units think
-        for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
             cUnit *cUnit = m_objects->getUnit(i);
             if (cUnit->isValid()) {
                 cUnit->think();
@@ -312,7 +312,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
-        for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
             cUnit *u = m_objects->getUnit(i);
             if (u->isSelected() && u->iType == MCV && u->getPlayer()->isHuman()) {
                 bool canPlace = u->getPlayer()->canPlaceStructureAt(u->getCell(), CONSTYARD, u->iID).success;
