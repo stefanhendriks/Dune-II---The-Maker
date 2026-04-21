@@ -21,9 +21,11 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     m_moveSpeedDrag(moveSpeedDrag),
     m_moveSpeedBorderOrKeys(moveSpeedBorderOrKeys),
     m_cameraEdgeMove(cameraEdgeMove),
-    m_pMap(theMap)
+    m_pMap(theMap),
+    m_mapGeometry(theMap ? &theMap->getGeometry() : nullptr)
 {
     assert(theMap != nullptr);
+    assert(m_mapGeometry != nullptr);
     m_viewportStartX = m_viewportStartY = 32;
     m_zoomLevel = 1.0f;
 
@@ -127,8 +129,8 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell)
     if (cell < 0) cell = 0;
     if (cell >= game.m_gameObjectsContext->getMap().getMaxCells()) cell = (game.m_gameObjectsContext->getMap().getMaxCells()-1);
 
-    int mapCellX = m_pMap->getGeometry().getAbsoluteXPositionFromCell(cell);
-    int mapCellY = m_pMap->getGeometry().getAbsoluteYPositionFromCell(cell);
+    int mapCellX = m_mapGeometry->getAbsoluteXPositionFromCell(cell);
+    int mapCellY = m_mapGeometry->getAbsoluteYPositionFromCell(cell);
 
     // determine the half of our screen
     int halfViewportWidth = m_viewportWidth / 2;
@@ -174,7 +176,7 @@ void cMapCamera::setViewportPosition(int x, int y)
 
 int cMapCamera::getCellFromAbsolutePosition(int x, int y)
 {
-    return game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions((x / 32), (y / 32));
+    return m_mapGeometry->getCellWithMapDimensions((x / 32), (y / 32));
 }
 
 void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -368,11 +370,11 @@ void cMapCamera::onMouseRightButtonClicked(const s_MouseEvent &)
 }
 
 int cMapCamera::getWindowXPositionFromCellWithOffset(int cell, int offset) {
-    int absoluteXPosition = m_pMap->getGeometry().getAbsoluteXPositionFromCell(cell);
+    int absoluteXPosition = m_mapGeometry->getAbsoluteXPositionFromCell(cell);
     return getWindowXPositionWithOffset(absoluteXPosition, offset);
 }
 
 int cMapCamera::getWindowYPositionFromCellWithOffset(int cell, int offset) {
-    int absoluteYPosition = m_pMap->getGeometry().getAbsoluteYPositionFromCell(cell);
+    int absoluteYPosition = m_mapGeometry->getAbsoluteYPositionFromCell(cell);
     return getWindowYPositionWithOffset(absoluteYPosition, offset);
 }
