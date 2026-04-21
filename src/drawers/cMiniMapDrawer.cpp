@@ -413,7 +413,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     int mouseMiniMapY = mouseY - m_drawY;
     mouseMiniMapX /= m_factorZoom;
     mouseMiniMapY /= m_factorZoom;
-    auto mouseMiniMapPoint = m_map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
+    auto mouseMiniMapPoint = m_map->getGeometry().fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
     return m_map->getGeometry().getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }
