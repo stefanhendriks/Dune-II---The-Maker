@@ -101,12 +101,12 @@ void cPlayerBrainMissionKind::onExecuteSpecificStateSwitch(const s_GameEvent &ev
 {
     // unit got created, not reinforced - add it to the units list (ie saboteur to command)
     if (event.entityType == UNIT && !event.isReinforce) {
-        cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
+        cUnit *entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
 
         // this unit has not been assigned to a mission yet
-        if (!entityUnit.isAssignedAnyMission()) {
-            entityUnit.assignMission(mission->getUniqueId());
-            mission->getUnits().push_back(entityUnit.iID);
+        if (!entityUnit->isAssignedAnyMission()) {
+            entityUnit->assignMission(mission->getUniqueId());
+            mission->getUnits().push_back(entityUnit->iID);
         }
     }
 

@@ -22,7 +22,7 @@ public:
 private:
     int TIMER_think;
 
-    void findRandomValidLocationToMoveToAndGoThere(cUnit &pSandWorm) const;
+    void findRandomValidLocationToMoveToAndGoThere(cUnit *pSandWorm) const;
 };
 
 }

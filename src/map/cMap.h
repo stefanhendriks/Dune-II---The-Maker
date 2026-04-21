@@ -578,7 +578,7 @@ private:
 
     int m_maxCells;
 
-    void drawUnitDebug(cUnit &pUnit) const;
+    void drawUnitDebug(cUnit *pUnit) const;
 
     // thinking related
     void thinkAutoDetonateSpiceBlooms();

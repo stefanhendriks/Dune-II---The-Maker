@@ -35,10 +35,10 @@ void cRepairFacility::thinkFast()
 void cRepairFacility::think_repairUnit()  // must repair...
 {
     int iUnitID = getUnitIdWithin();
-    cUnit &unitToRepair = game.m_gameObjectsContext->getUnit(iUnitID);
-//    int maxHpForUnitType = game.m_infoContext->getUnitInfo(unitToRepair.iType).hp;
+    cUnit *unitToRepair = game.m_gameObjectsContext->getUnit(iUnitID);
+//    int maxHpForUnitType = game.m_infoContext->getUnitInfo(unitToRepair->iType).hp;
 
-    if (unitToRepair.requiresRepairing()) {
+    if (unitToRepair->requiresRepairing()) {
         TIMER_repairunit++;
 
         // TODO: move to structure info? (or unit info?)
@@ -55,7 +55,7 @@ void cRepairFacility::think_repairUnit()  // must repair...
             // TODO: Move repair rate per tick (how much hp per tick will be increased?) into unit info?
             int REPAIR_RATE_HP_PER_TICK = 3; // ie, unit with 300 HP, costs 100 to repair
 
-            unitToRepair.repair(REPAIR_RATE_HP_PER_TICK);
+            unitToRepair->repair(REPAIR_RATE_HP_PER_TICK);
 
             // TODO: Move to unit info
             // Cost per tick to repair unit for REPAIR_RATE_HP_PER_TICK amount
@@ -65,7 +65,7 @@ void cRepairFacility::think_repairUnit()  // must repair...
         return;
     }
 
-    unitToRepair.setMaxHitPoints();
+    unitToRepair->setMaxHitPoints();
 
     // dump unit, get rid of it
     unitLeavesStructure();

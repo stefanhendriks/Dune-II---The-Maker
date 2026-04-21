@@ -139,7 +139,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int unitIdOnMap = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
-                    if (!game.m_gameObjectsContext->getUnit(unitIdOnMap).isDead()) {
+                    if (!game.m_gameObjectsContext->getUnit(unitIdOnMap)->isDead()) {
                         itemToPlaceColor = Color::PlaceNeutral;
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?

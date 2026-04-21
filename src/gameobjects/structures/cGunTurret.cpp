@@ -66,12 +66,12 @@ void cGunTurret::think_animation()
 
 void cGunTurret::think_attack()
 {
-    cUnit &unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
-    if (unitTarget.isValid() && !unitTarget.isDead()) {
+    cUnit *unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
+    if (unitTarget->isValid() && !unitTarget->isDead()) {
         int iCellX = game.m_gameObjectsContext->getMap().getCellX(getCell());
         int iCellY = game.m_gameObjectsContext->getMap().getCellY(getCell());
 
-        int unitCell = unitTarget.getCell();
+        int unitCell = unitTarget->getCell();
 
         int iTargetX = game.m_gameObjectsContext->getMap().getCellX(unitCell);
         int iTargetY = game.m_gameObjectsContext->getMap().getCellY(unitCell);
@@ -143,11 +143,11 @@ void cGunTurret::think_fire()
 {
     bool lowPower = !getPlayer()->bEnoughPower();
 
-    cUnit &unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
-    if (unitTarget.isValid() && !unitTarget.isDead()) {
+    cUnit *unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
+    if (unitTarget->isValid() && !unitTarget->isDead()) {
         TIMER_fire++;
 
-        int iDistance = game.m_gameObjectsContext->getMap().distance(getCell(), unitTarget.getCell());
+        int iDistance = game.m_gameObjectsContext->getMap().distance(getCell(), unitTarget->getCell());
 
         if (iDistance > getSight()) {
             iTargetID = -1;
@@ -156,7 +156,7 @@ void cGunTurret::think_fire()
         }
 
         if (lowPower) {
-            if (unitTarget.isAirbornUnit()) {
+            if (unitTarget->isAirbornUnit()) {
                 // no longer able, forget it
                 iTargetID = -1;
                 return;
@@ -167,11 +167,11 @@ void cGunTurret::think_fire()
         int distanceForSecondaryFire = 3;
         int iSlowDown = getStructureInfo().fireRate;
         if (TIMER_fire > iSlowDown) {
-            int iTargetCell = unitTarget.getCell();
+            int iTargetCell = unitTarget->getCell();
 
             int bulletType = BULLET_TURRET; // short range bullet
 
-            if (unitTarget.isAirbornUnit()) {
+            if (unitTarget->isAirbornUnit()) {
                 bulletType = ROCKET_RTURRET;
             }
             else {
@@ -190,7 +190,7 @@ void cGunTurret::think_fire()
             int iBull = createBullet(bulletType, getCell(), iTargetCell, -1, id);
 
             // only rockets are homing
-            if (unitTarget.isAirbornUnit()) {
+            if (unitTarget->isAirbornUnit()) {
                 if (iBull > -1 && bulletType == ROCKET_RTURRET) {
                     // it is a homing missile!
                     game.m_gameObjectsContext->getBullets()[iBull].iHoming = iTargetID;
@@ -237,16 +237,16 @@ void cGunTurret::think_guard()
         }
 
         // scan area for units
-        for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
+        for (int i = 0; i < game.m_gameObjectsContext->getUnits()->size(); i++) {
             // is valid
-            cUnit &cUnit = game.m_gameObjectsContext->getUnits()[i];
-            if (!cUnit.isValid()) continue;
-            if (cUnit.iPlayer == getOwner()) continue; // skip own units
-            if (cUnit.getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
-            if (!game.m_gameObjectsContext->getMap().isVisible(cUnit.getCell(), getPlayer())) continue; // skip not visible
+            cUnit *cUnit = game.m_gameObjectsContext->getUnit(i);
+            if (!cUnit->isValid()) continue;
+            if (cUnit->iPlayer == getOwner()) continue; // skip own units
+            if (cUnit->getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
+            if (!game.m_gameObjectsContext->getMap().isVisible(cUnit->getCell(), getPlayer())) continue; // skip not visible
 
             if (!canAttackAirUnits()) {
-                if (cUnit.isAirbornUnit()) {
+                if (cUnit->isAirbornUnit()) {
                     continue; // it was airborn, and turrets which can't attack air units cannot hit this, so skip
                 }
             }
@@ -254,20 +254,20 @@ void cGunTurret::think_guard()
                 // we can attack air units, but we are low on power, hence we don't attack them
                 if (lowPower && game.isRocketTurretsDownOnLowPower()) {
                     // do not aim for air units when low power
-                    if (cUnit.isAirbornUnit()) {
+                    if (cUnit->isAirbornUnit()) {
                         continue; // it was airborn, and this turret is down on power, so don't fire air units
                     }
                 }
             }
 
-            int c1 = cUnit.getCell();
+            int c1 = cUnit->getCell();
             int distance = ABS_length(iCellX, iCellY, game.m_gameObjectsContext->getMap().getCellX(c1), game.m_gameObjectsContext->getMap().getCellY(c1));
 
             if (distance <= distanceForAttacking) {
-                if (cUnit.isAttackableAirUnit()) {
+                if (cUnit->isAttackableAirUnit()) {
                     iAir = i;
                 }
-                else if (cUnit.isSandworm()) {
+                else if (cUnit->isSandworm()) {
                     iWorm = i;
                 }
                 else if (distance < iDistance) {
@@ -291,15 +291,15 @@ void cGunTurret::think_guard()
 
         // discovered a new target
         if (iTargetID > -1 && iTargetID != prevTarget) {
-            cUnit &unitToAttack = game.m_gameObjectsContext->getUnit(iTargetID);
-            if (unitToAttack.isValid()) {
+            cUnit *unitToAttack = game.m_gameObjectsContext->getUnit(iTargetID);
+            if (unitToAttack->isValid()) {
                 s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                     .entityType = eBuildType::UNIT,
-                    .entityID = unitToAttack.iID,
+                    .entityID = unitToAttack->iID,
                     .player = getPlayer(),
-                    .entitySpecificType = unitToAttack.getType(),
-                    .atCell = unitToAttack.getCell()
+                    .entitySpecificType = unitToAttack->getType(),
+                    .atCell = unitToAttack->getCell()
                 };
 
                 game.onNotifyGameEvent(event);
