@@ -700,7 +700,7 @@ bool cGame::setupGame()
     m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer, m_gameSettings->m_debugMode);
 
     // Injection of services
-    m_players->serviceInit(m_services.get());
+    m_gameObjectsContext->serviceInit(m_services.get());
 
     // all has installed well. Let's rock and roll.
     SDL_ShowCursor(false);
