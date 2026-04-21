@@ -378,7 +378,7 @@ void cIni::INI_Load_seed(int seed)
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
             int type = seedMap.getCellType(mapX, mapY);
-            int iCell = game.m_gameObjectsContext->getMap().getGeometry().makeCell(mapX, mapY);
+            int iCell = game.m_gameObjectsContext->getMapGeometry()->makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
         }
     }
@@ -782,7 +782,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = game.m_gameObjectsContext->getMap().getGeometry().makeCell(iCellX, iCellY);
+                d2tm_cell = game.m_gameObjectsContext->getMapGeometry()->makeCell(iCellX, iCellY);
                 blooms[iBloomID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -835,7 +835,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = game.m_gameObjectsContext->getMap().getGeometry().makeCell(iCellX, iCellY);
+                d2tm_cell = game.m_gameObjectsContext->getMapGeometry()->makeCell(iCellX, iCellY);
                 fields[iFieldID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 

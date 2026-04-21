@@ -76,7 +76,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     // Determine if structure to be placed is within build distance
     for (int iX=iStartX; iX < iEndX; iX++) {
         for (int iY=iStartY; iY < iEndY; iY++) {
-            int iCll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(iX, iY);
+            int iCll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
                 int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
@@ -120,7 +120,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     continue;
                 }
 
-                int iCll = game.m_gameObjectsContext->getMap().getGeometry().makeCell(cellX, cellY);
+                int iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(cellX, cellY);
 
                 if (!game.m_gameObjectsContext->getMap().isCellPassable(iCll) || game.m_gameObjectsContext->getMap().getCellType(iCll) != TERRAIN_ROCK) {
                     itemToPlaceColor = Color::PlaceNeutral;

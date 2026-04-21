@@ -174,7 +174,7 @@ void cMapCamera::setViewportPosition(int x, int y)
 
 int cMapCamera::getCellFromAbsolutePosition(int x, int y)
 {
-    return game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions((x / 32), (y / 32));
+    return game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions((x / 32), (y / 32));
 }
 
 void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
