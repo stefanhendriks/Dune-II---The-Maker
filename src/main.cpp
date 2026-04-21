@@ -13,6 +13,7 @@
 #include "game/cGame.h"
 
 #include "utils/cLog.h"
+#include "utils/Log.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/cHandleArgument.h"
@@ -31,6 +32,8 @@ std::shared_ptr<Graphics>   gfxdata;
 
 int main(int argc, char **argv)
 {
+    std::unique_ptr<cLog> m_log = std::make_unique<cLog>("nlog.txt");
+
     std::unique_ptr<InitialGameSettings> settings = loadSettingsFromIni("settings.ini");
     
     // read command-line arguments, can override settings.ini
@@ -48,6 +51,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    game.getLog(m_log.get());
     game.applySettings(std::move(settings));
 
     try {

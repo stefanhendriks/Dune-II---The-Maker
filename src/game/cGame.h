@@ -18,6 +18,7 @@
 #include "utils/cRectangle.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/Color.hpp"
+#include "utils/Log.h"
 
 #include <memory>
 #include <string>
@@ -83,6 +84,10 @@ public:
         m_gameFilename = filename;
     }
 
+    void getLog(cLog *log) {
+        assert(log != nullptr);
+        m_log = log;
+    }
     cRectangle *m_mapViewport;
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
@@ -286,4 +291,6 @@ private:
     std::unique_ptr<cScreenFader> m_cScreenFader;
 
     std::unique_ptr<sGameServices> m_services;
+
+    cLog* m_log = nullptr;
 };
