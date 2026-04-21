@@ -278,7 +278,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 
     for (int x = iCellX; x < iCellXMax; x++) {
         for (int y = iCellY; y < iCellYMax; y++) {
-            game.m_gameObjectsContext->getMap().clearShroud(game.m_gameObjectsContext->getMap().getGeometry().makeCell(x, y), iSight, iPlayer);
+            game.m_gameObjectsContext->getMap().clearShroud(game.m_gameObjectsContext->getMapGeometry()->makeCell(x, y), iSight, iPlayer);
         }
     }
 }
@@ -325,7 +325,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType)
 
     for (int cx = 0; cx < w; cx++) {
         for (int cy = 0; cy < h; cy++) {
-            int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(cx + x, cy + y);
+            int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(cx + x, cy + y);
 
             if (cll < 0) {
                 continue;
@@ -357,7 +357,7 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
     auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
     for (int y = cellY; y < endCellY; y++) {
         for (int x = cellX; x < endCellX; x++) {
-            int cell = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(x, y);
+            int cell = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(x, y);
             mapEditor.createCell(cell, TERRAIN_SLAB, 0);
         }
     }
@@ -393,7 +393,7 @@ void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer)
 
     for (int sx = x; sx < endX; sx++) {
         for (int sy = y; sy < endY; sy++) {
-            createStructure(game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
+            createStructure(game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
         }
     }
 }

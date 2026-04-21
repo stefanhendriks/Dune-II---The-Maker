@@ -127,7 +127,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     for (int x = 0; x < game.m_gameObjectsContext->getMap().getWidth(); x++) {
         for (int y = 0; y < game.m_gameObjectsContext->getMap().getHeight(); y++) {
 
-            int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(x, y);
+            int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
             Color iColor = Color{194, 125, 60,255};

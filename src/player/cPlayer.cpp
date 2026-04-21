@@ -1148,7 +1148,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
 
         // check: from top left to top right
         for (int sx = topLeftX; sx < iEndX; sx++) {
-            int cell = m_objects->getMap().getGeometry().getCellWithMapBorders(sx, topLeftY);
+            int cell = m_objects->getMapGeometry()->getCellWithMapBorders(sx, topLeftY);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1162,7 +1162,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int bottomLeftY = iEndY;
         // check: from bottom left to bottom right
         for (int sx = bottomLeftX; sx < iEndX; sx++) {
-            int cell = m_objects->getMap().getGeometry().getCellWithMapBorders(sx, bottomLeftY);
+            int cell = m_objects->getMapGeometry()->getCellWithMapBorders(sx, bottomLeftY);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1176,7 +1176,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int justLeftX = topLeftX;
         int justLeftY = iStartY - (iHeight - 1);
         for (int sy = justLeftY; sy < iEndY; sy++) {
-            int cell = m_objects->getMap().getGeometry().getCellWithMapBorders(justLeftX, sy);
+            int cell = m_objects->getMapGeometry()->getCellWithMapBorders(justLeftX, sy);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1190,7 +1190,7 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         int justRightX = iEndX;
         int justRightY = iStartY - (iHeight - 1);
         for (int sy = justRightY; sy < iEndY; sy++) {
-            int cell = m_objects->getMap().getGeometry().getCellWithMapBorders(justRightX, sy);
+            int cell = m_objects->getMapGeometry()->getCellWithMapBorders(justRightX, sy);
             if (cell < 0) continue;
 
             const s_PlaceResult &result = canPlaceStructureAt(cell, structureType);
@@ -1765,7 +1765,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 
     for (int cx = 0; cx < w; cx++) {
         for (int cy = 0; cy < h; cy++) {
-            int cll = m_objects->getMap().getGeometry().getCellWithMapBorders(cx + x, cy + y);
+            int cll = m_objects->getMapGeometry()->getCellWithMapBorders(cx + x, cy + y);
 
             if (!result.badTerrain && !m_objects->getMap().isValidTerrainForStructureAtCell(cll)) {
                 result.badTerrain = true;

@@ -1125,14 +1125,14 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     int widthInCells = structureInfo.bmp_width / 32;
     int heightInCells = structureInfo.bmp_height / 32;
 
-    int cellX = m_gameObjectsContext->getMap().getGeometry().getCellX(event.atCell);
-    int cellY = m_gameObjectsContext->getMap().getGeometry().getCellY(event.atCell);
+    int cellX = m_gameObjectsContext->getMapGeometry()->getCellX(event.atCell);
+    int cellY = m_gameObjectsContext->getMapGeometry()->getCellY(event.atCell);
 
     for (int i = 0; i < amountOfUnitsToSpawn; i++) {
         int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
         cUnits::unitCreate(
-            m_gameObjectsContext->getMap().getGeometry().makeCell(randomX, randomY),
+            m_gameObjectsContext->getMapGeometry()->makeCell(randomX, randomY),
             unitTypeToSpawn,
             event.player->getId(),
             false,
@@ -1167,7 +1167,7 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
 
-            deployCell = m_gameObjectsContext->getMap().getGeometry().makeCell(posX, posY);
+            deployCell = m_gameObjectsContext->getMapGeometry()->makeCell(posX, posY);
         }
 
 
