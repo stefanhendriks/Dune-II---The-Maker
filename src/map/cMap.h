@@ -33,7 +33,7 @@ struct s_TerrainInfo;
 class GameContext;
 class cUnit;
 class cTextDrawer;
-
+struct sGameServices;
 
 class cMap : public cScenarioObserver {
 
@@ -41,6 +41,8 @@ public:
 
     cMap();
     ~cMap();
+
+    void serviceInit(sGameServices* services);
 
     void init(int width, int height);
     virtual void onNotifyGameEvent(const s_GameEvent &event) override;
@@ -580,4 +582,6 @@ private:
     void setSandwormRespawnTimer();
 
     void evaluateIfWeShouldSetTimerToRespawnWorm();
+
+    
 };
