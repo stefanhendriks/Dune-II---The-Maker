@@ -58,6 +58,9 @@ cPlayer::cPlayer()
 void cPlayer::serviceInit(sGameServices* services)
 {
     assert(services != nullptr);
+    m_log = services->ctx->getLog();
+    assert(m_log != nullptr);
+
     m_settings = services->settings;
     assert(m_settings != nullptr);
     m_infos = services->info;
