@@ -108,7 +108,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     // Determine if structure to be placed is within build distance
     for (int iX = iStartX; iX < iEndX; iX++) {
         for (int iY = iStartY; iY < iEndY; iY++) {
-            int iCll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(iX, iY);
+            int iCll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
                 int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
@@ -149,7 +149,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                 return false;
             }
 
-            int iCll = game.m_gameObjectsContext->getMap().getGeometry().makeCell(cellX, cellY);
+            int iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(cellX, cellY);
 
             // occupied by units or structures
             int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);

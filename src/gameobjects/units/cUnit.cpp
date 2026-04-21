@@ -333,7 +333,7 @@ void cUnit::createExplosionParticle()
                     game.playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(position.iCell));
 
                 // calculate cell and damage stuff around this
-                int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders((position.iCellX - 1) + cx, (position.iCellY - 1) + cy);
+                int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders((position.iCellX - 1) + cx, (position.iCellY - 1) + cy);
 
                 if (cll < 0 || cll == position.iCell)
                     continue; // do not do own cell
@@ -2193,7 +2193,7 @@ void cUnit::think_attack()
                 combat.iAttackUnit = -1;
                 combat.iAttackStructure = -1;
                 setAction(eActionType::MOVE);
-                setGoalCell(game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(rx, ry));
+                setGoalCell(game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(rx, ry));
             }
         }
         else {
@@ -2365,7 +2365,7 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
                     dy -= inaccuracy;
                     dy += RNG::rnd((inaccuracy * 2)+1); // we need + 1, because it is 'until'
 
-                    shootCell = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(dx, dy);
+                    shootCell = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(dx, dy);
                 }
             }
 
@@ -3988,7 +3988,7 @@ int cUnit::freeAroundMove(int iUnit)
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(x, y);
+            int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(x, y);
 
             if (cll > -1 && !game.m_gameObjectsContext->getMap().occupied(cll)) {
                 iClls[foundCoordinates] = cll;

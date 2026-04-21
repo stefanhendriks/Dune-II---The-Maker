@@ -176,7 +176,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             // circle around cell Y wise
             for (cy = sy; cy <= ey; cy++) {
                 // only check the 'cell' that is NOT the current cell.
-                int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapBorders(cx, cy);
+                int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(cx, cy);
 
                 // skip invalid cells
                 if (cll < 0)
@@ -545,7 +545,7 @@ int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
         for (int iSX = iStartX; iSX < iEndX; iSX++)
             for (int iSY = iStartY; iSY < iEndY; iSY++) {
                 // find an empty cell
-                int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(iSX, iSY);
+                int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(iSX, iSY);
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
