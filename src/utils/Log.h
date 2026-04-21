@@ -46,6 +46,7 @@ private:
     long long m_pendingTimestampMs = 0;
     std::size_t m_pendingCount = 0;
     bool m_hasPendingLine = false;
+    bool m_debugMode = false;
 };
 
 #include "utils/Log.tpp"
