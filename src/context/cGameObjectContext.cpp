@@ -1,4 +1,5 @@
 #include "cGameObjectContext.h"
+#include "include/sGameServices.h"
 
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/cBullets.h"
@@ -103,4 +104,12 @@ cStructureFactory* cGameObjectContext::getStructureFactory() const
         throw std::runtime_error("cStructureFactory not initialized in cGameObjectContext");
     }
     return m_structureFactory.get();
+}
+
+void cGameObjectContext::serviceInit(sGameServices* services)
+{
+    assert(m_Players != nullptr);
+    m_Players->serviceInit(services);
+    assert(m_map != nullptr);
+    m_map->serviceInit(services);
 }

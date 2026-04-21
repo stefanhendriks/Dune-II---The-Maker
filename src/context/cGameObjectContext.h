@@ -13,6 +13,8 @@ class cPlayer;
 class cUnit;
 class cStructureFactory;
 
+struct sGameServices;
+
 class cGameObjectContext {
 public:
     cGameObjectContext(
@@ -39,6 +41,7 @@ public:
 
     cStructureFactory* getStructureFactory() const;
 
+    void serviceInit(sGameServices* services);
 private:
     std::unique_ptr<cBullets> m_Bullets;
     std::unique_ptr<cPlayers> m_Players;
