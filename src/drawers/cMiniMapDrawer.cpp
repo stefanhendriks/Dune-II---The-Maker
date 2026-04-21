@@ -233,7 +233,7 @@ void cMiniMapDrawer::drawTerrain()
 
             // TODO: make flexible map borders
             // do not show the helper border
-            if (!m_map->isWithinBoundaries(x, y)) {
+            if (!m_map->getGeometry().isWithinBoundaries(x, y)) {
                 iColor = Color{0, 0, 0,255};
             }
 
@@ -288,7 +288,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
     for (int x = 0; x < m_map->getWidth(); x++) {
         for (int y = 0; y < m_map->getHeight(); y++) {
             // do not show the helper border
-            if (!m_map->isWithinBoundaries(x, y)) continue;
+            if (!m_map->getGeometry().isWithinBoundaries(x, y)) continue;
 
             int iCll = m_map->getGeometry().makeCell(x, y);
 

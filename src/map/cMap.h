@@ -63,36 +63,6 @@ public:
 
     // void setGameContext(GameContext* ctx);
 
-    bool isWithinBoundaries(int c);
-
-    /**
-     * Returns true/false when x,y coordinate is within playable bounds of the map. Taking invisible boundary into account.
-     * @param x
-     * @param y
-     * @return
-     */
-    bool isWithinBoundaries(int x, int y) {
-        // in a map of 64x64, the outer boundaries are impassable
-        // so; the actual valid values are 1...62 (because the coordinates
-        // are 0 based. Ie, coordinate 63 means it is at the 64th tile.
-        // hence, if coordinate 63 is passed in, it means it is out of bounds.
-        // but coordinate 62 is within bounds.
-
-        // since the width/height passed in the constructor is not 0 based (but 1 based)
-        // we need to take that into account when checking width/height (hence the -2)
-
-        // Example:
-        // width=64
-        // height=64
-        // ie: x = 63 ... 63 =< (64-2=62) -> out of bounds
-        //     x = 62 ... 62 =< (64-2-62) -> at the edge
-        //     x = 0  ...  0 > 0 ? no
-        //     x = 1  ...  1 > 0 ? yes, in bounds
-
-        return  x > 0 && x <= (m_width-2) &&
-                y > 0 && y <= (m_height -2);
-    }
-
     int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
     // Drawing
