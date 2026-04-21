@@ -24,12 +24,14 @@ void MapGeometry::resize(int _mapWidth, int _mapHeight)
 
 int MapGeometry::getCellX(int c) const
 {
+    if (!isValidCell(c)) return -1;
     assert(c > -1 && c < maxCells);
     return c % mapWidth;
 }
 
 int MapGeometry::getCellY(int c) const
 {
+    if (!isValidCell(c)) return -1;
     assert(c > -1 && c < maxCells);
     return c / mapWidth;
 }
