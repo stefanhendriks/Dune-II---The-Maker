@@ -8,6 +8,7 @@ class cPlayer;
 class cDrawManager;
 class cMapCamera;
 class cReinforcements;
+class cRectangle;
 struct s_GameEvent;
 struct s_PreviewMap;
 class Texture;
@@ -23,6 +24,7 @@ public:
     void drawCursor() const;
     cDrawManager* getDrawManager() const;
     cMapCamera* getMapCamera() const;
+    cRectangle* getMapViewport() const;
     cReinforcements* getReinforcements() const;
     cDrawManager* getRenderDrawManager() const;
     void setMissionWon() const;
@@ -53,6 +55,7 @@ public:
     int getCurrentState() const;
 
     void reduceShaking() const;
+    void shakeScreen(int duration) const;
     Color getColorFadeSelected(int r, int g, int b) const;
     void setWinFlags(int value) const;
     void setLoseFlags(int value) const;
