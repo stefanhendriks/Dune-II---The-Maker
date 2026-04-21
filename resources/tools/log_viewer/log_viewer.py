@@ -49,11 +49,11 @@ class LogViewer:
         ttk.Entry(top_frame, textvariable=self.msg_search_var, width=20).grid(row=0, column=8, padx=5)
 
         # Main Table (Treeview)
-        self.columns = ("timestamp", "level", "component", "event", "message", "player", "house")
+        self.columns = ("timestamp", "level", "component", "event", "message", "player", "house", "x X")
         self.tree = ttk.Treeview(self.root, columns=self.columns, show='headings')
         
-        headers = ["Timestamp", "Level", "Component", "Event", "Message", "Player ID", "House"]
-        widths = [80, 80, 120, 150, 500, 80, 80] 
+        headers = ["Timestamp", "Level", "Component", "Event", "Message", "Player ID", "House", "x X"]
+        widths = [80, 80, 120, 150, 500, 80, 80, 40] 
         
         for col, head, w in zip(self.columns, headers, widths):
             self.tree.heading(col, text=head, command=lambda c=col: self.sort_by(c, False))
@@ -91,8 +91,8 @@ class LogViewer:
             for line in lines:
                 if not line.strip() or line.startswith("\\\\"): continue
                 parts = line.strip().split('|')
-                if len(parts) >= 7:
-                    row = parts[:7]
+                if len(parts) >= 8:
+                    row = parts[:8]
                     self.all_logs.append(row)
                     comps.add(row[2])
             
