@@ -94,9 +94,9 @@ void cGameControlsContext::determineHoveringOverStructureId()
 void cGameControlsContext::determineHoveringOverUnitId()
 {
     if (m_mouseHoveringOverUnitId > -1) {
-        cUnit &aUnit = game.m_gameObjectsContext->getUnits()[m_mouseHoveringOverUnitId];
-        if (aUnit.isValid()) {
-            aUnit.rendering.bHovered = false;
+        cUnit *aUnit = game.m_gameObjectsContext->getUnit(m_mouseHoveringOverUnitId);
+        if (aUnit->isValid()) {
+            aUnit->rendering.bHovered = false;
         }
     }
     m_mouseHoveringOverUnitId = -1;
@@ -111,7 +111,7 @@ void cGameControlsContext::determineHoveringOverUnitId()
     if (cellOfMouse->id[MAPID_UNITS] > -1) {
         int iUnitId = cellOfMouse->id[MAPID_UNITS];
 
-        if (!game.m_gameObjectsContext->getUnits()[iUnitId].isHidden()) {
+        if (!game.m_gameObjectsContext->getUnit(iUnitId)->isHidden()) {
             m_mouseHoveringOverUnitId = iUnitId;
         }
 
@@ -122,9 +122,9 @@ void cGameControlsContext::determineHoveringOverUnitId()
     }
 
     if (m_mouseHoveringOverUnitId > -1) {
-        cUnit &aUnit = game.m_gameObjectsContext->getUnits()[m_mouseHoveringOverUnitId];
-        if (aUnit.isValid()) {
-            aUnit.rendering.bHovered = true;
+        cUnit *aUnit = game.m_gameObjectsContext->getUnit(m_mouseHoveringOverUnitId);
+        if (aUnit->isValid()) {
+            aUnit->rendering.bHovered = true;
         }
     }
 }

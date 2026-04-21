@@ -284,8 +284,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cRepairFacility *repairFacility = dynamic_cast<cRepairFacility *>(structure);
     assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
-    cUnit &pUnit = game.m_gameObjectsContext->getUnit(unitId);
-    int iconId = pUnit.getUnitInfo().icon;
+    cUnit *pUnit = game.m_gameObjectsContext->getUnit(unitId);
+    int iconId = pUnit->getUnitInfo().icon;
 
     int iconWidth = (m_gfxinter->getSurface(iconId))->w;
     int iconHeight = (m_gfxinter->getSurface(iconId))->h;
@@ -298,7 +298,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
 
     int height_y = 5;
 
-    float healthNormalized = pUnit.getTempHealthNormalized();
+    float healthNormalized = pUnit->getTempHealthNormalized();
 
     int w = healthNormalized * width_x;
     int r = (1.1 - healthNormalized) * 255;

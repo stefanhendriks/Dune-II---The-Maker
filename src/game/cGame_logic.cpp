@@ -235,8 +235,8 @@ void cGame::init()
 
     m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
 
-    for (int i = 0; i < m_gameObjectsContext->getUnits().size(); i++) {
-        m_gameObjectsContext->getUnits()[i].init(i);
+    for (int i = 0; i < m_gameObjectsContext->getUnits()->size(); i++) {
+        m_gameObjectsContext->getUnit(i)->init(i);
     }
 
     for (auto& particle : m_gameObjectsContext->getParticles()) {
@@ -273,8 +273,8 @@ void cGame::missionInit()
     // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
     m_gameObjectsContext->getMap().setTerrainInfo(m_infoContext->getTerrainInfo());
 
-    for (int i = 0; i < m_gameObjectsContext->getUnits().size(); i++) {
-        m_gameObjectsContext->getUnits()[i].init(i);
+    for (int i = 0; i < m_gameObjectsContext->getUnits()->size(); i++) {
+        m_gameObjectsContext->getUnit(i)->init(i);
     }
 
     for (auto& particle : m_gameObjectsContext->getParticles()) {
@@ -1559,7 +1559,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         if (mc > -1) {
             int idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(true, false);
+                m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(true, false);
             }
 
             int idOfStructureAtCell = m_gameObjectsContext->getMap().getCellIdStructuresLayer(mc);
@@ -1569,12 +1569,12 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(false, false);
+                m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(false, false);
             }
 
             idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdAirUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(false, false);
+                m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(false, false);
             }
         }
     }
@@ -1584,10 +1584,10 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         if (mc > -1) {
             int idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                cUnit &pUnit = m_gameObjectsContext->getUnits()[idOfUnitAtCell];
-                int damageToTake = pUnit.getHitPoints() - 25;
+                cUnit *pUnit = m_gameObjectsContext->getUnit(idOfUnitAtCell);
+                int damageToTake = pUnit->getHitPoints() - 25;
                 if (damageToTake > 0) {
-                    pUnit.takeDamage(damageToTake, -1, -1);
+                    pUnit->takeDamage(damageToTake, -1, -1);
                 }
             }
         }
@@ -1600,8 +1600,8 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::DEBUG_KILL_CARRYALLS)) {
         const std::vector<int> &myUnitsForType = humanPlayer->getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
-            cUnit &pUnit = m_gameObjectsContext->getUnits()[unitId];
-            pUnit.die(true, false);
+            cUnit *pUnit = m_gameObjectsContext->getUnit(unitId);
+            pUnit->die(true, false);
         }
     }
 }

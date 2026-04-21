@@ -276,16 +276,16 @@ void cPlayerBrainSkirmish::onMyStructureAttacked(const s_GameEvent &event)
     int unitIdThatAttacks = event.originId;
     if (unitIdThatAttacks > -1) {
         // respond to something that attacks us
-        cUnit originUnit = game.m_gameObjectsContext->getUnit(unitIdThatAttacks);
-        if (originUnit.getPlayer()->isSameTeamAs(player)) {
+        cUnit *originUnit = game.m_gameObjectsContext->getUnit(unitIdThatAttacks);
+        if (originUnit->getPlayer()->isSameTeamAs(player)) {
             // friendly fire, ignore
             log(std::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
             return;
         }
 
-        int cell = originUnit.getCell();
+        int cell = originUnit->getCell();
 
-        respondToThreat(&originUnit, nullptr, cell, 2 + RNG::rnd(4));
+        respondToThreat(originUnit, nullptr, cell, 2 + RNG::rnd(4));
     }
 }
 
@@ -964,8 +964,8 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
     bool foundIdleUnit = false;
     std::vector<int> ids = player->getAllMyUnits();
     for (auto &id : ids) {
-        cUnit &cUnit = game.m_gameObjectsContext->getUnit(id);
-        if (cUnit.isIdle()) {
+        cUnit *cUnit = game.m_gameObjectsContext->getUnit(id);
+        if (cUnit->isIdle()) {
             foundIdleUnit = true;
             break;
         }
@@ -977,13 +977,13 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
 
     int cellToAttack = -1;
     if (RNG::rnd(100) < 50) {
-        for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-            cUnit &cUnit = game.m_gameObjectsContext->getUnit(i);
-            if (!cUnit.isValid()) continue;
-            if (cUnit.getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-            if (!cUnit.isAttackingUnit()) continue; // skip units that cannot 'attack' stuff
+        for (int i = 0; i < game.m_gameObjectsContext->getUnits()->size(); i++) {
+            cUnit *cUnit = game.m_gameObjectsContext->getUnit(i);
+            if (!cUnit->isValid()) continue;
+            if (cUnit->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
+            if (!cUnit->isAttackingUnit()) continue; // skip units that cannot 'attack' stuff
             // enemy structure
-            cellToAttack = cUnit.getCell();
+            cellToAttack = cUnit->getCell();
             if (RNG::rnd(100) < 5) {
                 break; // this way we kind of have randomly another target...
             }
@@ -1005,9 +1005,9 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
 
     if (cellToAttack > -1) {
         for (auto &id : ids) {
-            cUnit &pUnit = game.m_gameObjectsContext->getUnit(id);
-            if (pUnit.isIdle()) {
-                pUnit.attackAt(cellToAttack);
+            cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+            if (pUnit->isIdle()) {
+                pUnit->attackAt(cellToAttack);
             }
         }
     }
@@ -1178,21 +1178,21 @@ void cPlayerBrainSkirmish::findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(s_
     // if there is any enemy player, then find a new place.
     if (!placeResult.unitIds.empty()) {
         for (auto &unitId : placeResult.unitIds) {
-            cUnit &aUnit = game.m_gameObjectsContext->getUnit(unitId);
-            if (!aUnit.isValid()) continue;
-            if (aUnit.getPlayer() == player) {
-                if (aUnit.isUnableToMove()) {
+            cUnit *aUnit = game.m_gameObjectsContext->getUnit(unitId);
+            if (!aUnit->isValid()) continue;
+            if (aUnit->getPlayer() == player) {
+                if (aUnit->isUnableToMove()) {
                     // it can't move, so we have to think of another place position
                     findNewPlaceToPlaceStructureOrCancelBuild(pBuildOrder, pItem);
                     return;
                 }
                 // move it when idle, else don't do a thing
-                if (aUnit.isIdle()) {
-                    aUnit.move_to(game.m_gameObjectsContext->getMap().getRandomCellFrom(aUnit.getCell(), 3));
+                if (aUnit->isIdle()) {
+                    aUnit->move_to(game.m_gameObjectsContext->getMap().getRandomCellFrom(aUnit->getCell(), 3));
                 }
             }
             else {
-                // if (aUnit.getPlayer()->isSameTeamAs(player)) { // who knows, a teammate is willing to move away when it is AI?
+                // if (aUnit->getPlayer()->isSameTeamAs(player)) { // who knows, a teammate is willing to move away when it is AI?
                 findNewPlaceToPlaceStructureOrCancelBuild(pBuildOrder, pItem);
                 return;
             }
@@ -1246,8 +1246,8 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
             if (event.player == player) {
                 // i discovered something
                 if (event.entityType == eBuildType::UNIT) {
-                    cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
-                    if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
+                    cUnit *pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
+                    if (pUnit->isValid() && !pUnit->getPlayer()->isSameTeamAs(player)) {
                         // found enemy unit
                         m_TIMER_produceMissionCooldown = 0;
                         m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
@@ -1255,7 +1255,7 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
                         if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
+                            respondToThreat(pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
@@ -1277,14 +1277,14 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
                 }
                 else if (!event.player->isSameTeamAs(player)) {
                     if (event.entityType == eBuildType::UNIT) {
-                        cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
+                        cUnit *pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
                         // the other player discovered a unit of mine
-                        if (pUnit.isValid() && pUnit.getPlayer() == player) {
+                        if (pUnit->isValid() && pUnit->getPlayer() == player) {
                             // found my unit
                             m_TIMER_produceMissionCooldown = 0;
                             m_state = ePlayerBrainState::PLAYERBRAIN_ENEMY_DETECTED;
                             m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
-                            m_discoveredEnemyAtCell.insert(pUnit.getCell());
+                            m_discoveredEnemyAtCell.insert(pUnit->getCell());
                         }
                     }
                     else if (event.entityType == eBuildType::STRUCTURE) {
@@ -1314,10 +1314,10 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
             if (event.player == player) {
                 // i discovered something
                 if (event.entityType == eBuildType::UNIT) {
-                    cUnit &pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
-                    if (pUnit.isValid() && !pUnit.getPlayer()->isSameTeamAs(player)) {
+                    cUnit *pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
+                    if (pUnit->isValid() && !pUnit->getPlayer()->isSameTeamAs(player)) {
                         if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                            respondToThreat(&pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
+                            respondToThreat(pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
                 }
@@ -1618,12 +1618,12 @@ void cPlayerBrainSkirmish::onMyUnitAttacked(const s_GameEvent &event)
     cUnit *threat = nullptr;
     if (event.originType == eBuildType::UNIT) {
         assert(event.originId > -1);
-        threat = &game.m_gameObjectsContext->getUnit(event.originId);
+        threat = game.m_gameObjectsContext->getUnit(event.originId);
     }
 
-    cUnit &victim = game.m_gameObjectsContext->getUnit(event.entityID);
-    if (victim.isHarvester()) {
-        respondToThreat(threat, &victim, event.atCell, 2 + RNG::rnd(4));
+    cUnit *victim = game.m_gameObjectsContext->getUnit(event.entityID);
+    if (victim->isHarvester()) {
+        respondToThreat(threat, victim, event.atCell, 2 + RNG::rnd(4));
     }
 }
 

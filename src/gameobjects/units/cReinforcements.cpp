@@ -209,11 +209,11 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     int d = fDegrees(iCellX, iCellY, cx, cy);
     int f = faceAngle(d); // get the angle
 
-    cUnit &carryall = game.m_gameObjectsContext->getUnit(iUnit);
-    carryall.rendering.iBodyShouldFace = f;
-    carryall.rendering.iBodyFacing = f;
-    carryall.rendering.iHeadShouldFace = f;
-    carryall.rendering.iHeadFacing = f;
+    cUnit *carryall = game.m_gameObjectsContext->getUnit(iUnit);
+    carryall->rendering.iBodyShouldFace = f;
+    carryall->rendering.iBodyFacing = f;
+    carryall->rendering.iHeadShouldFace = f;
+    carryall->rendering.iHeadFacing = f;
 
-    carryall.carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
+    carryall->carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
 }

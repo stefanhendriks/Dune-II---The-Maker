@@ -239,10 +239,10 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     newBullet.iPlayer = -1;
 
     if (unitWhichShoots > -1 ) {
-        cUnit &cUnit = game.m_gameObjectsContext->getUnit(unitWhichShoots);
-        newBullet.iPlayer = cUnit.iPlayer;
+        cUnit *cUnit = game.m_gameObjectsContext->getUnit(unitWhichShoots);
+        newBullet.iPlayer = cUnit->iPlayer;
         // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
-        if (cUnit.isAirbornUnit()) {
+        if (cUnit->isAirbornUnit()) {
             game.m_gameObjectsContext->getMap().clearShroudForAllPlayers(fromCell, 2);
         }
     }
@@ -253,16 +253,16 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 
         int unitIdAtTargetCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
-            cUnit &unitTarget = game.m_gameObjectsContext->getUnits()[unitIdAtTargetCell];
+            cUnit *unitTarget = game.m_gameObjectsContext->getUnit(unitIdAtTargetCell);
             // reveal for player which is being attacked
-            game.m_gameObjectsContext->getMap().clearShroud(fromCell, 2, unitTarget.iPlayer);
+            game.m_gameObjectsContext->getMap().clearShroud(fromCell, 2, unitTarget->iPlayer);
         }
 
         unitIdAtTargetCell = game.m_gameObjectsContext->getMap().getCellIdAirUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
-            cUnit &unitTarget = game.m_gameObjectsContext->getUnits()[unitIdAtTargetCell];
+            cUnit *unitTarget = game.m_gameObjectsContext->getUnit(unitIdAtTargetCell);
             // reveal for player which is being attacked
-            game.m_gameObjectsContext->getMap().clearShroud(fromCell, 2, unitTarget.iPlayer);
+            game.m_gameObjectsContext->getMap().clearShroud(fromCell, 2, unitTarget->iPlayer);
         }
     }
 

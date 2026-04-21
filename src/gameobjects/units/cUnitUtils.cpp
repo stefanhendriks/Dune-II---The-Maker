@@ -27,12 +27,12 @@ int cUnitUtils::findUnit(int type, int iPlayerId)
 // find the first unit of type belonging to player Id, and is not the same Id as iIgnoreUnitId.
 int cUnitUtils::findUnit(int type, int iPlayerId, int iIgnoreUnitId)
 {
-    for (int i=0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        if (i == iIgnoreUnitId || !game.m_gameObjectsContext->getUnits()[i].isValid()) {
+    for (int i=0; i < game.m_gameObjectsContext->getUnits()->size(); i++) {
+        if (i == iIgnoreUnitId || !game.m_gameObjectsContext->getUnit(i)->isValid()) {
             continue;
         }
 
-        if (game.m_gameObjectsContext->getUnits()[i].iPlayer == iPlayerId && game.m_gameObjectsContext->getUnits()[i].iType == type) {
+        if (game.m_gameObjectsContext->getUnit(i)->iPlayer == iPlayerId && game.m_gameObjectsContext->getUnit(i)->iType == type) {
             return i;
         }
     }
