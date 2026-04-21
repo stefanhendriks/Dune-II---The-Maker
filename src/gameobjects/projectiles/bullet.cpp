@@ -187,8 +187,8 @@ void cBullet::thinkFast()
         if (iHoming > -1) {
             if (game.m_gameObjectsContext->getUnit(iHoming)->isValid()) {
                 int cll = game.m_gameObjectsContext->getUnit(iHoming)->getCell();
-                targetX = game.m_gameObjectsContext->getMap().getAbsoluteXPositionFromCell(cll);
-                targetY = game.m_gameObjectsContext->getMap().getAbsoluteYPositionFromCell(cll);
+                targetX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCell(cll);
+                targetY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCell(cll);
             }
         }
     }
@@ -201,11 +201,11 @@ void cBullet::think_move()
 {
     iCell = game.m_mapCamera->getCellFromAbsolutePosition(posX, posY);
 
-    int iCellX = game.m_gameObjectsContext->getMap().getCellX(iCell);
-    int iCellY = game.m_gameObjectsContext->getMap().getCellY(iCell);
+    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
+    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
 
     // out of bounds somehow; then die
-    if (!game.m_gameObjectsContext->getMap().isWithinBoundaries(iCellX, iCellY)) {
+    if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(iCellX, iCellY)) {
         die();
         return;
     }
@@ -282,8 +282,8 @@ void cBullet::arrivedAtDestinationLogic()
     const s_BulletInfo &sBullet = gets_Bullet();
 
     // damage is inflicted to size of explosion
-    int x = game.m_gameObjectsContext->getMap().getCellX(iCell);
-    int y = game.m_gameObjectsContext->getMap().getCellY(iCell);
+    int x = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
+    int y = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
 
     int halfExplosionSize = std::round((float)(sBullet.explosionSize / 2));
     int startX = (x - halfExplosionSize);
@@ -308,8 +308,8 @@ void cBullet::arrivedAtDestinationLogic()
             int half = 16;
             int randomX = -8 + RNG::rnd(half);
             int randomY = -8 + RNG::rnd(half);
-            int posX = game.m_gameObjectsContext->getMap().getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
-            int posY = game.m_gameObjectsContext->getMap().getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
+            int posX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
+            int posY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
 
             logbook(std::format(
                         "iCell {} : cellToDamage : {} : ExplosionSize is {}, maxDistanceFromCenter is {} , actualDistance = {}, x={}, y={} and factor = {}",
@@ -364,7 +364,7 @@ void cBullet::arrivedAtDestinationLogic()
  */
 void cBullet::damageTerrain(int cell, double factor) const
 {
-    if (!game.m_gameObjectsContext->getMap().isValidCell(cell)) return;
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return;
     if (!canDamageGround()) return;
 
     float iDamage = getDamageToInflictToNonInfantry() * factor;
@@ -432,7 +432,7 @@ bool cBullet::doesAirUnitTakeDamage(int unitIdOnAirLayer) const
  */
 bool cBullet::damageAirUnit(int cell) const
 {
-    if (!game.m_gameObjectsContext->getMap().isValidCell(cell)) return false;
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return false;
     if (!canDamageAirUnits()) return false;
     int unitIdOnAirLayer = game.m_gameObjectsContext->getMap().getCellIdAirUnitLayer(cell);
 
@@ -455,7 +455,7 @@ bool cBullet::damageAirUnit(int cell) const
  */
 bool cBullet::damageGroundUnit(int cell, double factor) const
 {
-    if (!game.m_gameObjectsContext->getMap().isValidCell(cell)) return false;
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return false;
     int id = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(cell);
     if (id < 0) return false;
     if (iOwnerUnit >= 0 && id == iOwnerUnit) return false; // do not damage self
@@ -556,7 +556,7 @@ void cBullet::detonateSpiceBloom(int cell) const
 
 void cBullet::damageSandworm(int cell, double factor) const
 {
-    if (!game.m_gameObjectsContext->getMap().isValidCell(cell)) return;
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return;
     int id = game.m_gameObjectsContext->getMap().getCellIdWormsLayer(cell);
     if (id < 0) return; // bail
 
@@ -583,7 +583,7 @@ bool cBullet::isAtDestination() const
  */
 void cBullet::damageWall(int cell, double factor) const
 {
-    if (!game.m_gameObjectsContext->getMap().isValidCell(cell)) return;
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return;
     int cellTypeAtCell = game.m_gameObjectsContext->getMap().getCellType(cell);
     if (cellTypeAtCell != TERRAIN_WALL) return;
 
@@ -666,7 +666,7 @@ cPlayer *cBullet::getPlayer() const
  */
 void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 {
-    if (!game.m_gameObjectsContext->getMap().isValidCell(idOfStructureAtCell)) return;
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(idOfStructureAtCell)) return;
     int id = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(idOfStructureAtCell);
     if (id < 0) return; // bail
 

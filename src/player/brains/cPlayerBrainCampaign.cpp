@@ -1740,7 +1740,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                         m_TIMER_rest = 0; // if we where still 'resting' then stop this now.
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
-                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMapGeometry()->distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
@@ -1799,7 +1799,7 @@ void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
                 if (event.entityType == eBuildType::UNIT) {
                     cUnit *pUnit = game.m_gameObjectsContext->getUnit(event.entityID);
                     if (pUnit->isValid() && !pUnit->getPlayer()->isSameTeamAs(player)) {
-                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMap().distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
+                        if (m_centerOfBaseCell > -1 && game.m_gameObjectsContext->getMapGeometry()->distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
                             respondToThreat(pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
                         }
                     }
