@@ -977,7 +977,7 @@ void cPlayerBrainSkirmish::thinkState_EndGame()
 
     int cellToAttack = -1;
     if (RNG::rnd(100) < 50) {
-        for (int i = 0; i < game.m_gameObjectsContext->getUnits()->size(); i++) {
+        for (size_t i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
             cUnit *cUnit = game.m_gameObjectsContext->getUnit(i);
             if (!cUnit->isValid()) continue;
             if (cUnit->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
