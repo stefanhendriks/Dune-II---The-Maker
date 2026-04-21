@@ -311,7 +311,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfUnitAtCell = m_map->getCellIdUnitLayer(iCll);
             if (idOfUnitAtCell > -1) {
-                int iPlr = game.m_gameObjectsContext->getUnit(idOfUnitAtCell).iPlayer;
+                int iPlr = game.m_gameObjectsContext->getUnit(idOfUnitAtCell)->iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
@@ -320,7 +320,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfAirUnitAtCell = m_map->getCellIdAirUnitLayer(iCll);
             if (idOfAirUnitAtCell > -1) {
-                int iPlr = game.m_gameObjectsContext->getUnit(idOfAirUnitAtCell).iPlayer;
+                int iPlr = game.m_gameObjectsContext->getUnit(idOfAirUnitAtCell)->iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }

@@ -389,7 +389,7 @@ void cPlayer::markUnitsForGroup(const int groupId) const
 {
     // go over all units, and mark units for this group if selected.
     // and unmark them for the group when not/no longer selected.
-    for (auto &pUnit : m_objects->getUnits()) {
+    for (auto &pUnit : *m_objects->getUnits()) {
         if (!pUnit.isValid()) continue;
         if (!pUnit.belongsTo(this)) continue;
         if (pUnit.isSelected()) {
@@ -407,14 +407,14 @@ void cPlayer::markUnitsForGroup(const int groupId) const
 std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnit(i);
-        if (!pUnit.isValid()) continue;
-        if (pUnit.isDead()) continue;
-        if (!pUnit.belongsTo(this)) continue;
-        if (pUnit.isMarkedForRemoval()) continue; // do not count marked for removal units
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead()) continue;
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
 
-        if (pUnit.iGroup == groupId) {
+        if (pUnit->iGroup == groupId) {
             ids.push_back(i);
         }
     }
@@ -424,14 +424,14 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnit(i);
-        if (!pUnit.isValid()) continue;
-        if (pUnit.isDead()) continue;
-        if (!pUnit.belongsTo(this)) continue;
-        if (pUnit.isMarkedForRemoval()) continue; // do not count marked for removal units
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead()) continue;
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
 
-        if (!rect.isPointWithin(pUnit.center_draw_x(), pUnit.center_draw_y())) {
+        if (!rect.isPointWithin(pUnit->center_draw_x(), pUnit->center_draw_y())) {
             continue;
         }
 
@@ -450,11 +450,11 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
 int cPlayer::getAmountOfUnitsForType(const std::vector<int> &unitTypes) const
 {
     int count = 0;
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &cUnit = m_objects->getUnit(i);
-        if (!cUnit.isValid()) continue;
-        if (cUnit.iPlayer != this->getId()) continue;
-        if (std::find(unitTypes.begin(), unitTypes.end(), cUnit.iType) != unitTypes.end()) {
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit *cUnit = m_objects->getUnit(i);
+        if (!cUnit->isValid()) continue;
+        if (cUnit->iPlayer != this->getId()) continue;
+        if (std::find(unitTypes.begin(), unitTypes.end(), cUnit->iType) != unitTypes.end()) {
             count++;
         }
     }
@@ -1347,13 +1347,13 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
 
     int maxTargets = 0;
 
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &cUnit = m_objects->getUnit(i);
-        if (!cUnit.isValid()) continue;
-        if (cUnit.iPlayer != playerIndexToAttack) continue;
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit *cUnit = m_objects->getUnit(i);
+        if (!cUnit->isValid()) continue;
+        if (cUnit->iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = m_objects->getMap().isVisible(cUnit.getCell(), this);
+        bool isVisibleForPlayer = m_objects->getMap().isVisible(cUnit->getCell(), this);
 
         if (m_settings->isDebugMode()) {
             log(std::format("Visible = {}", isVisibleForPlayer));
@@ -1779,7 +1779,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 
             int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(cll);
             if (idOfUnitAtCell > -1) {
-                if (m_objects->getUnit(idOfUnitAtCell).isValid() && m_objects->getUnit(idOfUnitAtCell).getPlayer() != this) {
+                if (m_objects->getUnit(idOfUnitAtCell)->isValid() && m_objects->getUnit(idOfUnitAtCell)->getPlayer() != this) {
                     foundUnitFromOtherPlayerThanMe = true;
                 }
                 if (iUnitIDToIgnore > -1) {
@@ -1845,15 +1845,15 @@ void cPlayer::onEntityDiscovered(const s_GameEvent &event)
     // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
     bool triggerMusic = false;
     if (event.entityType == eBuildType::UNIT) {
-        cUnit &pUnit = m_objects->getUnit(event.entityID);
-        bool detectedEntityIsHuman = pUnit.getPlayer()->isHuman();
+        cUnit *pUnit = m_objects->getUnit(event.entityID);
+        bool detectedEntityIsHuman = pUnit->getPlayer()->isHuman();
 
         // unit discovered is NOT the same team, so enemy detected / music trigger
 //        if (detectedEntityIsHuman || (isHuman() && !detectedEntityIsHuman)) {
         if (detectedEntityIsHuman || isHuman()) {
-            if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pUnit.getPlayer())) {
+            if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pUnit->getPlayer())) {
                 triggerMusic = true;
-                if (pUnit.iType == SANDWORM) {
+                if (pUnit->iType == SANDWORM) {
                     voiceId = SOUND_VOICE_10_ATR; // wormsign
                 }
                 else {
@@ -1980,11 +1980,11 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell)
 
 void cPlayer::onMyUnitDestroyed(const s_GameEvent &event)
 {
-    cUnit &pUnit = m_objects->getUnit(event.entityID);
+    cUnit *pUnit = m_objects->getUnit(event.entityID);
 
     // If a harvester died, and it is the last. And we have atleast one REFINERY; then send a Harvester to that
     // player
-    if (pUnit.isHarvester()) { // a harvester died
+    if (pUnit->isHarvester()) { // a harvester died
         addNotification("You've lost a Harvester.", eNotificationType::PRIORITY);
         const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
 
@@ -1996,7 +1996,7 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event)
         }
 
         if (!refineries.empty()) { // and its player still has a refinery
-            reinforceHarvesterIfNeeded(pUnit.getCell());
+            reinforceHarvesterIfNeeded(pUnit->getCell());
 
             for (auto &structureId: refineries) {
                 cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
@@ -2009,9 +2009,9 @@ void cPlayer::onMyUnitDestroyed(const s_GameEvent &event)
             }
         }
     }
-    else if (pUnit.isType(CARRYALL)) {
-        if (pUnit.iNewUnitType == HARVESTER) { // was bringing new harvester...
-            reinforceHarvesterIfNeeded(pUnit.getCell());
+    else if (pUnit->isType(CARRYALL)) {
+        if (pUnit->iNewUnitType == HARVESTER) { // was bringing new harvester...
+            reinforceHarvesterIfNeeded(pUnit->getCell());
         }
     }
 }
@@ -2050,8 +2050,8 @@ std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cel
     std::vector<sEntityForDistance> result = std::vector<sEntityForDistance>(0);
 
     for (auto &unitId : ids) {
-        cUnit aUnit = m_objects->getUnit(unitId);
-        double dist = m_objects->getMap().distance(aUnit.getCell(), cell);
+        cUnit *aUnit = m_objects->getUnit(unitId);
+        double dist = m_objects->getMap().distance(aUnit->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
             .entityId = unitId
@@ -2104,17 +2104,17 @@ std::vector<int> cPlayer::getAllMyUnits()
 std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &pUnit = m_objects->getUnit(i);
-        if (!pUnit.isValid()) continue;
-        if (pUnit.isDead() && !pUnit.isHidden()) continue; // hidden units play "dead" :/
-        if (!pUnit.belongsTo(this)) continue;
-        if (pUnit.isMarkedForRemoval()) continue; // do not count marked for removal units
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
 
         // check for unit type?
         if (unitType > -1) {
             // TODO: what about units in a carry-all being transferred?
-            if (pUnit.iType != unitType) continue; // not the same type? skip
+            if (pUnit->iType != unitType) continue; // not the same type? skip
         }
 
         ids.push_back(i);
@@ -2141,13 +2141,13 @@ bool cPlayer::evaluateStillAlive()
 
     if (!alive) {
         // check units now
-        for (int i = 0; i < m_objects->getUnits().size(); i++) {
-            cUnit &pUnit = m_objects->getUnit(i);
-            if (!pUnit.isValid()) continue;
-            if (pUnit.isAirbornUnit()) continue; // do not count airborn units
-            if (pUnit.isDead()) continue; // in case we have some 'half-dead' units that got pass the isValid check...
+        for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+            cUnit *pUnit = m_objects->getUnit(i);
+            if (!pUnit->isValid()) continue;
+            if (pUnit->isAirbornUnit()) continue; // do not count airborn units
+            if (pUnit->isDead()) continue; // in case we have some 'half-dead' units that got pass the isValid check...
             // a better way for this would be to have such units in a separate collection.
-            if (!pUnit.belongsTo(this)) continue;
+            if (!pUnit->belongsTo(this)) continue;
             alive = true;
             break;
         }
@@ -2185,11 +2185,11 @@ void cPlayer::deselectStructure()
 std::vector<int> cPlayer::getSelectedUnits() const
 {
     std::vector<int> ids = std::vector<int>();
-    for (int i = 0; i < m_objects->getUnits().size(); i++) {
-        cUnit &cUnit = m_objects->getUnit(i);
-        if (!cUnit.isValid()) continue;
-        if (!cUnit.belongsTo(this)) continue;
-        if (cUnit.isSelected()) {
+    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+        cUnit *cUnit = m_objects->getUnit(i);
+        if (!cUnit->isValid()) continue;
+        if (!cUnit->belongsTo(this)) continue;
+        if (cUnit->isSelected()) {
             ids.push_back(i);
         }
     }
@@ -2217,25 +2217,25 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
 
     // check if there is a harvester in this group
     auto position = std::find_if(ids.begin(), ids.end(), [&](const int &id) {
-        return m_objects->getUnit(id).isHarvester();
+        return m_objects->getUnit(id)->isHarvester();
     });
     bool hasHarvesterSelected = position != ids.end();
 
     position = std::find_if(ids.begin(), ids.end(),
     [&](const int &id) {
-        return !m_objects->getUnit(id).isHarvester() && !m_objects->getUnit(id).isAirbornUnit();
+        return !m_objects->getUnit(id)->isHarvester() & !m_objects->getUnit(id)->isAirbornUnit();
     });
     bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
 
     if (hasHarvesterSelected && !nonAirbornNonHarvesterUnitSelected) {
         // select all the harvester units, skip airborn
         for (auto id: ids) {
-            cUnit &pUnit = m_objects->getUnit(id);
-            if (pUnit.isAirbornUnit()) continue;
-            if (!pUnit.isHarvester()) continue;
+            cUnit *pUnit = m_objects->getUnit(id);
+            if (pUnit->isAirbornUnit()) continue;
+            if (!pUnit->isHarvester()) continue;
             // only check if it has not been selected, so we only play sound when we truly select a new unit.
-            if (!pUnit.isSelected()) {
-                pUnit.select();
+            if (!pUnit->isSelected()) {
+                pUnit->select();
                 unitSelected = true; // do it here, instead of iterating again
             }
         }
@@ -2243,13 +2243,13 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
     else {
         // select all the non-harvester, non-airborn units
         for (auto id: ids) {
-            cUnit &pUnit = m_objects->getUnit(id);
-            if (pUnit.isAirbornUnit()) continue;
-            if (pUnit.isHarvester()) continue;
+            cUnit *pUnit = m_objects->getUnit(id);
+            if (pUnit->isAirbornUnit()) continue;
+            if (pUnit->isHarvester()) continue;
             // only check if it has not been selected, so we only play sound when we truly select a new unit.
-            if (!pUnit.isSelected()) {
-                pUnit.select();
-                if (pUnit.isInfantryUnit()) {
+            if (!pUnit->isSelected()) {
+                pUnit->select();
+                if (pUnit->isInfantryUnit()) {
                     infantrySelected = true;
                 }
                 else {
@@ -2290,7 +2290,7 @@ void cPlayer::thinkSlow()
 
 void cPlayer::deselectUnit(const int &unitId)
 {
-    m_objects->getUnit(unitId).deselect();
+    m_objects->getUnit(unitId)->deselect();
 }
 
 void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)

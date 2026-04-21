@@ -82,7 +82,7 @@ cUnit* cGameObjectContext::getUnit(int index)
 {
     if (!m_Units) return nullptr;
     if (index < 0) return nullptr;
-    if (index >= static_cast<int>(m_Units->size())) return nullptr;
+    if (index >= m_Units->size()) return nullptr;
     return &(*m_Units)[index];
 }
 

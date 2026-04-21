@@ -53,9 +53,9 @@ void cMouseRepairState::onMouseLeftButtonClicked()
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
-        if (pUnit.isValid() && pUnit.belongsTo(m_player) && pUnit.isEligibleForRepair()) {
-            pUnit.findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
+        cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+        if (pUnit->isValid() && pUnit->belongsTo(m_player) && pUnit->isEligibleForRepair()) {
+            pUnit->findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
         }
     }
 
@@ -104,8 +104,8 @@ int cMouseRepairState::getMouseTileForRepairState()
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
-        if (pUnit.isValid() && pUnit.belongsTo(m_player) && pUnit.isEligibleForRepair()) {
+        cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+        if (pUnit->isValid() && pUnit->belongsTo(m_player) && pUnit->isEligibleForRepair()) {
             return MOUSE_REPAIR;
         }
     }

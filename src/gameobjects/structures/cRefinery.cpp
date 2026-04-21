@@ -35,39 +35,39 @@ void cRefinery::thinkFast()
 void cRefinery::think_unit_occupation()
 {
     int iUnitID = getUnitIdWithin();
-    cUnit &cUnit = game.m_gameObjectsContext->getUnit(iUnitID);
+    cUnit *cUnit = game.m_gameObjectsContext->getUnit(iUnitID);
 
     // the unit id is filled in, that means the unit is IN this structure
     // the TIMER_harvest of the unit will be used to dump the harvest in the
     // refinery
-    cUnit.harvestTimer.increment();
+    cUnit->harvestTimer.increment();
 
     cPlayer *pPlayer = getPlayer();
     cPlayerDifficultySettings *difficultySettings = pPlayer->getDifficultySettings();
 
-    if (cUnit.harvestTimer.get() < difficultySettings->getDumpSpeed(10)) return;
+    if (cUnit->harvestTimer.get() < difficultySettings->getDumpSpeed(10)) return;
 
-    cUnit.harvestTimer.zero();
+    cUnit->harvestTimer.zero();
 
     // dump credits
-    if (cUnit.canUnload()) {
+    if (cUnit->canUnload()) {
         int iAmount = 5;
 
         // cap at max
-        s_UnitInfo &unitType = game.m_infoContext->getUnitInfo(cUnit.iType);
+        s_UnitInfo &unitType = game.m_infoContext->getUnitInfo(cUnit->iType);
 
-        if (cUnit.iCredits > unitType.credit_capacity) {
-            cUnit.iCredits = unitType.credit_capacity;
+        if (cUnit->iCredits > unitType.credit_capacity) {
+            cUnit->iCredits = unitType.credit_capacity;
             // this fixes the upper bound (so no unit can cheat !?)
         }
 
         // can substract credits? if not, choose remaining
-        if ((cUnit.iCredits - iAmount) < 0) {
-            iAmount = cUnit.iCredits;
+        if ((cUnit->iCredits - iAmount) < 0) {
+            iAmount = cUnit->iCredits;
         }
 
         pPlayer->dumpCredits(iAmount);
-        cUnit.iCredits -= iAmount;
+        cUnit->iCredits -= iAmount;
         return;
     }
 
@@ -88,8 +88,8 @@ void cRefinery::think_unit_occupation()
         int iCarry = cUnit::carryallTransfer(iUnitID, iHarvestCell);
 
         if (iCarry > -1) {
-            cUnit.movewaitTimer.reset(500);
-            cUnit.thinkwaitTimer.reset(500);
+            cUnit->movewaitTimer.reset(500);
+            cUnit->thinkwaitTimer.reset(500);
         }
     }
 }

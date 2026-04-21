@@ -565,18 +565,18 @@ void cMap::draw_units()
 
     // draw all worms first
     for (int i = 0; i < m_objects->getUnits()->size(); i++) {
-        cUnit &pUnit = (*m_objects->getUnits())[i];
-        if (!pUnit.isValid()) continue;
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
 
         // DEBUG MODE: DRAW PATHS
         if (m_settings->isDrawUnitDebug()) {
-            pUnit.draw_path();
+            pUnit->draw_path();
         }
 
-        if (pUnit.iType != SANDWORM) continue;
+        if (pUnit->iType != SANDWORM) continue;
 
-        if (pUnit.isWithinViewport(mapViewport)) {
-            pUnit.draw();
+        if (pUnit->isWithinViewport(mapViewport)) {
+            pUnit->draw();
         }
 
         drawUnitDebug(pUnit);
@@ -585,15 +585,15 @@ void cMap::draw_units()
 
     // then: draw infantry units
     for (int i = 0; i < m_objects->getUnits()->size(); i++) {
-        cUnit &pUnit = (*m_objects->getUnits())[i];
-        if (!pUnit.isValid()) continue;
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
 
-        if (!pUnit.isInfantryUnit())
+        if (!pUnit->isInfantryUnit())
             continue; // skip non-infantry units
 
-        if (pUnit.isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport)) {
             // draw
-            pUnit.draw();
+            pUnit->draw();
         }
 
         drawUnitDebug(pUnit);
@@ -601,28 +601,29 @@ void cMap::draw_units()
 
     // then: draw ground units
     for (int i = 0; i < m_objects->getUnits()->size(); i++) {
-        cUnit &pUnit = (*m_objects->getUnits())[i];
-        if (!pUnit.isValid()) continue;
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
 
-        if (pUnit.isAirbornUnit() ||
-                pUnit.isSandworm() ||
-                pUnit.isInfantryUnit())
+        if (pUnit->isAirbornUnit() ||
+                pUnit->isSandworm() ||
+                pUnit->isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
-        if (pUnit.isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport)) {
             // draw
-            pUnit.draw();
+            pUnit->draw();
         }
 
         drawUnitDebug(pUnit);
     }
 }
 
-void cMap::drawUnitDebug(cUnit &pUnit) const
+void cMap::drawUnitDebug(cUnit *pUnit) const
 {
+    if (!pUnit) return;
     if (!m_settings->isDrawUnitDebug()) return;
 
-    pUnit.draw_debug(m_textDrawer);
+    pUnit->draw_debug(m_textDrawer);
 }
 
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
@@ -632,30 +633,30 @@ void cMap::draw_units_2nd()
 
     // draw health of units
     for (int i = 0; i < m_objects->getUnits()->size(); i++) {
-        cUnit &pUnit = (*m_objects->getUnits())[i];
-        if (!pUnit.isValid()) continue;
-        if (!pUnit.rendering.bHovered && !pUnit.isSelected()) continue;
-        if (!pUnit.isWithinViewport(mapViewport)) continue;
-        if (pUnit.isHidden()) continue;
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
+        if (!pUnit->rendering.bHovered && !pUnit->isSelected()) continue;
+        if (!pUnit->isWithinViewport(mapViewport)) continue;
+        if (pUnit->isHidden()) continue;
 
-        pUnit.draw_health();
-        pUnit.draw_group(m_textDrawer);
-        pUnit.draw_experience();
-        if (pUnit.iType == HARVESTER) {
-            pUnit.draw_spice();
+        pUnit->draw_health();
+        pUnit->draw_group(m_textDrawer);
+        pUnit->draw_experience();
+        if (pUnit->iType == HARVESTER) {
+            pUnit->draw_spice();
         }
     }
 
     // draw airborn units
     for (int i = 0; i < m_objects->getUnits()->size(); i++) {
-        cUnit &pUnit = (*m_objects->getUnits())[i];
-        if (!pUnit.isValid()) continue;
-        if (!pUnit.isAirbornUnit()) continue;
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
+        if (!pUnit->isAirbornUnit()) continue;
 
-        if (pUnit.isWithinViewport(mapViewport)) {
-            pUnit.draw();
+        if (pUnit->isWithinViewport(mapViewport)) {
+            pUnit->draw();
             // TODO: Only human players?
-            pUnit.draw_health();
+            pUnit->draw_health();
             if (m_settings->isDebugMode()) {
                 drawUnitDebug(pUnit);
             }
