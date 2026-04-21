@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdexcept>
+#include <cstddef>
 #include <memory>
 
 class cBullets;
@@ -37,6 +38,8 @@ public:
     cAbstractStructure* getStructure(int index);
 
     cUnits* getUnits() const;
+    std::size_t getUnitsSize() const;
+    cUnit* getUnit(std::size_t index);
     cUnit* getUnit(int index);
 
     cPlayer* getPlayer(int index);
