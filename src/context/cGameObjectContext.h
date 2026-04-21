@@ -14,6 +14,7 @@ class cPlayer;
 class cUnit;
 class cAbstractStructure;
 class cStructureFactory;
+class MapGeometry;
 
 struct sGameServices;
 
@@ -31,6 +32,7 @@ public:
 
     cBullets& getBullets() const;
     cMap& getMap() const;
+    MapGeometry* getMapGeometry() const;
     cPlayers* getPlayers() const;
     cParticles& getParticles() const;
 
