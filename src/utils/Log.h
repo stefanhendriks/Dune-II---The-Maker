@@ -1,5 +1,6 @@
 #pragma once
 
+//just have eLogLevel, eLogComponent in this file, to avoid circular dependencies with cLog
 #include "utils/cLog.h"
 
 #include <format>
