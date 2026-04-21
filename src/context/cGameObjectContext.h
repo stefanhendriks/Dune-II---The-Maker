@@ -11,6 +11,7 @@ class cUnits;
 class cMap;
 class cPlayer;
 class cUnit;
+class cAbstractStructure;
 class cStructureFactory;
 
 struct sGameServices;
@@ -28,16 +29,19 @@ public:
     ~cGameObjectContext();
 
     cBullets& getBullets() const;
+    cMap& getMap() const;
     cPlayers* getPlayers() const;
     cParticles& getParticles() const;
+
     cStructures& getStructures() const;
+    cAbstractStructure* getStructure(int index);
+
     cUnits& getUnits() const;
-    cMap& getMap() const;
+    cUnit& getUnit(int index);
+    const cUnit& getUnit(int index) const;
 
     cPlayer* getPlayer(int index);
     const cPlayer* getPlayer(int index) const;
-    cUnit& getUnit(int index);
-    const cUnit& getUnit(int index) const;
 
     cStructureFactory* getStructureFactory() const;
 
