@@ -61,65 +61,7 @@ public:
     bool occupiedInDimension(int iCell, int dimension);
     bool occupiedByWallOrMountain(int iCell);
 
-    int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance) const;
-
-    /**
-    Shortcut method, which takes cells as arguments, creates x1, y1 and x2, y2 out of them
-    and runs the normal distance method to get the distance.
-    **/
-    double distance(int cell1, int cell2);
-
     // void setGameContext(GameContext* ctx);
-
-    int getAbsoluteXPositionFromCell(int cell);
-
-    int getAbsoluteYPositionFromCell(int cell);
-
-    /**
-     * Like absoluteX position, but then centers within cell (ie adds half tile)
-     * @param cell
-     * @return
-     */
-    int getAbsoluteXPositionFromCellCentered(int cell);
-
-    /**
-     * Like absoluteX position, but then centers within cell (ie adds half tile)
-     * @param cell
-     * @return
-     */
-    int getAbsoluteYPositionFromCellCentered(int cell);
-
-    int getCellAbove(int c);
-
-    int getCellBelow(int c);
-
-    int getCellLeft(int c);
-
-    int getCellRight(int c);
-
-    int getCellUpperLeft(int c);
-
-    int getCellUpperRight(int c);
-
-    int getCellLowerLeft(int c);
-
-    int getCellLowerRight(int c);
-
-    /**
-     * returns true if one cell is adjacent to another cell
-     */
-    bool isCellAdjacentToOtherCell(int thisCell, int otherCell);
-
-    /**
-        The X coordinate is found by finding out how many 'rows' (the Y) are there, then
-        the remaining of that value is the X.
-    **/
-    int getCellX(int c) const;
-
-    /**
-        The Y coordinate is found by finding as many MAP_W_MAX can fit in the given cell
-    **/
-    int getCellY(int c) const;
 
     bool isWithinBoundaries(int c);
 
@@ -151,7 +93,6 @@ public:
                 y > 0 && y <= (m_height -2);
     }
 
-    double distance(int x1, int y1, int x2, int y2);
     int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
     // Drawing
@@ -445,8 +386,6 @@ public:
         return m_width;
     }
 
-    int getMaxDistanceInPixels() const;
-
     /**
      * Returns the amount of cells of a specific type
      * @param cellType
@@ -469,8 +408,6 @@ public:
      * @return
      */
     bool isValidCell(int c) const;
-
-    int getRandomCell();
 
     int getMaxCells() const {
         return m_maxCells;
@@ -499,20 +436,11 @@ public:
      */
     bool isValidTerrainForStructureAtCell(int cell);
 
-    int getRandomCellFrom(int cell, int distance);
-
-    int getRandomCellFromWithRandomDistance(int cell, int distance);
-
     int getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType);
 
     bool isStructureVisible(cAbstractStructure *pStructure, int iPlayer);
 
     bool isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer);
-
-    bool isAtMapBoundaries(int cell);
-
-    cPoint fixCoordinatesToBeWithinPlayableMap(int x, int y) const;
-    cPoint fixCoordinatesToBeWithinMap(int x, int y) const;
 
     int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
     int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);
@@ -535,8 +463,6 @@ public:
     }
 
     void setDesiredAmountOfWorms(int value);
-
-    cPoint getAbsolutePositionFromCell(int cell);
 
     void setReinforcements(std::shared_ptr<cReinforcements> reinforcements);
 

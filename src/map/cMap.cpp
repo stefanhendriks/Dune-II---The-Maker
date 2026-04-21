@@ -374,7 +374,7 @@ void cMap::thinkAboutRespawningWorms()
         // spawn one worm, set timer again
         int failures = 0;
         while (failures < 10) {
-            int cell = getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+            int cell = m_mapGeometry->getRandomCellWithinMapWithSafeDistanceFromBorder(2);
             if (!isCellPassableForWorm(cell)) {
                 failures++;
                 continue;
@@ -413,7 +413,7 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
         // randomly create a new spice bloom somewhere on the map
         int iCll = -1;
         for (int i = 0; i < 10; i++) {
-            int cell = getRandomCell();
+            int cell = m_mapGeometry->getRandomCell();
             // find place to spawn bloom
             if (getCellType(cell) == TERRAIN_SAND) {
                 iCll = cell;
@@ -489,8 +489,8 @@ void cMap::clearShroud(int c, int size, int playerId)
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
-            int x = getAbsoluteXPositionFromCellCentered(c);
-            int y = getAbsoluteYPositionFromCellCentered(c);
+            int x = m_mapGeometry->getAbsoluteXPositionFromCellCentered(c);
+            int y = m_mapGeometry->getAbsoluteYPositionFromCellCentered(c);
 
             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
@@ -670,7 +670,7 @@ int cMap::mouse_draw_x()
     cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
-        int absX = getAbsoluteXPositionFromCell(mouseCell);
+        int absX = m_mapGeometry->getAbsoluteXPositionFromCell(mouseCell);
         return m_interface->getMapCamera()->getWindowXPosition(absX);
     }
     return -1;
@@ -682,7 +682,7 @@ int cMap::mouse_draw_y()
     cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
-        int absY = getAbsoluteYPositionFromCell(mouseCell);
+        int absY = m_mapGeometry->getAbsoluteYPositionFromCell(mouseCell);
         return m_interface->getMapCamera()->getWindowYPosition(absY);
     }
     return -1;
@@ -736,8 +736,8 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
 {
     assert(destinationCell > -1);
     // Cell x and y coordinates
-    int iCllX = getCellX(destinationCell);
-    int iCllY = getCellY(destinationCell);
+    int iCllX = m_mapGeometry->getCellX(destinationCell);
+    int iCllY = m_mapGeometry->getCellY(destinationCell);
 
     // STEP 1: determine starting
     int iStartCell = -1;
@@ -749,7 +749,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     // HORIZONTAL cells
     for (int iX = 0; iX < m_width; iX++) {
         // check when Y = 0 (top)
-        tDistance = distance(iX, 0, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(iX, 0, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
@@ -762,7 +762,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         }
 
         // check when Y = map_height (bottom)
-        tDistance = distance(iX, m_height - 1, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(iX, m_height - 1, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
@@ -778,7 +778,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     // VERTICAL cells
     for (int iY = 0; iY < m_height; iY++) {
         // check when X = 0 (left)
-        tDistance = distance(0, iY, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(0, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
@@ -791,7 +791,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         }
 
         // check when XY = map_m_width (bottom)
-        tDistance = distance(m_width - 1, iY, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(m_width - 1, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
@@ -806,122 +806,9 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     return iStartCell;
 }
 
-double cMap::distance(int x1, int y1, int x2, int y2)  //rip
-{
-    return m_mapGeometry->distance(x1, y1, x2, y2);
-}
-
-int cMap::getCellY(int c) const//rip
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellY(c);
-}
-
-int cMap::getCellX(int c) const//rip
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellX(c);
-}
-
-bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell)
-{
-    return m_mapGeometry->isCellAdjacentToOtherCell(thisCell, otherCell);
-}
-
-int cMap::getCellLowerRight(int c)
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellLowerRight(c);
-}
-
-int cMap::getCellLowerLeft(int c)
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellLowerLeft(c);
-}
-
-int cMap::getCellUpperRight(int c)
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellUpperRight(c);
-}
-
-int cMap::getCellUpperLeft(int c)
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellUpperLeft(c);
-}
-
-int cMap::getCellRight(int c)
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellRight(c);
-}
-
-int cMap::getCellLeft(int c)
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellLeft(c);
-}
-
-int cMap::getCellBelow(int c)
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellBelow(c);
-}
-
-int cMap::getCellAbove(int c)
-{
-    if (!isValidCell(c)) return -1;
-    return m_mapGeometry->getCellAbove(c);
-}
-
-int cMap::getAbsoluteYPositionFromCell(int cell) //rip
-{
-    if (!isValidCell(cell)) return -1;
-    return m_mapGeometry->getAbsoluteYPositionFromCell(cell);
-}
-
-int cMap::getAbsoluteXPositionFromCell(int cell)  //rip
-{
-    if (!isValidCell(cell)) return -1;
-    return m_mapGeometry->getAbsoluteXPositionFromCell(cell);
-}
-
-int cMap::getAbsoluteXPositionFromCellCentered(int cell)  //rip
-{
-    if (!isValidCell(cell)) return -1;
-    return m_mapGeometry->getAbsoluteXPositionFromCellCentered(cell);
-}
-
-int cMap::getAbsoluteYPositionFromCellCentered(int cell)  //rip
-{
-    if (!isValidCell(cell)) return -1;
-    return m_mapGeometry->getAbsoluteYPositionFromCellCentered(cell);
-}
-
-double cMap::distance(int cell1, int cell2) //rip
-{
-    if (!isValidCell(cell1) || !isValidCell(cell2)) return 0;
-    return m_mapGeometry->distance(cell1, cell2);
-}
-
-int cMap::getMaxDistanceInPixels() const {
-    return m_mapGeometry->getMaxDistanceInPixels();
-}
-
 bool cMap::isValidCell(int c) const //rip
 {
     return m_mapGeometry->isValidCell(c);
-}
-
-/**
- * Returns a random cell, disregards playable borders
- * @return
- */
-int cMap::getRandomCell() //rip
-{
-    return m_mapGeometry->getRandomCell();
 }
 
 void cMap::createCell(int cell, int terrainType, int tile)
@@ -997,15 +884,10 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
     return isVisible(iCell, playerId);
 }
 
-int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) const //rip
-{
-    return m_mapGeometry->getRandomCellWithinMapWithSafeDistanceFromBorder(distance);
-}
-
 bool cMap::isWithinBoundaries(int c) //rip
 {
     if (!isValidCell(c)) return false;
-    return isWithinBoundaries(getCellX(c), getCellY(c));
+    return isWithinBoundaries(m_mapGeometry->getCellX(c), m_mapGeometry->getCellY(c));
 }
 
 void cMap::setVisibleFor(int iCell, cPlayer *pPlayer)
@@ -1039,15 +921,15 @@ int cMap::findNearestSpiceBloom(int iCell)
     int closestBloomFoundSoFar = -1;
     int bloomsEvaluated = 0;
 
-    cx = getCellX(iCell);
-    cy = getCellY(iCell);
+    cx = m_mapGeometry->getCellX(iCell);
+    cy = m_mapGeometry->getCellY(iCell);
 
     for (int i = 0; i < getMaxCells(); i++) {
         int cellType = getCellType(i);
         if (cellType != TERRAIN_BLOOM) continue;
         bloomsEvaluated++;
 
-        int d = ABS_length(cx, cy, getCellX(i), getCellY(i));
+        int d = ABS_length(cx, cy, m_mapGeometry->getCellX(i), m_mapGeometry->getCellY(i));
 
         if (d < iDistance) {
             closestBloomFoundSoFar = i;
@@ -1103,25 +985,6 @@ bool cMap::isValidTerrainForStructureAtCell(int cll)
  * @param cell
  * @param distance
  */
-int cMap::getRandomCellFrom(int cell, int distance) //rip
-{
-    if (!isValidCell(cell)) return -1;
-    return m_mapGeometry->getRandomCellFrom(cell, distance);
-}
-
-/**
- * Like getRandomCellFrom, but will randomize x/y coordinate. Using 'distance' to create a square around 'cell' (as center)
- * Hence, this could result in a cell being returned much closer than distance. But never further away than distance.
- * @param cell
- * @param distance
- * @return
- */
-int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) //rip
-{
-    if (!isValidCell(cell)) return -1;
-    return m_mapGeometry->getRandomCellFromWithRandomDistance(cell, distance);
-}
-
 /**
  * Takes structure, evaluates all its cells, and if any of these are visible, this function returns true.
  *
@@ -1158,22 +1021,6 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer)
     return false;
 }
 
-bool cMap::isAtMapBoundaries(int cell)  //rip
-{
-    if (!isValidCell(cell)) return false;
-    return m_mapGeometry->isAtMapBoundaries(cell);
-}
-
-cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const //rip
-{
-    return m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(x, y);
-}
-
-cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const //rip
-{
-    return m_mapGeometry->fixCoordinatesToBeWithinMap(x, y);
-}
-
 int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop)
 {
     auto *mapCamera = m_interface->getMapCamera();
@@ -1187,8 +1034,8 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
-            int x = getAbsoluteXPositionFromCellCentered(cell);
-            int y = getAbsoluteYPositionFromCellCentered(cell);
+            int x = m_mapGeometry->getAbsoluteXPositionFromCellCentered(cell);
+            int y = m_mapGeometry->getAbsoluteYPositionFromCellCentered(cell);
 
             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
@@ -1267,7 +1114,7 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
         if (pStructure == nullptr) continue;
         if (pStructure->getType() != structureType) continue;
 
-        long _distance = distance(cell, pStructure->getCell());
+        long _distance = m_mapGeometry->distance(cell, pStructure->getCell());
 
         // if distance is lower than last found distance, it is the closest for now.
         if (_distance < shortestDistance) {
@@ -1358,7 +1205,7 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
         if (pStructure->getType() != structureType) continue;
         if (pStructure->hasUnitWithin()) continue; // already occupied
 
-        long _distance = distance(cell, pStructure->getCell());
+        long _distance = m_mapGeometry->distance(cell, pStructure->getCell());
 
         // if distance is lower than last found distance, it is the closest for now.
         if (_distance < shortestDistance) {
@@ -1395,7 +1242,7 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
         if (pStructure->hasUnitWithin()) continue; // already occupied
 
         if (!pStructure->hasUnitHeadingTowards()) {    // no other unit is heading to this structure
-            long _distance = distance(cell, pStructure->getCell());
+            long _distance = m_mapGeometry->distance(cell, pStructure->getCell());
 
             // if distance is lower than last found distance, it is the closest for now.
             if (_distance < shortestDistance) {
@@ -1419,7 +1266,7 @@ int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minR
 
 int cMap::findRandomCellToMoveToForSandworm() {
     for (int iTries = 0; iTries < 5; iTries++) {
-        int iMoveTo = getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+        int iMoveTo = m_mapGeometry->getRandomCellWithinMapWithSafeDistanceFromBorder(2);
         if (isCellPassableForWorm(iMoveTo)) {
             return iMoveTo;
         }
@@ -1571,8 +1418,3 @@ void cMap::onEntityDestroyed(const s_GameEvent &event)
     }
 }
 
-cPoint cMap::getAbsolutePositionFromCell(int cell)
-{
-    if (!isValidCell(cell)) return {-1, -1};
-    return m_mapGeometry->getAbsolutePositionFromCell(cell);
-}
