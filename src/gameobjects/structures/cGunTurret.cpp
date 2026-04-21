@@ -68,13 +68,13 @@ void cGunTurret::think_attack()
 {
     cUnit *unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
     if (unitTarget->isValid() && !unitTarget->isDead()) {
-        int iCellX = game.m_gameObjectsContext->getMap().getCellX(getCell());
-        int iCellY = game.m_gameObjectsContext->getMap().getCellY(getCell());
+        int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(getCell());
+        int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(getCell());
 
         int unitCell = unitTarget->getCell();
 
-        int iTargetX = game.m_gameObjectsContext->getMap().getCellX(unitCell);
-        int iTargetY = game.m_gameObjectsContext->getMap().getCellY(unitCell);
+        int iTargetX = game.m_gameObjectsContext->getMapGeometry()->getCellX(unitCell);
+        int iTargetY = game.m_gameObjectsContext->getMapGeometry()->getCellY(unitCell);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
         int facingAngle = faceAngle(d, kTurretFacings); // get the angle
@@ -147,7 +147,7 @@ void cGunTurret::think_fire()
     if (unitTarget->isValid() && !unitTarget->isDead()) {
         TIMER_fire++;
 
-        int iDistance = game.m_gameObjectsContext->getMap().distance(getCell(), unitTarget->getCell());
+        int iDistance = game.m_gameObjectsContext->getMapGeometry()->distance(getCell(), unitTarget->getCell());
 
         if (iDistance > getSight()) {
             iTargetID = -1;
@@ -218,8 +218,8 @@ void cGunTurret::think_guard()
         TIMER_guard=0-RNG::rnd(20);
 
         int c = getCell();
-        int iCellX = game.m_gameObjectsContext->getMap().getCellX(c);
-        int iCellY = game.m_gameObjectsContext->getMap().getCellY(c);
+        int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(c);
+        int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(c);
 
         int iDistance=9999; // closest distance
 
@@ -261,7 +261,7 @@ void cGunTurret::think_guard()
             }
 
             int c1 = cUnit->getCell();
-            int distance = ABS_length(iCellX, iCellY, game.m_gameObjectsContext->getMap().getCellX(c1), game.m_gameObjectsContext->getMap().getCellY(c1));
+            int distance = ABS_length(iCellX, iCellY, game.m_gameObjectsContext->getMapGeometry()->getCellX(c1), game.m_gameObjectsContext->getMapGeometry()->getCellY(c1));
 
             if (distance <= distanceForAttacking) {
                 if (cUnit->isAttackableAirUnit()) {

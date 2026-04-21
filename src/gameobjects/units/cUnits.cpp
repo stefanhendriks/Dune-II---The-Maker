@@ -90,7 +90,7 @@ static int unitNewID()
 // }
 
 int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
-    if (!game.m_gameObjectsContext->getMap().isValidCell(iCll)) {
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
         return -1;
     }

@@ -1134,8 +1134,8 @@ int cPlayer::findCellToPlaceStructure(int structureType)
         cAbstractStructure *aStructure = m_objects->getStructures()[id];
 
         // go around any structure, and try to find a cell where we can place a structure.
-        int iStartX = m_objects->getMap().getCellX(aStructure->getCell());
-        int iStartY = m_objects->getMap().getCellY(aStructure->getCell());
+        int iStartX = m_objects->getMapGeometry()->getCellX(aStructure->getCell());
+        int iStartY = m_objects->getMapGeometry()->getCellY(aStructure->getCell());
 
         int iEndX = iStartX + aStructure->getWidth(); // not plus 1 because iStartX is 1st cell
         int iEndY = iStartY + aStructure->getHeight(); // not plus 1 because iStartY is 1st cell
@@ -1749,7 +1749,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 {
     s_PlaceResult result;
 
-    if (!m_objects->getMap().isValidCell(iCell)) {
+    if (!m_objects->getMapGeometry()->isValidCell(iCell)) {
         result.outOfBounds = true;
         return result;
     }
@@ -1758,8 +1758,8 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
     int w = m_infos->getStructureInfo(iStructureType).bmp_width / TILESIZE_WIDTH_PIXELS;
     int h = m_infos->getStructureInfo(iStructureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
 
-    int x = m_objects->getMap().getCellX(iCell);
-    int y = m_objects->getMap().getCellY(iCell);
+    int x = m_objects->getMapGeometry()->getCellX(iCell);
+    int y = m_objects->getMapGeometry()->getCellY(iCell);
 
     bool foundUnitFromOtherPlayerThanMe = false;
 
@@ -1967,7 +1967,7 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell)
 {
     s_PlaceResult result;
 
-    if (!m_objects->getMap().isValidCell(iCell)) {
+    if (!m_objects->getMapGeometry()->isValidCell(iCell)) {
         result.outOfBounds = true;
         return result;
     }
@@ -2051,7 +2051,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cel
 
     for (auto &unitId : ids) {
         cUnit *aUnit = m_objects->getUnit(unitId);
-        double dist = m_objects->getMap().distance(aUnit->getCell(), cell);
+        double dist = m_objects->getMapGeometry()->distance(aUnit->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
             .entityId = unitId
@@ -2070,7 +2070,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(in
 
     for (auto &structureId : ids) {
         cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
-        double dist = m_objects->getMap().distance(pStructure->getCell(), cell);
+        double dist = m_objects->getMapGeometry()->distance(pStructure->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
             .distance = (int)dist,
             .entityId = structureId

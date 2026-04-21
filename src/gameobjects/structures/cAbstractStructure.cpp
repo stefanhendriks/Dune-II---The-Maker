@@ -197,8 +197,8 @@ void cAbstractStructure::die()
     }
 
     int iCll=iCell;
-    int iCX= game.m_gameObjectsContext->getMap().getCellX(iCll);
-    int iCY= game.m_gameObjectsContext->getMap().getCellY(iCll);
+    int iCX= game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll);
+    int iCY= game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
 
     // create destroy particles
     for (int w = 0; w < iWidth; w++) {
@@ -209,8 +209,8 @@ void cAbstractStructure::die()
             cMapEditor(game.m_gameObjectsContext->getMap()).smoothAroundCell(iCll);
 
             int half = 16;
-            int posX = game.m_gameObjectsContext->getMap().getAbsoluteXPositionFromCell(iCll);
-            int posY = game.m_gameObjectsContext->getMap().getAbsoluteYPositionFromCell(iCll);
+            int posX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCell(iCll);
+            int posY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCell(iCll);
 
             cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
 
@@ -282,8 +282,8 @@ void cAbstractStructure::think_prebuild()
 
 std::vector<int> cAbstractStructure::getCellsAroundStructure()
 {
-    int iStartX = game.m_gameObjectsContext->getMap().getCellX(iCell);
-    int iStartY = game.m_gameObjectsContext->getMap().getCellY(iCell);
+    int iStartX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
+    int iStartY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
 
     int iEndX = (iStartX + iWidth) + 1;
     int iEndY = (iStartY + iHeight) + 1;
@@ -311,8 +311,8 @@ std::vector<int> cAbstractStructure::getCellsAroundStructure()
  */
 std::vector<int> cAbstractStructure::getCellsOfStructure()
 {
-    int iStartX = game.m_gameObjectsContext->getMap().getCellX(iCell);
-    int iStartY = game.m_gameObjectsContext->getMap().getCellY(iCell);
+    int iStartX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
+    int iStartY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
 
     int iEndX = (iStartX + iWidth);
     int iEndY = (iStartY + iHeight);
@@ -551,8 +551,8 @@ void cAbstractStructure::setHitPoints(int hp)
 void cAbstractStructure::setCell(int cell)
 {
     iCell = cell;
-    posX = game.m_gameObjectsContext->getMap().getAbsoluteXPositionFromCell(iCell);
-    posY = game.m_gameObjectsContext->getMap().getAbsoluteYPositionFromCell(iCell);
+    posX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCell(iCell);
+    posY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCell(iCell);
 }
 
 void cAbstractStructure::setOwner(int player)
@@ -641,7 +641,7 @@ bool cAbstractStructure::isValid()
     if (dead) // flagged for deletion, so no longer 'valid'
         return false;
 
-    if (!game.m_gameObjectsContext->getMap().isValidCell(iCell))
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCell))
         return false;
 
     return true;

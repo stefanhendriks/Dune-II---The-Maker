@@ -91,8 +91,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
 
 #define SCANWIDTH    1
 
-    int iCellX = game.m_gameObjectsContext->getMap().getCellX(mouseCell);
-    int iCellY = game.m_gameObjectsContext->getMap().getCellY(mouseCell);
+    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(mouseCell);
+    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(mouseCell);
 
     // check
     int iStartX = iCellX - SCANWIDTH;
@@ -102,8 +102,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     int iEndY = iCellY + SCANWIDTH + cellHeight;
 
     // Fix up the boundaries
-    cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(iStartX, iStartY);
-    cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(iEndX, iEndY);
+    cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinMap(iStartX, iStartY);
+    cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinMap(iEndX, iEndY);
 
     // Determine if structure to be placed is within build distance
     for (int iX = iStartX; iX < iEndX; iX++) {
@@ -145,7 +145,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
             int cellX = iCellX + iX;
             int cellY = iCellY + iY;
 
-            if (!game.m_gameObjectsContext->getMap().isWithinBoundaries(cellX, cellY)) {
+            if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(cellX, cellY)) {
                 return false;
             }
 

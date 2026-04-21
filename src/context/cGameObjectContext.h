@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <cstddef>
 #include <memory>
+#include "map/MapGeometry.hpp"
 
 class cBullets;
 class cPlayers;
@@ -14,7 +15,6 @@ class cPlayer;
 class cUnit;
 class cAbstractStructure;
 class cStructureFactory;
-class MapGeometry;
 
 struct sGameServices;
 
