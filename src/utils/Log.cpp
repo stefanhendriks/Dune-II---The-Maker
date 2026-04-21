@@ -4,107 +4,82 @@
 
 #include <array>
 #include <chrono>
+#include <iostream>
 #include <string>
 #include <string_view>
 #include <system_error>
-#include <iostream>
+#include <unordered_map>
 
+namespace {
 
-std::string getLogLevelString(eLogLevel level)
+template <typename TEnum>
+std::string_view findEnumString(const std::unordered_map<TEnum, std::string_view> &values, TEnum value)
 {
-    // LOG_TRACE, LOG_WARN, LOG_ERROR, LOG_FATAL
-    switch (level) {
-        case LOG_FATAL:
-            return "FATAL";
-        case LOG_WARN:
-            return "WARN";
-        case LOG_ERROR:
-            return "ERROR";
-        case LOG_DEBUG:
-            return "DEBUG";
-        case LOG_TRACE:
-            return "TRACE";
-        case LOG_INFO:
-            return "INFO";
-    }
-    return "UNIDENTIFIED";
+    const auto it = values.find(value);
+    return it != values.end() ? it->second : "UNIDENTIFIED";
 }
 
-std::string getLogComponentString(eLogComponent component)
+}
+
+std::string_view getLogLevelString(eLogLevel level)
 {
-    switch(component) {
-        case COMP_UNITS:
-            return "UNITS";
-        case COMP_STRUCTURES:
-            return "STRUCTURES";
-        case COMP_GAMERULES:
-            return "GAMERULES";
-        case COMP_SCENARIOINI:
-            return "SCENARIOINI";
-        case COMP_PARTICLE:
-            return "PARTICLE";
-        case COMP_BULLET:
-            return "BULLET";
-        case COMP_AI:
-            return "AI";
-        case COMP_UPGRADE_LIST:
-            return "UPGRADE_LIST";
-        case COMP_BUILDING_LIST_UPDATER:
-            return "BUILDING_LIST_UPDATER";
-        case COMP_MAP:
-            return "MAP";
-        case COMP_GAMEOBJECTS:
-            return "GAMEOBJECTS";
-        case COMP_SIDEBAR:
-            return "SIDEBAR";
-        case COMP_NONE:
-            return "NONE";
-        case COMP_SETUP:
-            return "SETUP";
-        case COMP_INIT:
-            return "INIT";
-        // case COMP_ALLEGRO:
-        //     return "ALLEGRO";
-        case COMP_SDL2:
-            return "SDL2";
-        case COMP_VERSION:
-            return "VERSION";
-        case COMP_SKIRMISHSETUP:
-            return "SKIRMISHSETUP";
-        case COMP_ALFONT:
-            return "ALFONT";
-        case COMP_SOUND:
-            return "SOUND";
-        case COMP_REGIONINI:
-            return "REGIONINI";
-        case COMP_PLAYER:
-            return "PLAYER";
-        case COMP_GAMESTATE:
-            return "GAMESTATE";
-        case COMP_CHEATS:
-            return "CHEATS";
-    }
-    return "UNIDENTIFIED";
+    static const std::unordered_map<eLogLevel, std::string_view> levelNames = {
+        { LOG_FATAL, "FATAL" },
+        { LOG_WARN, "WARN" },
+        { LOG_ERROR, "ERROR" },
+        { LOG_DEBUG, "DEBUG" },
+        { LOG_TRACE, "TRACE" },
+        { LOG_INFO, "INFO" },
+    };
+
+    return findEnumString(levelNames, level);
+}
+
+std::string_view getLogComponentString(eLogComponent component)
+{
+    static const std::unordered_map<eLogComponent, std::string_view> componentNames = {
+        { COMP_UNITS, "UNITS" },
+        { COMP_STRUCTURES, "STRUCTURES" },
+        { COMP_GAMERULES, "GAMERULES" },
+        { COMP_SCENARIOINI, "SCENARIOINI" },
+        { COMP_PARTICLE, "PARTICLE" },
+        { COMP_BULLET, "BULLET" },
+        { COMP_AI, "AI" },
+        { COMP_UPGRADE_LIST, "UPGRADE_LIST" },
+        { COMP_BUILDING_LIST_UPDATER, "BUILDING_LIST_UPDATER" },
+        { COMP_MAP, "MAP" },
+        { COMP_GAMEOBJECTS, "GAMEOBJECTS" },
+        { COMP_SIDEBAR, "SIDEBAR" },
+        { COMP_NONE, "NONE" },
+        { COMP_SETUP, "SETUP" },
+        { COMP_INIT, "INIT" },
+        { COMP_SDL2, "SDL2" },
+        { COMP_VERSION, "VERSION" },
+        { COMP_SKIRMISHSETUP, "SKIRMISHSETUP" },
+        { COMP_ALFONT, "ALFONT" },
+        { COMP_SOUND, "SOUND" },
+        { COMP_REGIONINI, "REGIONINI" },
+        { COMP_PLAYER, "PLAYER" },
+        { COMP_GAMESTATE, "GAMESTATE" },
+        { COMP_CHEATS, "CHEATS" },
+    };
+
+    return findEnumString(componentNames, component);
 }
 
 std::string_view getLogHouseString(int houseId)
 {
-    switch (houseId) {
-        case ATREIDES:
-            return "ATREIDES";
-        case HARKONNEN:
-            return "HARKONNEN";
-        case ORDOS:
-            return "ORDOS";
-        case FREMEN:
-            return "FREMEN";
-        case SARDAUKAR:
-            return "SARDAUKAR";
-        case MERCENARY:
-            return "MERCENARY";
-        default:
-            return "UNKNOWN HOUSE";
-    }
+    static const std::unordered_map<int, std::string_view> houseNames = {
+        { ATREIDES, "ATREIDES" },
+        { HARKONNEN, "HARKONNEN" },
+        { ORDOS, "ORDOS" },
+        { FREMEN, "FREMEN" },
+        { SARDAUKAR, "SARDAUKAR" },
+        { MERCENARY, "MERCENARY" },
+    };
+
+    const auto it = houseNames.find(houseId);
+    return it != houseNames.end() ? it->second : "UNKNOWN HOUSE";
 }
 
 
