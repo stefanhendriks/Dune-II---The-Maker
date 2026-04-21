@@ -1291,36 +1291,36 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
     return findNearByValidDropLocation(cell, 1, range, unitTypeToDrop);
 }
 
-int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
-{
-    auto *mapCamera = m_interface->getMapCamera();
+// int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
+// {
+//     auto *mapCamera = m_interface->getMapCamera();
 
-    // go around 360 fDegrees and calculate new stuff.
-    for (float dr = 1; dr < range; dr++) { // go outwards
-        for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
-            // need a smarter way to do this (less CPU intensive).
+//     // go around 360 fDegrees and calculate new stuff.
+//     for (float dr = 1; dr < range; dr++) { // go outwards
+//         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
+//             // need a smarter way to do this (less CPU intensive).
 
-            int x = getAbsoluteXPositionFromCellCentered(cell);
-            int y = getAbsoluteYPositionFromCellCentered(cell);
+//             int x = getAbsoluteXPositionFromCellCentered(cell);
+//             int y = getAbsoluteYPositionFromCellCentered(cell);
 
-            float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
-            float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
+//             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
+//             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
 
-            x = (x + dr1);
-            y = (y + dr2);
+//             x = (x + dr1);
+//             y = (y + dr2);
 
-            // convert back
-            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
+//             // convert back
+//             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
-            if (cl < 0) continue;
+//             if (cl < 0) continue;
 
-            if (canDeployUnitAtCell(cell, unitIDToDrop)) {
-                return cell;
-            }
-        }
-    }
-    return -1;
-}
+//             if (canDeployUnitAtCell(cell, unitIDToDrop)) {
+//                 return cell;
+//             }
+//         }
+//     }
+//     return -1;
+// }
 
 /**
  * Scans structures, belonging to player. If it is the same type it will be returned.

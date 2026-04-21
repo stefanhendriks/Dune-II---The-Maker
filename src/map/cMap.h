@@ -517,7 +517,7 @@ public:
     int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
     int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);
 
-    int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
+    // int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
 
     int findRandomCellToMoveToForSandworm();
     bool isCellPassableForWorm(int cell);
