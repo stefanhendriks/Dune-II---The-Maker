@@ -519,7 +519,7 @@ public:
 
     int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
 
-    int findRandomCellToMoveToForSandworm() const;
+    int findRandomCellToMoveToForSandworm();
     bool isCellPassableForWorm(int cell);
 
     bool isValidTerrainForConcreteAtCell(int cell);
