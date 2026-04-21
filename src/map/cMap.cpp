@@ -15,7 +15,6 @@
 #include "cMapCamera.h"
 #include "cMapEditor.h"
 #include "game/cGameInterface.h"
-#include "include/d2tmc.h"
 #include "utils/cLog.h"
 #include "data/gfxdata.h"
 #include "gameobjects/particles/cParticle.h"
@@ -70,17 +69,22 @@ MapGeometry &cMap::getGeometry() const
     return *m_mapGeometry;
 }
 
-void cMap::setGameContext(GameContext* ctx)
-{
-    m_ctx = ctx;
-    m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
-}
+// void cMap::setGameContext(GameContext* ctx)
+// {
+//     m_ctx = ctx;
+//     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
+// }
 
 void cMap::serviceInit(sGameServices* services)
 {
     assert(services != nullptr);
-    m_log = services->ctx->getLog();
+    m_ctx = services->ctx;
+    assert(m_ctx != nullptr);
+    m_log = m_ctx->getLog();
     assert(m_log != nullptr);
+
+    m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
+    assert(m_textDrawer != nullptr);
 
     m_settings = services->settings;
     assert(m_settings != nullptr);
@@ -88,7 +92,7 @@ void cMap::serviceInit(sGameServices* services)
     assert(m_infos != nullptr);
     m_objects = services->objects;
     assert(m_objects != nullptr);
-    m_interface = services->ctx->getGameInterface();
+    m_interface = m_ctx->getGameInterface();
     assert(m_interface != nullptr);
 }
 
@@ -123,10 +127,6 @@ void cMap::init(int width, int height)
 
     // clear out all cells
     clearAllCells();
-
-    // moved in cGameObjectContext
-    if (game.m_gameObjectsContext)
-        game.m_gameObjectsContext->getStructureFactory()->deleteAllExistingStructures();
 
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;
