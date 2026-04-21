@@ -127,7 +127,7 @@ void cMapDrawer::drawTerrain()
             }
 
             // skip outer border cells
-            if (!m_map->isWithinBoundaries(iCell)) {
+            if (!m_mapGeometry->isWithinBoundaries(iCell)) {
                 continue;
             }
 

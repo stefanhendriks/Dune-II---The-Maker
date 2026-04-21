@@ -478,7 +478,7 @@ void cMap::clearShroudForAllPlayers(int c, int size)
 
 void cMap::clearShroud(int c, int size, int playerId)
 {
-    if (!isWithinBoundaries(c)) return;
+    if (!m_mapGeometry->isWithinBoundaries(c)) return;
 
     auto *mapCamera = m_interface->getMapCamera();
 
@@ -884,12 +884,6 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
     return isVisible(iCell, playerId);
 }
 
-bool cMap::isWithinBoundaries(int c) //rip
-{
-    if (!isValidCell(c)) return false;
-    return isWithinBoundaries(m_mapGeometry->getCellX(c), m_mapGeometry->getCellY(c));
-}
-
 void cMap::setVisibleFor(int iCell, cPlayer *pPlayer)
 {
     if (!pPlayer) return;
@@ -1047,7 +1041,7 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
-            if (!isWithinBoundaries(cl)) continue;
+            if (!m_mapGeometry->isWithinBoundaries(cl)) continue;
 
             if (canDeployUnitTypeAtCell(cl, unitTypeToDrop)) {
                 return cl;
