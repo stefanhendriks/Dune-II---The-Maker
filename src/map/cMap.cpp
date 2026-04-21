@@ -69,6 +69,12 @@ void cMap::setGameContext(GameContext* ctx)
     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
 }
 
+void cMap::serviceInit(sGameServices* services)
+{
+    assert(services != nullptr);
+    // nothing to do for now, but we might need this in the future when we want to inject services into cMap
+}
+
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
 {
     m_reinforcements = reinforcements;
