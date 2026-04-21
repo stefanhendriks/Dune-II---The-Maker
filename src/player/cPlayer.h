@@ -79,6 +79,7 @@ class cGameSettings;
 class cInfoContext;
 class cGameObjectContext;
 class cGameInterface;
+class cLog;
 
 class cPlayer : public cScenarioObserver {
 
@@ -553,6 +554,7 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
+    cLog *m_log = nullptr;
     Graphics *m_gfxdata = nullptr;
 
     Texture *bmp_structure[MAX_STRUCTURE_BMPS];
