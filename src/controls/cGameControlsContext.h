@@ -45,6 +45,9 @@ public:
     int getMouseCell() const {
         return m_mouseCell;
     }
+    int getMouseCellClamped() const {
+        return m_mouseCellClamped;
+    }
 
     bool isMouseOverStructure() const {
         return m_mouseHoveringOverStructureId > -1;
@@ -74,7 +77,7 @@ public:
 
     cAbstractStructure *getStructurePointerWhereMouseHovers() const;
 
-    int getMouseCellFromScreen(int mouseX, int mouseY) const;
+    int getMouseCellFromScreen(int mouseX, int mouseY, bool clamped) const;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -99,6 +102,7 @@ private:
 
     // on what cell is the mouse hovering
     int m_mouseCell;
+    int m_mouseCellClamped;
 
     // context belongs to specific player
     cPlayer *m_player;

@@ -25,6 +25,7 @@ cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
     m_mouseHoveringOverUnitId(-1),
     m_mouseOnBattleField(false),
     m_mouseCell(-99),
+    m_mouseCellClamped(0),
     m_player(player),
     m_state(MOUSESTATE_SELECT),
     m_prevState(MOUSESTATE_SELECT),
@@ -70,14 +71,20 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords)
         return;
     }
     m_mouseOnBattleField = true;
-    m_mouseCell = getMouseCellFromScreen(coords.x, coords.y);
+    m_mouseCell = getMouseCellFromScreen(coords.x, coords.y, false);
+    if (m_mouseCell<0) { // clampe mouse cell to map
+        m_mouseCellClamped = getMouseCellFromScreen(coords.x, coords.y, true);
+    }
 }
 
-int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const
+int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY, bool clamped) const
 {
     int absMapX = game.m_mapCamera->getAbsMapMouseX(mouseX);
     int absMapY = game.m_mapCamera->getAbsMapMouseY(mouseY);
-    return game.m_mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
+    if (clamped)
+        return game.m_mapCamera->getCellClampedFromAbsolutePosition(absMapX, absMapY);
+    else
+        return game.m_mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
 }
 
 void cGameControlsContext::determineHoveringOverStructureId()
