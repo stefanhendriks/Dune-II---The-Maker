@@ -137,6 +137,15 @@ int MapGeometry::getCellWithMapDimensions(int x, int y) const
     return (y * mapWidth) + x;
 }
 
+int MapGeometry::getCellClampedWithMapDimensions(int x, int y) const
+{
+    if (x < 1) x= 1;
+    if (x >= mapWidth) x = mapWidth -2;
+    if (y < 0) y=1;
+    if (y >= mapHeight) y = mapHeight -2;
+    return (y * mapWidth) + x;
+}
+
 int MapGeometry::makeCell(int x, int y) const
 {
     assert(x > -1 && "makeCell x must be > -1");
