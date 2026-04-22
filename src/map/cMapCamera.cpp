@@ -179,6 +179,11 @@ int cMapCamera::getCellFromAbsolutePosition(int x, int y)
     return m_mapGeometry->getCellWithMapDimensions((x / 32), (y / 32));
 }
 
+int cMapCamera::getCellClampedFromAbsolutePosition(int x, int y)
+{
+    return m_mapGeometry->getCellClampedWithMapDimensions((x / 32), (y / 32));
+}
+
 void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     // MOUSE WHEEL scrolling causes zooming in/out

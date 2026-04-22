@@ -114,7 +114,10 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
         evaluateSelectedUnits();
 
         int mouseCell = m_context->getMouseCell();
-
+        // if mouse cell is invalid, try to get mouse cell in map (Manathan distance)
+        if (mouseCell < 0) {
+            mouseCell = m_context->getMouseCellClamped();
+        }
         bool infantryAcknowledged = false;
         bool unitAcknowledged = false;
 

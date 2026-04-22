@@ -25,6 +25,7 @@ public:
         If you want to take the invisible border into account use getCellWithMapBorders instead.
     **/
     int getCellWithMapDimensions(int x, int y) const;
+    int getCellClampedWithMapDimensions(int x, int y) const;
     /**
         Return map cell; taking the map borders into account. If x or y falls out of bounds, this function will return -1
         If you want to include the invisible map borders, use getCellWithMapDimensions instead.
