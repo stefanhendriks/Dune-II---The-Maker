@@ -19,6 +19,8 @@
 #include "game/cGame.h"
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"
+#include "include/sGameServices.h"
+#include "context/GameContext.hpp"
 #include <format>
 #include <cassert>
 
@@ -29,6 +31,16 @@ cUnits::cUnits() {
 
 void cUnits::serviceInit(sGameServices* services)
 {
+    assert(services != nullptr);
+    m_infos = services->info;
+    assert(m_infos != nullptr);
+    m_objects = services->objects;
+    assert(m_objects != nullptr);
+    m_interface = services->ctx->getGameInterface();
+    assert(m_interface != nullptr);
+    m_map = &m_objects->getMap();
+    assert(m_map != nullptr);
+
     assert(services != nullptr);
     for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
         m_units[i].serviceInit(services);

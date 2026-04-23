@@ -17,6 +17,10 @@
 #include "cUnit.h"
 
 struct sGameServices;
+class cInfoContext;
+class cGameObjectContext;
+class cGameInterface;
+class cMap;
 
 /**
  * Manager class that encapsulates the global g_Unit array
@@ -130,6 +134,10 @@ public:
 
 
 private:
+    cInfoContext *m_infos = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cMap* m_map = nullptr;
     // Maximum number of units
     static constexpr int MAX_UNITS_CAPACITY = 300;
     std::array<cUnit, MAX_UNITS_CAPACITY> m_units;
