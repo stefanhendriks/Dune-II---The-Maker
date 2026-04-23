@@ -1095,7 +1095,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
             if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
                 onEventSpecialLaunch(*launchEvent);
-            }        
+            }
             break;
         case eGameEventType::GAME_EVENT_DESTROYED:
             onEventEntityDestroyed(event);
