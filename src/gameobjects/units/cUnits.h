@@ -85,6 +85,10 @@ public:
     auto end() { return m_units.end(); }
     auto end() const { return m_units.end(); }
 
+    bool areUnitsSelected() const;
+
+    void move_to(int icell);
+
     /**
      * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
      * Assumes the creation of a unit is NOT a reinforcement.
