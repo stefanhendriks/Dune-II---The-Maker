@@ -24,7 +24,7 @@ static constexpr int MAX_PATH_SIZE = 256;
 class cPlayer;
 class cTextDrawer;
 class cAbstractStructure;
-class sGameServices;
+struct sGameServices;
 
 class cGameSettings;
 class cInfoContext;
