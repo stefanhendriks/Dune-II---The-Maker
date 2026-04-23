@@ -384,7 +384,15 @@ void cMap::thinkAboutRespawningWorms()
                 continue;
             }
             logbook(std::format("cMap::thinkAboutRespawningWorms : Spawning sandworm at {}", cell));
-            cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            //cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                .entityType = eBuildType::UNIT,
+                .player = m_objects->getPlayer(AI_WORM),
+                .entitySpecificType = SANDWORM,
+                .atCell = cell
+            };
+            m_interface->onNotifyGameEvent(event);
             break;
         }
     }
