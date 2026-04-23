@@ -40,7 +40,7 @@ public:
     cAbstractStructure* getStructure(int index);
 
     cUnits* getUnits() const;
-    std::size_t getUnitsSize() const;
+    int getUnitsSize() const;
     cUnit* getUnit(std::size_t index);
     cUnit* getUnit(int index);
 
