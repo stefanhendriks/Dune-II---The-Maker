@@ -26,6 +26,11 @@ class cTextDrawer;
 class cAbstractStructure;
 class sGameServices;
 
+class cGameSettings;
+class cInfoContext;
+class cGameObjectContext;
+class cGameInterface;
+
 enum class eTransferType {
     NONE,                               // nothing to transfer
     NEW_STAY,                           // bring a new unit, and let the carryall stay
@@ -463,6 +468,11 @@ public:
     static int freeAroundMove(int iUnit);
 
 private:
+    cGameSettings *m_settings = nullptr;
+    cInfoContext *m_infos = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cGameInterface *m_interface = nullptr;
+
     eActionType m_action;
     eUnitActionIntent intent;
 
