@@ -14,7 +14,7 @@ class cPlayer;
 class cBuildingList;
 class cBuildingListItem;
 
-//GAME_EVENT_DEPLOY_UNIT
+// GAME_EVENT_DEPLOY_UNIT
 struct DeployUnitEvent {
     int iCell = -1;
     int unitType = -1;
