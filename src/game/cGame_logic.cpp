@@ -1093,7 +1093,9 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     // game itself handles events
     switch (event.eventType) {
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
-            onEventSpecialLaunch(event);
+            if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
+                onEventSpecialLaunch(*launchEvent);
+            }        
             break;
         case eGameEventType::GAME_EVENT_DESTROYED:
             onEventEntityDestroyed(event);
@@ -1172,9 +1174,10 @@ void cGame::onEventCreateUnit(const DeployUnitEvent &event) {
     }
 }
 
-void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
-    cBuildingListItem *itemToDeploy = event.buildingListItem;
-    int iMouseCell = event.atCell;
+void cGame::onEventSpecialLaunch(const LaunchDeathHandEvent &event) const
+{
+    cBuildingListItem *itemToDeploy = event.itemToLaunch;
+    int iMouseCell = event.targetCell;
     cPlayer *player = event.player;
     if (itemToDeploy->isTypeSpecial()) {
         const s_SpecialInfo &special = itemToDeploy->getSpecialInfo();

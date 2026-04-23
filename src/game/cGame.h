@@ -161,7 +161,7 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    void onEventSpecialLaunch(const s_GameEvent &event) const;
+    void onEventSpecialLaunch(const LaunchDeathHandEvent &event) const;
     void onEventEntityDestroyed(const s_GameEvent & event);
     void onEventCreateUnit(const DeployUnitEvent &deployEvent);
 
