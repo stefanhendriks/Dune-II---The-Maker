@@ -727,13 +727,15 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         if (!result.success) {
             // when failure, create mcv instead
             // cUnits::unitCreate(pPlayer->getFocusCell(), MCV, p, true);
-            s_GameEvent event {
+            const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
-                .entityType = eBuildType::UNIT,
-                .player = pPlayer,
-                .entitySpecificType = MCV,
-                .atCell = pPlayer->getFocusCell(),
-                .isReinforce = false
+                .data = DeployUnitEvent {
+                    .iCell = pPlayer->getFocusCell(),
+                    .unitType = MCV,
+                    .iPlayer = p,
+                    .bOnStart = true,
+                    .isReinforcement = false
+                }
             };
             m_interface->onNotifyGameEvent(event);
         }
@@ -848,12 +850,14 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             }
             logbook(std::format("Spawning sandworm at {}", cell));
             // cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
-            s_GameEvent event {
+            const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
-                .entityType = eBuildType::UNIT,
-                .player = m_objects->getPlayer(AI_WORM),
-                .entitySpecificType = SANDWORM,
-                .atCell = cell
+                .data = DeployUnitEvent {
+                    .iCell = cell,
+                    .unitType = SANDWORM,
+                    .iPlayer = AI_WORM,
+                    .bOnStart = true
+                }
             };
             m_interface->onNotifyGameEvent(event);
             wormCell = cell; // start from here to spawn new worm

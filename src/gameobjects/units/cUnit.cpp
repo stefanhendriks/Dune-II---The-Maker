@@ -1619,16 +1619,15 @@ void cUnit::thinkFast_move_airUnit()
             if (canDeployAtCell && isWithinMapBoundaries) {
                 // drop unit
                 if (iNewUnitType > -1) {
-                    s_GameEvent event {
+                    const s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
-                        .entityType = eBuildType::UNIT,
-                        .entityID = iID,
-                        .player = getPlayer(),
-                        .entitySpecificType = iNewUnitType,
-                        .atCell = position.iCell,
-                        .isReinforce = isReinforcement,
-                        .originId = iID,
-                        .originType = eBuildType::UNIT,
+                        .data = DeployUnitEvent {
+                            .iCell = position.iCell,
+                            .unitType = iNewUnitType,
+                            .iPlayer = getPlayer()->getId(),
+                            .bOnStart = true,
+                            .isReinforcement = isReinforcement
+                        }
                     };
                     m_interface->onNotifyGameEvent(event);
                 }

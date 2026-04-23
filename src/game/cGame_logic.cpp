@@ -1099,7 +1099,9 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
             onEventEntityDestroyed(event);
             break;
         case eGameEventType::GAME_EVENT_DEPLOY_UNIT:
-            onEventDeployUnit(event);
+            if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
+                onEventDeployUnit(*deployEvent);
+            }
             break;
         default:
             break;
@@ -1145,26 +1147,28 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     }
 }
 
-void cGame::onEventDeployUnit(const s_GameEvent &event) {
-    if (event.entityType != eBuildType::UNIT) {
+void cGame::onEventDeployUnit(const DeployUnitEvent &event) {
+    if (event.iCell < 0 || event.unitType < 0 || event.iPlayer < 0) {
         return;
     }
-
-    if (event.player == nullptr || event.atCell < 0 || event.entitySpecificType < 0) {
-        return;
-    }
-
     int id = cUnits::unitCreate(
-        event.atCell,
-        event.entitySpecificType,
-        event.player->getId(),
-        true,
-        event.isReinforce
+        event.iCell,
+        event.unitType,
+        event.iPlayer,
+        event.bOnStart,
+        event.isReinforcement,
+        event.hpPercentage
     );
+
     if (id < 0) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_GAME, "Deploy unit", std::format("Failed to deploy unit of type {} at cell {} for player {}", event.entitySpecificType, event.atCell, event.player->getId()));
-    } else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_GAME, "Deploy unit", std::format("Successfully deployed unit of type {} at cell {} for player {}, id={}", event.entitySpecificType, event.atCell, event.player->getId(), id));
+        cLogger::getInstance()->log( LOG_ERROR, COMP_GAME, "Deploy unit",
+            std::format("Failed to deploy unit of type {} at cell {} for player {}", event.unitType, event.iCell, event.iPlayer)
+        );
+    }
+    else {
+        cLogger::getInstance()->log( LOG_INFO, COMP_GAME, "Deploy unit",
+            std::format("Successfully deployed unit of type {} at cell {} for player {}, id={}",event.unitType, event.iCell, event.iPlayer, id )
+        );
     }
 }
 
