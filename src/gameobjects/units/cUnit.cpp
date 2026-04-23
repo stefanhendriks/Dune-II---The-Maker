@@ -42,6 +42,7 @@
 #include "context/cGameObjectContext.h"
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
+#include "game/cGameInterface.h"
 #include <cmath>
 
 #include "data/gfxaudio.h"
@@ -158,7 +159,10 @@ void cUnit::serviceInit(sGameServices* services)
     assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
     assert(m_interface != nullptr);
-
+    m_mapCamera = m_interface->getMapCamera();
+    assert(m_mapCamera != nullptr);
+    m_map = &m_objects->getMap();
+    assert(m_map != nullptr);
 }
 
 void cUnit::recreateDimensions()
