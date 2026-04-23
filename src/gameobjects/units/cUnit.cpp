@@ -11,7 +11,7 @@
   */
 
 #include "cUnit.h"
-#include "cUnits.h"
+// #include "cUnits.h"
 
 
 #include "game/cGame.h"
@@ -201,7 +201,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
     // Animation / Sound
 
     // Anyone who was attacking this unit is on actionGuard
-    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue; // skip invalid
         if (pUnit->combat.iAttackUnit != iID) continue; // skip those who did not want to attack me
@@ -1255,9 +1255,9 @@ void cUnit::selectTargetForOrnithopter(cPlayer *pPlayer)
     int iDistance = 9999;
     int iTarget = -1;
 
-    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *target = m_objects->getUnit(i);
-        if (target->isValid() && i != iID) {
+        if (target->isValid() && static_cast<int>(i) != iID) {
             if (pPlayer->isSameTeamAs(target->getPlayer()))
                 continue;
 
@@ -2970,9 +2970,9 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
         // this). An alternative is to have a function return per 'segment' the units within it (so we don't need to
         // iterate over all units)
         if (canSquishInfantry()) {
-            for (int iq = 0; iq < m_objects->getUnits()->size(); iq++) {
+            for (size_t iq = 0; iq < m_objects->getUnitsSize(); iq++) {
                 cUnit *potentialDeadUnit = m_objects->getUnit(iq);
-                if (iq == iID) continue; // skip self
+                if (static_cast<int>(iq) == iID) continue; // skip self
                 if (!potentialDeadUnit->isValid()) continue;
                 if (potentialDeadUnit->position.iCell != position.iCell) continue; // not on my cell
                 if (!potentialDeadUnit->canBeSquished()) continue;
@@ -3535,9 +3535,9 @@ void cUnit::thinkFast_guard_sandworm()
     int iDistance = 9999;
     int unitIdToAttack = -1;
 
-    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
+    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *potentialDinner = m_objects->getUnit(i);
-        if (i == iID) continue;
+        if (static_cast<int>(i) == iID) continue;
         if (!potentialDinner->isValid()) continue;
         if (potentialDinner->getPlayer()->isSameTeamAs(getPlayer())) continue;
         if (potentialDinner->isAirbornUnit()) continue;
@@ -3586,8 +3586,8 @@ int cUnit::findNearbyGroundUnitToAttack(int range)
     int iDistance = 9999;
     int unitIdToAttack = -1;
 
-    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
-        if (i == iID) continue; // skip self
+    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+        if (static_cast<int>(i) == iID) continue; // skip self
         cUnit *potentialThreat = m_objects->getUnit(i);
         if (!potentialThreat->isValid()) continue;
         if (potentialThreat->belongsTo(getPlayer())) continue; // skip own units
@@ -3611,8 +3611,8 @@ int cUnit::findNearbyAirUnitToAttack(int range)
     int iDistance = 9999;
     int airUnitToAttack = -1;
 
-    for (int i = 0; i < m_objects->getUnits()->size(); i++) {
-        if (i == iID) continue; // skip self
+    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+        if (static_cast<int>(i) == iID) continue; // skip self
         cUnit *potentialThreat = m_objects->getUnit(i);
         if (!potentialThreat->isValid()) continue;
         if (!potentialThreat->isAirbornUnit()) continue; // skip all non-airborn units right away
@@ -3958,13 +3958,13 @@ int cUnit::findHarvestSpot(int id)
 int cUnit::carryallFreeForTransfer(int iPlayer)
 {
     // find a free carry all
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits()->size(); i++) {
+    for (size_t i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
         cUnit *cUnit = game.m_gameObjectsContext->getUnit(i);
         if (!cUnit->isValid()) continue;
         if (cUnit->iPlayer != iPlayer) continue;
         if (cUnit->iType != CARRYALL) continue; // skip non-carry-all units
         if (cUnit->m_transferType != eTransferType::NONE) continue; // skip busy carry-alls
-        return i;
+        return static_cast<int>(i);
     }
 
     return -1;
