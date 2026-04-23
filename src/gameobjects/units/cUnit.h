@@ -24,6 +24,7 @@ static constexpr int MAX_PATH_SIZE = 256;
 class cPlayer;
 class cTextDrawer;
 class cAbstractStructure;
+class sGameServices;
 
 enum class eTransferType {
     NONE,                               // nothing to transfer
@@ -128,6 +129,8 @@ public:
 
     cUnit();
     ~cUnit();
+
+    void serviceInit(sGameServices* services);
 
     float fExperience;	// experience gained by unit
 

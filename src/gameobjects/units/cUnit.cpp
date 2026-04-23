@@ -144,6 +144,11 @@ void cUnit::init(int i)
     movedelayTimer.zero();
 }
 
+void cUnit::serviceInit(sGameServices* services)
+{
+    assert(services != nullptr);
+}
+
 void cUnit::recreateDimensions()
 {
     // set up dimensions

@@ -16,6 +16,8 @@
 #include "definitions.h"
 #include "cUnit.h"
 
+struct sGameServices;
+
 /**
  * Manager class that encapsulates the global g_Unit array
  * Provides safe access to units with bounds checking and convenient methods
@@ -26,6 +28,7 @@ public:
      * Default constructor
      */
     cUnits();
+    void serviceInit(sGameServices* services);
 
     /**
      * Non-copyable
