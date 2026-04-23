@@ -1161,7 +1161,11 @@ void cGame::onEventDeployUnit(const s_GameEvent &event) {
         true,
         event.isReinforce
     );
-    cLogger::getInstance()->log(LOG_INFO, COMP_GAME, "Deploy unit", std::format("Deployed unit of type {} at cell {} for player {}, id={}", event.entitySpecificType, event.atCell, event.player->getId(), id));
+    if (id < 0) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_GAME, "Deploy unit", std::format("Failed to deploy unit of type {} at cell {} for player {}", event.entitySpecificType, event.atCell, event.player->getId()));
+    } else {
+        cLogger::getInstance()->log(LOG_INFO, COMP_GAME, "Deploy unit", std::format("Successfully deployed unit of type {} at cell {} for player {}, id={}", event.entitySpecificType, event.atCell, event.player->getId(), id));
+    }
 }
 
 void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
