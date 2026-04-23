@@ -174,6 +174,11 @@ jobs:
     name: Cleanup old bleeding edge releases
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          fetch-depth: 0   # fetch full history to see all files
       - name: Keep only the last 10 bleeding edge releases
         run: |
           gh release list --repo ${{ github.repository }} --limit 200 --json tagName,publishedAt \
