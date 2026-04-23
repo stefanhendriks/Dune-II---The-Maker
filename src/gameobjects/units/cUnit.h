@@ -30,6 +30,8 @@ class cGameSettings;
 class cInfoContext;
 class cGameObjectContext;
 class cGameInterface;
+class cMapCamera;
+class cMap;
 
 enum class eTransferType {
     NONE,                               // nothing to transfer
@@ -472,6 +474,8 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
+    cMapCamera* m_mapCamera = nullptr;
+    cMap* m_map = nullptr;
 
     eActionType m_action;
     eUnitActionIntent intent;
