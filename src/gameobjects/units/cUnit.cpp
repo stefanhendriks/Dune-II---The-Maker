@@ -41,9 +41,12 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "context/GameContext.hpp"
+#include "include/sGameServices.h"
 #include <cmath>
 
 #include "data/gfxaudio.h"
+
+
 
 // Class specific on top
 // Globals on bottom
@@ -147,6 +150,15 @@ void cUnit::init(int i)
 void cUnit::serviceInit(sGameServices* services)
 {
     assert(services != nullptr);
+    m_settings = services->settings;
+    assert(m_settings != nullptr);
+    m_infos = services->info;
+    assert(m_infos != nullptr);
+    m_objects = services->objects;
+    assert(m_objects != nullptr);
+    m_interface = services->ctx->getGameInterface();
+    assert(m_interface != nullptr);
+
 }
 
 void cUnit::recreateDimensions()
