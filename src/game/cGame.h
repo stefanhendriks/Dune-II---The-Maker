@@ -163,7 +163,7 @@ public:
 
     void onEventSpecialLaunch(const s_GameEvent &event) const;
     void onEventEntityDestroyed(const s_GameEvent & event);
-    void onEventDeployUnit(const s_GameEvent &event);
+    void onEventDeployUnit(const DeployUnitEvent &deployEvent);
 
     void shakeScreen(int duration);
     void reduceShaking() const;

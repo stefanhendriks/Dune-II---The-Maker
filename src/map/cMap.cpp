@@ -385,12 +385,14 @@ void cMap::thinkAboutRespawningWorms()
             }
             logbook(std::format("cMap::thinkAboutRespawningWorms : Spawning sandworm at {}", cell));
             //cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
-            s_GameEvent event {
+             const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
-                .entityType = eBuildType::UNIT,
-                .player = m_objects->getPlayer(AI_WORM),
-                .entitySpecificType = SANDWORM,
-                .atCell = cell
+                .data = DeployUnitEvent {
+                    .iCell = cell,
+                    .unitType = SANDWORM,
+                    .iPlayer = AI_WORM,
+                    .bOnStart = true
+                }
             };
             m_interface->onNotifyGameEvent(event);
             break;
