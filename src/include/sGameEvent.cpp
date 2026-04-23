@@ -75,6 +75,15 @@ const std::string s_GameEvent::toString(const s_GameEvent &event)
         );
     }
 
+    if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
+        return std::format(
+            "LaunchDeathHandEvent[targetCell={}, itemToLaunch={}, playerId={}]",
+            launchEvent->targetCell,
+            launchEvent->itemToLaunch ? "present" : "nullptr",
+            launchEvent->playerID
+        );
+    }
+
     return std::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}], [buildingListItem={}] [originId={}]",
                            toString(event.eventType),
                            eBuildTypeString(event.entityType),
