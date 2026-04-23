@@ -847,7 +847,15 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 continue;
             }
             logbook(std::format("Spawning sandworm at {}", cell));
-            cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            // cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                .entityType = eBuildType::UNIT,
+                .player = m_objects->getPlayer(AI_WORM),
+                .entitySpecificType = SANDWORM,
+                .atCell = cell
+            };
+            m_interface->onNotifyGameEvent(event);
             wormCell = cell; // start from here to spawn new worm
             worms--;
             failures = 0; // reset failures
