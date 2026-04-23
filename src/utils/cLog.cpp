@@ -53,6 +53,8 @@ std::string getLogComponentString(eLogComponent component)
             return "MAP";
         case COMP_GAMEOBJECTS:
             return "GAMEOBJECTS";
+        case COMP_GAME:
+            return "GAME";
         case COMP_SIDEBAR:
             return "SIDEBAR";
         case COMP_NONE:
