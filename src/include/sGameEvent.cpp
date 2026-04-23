@@ -61,6 +61,18 @@ const char *s_GameEvent::toString(const eGameEventType &eventType)
 
 const std::string s_GameEvent::toString(const s_GameEvent &event)
 {
+    if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
+        return std::format(
+            "DeployUnitEvent[cell={}, unitType={}, playerId={}, onStart={}, reinforcement={}, hp={}]",
+            deployEvent->iCell,
+            deployEvent->unitType,
+            deployEvent->iPlayer,
+            deployEvent->bOnStart ? "true" : "false",
+            deployEvent->isReinforcement ? "true" : "false",
+            deployEvent->hpPercentage
+        );
+    }
+
     return std::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}], [buildingListItem={}] [originId={}]",
                            toString(event.eventType),
                            eBuildTypeString(event.entityType),
