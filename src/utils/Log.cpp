@@ -49,6 +49,7 @@ std::string_view getLogComponentString(eLogComponent component)
         { COMP_BUILDING_LIST_UPDATER, "BUILDING_LIST_UPDATER" },
         { COMP_MAP, "MAP" },
         { COMP_GAMEOBJECTS, "GAMEOBJECTS" },
+        { COMP_GAME, "GAME" },
         { COMP_SIDEBAR, "SIDEBAR" },
         { COMP_NONE, "NONE" },
         { COMP_SETUP, "SETUP" },
