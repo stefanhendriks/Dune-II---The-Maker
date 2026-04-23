@@ -56,15 +56,15 @@ void cMouseDeployState::onMouseLeftButtonClicked()
     cBuildingListItem *itemToDeploy = m_player->getSideBar()->getList(eListType::LIST_PALACE)->getItemToDeploy();
     if (itemToDeploy == nullptr) return;
 
-    s_GameEvent event {
+    // launch missile by sending event
+    const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCH,
-        .entityType = eBuildType::SPECIAL,
-        .entityID = -1,
-        .player = m_player,
-        .entitySpecificType = itemToDeploy->getBuildId(),
-        .atCell = mouseCell,
-        .isReinforce = false,
-        .buildingListItem = itemToDeploy
+        .data = LaunchDeathHandEvent {
+            .targetCell = mouseCell,
+            .itemToLaunch = itemToDeploy,
+            .player = m_player,
+            .playerID = m_player->getId()
+        }
     };
     game.onNotifyGameEvent(event);
 }

@@ -8,6 +8,7 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
+#include "include/sGameEvent.h"
 #include "map/cMap.h"
 #include "definitions.h"
 #include "player/cPlayer.h"
@@ -74,15 +75,14 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
 void cPlayerBrainMissionKindDeathHand::think_Execute()
 {
     // launch missile by sending event
-    s_GameEvent event {
+    const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCH,
-        .entityType = itemToLaunch->getBuildType(),
-        .entityID = -1,
-        .player = player,
-        .entitySpecificType = itemToLaunch->getBuildId(),
-        .atCell = target,
-        .isReinforce = false,
-        .buildingListItem = itemToLaunch
+        .data = LaunchDeathHandEvent {
+            .targetCell = target,
+            .itemToLaunch = itemToLaunch,
+            .player = player,
+            .playerID = player->getId()
+        }
     };
     game.onNotifyGameEvent(event);
 

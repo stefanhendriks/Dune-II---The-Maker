@@ -24,9 +24,18 @@ struct DeployUnitEvent {
     float hpPercentage = 1.0F;
 };
 
+// GAME_EVENT_SPECIAL_LAUNCH
+struct LaunchDeathHandEvent {
+    int targetCell = -1;
+    cBuildingListItem* itemToLaunch = nullptr;
+    cPlayer* player = nullptr;
+    int playerID = -1; // for looging purposes, as player pointer might not always be available
+};
+
+
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
-    using GameEventData = std::variant<std::monostate, DeployUnitEvent>;
+    using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent>;
     GameEventData data = std::monostate{};
     
     /**
