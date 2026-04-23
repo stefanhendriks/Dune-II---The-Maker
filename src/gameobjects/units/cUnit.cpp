@@ -1541,7 +1541,7 @@ void cUnit::thinkFast_move_airUnit()
                             unitToPickupOrDrop.rendering.iBodyShouldFace = rendering.iBodyShouldFace;
 
                             // clear spot
-            m_map->clearShroud(position.iCell, unitToPickupOrDrop.getUnitInfo().sight, iPlayer);
+                            m_map->clearShroud(position.iCell, unitToPickupOrDrop.getUnitInfo().sight, iPlayer);
                             int unitIdOfUnitThatHasBeenPickedUp = iUnitID;
 
                             iUnitID = -1;         // reset this
@@ -1619,11 +1619,18 @@ void cUnit::thinkFast_move_airUnit()
             if (canDeployAtCell && isWithinMapBoundaries) {
                 // drop unit
                 if (iNewUnitType > -1) {
-                    int id = cUnits::unitCreate(position.iCell, iNewUnitType, iPlayer, true, isReinforcement);
-
-                    if (id > -1) {
-                        m_map->cellSetIdForLayer(position.iCell, MAPID_UNITS, id);
-                    }
+                    s_GameEvent event {
+                        .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                        .entityType = eBuildType::UNIT,
+                        .entityID = iID,
+                        .player = getPlayer(),
+                        .entitySpecificType = iNewUnitType,
+                        .atCell = position.iCell,
+                        .isReinforce = isReinforcement,
+                        .originId = iID,
+                        .originType = eBuildType::UNIT,
+                    };
+                    m_interface->onNotifyGameEvent(event);
                 }
 
                 // now make sure this carry-all will not be drawn as having a unit:
