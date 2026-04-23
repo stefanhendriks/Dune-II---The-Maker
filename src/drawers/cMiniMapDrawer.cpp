@@ -21,7 +21,7 @@
 #include "context/cGameObjectContext.h"
 #include "map/cMap.h"
 #include <cassert>
-#include <iostream>
+//#include <iostream>
 
 #include "data/gfxaudio.h"
 
@@ -59,8 +59,8 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
 
     m_RectMinimap = cRectangle(m_drawX, m_drawY, m_factorZoom*getMapWidthInPixels(), m_factorZoom * getMapHeightInPixels());
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
-    std::cout << "Minimap top left corner: (" << m_RectMinimap.getX() << ", " << m_RectMinimap.getY() << ", " << m_RectMinimap.getWidth() << ", " << m_RectMinimap.getHeight() << ")" << std::endl;
-    std::cout << "RectFullMinimap: (" << m_RectFullMinimap.getX() << ", " << m_RectFullMinimap.getY() << ", " << m_RectFullMinimap.getWidth() << ", " << m_RectFullMinimap.getHeight() << ")" << std::endl;
+    //std::cout << "Minimap top left corner: (" << m_RectMinimap.getX() << ", " << m_RectMinimap.getY() << ", " << m_RectMinimap.getWidth() << ", " << m_RectMinimap.getHeight() << ")" << std::endl;
+    //std::cout << "RectFullMinimap: (" << m_RectFullMinimap.getX() << ", " << m_RectFullMinimap.getY() << ", " << m_RectFullMinimap.getWidth() << ", " << m_RectFullMinimap.getHeight() << ")" << std::endl;
     m_mipMapTex = m_renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
 }
 
@@ -395,15 +395,15 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
     ) {
         if (game.m_gameObjectsContext->getUnits()->areUnitsSelected() == true) {
-            std::cout << "Mouse cursor is on pos:" << event.coords.x << "," << event.coords.y << " on minimap, moving selected units there." << std::endl;
-            std::cout << "RectMiniMap size: " << m_RectMinimap.getWidth() << "," << m_RectMinimap.getHeight() << std::endl;
+            //std::cout << "Mouse cursor is on pos:" << event.coords.x << "," << event.coords.y << " on minimap, moving selected units there." << std::endl;
+            //std::cout << "RectMiniMap size: " << m_RectMinimap.getWidth() << "," << m_RectMinimap.getHeight() << std::endl;
             int posX = (event.coords.x-m_RectMinimap.getX())/m_factorZoom;
             if (posX<0) posX=1;
             if (posX>m_RectMinimap.getWidth()) posX=m_RectMinimap.getWidth()-1;
             int posY = (event.coords.y-m_RectMinimap.getY())/m_factorZoom;
             if (posY<0) posY=1;
             if (posY>m_RectMinimap.getHeight()) posY=m_RectMinimap.getHeight()-1;
-            std::cout << "Calculated pos on map: " << posX << "," << posY << ":"<< (posY * m_RectMinimap.getWidth()/m_factorZoom) + posX << std::endl;
+            //std::cout << "Calculated pos on map: " << posX << "," << posY << ":"<< (posY * m_RectMinimap.getWidth()/m_factorZoom) + posX << std::endl;
             cUnits *units = game.m_gameObjectsContext->getUnits();
             units->move_to((posY * m_RectMinimap.getWidth()/m_factorZoom) + posX);
             return;
