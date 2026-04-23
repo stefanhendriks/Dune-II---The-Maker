@@ -2223,7 +2223,7 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
 
     position = std::find_if(ids.begin(), ids.end(),
     [&](const int &id) {
-        return !m_objects->getUnit(id)->isHarvester() & !m_objects->getUnit(id)->isAirbornUnit();
+        return !m_objects->getUnit(id)->isHarvester() && !m_objects->getUnit(id)->isAirbornUnit();
     });
     bool nonAirbornNonHarvesterUnitSelected = position != ids.end();
 
