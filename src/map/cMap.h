@@ -33,7 +33,13 @@ struct s_TerrainInfo;
 class GameContext;
 class cUnit;
 class cTextDrawer;
+struct sGameServices;
 
+class cGameSettings;
+class cInfoContext;
+class cGameObjectContext;
+class cGameInterface;
+class cLog;
 
 class cMap : public cScenarioObserver {
 
@@ -41,6 +47,8 @@ public:
 
     cMap();
     ~cMap();
+
+    void serviceInit(sGameServices* services);
 
     void init(int width, int height);
     virtual void onNotifyGameEvent(const s_GameEvent &event) override;
@@ -53,97 +61,8 @@ public:
     bool occupiedInDimension(int iCell, int dimension);
     bool occupiedByWallOrMountain(int iCell);
 
-    int getRandomCellWithinMapWithSafeDistanceFromBorder(int desiredMinimalDistance) const;
+    // void setGameContext(GameContext* ctx);
 
-    /**
-    Shortcut method, which takes cells as arguments, creates x1, y1 and x2, y2 out of them
-    and runs the normal distance method to get the distance.
-    **/
-    double distance(int cell1, int cell2);
-
-    void setGameContext(GameContext* ctx);
-
-    int getAbsoluteXPositionFromCell(int cell);
-
-    int getAbsoluteYPositionFromCell(int cell);
-
-    /**
-     * Like absoluteX position, but then centers within cell (ie adds half tile)
-     * @param cell
-     * @return
-     */
-    int getAbsoluteXPositionFromCellCentered(int cell);
-
-    /**
-     * Like absoluteX position, but then centers within cell (ie adds half tile)
-     * @param cell
-     * @return
-     */
-    int getAbsoluteYPositionFromCellCentered(int cell);
-
-    int getCellAbove(int c);
-
-    int getCellBelow(int c);
-
-    int getCellLeft(int c);
-
-    int getCellRight(int c);
-
-    int getCellUpperLeft(int c);
-
-    int getCellUpperRight(int c);
-
-    int getCellLowerLeft(int c);
-
-    int getCellLowerRight(int c);
-
-    /**
-     * returns true if one cell is adjacent to another cell
-     */
-    bool isCellAdjacentToOtherCell(int thisCell, int otherCell);
-
-    /**
-        The X coordinate is found by finding out how many 'rows' (the Y) are there, then
-        the remaining of that value is the X.
-    **/
-    int getCellX(int c) const;
-
-    /**
-        The Y coordinate is found by finding as many MAP_W_MAX can fit in the given cell
-    **/
-    int getCellY(int c) const;
-
-    bool isWithinBoundaries(int c);
-
-    /**
-     * Returns true/false when x,y coordinate is within playable bounds of the map. Taking invisible boundary into account.
-     * @param x
-     * @param y
-     * @return
-     */
-    bool isWithinBoundaries(int x, int y) {
-        // in a map of 64x64, the outer boundaries are impassable
-        // so; the actual valid values are 1...62 (because the coordinates
-        // are 0 based. Ie, coordinate 63 means it is at the 64th tile.
-        // hence, if coordinate 63 is passed in, it means it is out of bounds.
-        // but coordinate 62 is within bounds.
-
-        // since the width/height passed in the constructor is not 0 based (but 1 based)
-        // we need to take that into account when checking width/height (hence the -2)
-
-        // Example:
-        // width=64
-        // height=64
-        // ie: x = 63 ... 63 =< (64-2=62) -> out of bounds
-        //     x = 62 ... 62 =< (64-2-62) -> at the edge
-        //     x = 0  ...  0 > 0 ? no
-        //     x = 1  ...  1 > 0 ? yes, in bounds
-
-        return  x > 0 && x <= (m_width-2) &&
-                y > 0 && y <= (m_height -2);
-    }
-
-    double distance(int x1, int y1, int x2, int y2);
     int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
     // Drawing
@@ -437,8 +356,6 @@ public:
         return m_width;
     }
 
-    int getMaxDistanceInPixels() const;
-
     /**
      * Returns the amount of cells of a specific type
      * @param cellType
@@ -461,8 +378,6 @@ public:
      * @return
      */
     bool isValidCell(int c) const;
-
-    int getRandomCell();
 
     int getMaxCells() const {
         return m_maxCells;
@@ -491,27 +406,18 @@ public:
      */
     bool isValidTerrainForStructureAtCell(int cell);
 
-    int getRandomCellFrom(int cell, int distance);
-
-    int getRandomCellFromWithRandomDistance(int cell, int distance);
-
     int getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType);
 
     bool isStructureVisible(cAbstractStructure *pStructure, int iPlayer);
 
     bool isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer);
 
-    bool isAtMapBoundaries(int cell);
-
-    cPoint fixCoordinatesToBeWithinPlayableMap(int x, int y) const;
-    cPoint fixCoordinatesToBeWithinMap(int x, int y) const;
-
     int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
     int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);
 
-    int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
+    // int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
 
-    int findRandomCellToMoveToForSandworm() const;
+    int findRandomCellToMoveToForSandworm();
     bool isCellPassableForWorm(int cell);
 
     bool isValidTerrainForConcreteAtCell(int cell);
@@ -528,8 +434,6 @@ public:
 
     void setDesiredAmountOfWorms(int value);
 
-    cPoint getAbsolutePositionFromCell(int cell);
-
     void setReinforcements(std::shared_ptr<cReinforcements> reinforcements);
 
     [[nodiscard]] MapGeometry &getGeometry() const;
@@ -540,6 +444,11 @@ private:
 
     std::vector<tCell> m_cell;
     GameContext *m_ctx = nullptr;
+    cGameSettings *m_settings = nullptr;
+    cInfoContext *m_infos = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cLog *m_log = nullptr;    
     cTextDrawer *m_textDrawer = nullptr;
 
     std::unique_ptr<MapGeometry> m_mapGeometry;
@@ -565,7 +474,7 @@ private:
 
     int m_maxCells;
 
-    void drawUnitDebug(cUnit &pUnit) const;
+    void drawUnitDebug(cUnit *pUnit) const;
 
     // thinking related
     void thinkAutoDetonateSpiceBlooms();
@@ -580,4 +489,6 @@ private:
     void setSandwormRespawnTimer();
 
     void evaluateIfWeShouldSetTimerToRespawnWorm();
+
+    
 };

@@ -80,7 +80,6 @@
 
 #include "controls/cGameControlsContext.h"
 #include "controls/eKeyAction.h"
-#include "gameobjects/structures/cOrderProcesser.h"
 #include "map/cMapCamera.h"
 #include "game/cTimeManager.h"
 #include "context/cInfoContext.h"
@@ -150,7 +149,7 @@ cGame::cGame()
     m_gameSettings->m_allowRepeatingReinforcements = false;
 
     m_gameObjectsContext = cGameObjectsContextCreator::create();
-    m_players = &m_gameObjectsContext->getPlayers();
+    m_players = m_gameObjectsContext->getPlayers();
     assert(m_players != nullptr);
 
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
@@ -205,6 +204,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 void cGame::init()
 {
     m_infoContext->initializeDefaultInfos();
+
     auto &map = m_gameObjectsContext->getMap();
     map.setTerrainInfo(m_infoContext->getTerrainInfo());
     m_newMusicSample = MUSIC_MENU;
@@ -235,8 +235,8 @@ void cGame::init()
 
     m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
 
-    for (int i = 0; i < m_gameObjectsContext->getUnits().size(); i++) {
-        m_gameObjectsContext->getUnits()[i].init(i);
+    for (int i = 0; i < m_gameObjectsContext->getUnits()->size(); i++) {
+        m_gameObjectsContext->getUnit(i)->init(i);
     }
 
     for (auto& particle : m_gameObjectsContext->getParticles()) {
@@ -273,8 +273,8 @@ void cGame::missionInit()
     // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
     m_gameObjectsContext->getMap().setTerrainInfo(m_infoContext->getTerrainInfo());
 
-    for (int i = 0; i < m_gameObjectsContext->getUnits().size(); i++) {
-        m_gameObjectsContext->getUnits()[i].init(i);
+    for (int i = 0; i < m_gameObjectsContext->getUnits()->size(); i++) {
+        m_gameObjectsContext->getUnit(i)->init(i);
     }
 
     for (auto& particle : m_gameObjectsContext->getParticles()) {
@@ -299,7 +299,7 @@ void cGame::setMissionWon()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, game.m_gameObjectsContext->getPlayer(HUMAN).getHouse());
+    m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, game.m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
     playMusicByType(MUSIC_WIN);
 
@@ -314,7 +314,7 @@ void cGame::setMissionLost()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, game.m_gameObjectsContext->getPlayer(HUMAN).getHouse());
+    m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, game.m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
     playMusicByType(MUSIC_LOSE);
 
@@ -598,11 +598,12 @@ bool cGame::setupGame()
 
     // create ressources from scratch
     context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
+    ctx->setLog(m_log);
     // share Graphics to all class what use ctx !
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !
     ctx->setTextContext(context->createTextContext());
-    m_gameObjectsContext->getMap().setGameContext(ctx.get());
+    //m_gameObjectsContext->getMap().setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
 
@@ -659,11 +660,11 @@ bool cGame::setupGame()
     game.m_state = GAME_INITIALIZE;
 
     logbook("Setup:  HOUSES");
-    m_Houses = std::make_shared<cHousesInfo>();
+    m_Houses = std::make_unique<cHousesInfo>();
     m_Houses->installHouses(gamesCfg);
     // A few messages for the player
     logbook("Initializing:  PLAYERS");
-    m_players->setupPlayers(m_Houses);
+    m_players->setupPlayers(m_Houses.get());
     cInfoContextCreator infoCreator;
     infoCreator.installInfos(*game.m_infoContext);
 
@@ -681,7 +682,7 @@ bool cGame::setupGame()
     // do install_upgrades after game.init, because game.init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
     game.m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos());
-    cPlayer *humanPlayer = &game.m_gameObjectsContext->getPlayer(HUMAN);
+    cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     game.m_drawManager = new cDrawManager(ctx.get(), humanPlayer);
 
@@ -698,6 +699,10 @@ bool cGame::setupGame()
     // I need m_renderDrawer to create cPreviewMaps
     m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer, m_gameSettings->m_debugMode);
 
+    // m_gameObjectsContext->getMap().setGameContext(ctx.get());
+    // Injection of services
+    m_gameObjectsContext->serviceInit(m_services.get());
+
     // all has installed well. Let's rock and roll.
     SDL_ShowCursor(false);
     return true;
@@ -709,29 +714,8 @@ bool cGame::setupGame()
  */
 void cGame::setupPlayers()
 {
-    // make sure each player has an own item builder
-    for (int i = HUMAN; i < MAX_PLAYERS; i++) {
-        cPlayer *thePlayer = &game.m_gameObjectsContext->getPlayer(i);
-
-        auto *buildingListUpdater = new cBuildingListUpdater(thePlayer);
-        thePlayer->setBuildingListUpdater(buildingListUpdater);
-
-        auto *itemBuilder = new cItemBuilder(thePlayer, buildingListUpdater);
-        thePlayer->setItemBuilder(itemBuilder);
-
-        auto *sidebar = m_sideBarFactory->createSideBar(thePlayer);
-        thePlayer->setSideBar(sidebar);
-
-        auto *orderProcesser = new cOrderProcesser(thePlayer);
-        thePlayer->setOrderProcesser(orderProcesser);
-
-        auto *gameControlsContext = new cGameControlsContext(thePlayer, this->m_mouse);
-        thePlayer->setGameControlsContext(gameControlsContext);
-
-        // set tech level
-        thePlayer->setTechLevel(m_dataCampaign->mission);
-    }
-    setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(0));
+    m_players->setupRuntimePlayerComponents(m_sideBarFactory.get(), m_mouse, m_dataCampaign->mission);
+    setPlayerToInteractFor(game.m_gameObjectsContext->getPlayer(0));
 }
 
 bool cGame::isState(int thisState) const
@@ -753,15 +737,15 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
     pState->calculateOffset();
     pState->installWorld();
 
-    cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+    cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
     int missionZeroBased = missionNr - 1;
     m_dataCampaign->mission = missionZeroBased;
 
     // a 'missionX.ini' file is from 1 til (including) 8
     // to play mission 2 (passed as missionNr param), we have to load up mission1.ini
     // meaning we have to use the 'zero based' value here
-    pState->fastForwardUntilMission(missionZeroBased, humanPlayer.getHouse());
-    pState->regionSetupNextMission(missionZeroBased, humanPlayer.getHouse());
+    pState->fastForwardUntilMission(missionZeroBased, humanPlayer->getHouse());
+    pState->regionSetupNextMission(missionZeroBased, humanPlayer->getHouse());
 }
 
 void cGame::setState(int newState)
@@ -800,7 +784,7 @@ void cGame::setState(int newState)
             m_states[newState] = nullptr;
         }
 
-        cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+        cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
         cGameState *existingStatePtr = m_states[newState];
 
@@ -820,7 +804,7 @@ void cGame::setState(int newState)
 
                     if (m_missionWasWon) {
                         // we won
-                        pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer.getHouse());
+                        pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer->getHouse());
                     }
                     else {
                         // OR: did not win
@@ -873,7 +857,7 @@ void cGame::setState(int newState)
                     pState->conquerRegions();
                 }
                 // first creation
-                pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer.getHouse());
+                pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer->getHouse());
 
                 playMusicByTypeForStateTransition(MUSIC_CONQUEST);
 
@@ -923,7 +907,7 @@ void cGame::setState(int newState)
                     m_timeManager->restartTimer();
                     takeBackGroundScreen();
                     // we came from options menu, notify mouse
-                    humanPlayer.getGameControlsContext()->onFocusMouseStateEvent();
+                    humanPlayer->getGameControlsContext()->onFocusMouseStateEvent();
                 }
                 else {
                     newStatePtr = new cGamePlaying(m_services.get());
@@ -952,7 +936,7 @@ void cGame::setState(int newState)
                 newStatePtr = new cWinLoseState(m_services.get(), Outcome::Win);
             }
             else if (newState == GAME_TELLHOUSE) {
-                m_dataCampaign->housePlayer = game.m_gameObjectsContext->getPlayer(HUMAN).getHouse();
+                m_dataCampaign->housePlayer = game.m_gameObjectsContext->getPlayer(HUMAN)->getHouse();
                 newStatePtr = new cTellHouseState(m_services.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
@@ -1003,7 +987,7 @@ void cGame::prepareMentatForPlayer()
 
 void cGame::prepareMentatToTellAboutHouse(int house)
 {
-    game.m_gameObjectsContext->getPlayer(HUMAN).setHouse(house);
+    game.m_gameObjectsContext->getPlayer(HUMAN)->setHouse(house);
     m_dataCampaign->housePlayer = house;
     if (!m_states[GAME_TELLHOUSE]) {
         m_states[GAME_TELLHOUSE] = new cTellHouseState(m_services.get(), m_dataCampaign.get());
@@ -1109,10 +1093,17 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     // game itself handles events
     switch (event.eventType) {
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
-            onEventSpecialLaunch(event);
+            if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
+                onEventSpecialLaunch(*launchEvent);
+            }        
             break;
         case eGameEventType::GAME_EVENT_DESTROYED:
             onEventEntityDestroyed(event);
+            break;
+        case eGameEventType::GAME_EVENT_DEPLOY_UNIT:
+            if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
+                onEventDeployUnit(*deployEvent);
+            }
             break;
         default:
             break;
@@ -1141,14 +1132,14 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     int widthInCells = structureInfo.bmp_width / 32;
     int heightInCells = structureInfo.bmp_height / 32;
 
-    int cellX = m_gameObjectsContext->getMap().getGeometry().getCellX(event.atCell);
-    int cellY = m_gameObjectsContext->getMap().getGeometry().getCellY(event.atCell);
+    int cellX = m_gameObjectsContext->getMapGeometry()->getCellX(event.atCell);
+    int cellY = m_gameObjectsContext->getMapGeometry()->getCellY(event.atCell);
 
     for (int i = 0; i < amountOfUnitsToSpawn; i++) {
         int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
         cUnits::unitCreate(
-            m_gameObjectsContext->getMap().getGeometry().makeCell(randomX, randomY),
+            m_gameObjectsContext->getMapGeometry()->makeCell(randomX, randomY),
             unitTypeToSpawn,
             event.player->getId(),
             false,
@@ -1158,9 +1149,35 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     }
 }
 
-void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
-    cBuildingListItem *itemToDeploy = event.buildingListItem;
-    int iMouseCell = event.atCell;
+void cGame::onEventDeployUnit(const DeployUnitEvent &event) {
+    if (event.iCell < 0 || event.unitType < 0 || event.iPlayer < 0) {
+        return;
+    }
+    int id = cUnits::unitCreate(
+        event.iCell,
+        event.unitType,
+        event.iPlayer,
+        event.bOnStart,
+        event.isReinforcement,
+        event.hpPercentage
+    );
+
+    if (id < 0) {
+        cLogger::getInstance()->log( LOG_ERROR, COMP_GAME, "Deploy unit",
+            std::format("Failed to deploy unit of type {} at cell {} for player {}", event.unitType, event.iCell, event.iPlayer)
+        );
+    }
+    else {
+        cLogger::getInstance()->log( LOG_INFO, COMP_GAME, "Deploy unit",
+            std::format("Successfully deployed unit of type {} at cell {} for player {}, id={}",event.unitType, event.iCell, event.iPlayer, id )
+        );
+    }
+}
+
+void cGame::onEventSpecialLaunch(const LaunchDeathHandEvent &event) const
+{
+    cBuildingListItem *itemToDeploy = event.itemToLaunch;
+    int iMouseCell = event.targetCell;
     cPlayer *player = event.player;
     if (itemToDeploy->isTypeSpecial()) {
         const s_SpecialInfo &special = itemToDeploy->getSpecialInfo();
@@ -1171,19 +1188,19 @@ void cGame::onEventSpecialLaunch(const s_GameEvent &event) const {
         }
         else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
             int precision = special.deployTargetPrecision;
-            int mouseCellX = m_gameObjectsContext->getMap().getCellX(iMouseCell) - precision;
-            int mouseCellY = m_gameObjectsContext->getMap().getCellY(iMouseCell) - precision;
+            int mouseCellX = m_gameObjectsContext->getMapGeometry()->getCellX(iMouseCell) - precision;
+            int mouseCellY = m_gameObjectsContext->getMapGeometry()->getCellY(iMouseCell) - precision;
 
             int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
-            cPoint::split(posX, posY) = m_gameObjectsContext->getMap().fixCoordinatesToBeWithinPlayableMap(posX, posY);
+            cPoint::split(posX, posY) = m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(posX, posY);
 
             logbook(std::format(
                         "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
                         mouseCellY, mouseCellY, posX, posY,precision)
                    );
 
-            deployCell = m_gameObjectsContext->getMap().getGeometry().makeCell(posX, posY);
+            deployCell = m_gameObjectsContext->getMapGeometry()->makeCell(posX, posY);
         }
 
 
@@ -1310,7 +1327,7 @@ void cGame::setNextStateToTransitionTo(int newState)
 void cGame::saveBmpScreenToDisk()
 {
     if (cScreenShotSaver::saveScreen(renderer, m_gameSettings->m_screenW, m_gameSettings->m_screenH)) {
-        game.m_gameObjectsContext->getPlayer(HUMAN).addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
+        game.m_gameObjectsContext->getPlayer(HUMAN)->addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
 }
 
@@ -1388,7 +1405,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
     // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
     // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = m_mapCamera->divideByZoomLevel(m_gameObjectsContext->getMap().getMaxDistanceInPixels() / 2);
+    float maxDistance = m_mapCamera->divideByZoomLevel(m_gameObjectsContext->getMapGeometry()->getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
     float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
@@ -1407,7 +1424,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
 void cGame::playVoice(int sampleId, int playerId)
 {
-    m_soundPlayer->playVoice(sampleId, game.m_gameObjectsContext->getPlayer(playerId).getHouse());
+    m_soundPlayer->playVoice(sampleId, game.m_gameObjectsContext->getPlayer(playerId)->getHouse());
 }
 
 void cGame::playMusicByTypeForStateTransition(int iType)
@@ -1467,7 +1484,7 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
         sampleId = MIDI_SCENARIO;
     }
     else if (iType == MUSIC_BRIEFING) {
-        int houseIndex = game.m_gameObjectsContext->getPlayer(HUMAN).getHouse();
+        int houseIndex = game.m_gameObjectsContext->getPlayer(HUMAN)->getHouse();
         if (houseIndex == ATREIDES) {
             sampleId = MIDI_MENTAT_ATR;
         }
@@ -1532,23 +1549,23 @@ void cGame::thinkCache()
 
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+    const cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
 
     if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
-        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(0));
-        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(0));
+        game.m_drawManager->setPlayerToDraw(game.m_gameObjectsContext->getPlayer(0));
+        game.setPlayerToInteractFor(game.m_gameObjectsContext->getPlayer(0));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
-        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(1));
-        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(1));
+        game.m_drawManager->setPlayerToDraw(game.m_gameObjectsContext->getPlayer(1));
+        game.setPlayerToInteractFor(game.m_gameObjectsContext->getPlayer(1));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
-        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(2));
-        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(2));
+        game.m_drawManager->setPlayerToDraw(game.m_gameObjectsContext->getPlayer(2));
+        game.setPlayerToInteractFor(game.m_gameObjectsContext->getPlayer(2));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
-        game.m_drawManager->setPlayerToDraw(&game.m_gameObjectsContext->getPlayer(3));
-        game.setPlayerToInteractFor(&game.m_gameObjectsContext->getPlayer(3));
+        game.m_drawManager->setPlayerToDraw(game.m_gameObjectsContext->getPlayer(3));
+        game.setPlayerToInteractFor(game.m_gameObjectsContext->getPlayer(3));
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
@@ -1561,21 +1578,21 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::DEBUG_GIVE_CREDITS)) {
         for (int i = 0; i < AI_WORM; i++) {
-            game.m_gameObjectsContext->getPlayer(i).setCredits(5000);
+            game.m_gameObjectsContext->getPlayer(i)->setCredits(5000);
         }
     }
 
     if (event.isAction(eKeyAction::DEBUG_SPAWN_ORNITHOPTER)) {
-        int mc = humanPlayer.getGameControlsContext()->getMouseCell();
+        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         cUnits::unitCreate(mc, ORNITHOPTER, 1, false, false);
     }
 
     if (event.isAction(eKeyAction::DEBUG_DESTROY_AT_CURSOR)) {
-        int mc = humanPlayer.getGameControlsContext()->getMouseCell();
+        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(true, false);
+                m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(true, false);
             }
 
             int idOfStructureAtCell = m_gameObjectsContext->getMap().getCellIdStructuresLayer(mc);
@@ -1585,25 +1602,25 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(false, false);
+                m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(false, false);
             }
 
             idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdAirUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_gameObjectsContext->getUnits()[idOfUnitAtCell].die(false, false);
+                m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(false, false);
             }
         }
     }
 
     if (event.isAction(eKeyAction::DEBUG_DAMAGE_AT_CURSOR)) {
-        int mc = humanPlayer.getGameControlsContext()->getMouseCell();
+        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                cUnit &pUnit = m_gameObjectsContext->getUnits()[idOfUnitAtCell];
-                int damageToTake = pUnit.getHitPoints() - 25;
+                cUnit *pUnit = m_gameObjectsContext->getUnit(idOfUnitAtCell);
+                int damageToTake = pUnit->getHitPoints() - 25;
                 if (damageToTake > 0) {
-                    pUnit.takeDamage(damageToTake, -1, -1);
+                    pUnit->takeDamage(damageToTake, -1, -1);
                 }
             }
         }
@@ -1614,10 +1631,10 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::DEBUG_KILL_CARRYALLS)) {
-        const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
+        const std::vector<int> &myUnitsForType = humanPlayer->getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
-            cUnit &pUnit = m_gameObjectsContext->getUnits()[unitId];
-            pUnit.die(true, false);
+            cUnit *pUnit = m_gameObjectsContext->getUnit(unitId);
+            pUnit->die(true, false);
         }
     }
 }

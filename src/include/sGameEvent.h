@@ -8,14 +8,36 @@
 
 #include <cassert>
 #include <string>
+#include <variant>
 
 class cPlayer;
 class cBuildingList;
 class cBuildingListItem;
 
+// GAME_EVENT_DEPLOY_UNIT
+struct DeployUnitEvent {
+    int iCell = -1;
+    int unitType = -1;
+    int iPlayer = -1;
+    bool bOnStart = false;
+    bool isReinforcement = false;
+    float hpPercentage = 1.0F;
+};
+
+// GAME_EVENT_SPECIAL_LAUNCH
+struct LaunchDeathHandEvent {
+    int targetCell = -1;
+    cBuildingListItem* itemToLaunch = nullptr;
+    cPlayer* player = nullptr;
+    int playerID = -1; // for looging purposes, as player pointer might not always be available
+};
+
+
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
-
+    using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent>;
+    GameEventData data = std::monostate{};
+    
     /**
      * kind of entity this applies to.
      * In case of eventType == DISCOVERED, this is the entityType being discovered
@@ -42,8 +64,6 @@ struct s_GameEvent {
 
     int originId = -1; // in case GAME_EVENT_DAMAGED, this is the id that inflicted damage
     eBuildType originType = eBuildType::UNKNOWN; // in case GAME_EVENT_DAMAGED, this is the kind of entity that inflicted damage
-
-    // TODO: figure out a way to have bags of data depending on type of event without the need of expanding this generic GAME_EVENT struct
 
     static const char *toString(const eGameEventType &eventType);
 

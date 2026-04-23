@@ -14,8 +14,7 @@
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "cMapCamera.h"
 #include "cMapEditor.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "game/cGameInterface.h"
 #include "utils/cLog.h"
 #include "data/gfxdata.h"
 #include "gameobjects/particles/cParticle.h"
@@ -36,8 +35,9 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "gameobjects/units/cUnit.h"
-#include "gameobjects/units/cUnits.h"
+// #include "gameobjects/units/cUnits.h"
 #include "drawers/cTextDrawer.h"
+#include "include/sGameServices.h"
 
 #include <format>
 #include <algorithm>
@@ -54,6 +54,12 @@ cMap::cMap()
     m_mapGeometry = std::make_unique<MapGeometry>(64,64);
     init(64, 64);
     m_terrainInfo = nullptr;
+
+    m_settings = nullptr;
+    m_infos = nullptr;
+    m_objects = nullptr;
+    m_interface = nullptr;
+    m_log = nullptr;
 }
 
 cMap::~cMap() = default;
@@ -63,10 +69,31 @@ MapGeometry &cMap::getGeometry() const
     return *m_mapGeometry;
 }
 
-void cMap::setGameContext(GameContext* ctx)
+// void cMap::setGameContext(GameContext* ctx)
+// {
+//     m_ctx = ctx;
+//     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
+// }
+
+void cMap::serviceInit(sGameServices* services)
 {
-    m_ctx = ctx;
-    m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
+    assert(services != nullptr);
+    m_ctx = services->ctx;
+    assert(m_ctx != nullptr);
+    m_log = m_ctx->getLog();
+    assert(m_log != nullptr);
+
+    m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
+    assert(m_textDrawer != nullptr);
+
+    m_settings = services->settings;
+    assert(m_settings != nullptr);
+    m_infos = services->info;
+    assert(m_infos != nullptr);
+    m_objects = services->objects;
+    assert(m_objects != nullptr);
+    m_interface = m_ctx->getGameInterface();
+    assert(m_interface != nullptr);
 }
 
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
@@ -100,10 +127,6 @@ void cMap::init(int width, int height)
 
     // clear out all cells
     clearAllCells();
-
-    // moved in cGameObjectContext
-    if (game.m_gameObjectsContext)
-        game.m_gameObjectsContext->getStructureFactory()->deleteAllExistingStructures();
 
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;
@@ -191,7 +214,7 @@ bool cMap::canDeployUnitTypeAtCell(int iCell, int iUnitType)
     if (iCell < 0 || iUnitType < 0)
         return false;
 
-    s_UnitInfo &unitToDeploy = game.m_infoContext->getUnitInfo(iUnitType);
+    s_UnitInfo &unitToDeploy = m_infos->getUnitInfo(iUnitType);
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
@@ -226,15 +249,16 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
     if (iCell < 0 || iUnitID < 0)
         return false;
 
-    cUnit &pUnit = game.m_gameObjectsContext->getUnits()[iUnitID];
-    if (!pUnit.isAirbornUnit()) return false; // weird unit passed in
-    if (pUnit.iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
+    cUnit *pUnit = m_objects->getUnit(iUnitID);
+    if (!pUnit) return false;
+    if (!pUnit->isAirbornUnit()) return false; // weird unit passed in
+    if (pUnit->iNewUnitType < 0) return false; // safe-guard when this unit has no new unit to spawn
 
     int structureIdOnMap = getCellIdStructuresLayer(iCell);
     if (structureIdOnMap > -1) {
         // the cell contains a structure that the unit wants to enter (for repairment?)
-        if (pUnit.iStructureID > -1) {
-            if (structureIdOnMap == pUnit.iStructureID) {
+        if (pUnit->iStructureID > -1) {
+            if (structureIdOnMap == pUnit->iStructureID) {
                 return true;
             }
         }
@@ -243,7 +267,7 @@ bool cMap::canDeployUnitAtCell(int iCell, int iUnitID)
         return false;
     }
 
-    s_UnitInfo &unitToDeploy = game.m_infoContext->getUnitInfo(pUnit.iNewUnitType);
+    s_UnitInfo &unitToDeploy = m_infos->getUnitInfo(pUnit->iNewUnitType);
 
     bool isAirbornUnit = unitToDeploy.airborn;
     bool isInfantryUnit = unitToDeploy.infantry;
@@ -283,13 +307,14 @@ bool cMap::occupied(int iCll, int iUnitID)
     if (iCll < 0 || iUnitID < 0)
         return true;
 
-    cUnit &pUnit = game.m_gameObjectsContext->getUnits()[iUnitID];
+    cUnit *pUnit = m_objects->getUnit(iUnitID);
+    if (!pUnit) return true;
 
     int structureIdOnMap = getCellIdStructuresLayer(iCll);
     if (structureIdOnMap > -1) {
         // the cell contains a structure that the unit wants to enter
-        if (pUnit.iStructureID > -1) {
-            if (structureIdOnMap == pUnit.iStructureID) {
+        if (pUnit->iStructureID > -1) {
+            if (structureIdOnMap == pUnit->iStructureID) {
                 // the unit wants to enter this structure, so it does not block the unit
                 return false;
             }
@@ -300,7 +325,7 @@ bool cMap::occupied(int iCll, int iUnitID)
     }
 
     // non airborn units can block each other
-    if (!pUnit.isAirbornUnit() && !pUnit.isSandworm()) {
+    if (!pUnit->isAirbornUnit() && !pUnit->isSandworm()) {
         int cellIdOnMap = getCellIdUnitLayer(iCll);
         if (cellIdOnMap > -1 && cellIdOnMap != iUnitID) {
             return true; // other unit at cell
@@ -314,7 +339,7 @@ bool cMap::occupied(int iCll, int iUnitID)
 
     // mountains only block infantry
     if (getCellType(iCll) == TERRAIN_MOUNTAIN) {
-        if (!pUnit.isInfantryUnit() && !pUnit.isAirbornUnit()) {
+        if (!pUnit->isInfantryUnit() && !pUnit->isAirbornUnit()) {
             return true;
         }
     }
@@ -344,18 +369,28 @@ void cMap::thinkAboutRespawningWorms()
     // timer hit exactly '1'
     m_iTIMER_respawnSandworms--;
 
-    int currentAmountOfWorms = game.m_gameObjectsContext->getPlayer(AI_WORM).getAmountOfUnitsForType(SANDWORM);
+    int currentAmountOfWorms = m_objects->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM);
     if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
         // spawn one worm, set timer again
         int failures = 0;
         while (failures < 10) {
-            int cell = getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+            int cell = m_mapGeometry->getRandomCellWithinMapWithSafeDistanceFromBorder(2);
             if (!isCellPassableForWorm(cell)) {
                 failures++;
                 continue;
             }
             logbook(std::format("cMap::thinkAboutRespawningWorms : Spawning sandworm at {}", cell));
-            cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            //cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+             const s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                .data = DeployUnitEvent {
+                    .iCell = cell,
+                    .unitType = SANDWORM,
+                    .iPlayer = AI_WORM,
+                    .bOnStart = true
+                }
+            };
+            m_interface->onNotifyGameEvent(event);
             break;
         }
     }
@@ -388,7 +423,7 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
         // randomly create a new spice bloom somewhere on the map
         int iCll = -1;
         for (int i = 0; i < 10; i++) {
-            int cell = getRandomCell();
+            int cell = m_mapGeometry->getRandomCell();
             // find place to spawn bloom
             if (getCellType(cell) == TERRAIN_SAND) {
                 iCll = cell;
@@ -430,7 +465,7 @@ void cMap::thinkAutoDetonateSpiceBlooms()  // let spice bloom detonate after X a
 void cMap::draw_bullets()
 {
     // Loop through all units, check if they should be drawn, and if so, draw them
-    for (auto& bullet : game.m_gameObjectsContext->getBullets()) {
+    for (auto& bullet : m_objects->getBullets()) {
         if (bullet.bAlive) {
             bullet.draw();
         }
@@ -453,7 +488,9 @@ void cMap::clearShroudForAllPlayers(int c, int size)
 
 void cMap::clearShroud(int c, int size, int playerId)
 {
-    if (!isWithinBoundaries(c)) return;
+    if (!m_mapGeometry->isWithinBoundaries(c)) return;
+
+    auto *mapCamera = m_interface->getMapCamera();
 
     setVisibleFor(c, playerId);
 
@@ -462,8 +499,8 @@ void cMap::clearShroud(int c, int size, int playerId)
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
-            int x = getAbsoluteXPositionFromCellCentered(c);
-            int y = getAbsoluteYPositionFromCellCentered(c);
+            int x = m_mapGeometry->getAbsoluteXPositionFromCellCentered(c);
+            int y = m_mapGeometry->getAbsoluteYPositionFromCellCentered(c);
 
             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
@@ -472,7 +509,7 @@ void cMap::clearShroud(int c, int size, int playerId)
             y = (y + dr2);
 
             // convert back
-            int cl = game.m_mapCamera->getCellFromAbsolutePosition(x, y);
+            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
 
@@ -481,33 +518,34 @@ void cMap::clearShroud(int c, int size, int playerId)
 
                 int structureId = getCellIdStructuresLayer(cl);
                 if (structureId > -1) {
-                    cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureId];
+                    cAbstractStructure *pStructure = m_objects->getStructure(structureId);
+                    if (!pStructure) continue;
                     s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                         .entityType = eBuildType::STRUCTURE,
                         .entityID = structureId,
-                        .player = &game.m_gameObjectsContext->getPlayer(playerId),
+                        .player = m_objects->getPlayer(playerId),
                         .entitySpecificType = pStructure->getType(),
                         .atCell = cl
                     };
 
-                    game.onNotifyGameEvent(event);
+                    m_interface->onNotifyGameEvent(event);
                 }
 
                 int unitId = getCellIdUnitLayer(cl);
                 if (unitId > -1) {
-                    cUnit &cUnit = game.m_gameObjectsContext->getUnits()[unitId];
-                    if (cUnit.isValid()) {
+                    cUnit *cUnit = m_objects->getUnit(unitId);
+                    if (cUnit && cUnit->isValid()) {
                         s_GameEvent event {
                             .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
                             .entityType = eBuildType::UNIT,
                             .entityID = unitId,
-                            .player = &game.m_gameObjectsContext->getPlayer(playerId),
-                            .entitySpecificType = cUnit.getType(),
+                            .player = m_objects->getPlayer(playerId),
+                            .entitySpecificType = cUnit->getType(),
                             .atCell = cl
                         };
 
-                        game.onNotifyGameEvent(event);
+                        m_interface->onNotifyGameEvent(event);
                     }
                 }
             } // make visible
@@ -530,23 +568,25 @@ void cMap::remove_id(int iIndex, int iIDType)
 
 void cMap::draw_units()
 {
+    auto *mapViewport = m_interface->getMapViewport();
+
     //@Mira SDL2 blender
     //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
-        if (!pUnit.isValid()) continue;
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
 
         // DEBUG MODE: DRAW PATHS
-        if (game.m_gameSettings->isDrawUnitDebug()) {
-            pUnit.draw_path();
+        if (m_settings->isDrawUnitDebug()) {
+            pUnit->draw_path();
         }
 
-        if (pUnit.iType != SANDWORM) continue;
+        if (pUnit->iType != SANDWORM) continue;
 
-        if (pUnit.isWithinViewport(game.m_mapViewport)) {
-            pUnit.draw();
+        if (pUnit->isWithinViewport(mapViewport)) {
+            pUnit->draw();
         }
 
         drawUnitDebug(pUnit);
@@ -554,77 +594,80 @@ void cMap::draw_units()
     }
 
     // then: draw infantry units
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
-        if (!pUnit.isValid()) continue;
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
 
-        if (!pUnit.isInfantryUnit())
+        if (!pUnit->isInfantryUnit())
             continue; // skip non-infantry units
 
-        if (pUnit.isWithinViewport(game.m_mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport)) {
             // draw
-            pUnit.draw();
+            pUnit->draw();
         }
 
         drawUnitDebug(pUnit);
     }
 
     // then: draw ground units
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
-        if (!pUnit.isValid()) continue;
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
 
-        if (pUnit.isAirbornUnit() ||
-                pUnit.isSandworm() ||
-                pUnit.isInfantryUnit())
+        if (pUnit->isAirbornUnit() ||
+                pUnit->isSandworm() ||
+                pUnit->isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
-        if (pUnit.isWithinViewport(game.m_mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport)) {
             // draw
-            pUnit.draw();
+            pUnit->draw();
         }
 
         drawUnitDebug(pUnit);
     }
 }
 
-void cMap::drawUnitDebug(cUnit &pUnit) const
+void cMap::drawUnitDebug(cUnit *pUnit) const
 {
-    if (!game.m_gameSettings->isDrawUnitDebug()) return;
+    if (!pUnit) return;
+    if (!m_settings->isDrawUnitDebug()) return;
 
-    pUnit.draw_debug(m_textDrawer);
+    pUnit->draw_debug(m_textDrawer);
 }
 
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
 void cMap::draw_units_2nd()
 {
-    // draw health of units
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
-        if (!pUnit.isValid()) continue;
-        if (!pUnit.rendering.bHovered && !pUnit.isSelected()) continue;
-        if (!pUnit.isWithinViewport(game.m_mapViewport)) continue;
-        if (pUnit.isHidden()) continue;
+    auto *mapViewport = m_interface->getMapViewport();
 
-        pUnit.draw_health();
-        pUnit.draw_group(m_textDrawer);
-        pUnit.draw_experience();
-        if (pUnit.iType == HARVESTER) {
-            pUnit.draw_spice();
+    // draw health of units
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
+        if (!pUnit->rendering.bHovered && !pUnit->isSelected()) continue;
+        if (!pUnit->isWithinViewport(mapViewport)) continue;
+        if (pUnit->isHidden()) continue;
+
+        pUnit->draw_health();
+        pUnit->draw_group(m_textDrawer);
+        pUnit->draw_experience();
+        if (pUnit->iType == HARVESTER) {
+            pUnit->draw_spice();
         }
     }
 
     // draw airborn units
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnits()[i];
-        if (!pUnit.isValid()) continue;
-        if (!pUnit.isAirbornUnit()) continue;
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
+        if (!pUnit->isAirbornUnit()) continue;
 
-        if (pUnit.isWithinViewport(game.m_mapViewport)) {
-            pUnit.draw();
+        if (pUnit->isWithinViewport(mapViewport)) {
+            pUnit->draw();
             // TODO: Only human players?
-            pUnit.draw_health();
-            if (game.m_gameSettings->isDebugMode()) {
+            pUnit->draw_health();
+            if (m_settings->isDebugMode()) {
                 drawUnitDebug(pUnit);
             }
         }
@@ -634,20 +677,23 @@ void cMap::draw_units_2nd()
 
 int cMap::mouse_draw_x()
 {
-    if (game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext()->getMouseCell();
-        int absX = getAbsoluteXPositionFromCell(mouseCell);
-        return game.m_mapCamera->getWindowXPosition(absX);
+    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
+    if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
+        int absX = m_mapGeometry->getAbsoluteXPositionFromCell(mouseCell);
+        return m_interface->getMapCamera()->getWindowXPosition(absX);
     }
     return -1;
 }
 
 int cMap::mouse_draw_y()
 {
-    if (game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext()->getMouseCell();
-        int absY = getAbsoluteYPositionFromCell(mouseCell);
-        return game.m_mapCamera->getWindowYPosition(absY);
+    //@mira rewrite
+    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
+    if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
+        int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
+        int absY = m_mapGeometry->getAbsoluteYPositionFromCell(mouseCell);
+        return m_interface->getMapCamera()->getWindowYPosition(absY);
     }
     return -1;
 }
@@ -700,8 +746,8 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
 {
     assert(destinationCell > -1);
     // Cell x and y coordinates
-    int iCllX = getCellX(destinationCell);
-    int iCllY = getCellY(destinationCell);
+    int iCllX = m_mapGeometry->getCellX(destinationCell);
+    int iCllY = m_mapGeometry->getCellY(destinationCell);
 
     // STEP 1: determine starting
     int iStartCell = -1;
@@ -713,7 +759,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     // HORIZONTAL cells
     for (int iX = 0; iX < m_width; iX++) {
         // check when Y = 0 (top)
-        tDistance = distance(iX, 0, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(iX, 0, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
@@ -726,7 +772,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         }
 
         // check when Y = map_height (bottom)
-        tDistance = distance(iX, m_height - 1, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(iX, m_height - 1, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
@@ -742,7 +788,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     // VERTICAL cells
     for (int iY = 0; iY < m_height; iY++) {
         // check when X = 0 (left)
-        tDistance = distance(0, iY, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(0, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
@@ -755,7 +801,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         }
 
         // check when XY = map_m_width (bottom)
-        tDistance = distance(m_width - 1, iY, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(m_width - 1, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
@@ -770,174 +816,9 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     return iStartCell;
 }
 
-double cMap::distance(int x1, int y1, int x2, int y2)  //rip
-{
-    if (x1 == x2 && y1 == y2) return 1; // when all the same, distance is 1 ...
-
-    int A = abs(x2 - x1) * abs(x2 - x1);
-    int B = abs(y2 - y1) * abs(y2 - y1);
-    return sqrt((double) (A + B)); // get C from A and B
-}
-
-int cMap::getCellY(int c) const//rip
-{
-    if (c < 0 || c >= m_maxCells) {
-        return -1;
-    }
-
-    return (c / m_width);
-}
-
-int cMap::getCellX(int c) const//rip
-{
-    if (c < 0 || c >= m_maxCells) {
-        return -1;
-    }
-
-    int cellX = c - ((c / m_width) * m_width);
-    return cellX;
-}
-
-bool cMap::isCellAdjacentToOtherCell(int thisCell, int otherCell)
-{
-    if (getCellAbove(thisCell) == otherCell) return true;
-    if (getCellBelow(thisCell) == otherCell) return true;
-    if (getCellLeft(thisCell) == otherCell) return true;
-    if (getCellRight(thisCell) == otherCell) return true;
-
-    //
-    if (getCellUpperLeft(thisCell) == otherCell) return true;
-    if (getCellUpperRight(thisCell) == otherCell) return true;
-    if (getCellLowerLeft(thisCell) == otherCell) return true;
-    if (getCellLowerRight(thisCell) == otherCell) return true;
-
-    return false;
-}
-
-int cMap::getCellLowerRight(int c)
-{
-    int lowerRightCell = getCellBelow(c) + 1;
-    if (lowerRightCell >= m_maxCells) return -1;
-    if (lowerRightCell < 0) return -1;
-
-    return lowerRightCell;
-}
-
-int cMap::getCellLowerLeft(int c)
-{
-    int lowerLeftCell = getCellBelow(c) - 1;
-    if (lowerLeftCell < 0) return -1;
-    if (lowerLeftCell >= m_maxCells) return -1;
-    return lowerLeftCell;
-}
-
-int cMap::getCellUpperRight(int c)
-{
-    int upperRightCell = getCellAbove(c) + 1;
-    if (upperRightCell < 0) return -1;
-
-    return upperRightCell;
-}
-
-int cMap::getCellUpperLeft(int c)
-{
-    int upperLeftCell = getCellAbove(c) - 1;
-    if (upperLeftCell < 0) return -1;
-
-    return upperLeftCell;
-}
-
-int cMap::getCellRight(int c)
-{
-    int x = getCellX(c);
-    int cellRight = x + 1;
-    if (cellRight >= m_maxCells) return -1;
-    if (cellRight >= m_width) return -1;
-
-    return c + 1;
-}
-
-int cMap::getCellLeft(int c)
-{
-    if (c < 0) return -1;
-    int x = getCellX(c);
-    int cellLeft = x - 1;
-    if (cellLeft < 0) return -1;
-    return c - 1;
-}
-
-int cMap::getCellBelow(int c)
-{
-    if (c < 0) return -1;
-    int cellBelow = c + m_width;
-    if (cellBelow >= m_maxCells)
-        return -1;
-
-    return cellBelow;
-}
-
-int cMap::getCellAbove(int c)
-{
-    if (c < 0) return -1;
-    int cellAbove = c - m_width;
-
-    if (cellAbove < 0) return -1;
-
-    return cellAbove;
-}
-
-int cMap::getAbsoluteYPositionFromCell(int cell) //rip
-{
-    if (cell < 0) return -1;
-    return getCellY(cell) * TILESIZE_HEIGHT_PIXELS;
-}
-
-int cMap::getAbsoluteXPositionFromCell(int cell)  //rip
-{
-    if (cell < 0) return -1;
-    return getCellX(cell) * TILESIZE_WIDTH_PIXELS;
-}
-
-int cMap::getAbsoluteXPositionFromCellCentered(int cell)  //rip
-{
-    return getAbsoluteXPositionFromCell(cell) + (TILESIZE_WIDTH_PIXELS / 2);
-}
-
-int cMap::getAbsoluteYPositionFromCellCentered(int cell)  //rip
-{
-    return getAbsoluteYPositionFromCell(cell) + (TILESIZE_HEIGHT_PIXELS / 2);
-}
-
-double cMap::distance(int cell1, int cell2) //rip
-{
-    int x1 = getCellX(cell1);
-    int y1 = getCellY(cell1);
-
-    int x2 = getCellX(cell2);
-    int y2 = getCellY(cell2);
-    return ABS_length(x1, y1, x2, y2);
-}
-
-int cMap::getMaxDistanceInPixels() const {
-    int tileWidth = 32;
-    int tileHeight = 32;
-    int maxWidthDistance = m_width * tileWidth;
-    int maxHeightDistance = m_height * tileHeight;
-    return ABS_length(0, 0, maxWidthDistance, maxHeightDistance);
-}
-
 bool cMap::isValidCell(int c) const //rip
 {
-    return !(c < 0 || c >= m_maxCells);
-}
-
-/**
- * Returns a random cell, disregards playable borders
- * @return
- */
-int cMap::getRandomCell() //rip
-{
-    return RNG::rnd(m_maxCells);
+    return m_mapGeometry->isValidCell(c);
 }
 
 void cMap::createCell(int cell, int terrainType, int tile)
@@ -995,7 +876,7 @@ void cMap::createCell(int cell, int terrainType, int tile)
             .buildingList = nullptr
         };
 
-        game.onNotifyGameEvent(event);
+        m_interface->onNotifyGameEvent(event);
     }
 }
 
@@ -1011,22 +892,6 @@ bool cMap::isVisible(int iCell, cPlayer *thePlayer)
     if (!thePlayer) return false;
     int playerId = thePlayer->getId();
     return isVisible(iCell, playerId);
-}
-
-int cMap::getRandomCellWithinMapWithSafeDistanceFromBorder(int distance) const //rip
-{
-    // distance = 2
-    // m_width = 64
-    // => 2 + (64 - 4) => 2 + (...60) = min 2, max 62
-    return m_mapGeometry->getCellWithMapBorders(
-               distance + RNG::rnd(m_width - (distance * 2)),
-               distance + RNG::rnd(m_height - (distance * 2))
-           );
-}
-
-bool cMap::isWithinBoundaries(int c) //rip
-{
-    return isWithinBoundaries(getCellX(c), getCellY(c));
 }
 
 void cMap::setVisibleFor(int iCell, cPlayer *pPlayer)
@@ -1060,15 +925,15 @@ int cMap::findNearestSpiceBloom(int iCell)
     int closestBloomFoundSoFar = -1;
     int bloomsEvaluated = 0;
 
-    cx = getCellX(iCell);
-    cy = getCellY(iCell);
+    cx = m_mapGeometry->getCellX(iCell);
+    cy = m_mapGeometry->getCellY(iCell);
 
     for (int i = 0; i < getMaxCells(); i++) {
         int cellType = getCellType(i);
         if (cellType != TERRAIN_BLOOM) continue;
         bloomsEvaluated++;
 
-        int d = ABS_length(cx, cy, getCellX(i), getCellY(i));
+        int d = ABS_length(cx, cy, m_mapGeometry->getCellX(i), m_mapGeometry->getCellY(i));
 
         if (d < iDistance) {
             closestBloomFoundSoFar = i;
@@ -1124,33 +989,6 @@ bool cMap::isValidTerrainForStructureAtCell(int cll)
  * @param cell
  * @param distance
  */
-int cMap::getRandomCellFrom(int cell, int distance) //rip
-{
-    int startX = getCellX(cell);
-    int startY = getCellY(cell);
-    int xDir = RNG::rnd(100) < 50 ? -1 : 1;
-    int yDir = RNG::rnd(100) < 50 ? -1 : 1;
-    int newX = (startX - distance) + (xDir * distance);
-    int newY = (startY - distance) + (yDir * distance);
-    return m_mapGeometry->getCellWithMapBorders(newX, newY);
-}
-
-/**
- * Like getRandomCellFrom, but will randomize x/y coordinate. Using 'distance' to create a square around 'cell' (as center)
- * Hence, this could result in a cell being returned much closer than distance. But never further away than distance.
- * @param cell
- * @param distance
- * @return
- */
-int cMap::getRandomCellFromWithRandomDistance(int cell, int distance) //rip
-{
-    int startX = getCellX(cell);
-    int startY = getCellY(cell);
-    int newX = (startX - distance) + (RNG::rnd(distance * 2));
-    int newY = (startY - distance) + (RNG::rnd(distance * 2));
-    return m_mapGeometry->getCellWithMapBorders(newX, newY);
-}
-
 /**
  * Takes structure, evaluates all its cells, and if any of these are visible, this function returns true.
  *
@@ -1187,35 +1025,9 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer)
     return false;
 }
 
-bool cMap::isAtMapBoundaries(int cell)  //rip
-{
-    bool validCell = isValidCell(cell);
-    if (!validCell) return false;
-
-    int maxHeight = (m_height - 2); // hence the -2!
-    int maxWidth = (m_width - 2);
-
-    int x = getCellX(cell);
-    int y = getCellY(cell);
-
-    if (x == 1 || x == maxWidth) return true;
-    if (y == 1 || y == maxHeight) return true;
-
-    return false;
-}
-
-cPoint cMap::fixCoordinatesToBeWithinPlayableMap(int x, int y) const //rip
-{
-    return {std::clamp(x, 1, getWidth() - 2), std::clamp(y, 1, getHeight() - 2)};
-}
-
-cPoint cMap::fixCoordinatesToBeWithinMap(int x, int y) const //rip
-{
-    return {std::clamp(x, 0, getWidth() - 1), std::clamp(y, 0, getHeight() - 1)};
-}
-
 int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop)
 {
+    auto *mapCamera = m_interface->getMapCamera();
 
     if (minRange < 1) {
         minRange = 1;
@@ -1226,8 +1038,8 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
-            int x = getAbsoluteXPositionFromCellCentered(cell);
-            int y = getAbsoluteYPositionFromCellCentered(cell);
+            int x = m_mapGeometry->getAbsoluteXPositionFromCellCentered(cell);
+            int y = m_mapGeometry->getAbsoluteYPositionFromCellCentered(cell);
 
             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
@@ -1236,10 +1048,10 @@ int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int uni
             y = (y + dr2);
 
             // convert back
-            int cl = game.m_mapCamera->getCellFromAbsolutePosition(x, y);
+            int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
             if (cl < 0) continue;
-            if (!isWithinBoundaries(cl)) continue;
+            if (!m_mapGeometry->isWithinBoundaries(cl)) continue;
 
             if (canDeployUnitTypeAtCell(cl, unitTypeToDrop)) {
                 return cl;
@@ -1254,34 +1066,36 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
     return findNearByValidDropLocation(cell, 1, range, unitTypeToDrop);
 }
 
-int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
-{
-    // go around 360 fDegrees and calculate new stuff.
-    for (float dr = 1; dr < range; dr++) { // go outwards
-        for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
-            // need a smarter way to do this (less CPU intensive).
+// int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
+// {
+//     auto *mapCamera = m_interface->getMapCamera();
 
-            int x = getAbsoluteXPositionFromCellCentered(cell);
-            int y = getAbsoluteYPositionFromCellCentered(cell);
+//     // go around 360 fDegrees and calculate new stuff.
+//     for (float dr = 1; dr < range; dr++) { // go outwards
+//         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
+//             // need a smarter way to do this (less CPU intensive).
 
-            float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
-            float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
+//             int x = getAbsoluteXPositionFromCellCentered(cell);
+//             int y = getAbsoluteYPositionFromCellCentered(cell);
 
-            x = (x + dr1);
-            y = (y + dr2);
+//             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
+//             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
 
-            // convert back
-            int cl = game.m_mapCamera->getCellFromAbsolutePosition(x, y);
+//             x = (x + dr1);
+//             y = (y + dr2);
 
-            if (cl < 0) continue;
+//             // convert back
+//             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
 
-            if (canDeployUnitAtCell(cell, unitIDToDrop)) {
-                return cell;
-            }
-        }
-    }
-    return -1;
-}
+//             if (cl < 0) continue;
+
+//             if (canDeployUnitAtCell(cell, unitIDToDrop)) {
+//                 return cell;
+//             }
+//         }
+//     }
+//     return -1;
+// }
 
 /**
  * Scans structures, belonging to player. If it is the same type it will be returned.
@@ -1300,11 +1114,11 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
 
     const std::vector<int> &myStructuresAsId = player->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *pStructure = m_objects->getStructure(i);
         if (pStructure == nullptr) continue;
         if (pStructure->getType() != structureType) continue;
 
-        long _distance = distance(cell, pStructure->getCell());
+        long _distance = m_mapGeometry->distance(cell, pStructure->getCell());
 
         // if distance is lower than last found distance, it is the closest for now.
         if (_distance < shortestDistance) {
@@ -1314,7 +1128,7 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
     }
 
     if (foundStructureId > -1) {
-        return game.m_gameObjectsContext->getStructures()[foundStructureId];
+        return m_objects->getStructure(foundStructureId);
     }
 
     return nullptr;
@@ -1390,12 +1204,12 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
 
     const std::vector<int> &myStructuresAsId = pPlayer->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *pStructure = m_objects->getStructure(i);
         if (pStructure == nullptr) continue;
         if (pStructure->getType() != structureType) continue;
         if (pStructure->hasUnitWithin()) continue; // already occupied
 
-        long _distance = distance(cell, pStructure->getCell());
+        long _distance = m_mapGeometry->distance(cell, pStructure->getCell());
 
         // if distance is lower than last found distance, it is the closest for now.
         if (_distance < shortestDistance) {
@@ -1405,7 +1219,7 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
     }
 
     if (foundStructureId > -1) {
-        return game.m_gameObjectsContext->getStructures()[foundStructureId];
+        return m_objects->getStructure(foundStructureId);
     }
 
     return nullptr;
@@ -1425,14 +1239,14 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
 
     const std::vector<int> &myStructuresAsId = pPlayer->getAllMyStructuresAsId();
     for (auto &i: myStructuresAsId) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *pStructure = m_objects->getStructure(i);
         if (pStructure == nullptr) continue;
         if (pStructure->getOwner() != playerId) continue;
         if (pStructure->getType() != structureType) continue;
         if (pStructure->hasUnitWithin()) continue; // already occupied
 
         if (!pStructure->hasUnitHeadingTowards()) {    // no other unit is heading to this structure
-            long _distance = distance(cell, pStructure->getCell());
+            long _distance = m_mapGeometry->distance(cell, pStructure->getCell());
 
             // if distance is lower than last found distance, it is the closest for now.
             if (_distance < shortestDistance) {
@@ -1443,7 +1257,7 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
     }
 
     if (foundStructureId > -1) {
-        return game.m_gameObjectsContext->getStructures()[foundStructureId];
+        return m_objects->getStructure(foundStructureId);
     }
 
     return nullptr;
@@ -1454,10 +1268,10 @@ int cMap::getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minR
     return findNearByValidDropLocation(cell, minRange, maxRange, unitType);
 }
 
-int cMap::findRandomCellToMoveToForSandworm() const {
+int cMap::findRandomCellToMoveToForSandworm() {
     for (int iTries = 0; iTries < 5; iTries++) {
-        int iMoveTo = getRandomCellWithinMapWithSafeDistanceFromBorder(2);
-        if (game.m_gameObjectsContext->getMap().isCellPassableForWorm(iMoveTo)) {
+        int iMoveTo = m_mapGeometry->getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+        if (isCellPassableForWorm(iMoveTo)) {
             return iMoveTo;
         }
     }
@@ -1498,7 +1312,7 @@ void cMap::detonateSpiceBloom(int cell)
     mapEditor.createCell(cell, TERRAIN_SAND, 0);
     int size = 75 + (RNG::rnd(100));
     mapEditor.createRandomField(cell, TERRAIN_SPICE, size);
-    game.shakeScreen(20);
+    m_interface->shakeScreen(20);
 
     s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW,
@@ -1511,7 +1325,7 @@ void cMap::detonateSpiceBloom(int cell)
         .buildingListItem = nullptr,
         .buildingList = nullptr
     };
-    game.onNotifyGameEvent(event);
+    m_interface->onNotifyGameEvent(event);
 
 }
 
@@ -1553,7 +1367,7 @@ void cMap::onEntityCreated(const s_GameEvent &event)
 
 void cMap::evaluateIfWeShouldSetTimerToRespawnWorm()
 {
-    int currentAmountOfWorms = game.m_gameObjectsContext->getPlayer(AI_WORM).getAmountOfUnitsForType(SANDWORM);
+    int currentAmountOfWorms = m_objects->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM);
 
     // as long as we don't have the desired amount, set respawn timer
     if (currentAmountOfWorms < m_iDesiredAmountOfWorms) {
@@ -1608,7 +1422,3 @@ void cMap::onEntityDestroyed(const s_GameEvent &event)
     }
 }
 
-cPoint cMap::getAbsolutePositionFromCell(int cell)
-{
-    return cPoint(getAbsoluteXPositionFromCell(cell), getAbsoluteYPositionFromCell(cell));
-}

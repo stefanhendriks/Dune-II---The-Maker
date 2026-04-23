@@ -64,10 +64,10 @@ void cPlayerBrainMissionKindSaboteur::think_Execute()
         if (pStructure->isValid()) {
             const std::vector<int> &units = mission->getUnits();
             for (auto &myUnit: units) {
-                cUnit &aUnit = game.m_gameObjectsContext->getUnit(myUnit);
-                if (aUnit.isValid() && aUnit.isIdle()) {
+                cUnit *aUnit = game.m_gameObjectsContext->getUnit(myUnit);
+                if (aUnit->isValid() && aUnit->isIdle()) {
                     log("cPlayerBrainMissionKindSaboteur::thinkState_Execute(): Ordering unit to attack!");
-                    aUnit.attackStructure(targetStructureID);
+                    aUnit->attackStructure(targetStructureID);
                 }
             }
         }

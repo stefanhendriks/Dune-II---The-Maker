@@ -18,6 +18,7 @@
 #include "utils/cRectangle.h"
 #include "observers/cScenarioObserver.h"
 #include "utils/Color.hpp"
+#include "utils/Log.h"
 
 #include <memory>
 #include <string>
@@ -83,6 +84,10 @@ public:
         m_gameFilename = filename;
     }
 
+    void getLog(cLog *log) {
+        assert(log != nullptr);
+        m_log = log;
+    }
     cRectangle *m_mapViewport;
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
@@ -156,8 +161,9 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    void onEventSpecialLaunch(const s_GameEvent &event) const;
+    void onEventSpecialLaunch(const LaunchDeathHandEvent &event) const;
     void onEventEntityDestroyed(const s_GameEvent & event);
+    void onEventDeployUnit(const DeployUnitEvent &deployEvent);
 
     void shakeScreen(int duration);
     void reduceShaking() const;
@@ -246,7 +252,7 @@ private:
     cTimeManager* m_timeManager;
     SDLDrawer *m_renderDrawer = nullptr;
 
-    std::shared_ptr<cHousesInfo> m_Houses;
+    std::unique_ptr<cHousesInfo> m_Houses;
     bool m_missionWasWon;               // hack: used for state transitioning :/
 
     int m_newMusicSample;
@@ -286,4 +292,6 @@ private:
     std::unique_ptr<cScreenFader> m_cScreenFader;
 
     std::unique_ptr<sGameServices> m_services;
+
+    cLog* m_log = nullptr;
 };

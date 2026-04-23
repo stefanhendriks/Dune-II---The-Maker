@@ -59,8 +59,8 @@ void cGamePlaying::thinkFast()
 
     m_mapCamera->thinkFast();
 
-    for (cPlayer &pPlayer : m_objects->getPlayers()) {
-        pPlayer.thinkFast();
+    for (cPlayer* pPlayer : m_objects->getPlayers()) {
+        pPlayer->thinkFast();
     }
 
     // structures think
@@ -77,8 +77,8 @@ void cGamePlaying::thinkFast()
         }
     }
 
-    for (cPlayer &pPlayer : m_objects->getPlayers()) {
-        cItemBuilder *itemBuilder = pPlayer.getItemBuilder();
+    for (cPlayer* pPlayer : m_objects->getPlayers()) {
+        cItemBuilder *itemBuilder = pPlayer->getItemBuilder();
         if (itemBuilder) {
             itemBuilder->thinkFast();
         }
@@ -89,7 +89,7 @@ void cGamePlaying::thinkFast()
     m_interface->reduceShaking();
 
     // units think (move only)
-    for (cUnit &cUnit : m_objects->getUnits()) {
+    for (cUnit &cUnit : *m_objects->getUnits()) {
         if (!cUnit.isValid()) continue;
         cUnit.thinkFast();
     }
@@ -110,17 +110,18 @@ void cGamePlaying::thinkFast()
 void cGamePlaying::thinkNormal()
 {
         // units think
-        for (int i = 0; i < m_objects->getUnits().size(); i++) {
-            cUnit &cUnit = m_objects->getUnits()[i];
-            if (cUnit.isValid()) {
-                cUnit.think();
+        for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+            cUnit *cUnit = m_objects->getUnit(i);
+            if (cUnit->isValid()) {
+                cUnit->think();
             }
         }
 
         m_drawManager->think();
 
+        //@mira move to Players
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            m_objects->getPlayer(i).think();
+            m_objects->getPlayer(i)->think();
         }
 }
 
@@ -143,9 +144,10 @@ void cGamePlaying::thinkSlow()
         }
     }
 
+    //@mira move to players
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer &player = m_objects->getPlayer(i);
-        player.thinkSlow();
+        cPlayer* player = m_objects->getPlayer(i);
+        player->thinkSlow();
     }
 }
 
@@ -203,17 +205,17 @@ void cGamePlaying::evaluatePlayerStatus()
         // TODO: Better way is with events (ie created/destroyed). However, there is no such
         // bookkeeping per player *yet*. So instead, for now, we "poll" for this data.
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            cPlayer &player = m_objects->getPlayer(i);
-            bool isAlive = player.isAlive();
+            cPlayer* player = m_objects->getPlayer(i);
+            bool isAlive = player->isAlive();
             // evaluate all players regardless if they are alive or not (who knows, they became alive?)
-            player.evaluateStillAlive();
+            player->evaluateStillAlive();
 
-            if (isAlive && !player.isAlive()) {
+            if (isAlive && !player->isAlive()) {
                 s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
                     .entityType = eBuildType::SPECIAL,
                     .entityID = -1,
-                    .player = &player
+                    .player = player
                 };
 
                 m_interface->onNotifyGameEvent(event);
@@ -250,12 +252,12 @@ void cGamePlaying::missionInit()
 
 void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = m_objects->getPlayer(HUMAN);
+    const cPlayer* humanPlayer = m_objects->getPlayer(HUMAN);
 
     if (event.isAction(eKeyAction::ATTACK_MODE)) {
         int iGroup = event.getGroupNumber();
         if (iGroup > 0) {
-            humanPlayer.markUnitsForGroup(iGroup);
+            humanPlayer->markUnitsForGroup(iGroup);
         }
     }
 
@@ -265,7 +267,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         }
 
         if (event.isAction(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR)) {
-            int mouseCell = humanPlayer.getGameControlsContext()->getMouseCell();
+            int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
                 m_objects->getMap().clearShroud(mouseCell, 6, HUMAN);
             }
@@ -277,11 +279,11 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
-        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer->getFocusCell());
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
-        cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+        cAbstractStructure *selectedStructure = humanPlayer->getSelectedStructure();
         if (selectedStructure) {
             m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
@@ -299,7 +301,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 
 void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 {
-    cPlayer &humanPlayer = m_objects->getPlayer(HUMAN);
+    cPlayer* humanPlayer = m_objects->getPlayer(HUMAN);
 
     if (event.isAction(eKeyAction::TOGGLE_FPS)) {
         m_settings->setDrawFps(false);
@@ -310,31 +312,31 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
-        for (int i = 0; i < m_objects->getUnits().size(); i++) {
-            cUnit &u = m_objects->getUnits()[i];
-            if (u.isSelected() && u.iType == MCV && u.getPlayer()->isHuman()) {
-                bool canPlace = u.getPlayer()->canPlaceStructureAt(u.getCell(), CONSTYARD, u.iID).success;
+        for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+            cUnit *u = m_objects->getUnit(i);
+            if (u->isSelected() && u->iType == MCV && u->getPlayer()->isHuman()) {
+                bool canPlace = u->getPlayer()->canPlaceStructureAt(u->getCell(), CONSTYARD, u->iID).success;
                 if (canPlace) {
-                    int iLocation = u.getCell();
-                    u.die(false, false);
-                    humanPlayer.placeStructure(iLocation, CONSTYARD, 100);
+                    int iLocation = u->getCell();
+                    u->die(false, false);
+                    humanPlayer->placeStructure(iLocation, CONSTYARD, 100);
                 }
             }
         }
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
-        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer.getFocusCell());
+        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer->getFocusCell());
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
-        cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+        cAbstractStructure *selectedStructure = humanPlayer->getSelectedStructure();
         if (selectedStructure) {
             m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
     }
 
-    cAbstractStructure *selectedStructure = humanPlayer.getSelectedStructure();
+    cAbstractStructure *selectedStructure = humanPlayer->getSelectedStructure();
     if (selectedStructure) {
         if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
             if (selectedStructure->getType() == REPAIR) {
@@ -342,36 +344,36 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
                     .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
                     .entityType = eBuildType::UNKNOWN,
                     .entityID = -1,
-                    .player = &humanPlayer
+                    .player = humanPlayer
                 };
                 selectedStructure->onNotifyGameEvent(deployEvent);
             }
         }
         if (event.isAction(eKeyAction::SET_PRIMARY)) {
-            humanPlayer.setPrimaryBuildingForStructureType(selectedStructure->getType(), selectedStructure->getStructureId());
+            humanPlayer->setPrimaryBuildingForStructureType(selectedStructure->getType(), selectedStructure->getStructureId());
         }
     }
 }
 
 void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
-    const cPlayer &humanPlayer = m_objects->getPlayer(HUMAN);
+    const cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
 
     if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
-        m_drawManager->setPlayerToDraw(&m_objects->getPlayer(0));
-        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(0));
+        m_drawManager->setPlayerToDraw(m_objects->getPlayer(0));
+        m_interface->setPlayerToInteractFor(m_objects->getPlayer(0));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
-        m_drawManager->setPlayerToDraw(&m_objects->getPlayer(1));
-        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(1));
+        m_drawManager->setPlayerToDraw(m_objects->getPlayer(1));
+        m_interface->setPlayerToInteractFor(m_objects->getPlayer(1));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
-        m_drawManager->setPlayerToDraw(&m_objects->getPlayer(2));
-        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(2));
+        m_drawManager->setPlayerToDraw(m_objects->getPlayer(2));
+        m_interface->setPlayerToInteractFor(m_objects->getPlayer(2));
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
-        m_drawManager->setPlayerToDraw(&m_objects->getPlayer(3));
-        m_interface->setPlayerToInteractFor(&m_objects->getPlayer(3));
+        m_drawManager->setPlayerToDraw(m_objects->getPlayer(3));
+        m_interface->setPlayerToInteractFor(m_objects->getPlayer(3));
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
@@ -384,16 +386,16 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::DEBUG_GIVE_CREDITS)) {
         for (int i = 0; i < AI_WORM; i++) {
-            m_objects->getPlayer(i).setCredits(5000);
+            m_objects->getPlayer(i)->setCredits(5000);
         }
     }
 
     if (event.isAction(eKeyAction::DEBUG_DESTROY_AT_CURSOR)) {
-        int mc = humanPlayer.getGameControlsContext()->getMouseCell();
+        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_objects->getUnits()[idOfUnitAtCell].die(true, false);
+                m_objects->getUnit(idOfUnitAtCell)->die(true, false);
             }
 
             int idOfStructureAtCell = m_objects->getMap().getCellIdStructuresLayer(mc);
@@ -403,20 +405,20 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
             idOfUnitAtCell = m_objects->getMap().getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
-                m_objects->getUnits()[idOfUnitAtCell].die(false, false);
+                m_objects->getUnit(idOfUnitAtCell)->die(false, false);
             }
         }
     }
 
     if (event.isAction(eKeyAction::DEBUG_DAMAGE_AT_CURSOR)) {
-        int mc = humanPlayer.getGameControlsContext()->getMouseCell();
+        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
-                cUnit &pUnit = m_objects->getUnits()[idOfUnitAtCell];
-                int damageToTake = pUnit.getHitPoints() - 25;
+                cUnit *pUnit = m_objects->getUnit(idOfUnitAtCell);
+                int damageToTake = pUnit->getHitPoints() - 25;
                 if (damageToTake > 0) {
-                    pUnit.takeDamage(damageToTake, -1, -1);
+                    pUnit->takeDamage(damageToTake, -1, -1);
                 }
             }
         }
@@ -425,17 +427,17 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::DEBUG_KILL_CARRYALLS)) {
-        const std::vector<int> &myUnitsForType = humanPlayer.getAllMyUnitsForType(CARRYALL);
+        const std::vector<int> &myUnitsForType = humanPlayer->getAllMyUnitsForType(CARRYALL);
         for (auto &unitId : myUnitsForType) {
-            cUnit &pUnit = m_objects->getUnits()[unitId];
-            pUnit.die(true, false);
+            cUnit *pUnit = m_objects->getUnit(unitId);
+            pUnit->die(true, false);
         }
     }
 }
 
 void cGamePlaying::update()
 {
-    for (auto &pPlayer : m_objects->getPlayers()) {
-        pPlayer.update();
+    for (auto* pPlayer : m_objects->getPlayers()) {
+        pPlayer->update();
     }
 }

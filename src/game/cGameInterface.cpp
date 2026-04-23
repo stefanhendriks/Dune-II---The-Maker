@@ -6,6 +6,7 @@
 #include "controls/cMouse.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "include/sGameEvent.h"
+#include "utils/cStructureUtils.h"
 
 #include <format>
 
@@ -88,6 +89,11 @@ cMapCamera* cGameInterface::getMapCamera() const
     return m_igame->m_mapCamera;
 }
 
+cRectangle* cGameInterface::getMapViewport() const
+{
+    return m_igame->m_mapViewport;
+}
+
 void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const
 {
     m_igame->setPlayerToInteractFor(pPlayer);
@@ -143,6 +149,11 @@ void cGameInterface::reduceShaking() const
     m_igame->reduceShaking();
 }
 
+void cGameInterface::shakeScreen(int duration) const
+{
+    m_igame->shakeScreen(duration);
+}
+
 void cGameInterface::goingToWinLoseBrief(int winOrLoseBrief) const
 {
     m_igame->goingToWinLoseBrief(winOrLoseBrief);
@@ -191,6 +202,46 @@ void cGameInterface::setLoseFlags(int value) const
 bool cGameInterface::playMusicByType(int iType) const
 {
     return m_igame->playMusicByType(iType);
+}
+
+bool cGameInterface::playMusicByType(int iType, int playerId, bool triggerWithVoice) const
+{
+    return m_igame->playMusicByType(iType, playerId, triggerWithVoice);
+}
+
+void cGameInterface::playVoice(int sampleId, int playerId) const
+{
+    m_igame->playVoice(sampleId, playerId);
+}
+
+void cGameInterface::playSound(int sampleId) const
+{
+    m_igame->playSound(sampleId);
+}
+
+void cGameInterface::playSoundWithDistance(int sampleId, int distance) const
+{
+    m_igame->playSoundWithDistance(sampleId, distance);
+}
+
+int cGameInterface::getTotalPowerUsageForPlayer(cPlayer *pPlayer) const
+{
+    return m_igame->m_structureUtils->getTotalPowerUsageForPlayer(pPlayer);
+}
+
+int cGameInterface::getTotalPowerOutForPlayer(cPlayer *pPlayer) const
+{
+    return m_igame->m_structureUtils->getTotalPowerOutForPlayer(pPlayer);
+}
+
+int cGameInterface::getTotalSpiceCapacityForPlayer(cPlayer *pPlayer) const
+{
+    return m_igame->m_structureUtils->getTotalSpiceCapacityForPlayer(pPlayer);
+}
+
+int cGameInterface::getStructureTypeByUnitBuildId(int unitBuildId) const
+{
+    return m_igame->m_structureUtils->getStructureTypeByUnitBuildId(unitBuildId);
 }
 
 cDrawManager* cGameInterface::getRenderDrawManager() const

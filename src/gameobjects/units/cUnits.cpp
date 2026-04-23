@@ -19,12 +19,34 @@
 #include "game/cGame.h"
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"
+#include "include/sGameServices.h"
+#include "context/GameContext.hpp"
 #include <format>
 #include <cassert>
 
 cUnits::cUnits() {
     // Units will be initialized through default constructors of std::array
 }
+
+
+void cUnits::serviceInit(sGameServices* services)
+{
+    assert(services != nullptr);
+    m_infos = services->info;
+    assert(m_infos != nullptr);
+    m_objects = services->objects;
+    assert(m_objects != nullptr);
+    m_interface = services->ctx->getGameInterface();
+    assert(m_interface != nullptr);
+    m_map = &m_objects->getMap();
+    assert(m_map != nullptr);
+
+    assert(services != nullptr);
+    for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
+        m_units[i].serviceInit(services);
+    }
+}
+
 
 cUnit& cUnits::operator[](int index)
 {
@@ -77,8 +99,8 @@ int cUnits::getValidUnitsCount() const {
 // return new valid ID
 static int unitNewID()
 {
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits().size(); i++)
-        if (!game.m_gameObjectsContext->getUnit(i).isValid())
+    for (int i = 0; i < game.m_gameObjectsContext->getUnits()->size(); i++)
+        if (!game.m_gameObjectsContext->getUnit(i)->isValid())
             return i;
 
     return -1; // NONE
@@ -90,7 +112,7 @@ static int unitNewID()
 // }
 
 int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
-    if (!game.m_gameObjectsContext->getMap().isValidCell(iCll)) {
+    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
         return -1;
     }
@@ -134,29 +156,29 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
         return -1;
     }
 
-    cUnit &newUnit = game.m_gameObjectsContext->getUnit(iNewId);
-    newUnit.init(iNewId);
+    cUnit *newUnit = game.m_gameObjectsContext->getUnit(iNewId);
+    newUnit->init(iNewId);
 
-    newUnit.setCell(iCll);
-    newUnit.rendering.iBodyFacing = RNG::rnd(8);
-    newUnit.rendering.iHeadFacing = RNG::rnd(8);
+    newUnit->setCell(iCll);
+    newUnit->rendering.iBodyFacing = RNG::rnd(8);
+    newUnit->rendering.iHeadFacing = RNG::rnd(8);
 
-    newUnit.rendering.iBodyShouldFace = newUnit.rendering.iBodyFacing;
-    newUnit.rendering.iHeadShouldFace = newUnit.rendering.iHeadFacing;
+    newUnit->rendering.iBodyShouldFace = newUnit->rendering.iBodyFacing;
+    newUnit->rendering.iHeadShouldFace = newUnit->rendering.iHeadFacing;
 
-    newUnit.iType = unitType;
-    newUnit.setHp(sUnitType.hp * hpPercentage);
-    newUnit.movement.iGoalCell = iCll;
+    newUnit->iType = unitType;
+    newUnit->setHp(sUnitType.hp * hpPercentage);
+    newUnit->movement.iGoalCell = iCll;
 
-    newUnit.deselect();
-    newUnit.rendering.bHovered = false;
+    newUnit->deselect();
+    newUnit->rendering.bHovered = false;
 
-    // newUnit.TIMER_bored = RNG::rnd(3000);
-    newUnit.boredTimer.reset(RNG::rnd(3000));
+    // newUnit->TIMER_bored = RNG::rnd(3000);
+    newUnit->boredTimer.reset(RNG::rnd(3000));
     
-    // newUnit.TIMER_guard = 20 + RNG::rnd(70);
-    newUnit.guardTimer.reset(20 + RNG::rnd(70));
-    newUnit.recreateDimensions();
+    // newUnit->TIMER_guard = 20 + RNG::rnd(70);
+    newUnit->guardTimer.reset(20 + RNG::rnd(70));
+    newUnit->recreateDimensions();
 
     // Sandworm units are always owned by AI_WORM. INI files typically specify "Fremen"
     // as the house (player 5), but sandworms must be owned by AI_WORM (player 6).
@@ -164,22 +186,22 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
         iPlayer = AI_WORM;
     }
 
-    newUnit.iPlayer = iPlayer;
+    newUnit->iPlayer = iPlayer;
 
     // AI player immediately moves unit away
     if (iPlayer > 0 && iPlayer < AI_WORM && !sUnitType.airborn && !bOnStart) {
         int iF = cUnit::freeAroundMove(iNewId);
 
         if (iF > -1) {
-            newUnit.log("Order move #2");
-            game.m_gameObjectsContext->getUnit(iNewId).move_to(iF);
+            newUnit->log("Order move #2");
+            game.m_gameObjectsContext->getUnit(iNewId)->move_to(iF);
         }
     }
 
     // Put on map too!:
     game.m_gameObjectsContext->getMap().cellSetIdForLayer(iCll, mapIdIndex, iNewId);
 
-    newUnit.updateCellXAndY();
+    newUnit->updateCellXAndY();
 
     game.m_gameObjectsContext->getMap().clearShroud(iCll, sUnitType.sight, iPlayer);
 
@@ -187,7 +209,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
         .eventType = eGameEventType::GAME_EVENT_CREATED,
         .entityType = eBuildType::UNIT,
         .entityID = iNewId,
-        .player = newUnit.getPlayer(),
+        .player = newUnit->getPlayer(),
         .entitySpecificType = unitType,
         .atCell = -1,
         .isReinforce = isReinforcement
@@ -213,3 +235,23 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 // {
 //     return unitCreate(iCll, unitType, iPlayer, bOnStart, isReinforcement, 1.0f);
 // }
+
+bool cUnits::areUnitsSelected() const
+{
+    for (const auto& unit : m_units) {
+        if (unit.isValid() && unit.isSelected()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void cUnits::move_to(int icell)
+{
+    // Implementation for moving units to a specific cell
+    for (auto& unit : m_units) {
+        if (unit.isValid() && unit.isSelected()) {
+            unit.move_to(icell);
+        }
+    }
+}

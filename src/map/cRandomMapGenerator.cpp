@@ -50,15 +50,15 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
 
     // draw
     while (a_rock > 0) {
-        int iCll = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+        int iCll = game.m_gameObjectsContext->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(4);
         if (iCll < 0) continue;
 
         bool bOk = true;
         if (iSpot < maxRockSpots) {
             for (int s = 0; s < maxRockSpots; s++) {
                 if (iSpotRock[s] > -1) {
-                    if (ABS_length(game.m_gameObjectsContext->getMap().getCellX(iCll), game.m_gameObjectsContext->getMap().getCellY(iCll), game.m_gameObjectsContext->getMap().getCellX(iSpotRock[s]),
-                                   game.m_gameObjectsContext->getMap().getCellY(iSpotRock[s])) < iDistance) {
+                    if (ABS_length(game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll), game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll), game.m_gameObjectsContext->getMapGeometry()->getCellX(iSpotRock[s]),
+                                   game.m_gameObjectsContext->getMapGeometry()->getCellY(iSpotRock[s])) < iDistance) {
                         bOk = false;
                     }
                     else {
@@ -100,13 +100,13 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     mapEditor.removeSingleRockSpots();
 
     while (a_spice > 0) {
-        int iCll = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(0);
+        int iCll = game.m_gameObjectsContext->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createRandomField(iCll, TERRAIN_SPICE, 2500);
         a_spice--;
     }
 
     while (a_hill > 0) {
-        int cell = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(0);
+        int cell = game.m_gameObjectsContext->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(0);
         mapEditor.createRandomField(cell, TERRAIN_HILL, 500 + RNG::rnd(500));
         a_hill--;
     }
@@ -127,7 +127,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     for (int x = 0; x < game.m_gameObjectsContext->getMap().getWidth(); x++) {
         for (int y = 0; y < game.m_gameObjectsContext->getMap().getHeight(); y++) {
 
-            int cll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(x, y);
+            int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
             Color iColor = Color{194, 125, 60,255};
@@ -144,8 +144,8 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
 
             for (int s = 0; s < 4; s++) {
                 if (randomMapEntry.iStartCell[s] > -1) {
-                    int sx = game.m_gameObjectsContext->getMap().getCellX(randomMapEntry.iStartCell[s]);
-                    int sy = game.m_gameObjectsContext->getMap().getCellY(randomMapEntry.iStartCell[s]);
+                    int sx = game.m_gameObjectsContext->getMapGeometry()->getCellX(randomMapEntry.iStartCell[s]);
+                    int sy = game.m_gameObjectsContext->getMapGeometry()->getCellY(randomMapEntry.iStartCell[s]);
 
                     if (sx == x && sy == y)
                         iColor = Color::White;

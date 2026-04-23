@@ -47,7 +47,7 @@ void cStructureDrawer::drawStructuresSecondLayer()
 
 void cStructureDrawer::drawStructuresHealthBars()
 {
-    cGameControlsContext *context = game.m_gameObjectsContext->getPlayer(HUMAN).getGameControlsContext();
+    cGameControlsContext *context = game.m_gameObjectsContext->getPlayer(HUMAN)->getGameControlsContext();
 
     // DRAW HEALTH
     if (context->isMouseOverStructure()) {
@@ -159,11 +159,11 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
     // :-/
     if (game.m_gameSettings->isDebugMode()) {
-        cPlayer &humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
-        cAbstractStructure *pStructure = humanPlayer.getSelectedStructure();
+        cPlayer *humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+        cAbstractStructure *pStructure = humanPlayer->getSelectedStructure();
         if (pStructure && pStructure == structure) {
             cMouse *pMouse = game.getMouse();
-            cGameControlsContext *pContext = humanPlayer.getGameControlsContext();
+            cGameControlsContext *pContext = humanPlayer->getGameControlsContext();
 
             int x1 = pMouse->getX();
             int y1 = pMouse->getY();
@@ -172,11 +172,11 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
             m_renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
 
-            int mouseCellX = game.m_gameObjectsContext->getMap().getCellX(pContext->getMouseCell());
-            int mouseCellY = game.m_gameObjectsContext->getMap().getCellY(pContext->getMouseCell());
+            int mouseCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(pContext->getMouseCell());
+            int mouseCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(pContext->getMouseCell());
 
-            int cellX = game.m_gameObjectsContext->getMap().getCellX(structure->getCell());
-            int cellY = game.m_gameObjectsContext->getMap().getCellY(structure->getCell());
+            int cellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(structure->getCell());
+            int cellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(structure->getCell());
 
             float degrees = fDegrees(cellX, cellY, mouseCellX, mouseCellY);
 
@@ -284,8 +284,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cRepairFacility *repairFacility = dynamic_cast<cRepairFacility *>(structure);
     assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
-    cUnit &pUnit = game.m_gameObjectsContext->getUnit(unitId);
-    int iconId = pUnit.getUnitInfo().icon;
+    cUnit *pUnit = game.m_gameObjectsContext->getUnit(unitId);
+    int iconId = pUnit->getUnitInfo().icon;
 
     int iconWidth = (m_gfxinter->getSurface(iconId))->w;
     int iconHeight = (m_gfxinter->getSurface(iconId))->h;
@@ -298,7 +298,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
 
     int height_y = 5;
 
-    float healthNormalized = pUnit.getTempHealthNormalized();
+    float healthNormalized = pUnit->getTempHealthNormalized();
 
     int w = healthNormalized * width_x;
     int r = (1.1 - healthNormalized) * 255;
@@ -335,15 +335,15 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
             // draw
             drawStructureForLayer(theStructure, layer);
 
-            cPlayer &player = game.m_gameObjectsContext->getPlayer(HUMAN); // TODO: Pass it as variable? (instead of getting it from here)
+            cPlayer *player = game.m_gameObjectsContext->getPlayer(HUMAN); // TODO: Pass it as variable? (instead of getting it from here)
             // regardless if selected, render this so you know from which structure things will come?
-            if (player.isPrimaryStructureForStructureType(theStructure->getType(), i)) {
-                drawRectangleOfStructure(theStructure, player.getPrimaryBuildingFadingColor());
+            if (player->isPrimaryStructureForStructureType(theStructure->getType(), i)) {
+                drawRectangleOfStructure(theStructure, player->getPrimaryBuildingFadingColor());
                 continue;
             }
 
-            if (i == player.selected_structure) {
-                drawRectangleOfStructure(theStructure, player.getSelectFadingColor());
+            if (i == player->selected_structure) {
+                drawRectangleOfStructure(theStructure, player->getSelectFadingColor());
             }
         }
     }

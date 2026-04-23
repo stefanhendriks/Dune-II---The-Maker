@@ -71,7 +71,7 @@ bool cReinforcement::isReady() const
 
 void cReinforcement::execute() const
 {
-    int focusCell = game.m_gameObjectsContext->getPlayer(m_playerId).getFocusCell();
+    int focusCell = game.m_gameObjectsContext->getPlayer(m_playerId)->getFocusCell();
     REINFORCE(m_playerId, m_unitType, m_cell, focusCell, true);
 }
 
@@ -168,7 +168,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     if (iPlr < 0 || iTpe < 0)
         return;
 
-    if (game.m_gameObjectsContext->getMap().isValidCell(iCll) == false)
+    if (game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCll) == false)
         return;
 
     if (iStart < 0)
@@ -201,19 +201,19 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     }
 
     // STEP 3: assign order to carryall
-    int iCellX = game.m_gameObjectsContext->getMap().getCellX(iStartCell);
-    int iCellY = game.m_gameObjectsContext->getMap().getCellY(iStartCell);
-    int cx = game.m_gameObjectsContext->getMap().getCellX(iCll);
-    int cy = game.m_gameObjectsContext->getMap().getCellY(iCll);
+    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iStartCell);
+    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iStartCell);
+    int cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll);
+    int cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
 
     int d = fDegrees(iCellX, iCellY, cx, cy);
     int f = faceAngle(d); // get the angle
 
-    cUnit &carryall = game.m_gameObjectsContext->getUnit(iUnit);
-    carryall.rendering.iBodyShouldFace = f;
-    carryall.rendering.iBodyFacing = f;
-    carryall.rendering.iHeadShouldFace = f;
-    carryall.rendering.iHeadFacing = f;
+    cUnit *carryall = game.m_gameObjectsContext->getUnit(iUnit);
+    carryall->rendering.iBodyShouldFace = f;
+    carryall->rendering.iBodyFacing = f;
+    carryall->rendering.iHeadShouldFace = f;
+    carryall->rendering.iHeadFacing = f;
 
-    carryall.carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
+    carryall->carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
 }

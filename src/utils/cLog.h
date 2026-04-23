@@ -24,6 +24,7 @@ enum eLogComponent {
     COMP_SIDEBAR,
     COMP_MAP,
     COMP_GAMEOBJECTS,
+    COMP_GAME,
     COMP_NONE,
     COMP_INIT,
     // COMP_ALLEGRO,		/** Use for allegro specific calls **/

@@ -59,8 +59,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 #define SCANWIDTH	1
 
-    int iCellX = game.m_gameObjectsContext->getMap().getCellX(mouseCell);
-    int iCellY = game.m_gameObjectsContext->getMap().getCellY(mouseCell);
+    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(mouseCell);
+    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(mouseCell);
 
     // check
     int iStartX = iCellX-SCANWIDTH;
@@ -70,13 +70,13 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int iEndY = iCellY + SCANWIDTH + cellHeight;
 
     // Fix up the boundaries
-    cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(iStartX, iStartY);
-    cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(iEndX, iEndY);
+    cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinMap(iStartX, iStartY);
+    cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinMap(iEndX, iEndY);
 
     // Determine if structure to be placed is within build distance
     for (int iX=iStartX; iX < iEndX; iX++) {
         for (int iY=iStartY; iY < iEndY; iY++) {
-            int iCll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(iX, iY);
+            int iCll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
                 int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
@@ -116,11 +116,11 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int cellX = iCellX + iX;
                 int cellY = iCellY + iY;
 
-                if (!game.m_gameObjectsContext->getMap().isWithinBoundaries(cellX, cellY)) {
+                if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(cellX, cellY)) {
                     continue;
                 }
 
-                int iCll = game.m_gameObjectsContext->getMap().getGeometry().makeCell(cellX, cellY);
+                int iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(cellX, cellY);
 
                 if (!game.m_gameObjectsContext->getMap().isCellPassable(iCll) || game.m_gameObjectsContext->getMap().getCellType(iCll) != TERRAIN_ROCK) {
                     itemToPlaceColor = Color::PlaceNeutral;
@@ -139,7 +139,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int unitIdOnMap = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
-                    if (!game.m_gameObjectsContext->getUnit(unitIdOnMap).isDead()) {
+                    if (!game.m_gameObjectsContext->getUnit(unitIdOnMap)->isDead()) {
                         itemToPlaceColor = Color::PlaceNeutral;
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?

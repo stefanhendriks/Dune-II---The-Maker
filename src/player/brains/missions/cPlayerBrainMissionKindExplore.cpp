@@ -26,7 +26,7 @@ cPlayerBrainMissionKindExplore::~cPlayerBrainMissionKindExplore()
 
 bool cPlayerBrainMissionKindExplore::think_SelectTarget()
 {
-    targetCell = game.m_gameObjectsContext->getMap().getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+    targetCell = game.m_gameObjectsContext->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(2);
     return true;
 }
 
@@ -34,19 +34,19 @@ void cPlayerBrainMissionKindExplore::think_Execute()
 {
     const std::vector<int> &units = mission->getUnits();
     for (auto &myUnit : units) {
-        cUnit &aUnit = game.m_gameObjectsContext->getUnit(myUnit);
-        if (aUnit.isValid()) {
-            if (aUnit.isIdle()) {
-                if (game.m_gameObjectsContext->getMap().distance(aUnit.getCell(), targetCell) < 4) {
+        cUnit *aUnit = game.m_gameObjectsContext->getUnit(myUnit);
+        if (aUnit->isValid()) {
+            if (aUnit->isIdle()) {
+                if (game.m_gameObjectsContext->getMapGeometry()->distance(aUnit->getCell(), targetCell) < 4) {
                     targetCell = -1;
                     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET); // select new target
                 }
                 else {
-                    aUnit.move_to(targetCell);
+                    aUnit->move_to(targetCell);
                 }
             }
             else {
-                if (game.m_gameObjectsContext->getMap().distance(aUnit.getCell(), targetCell) < 2) {
+                if (game.m_gameObjectsContext->getMapGeometry()->distance(aUnit->getCell(), targetCell) < 2) {
                     // almost there. Select new target.
                     targetCell = -1;
                     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET); // select new target

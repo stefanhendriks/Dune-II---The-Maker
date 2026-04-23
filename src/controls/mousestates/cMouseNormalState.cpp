@@ -81,8 +81,8 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                 game.m_drawManager->setMessage(std::format("{} units selected", ids.size()));
             }
             else {
-                cUnit &pUnit = game.m_gameObjectsContext->getUnit(ids[0]);
-                game.m_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
+                cUnit *pUnit = game.m_gameObjectsContext->getUnit(ids[0]);
+                game.m_drawManager->setMessage(pUnit->getUnitStatusForMessageBar());
             }
         }
     }
@@ -96,16 +96,16 @@ void cMouseNormalState::onMouseLeftButtonClicked()
             if (hoverUnitId > -1) {
                 m_player->deselectAllUnits();
 
-                cUnit &pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
-                if (pUnit.isValid() && pUnit.belongsTo(m_player) && !pUnit.isSelected()) {
-                    pUnit.select();
-                    if (pUnit.isInfantryUnit()) {
+                cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+                if (pUnit->isValid() && pUnit->belongsTo(m_player) && !pUnit->isSelected()) {
+                    pUnit->select();
+                    if (pUnit->isInfantryUnit()) {
                         infantrySelected = true;
                     }
                     else {
                         unitSelected = true;
                     }
-                    game.m_drawManager->setMessage(pUnit.getUnitStatusForMessageBar());
+                    game.m_drawManager->setMessage(pUnit->getUnitStatusForMessageBar());
                 }
             }
 
@@ -178,8 +178,8 @@ int cMouseNormalState::getMouseTileForNormalState() const
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit &pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
-        if (pUnit.isValid() && pUnit.belongsTo(m_player)) {
+        cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+        if (pUnit->isValid() && pUnit->belongsTo(m_player)) {
             // only show this for units
             return MOUSE_PICK;
         }

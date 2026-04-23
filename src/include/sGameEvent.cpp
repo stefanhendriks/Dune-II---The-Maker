@@ -1,5 +1,5 @@
 #include "include/sGameEvent.h"
-#include "sidebar/cBuildingListItem.h"
+// #include "sidebar/cBuildingListItem.h"
 #include "utils/common.h"
 
 const char *s_GameEvent::toString(const eGameEventType &eventType)
@@ -49,6 +49,8 @@ const char *s_GameEvent::toString(const eGameEventType &eventType)
             return "GAME_EVENT_PLAYER_DEFEATED";
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED:
             return "GAME_EVENT_SPECIAL_LAUNCHED";
+        case eGameEventType::GAME_EVENT_DEPLOY_UNIT:
+            return "GAME_EVENT_DEPLOY_UNIT";
         default:
             assert(false && "Unknown game event type for toString()");
             break;
@@ -59,6 +61,27 @@ const char *s_GameEvent::toString(const eGameEventType &eventType)
 
 const std::string s_GameEvent::toString(const s_GameEvent &event)
 {
+    if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
+        return std::format(
+            "DeployUnitEvent[cell={}, unitType={}, playerId={}, onStart={}, reinforcement={}, hp={}]",
+            deployEvent->iCell,
+            deployEvent->unitType,
+            deployEvent->iPlayer,
+            deployEvent->bOnStart ? "true" : "false",
+            deployEvent->isReinforcement ? "true" : "false",
+            deployEvent->hpPercentage
+        );
+    }
+
+    if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
+        return std::format(
+            "LaunchDeathHandEvent[targetCell={}, itemToLaunch={}, playerId={}]",
+            launchEvent->targetCell,
+            launchEvent->itemToLaunch ? "present" : "nullptr",
+            launchEvent->playerID
+        );
+    }
+
     return std::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}], [buildingListItem={}] [originId={}]",
                            toString(event.eventType),
                            eBuildTypeString(event.entityType),

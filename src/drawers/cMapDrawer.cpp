@@ -11,6 +11,7 @@
 #include "utils/Graphics.hpp"
 #include "map/cMap.h"
 #include "map/cMapCamera.h"
+#include "map/MapGeometry.hpp"
 
 #include <SDL2/SDL.h>
 #include <cmath>
@@ -18,6 +19,7 @@
 
 cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera) :
     m_map(map),
+    m_mapGeometry(map ? &map->getGeometry() : nullptr),
     m_player(player),
     m_camera(camera),
     m_ctx(ctx),
@@ -27,6 +29,7 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     m_drawGrid(false)
 {
     assert(map!=nullptr);
+    assert(m_mapGeometry != nullptr);
     assert(camera!=nullptr);
     assert(player!=nullptr);
     assert(ctx != nullptr);
@@ -56,10 +59,10 @@ void cMapDrawer::drawShroud()
 
             if (iCell < 0) continue;
 
-            int absoluteXCoordinateOnMap = m_map->getAbsoluteXPositionFromCell(iCell);
+            int absoluteXCoordinateOnMap = m_mapGeometry->getAbsoluteXPositionFromCell(iCell);
             float fDrawX = game.m_mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
-            int absoluteYCoordinateOnMap = m_map->getAbsoluteYPositionFromCell(iCell);
+            int absoluteYCoordinateOnMap = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = game.m_mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
@@ -124,7 +127,7 @@ void cMapDrawer::drawTerrain()
             }
 
             // skip outer border cells
-            if (!m_map->isWithinBoundaries(iCell)) {
+            if (!m_mapGeometry->isWithinBoundaries(iCell)) {
                 continue;
             }
 
@@ -134,10 +137,10 @@ void cMapDrawer::drawTerrain()
                 continue;
             }
 
-            int absoluteXCoordinateOnMap = m_map->getAbsoluteXPositionFromCell(iCell);
+            int absoluteXCoordinateOnMap = m_mapGeometry->getAbsoluteXPositionFromCell(iCell);
             float fDrawX = game.m_mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
 
-            int absoluteYCoordinateOnMap = m_map->getAbsoluteYPositionFromCell(iCell);
+            int absoluteYCoordinateOnMap = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = game.m_mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             int iDrawX = round(fDrawX);
@@ -170,8 +173,8 @@ void cMapDrawer::drawTerrain()
                 if (mouseCell > -1) {
                     int cellX = (viewportX / 32);
                     int cellY = (viewportY / 32);
-                    int mcX = m_map->getCellX(mouseCell);
-                    int mcY = m_map->getCellY(mouseCell);
+                    int mcX = m_mapGeometry->getCellX(mouseCell);
+                    int mcY = m_mapGeometry->getCellY(mouseCell);
 
                     if (mcX == cellX && mcY == cellY) {
                         m_renderDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight,255, 255, 0,96);
@@ -258,10 +261,10 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const
 
     int tile; // Visible stuff, now check for not visible stuff. When found, assign the proper border
     // of shroud to it.
-    int above = m_map->getCellAbove(cll);
-    int under = m_map->getCellBelow(cll);
-    int left = m_map->getCellLeft(cll);
-    int right = m_map->getCellRight(cll);
+    int above = m_mapGeometry->getCellAbove(cll);
+    int under = m_mapGeometry->getCellBelow(cll);
+    int left = m_mapGeometry->getCellLeft(cll);
+    int right = m_mapGeometry->getCellRight(cll);
 
     bool a, u, l, r;
     a = u = l = r = true;

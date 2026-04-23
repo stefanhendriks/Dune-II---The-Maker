@@ -21,7 +21,7 @@
 #include "context/cGameObjectContext.h"
 #include "map/cMap.h"
 #include <cassert>
-#include <iostream>
+//#include <iostream>
 
 #include "data/gfxaudio.h"
 
@@ -59,6 +59,8 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
 
     m_RectMinimap = cRectangle(m_drawX, m_drawY, m_factorZoom*getMapWidthInPixels(), m_factorZoom * getMapHeightInPixels());
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
+    //std::cout << "Minimap top left corner: (" << m_RectMinimap.getX() << ", " << m_RectMinimap.getY() << ", " << m_RectMinimap.getWidth() << ", " << m_RectMinimap.getHeight() << ")" << std::endl;
+    //std::cout << "RectFullMinimap: (" << m_RectFullMinimap.getX() << ", " << m_RectFullMinimap.getY() << ", " << m_RectFullMinimap.getWidth() << ", " << m_RectFullMinimap.getHeight() << ")" << std::endl;
     m_mipMapTex = m_renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
 }
 
@@ -233,7 +235,7 @@ void cMiniMapDrawer::drawTerrain()
 
             // TODO: make flexible map borders
             // do not show the helper border
-            if (!m_map->isWithinBoundaries(x, y)) {
+            if (!m_map->getGeometry().isWithinBoundaries(x, y)) {
                 iColor = Color{0, 0, 0,255};
             }
 
@@ -288,7 +290,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
     for (int x = 0; x < m_map->getWidth(); x++) {
         for (int y = 0; y < m_map->getHeight(); y++) {
             // do not show the helper border
-            if (!m_map->isWithinBoundaries(x, y)) continue;
+            if (!m_map->getGeometry().isWithinBoundaries(x, y)) continue;
 
             int iCll = m_map->getGeometry().makeCell(x, y);
 
@@ -306,25 +308,25 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.m_gameObjectsContext->getPlayer(iPlr).getMinimapColor();
+                iColor = game.m_gameObjectsContext->getPlayer(iPlr)->getMinimapColor();
             }
 
             int idOfUnitAtCell = m_map->getCellIdUnitLayer(iCll);
             if (idOfUnitAtCell > -1) {
-                int iPlr = game.m_gameObjectsContext->getUnit(idOfUnitAtCell).iPlayer;
+                int iPlr = game.m_gameObjectsContext->getUnit(idOfUnitAtCell)->iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.m_gameObjectsContext->getPlayer(iPlr).getMinimapColor();
+                iColor = game.m_gameObjectsContext->getPlayer(iPlr)->getMinimapColor();
             }
 
             int idOfAirUnitAtCell = m_map->getCellIdAirUnitLayer(iCll);
             if (idOfAirUnitAtCell > -1) {
-                int iPlr = game.m_gameObjectsContext->getUnit(idOfAirUnitAtCell).iPlayer;
+                int iPlr = game.m_gameObjectsContext->getUnit(idOfAirUnitAtCell)->iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.m_gameObjectsContext->getPlayer(iPlr).getMinimapColor();
+                iColor = game.m_gameObjectsContext->getPlayer(iPlr)->getMinimapColor();
             }
 
             int idOfWormAtCell = m_map->getCellIdWormsLayer(iCll);
@@ -392,7 +394,20 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
     if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
     ) {
-
+        if (game.m_gameObjectsContext->getUnits()->areUnitsSelected() == true) {
+            //std::cout << "Mouse cursor is on pos:" << event.coords.x << "," << event.coords.y << " on minimap, moving selected units there." << std::endl;
+            //std::cout << "RectMiniMap size: " << m_RectMinimap.getWidth() << "," << m_RectMinimap.getHeight() << std::endl;
+            int posX = (event.coords.x-m_RectMinimap.getX())/m_factorZoom;
+            if (posX<0) posX=1;
+            if (posX>m_RectMinimap.getWidth()) posX=m_RectMinimap.getWidth()-1;
+            int posY = (event.coords.y-m_RectMinimap.getY())/m_factorZoom;
+            if (posY<0) posY=1;
+            if (posY>m_RectMinimap.getHeight()) posY=m_RectMinimap.getHeight()-1;
+            //std::cout << "Calculated pos on map: " << posX << "," << posY << ":"<< (posY * m_RectMinimap.getWidth()/m_factorZoom) + posX << std::endl;
+            cUnits *units = game.m_gameObjectsContext->getUnits();
+            units->move_to((posY * m_RectMinimap.getWidth()/m_factorZoom) + posX);
+            return;
+        }
         if (m_player->hasAtleastOneStructure(RADAR)) {
             auto m_mouse = game.getMouse();
             int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
@@ -413,7 +428,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     int mouseMiniMapY = mouseY - m_drawY;
     mouseMiniMapX /= m_factorZoom;
     mouseMiniMapY /= m_factorZoom;
-    auto mouseMiniMapPoint = m_map->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
+    auto mouseMiniMapPoint = m_map->getGeometry().fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
     return m_map->getGeometry().getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }

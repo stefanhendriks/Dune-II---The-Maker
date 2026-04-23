@@ -16,6 +16,12 @@
 #include "definitions.h"
 #include "cUnit.h"
 
+struct sGameServices;
+class cInfoContext;
+class cGameObjectContext;
+class cGameInterface;
+class cMap;
+
 /**
  * Manager class that encapsulates the global g_Unit array
  * Provides safe access to units with bounds checking and convenient methods
@@ -26,6 +32,7 @@ public:
      * Default constructor
      */
     cUnits();
+    void serviceInit(sGameServices* services);
 
     /**
      * Non-copyable
@@ -85,6 +92,10 @@ public:
     auto end() { return m_units.end(); }
     auto end() const { return m_units.end(); }
 
+    bool areUnitsSelected() const;
+
+    void move_to(int icell);
+
     /**
      * Creates a new unit, when bOnStart is true, it will prevent AI players from moving a unit immediately a bit.
      * Assumes the creation of a unit is NOT a reinforcement.
@@ -125,6 +136,10 @@ public:
 
 
 private:
+    cInfoContext *m_infos = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cMap* m_map = nullptr;
     // Maximum number of units
     static constexpr int MAX_UNITS_CAPACITY = 300;
     std::array<cUnit, MAX_UNITS_CAPACITY> m_units;

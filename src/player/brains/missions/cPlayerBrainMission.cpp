@@ -149,8 +149,8 @@ void cPlayerBrainMission::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainMission::onEventDeviated(const s_GameEvent &event)
 {
     if (event.entityType == UNIT) {
-        cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
-        if (entityUnit.getPlayer() != player) {
+        cUnit *entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
+        if (entityUnit->getPlayer() != player) {
             // not our unit, if it was in our units list, remove it.
             removeUnitIdFromListIfPresent(event.entityID);
         }
@@ -197,10 +197,10 @@ void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
                 state == PLAYERBRAINMISSION_STATE_PREPARE_GATHER_RESOURCES) {
             // unit got created, not reinforced
             if (event.entityType == UNIT && !event.isReinforce) {
-                cUnit &entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
+                cUnit *entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
 
                 // this unit has not been assigned to a mission yet
-                if (!entityUnit.isAssignedAnyMission()) {
+                if (!entityUnit->isAssignedAnyMission()) {
                     // update bookkeeping that we have produced something
                     for (auto &thingIWant : group) {
                         // straightforward type match
@@ -208,8 +208,8 @@ void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
                             // in case we have multiple entries with same type we check for produced vs required
                             if (thingIWant.produced < thingIWant.required) {
                                 // assign this unit to my team and my mission
-                                units.push_back(entityUnit.iID);
-                                entityUnit.assignMission(uniqueIdentifier);
+                                units.push_back(entityUnit->iID);
+                                entityUnit->assignMission(uniqueIdentifier);
 
                                 thingIWant.produced++; // increase produced amount
                                 break;
@@ -228,8 +228,8 @@ void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
                                     // meaning we assign any unit that derived from this to our group.
 
                                     // assign this unit to my team and my mission
-                                    units.push_back(entityUnit.iID);
-                                    entityUnit.assignMission(uniqueIdentifier);
+                                    units.push_back(entityUnit->iID);
+                                    entityUnit->assignMission(uniqueIdentifier);
 
                                     thingIWant.produced++; // increase produced amount
                                     break;
@@ -257,7 +257,7 @@ void cPlayerBrainMission::removeUnitIdFromListIfPresent(int unitIdToRemove)
         // found unit in our list, so someone of ours got destroyed!
         log(std::format("removeUnitIdFromListIfPresent [{}] has removed unit from the list!", unitIdToRemove).c_str());
         units.erase(position);
-        game.m_gameObjectsContext->getUnit(unitIdToRemove).unAssignMission();
+        game.m_gameObjectsContext->getUnit(unitIdToRemove)->unAssignMission();
         log("These units are still available:");
         logUnits();
     }
@@ -293,16 +293,16 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
 
                 if (thingIWant.buildType == eBuildType::UNIT) {
                     for (auto &unitId : allMyUnits) {
-                        cUnit &pUnit = game.m_gameObjectsContext->getUnit(unitId);
-                        if (!pUnit.isValid()) continue;
-                        if (pUnit.getType() != thingIWant.type) continue;
-                        if (!pUnit.isIdle()) continue;
-                        if (pUnit.isUnableToMove()) continue; // don't assign units with missions that can't move
-                        if (pUnit.isAssignedAnyMission()) continue; // already assigned to a mission
+                        cUnit *pUnit = game.m_gameObjectsContext->getUnit(unitId);
+                        if (!pUnit->isValid()) continue;
+                        if (pUnit->getType() != thingIWant.type) continue;
+                        if (!pUnit->isIdle()) continue;
+                        if (pUnit->isUnableToMove()) continue; // don't assign units with missions that can't move
+                        if (pUnit->isAssignedAnyMission()) continue; // already assigned to a mission
 
                         // claim it for this mission!
-                        pUnit.assignMission(this->uniqueIdentifier);
-                        units.push_back(pUnit.iID);
+                        pUnit->assignMission(this->uniqueIdentifier);
+                        units.push_back(pUnit->iID);
                         thingIWant.produced++; // update bookkeeping, no need to order it, we already have it
                         log(std::format("Found idle unit [{}] to assign to mission [{}]", unitId, this->uniqueIdentifier).c_str());
 
@@ -448,8 +448,8 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
 void cPlayerBrainMission::logUnits()
 {
     for (auto &myUnitId : units) {
-        cUnit &myUnit = game.m_gameObjectsContext->getUnit(myUnitId);
-        log(std::format("logUnits() : Unit {}, type {} ({})", myUnit.iID, myUnit.iType, myUnit.getUnitInfo().name).c_str());
+        cUnit *myUnit = game.m_gameObjectsContext->getUnit(myUnitId);
+        log(std::format("logUnits() : Unit {}, type {} ({})", myUnit->iID, myUnit->iType, myUnit->getUnitInfo().name).c_str());
     }
 }
 
@@ -505,9 +505,9 @@ void cPlayerBrainMission::thinkState_Execute()
 
     bool teamIsStillAlive = false;
     for (auto &myUnit : units) {
-        cUnit &aUnit = game.m_gameObjectsContext->getUnit(myUnit);
-        if (aUnit.isValid() &&
-                aUnit.isAssignedMission(uniqueIdentifier)) { // in case this unit ID was re-spawned...
+        cUnit *aUnit = game.m_gameObjectsContext->getUnit(myUnit);
+        if (aUnit->isValid() &&
+                aUnit->isAssignedMission(uniqueIdentifier)) { // in case this unit ID was re-spawned...
             teamIsStillAlive = true;
             break;
         }

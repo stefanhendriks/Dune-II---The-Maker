@@ -31,25 +31,25 @@ void cPlayerBrainSandworm::think()
     // loop through all its worms and move them around
     const std::vector<int> &wormIds = player->getAllMyUnitsForType(SANDWORM);
     for (auto &i : wormIds) {
-        cUnit &pSandWorm = game.m_gameObjectsContext->getUnit(i);
+        cUnit *pSandWorm = game.m_gameObjectsContext->getUnit(i);
 
         // when on guard
-        bool allowedToMove = pSandWorm.movewaitTimer.get() < 1;
-        if (pSandWorm.isIdle() && allowedToMove) {
+        bool allowedToMove = pSandWorm->movewaitTimer.get() < 1;
+        if (pSandWorm->isIdle() && allowedToMove) {
             findRandomValidLocationToMoveToAndGoThere(pSandWorm);
         }
     }
 
 }
 
-void cPlayerBrainSandworm::findRandomValidLocationToMoveToAndGoThere(cUnit &pSandWorm) const
+void cPlayerBrainSandworm::findRandomValidLocationToMoveToAndGoThere(cUnit *pSandWorm) const
 {
     int placeToMoveTo = game.m_gameObjectsContext->getMap().findRandomCellToMoveToForSandworm();
 
     if (placeToMoveTo > -1) {
-        pSandWorm.move_to(placeToMoveTo);
+        pSandWorm->move_to(placeToMoveTo);
     } else {
-        pSandWorm.die(false, false);
+        pSandWorm->die(false, false);
     }
 }
 

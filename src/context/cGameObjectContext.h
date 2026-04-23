@@ -1,7 +1,9 @@
 #pragma once
 
 #include <stdexcept>
+#include <cstddef>
 #include <memory>
+#include "map/MapGeometry.hpp"
 
 class cBullets;
 class cPlayers;
@@ -11,7 +13,10 @@ class cUnits;
 class cMap;
 class cPlayer;
 class cUnit;
+class cAbstractStructure;
 class cStructureFactory;
+
+struct sGameServices;
 
 class cGameObjectContext {
 public:
@@ -26,19 +31,25 @@ public:
     ~cGameObjectContext();
 
     cBullets& getBullets() const;
-    cPlayers& getPlayers() const;
-    cParticles& getParticles() const;
-    cStructures& getStructures() const;
-    cUnits& getUnits() const;
     cMap& getMap() const;
+    MapGeometry* getMapGeometry() const;
+    cPlayers* getPlayers() const;
+    cParticles& getParticles() const;
 
-    cPlayer& getPlayer(int index);
-    const cPlayer& getPlayer(int index) const;
-    cUnit& getUnit(int index);
-    const cUnit& getUnit(int index) const;
+    cStructures& getStructures() const;
+    cAbstractStructure* getStructure(int index);
+
+    cUnits* getUnits() const;
+    int getUnitsSize() const;
+    cUnit* getUnit(std::size_t index);
+    cUnit* getUnit(int index);
+
+    cPlayer* getPlayer(int index);
+    const cPlayer* getPlayer(int index) const;
 
     cStructureFactory* getStructureFactory() const;
 
+    void serviceInit(sGameServices* services);
 private:
     std::unique_ptr<cBullets> m_Bullets;
     std::unique_ptr<cPlayers> m_Players;

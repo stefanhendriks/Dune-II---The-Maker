@@ -11,11 +11,21 @@ public:
 
     int getCellX(int c) const;
     int getCellY(int c) const;
+    int getCellAbove(int c) const;
+    int getCellBelow(int c) const;
+    int getCellLeft(int c) const;
+    int getCellRight(int c) const;
+    int getCellUpperLeft(int c) const;
+    int getCellUpperRight(int c) const;
+    int getCellLowerLeft(int c) const;
+    int getCellLowerRight(int c) const;
+    bool isCellAdjacentToOtherCell(int thisCell, int otherCell) const;
     /**
         Returns cell , taking given map width/height into account. This includes the invisible border around the map.
         If you want to take the invisible border into account use getCellWithMapBorders instead.
     **/
     int getCellWithMapDimensions(int x, int y) const;
+    int getCellClampedWithMapDimensions(int x, int y) const;
     /**
         Return map cell; taking the map borders into account. If x or y falls out of bounds, this function will return -1
         If you want to include the invisible map borders, use getCellWithMapDimensions instead.
@@ -42,8 +52,10 @@ public:
     bool isWithinBoundaries(int c) const;
     // ...
     double distance(int cell1, int cell2) const;
+    double distance(int x1, int y1, int x2, int y2) const;
 
     int getMaxCells() const { return maxCells; }
+    int getMaxDistanceInPixels() const;
 
     bool isAtMapBoundaries(int cell) const;
     cPoint fixCoordinatesToBeWithinPlayableMap(int x, int y) const;

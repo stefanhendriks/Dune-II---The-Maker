@@ -91,8 +91,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
 
 #define SCANWIDTH    1
 
-    int iCellX = game.m_gameObjectsContext->getMap().getCellX(mouseCell);
-    int iCellY = game.m_gameObjectsContext->getMap().getCellY(mouseCell);
+    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(mouseCell);
+    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(mouseCell);
 
     // check
     int iStartX = iCellX - SCANWIDTH;
@@ -102,13 +102,13 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     int iEndY = iCellY + SCANWIDTH + cellHeight;
 
     // Fix up the boundaries
-    cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(iStartX, iStartY);
-    cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMap().fixCoordinatesToBeWithinMap(iEndX, iEndY);
+    cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinMap(iStartX, iStartY);
+    cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinMap(iEndX, iEndY);
 
     // Determine if structure to be placed is within build distance
     for (int iX = iStartX; iX < iEndX; iX++) {
         for (int iY = iStartY; iY < iEndY; iY++) {
-            int iCll = game.m_gameObjectsContext->getMap().getGeometry().getCellWithMapDimensions(iX, iY);
+            int iCll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
                 int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
@@ -145,11 +145,11 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
             int cellX = iCellX + iX;
             int cellY = iCellY + iY;
 
-            if (!game.m_gameObjectsContext->getMap().isWithinBoundaries(cellX, cellY)) {
+            if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(cellX, cellY)) {
                 return false;
             }
 
-            int iCll = game.m_gameObjectsContext->getMap().getGeometry().makeCell(cellX, cellY);
+            int iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(cellX, cellY);
 
             // occupied by units or structures
             int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
@@ -165,7 +165,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                 int unitIdOnMap = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
-                    if (!game.m_gameObjectsContext->getUnits()[unitIdOnMap].isDead()) {
+                    if (!game.m_gameObjectsContext->getUnit(unitIdOnMap)->isDead()) {
                         return false;
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?

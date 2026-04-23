@@ -16,6 +16,10 @@
 #include <memory>
 class cGameSettings;
 struct s_DataCampaign;
+struct sGameServices;
+class cMouse;
+class cSideBarFactory;
+class cLog;
 #include "cPlayer.h"
 
 /**
@@ -33,6 +37,11 @@ public:
     cPlayers();
 
     /**
+     * Propagates services to every cPlayer.
+     */
+    void serviceInit(sGameServices* services);
+    ~cPlayers();
+    /**
      * Non-copyable
      */
     cPlayers(const cPlayers&) = delete;
@@ -43,8 +52,8 @@ public:
      * @param index The player index
      * @return Reference to cPlayer object
      */
-    cPlayer& operator[](int index);
-    const cPlayer& operator[](int index) const;
+    cPlayer* operator[](int index);
+    const cPlayer* operator[](int index) const;
 
     /**
      * Safe access with bounds checking
@@ -58,8 +67,8 @@ public:
      * Get human player (player 0)
      * @return Reference to human player
      */
-    cPlayer& getHumanPlayer();
-    const cPlayer& getHumanPlayer() const;
+    cPlayer* getHumanPlayer();
+    const cPlayer* getHumanPlayer() const;
 
     /**
      * Get the capacity (maximum number of players)
@@ -93,12 +102,32 @@ public:
      */
     void initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign);
 
-    void setupPlayers(std::shared_ptr<cHousesInfo> housesInfo);
+    void setupPlayers(cHousesInfo* housesInfo);
+
+    // Initialize per-player runtime helpers used during gameplay.
+    void setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMouse* mouse, int techLevel);
 
     void destroyAllegroBitmaps();
 
     void onNotifyGameEvent(const s_GameEvent& event);
     void evaluateStillAliveForAI();
 private:
-    std::array<cPlayer, MAX_PLAYERS_CAPACITY> m_players;
+    std::array<cPlayer*, MAX_PLAYERS_CAPACITY> m_players;
+    cLog *m_log = nullptr;
 };
+
+inline auto begin(cPlayers* players) {
+  return players->begin();
+}
+
+inline auto end(cPlayers* players) {
+  return players->end();
+}
+
+inline auto begin(const cPlayers* players) {
+  return players->begin();
+}
+
+inline auto end(const cPlayers* players) {
+  return players->end();
+}

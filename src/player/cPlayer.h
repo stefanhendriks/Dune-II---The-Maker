@@ -43,6 +43,7 @@ class cSideBar;
 class cPlayerDifficultySettings;
 class cOrderProcesser;
 class cGameControlsContext;
+class Graphics;
 
 
 struct sEntityForDistance {
@@ -73,6 +74,13 @@ struct s_PlaceResult {
     std::set<int> structureIds = std::set<int>();
 };
 
+struct sGameServices;
+class cGameSettings;
+class cInfoContext;
+class cGameObjectContext;
+class cGameInterface;
+class cLog;
+
 class cPlayer : public cScenarioObserver {
 
 public:
@@ -81,11 +89,17 @@ public:
 
     ~cPlayer();
 
-    void init(int id, brains::cPlayerBrain *brain);
+    /**
+     * Injects services that weren't available at construction time.
+     */
+    void serviceInit(sGameServices* services);
 
-    void setBrain(brains::cPlayerBrain *brain);
+    void init(int id, std::unique_ptr<brains::cPlayerBrain> brain);
 
-    void setHousesInfo(std::shared_ptr<cHousesInfo> housesInfo) {
+    void setBrain(std::unique_ptr<brains::cPlayerBrain> brain);
+
+    void setHousesInfo(cHousesInfo* housesInfo) {
+        assert(housesInfo != nullptr);
         m_HousesInfo = housesInfo;
     }
 
@@ -103,7 +117,7 @@ public:
     void substractCredits(int amount);
     void setCredits(int credits);
     void giveCredits(float amountToGive);
-    int getCredits();
+    int getCredits() const;
 
 
     // focus cell
@@ -123,23 +137,23 @@ public:
     void setHouse(int iHouse);
 
     // ---
-    void setItemBuilder(cItemBuilder *theItemBuilder);
+    void setItemBuilder(std::unique_ptr<cItemBuilder> theItemBuilder);
 
     void setSideBar(cSideBar *theSideBar);
 
-    void setBuildingListUpdater(cBuildingListUpdater *theBuildingListUpgrader);
+    void setBuildingListUpdater(std::unique_ptr<cBuildingListUpdater> theBuildingListUpgrader);
 
     void setTechLevel(int theTechLevel) {
         techLevel = theTechLevel;
     }
 
-    void setOrderProcesser(cOrderProcesser *theOrderProcesser);
+    void setOrderProcesser(std::unique_ptr<cOrderProcesser> theOrderProcesser);
 
-    void setGameControlsContext(cGameControlsContext *theGameControlsContext);
+    void setGameControlsContext(std::unique_ptr<cGameControlsContext> theGameControlsContext);
 
     // get
     cBuildingListUpdater *getBuildingListUpdater() const {
-        return buildingListUpdater;
+        return buildingListUpdater.get();
     }
 
     cPlayerDifficultySettings *getDifficultySettings() const {
@@ -147,7 +161,7 @@ public:
     }
 
     cItemBuilder *getItemBuilder() const {
-        return itemBuilder;
+        return itemBuilder.get();
     }
 
     cSideBar *getSideBar() const {
@@ -175,11 +189,11 @@ public:
     }
 
     cOrderProcesser *getOrderProcesser() const {
-        return orderProcesser;
+        return orderProcesser.get();
     }
 
     cGameControlsContext *getGameControlsContext() const {
-        return gameControlsContext;
+        return gameControlsContext.get();
     }
 
     void setContextMouseState(eMouseState newState);
@@ -194,7 +208,7 @@ public:
         return emblemBackgroundColor;
     }
 
-    bool isHuman() {
+    bool isHuman() const {
         return m_Human;
     }
 
@@ -202,7 +216,7 @@ public:
 
     int getAmountOfStructuresForType(int structureType) const;
 
-    int getAmountOfUnitsForType(std::vector<int> unitTypes) const;
+    int getAmountOfUnitsForType(const std::vector<int> &unitTypes) const;
 
     bool hasRadarAndEnoughPower() const;
 
@@ -270,7 +284,7 @@ public:
         iTeam = value;
     }
 
-    int getTeam() {
+    int getTeam() const {
         return iTeam;
     }
 
@@ -305,15 +319,15 @@ public:
 
     std::vector<int> getSelectedUnits() const;
 
-    bool isSameTeamAs(const cPlayer *pPlayer);
+    bool isSameTeamAs(const cPlayer *pPlayer) const;
 
     void update();
 
-    float getMaxCredits();
+    float getMaxCredits() const;
 
-    int getPowerProduced();
+    int getPowerProduced() const;
 
-    int getPowerUsage();
+    int getPowerUsage() const;
 
     void dumpCredits(int amount);
 
@@ -518,19 +532,16 @@ private:
     bool m_Human;
 
     // TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
-    // TODO: redundant? OBSELETE. Since we're getting more properties for units and thereby
+    // TODO: redundant? OBSOLETE. Since we're getting more properties for units and thereby
     // can/should create units specific for houses.
     cPlayerDifficultySettings *difficultySettings;
-
     // these have all state, and need to be recreated for each mission.
     cSideBar *sidebar;            // each player has a sidebar (lists of what it can build)
-    cItemBuilder *itemBuilder; // each player can build items
-
-    cBuildingListUpdater *buildingListUpdater; // modifies list of sidebar on upgrades
-    cOrderProcesser *orderProcesser; // process orders for starport
-    std::shared_ptr<cHousesInfo> m_HousesInfo;
-
-    cGameControlsContext *gameControlsContext;
+    std::unique_ptr<cItemBuilder> itemBuilder; // each player can build items
+    std::unique_ptr<cBuildingListUpdater> buildingListUpdater; // modifies list of sidebar on upgrades
+    std::unique_ptr<cOrderProcesser> orderProcesser; // process orders for starport
+    cHousesInfo* m_HousesInfo;
+    std::unique_ptr<cGameControlsContext> gameControlsContext;
 
     int techLevel;        // technology level
     int house;
@@ -539,6 +550,12 @@ private:
     int id;    // this id is the reference to the player array
     int iTeam;
 
+    cGameSettings *m_settings = nullptr;
+    cInfoContext *m_infos = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cLog *m_log = nullptr;
+    Graphics *m_gfxdata = nullptr;
 
     Texture *bmp_structure[MAX_STRUCTURE_BMPS];
     Texture *bmp_flag;
@@ -559,7 +576,7 @@ private:
 
     int focusCell_;        // this is the cell that will be showed in the game centralized upon map loading
 
-    brains::cPlayerBrain *brain_;
+    std::unique_ptr<brains::cPlayerBrain> brain_;
 
     bool m_autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 

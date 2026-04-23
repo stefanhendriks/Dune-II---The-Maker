@@ -635,8 +635,8 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         if (playableFaction) {
             if (!sSkirmishPlayer.bPlaying) {
                 // make sure it is a brain dead AI...
-                cPlayer &cPlayer = m_objects->getPlayer(p);
-                cPlayer.init(p, nullptr);
+                cPlayer* cPlayer = m_objects->getPlayer(p);
+                cPlayer->init(p, nullptr);
                 continue;
             }
 
@@ -661,7 +661,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                             houseInUse = true;
                         }
 
-                        if (m_objects->getPlayer(pl).getHouse() == iHouse) {
+                        if (m_objects->getPlayer(pl)->getHouse() == iHouse) {
                             // already in use by a already-setup player
                             houseInUse = true;
                         }
@@ -682,54 +682,65 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             }
         }
 
-        cPlayer &pPlayer = m_objects->getPlayer(p);
+        cPlayer* pPlayer = m_objects->getPlayer(p);
 
         // TEAM Logic
         if (p == HUMAN) {
-            pPlayer.init(p, nullptr);
+            pPlayer->init(p, nullptr);
         }
         else if (p == AI_CPU5) {
-            pPlayer.init(p, new brains::cPlayerBrainFremenSuperWeapon(&pPlayer));
+            pPlayer->init(p, std::make_unique<brains::cPlayerBrainFremenSuperWeapon>(pPlayer));
         }
         else if (p == AI_CPU6) {
             if (!m_settings->isDisableWormAi()) {
-                pPlayer.init(p, new brains::cPlayerBrainSandworm(&pPlayer));
+                pPlayer->init(p, std::make_unique<brains::cPlayerBrainSandworm>(pPlayer));
             }
             else {
-                pPlayer.init(p, nullptr);
+                pPlayer->init(p, nullptr);
             }
         }
         else {
             if (maxThinkingAIs > 0) {
-                pPlayer.init(p, new brains::cPlayerBrainSkirmish(&pPlayer));
+                pPlayer->init(p, std::make_unique<brains::cPlayerBrainSkirmish>(pPlayer));
                 maxThinkingAIs--;
             }
             else {
-                pPlayer.init(p, nullptr);
+                pPlayer->init(p, nullptr);
             }
         }
 
-        pPlayer.setCredits(sSkirmishPlayer.iCredits);
-        pPlayer.setHouse(iHouse);
+        pPlayer->setCredits(sSkirmishPlayer.iCredits);
+        pPlayer->setHouse(iHouse);
 
         // from here, ignore non playable factions
         if (!playableFaction) continue;
 
-        pPlayer.setFocusCell(iStartPositions[p]);
+        pPlayer->setFocusCell(iStartPositions[p]);
 
         // Set map position
         if (p == HUMAN) {
-            m_interface->getMapCamera()->centerAndJumpViewPortToCell(pPlayer.getFocusCell());
+            m_interface->getMapCamera()->centerAndJumpViewPortToCell(pPlayer->getFocusCell());
         }
 
         // create constyard
-        const s_PlaceResult &result = pPlayer.canPlaceStructureAt(pPlayer.getFocusCell(), CONSTYARD);
+        const s_PlaceResult &result = pPlayer->canPlaceStructureAt(pPlayer->getFocusCell(), CONSTYARD);
         if (!result.success) {
             // when failure, create mcv instead
-            cUnits::unitCreate(pPlayer.getFocusCell(), MCV, p, true);
+            // cUnits::unitCreate(pPlayer->getFocusCell(), MCV, p, true);
+            const s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                .data = DeployUnitEvent {
+                    .iCell = pPlayer->getFocusCell(),
+                    .unitType = MCV,
+                    .iPlayer = p,
+                    .bOnStart = true,
+                    .isReinforcement = false
+                }
+            };
+            m_interface->onNotifyGameEvent(event);
         }
         else {
-            pPlayer.placeStructure(pPlayer.getFocusCell(), CONSTYARD, 100);
+            pPlayer->placeStructure(pPlayer->getFocusCell(), CONSTYARD, 100);
         }
     }
 
@@ -751,7 +762,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         int iType = RNG::rnd(12);
 
         for (int p = 0; p < MAX_PLAYERS; p++) {
-            cPlayer &pPlayer = m_objects->getPlayer(p);
+            cPlayer* pPlayer = m_objects->getPlayer(p);
             s_SkirmishPlayer &pSkirmishPlayer = skirmishPlayer[p];
 
             if (!pSkirmishPlayer.bPlaying) continue; // skip non playing players
@@ -760,11 +771,11 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 continue; // skip this player
             }
 
-            int iPlayerUnitType = pPlayer.getSameOrSimilarUnitType(iType);
+            int iPlayerUnitType = pPlayer->getSameOrSimilarUnitType(iType);
 
             int minRange = 3;
             int maxRange = 12;
-            int cell = m_objects->getMap().getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer.getFocusCell(),
+            int cell = m_objects->getMap().getRandomCellFromWithRandomDistanceValidForUnitType(pPlayer->getFocusCell(),
                        minRange,
                        maxRange,
                        iPlayerUnitType);
@@ -773,7 +784,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
             cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units",
                                         std::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),
-                                        OUTC_NONE, p, pPlayer.getHouse());
+                                        OUTC_NONE, p, pPlayer->getHouse());
         }
 
         u++;
@@ -781,27 +792,27 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     // TEAM LOGIC here, so we can decide which is Atreides and thus should be allied with Fremen...
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        cPlayer &player = m_objects->getPlayer(p);
+        cPlayer* player = m_objects->getPlayer(p);
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[p];
         if (p == HUMAN) {
-            player.setTeam(sSkirmishPlayer.team);
+            player->setTeam(sSkirmishPlayer.team);
         }
         else if (p == AI_CPU5) {   // AI for fremen (super weapon)
-            player.setTeam(AI_CPU5);
+            player->setTeam(AI_CPU5);
         }
         else if (p == AI_CPU6) {
-            player.setTeam(AI_CPU6); // worm team is against everyone
+            player->setTeam(AI_CPU6); // worm team is against everyone
         }
         else {
             // all other AI's are their own team (campaign == AI's are friends, here they are enemies)
-            player.setTeam(sSkirmishPlayer.team);
+            player->setTeam(sSkirmishPlayer.team);
         }
     }
 
     for (int p = 0; p < MAX_PLAYERS; p++) {
-        cPlayer &player = m_objects->getPlayer(p);
-        if (player.getHouse() == ATREIDES) {
-            m_objects->getPlayer(AI_CPU5).setTeam(player.getTeam());
+        cPlayer* player = m_objects->getPlayer(p);
+        if (player->getHouse() == ATREIDES) {
+            m_objects->getPlayer(AI_CPU5)->setTeam(player->getTeam());
         }
     }
 
@@ -821,7 +832,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         int worms = spawnWorms;
         int minDistance = worms * 12; // so on 64x64 maps this still could work
         int maxDistance = worms * 32; // 128 / 4
-        int wormCell = m_objects->getMap().getRandomCell();
+        int wormCell = m_objects->getMapGeometry()->getRandomCell();
         int failures = 0;
         logbook(std::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
         while (worms > 0) {
@@ -838,7 +849,17 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 continue;
             }
             logbook(std::format("Spawning sandworm at {}", cell));
-            cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            // cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            const s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                .data = DeployUnitEvent {
+                    .iCell = cell,
+                    .unitType = SANDWORM,
+                    .iPlayer = AI_WORM,
+                    .bOnStart = true
+                }
+            };
+            m_interface->onNotifyGameEvent(event);
             wormCell = cell; // start from here to spawn new worm
             worms--;
             failures = 0; // reset failures

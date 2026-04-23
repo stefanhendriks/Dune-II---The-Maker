@@ -17,6 +17,7 @@
 #include <cmath>
 
 class cMap;
+class MapGeometry;
 
 class cMapCamera : cInputObserver {
 
@@ -169,6 +170,7 @@ public:
     }
 
     int getCellFromAbsolutePosition(int x, int y);
+    int getCellClampedFromAbsolutePosition(int x, int y);
 
     void setViewportPosition(int x, int y);
 
@@ -204,6 +206,7 @@ private:
 
     // the map this camera is viewing
     cMap *m_pMap;
+    MapGeometry *m_mapGeometry = nullptr;
 
     void adjustViewport(float screenX, float screenY);
 

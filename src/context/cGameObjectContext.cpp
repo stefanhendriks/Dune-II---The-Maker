@@ -1,4 +1,5 @@
 #include "cGameObjectContext.h"
+#include "include/sGameServices.h"
 
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/cBullets.h"
@@ -42,11 +43,11 @@ cBullets& cGameObjectContext::getBullets() const {
     return *m_Bullets;
 }
 
-cPlayers& cGameObjectContext::getPlayers() const {
+cPlayers* cGameObjectContext::getPlayers() const {
     if (!m_Players) {
         throw std::runtime_error("cPlayers not initialized in cGameObjectContext");
     }
-    return *m_Players;
+    return m_Players.get();
 }
 
 cParticles& cGameObjectContext::getParticles() const {
@@ -63,11 +64,18 @@ cStructures& cGameObjectContext::getStructures() const {
     return *m_pStructures;
 }
 
-cUnits& cGameObjectContext::getUnits() const {
+cUnits* cGameObjectContext::getUnits() const {
     if (!m_Units) {
         throw std::runtime_error("cUnits not initialized in cGameObjectContext");
     }
-    return *m_Units;
+    return m_Units.get();
+}
+
+int cGameObjectContext::getUnitsSize() const {
+    if (!m_Units) {
+        throw std::runtime_error("cUnits not initialized in cGameObjectContext");
+    }
+    return m_Units->size();
 }
 
 cMap& cGameObjectContext::getMap() const {
@@ -77,24 +85,44 @@ cMap& cGameObjectContext::getMap() const {
     return *m_map;
 }
 
-cUnit& cGameObjectContext::getUnit(int index)
-{
-    return (*m_Units)[index];
+MapGeometry* cGameObjectContext::getMapGeometry() const {
+    if (!m_map) {
+        throw std::runtime_error("cMap not initialized in cGameObjectContext");
+    }
+    return &m_map->getGeometry();
 }
 
-const cUnit& cGameObjectContext::getUnit(int index) const
+cUnit* cGameObjectContext::getUnit(std::size_t index)
 {
-    return (*m_Units)[index];
+    if (!m_Units) return nullptr;
+    if (index >= static_cast<std::size_t>(m_Units->size())) return nullptr;
+    return &(*m_Units)[static_cast<int>(index)];
 }
 
-cPlayer& cGameObjectContext::getPlayer(int index)
+cUnit* cGameObjectContext::getUnit(int index)
 {
-    return (*m_Players)[index];
+    if (index < 0) return nullptr;
+    return getUnit(static_cast<std::size_t>(index));
 }
 
-const cPlayer& cGameObjectContext::getPlayer(int index) const
+cAbstractStructure* cGameObjectContext::getStructure(int index)
 {
-    return (*m_Players)[index];
+    if (index < 0) return nullptr;
+
+    auto &structures = getStructures();
+    if (index >= static_cast<int>(structures.size())) return nullptr;
+
+    return structures[index];
+}
+
+cPlayer* cGameObjectContext::getPlayer(int index)
+{
+    return m_Players->getPlayer(index);
+}
+
+const cPlayer* cGameObjectContext::getPlayer(int index) const
+{
+    return m_Players->getPlayer(index);
 }
 
 cStructureFactory* cGameObjectContext::getStructureFactory() const
@@ -103,4 +131,14 @@ cStructureFactory* cGameObjectContext::getStructureFactory() const
         throw std::runtime_error("cStructureFactory not initialized in cGameObjectContext");
     }
     return m_structureFactory.get();
+}
+
+void cGameObjectContext::serviceInit(sGameServices* services)
+{
+    assert(m_Players != nullptr);
+    m_Players->serviceInit(services);
+    assert(m_map != nullptr);
+    m_map->serviceInit(services);
+    assert(m_Units != nullptr);
+    m_Units->serviceInit(services);
 }
