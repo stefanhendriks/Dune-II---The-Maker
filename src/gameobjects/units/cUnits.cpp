@@ -26,6 +26,16 @@ cUnits::cUnits() {
     // Units will be initialized through default constructors of std::array
 }
 
+
+void cUnits::serviceInit(sGameServices* services)
+{
+    assert(services != nullptr);
+    for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
+        m_units[i].serviceInit(services);
+    }
+}
+
+
 cUnit& cUnits::operator[](int index)
 {
     assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
