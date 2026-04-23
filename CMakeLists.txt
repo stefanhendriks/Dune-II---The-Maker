@@ -106,14 +106,15 @@ if (APPLE)
             ${ALL_SDL_LIBS}
     )
     target_compile_options(${PROJECT_NAME}
-      PRIVATE
-        ${D2TM_OPTMIZATION}
-        "-Wall"
-        "-Wextra"
-        "-Wpedantic"
-        "-Wzero-as-null-pointer-constant"
-        "-Wextra-semi"
-        "-Werror"
+            PRIVATE
+            ${D2TM_OPTMIZATION}
+            "-Wall"
+            "-Wextra"
+            "-Wpedantic"
+            "-Wzero-as-null-pointer-constant"
+            "-Wextra-semi"
+            "-Werror"
+            "-Wno-unused-private-field"
     )
 elseif (UNIX)
     target_compile_options(${PROJECT_NAME}
