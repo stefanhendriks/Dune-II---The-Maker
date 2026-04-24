@@ -51,13 +51,13 @@ private:
 
     int m_centerOfBaseCell;
 
-    void onMyStructureDestroyed(const s_GameEvent &event);
+    void onMyStructureDestroyed(const CommonEvent &event);
 
-    void onMyStructureCreated(const s_GameEvent &event);
+    void onMyStructureCreated(const CommonEvent &event);
 
     void onMyStructureAttacked(const DamagedEvent &event);
 
-    void onMyStructureDecayed(const s_GameEvent &event);
+    void onMyStructureDecayed(const CommonEvent &event);
 
     void onMyUnitAttacked(const DamagedEvent &event);
 
@@ -113,7 +113,7 @@ private:
 
     void thinkState_Rest();
 
-    void onEntityDiscoveredEvent(const s_GameEvent &event);
+    void onEntityDiscoveredEvent(const CommonEvent &event);
 
     void produceMissions();
 

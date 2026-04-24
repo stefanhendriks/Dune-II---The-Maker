@@ -108,13 +108,17 @@ const std::string s_GameEvent::toString(const s_GameEvent &event)
         );
     }
 
-    return std::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}]",
-                           toString(event.eventType),
-                           eBuildTypeString(event.entityType),
-                           event.entityID,
-                           event.entitySpecificType,
-                           toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType),
-                           event.isReinforce ? "true" : "false",
-                           event.atCell
-                          );
+    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+        return std::format(
+            "CommonEvent[entityType={}, entityId={}, player={}, entitySpecificType={}, atCell={}, isReinforce={}]",
+            eBuildTypeString(commonEvent->entityType),
+            commonEvent->entityID,
+            commonEvent->player ? "present" : "nullptr",
+            commonEvent->entitySpecificType,
+            commonEvent->atCell,
+            commonEvent->isReinforce ? "true" : "false"
+        );
+    }
+    
+    return std::format("cGameEvent [type={}]",toString(event.eventType));
 }

@@ -205,16 +205,16 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 
     game.m_gameObjectsContext->getMap().clearShroud(iCll, sUnitType.sight, iPlayer);
 
-    s_GameEvent event {
+    const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_CREATED,
-        .entityType = eBuildType::UNIT,
-        .entityID = iNewId,
-        .player = newUnit->getPlayer(),
-        .entitySpecificType = unitType,
-        .atCell = -1,
-        .isReinforce = isReinforcement
+        .data = CommonEvent {
+            .entityType = eBuildType::UNIT,
+            .entityID = iNewId,
+            .player = newUnit->getPlayer(),
+            .entitySpecificType = unitType,
+            .isReinforce = isReinforcement
+        }
     };
-
     game.onNotifyGameEvent(event);
 
     return iNewId;

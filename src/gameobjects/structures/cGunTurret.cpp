@@ -293,15 +293,16 @@ void cGunTurret::think_guard()
         if (iTargetID > -1 && iTargetID != prevTarget) {
             cUnit *unitToAttack = game.m_gameObjectsContext->getUnit(iTargetID);
             if (unitToAttack->isValid()) {
-                s_GameEvent event {
+                const s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
-                    .entityType = eBuildType::UNIT,
-                    .entityID = unitToAttack->iID,
-                    .player = getPlayer(),
-                    .entitySpecificType = unitToAttack->getType(),
-                    .atCell = unitToAttack->getCell()
+                    .data = CommonEvent {
+                        .entityType = eBuildType::UNIT,
+                        .entityID = unitToAttack->iID,
+                        .player = getPlayer(),
+                        .entitySpecificType = unitToAttack->getType(),
+                        .atCell = unitToAttack->getCell()
+                    }
                 };
-
                 game.onNotifyGameEvent(event);
             }
         }

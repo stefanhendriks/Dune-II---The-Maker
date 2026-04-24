@@ -162,8 +162,8 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
     void onEventSpecialLaunch(const LaunchDeathHandEvent &event) const;
-    void onEventEntityDestroyed(const s_GameEvent & event);
-    void onEventCreateUnit(const DeployUnitEvent &event);
+    void onEventEntityDestroyed(const CommonEvent & event);
+    void onEventCreateUnit(const DeployUnitEvent &deployEvent);
 
     void shakeScreen(int duration);
     void reduceShaking() const;

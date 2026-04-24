@@ -32,7 +32,7 @@ public:
 private:
     int targetStructureID;
 
-    void onEventDestroyed(const s_GameEvent &event);
+    void onEventDestroyed(const CommonEvent &event);
 };
 
 }
