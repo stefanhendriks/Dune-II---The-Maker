@@ -77,7 +77,8 @@ public:
 
     cAbstractStructure *getStructurePointerWhereMouseHovers() const;
 
-    int getMouseCellFromScreen(int mouseX, int mouseY, bool clamped) const;
+    int getMouseCellFromScreen(int mouseX, int mouseY) const;
+    int getMouseCellFromScreenClamped(int mouseX, int mouseY) const;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;

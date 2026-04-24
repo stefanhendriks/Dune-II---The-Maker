@@ -170,7 +170,7 @@ public:
     }
 
     int getCellFromAbsolutePosition(int x, int y);
-    int getCellClampedFromAbsolutePosition(int x, int y);
+    int getCellFromAbsolutePositionClamped(int x, int y);
 
     void setViewportPosition(int x, int y);
 

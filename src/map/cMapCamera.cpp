@@ -179,9 +179,11 @@ int cMapCamera::getCellFromAbsolutePosition(int x, int y)
     return m_mapGeometry->getCellWithMapDimensions((x / 32), (y / 32));
 }
 
-int cMapCamera::getCellClampedFromAbsolutePosition(int x, int y)
+int cMapCamera::getCellFromAbsolutePositionClamped(int x, int y)
 {
-    return m_mapGeometry->getCellClampedWithMapDimensions((x / 32), (y / 32));
+    int cx, cy;
+    cPoint::split(cx, cy) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap((x / 32), (y / 32));
+    return m_mapGeometry->makeCell(cx, cy);
 }
 
 void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
