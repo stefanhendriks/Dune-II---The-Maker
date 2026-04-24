@@ -24,6 +24,7 @@
 //#include <iostream>
 
 #include "data/gfxaudio.h"
+#include "gameobjects/particles/cParticle.h"
 
 cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
@@ -207,7 +208,7 @@ void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
             onMouseAt(event);
             return;
         case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
-            onMousePressedLeft(event); // click has same behavior as 'press'
+            onMouseClickedLeft(event);
             return;
         case eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED:
             onMousePressedLeft(event);
@@ -389,26 +390,32 @@ void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event)
     m_isMouseOver = m_RectMinimap.isPointWithin(event.coords.x, event.coords.y);
 }
 
+void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
+    if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
+        !game.getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
+        this->m_status != NOTAVAILABLE // only allow action when not drawing logo
+    ) {
+        if (m_player->hasAnyUnitSelected()) {
+            auto m_mouse = game.getMouse();
+            int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
+            cUnits *units = game.m_gameObjectsContext->getUnits();
+            units->move_to(mouseCellOnMinimap);
+
+            auto absPoint = m_map->getGeometry().getAbsolutePositionFromCell(mouseCellOnMinimap);
+            cParticle::create(absPoint.x, absPoint.y, D2TM_PARTICLE_MOVE, -1, -1);
+        }
+    }
+}
+
 void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
 {
     if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
         !game.getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
         this->m_status != NOTAVAILABLE // only allow action when not drawing logo
     ) {
-        if (m_player->hasAnyUnitSelected()) {
-            // Translate map coordinates to cell
-            int posX = (event.coords.x - m_RectMinimap.getX()) / m_factorZoom;
-            int posY = (event.coords.y - m_RectMinimap.getY()) / m_factorZoom;
-
-            auto point = m_map->getGeometry().fixCoordinatesToBeWithinPlayableMap(posX, posY);
-
-            cUnits *units = game.m_gameObjectsContext->getUnits();
-            units->move_to(m_map->getGeometry().makeCell(point));
-            return;
-        }
-        if (m_player->hasAtleastOneStructure(RADAR)) {
-            auto m_mouse = game.getMouse();
-            int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
+        auto m_mouse = game.getMouse();
+        int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
+        if (!m_player->hasAnyUnitSelected()) {
             m_mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }
     }

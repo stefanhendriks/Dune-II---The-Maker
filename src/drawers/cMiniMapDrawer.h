@@ -66,6 +66,7 @@ protected:
 private:
     void onMouseAt(const s_MouseEvent &event);
     void onMousePressedLeft(const s_MouseEvent &event);
+    void onMouseClickedLeft(const s_MouseEvent &event);
     void cleanDrawTerrain() const;
     int getMouseCell(int mouseX, int mouseY);
 
