@@ -3506,17 +3506,18 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
                     originCell = pStructure->getCell();
                 }
             }
-            s_GameEvent event {
+            const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_DAMAGED,
-                .entityType = eBuildType::UNIT,
-                .entityID = iID,
-                .player = getPlayer(),
-                .entitySpecificType = getType(),
-                .atCell = originCell,
-                .originId = originId,
-                .originType = originType,
+                .data = DamagedEvent {
+                    .entityType = eBuildType::UNIT,
+                    .entityID = iID,
+                    .player = getPlayer(),
+                    .entitySpecificType = getType(),
+                    .atCell = originCell,
+                    .originId = originId,
+                    .originType = originType
+                }
             };
-
             m_interface->onNotifyGameEvent(event);
         }
     }
