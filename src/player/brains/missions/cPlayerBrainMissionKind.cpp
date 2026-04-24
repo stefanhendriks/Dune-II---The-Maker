@@ -113,8 +113,9 @@ void cPlayerBrainMissionKind::onExecuteSpecificStateSwitch(const s_GameEvent &ev
 
     // just before we set select-target state, we call this method. So our child-implementations
     // can change state accordingly
-    onNotify_SpecificStateSwitch(event);
-
+    if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+        onNotify_SpecificStateSwitch(*buildEvent);
+    }
     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET);
 }
 

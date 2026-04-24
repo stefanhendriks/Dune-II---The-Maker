@@ -43,9 +43,18 @@ struct DamagedEvent {
     eBuildType originType = eBuildType::UNKNOWN; // in case GAME_EVENT_DAMAGED, this is the kind of entity that inflicted damage
 };
 
+// BUILDING_EVENT
+struct BuildingEvent {
+    eBuildType entityType;  //kind of entity this applies to.
+    cPlayer *player = nullptr;
+    int entitySpecificType = -1; // type of <entityType>, ie, if entityType is STRUCTURE. This value can be CONSTYARD
+    cBuildingListItem *buildingListItem = nullptr; // if buildingListItem is ready (special, or not)
+    cBuildingList *buildingList = nullptr; // in case buildingList is available (or not)
+};
+
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
-    using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent, DamagedEvent>;
+    using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent, DamagedEvent, BuildingEvent>;
     GameEventData data = std::monostate{};
     
     /**
@@ -69,9 +78,6 @@ struct s_GameEvent {
     int entitySpecificType = -1; // type of <entityType>, ie, if entityType is STRUCTURE. This value can be CONSTYARD
     int atCell = -1;        // if applicable (== > -1) where on the map did this event happen?
     bool isReinforce = false;       // only applicable for UNIT and CREATED events. So we can distinguish between 'normal' CREATED units and reinforced units.
-    cBuildingListItem *buildingListItem = nullptr; // if buildingListItem is ready (special, or not)
-    cBuildingList *buildingList = nullptr; // in case buildingList is available (or not)
-
 
     static const char *toString(const eGameEventType &eventType);
 

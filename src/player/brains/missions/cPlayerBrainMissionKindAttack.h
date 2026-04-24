@@ -22,7 +22,7 @@ public:
 
     void onNotifyGameEvent(const s_GameEvent &event) override;
 
-    void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
+    void onNotify_SpecificStateSwitch(const BuildingEvent &event) override;
 
     const char *toString() override {
         return "cPlayerBrainMissionKindAttack";

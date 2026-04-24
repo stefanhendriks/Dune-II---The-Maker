@@ -140,26 +140,28 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
     cPlayer *pPlayer = m_itemBuilder->getPlayer();
     int buildId = item->getBuildId();
     eBuildType buildType = item->getBuildType();
-
-    s_GameEvent event {
+    const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_ADDED,
-        .entityType = buildType,
-        .player = pPlayer,
-        .entitySpecificType = buildId,
-        .buildingListItem = item
+        .data = BuildingEvent {
+            .entityType = buildType,
+            .player = pPlayer,
+            .entitySpecificType = buildId,
+            .buildingListItem = item
+        }
     };
-
     game.onNotifyGameEvent(event);
 
     if (isAvailable() != beforeAddingAvailable) {
         // emit another event that this list became available! (so that sidebar can animate things)
-        s_GameEvent event {
+        const s_GameEvent event {
             .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE,
-            .entityType = buildType,
-            .player = pPlayer,
-            .entitySpecificType = buildId,
-            .buildingListItem = item,
-            .buildingList = this
+            .data = BuildingEvent {
+                .entityType = buildType,
+                .player = pPlayer,
+                .entitySpecificType = buildId,
+                .buildingListItem = item,
+                .buildingList = this
+            }
         };
         game.onNotifyGameEvent(event);
     }
@@ -221,17 +223,15 @@ bool cBuildingList::removeItemFromList(int position)
 
     if (isAvailable() != beforeRemovingAvailable) {
         // emit another event that this list became un-available!
-        s_GameEvent event {
+        const s_GameEvent event {
             .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE,
-            .entityType = eBuildType::UNIT, // BOGUS
-            .entityID = -1,
-            .player = this->m_itemBuilder->getPlayer(),
-            .entitySpecificType = -1, // BOGUS
-            .atCell = -1,
-            .isReinforce = false,
-            .buildingList = this
+            .data = BuildingEvent {
+                .entityType = eBuildType::UNIT,
+                .player = this->m_itemBuilder->getPlayer(),
+                .entitySpecificType = -1,
+                .buildingList = this
+            }
         };
-
         game.onNotifyGameEvent(event);
     }
     return true;

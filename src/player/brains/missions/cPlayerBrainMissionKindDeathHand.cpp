@@ -103,7 +103,9 @@ void cPlayerBrainMissionKindDeathHand::onNotifyGameEvent(const s_GameEvent &even
     log(std::format("cPlayerBrainMissionKindDeathHand::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
     if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED) {
-        onBuildItemCancelled(event);
+        if (const auto *buildingEvent = std::get_if<BuildingEvent>(&event.data)) {
+            onBuildItemCancelled(*buildingEvent);
+        }
     }
 }
 
@@ -119,7 +121,7 @@ cPlayerBrainMissionKind *cPlayerBrainMissionKindDeathHand::clone(cPlayer *player
     return copy;
 }
 
-void cPlayerBrainMissionKindDeathHand::onBuildItemCancelled(const s_GameEvent &event)
+void cPlayerBrainMissionKindDeathHand::onBuildItemCancelled(const BuildingEvent &event)
 {
     if (event.player == player) {
         // looks like the thing we had stored is being cancelled, so forget about it
@@ -131,7 +133,7 @@ void cPlayerBrainMissionKindDeathHand::onBuildItemCancelled(const s_GameEvent &e
     }
 }
 
-void cPlayerBrainMissionKindDeathHand::onNotify_SpecificStateSwitch(const s_GameEvent &event)
+void cPlayerBrainMissionKindDeathHand::onNotify_SpecificStateSwitch(const BuildingEvent &event)
 {
     // here we know it is the specific thing we are interested in (hence the "SpecificStateSwitch" name)
     if (event.player == player) {

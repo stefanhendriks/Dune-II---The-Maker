@@ -1215,14 +1215,15 @@ void cGame::onEventSpecialLaunch(const LaunchDeathHandEvent &event) const
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     // notify game that the item just has been finished!
-                    s_GameEvent event {
+                    const s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED,
-                        .entityType = itemToDeploy->getBuildType(),
-                        .player = pStructure->getPlayer(),
-                        .entitySpecificType = itemToDeploy->getBuildId(),
-                        .buildingListItem = itemToDeploy
+                        .data = BuildingEvent {
+                            .entityType = itemToDeploy->getBuildType(),
+                            .player = pStructure->getPlayer(),
+                            .entitySpecificType = itemToDeploy->getBuildId(),
+                            .buildingListItem = itemToDeploy
+                        }
                     };
-
                     game.onNotifyGameEvent(event);
                 }
             }
