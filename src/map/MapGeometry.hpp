@@ -46,6 +46,7 @@ public:
         Use <b>getCellWithMapDimensions</b> if you want a safe way to get a cell within the <i>maximum</i> map boundaries.
     **/
     int makeCell(int x, int y) const;
+    int makeCell(cPoint point) const;
 
     bool isValidCell(int c) const;
     bool isWithinBoundaries(int x, int y) const;
