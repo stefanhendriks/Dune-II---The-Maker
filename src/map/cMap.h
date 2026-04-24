@@ -446,9 +446,9 @@ private:
     GameContext *m_ctx = nullptr;
     cGameSettings *m_settings = nullptr;
     cInfoContext *m_infos = nullptr;
-    cGameObjectContext *m_objects = nullptr;
+    cGameObjectContext *m_gameObjectContext = nullptr;
     cGameInterface *m_interface = nullptr;
-    cLog *m_log = nullptr;    
+    cLog *m_log = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
 
     std::unique_ptr<MapGeometry> m_mapGeometry;
