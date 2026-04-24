@@ -157,11 +157,11 @@ private:
 
     void removeUnitIdFromListIfPresent(int unitIdToRemove);
 
-    void onEventCreated(const s_GameEvent &event);
+    void onEventCreated(const CommonEvent &event);
 
-    void onEventDestroyed(const s_GameEvent &event);
+    void onEventDestroyed(const CommonEvent &event);
 
-    void onEventDeviated(const s_GameEvent &event);
+    void onEventDeviated(const CommonEvent &event);
 
     static const char *ePlayerBrainMissionStateString(const ePlayerBrainMissionState &state) {
         switch (state) {
@@ -184,11 +184,11 @@ private:
         return "";
     }
 
-    void onEventCannotBuild(const s_GameEvent &event);
+    void onEventCannotBuild(const CommonEvent &event);
 
     bool producedAllRequiredUnits();
 
-    void onEventCannotCreatePath(const s_GameEvent &event);
+    void onEventCannotCreatePath(const CommonEvent &event);
 
     void logUnits();
 };

@@ -320,11 +320,11 @@ void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event)
 
 void cSideBar::onNotify(const s_GameEvent &event)
 {
-    // event is for specific player, and we are not that player...
-    if (event.player != nullptr && event.player != m_player) {
-        return;
-    }
     if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+        // event is for specific player, and we are not that player...
+        if (buildEvent->player != nullptr && buildEvent->player != m_player) {
+            return;
+        }
         // for us, or for no player in particular
         switch(event.eventType) {
             case eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET:

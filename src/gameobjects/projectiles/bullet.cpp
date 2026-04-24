@@ -503,14 +503,15 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
                 groundUnitTakingDamage->iGroup = -1;
 
                 // send out event that this unit got deviated (and what the new owner ID is)
-                s_GameEvent event {
+                const s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DEVIATED,
-                    .entityType = eBuildType::UNIT,
-                    .entityID = groundUnitTakingDamage->iID,
-                    .player = groundUnitTakingDamage->getPlayer(), // <-- is now changed
-                    .entitySpecificType = groundUnitTakingDamage->iType
+                    .data = CommonEvent {
+                        .entityType = eBuildType::UNIT,
+                        .entityID = groundUnitTakingDamage->iID,
+                        .player = groundUnitTakingDamage->getPlayer(), // <-- is now changed
+                        .entitySpecificType = groundUnitTakingDamage->iType
+                    }
                 };
-
                 game.onNotifyGameEvent(event);
             }
         }

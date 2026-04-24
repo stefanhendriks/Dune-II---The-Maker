@@ -254,15 +254,16 @@ void cAbstractStructure::die()
     // eligible for cleanup
     dead = true;
 
-    s_GameEvent event {
+    const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_DESTROYED,
-        .entityType = eBuildType::STRUCTURE,
-        .entityID = getStructureId(),
-        .player = pPlayer,
-        .entitySpecificType = getType(),
-        .atCell = iCell
+        .data = CommonEvent {
+            .entityType = eBuildType::STRUCTURE,
+            .entityID = getStructureId(),
+            .player = pPlayer,
+            .entitySpecificType = getType(),
+            .atCell = iCell
+        }
     };
-
     game.onNotifyGameEvent(event);
 }
 
@@ -464,14 +465,15 @@ void cAbstractStructure::decay(int hp)
     iHitPoints -= damage; // do damage
     if (iHitPoints < 1) iHitPoints = 1;
 
-    s_GameEvent event {
+    const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_DECAY,
-        .entityType = eBuildType::STRUCTURE,
-        .entityID = getStructureId(),
-        .player = getPlayer(),
-        .entitySpecificType = getType()
+        .data = CommonEvent {
+            .entityType = eBuildType::STRUCTURE,
+            .entityID = getStructureId(),
+            .player = getPlayer(),
+            .entitySpecificType = getType()
+        }
     };
-
     game.onNotifyGameEvent(event);
 }
 

@@ -533,9 +533,11 @@ private:
 
     bool startBuilding(eBuildType buildType, int buildId);
 
-    void onEntityDiscovered(const s_GameEvent &event);
+    void onEntityDiscovered(const CommonEvent &event);
 
-    void onMyUnitDestroyed(const s_GameEvent &event);
+    void onMyUnitDestroyed(const CommonEvent &event);
+
+    void onMyStructureDestroyed(const CommonEvent &event);
 
     bool m_Human;
 
@@ -594,8 +596,6 @@ private:
     bool alive;
 
     std::vector<cPlayerNotification> notifications;
-
-    void onMyStructureDestroyed(const s_GameEvent &event);
 
     void reinforceHarvesterIfNeeded(int cell);
 };

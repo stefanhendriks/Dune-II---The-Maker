@@ -243,14 +243,15 @@ void cUnit::die(bool bBlowUp, bool bSquish)
 
     // before re-initing, send out event, so in case we need to handle the event and fetch the data from that
     // entity then we can atleast pry it for data...
-    s_GameEvent event {
+    const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_DESTROYED,
-        .entityType = eBuildType::UNIT,
-        .entityID = iID,
-        .player = getPlayer(),
-        .entitySpecificType = iType
+        .data = CommonEvent {
+            .entityType = eBuildType::UNIT,
+            .entityID = iID,
+            .player = getPlayer(),
+            .entitySpecificType = iType
+        }
     };
-
     m_interface->onNotifyGameEvent(event);
 
     init(iID);    // re-init
@@ -2556,16 +2557,17 @@ void cUnit::thinkFast_move()
                     if (movement.iPathFails > 2) {
                         // notify that we can't create path, we should do something about this?
                         // at this point we can still ready unit state about path goal, etc.
-                        s_GameEvent event {
+                        const s_GameEvent event {
                             .eventType = eGameEventType::GAME_EVENT_CANNOT_CREATE_PATH,
-                            .entityType = eBuildType::UNIT,
-                            .entityID = iID,
-                            .player = getPlayer(),
-                            .entitySpecificType = iType,
-                            .atCell = position.iCell,
-                            .isReinforce = isReinforcement
+                            .data = CommonEvent {
+                                .entityType = eBuildType::UNIT,
+                                .entityID = iID,
+                                .player = getPlayer(),
+                                .entitySpecificType = iType,
+                                .atCell = position.iCell,
+                                .isReinforce = isReinforcement
+                            }
                         };
-
                         m_interface->onNotifyGameEvent(event);
 
                         // stop trying - forget about path stuff

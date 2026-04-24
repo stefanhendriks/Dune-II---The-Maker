@@ -128,46 +128,65 @@ void cPlayerBrainCampaign::addBuildOrder(s_buildOrder order)
 
 void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
 {
-    if (event.player == player) {
+    // if (event.player == player) {
         // events about my structures
-        if (event.entityType == eBuildType::STRUCTURE) {
+        // if (event.entityType == eBuildType::STRUCTURE) {
             switch (event.eventType) {
                 case eGameEventType::GAME_EVENT_DESTROYED:
-                    onMyStructureDestroyed(event);
+                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                            onMyStructureDestroyed(*commonEvent);
+                        }
+                    }
                     break;
                 case eGameEventType::GAME_EVENT_CREATED:
-                    onMyStructureCreated(event);
+                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                            onMyStructureCreated(*commonEvent);
+                        }
+                    }
                     break;
                 case eGameEventType::GAME_EVENT_DAMAGED:
                     if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
-                        onMyStructureAttacked(*damagedEvent);
+                        if ((damagedEvent->player == player) && (damagedEvent->entityType == eBuildType::STRUCTURE)) {
+                            onMyStructureAttacked(*damagedEvent);
+                        }
                     }
                     break;
                     // help I'm under attack.. do something smart
                     break;
                 case eGameEventType::GAME_EVENT_DECAY:
-                    onMyStructureDecayed(event);
+                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                            onMyStructureDecayed(*commonEvent);
+                        }
+                    }
                     // should repair when under 75%?
                     break;
                 default:
                     break;
             }
-        }
-        else if (event.entityType == eBuildType::UNIT) {
+        // }
+        // else 
+        // if (event.entityType == eBuildType::UNIT) {
             switch (event.eventType) {
                 case eGameEventType::GAME_EVENT_DAMAGED:
                     if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
-                        onMyUnitAttacked(*damagedEvent);
+                        if (damagedEvent->entityType == eBuildType::UNIT) {
+                            onMyUnitAttacked(*damagedEvent);
+                        }
                     }
                     break;
                 default:
                     break;
             }
-        }
-    }
+        // }
+    // }
 
     if (event.eventType == eGameEventType::GAME_EVENT_DISCOVERED) {
-        onEntityDiscoveredEvent(event);
+        if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+            onEntityDiscoveredEvent(*commonEvent);
+        }
     }
 
     // notify mission about any kind of event
@@ -176,7 +195,7 @@ void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainCampaign::onMyStructureCreated(const s_GameEvent &event)
+void cPlayerBrainCampaign::onMyStructureCreated(const CommonEvent &event)
 {
     // a structure was created, update our baseplan
     cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
@@ -214,7 +233,7 @@ void cPlayerBrainCampaign::onMyStructureCreated(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainCampaign::onMyStructureDestroyed(const s_GameEvent &event)
+void cPlayerBrainCampaign::onMyStructureDestroyed(const CommonEvent &event)
 {
     // a structure got destroyed, figure out which one it is in my base plan, and update its state
     for (auto &structurePosition : m_myBase) {
@@ -279,7 +298,7 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const DamagedEvent &event)
     }
 }
 
-void cPlayerBrainCampaign::onMyStructureDecayed(const s_GameEvent &event)
+void cPlayerBrainCampaign::onMyStructureDecayed(const CommonEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
         cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
@@ -1730,7 +1749,7 @@ void cPlayerBrainCampaign::thinkState_Rest()
     changeThinkStateTo(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_SCAN_BASE);
 }
 
-void cPlayerBrainCampaign::onEntityDiscoveredEvent(const s_GameEvent &event)
+void cPlayerBrainCampaign::onEntityDiscoveredEvent(const CommonEvent &event)
 {
     bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
     if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {

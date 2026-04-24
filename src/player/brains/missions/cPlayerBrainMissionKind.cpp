@@ -76,22 +76,24 @@ void cPlayerBrainMissionKind::onNotifyGameEvent(const s_GameEvent &event)
 {
     log(std::format("cPlayerBrainMissionKind::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
-    if (event.player == specificPlayerForEventToGoToSelectTargetState) {
-        if (specificEventTypeToGoToSelectTargetState != eGameEventType::GAME_EVENT_NONE) {
-            bool executeSpecificStateSwitch = false;
-            if (event.eventType == specificEventTypeToGoToSelectTargetState) {
-                if (specificBuildIdToGoToSelectTargetState > -1) {
-                    executeSpecificStateSwitch = (
-                                                     event.entitySpecificType == specificBuildIdToGoToSelectTargetState &&
-                                                     event.entityType == specificBuildTypeToGoToSelectTargetState
-                                                 );
+    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+        if (commonEvent->player == specificPlayerForEventToGoToSelectTargetState) {
+            if (specificEventTypeToGoToSelectTargetState != eGameEventType::GAME_EVENT_NONE) {
+                bool executeSpecificStateSwitch = false;
+                if (event.eventType == specificEventTypeToGoToSelectTargetState) {
+                    if (specificBuildIdToGoToSelectTargetState > -1) {
+                        executeSpecificStateSwitch = (
+                                commonEvent->entitySpecificType == specificBuildIdToGoToSelectTargetState &&
+                                commonEvent->entityType == specificBuildTypeToGoToSelectTargetState
+                            );
+                    }
+                    else {
+                        executeSpecificStateSwitch = true;
+                    }
                 }
-                else {
-                    executeSpecificStateSwitch = true;
+                if (executeSpecificStateSwitch) {
+                    onExecuteSpecificStateSwitch(event);
                 }
-            }
-            if (executeSpecificStateSwitch) {
-                onExecuteSpecificStateSwitch(event);
             }
         }
     }
@@ -99,14 +101,16 @@ void cPlayerBrainMissionKind::onNotifyGameEvent(const s_GameEvent &event)
 
 void cPlayerBrainMissionKind::onExecuteSpecificStateSwitch(const s_GameEvent &event)
 {
-    // unit got created, not reinforced - add it to the units list (ie saboteur to command)
-    if (event.entityType == UNIT && !event.isReinforce) {
-        cUnit *entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
+    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+        // unit got created, not reinforced - add it to the units list (ie saboteur to command)
+        if (commonEvent->entityType == UNIT && !commonEvent->isReinforce) {
+            cUnit *entityUnit = game.m_gameObjectsContext->getUnit(commonEvent->entityID);
 
-        // this unit has not been assigned to a mission yet
-        if (!entityUnit->isAssignedAnyMission()) {
-            entityUnit->assignMission(mission->getUniqueId());
-            mission->getUnits().push_back(entityUnit->iID);
+            // this unit has not been assigned to a mission yet
+            if (!entityUnit->isAssignedAnyMission()) {
+                entityUnit->assignMission(mission->getUniqueId());
+                mission->getUnits().push_back(entityUnit->iID);
+            }
         }
     }
 
