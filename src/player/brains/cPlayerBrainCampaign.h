@@ -55,11 +55,11 @@ private:
 
     void onMyStructureCreated(const s_GameEvent &event);
 
-    void onMyStructureAttacked(const s_GameEvent &event);
+    void onMyStructureAttacked(const DamagedEvent &event);
 
     void onMyStructureDecayed(const s_GameEvent &event);
 
-    void onMyUnitAttacked(const s_GameEvent &event);
+    void onMyUnitAttacked(const DamagedEvent &event);
 
     void thinkState_ScanBase();
 
