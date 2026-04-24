@@ -97,14 +97,24 @@ const std::string s_GameEvent::toString(const s_GameEvent &event)
         );
     }
 
-    return std::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}], [buildingListItem={}]",
+    if (const auto *buildingEvent = std::get_if<BuildingEvent>(&event.data)) {
+        return std::format(
+            "BuildingEvent[entityType={}, player={}, entitySpecificType={}, buildingListItem={}, buildingList={}]",
+            eBuildTypeString(buildingEvent->entityType),
+            buildingEvent->player ? "present" : "nullptr",
+            buildingEvent->entitySpecificType,
+            buildingEvent->buildingListItem ? "present" : "nullptr",
+            buildingEvent->buildingList ? "present" : "nullptr"
+        );
+    }
+
+    return std::format("cGameEvent [type={}], [entityType={}], [entityId={}], [entitySpecificType={} ={}], [isReinforce={}], [atCell={}]",
                            toString(event.eventType),
                            eBuildTypeString(event.entityType),
                            event.entityID,
                            event.entitySpecificType,
                            toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType),
                            event.isReinforce ? "true" : "false",
-                           event.atCell,
-                           event.buildingListItem ? "present" : "nullptr"
+                           event.atCell
                           );
 }

@@ -73,7 +73,7 @@ cPlayerBrainMissionKind *cPlayerBrainMissionKindExplore::clone(cPlayer *player, 
     return copy;
 }
 
-void cPlayerBrainMissionKindExplore::onNotify_SpecificStateSwitch(const s_GameEvent &)
+void cPlayerBrainMissionKindExplore::onNotify_SpecificStateSwitch(const BuildingEvent &)
 {
     // NOOP
 }

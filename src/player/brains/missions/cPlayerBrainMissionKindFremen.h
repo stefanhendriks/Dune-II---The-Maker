@@ -26,7 +26,7 @@ public:
         return "cPlayerBrainMissionKindFremen";
     }
 
-    void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
+    void onNotify_SpecificStateSwitch(const BuildingEvent &event) override;
 private:
 };
 

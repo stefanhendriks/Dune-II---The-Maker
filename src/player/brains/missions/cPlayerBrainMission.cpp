@@ -418,14 +418,15 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
         else {
             // in reality this event already has been sent, but this mission did not exist yet
             cBuildingListItem *item = player->getSpecialAwaitingPlacement();
-            s_GameEvent event {
+            const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET,
-                .entityType = item->getBuildType(),
-                .player = player,
-                .entitySpecificType = item->getBuildId(),
-                .buildingListItem = item // mandatory for this event!
+                .data = BuildingEvent {
+                    .entityType = item->getBuildType(),
+                    .player = player,
+                    .entitySpecificType = item->getBuildId(),
+                    .buildingListItem = item
+                }
             };
-            // fake notification for missionKind so that its state gets updated...
             missionKind->onNotifyGameEvent(event);
         }
         return; // bail, mission without units will wait for events

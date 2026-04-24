@@ -124,11 +124,11 @@ private:
 
     cBuildingList *getSelectedList() const;
 
-    void onListBecameUnavailableEvent(const s_GameEvent &event);
+    void onListBecameUnavailableEvent(const BuildingEvent *event);
 
-    void onListBecameAvailableEvent(const s_GameEvent &event);
+    void onListBecameAvailableEvent(const BuildingEvent *event);
 
-    void onSpecialReadyToDeployEvent(const s_GameEvent &event) const;
+    void onSpecialReadyToDeployEvent(const BuildingEvent *event) const;
 
-    void onListItemReadyToPlaceEvent(const s_GameEvent &event) const;
+    void onListItemReadyToPlaceEvent(const BuildingEvent *event) const;
 };

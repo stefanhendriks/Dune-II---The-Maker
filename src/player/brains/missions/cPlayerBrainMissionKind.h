@@ -77,7 +77,7 @@ public:
 
     virtual cPlayerBrainMissionKind *clone(cPlayer *player, cPlayerBrainMission *mission) = 0;
 
-    virtual void onNotify_SpecificStateSwitch(const s_GameEvent &event) = 0;
+    virtual void onNotify_SpecificStateSwitch(const BuildingEvent &event) = 0;
 
     void onNotifyGameEvent(const s_GameEvent &event);
 

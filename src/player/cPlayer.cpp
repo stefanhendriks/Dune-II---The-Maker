@@ -1632,14 +1632,18 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
     }
 
     if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED) {
-        auto msg = std::format("{} launched!", event.buildingListItem->getNameString());
-        addNotification(msg, eNotificationType::BAD);
+        if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+                auto msg = std::format("{} launched!", buildEvent->buildingListItem->getNameString());
+                addNotification(msg, eNotificationType::BAD);
+        }
     }
 
     if (event.player == this) {
         if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET) {
-            auto msg = std::format("{} is ready for deployment.", event.buildingListItem->getNameString());
-            addNotification(msg, eNotificationType::PRIORITY);
+            if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+                auto msg = std::format("{} is ready for deployment.", buildEvent->buildingListItem->getNameString());
+                addNotification(msg, eNotificationType::PRIORITY);
+            }
         }
 
         if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
@@ -1666,8 +1670,10 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
 
         if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED) {
             if (event.entityType == eBuildType::UPGRADE) {
-                auto msg = std::format("Upgrade: {} completed.", event.buildingListItem->getNameString());
-                addNotification(msg, eNotificationType::PRIORITY);
+                if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+                    auto msg = std::format("Upgrade: {} completed.", buildEvent->buildingListItem->getNameString());
+                    addNotification(msg, eNotificationType::PRIORITY);
+                }
             }
         }
 
