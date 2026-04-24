@@ -209,17 +209,18 @@ void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
             return;
         case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
             onMouseClickedLeft(event);
-            return;
+            break;
         case eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED:
             onMousePressedLeft(event);
-            return;
+            break;
         case eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED:
             onMousePressedRight(event);
-            return;
+            break;
         default:
             return;
     }
 
+    updateMouseCursor();
 }
 
 void cMiniMapDrawer::drawTerrain()
@@ -391,6 +392,19 @@ int cMiniMapDrawer::getMapWidthInPixels() const {
 void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event)
 {
     m_isMouseOver = m_RectMinimap.isPointWithin(event.coords.x, event.coords.y);
+    updateMouseCursor();
+}
+
+void cMiniMapDrawer::updateMouseCursor()
+{
+    if (m_isMouseOver &&
+        m_status != NOTAVAILABLE) {
+        if (m_player->hasAnyUnitSelected()) {
+            game.getMouse()->setTile(MOUSE_MOVE);
+        } else {
+            game.getMouse()->setTile(MOUSE_NORMAL);
+        }
+    }
 }
 
 void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {

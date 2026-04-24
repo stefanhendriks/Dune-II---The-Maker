@@ -68,6 +68,7 @@ private:
     void onMousePressedLeft(const s_MouseEvent &event);
     void onMousePressedRight(const s_MouseEvent &event);
     void onMouseClickedLeft(const s_MouseEvent &event);
+    void updateMouseCursor();
     void cleanDrawTerrain() const;
     int getMouseCell(int mouseX, int mouseY);
 
