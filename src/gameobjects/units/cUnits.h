@@ -85,8 +85,6 @@ public:
     auto end() { return m_units.end(); }
     auto end() const { return m_units.end(); }
 
-    bool areUnitsSelected() const;
-
     void move_to(int icell);
 
     /**

@@ -1661,6 +1661,20 @@ int cPlayer::getSpecialUnitType()
     return TRIKE;
 }
 
+bool cPlayer::hasAnyUnitSelected() {
+    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
+        if (pUnit->isSelected()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool cPlayer::hasEnoughPowerFor(int structureType) const
 {
     assert(structureType > -1 && "hasEnoughPowerFor called with structureType < 0!");

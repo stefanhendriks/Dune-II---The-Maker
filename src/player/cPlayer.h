@@ -443,6 +443,8 @@ public:
     int getScoutingUnitType();
     int getSpecialUnitType();
 
+    bool hasAnyUnitSelected();
+
     static std::string getHouseNameForId(int house);
 
     void logStructures();
