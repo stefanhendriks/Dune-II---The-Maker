@@ -398,24 +398,12 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
         if (m_player->hasAnyUnitSelected()) {
             // Translate map coordinates to cell
             int posX = (event.coords.x - m_RectMinimap.getX()) / m_factorZoom;
-            if (posX < 0) {
-                posX = 1;
-            }
-
-            if (posX > m_RectMinimap.getWidth()) {
-                posX = m_RectMinimap.getWidth() - 1;
-            }
-
             int posY = (event.coords.y - m_RectMinimap.getY()) / m_factorZoom;
-            if (posY < 0) {
-                posY = 1;
-            }
-            if (posY > m_RectMinimap.getHeight()) {
-                posY = m_RectMinimap.getHeight() - 1;
-            }
+
+            auto point = m_map->getGeometry().fixCoordinatesToBeWithinPlayableMap(posX, posY);
 
             cUnits *units = game.m_gameObjectsContext->getUnits();
-            units->move_to((posY * m_RectMinimap.getWidth()/m_factorZoom) + posX);
+            units->move_to(m_map->getGeometry().makeCell(point));
             return;
         }
         if (m_player->hasAtleastOneStructure(RADAR)) {

@@ -137,6 +137,10 @@ int MapGeometry::getCellWithMapDimensions(int x, int y) const
     return (y * mapWidth) + x;
 }
 
+int MapGeometry::makeCell(cPoint point) const {
+    return makeCell(point.x, point.y);
+}
+
 int MapGeometry::makeCell(int x, int y) const
 {
     assert(x > -1 && "makeCell x must be > -1");
