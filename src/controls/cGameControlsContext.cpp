@@ -81,10 +81,11 @@ int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY, bool cl
 {
     int absMapX = game.m_mapCamera->getAbsMapMouseX(mouseX);
     int absMapY = game.m_mapCamera->getAbsMapMouseY(mouseY);
-    if (clamped)
+    if (clamped) {
         return game.m_mapCamera->getCellClampedFromAbsolutePosition(absMapX, absMapY);
-    else
+    } else {
         return game.m_mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
+    }
 }
 
 void cGameControlsContext::determineHoveringOverStructureId()
