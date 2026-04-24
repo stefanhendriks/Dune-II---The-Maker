@@ -515,16 +515,17 @@ void cAbstractStructure::damage(int hp, int originId)
             }
         }
 
-        s_GameEvent event {
+        const s_GameEvent event {
             .eventType = eGameEventType::GAME_EVENT_DAMAGED,
-            .entityType = eBuildType::STRUCTURE,
-            .entityID = getStructureId(),
-            .player = getPlayer(),
-            .entitySpecificType = getType(),
-            .originId = originId,
-            .originType = eBuildType::UNIT // TODO: What if another structure damaged me!?
+            .data = DamagedEvent {
+                .entityType = eBuildType::STRUCTURE,
+                .entityID = getStructureId(),
+                .player = getPlayer(),
+                .entitySpecificType = getType(),
+                .originId = originId,
+                .originType = eBuildType::UNIT // TODO: What if another structure damaged me!?
+            }
         };
-
         game.onNotifyGameEvent(event);
     }
 }

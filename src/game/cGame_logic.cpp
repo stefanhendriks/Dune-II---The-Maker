@@ -1113,7 +1113,8 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     m_players->onNotifyGameEvent(event);
 }
 
-void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
+void cGame::onEventEntityDestroyed(const s_GameEvent &event)
+{
     if (event.entityType != eBuildType::STRUCTURE) {
         return;
     }

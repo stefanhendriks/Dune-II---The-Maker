@@ -159,7 +159,10 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
                     onMyStructureCreated(event);
                     break;
                 case eGameEventType::GAME_EVENT_DAMAGED:
-                    onMyStructureAttacked(event);
+                    if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
+                        onMyStructureAttacked(*damagedEvent);
+                    }
+                    break;
                     // help I'm under attack.. do something smart
                     break;
                 case eGameEventType::GAME_EVENT_DECAY:
@@ -173,7 +176,9 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
         else if (event.entityType == eBuildType::UNIT) {
             switch (event.eventType) {
                 case eGameEventType::GAME_EVENT_DAMAGED:
-                    onMyUnitAttacked(event);
+                    if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
+                        onMyUnitAttacked(*damagedEvent);
+                    }
                     break;
                 default:
                     break;
@@ -261,7 +266,7 @@ void cPlayerBrainSkirmish::onMyStructureDestroyed(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainSkirmish::onMyStructureAttacked(const s_GameEvent &event)
+void cPlayerBrainSkirmish::onMyStructureAttacked(const DamagedEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
         cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
@@ -1608,7 +1613,7 @@ void cPlayerBrainSkirmish::log(const std::string &txt)
                );
 }
 
-void cPlayerBrainSkirmish::onMyUnitAttacked(const s_GameEvent &event)
+void cPlayerBrainSkirmish::onMyUnitAttacked(const DamagedEvent &event)
 {
     if (event.originType == eBuildType::UNKNOWN) {
         // don't know who attacked us; ignore

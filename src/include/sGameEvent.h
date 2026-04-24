@@ -32,10 +32,20 @@ struct LaunchDeathHandEvent {
     int playerID = -1; // for looging purposes, as player pointer might not always be available
 };
 
+// GAME_EVENT_DAMAGED
+struct DamagedEvent {
+    eBuildType entityType = eBuildType::UNKNOWN; //kind of entity this applies to.
+    int entityID = -1;
+    cPlayer *player = nullptr;
+    int entitySpecificType = -1; // type of <entityType>, ie, if entityType is STRUCTURE. This value can be CONSTYARD
+    int atCell = -1;
+    int originId = -1; // in case GAME_EVENT_DAMAGED, this is the id that inflicted damage
+    eBuildType originType = eBuildType::UNKNOWN; // in case GAME_EVENT_DAMAGED, this is the kind of entity that inflicted damage
+};
 
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
-    using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent>;
+    using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent, DamagedEvent>;
     GameEventData data = std::monostate{};
     
     /**
@@ -62,8 +72,6 @@ struct s_GameEvent {
     cBuildingListItem *buildingListItem = nullptr; // if buildingListItem is ready (special, or not)
     cBuildingList *buildingList = nullptr; // in case buildingList is available (or not)
 
-    int originId = -1; // in case GAME_EVENT_DAMAGED, this is the id that inflicted damage
-    eBuildType originType = eBuildType::UNKNOWN; // in case GAME_EVENT_DAMAGED, this is the kind of entity that inflicted damage
 
     static const char *toString(const eGameEventType &eventType);
 
