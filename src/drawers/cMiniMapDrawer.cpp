@@ -213,6 +213,9 @@ void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
         case eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED:
             onMousePressedLeft(event);
             return;
+        case eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED:
+            onMousePressedRight(event);
+            return;
         default:
             return;
     }
@@ -395,6 +398,7 @@ void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
         !game.getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
         this->m_status != NOTAVAILABLE // only allow action when not drawing logo
     ) {
+        // left mouse *click* will move any units if selected
         if (m_player->hasAnyUnitSelected()) {
             auto m_mouse = game.getMouse();
             int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
@@ -413,11 +417,25 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
         !game.getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
         this->m_status != NOTAVAILABLE // only allow action when not drawing logo
     ) {
-        auto m_mouse = game.getMouse();
-        int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
+        // left-mouse button press only moves viewport if no units are selected
         if (!m_player->hasAnyUnitSelected()) {
+            auto m_mouse = game.getMouse();
+            int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
             m_mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }
+    }
+}
+
+void cMiniMapDrawer::onMousePressedRight(const s_MouseEvent &event)
+{
+    if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
+        !game.getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
+        this->m_status != NOTAVAILABLE // only allow action when not drawing logo
+    ) {
+        // right-mouse button press will always move viewport
+        auto m_mouse = game.getMouse();
+        int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
+        m_mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
     }
 }
 
