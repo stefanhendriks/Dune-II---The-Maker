@@ -148,46 +148,62 @@ void cPlayerBrainSkirmish::addBuildOrder(s_buildOrder order)
 
 void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
 {
-    if (event.player == player) {
-        // events about my structures
-        if (event.entityType == eBuildType::STRUCTURE) {
+    //if (event.player == player) && (event.entityType == eBuildType::STRUCTURE) {
             switch (event.eventType) {
                 case eGameEventType::GAME_EVENT_DESTROYED:
-                    onMyStructureDestroyed(event);
+                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                            onMyStructureDestroyed(*commonEvent);
+                        }
+                    }
                     break;
                 case eGameEventType::GAME_EVENT_CREATED:
-                    onMyStructureCreated(event);
+                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                            onMyStructureCreated(*commonEvent);
+                        }
+                    }
                     break;
                 case eGameEventType::GAME_EVENT_DAMAGED:
                     if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
-                        onMyStructureAttacked(*damagedEvent);
+                        if ((damagedEvent->player == player) && (damagedEvent->entityType == eBuildType::STRUCTURE)) {
+                            onMyStructureAttacked(*damagedEvent);
+                        }
                     }
                     break;
                     // help I'm under attack.. do something smart
                     break;
                 case eGameEventType::GAME_EVENT_DECAY:
-                    onMyStructureDecayed(event);
+                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                            onMyStructureDecayed(*commonEvent);
+                        }
+                    }
                     // should repair when under 75%?
                     break;
                 default:
                     break;
             }
-        }
-        else if (event.entityType == eBuildType::UNIT) {
+        // }
+    
+        // if (event.entityType == eBuildType::UNIT) {
             switch (event.eventType) {
                 case eGameEventType::GAME_EVENT_DAMAGED:
                     if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
-                        onMyUnitAttacked(*damagedEvent);
+                        if ((damagedEvent->player == player) && (damagedEvent->entityType == eBuildType::UNIT)) {
+                            onMyUnitAttacked(*damagedEvent);
+                        }
                     }
                     break;
                 default:
                     break;
             }
-        }
-    }
+        // }
 
     if (event.eventType == eGameEventType::GAME_EVENT_DISCOVERED) {
-        onEntityDiscoveredEvent(event);
+        if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+            onEntityDiscoveredEvent(*commonEvent);
+        }
     }
 
     // notify mission about any kind of event
@@ -196,7 +212,7 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainSkirmish::onMyStructureCreated(const s_GameEvent &event)
+void cPlayerBrainSkirmish::onMyStructureCreated(const CommonEvent &event)
 {
     // a structure was created, update our baseplan
     cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
@@ -247,7 +263,7 @@ void cPlayerBrainSkirmish::onMyStructureCreated(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainSkirmish::onMyStructureDestroyed(const s_GameEvent &event)
+void cPlayerBrainSkirmish::onMyStructureDestroyed(const CommonEvent &event)
 {
     // a structure got destroyed, figure out which one it is in my base plan, and update its state
     for (auto &structurePosition : m_myBase) {
@@ -302,7 +318,7 @@ void cPlayerBrainSkirmish::respondToThreat(cUnit *threat, cUnit *victim, int cel
     cRespondToThreatAction(this->player, threat, victim, cellOriginOfThreat, maxUnitsToOrder).execute();
 }
 
-void cPlayerBrainSkirmish::onMyStructureDecayed(const s_GameEvent &event)
+void cPlayerBrainSkirmish::onMyStructureDecayed(const CommonEvent &event)
 {
     if (player->hasEnoughCreditsFor(50)) {
         cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[event.entityID];
@@ -1083,16 +1099,14 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
             }
             else if (reason == eCantBuildReason::REQUIRES_ADDITIONAL_STRUCTURE || reason == eCantBuildReason::REQUIRES_STRUCTURE) {
                 // notify whoever is interested that the requested thing being built is not available for building...
-                s_GameEvent event {
+                const s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_CANNOT_BUILD,
-                    .entityType = buildOrder.buildType,
-                    .entityID = -1,
-                    .player = player,
-                    .entitySpecificType = buildOrder.buildId,
-                    .atCell = -1,
-                    .isReinforce = false,
+                    .data = CommonEvent {
+                        .entityType = buildOrder.buildType,
+                        .player = player,
+                        .entitySpecificType = buildOrder.buildId,
+                    }
                 };
-
                 game.onNotifyGameEvent(event);
             }
         }
@@ -1242,7 +1256,7 @@ void cPlayerBrainSkirmish::thinkState_Rest()
     changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_BASE);
 }
 
-void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const s_GameEvent &event)
+void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const CommonEvent &event)
 {
     bool wormsign = event.entityType == eBuildType::UNIT && event.entitySpecificType == SANDWORM;
     if (m_state == ePlayerBrainState::PLAYERBRAIN_PEACEFUL) {

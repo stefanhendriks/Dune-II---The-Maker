@@ -121,24 +121,26 @@ void cPlayerBrainMission::onNotifyGameEvent(const s_GameEvent &event)
 {
     log(std::format("cPlayerBrainMission::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
-    switch(event.eventType) {
-        case GAME_EVENT_CANNOT_BUILD:
-            onEventCannotBuild(event);
-            break;
-        case GAME_EVENT_CANNOT_CREATE_PATH:
-            onEventCannotCreatePath(event);
-            break;
-        case GAME_EVENT_CREATED:
-            onEventCreated(event);
-            break;
-        case GAME_EVENT_DESTROYED:
-            onEventDestroyed(event);
-            break;
-        case GAME_EVENT_DEVIATED:
-            onEventDeviated(event);
-            break;
-        default:
-            break;
+    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+        switch(event.eventType) {
+            case GAME_EVENT_CANNOT_BUILD:
+                onEventCannotBuild(*commonEvent);
+                break;
+            case GAME_EVENT_CANNOT_CREATE_PATH:
+                onEventCannotCreatePath(*commonEvent);
+                break;
+            case GAME_EVENT_CREATED:
+                onEventCreated(*commonEvent);
+                break;
+            case GAME_EVENT_DESTROYED:
+                onEventDestroyed(*commonEvent);
+                break;
+            case GAME_EVENT_DEVIATED:
+                onEventDeviated(*commonEvent);
+                break;
+            default:
+                break;
+        }
     }
 
     if (missionKind) {
@@ -146,7 +148,7 @@ void cPlayerBrainMission::onNotifyGameEvent(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainMission::onEventDeviated(const s_GameEvent &event)
+void cPlayerBrainMission::onEventDeviated(const CommonEvent &event)
 {
     if (event.entityType == UNIT) {
         cUnit *entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
@@ -157,7 +159,7 @@ void cPlayerBrainMission::onEventDeviated(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainMission::onEventDestroyed(const s_GameEvent &event)
+void cPlayerBrainMission::onEventDestroyed(const CommonEvent &event)
 {
     if (event.entityType == UNIT) {
         if (event.player == player) {
@@ -188,7 +190,7 @@ void cPlayerBrainMission::onEventDestroyed(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainMission::onEventCreated(const s_GameEvent &event)
+void cPlayerBrainMission::onEventCreated(const CommonEvent &event)
 {
     // since we are assembling resources, listen to these events.
     if (event.player == player) {
@@ -645,7 +647,7 @@ void cPlayerBrainMission::log(const char *txt)
                             uniqueIdentifier, ePlayerBrainMissionKindString(kind), ePlayerBrainMissionStateString(state), txt).c_str());
 }
 
-void cPlayerBrainMission::onEventCannotBuild(const s_GameEvent &event)
+void cPlayerBrainMission::onEventCannotBuild(const CommonEvent &event)
 {
     // event is for us
     if (event.player != player) {
@@ -668,7 +670,7 @@ void cPlayerBrainMission::onEventCannotBuild(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainMission::onEventCannotCreatePath(const s_GameEvent &event)
+void cPlayerBrainMission::onEventCannotCreatePath(const CommonEvent &event)
 {
     // it is an event about my own stuff
     if (event.player == player) {

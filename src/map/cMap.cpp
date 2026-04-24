@@ -520,15 +520,16 @@ void cMap::clearShroud(int c, int size, int playerId)
                 if (structureId > -1) {
                     cAbstractStructure *pStructure = m_objects->getStructure(structureId);
                     if (!pStructure) continue;
-                    s_GameEvent event {
+                    const s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
-                        .entityType = eBuildType::STRUCTURE,
-                        .entityID = structureId,
-                        .player = m_objects->getPlayer(playerId),
-                        .entitySpecificType = pStructure->getType(),
-                        .atCell = cl
+                        .data = CommonEvent {
+                            .entityType = eBuildType::STRUCTURE,
+                            .entityID = structureId,
+                            .player = m_objects->getPlayer(playerId),
+                            .entitySpecificType = pStructure->getType(),
+                            .atCell = cl
+                        }
                     };
-
                     m_interface->onNotifyGameEvent(event);
                 }
 
@@ -538,11 +539,13 @@ void cMap::clearShroud(int c, int size, int playerId)
                     if (cUnit && cUnit->isValid()) {
                         s_GameEvent event {
                             .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
-                            .entityType = eBuildType::UNIT,
-                            .entityID = unitId,
-                            .player = m_objects->getPlayer(playerId),
-                            .entitySpecificType = cUnit->getType(),
-                            .atCell = cl
+                            .data = CommonEvent {
+                                .entityType = eBuildType::UNIT,
+                                .entityID = unitId,
+                                .player = m_objects->getPlayer(playerId),
+                                .entitySpecificType = cUnit->getType(),
+                                .atCell = cl
+                            }
                         };
 
                         m_interface->onNotifyGameEvent(event);
@@ -866,14 +869,11 @@ void cMap::createCell(int cell, int terrainType, int tile)
 
         s_GameEvent event {
             .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED,
-            .entityType = eBuildType::SPECIAL,
-            .entityID = -1,
-            .player = nullptr,
-            .entitySpecificType = -1,
-            .atCell = cell,
-            .isReinforce = false
+            .data = CommonEvent {
+                .entityType = eBuildType::SPECIAL,
+                .atCell = cell
+            }
         };
-
         m_interface->onNotifyGameEvent(event);
     }
 }
@@ -1314,12 +1314,10 @@ void cMap::detonateSpiceBloom(int cell)
 
     s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW,
-        .entityType = eBuildType::SPECIAL,
-        .entityID = -1,
-        .player = nullptr,
-        .entitySpecificType = -1,
-        .atCell = cell,
-        .isReinforce = false
+        .data = CommonEvent {
+            .entityType = eBuildType::SPECIAL,
+            .atCell = cell,
+        }
     };
     m_interface->onNotifyGameEvent(event);
 
@@ -1330,14 +1328,18 @@ void cMap::onNotifyGameEvent(const s_GameEvent &event)
     switch (event.eventType) {
         case eGameEventType::GAME_EVENT_SPICE_BLOOM_SPAWNED:
             if (m_bAutoDetonateSpiceBlooms) {
-                // 1000/5 = taking care of thinkFast 5ms loop. The second part
-                // is the actual amount of seconds we want to delay before blowing up the spice bloom
-                m_mBloomTimers[event.atCell] = (1000 / 5) * (45 + RNG::rnd(120));
+                if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                    // 1000/5 = taking care of thinkFast 5ms loop. The second part
+                    // is the actual amount of seconds we want to delay before blowing up the spice bloom
+                    m_mBloomTimers[commonEvent->atCell] = (1000 / 5) * (45 + RNG::rnd(120));
+                }
             }
             break;
         case eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW:
             if (m_bAutoDetonateSpiceBlooms) {
-                m_mBloomTimers.erase(event.atCell);
+                if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                    m_mBloomTimers.erase(commonEvent->atCell);
+                }
             }
             break;
         case eGameEventType::GAME_EVENT_DESTROYED:
@@ -1353,11 +1355,13 @@ void cMap::onNotifyGameEvent(const s_GameEvent &event)
 
 void cMap::onEntityCreated(const s_GameEvent &event)
 {
-    if (event.entityType != eBuildType::UNIT) return;
+    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+        if (commonEvent->entityType != eBuildType::UNIT) return;
 
-    // only care about units
-    if (event.entitySpecificType == SANDWORM) {
-        evaluateIfWeShouldSetTimerToRespawnWorm();
+        // only care about units
+        if (commonEvent->entitySpecificType == SANDWORM) {
+            evaluateIfWeShouldSetTimerToRespawnWorm();
+        }
     }
 }
 
@@ -1409,12 +1413,14 @@ void cMap::setDesiredAmountOfWorms(int value)
 
 void cMap::onEntityDestroyed(const s_GameEvent &event)
 {
-    if (event.entityType != eBuildType::UNIT) return;
+    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+        if (commonEvent->entityType != eBuildType::UNIT) return;
 
-    // only care about units
-    if (event.entitySpecificType == SANDWORM) {
-        // a sandworm got destroyed, set timer to re-spawn it
-        setSandwormRespawnTimer();
+        // only care about units
+        if (commonEvent->entitySpecificType == SANDWORM) {
+            // a sandworm got destroyed, set timer to re-spawn it
+            setSandwormRespawnTimer();
+        }
     }
 }
 

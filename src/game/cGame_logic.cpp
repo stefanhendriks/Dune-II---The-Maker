@@ -1098,7 +1098,9 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
             }        
             break;
         case eGameEventType::GAME_EVENT_DESTROYED:
-            onEventEntityDestroyed(event);
+            if (const auto *destroyEvent = std::get_if<CommonEvent>(&event.data)) {
+                onEventEntityDestroyed(*destroyEvent);
+            }
             break;
         case eGameEventType::GAME_EVENT_DEPLOY_UNIT:
             if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
@@ -1113,7 +1115,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     m_players->onNotifyGameEvent(event);
 }
 
-void cGame::onEventEntityDestroyed(const s_GameEvent &event)
+void cGame::onEventEntityDestroyed(const CommonEvent &event)
 {
     if (event.entityType != eBuildType::STRUCTURE) {
         return;
@@ -1243,16 +1245,14 @@ void cGame::onEventSpecialLaunch(const LaunchDeathHandEvent &event) const
     }
 
     // notify game that the item just has been finished!
-    s_GameEvent eventT {
+    const s_GameEvent eventT {
         .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
-        .entityType = itemToDeploy->getBuildType(),
-        .entityID = -1,
-        .player = player,
-        .entitySpecificType = itemToDeploy->getBuildId(),
-        .atCell = -1,
-        .isReinforce = false,
+        .data = BuildingEvent {
+            .entityType = itemToDeploy->getBuildType(),
+            .player = player,
+            .entitySpecificType = itemToDeploy->getBuildId()
+        }
     };
-
     game.onNotifyGameEvent(eventT);
 }
 

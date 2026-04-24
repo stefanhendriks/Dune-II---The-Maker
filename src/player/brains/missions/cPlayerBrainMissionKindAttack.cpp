@@ -132,17 +132,21 @@ void cPlayerBrainMissionKindAttack::onNotifyGameEvent(const s_GameEvent &event)
 
     switch(event.eventType) {
         case GAME_EVENT_DESTROYED:
-            onEventDestroyed(event);
+                if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                    onEventDestroyed(*commonEvent);
+                }
             break;
         case GAME_EVENT_DEVIATED:
-            onEventDeviated(event);
+                if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                    onEventDeviated(*commonEvent);
+                }
             break;
         default:
             break;
     }
 }
 
-void cPlayerBrainMissionKindAttack::onEventDeviated(const s_GameEvent &event)
+void cPlayerBrainMissionKindAttack::onEventDeviated(const CommonEvent &event)
 {
     if (event.entityType == UNIT) {
         cUnit *entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
@@ -157,7 +161,7 @@ void cPlayerBrainMissionKindAttack::onEventDeviated(const s_GameEvent &event)
     }
 }
 
-void cPlayerBrainMissionKindAttack::onEventDestroyed(const s_GameEvent &event)
+void cPlayerBrainMissionKindAttack::onEventDestroyed(const CommonEvent &event)
 {
     if (event.entityType == UNIT) {
         if (event.player != player) {

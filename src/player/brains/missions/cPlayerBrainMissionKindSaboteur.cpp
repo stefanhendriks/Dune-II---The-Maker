@@ -84,11 +84,13 @@ void cPlayerBrainMissionKindSaboteur::onNotifyGameEvent(const s_GameEvent &event
     log(std::format("cPlayerBrainMissionKindSaboteur::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 
     if (event.eventType == GAME_EVENT_DESTROYED) {
-        onEventDestroyed(event);
+        if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+            onEventDestroyed(*commonEvent);
+        }
     }
 }
 
-void cPlayerBrainMissionKindSaboteur::onEventDestroyed(const s_GameEvent &event)
+void cPlayerBrainMissionKindSaboteur::onEventDestroyed(const CommonEvent &event)
 {
     if (event.entityType == STRUCTURE) {
         if (event.player != player) {

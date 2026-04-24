@@ -178,14 +178,15 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     game.m_structureUtils->putStructureOnDimension(MAPID_STRUCTURES, str);
 
     // handle update
-    s_GameEvent event {
+    const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_CREATED,
-        .entityType = eBuildType::STRUCTURE,
-        .entityID = str->getStructureId(),
-        .player = str->getPlayer(),
-        .entitySpecificType = iStructureType
+        .data = CommonEvent {
+            .entityType = eBuildType::STRUCTURE,
+            .entityID = str->getStructureId(),
+            .player = str->getPlayer(),
+            .entitySpecificType = iStructureType
+        }
     };
-
     game.onNotifyGameEvent(event);
 
     return str;

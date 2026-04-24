@@ -32,9 +32,9 @@ private:
     int targetStructureID;
     int targetUnitID;
 
-    void onEventDeviated(const s_GameEvent &event);
+    void onEventDeviated(const CommonEvent &event);
 
-    void onEventDestroyed(const s_GameEvent &event);
+    void onEventDestroyed(const CommonEvent &event);
 
     int findEnemyUnit() const;
 

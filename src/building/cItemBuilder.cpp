@@ -260,16 +260,13 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             }
 
             // notify game that the item just has been finished
-            s_GameEvent event {
+            const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
-                .entityType = eBuildType,
-                .entityID = -1,
-                .player = nullptr,
-                .entitySpecificType = buildId,
-                .atCell = -1,
-                .isReinforce = false,
+                .data = BuildingEvent {
+                    .entityType = eBuildType,
+                    .entitySpecificType = buildId,
+                }
             };
-
             game.onNotifyGameEvent(event);
         }
         else if (eBuildType == SPECIAL) {
@@ -332,16 +329,14 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 }
 
                 // notify game that the item just has been finished
-                s_GameEvent event {
+                const s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
-                    .entityType = eBuildType,
-                    .entityID = -1,
-                    .player = m_player,
-                    .entitySpecificType = buildId,
-                    .atCell = -1,
-                    .isReinforce = false,
+                    .data = BuildingEvent {
+                        .entityType = eBuildType,
+                        .player = m_player,
+                        .entitySpecificType = buildId,
+                    }
                 };
-
                 game.onNotifyGameEvent(event);
             }
             else if (special.providesType == BULLET) {

@@ -1514,67 +1514,81 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
 void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
 {
     // notify building list updater if it was a structure of mine. So it gets removed from the building list.
-    if (event.eventType == eGameEventType::GAME_EVENT_PLAYER_DEFEATED) {
-        auto msg = std::format("Player {} ({}) has been defeated.", event.player->getId(), event.player->getHouseName());
-        addNotification(msg, eNotificationType::BAD);
-    }
+    switch (event.eventType) {
+    case eGameEventType::GAME_EVENT_PLAYER_DEFEATED:
+        if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+            auto msg = std::format("Player {} ({}) has been defeated.", commonEvent->player->getId(), commonEvent->player->getHouseName());
+            addNotification(msg, eNotificationType::BAD);
+        }
+        break;
 
-    if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED) {
+    case eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED:
         if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
                 auto msg = std::format("{} launched!", buildEvent->buildingListItem->getNameString());
                 addNotification(msg, eNotificationType::BAD);
         }
-    }
+        break;
 
-    if (event.player == this) {
-        if (event.eventType == eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET) {
-            if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+    case eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET:
+        if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+            if (buildEvent->player == this) {
                 auto msg = std::format("{} is ready for deployment.", buildEvent->buildingListItem->getNameString());
                 addNotification(msg, eNotificationType::PRIORITY);
             }
         }
-
-        if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
-            // it is mine
-        }
-
-        if (event.eventType == eGameEventType::GAME_EVENT_DISCOVERED) {
-            onEntityDiscovered(event);
-        }
-
-        if (event.entityType == eBuildType::STRUCTURE) {
-            if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
-                onMyStructureDestroyed(event);
-            }
-            else if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
-                buildingListUpdater->onStructureCreated(event.entitySpecificType);
+        break;
+    
+    case eGameEventType::GAME_EVENT_DISCOVERED :
+        if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+            if (commonEvent->player == this) {
+                onEntityDiscovered(*commonEvent);
             }
         }
-        else if (event.entityType == eBuildType::UNIT) {
-            if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
-                onMyUnitDestroyed(event);
+        break;
+
+    case eGameEventType::GAME_EVENT_DESTROYED:
+        if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+            if (commonEvent->player == this && commonEvent->entityType == eBuildType::STRUCTURE) {
+                onMyStructureDestroyed(*commonEvent);
+            }
+            if (commonEvent->player == this && commonEvent->entityType == eBuildType::UNIT) {
+                onMyUnitDestroyed(*commonEvent);
             }
         }
+        break;
 
-        if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED) {
-            if (event.entityType == eBuildType::UPGRADE) {
-                if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
-                    auto msg = std::format("Upgrade: {} completed.", buildEvent->buildingListItem->getNameString());
-                    addNotification(msg, eNotificationType::PRIORITY);
+    case eGameEventType::GAME_EVENT_CREATED:
+        if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+            if (commonEvent->player == this && commonEvent->entityType == eBuildType::STRUCTURE) {
+                buildingListUpdater->onStructureCreated(commonEvent->entitySpecificType);
+            }
+        }
+        break;
+    
+    case eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED:
+        if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+            if (buildEvent->player == this && buildEvent->entityType == eBuildType::UPGRADE) {
+                auto msg = std::format("Upgrade: {} completed.", buildEvent->buildingListItem->getNameString());
+                addNotification(msg, eNotificationType::PRIORITY);
+            }
+            if (cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType)) {
+                startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
+            }
+        }
+        break;
+
+    case eGameEventType::GAME_EVENT_LIST_ITEM_ADDED:
+    case eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED:
+    case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
+            if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                if (cBuildingListItem::isAutoBuild(commonEvent->entityType, commonEvent->entitySpecificType)) {
+                    startBuilding(commonEvent->entityType, commonEvent->entitySpecificType);
                 }
             }
-        }
-
-        if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED ||
-                event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_ADDED ||
-                event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED ||
-                event.eventType == eGameEventType::GAME_EVENT_SPECIAL_LAUNCH) {
-            if (cBuildingListItem::isAutoBuild(event.entityType, event.entitySpecificType)) {
-                startBuilding(event.entityType, event.entitySpecificType);
-            }
-        }
+            break;
+    default:
+        break;
     }
-
     // pass event to brain
     if (brain_) {
         brain_->onNotifyGameEvent(event);
@@ -1832,7 +1846,7 @@ bool cPlayer::startBuilding(cBuildingListItem *pItem)
     return startBuilding(pItem->getBuildType(), pItem->getBuildId());
 }
 
-void cPlayer::onEntityDiscovered(const s_GameEvent &event)
+void cPlayer::onEntityDiscovered(const CommonEvent &event)
 {
 //    if (!event.player->isHuman()) { // todo == interacting player? (have a mentat/sound thing that listens to events??)
 //        // do nothing
@@ -1984,7 +1998,7 @@ s_PlaceResult cPlayer::canPlaceConcreteAt(int iCell)
     return result;
 }
 
-void cPlayer::onMyUnitDestroyed(const s_GameEvent &event)
+void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
 {
     cUnit *pUnit = m_objects->getUnit(event.entityID);
 
@@ -2299,7 +2313,7 @@ void cPlayer::deselectUnit(const int &unitId)
     m_objects->getUnit(unitId)->deselect();
 }
 
-void cPlayer::onMyStructureDestroyed(const s_GameEvent &event)
+void cPlayer::onMyStructureDestroyed(const CommonEvent &event)
 {
     buildingListUpdater->onStructureDestroyed(event.entitySpecificType);
 

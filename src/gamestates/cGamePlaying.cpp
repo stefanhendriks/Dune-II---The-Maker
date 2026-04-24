@@ -211,13 +211,13 @@ void cGamePlaying::evaluatePlayerStatus()
             player->evaluateStillAlive();
 
             if (isAlive && !player->isAlive()) {
-                s_GameEvent event {
+                const s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
-                    .entityType = eBuildType::SPECIAL,
-                    .entityID = -1,
-                    .player = player
+                    .data = CommonEvent {
+                        .entityType = eBuildType::SPECIAL,
+                        .player = player
+                    }
                 };
-
                 m_interface->onNotifyGameEvent(event);
             }
             // TODO: event : Player joined/became alive, etc?
@@ -340,11 +340,12 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     if (selectedStructure) {
         if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
             if (selectedStructure->getType() == REPAIR) {
-                s_GameEvent deployEvent {
+                const s_GameEvent deployEvent {
                     .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
-                    .entityType = eBuildType::UNKNOWN,
-                    .entityID = -1,
-                    .player = humanPlayer
+                    .data = CommonEvent {
+                        .entityType = eBuildType::UNKNOWN,
+                        .player = humanPlayer
+                    }
                 };
                 selectedStructure->onNotifyGameEvent(deployEvent);
             }
