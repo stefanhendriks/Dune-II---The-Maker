@@ -123,7 +123,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(cellX, cellY);
 
                 if (!game.m_gameObjectsContext->getMap().isCellPassable(iCll) || game.m_gameObjectsContext->getMap().getCellType(iCll) != TERRAIN_ROCK) {
-                    itemToPlaceColor = Color::PlaceNeutral;
+                    itemToPlaceColor = Color::PlaceBad;
                 }
 
                 if (game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_SLAB) {
@@ -133,14 +133,14 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 // occupied by units or structures
                 int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
-                    itemToPlaceColor = Color::PlaceNeutral;
+                    itemToPlaceColor = Color::PlaceBad;
                 }
 
                 int unitIdOnMap = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
                     if (!game.m_gameObjectsContext->getUnit(unitIdOnMap)->isDead()) {
-                        itemToPlaceColor = Color::PlaceNeutral;
+                        itemToPlaceColor = Color::PlaceBad;
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?
                 }
