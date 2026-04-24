@@ -273,14 +273,15 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
             item->resetProgress();
 
             // notify game that the item just has been cancelled, just before the actual removal
-            s_GameEvent event {
+            const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED,
-                .entityType = item->getBuildType(),
-                .player = m_player,
-                .entitySpecificType = item->getBuildId(),
-                .buildingListItem = item
+                .data = BuildingEvent {
+                    .entityType = item->getBuildType(),
+                    .player = m_player,
+                    .entitySpecificType = item->getBuildId(),
+                    .buildingListItem = item
+                }
             };
-
             game.onNotifyGameEvent(event);
             // else, only the number is decreased (used for queueing)
 
@@ -323,48 +324,49 @@ void cSideBar::onNotify(const s_GameEvent &event)
     if (event.player != nullptr && event.player != m_player) {
         return;
     }
-
-    // for us, or for no player in particular
-    switch(event.eventType) {
-        case eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET:
-            onSpecialReadyToDeployEvent(event);
-            break;
-        case eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT:
-            onListItemReadyToPlaceEvent(event);
-            break;
-        case eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE:
-            onListBecameAvailableEvent(event);
-            break;
-        case eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE:
-            onListBecameUnavailableEvent(event);
-            break;
-        case eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN:
-            findFirstActiveListAndSelectIt();
-            break;
-        default:
-            break;
+    if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+        // for us, or for no player in particular
+        switch(event.eventType) {
+            case eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET:
+                onSpecialReadyToDeployEvent(buildEvent);
+                break;
+            case eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT:
+                onListItemReadyToPlaceEvent(buildEvent);
+                break;
+            case eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE:
+                onListBecameAvailableEvent(buildEvent);
+                break;
+            case eGameEventType::GAME_EVENT_LIST_BECAME_UNAVAILABLE:
+                onListBecameUnavailableEvent(buildEvent);
+                break;
+            case eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN:
+                findFirstActiveListAndSelectIt();
+                break;
+            default:
+                break;
+        }
     }
 }
 
-void cSideBar::onListItemReadyToPlaceEvent(const s_GameEvent &event) const
+void cSideBar::onListItemReadyToPlaceEvent(const BuildingEvent *event) const
 {
-    event.buildingListItem->getList()->startFlashing();
+    event->buildingListItem->getList()->startFlashing();
 }
 
-void cSideBar::onSpecialReadyToDeployEvent(const s_GameEvent &event) const
+void cSideBar::onSpecialReadyToDeployEvent(const BuildingEvent *event) const
 {
-    event.buildingListItem->getList()->startFlashing();
+    event->buildingListItem->getList()->startFlashing();
 }
 
-void cSideBar::onListBecameAvailableEvent(const s_GameEvent &event)
+void cSideBar::onListBecameAvailableEvent(const BuildingEvent *event)
 {
-    event.buildingList->startFlashing();
+    event->buildingList->startFlashing();
 }
 
-void cSideBar::onListBecameUnavailableEvent(const s_GameEvent &event)
+void cSideBar::onListBecameUnavailableEvent(const BuildingEvent *event)
 {
     cBuildingList *pList = getSelectedList();
-    if (pList == event.buildingList) {
+    if (pList == event->buildingList) {
         findFirstActiveListAndSelectIt();
     }
 }

@@ -112,7 +112,7 @@ cPlayerBrainMissionKind *cPlayerBrainMissionKindSaboteur::clone(cPlayer *player,
     return copy;
 }
 
-void cPlayerBrainMissionKindSaboteur::onNotify_SpecificStateSwitch(const s_GameEvent &)
+void cPlayerBrainMissionKindSaboteur::onNotify_SpecificStateSwitch(const BuildingEvent &)
 {
     // NOOP
 }

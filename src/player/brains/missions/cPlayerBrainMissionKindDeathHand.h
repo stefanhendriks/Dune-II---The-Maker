@@ -28,7 +28,7 @@ public:
         return "cPlayerBrainMissionKindDeathHand";
     }
 
-    void onNotify_SpecificStateSwitch(const s_GameEvent &event) override;
+    void onNotify_SpecificStateSwitch(const BuildingEvent &event) override;
 
 private:
     int target;
@@ -40,7 +40,7 @@ private:
 
     void onMySpecialSelectTarget(const s_GameEvent &event);
 
-    void onBuildItemCancelled(const s_GameEvent &event);
+    void onBuildItemCancelled(const BuildingEvent &event);
 };
 
 }

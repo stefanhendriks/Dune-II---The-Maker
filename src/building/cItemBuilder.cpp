@@ -216,14 +216,15 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             }
             item->setPlaceIt(true);
 
-            s_GameEvent event {
+            const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT,
-                .entityType = item->getBuildType(),
-                .player = m_player,
-                .entitySpecificType = item->getBuildId(),
-                .buildingListItem = item // mandatory for this event!
+                .data = BuildingEvent {
+                    .entityType = item->getBuildType(),
+                    .player = m_player,
+                    .entitySpecificType = item->getBuildId(),
+                    .buildingListItem = item // mandatory for this event!
+                }
             };
-
             game.onNotifyGameEvent(event);
         }
     }
@@ -350,14 +351,15 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     if (!item->shouldDeployIt()) {
                         item->setDeployIt(true);
 
-                        s_GameEvent event {
+                        const s_GameEvent event {
                             .eventType = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET,
-                            .entityType = item->getBuildType(),
-                            .player = m_player,
-                            .entitySpecificType = item->getBuildId(),
-                            .buildingListItem = item // mandatory for this event!
+                            .data = BuildingEvent {
+                                .entityType = item->getBuildType(),
+                                .player = m_player,
+                                .entitySpecificType = item->getBuildId(),
+                                .buildingListItem = item
+                            }
                         };
-
                         game.onNotifyGameEvent(event);
                     }
                 }
@@ -371,17 +373,16 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
         }
         else if (eBuildType == UPGRADE) {
             // notify game that the item just has been finished
-            s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
-                .entityType = eBuildType,
-                .entityID = -1,
-                .player = m_player,
-                .entitySpecificType = buildId,
-                .atCell = -1,
-                .isReinforce = false,
-                .buildingListItem = item
-            };
 
+            const s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
+                .data = BuildingEvent {
+                    .entityType = eBuildType,
+                    .player = m_player,
+                    .entitySpecificType = buildId,
+                    .buildingListItem = item
+                }
+            };
             game.onNotifyGameEvent(event);
 
             // these destroy the data..
