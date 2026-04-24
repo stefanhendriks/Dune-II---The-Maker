@@ -394,15 +394,26 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
     if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
         !game.getMouse()->isBoxSelecting() // pressed the mouse and not boxing anything..
     ) {
-        if (game.m_gameObjectsContext->getUnits()->areUnitsSelected() == true) {
+        if (m_player->hasAnyUnitSelected()) {
             //std::cout << "Mouse cursor is on pos:" << event.coords.x << "," << event.coords.y << " on minimap, moving selected units there." << std::endl;
             //std::cout << "RectMiniMap size: " << m_RectMinimap.getWidth() << "," << m_RectMinimap.getHeight() << std::endl;
-            int posX = (event.coords.x-m_RectMinimap.getX())/m_factorZoom;
-            if (posX<0) posX=1;
-            if (posX>m_RectMinimap.getWidth()) posX=m_RectMinimap.getWidth()-1;
-            int posY = (event.coords.y-m_RectMinimap.getY())/m_factorZoom;
-            if (posY<0) posY=1;
-            if (posY>m_RectMinimap.getHeight()) posY=m_RectMinimap.getHeight()-1;
+
+            int posX = (event.coords.x - m_RectMinimap.getX()) / m_factorZoom;
+            if (posX < 0) {
+                posX = 1;
+            }
+
+            if (posX > m_RectMinimap.getWidth()) {
+                posX = m_RectMinimap.getWidth() - 1;
+            }
+
+            int posY = (event.coords.y - m_RectMinimap.getY()) / m_factorZoom;
+            if (posY < 0) {
+                posY = 1;
+            }
+            if (posY > m_RectMinimap.getHeight()) {
+                posY = m_RectMinimap.getHeight() - 1;
+            }
             //std::cout << "Calculated pos on map: " << posX << "," << posY << ":"<< (posY * m_RectMinimap.getWidth()/m_factorZoom) + posX << std::endl;
             cUnits *units = game.m_gameObjectsContext->getUnits();
             units->move_to((posY * m_RectMinimap.getWidth()/m_factorZoom) + posX);

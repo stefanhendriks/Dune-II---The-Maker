@@ -214,16 +214,6 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 //     return unitCreate(iCll, unitType, iPlayer, bOnStart, isReinforcement, 1.0f);
 // }
 
-bool cUnits::areUnitsSelected() const
-{
-    for (const auto& unit : m_units) {
-        if (unit.isValid() && unit.isSelected()) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void cUnits::move_to(int icell)
 {
     // Implementation for moving units to a specific cell
