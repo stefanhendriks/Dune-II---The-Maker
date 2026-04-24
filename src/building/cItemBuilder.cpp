@@ -219,11 +219,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_PLACE_IT,
                 .entityType = item->getBuildType(),
-                .entityID = -1,
                 .player = m_player,
                 .entitySpecificType = item->getBuildId(),
-                .atCell = -1,
-                .isReinforce = false,
                 .buildingListItem = item // mandatory for this event!
             };
 
@@ -270,7 +267,6 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 .entitySpecificType = buildId,
                 .atCell = -1,
                 .isReinforce = false,
-                .buildingListItem = nullptr
             };
 
             game.onNotifyGameEvent(event);
@@ -343,7 +339,6 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     .entitySpecificType = buildId,
                     .atCell = -1,
                     .isReinforce = false,
-                    .buildingListItem = nullptr
                 };
 
                 game.onNotifyGameEvent(event);
@@ -358,11 +353,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                         s_GameEvent event {
                             .eventType = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET,
                             .entityType = item->getBuildType(),
-                            .entityID = -1,
                             .player = m_player,
                             .entitySpecificType = item->getBuildId(),
-                            .atCell = -1,
-                            .isReinforce = false,
                             .buildingListItem = item // mandatory for this event!
                         };
 

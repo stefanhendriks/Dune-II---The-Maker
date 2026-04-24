@@ -871,9 +871,7 @@ void cMap::createCell(int cell, int terrainType, int tile)
             .player = nullptr,
             .entitySpecificType = -1,
             .atCell = cell,
-            .isReinforce = false,
-            .buildingListItem = nullptr,
-            .buildingList = nullptr
+            .isReinforce = false
         };
 
         m_interface->onNotifyGameEvent(event);
@@ -1321,9 +1319,7 @@ void cMap::detonateSpiceBloom(int cell)
         .player = nullptr,
         .entitySpecificType = -1,
         .atCell = cell,
-        .isReinforce = false,
-        .buildingListItem = nullptr,
-        .buildingList = nullptr
+        .isReinforce = false
     };
     m_interface->onNotifyGameEvent(event);
 

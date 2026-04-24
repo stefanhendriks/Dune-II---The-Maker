@@ -1091,7 +1091,6 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
                     .entitySpecificType = buildOrder.buildId,
                     .atCell = -1,
                     .isReinforce = false,
-                    .buildingListItem = nullptr
                 };
 
                 game.onNotifyGameEvent(event);

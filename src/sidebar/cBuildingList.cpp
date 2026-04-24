@@ -144,11 +144,8 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
     s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_ADDED,
         .entityType = buildType,
-        .entityID = -1,
         .player = pPlayer,
         .entitySpecificType = buildId,
-        .atCell = -1,
-        .isReinforce = false,
         .buildingListItem = item
     };
 
@@ -159,15 +156,11 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
         s_GameEvent event {
             .eventType = eGameEventType::GAME_EVENT_LIST_BECAME_AVAILABLE,
             .entityType = buildType,
-            .entityID = -1,
             .player = pPlayer,
             .entitySpecificType = buildId,
-            .atCell = -1,
-            .isReinforce = false,
             .buildingListItem = item,
             .buildingList = this
         };
-
         game.onNotifyGameEvent(event);
     }
 
@@ -236,7 +229,6 @@ bool cBuildingList::removeItemFromList(int position)
             .entitySpecificType = -1, // BOGUS
             .atCell = -1,
             .isReinforce = false,
-            .buildingListItem = nullptr,
             .buildingList = this
         };
 

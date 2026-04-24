@@ -421,11 +421,8 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
             s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET,
                 .entityType = item->getBuildType(),
-                .entityID = -1,
                 .player = player,
                 .entitySpecificType = item->getBuildId(),
-                .atCell = -1,
-                .isReinforce = false,
                 .buildingListItem = item // mandatory for this event!
             };
             // fake notification for missionKind so that its state gets updated...

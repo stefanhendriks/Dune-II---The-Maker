@@ -1218,11 +1218,8 @@ void cGame::onEventSpecialLaunch(const LaunchDeathHandEvent &event) const
                     s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED,
                         .entityType = itemToDeploy->getBuildType(),
-                        .entityID = -1,
                         .player = pStructure->getPlayer(),
                         .entitySpecificType = itemToDeploy->getBuildId(),
-                        .atCell = -1,
-                        .isReinforce = false,
                         .buildingListItem = itemToDeploy
                     };
 
@@ -1253,7 +1250,6 @@ void cGame::onEventSpecialLaunch(const LaunchDeathHandEvent &event) const
         .entitySpecificType = itemToDeploy->getBuildId(),
         .atCell = -1,
         .isReinforce = false,
-        .buildingListItem = nullptr
     };
 
     game.onNotifyGameEvent(eventT);

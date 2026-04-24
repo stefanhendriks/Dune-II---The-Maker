@@ -276,11 +276,8 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
             s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED,
                 .entityType = item->getBuildType(),
-                .entityID = -1,
                 .player = m_player,
                 .entitySpecificType = item->getBuildId(),
-                .atCell = -1,
-                .isReinforce = false,
                 .buildingListItem = item
             };
 
