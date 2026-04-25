@@ -1662,7 +1662,7 @@ int cPlayer::getSpecialUnitType()
 }
 
 bool cPlayer::hasAnyUnitSelected() {
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
@@ -1678,7 +1678,7 @@ bool cPlayer::hasAnyUnitSelected() {
 sSelectedUnitTypes cPlayer::getSelectedUnitTypes() const
 {
     sSelectedUnitTypes result;
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         if (result.hasInfantry && result.hasVehicles) break;
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit || !pUnit->isValid()) continue;

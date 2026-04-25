@@ -17,6 +17,7 @@
 ASTAR cPathFinder::temp_map[16384];
 
 // Path creation definitions / var
+#define UNVISITED      -2
 #define CLOSED        -1
 #define OPEN          0
 
@@ -98,7 +99,11 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
     //game.m_pathsCreated++;
     game.m_gameSettings->setPathsCreated(game.m_gameSettings->getPathsCreated()+1);
-    memset(temp_map, -1, sizeof(temp_map));
+    for (auto& cell : temp_map) {
+        cell.cost = -1;
+        cell.parent = -1;
+        cell.state = UNVISITED;
+    }
 
     the_cll = -1;
     ex = -1;
@@ -289,12 +294,12 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     break;
                 }
 
-                bool isClosed = temp_map[cll].state == CLOSED;
+                bool isUnvisited = temp_map[cll].state == UNVISITED;
 
                 // when the cell (the attached one) is NOT the cell we are on and
-                // the cell is CLOSED (not checked yet)
+                // the cell is UNVISITED (not yet explored)
                 if (cll != iCell &&         // not checking on our own
-                        isClosed) {            // and is closed (else it's not valid to check)
+                        isUnvisited) {         // and is unvisited (else it's not valid to check)
                     int gcx = game.m_gameObjectsContext->getMapGeometry()->getCellX(goal_cell);
                     int gcy = game.m_gameObjectsContext->getMapGeometry()->getCellY(goal_cell);
 
