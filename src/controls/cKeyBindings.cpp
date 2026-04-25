@@ -52,6 +52,7 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN,{SDL_SCANCODE_L}, false, false, true);
     bind(eKeyAction::SELECT_HARVESTERS_ON_MAP,  {SDL_SCANCODE_H}, true, false, false);
     bind(eKeyAction::SELECT_HARVESTERS_ON_SCREEN,{SDL_SCANCODE_H}, false, false, true);
+    bind(eKeyAction::SELECT_ATTACKING_ON_MAP,    {SDL_SCANCODE_A}, true, false, false);
 
     // Groups
     bind(eKeyAction::GROUP_1, {SDL_SCANCODE_1});
@@ -131,6 +132,7 @@ void cKeyBindings::loadFromSection(const cSection &section)
         {"SELECT_LAUNCHERS_ON_SCREEN",eKeyAction::SELECT_LAUNCHERS_ON_SCREEN},
         {"SELECT_HARVESTERS_ON_MAP",  eKeyAction::SELECT_HARVESTERS_ON_MAP},
         {"SELECT_HARVESTERS_ON_SCREEN",eKeyAction::SELECT_HARVESTERS_ON_SCREEN},
+        {"SELECT_ATTACKING_ON_MAP",   eKeyAction::SELECT_ATTACKING_ON_MAP},
         {"GROUP_1",                   eKeyAction::GROUP_1},
         {"GROUP_2",                   eKeyAction::GROUP_2},
         {"GROUP_3",                   eKeyAction::GROUP_3},
