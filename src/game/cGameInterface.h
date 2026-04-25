@@ -63,6 +63,7 @@ public:
     bool playMusicByType(int iType, int playerId, bool triggerWithVoice) const;
     void playVoice(int sampleId, int playerId) const;
     void playSound(int sampleId) const;
+    void playSoundWithDistance(int sampleId, int distance) const;
 
     int getTotalPowerUsageForPlayer(cPlayer *pPlayer) const;
     int getTotalPowerOutForPlayer(cPlayer *pPlayer) const;

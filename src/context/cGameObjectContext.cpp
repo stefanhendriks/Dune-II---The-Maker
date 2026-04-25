@@ -139,4 +139,6 @@ void cGameObjectContext::serviceInit(sGameServices* services)
     m_Players->serviceInit(services);
     assert(m_map != nullptr);
     m_map->serviceInit(services);
+    assert(m_Units != nullptr);
+    m_Units->serviceInit(services);
 }
