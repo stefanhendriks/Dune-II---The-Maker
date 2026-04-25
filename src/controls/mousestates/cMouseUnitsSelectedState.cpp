@@ -473,14 +473,14 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         }
     }
 
-    if (event.isAction(eKeyAction::SELECT_ALL_MY_INFANTRY)) {
-        const auto infantryUnits = m_player->getAllMyInfantryUnits();
+    if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_MAP)) {
+        const auto infantryUnits = m_player->getInfantryUnitsOnMap();
         m_player->selectUnits(infantryUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
 
     if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_SCREEN)) {
-        const auto infantryUnits = m_player->getMyInfantryUnitsWithinViewportRect(*game.m_mapViewport);
+        const auto infantryUnits = m_player->getInfantryUnitsOnViewport(*game.m_mapViewport);
         m_player->selectUnits(infantryUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }

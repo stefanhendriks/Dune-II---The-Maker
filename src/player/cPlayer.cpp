@@ -440,7 +440,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
     return ids;
 }
 
-std::vector<int> cPlayer::getMyInfantryUnitsWithinViewportRect(const cRectangle &rect) const
+std::vector<int> cPlayer::getInfantryUnitsOnViewport(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
@@ -2163,7 +2163,7 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
     return ids;
 }
 
-std::vector<int> cPlayer::getAllMyInfantryUnits() const
+std::vector<int> cPlayer::getInfantryUnitsOnMap() const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
