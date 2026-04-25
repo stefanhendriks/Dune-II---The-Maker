@@ -40,7 +40,8 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::REPAIR_UNIT,               {SDL_SCANCODE_R});
     bind(eKeyAction::RETURN_TO_BASE,            {SDL_SCANCODE_F});
     bind(eKeyAction::SEND_TO_REFINERY,          {SDL_SCANCODE_D});
-    bind(eKeyAction::SELECT_SAME_TYPE_ON_SCREEN,{SDL_SCANCODE_Z}, true, false, false);
+    bind(eKeyAction::SELECT_SAME_TYPE_ON_MAP,   {SDL_SCANCODE_Z}, true, false, false);
+    bind(eKeyAction::SELECT_SAME_TYPE_ON_SCREEN,{SDL_SCANCODE_Z}, false, false, true);
     bind(eKeyAction::SELECT_INFANTRY_ON_MAP,    {SDL_SCANCODE_I}, true, false, false);
     bind(eKeyAction::SELECT_INFANTRY_ON_SCREEN, {SDL_SCANCODE_I}, false, false, true);
 
@@ -108,6 +109,7 @@ void cKeyBindings::loadFromSection(const cSection &section)
         {"REPAIR",                    eKeyAction::REPAIR_UNIT},
         {"RETURN_TO_BASE",            eKeyAction::RETURN_TO_BASE},
         {"SEND_TO_REFINERY",          eKeyAction::SEND_TO_REFINERY},
+        {"SELECT_SAME_TYPE_ON_MAP",   eKeyAction::SELECT_SAME_TYPE_ON_MAP},
         {"SELECT_SAME_TYPE_ON_SCREEN",eKeyAction::SELECT_SAME_TYPE_ON_SCREEN},
         {"SELECT_INFANTRY_ON_MAP",    eKeyAction::SELECT_INFANTRY_ON_MAP},
         {"SELECT_INFANTRY_ON_SCREEN", eKeyAction::SELECT_INFANTRY_ON_SCREEN},

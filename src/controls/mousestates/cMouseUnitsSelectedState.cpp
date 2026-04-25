@@ -473,6 +473,13 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         }
     }
 
+    if (event.isAction(eKeyAction::SELECT_SAME_TYPE_ON_MAP)) {
+        if (m_selectedUnits.size() == 1) {
+            cUnit *pUnit = game.m_gameObjectsContext->getUnit(m_selectedUnits[0]);
+            selectSameUnitsOnMap(pUnit->iType);
+        }
+    }
+
     if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_MAP)) {
         const auto infantryUnits = m_player->getInfantryUnitsOnMap();
         m_player->selectUnits(infantryUnits);
@@ -567,6 +574,20 @@ void cMouseUnitsSelectedState::onBlur()
 void cMouseUnitsSelectedState::selectSameUnitsOnScreen(int unitType)
 {
     const std::vector<int> &ids = m_player->getAllMyUnitsWithinViewportRect(*game.m_mapViewport);
+    std::vector<int> sameUnits =std::vector<int>();
+    for (int i : ids) {
+        cUnit *pUnit = game.m_gameObjectsContext->getUnit(i);
+        if (pUnit->iType == unitType) {
+            sameUnits.push_back(i);
+        }
+    }
+    m_player->selectUnits(sameUnits);
+    m_selectedUnits = m_player->getSelectedUnits();
+}
+
+void cMouseUnitsSelectedState::selectSameUnitsOnMap(int unitType)
+{
+    const std::vector<int> &ids = m_player->getAllMyUnits();
     std::vector<int> sameUnits =std::vector<int>();
     for (int i : ids) {
         cUnit *pUnit = game.m_gameObjectsContext->getUnit(i);
