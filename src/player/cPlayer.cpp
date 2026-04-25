@@ -2142,6 +2142,22 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
     return ids;
 }
 
+std::vector<int> cPlayer::getAllMyInfantryUnits() const
+{
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
+        if (!pUnit->isInfantryUnit()) continue;
+
+        ids.push_back(i);
+    }
+    return ids;
+}
+
 bool cPlayer::hasMetQuota()
 {
     return spiceQuota > 0 && hasEnoughCreditsFor(spiceQuota);
