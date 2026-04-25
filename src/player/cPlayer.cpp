@@ -472,6 +472,25 @@ std::vector<int> cPlayer::getInfantryUnitsOnViewport(const cRectangle &rect) con
     return ids;
 }
 
+std::vector<int> cPlayer::getMyWheelUnitsOnViewport(const cRectangle &rect) const
+{
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead()) continue;
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
+        if (!pUnit->isWheelUnit()) continue;
+
+        if (!rect.isPointWithin(pUnit->center_draw_x(), pUnit->center_draw_y())) {
+            continue;
+        }
+
+        ids.push_back(i);
+    }
+    return ids;
+}
 
 /**
  * This function will return the amount of units for given type, but it is not (yet) optimized, so it will
@@ -2197,6 +2216,22 @@ std::vector<int> cPlayer::getInfantryUnitsOnMap() const
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isInfantryUnit()) continue;
+
+        ids.push_back(i);
+    }
+    return ids;
+}
+
+std::vector<int> cPlayer::getWheelUnitsOnMap() const
+{
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
+        if (!pUnit->isWheelUnit()) continue;
 
         ids.push_back(i);
     }
