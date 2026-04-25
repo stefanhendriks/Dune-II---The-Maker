@@ -407,7 +407,7 @@ void cPlayer::markUnitsForGroup(const int groupId) const
 std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->isDead()) continue;
@@ -415,7 +415,7 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
 
         if (pUnit->iGroup == groupId) {
-            ids.push_back(static_cast<int>(i));
+            ids.push_back(i);
         }
     }
     return ids;
@@ -424,7 +424,7 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->isDead()) continue;
@@ -435,7 +435,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
             continue;
         }
 
-        ids.push_back(static_cast<int>(i));
+        ids.push_back(i);
     }
     return ids;
 }
@@ -450,7 +450,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
 int cPlayer::getAmountOfUnitsForType(const std::vector<int> &unitTypes) const
 {
     int count = 0;
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *cUnit = m_objects->getUnit(i);
         if (!cUnit->isValid()) continue;
         if (cUnit->iPlayer != this->getId()) continue;
@@ -1347,7 +1347,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
 
     int maxTargets = 0;
 
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *cUnit = m_objects->getUnit(i);
         if (!cUnit->isValid()) continue;
         if (cUnit->iPlayer != playerIndexToAttack) continue;
@@ -1361,7 +1361,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
 
         // HACK HACK: the AI player does not need to discover an enemy player yet
         if (isVisibleForPlayer || m_settings->isSkirmish()) {
-            iTargets[maxTargets] = static_cast<int>(i);
+            iTargets[maxTargets] = i;
             maxTargets++;
 
             if (maxTargets > 99)
@@ -1662,7 +1662,7 @@ int cPlayer::getSpecialUnitType()
 }
 
 bool cPlayer::hasAnyUnitSelected() {
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
@@ -1678,7 +1678,7 @@ bool cPlayer::hasAnyUnitSelected() {
 sSelectedUnitTypes cPlayer::getSelectedUnitTypes() const
 {
     sSelectedUnitTypes result;
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         if (result.hasInfantry && result.hasVehicles) break;
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit || !pUnit->isValid()) continue;
@@ -2136,7 +2136,7 @@ std::vector<int> cPlayer::getAllMyUnits()
 std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
 {
     std::vector<int> ids = std::vector<int>();
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
@@ -2149,7 +2149,7 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
             if (pUnit->iType != unitType) continue; // not the same type? skip
         }
 
-        ids.push_back(static_cast<int>(i));
+        ids.push_back(i);
     }
     return ids;
 }
@@ -2173,7 +2173,7 @@ bool cPlayer::evaluateStillAlive()
 
     if (!alive) {
         // check units now
-        for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+        for (int i = 0; i < m_objects->getUnitsSize(); i++) {
             cUnit *pUnit = m_objects->getUnit(i);
             if (!pUnit->isValid()) continue;
             if (pUnit->isAirbornUnit()) continue; // do not count airborn units
@@ -2217,12 +2217,12 @@ void cPlayer::deselectStructure()
 std::vector<int> cPlayer::getSelectedUnits() const
 {
     std::vector<int> ids = std::vector<int>();
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *cUnit = m_objects->getUnit(i);
         if (!cUnit->isValid()) continue;
         if (!cUnit->belongsTo(this)) continue;
         if (cUnit->isSelected()) {
-            ids.push_back(static_cast<int>(i));
+            ids.push_back(i);
         }
     }
     return ids;

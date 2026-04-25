@@ -24,6 +24,14 @@ static constexpr int MAX_PATH_SIZE = 256;
 class cPlayer;
 class cTextDrawer;
 class cAbstractStructure;
+struct sGameServices;
+
+class cGameSettings;
+class cInfoContext;
+class cGameObjectContext;
+class cGameInterface;
+class cMapCamera;
+class cMap;
 
 enum class eTransferType {
     NONE,                               // nothing to transfer
@@ -128,6 +136,8 @@ public:
 
     cUnit();
     ~cUnit();
+
+    void serviceInit(sGameServices* services);
 
     float fExperience;	// experience gained by unit
 
@@ -460,6 +470,13 @@ public:
     static int freeAroundMove(int iUnit);
 
 private:
+    cGameSettings *m_settings = nullptr;
+    cInfoContext *m_infos = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cMapCamera* m_mapCamera = nullptr;
+    cMap* m_map = nullptr;
+
     eActionType m_action;
     eUnitActionIntent intent;
 

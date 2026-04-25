@@ -219,6 +219,11 @@ void cGameInterface::playSound(int sampleId) const
     m_igame->playSound(sampleId);
 }
 
+void cGameInterface::playSoundWithDistance(int sampleId, int distance) const
+{
+    m_igame->playSoundWithDistance(sampleId, distance);
+}
+
 int cGameInterface::getTotalPowerUsageForPlayer(cPlayer *pPlayer) const
 {
     return m_igame->m_structureUtils->getTotalPowerUsageForPlayer(pPlayer);

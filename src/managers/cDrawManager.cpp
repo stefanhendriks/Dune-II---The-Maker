@@ -127,7 +127,7 @@ void cDrawManager::drawCombatState()
 void cDrawManager::drawDebugInfoUsages() const
 {
     int unitsUsed = 0;
-    for (size_t i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
+    for (int i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
         if (game.m_gameObjectsContext->getUnit(i)->isValid()) {
             unitsUsed++;
         }

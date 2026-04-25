@@ -17,6 +17,7 @@
 ASTAR cPathFinder::temp_map[16384];
 
 // Path creation definitions / var
+#define UNVISITED      -2
 #define CLOSED        -1
 #define OPEN          0
 
@@ -98,7 +99,11 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
     //game.m_pathsCreated++;
     game.m_gameSettings->setPathsCreated(game.m_gameSettings->getPathsCreated()+1);
-    memset(temp_map, -1, sizeof(temp_map));
+    for (auto& cell : temp_map) {
+        cell.cost = -1;
+        cell.parent = -1;
+        cell.state = UNVISITED;
+    }
 
     the_cll = -1;
     ex = -1;
@@ -121,6 +126,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     while (valid) {
         // iCell reached Goal Cell. We should have bailed out sooner.
         if (iCell == goal_cell) {
+            pUnit->log(std::format("WARNING: iCell == goal_cell ({}) at loop start - should have been caught earlier", iCell));
             valid = false;
             success = true;
             break;
@@ -228,13 +234,13 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                         if (idOfUnitAtCell != iUnitId) {
                             int iUID = idOfUnitAtCell;
 
-                            if (iPathCountUnits != 0) {
+                            // if (iPathCountUnits != 0) {
                                 if (iPathCountUnits <= 0) {
                                     // other units block our path
                                     good = false;
                                     pUnit->log("iPathCountUnits < 0 - variable 'good' becomes 'false'");
                                 }
-                            }
+                            // }
 
                             cUnit *unitAtCell = game.m_gameObjectsContext->getUnit(iUID);
                             if (!unitAtCell->getPlayer()->isSameTeamAs(pUnit->getPlayer())) {
@@ -289,17 +295,18 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     break;
                 }
 
-                bool isClosed = temp_map[cll].state == CLOSED;
+                bool isUnvisited = temp_map[cll].state == UNVISITED;
 
                 // when the cell (the attached one) is NOT the cell we are on and
-                // the cell is CLOSED (not checked yet)
+                // the cell is UNVISITED (not yet explored)
                 if (cll != iCell &&         // not checking on our own
-                        isClosed) {            // and is closed (else it's not valid to check)
+                        isUnvisited) {         // and is unvisited (else it's not valid to check)
                     int gcx = game.m_gameObjectsContext->getMapGeometry()->getCellX(goal_cell);
                     int gcy = game.m_gameObjectsContext->getMapGeometry()->getCellY(goal_cell);
 
                     // calculate the cost
-                    int tempCost = temp_map[cll].cost;
+                    // treat unvisited cells (cost == -1) as 0 to avoid corrupting newCost
+                    int tempCost = (temp_map[cll].cost >= 0) ? temp_map[cll].cost : 0;
                     double distanceCost = game.m_gameObjectsContext->getMapGeometry()->distance(cx, cy, gcx, gcy);
                     double newCost = distanceCost + tempCost;
 //                        pUnit->log(std::format(
@@ -361,26 +368,20 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
         }
         else {
-//            int prevCell = temp_map[iCell].parent;
+            // No unvisited neighbor found: mark current cell as a dead end and backtrack to parent
+            temp_map[iCell].state = CLOSED;
+            int prevCell = temp_map[iCell].parent;
 
-//            if (prevCell > -1 ) {
-//                int halfTile = 16;
-//                int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
-//                int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iCell, halfTile);
-//
-//                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
-//                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
-//
-//                _renderDrawer->renderLine(screen, iPrevX, iPrevY, iDx, iDy, Color{255, 0, 0));
-//                pUnit->log(std::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
-//                iCell = prevCell; // back track
-//            } else {
-            pUnit->log(std::format("Failed to find new cell, backtracking failed!"));
-            valid = false;
-            success = false;
-            pUnit->log("FAILED TO CREATE PATH - nothing found to continue");
-            break;
-//            }
+            if (prevCell > -1) {
+                pUnit->log(std::format("Dead end at cell {}, backtracking to parent {}", iCell, prevCell));
+                iCell = prevCell;
+            } else {
+                pUnit->log("Failed to find new cell, backtracking failed - no parent!");
+                valid = false;
+                success = false;
+                pUnit->log("FAILED TO CREATE PATH - nothing found to continue");
+                break;
+            }
         }
 
     } // valid to run loop (and try to create a path)
@@ -423,14 +424,19 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 }
             }
             else {
+                pUnit->log(std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", sc));
                 cp = false;
             }
 
-            if (pi >= MAX_PATH_SIZE)
+            if (pi >= MAX_PATH_SIZE) {
+                pUnit->log(std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
                 cp = false;
+            }
 
-            if (sc == pUnit->getCell())
+            if (sc == pUnit->getCell()) {
+                pUnit->log(std::format("WARNING: backtrace reached start cell ({}) before completing", sc));
                 cp = false;
+            }
         }
 
         // reverse
@@ -520,7 +526,7 @@ int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
     int iStartX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll) - iSize;
     int iStartY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll) - iSize;
     int iEndX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll) + iSize;
-    int iEndY = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll) + iSize;
+    int iEndY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll) + iSize;
 
     float dDistance = 9999;
 
