@@ -236,6 +236,19 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(infantryUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
+
+
+    if (event.isAction(eKeyAction::SELECT_WHEELS_ON_MAP)) {
+        const auto wheelUnits = m_player->getWheelUnitsOnMap();
+        m_player->selectUnits(wheelUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
+
+    if (event.isAction(eKeyAction::SELECT_WHEELS_ON_SCREEN)) {
+        const auto wheelUnits = m_player->getMyWheelUnitsOnViewport(*game.m_mapViewport);
+        m_player->selectUnits(wheelUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
 }
 
 void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)

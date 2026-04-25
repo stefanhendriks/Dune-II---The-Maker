@@ -491,6 +491,18 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(infantryUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
+
+    if (event.isAction(eKeyAction::SELECT_WHEELS_ON_MAP)) {
+        const auto wheelUnits = m_player->getWheelUnitsOnMap();
+        m_player->selectUnits(wheelUnits);
+        m_selectedUnits = m_player->getSelectedUnits();
+    }
+
+    if (event.isAction(eKeyAction::SELECT_WHEELS_ON_SCREEN)) {
+        const auto wheelUnits = m_player->getMyWheelUnitsOnViewport(*game.m_mapViewport);
+        m_player->selectUnits(wheelUnits);
+        m_selectedUnits = m_player->getSelectedUnits();
+    }
 }
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
