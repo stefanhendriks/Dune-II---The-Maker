@@ -500,7 +500,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
             cUnit *ownerUnit = game.m_gameObjectsContext->getUnit(iOwnerUnit);
             if (ownerUnit->isValid()) {
                 groundUnitTakingDamage->iPlayer = ownerUnit->iPlayer;
-                groundUnitTakingDamage->iGroup = -1;
+                groundUnitTakingDamage->iGroups.fill(false);
 
                 // send out event that this unit got deviated (and what the new owner ID is)
                 const s_GameEvent event {
