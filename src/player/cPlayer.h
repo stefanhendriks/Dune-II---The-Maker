@@ -320,6 +320,9 @@ public:
     std::vector<int> getWheelUnitsOnMap() const;
     std::vector<int> getMyWheelUnitsOnViewport(const cRectangle &rect) const;
 
+    std::vector<int> getTankUnitsOnMap() const;
+    std::vector<int> getMyTankUnitsOnViewport(const cRectangle &rect) const;
+
     std::vector<int> getAllMyUnitsWithinViewportRect(const cRectangle &rect) const;
 
     std::vector<int> getAllMyStructuresAsId();
