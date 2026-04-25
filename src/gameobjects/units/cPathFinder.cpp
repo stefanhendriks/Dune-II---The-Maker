@@ -305,7 +305,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     int gcy = game.m_gameObjectsContext->getMapGeometry()->getCellY(goal_cell);
 
                     // calculate the cost
-                    int tempCost = temp_map[cll].cost;
+                    // treat unvisited cells (cost == -1) as 0 to avoid corrupting newCost
+                    int tempCost = (temp_map[cll].cost >= 0) ? temp_map[cll].cost : 0;
                     double distanceCost = game.m_gameObjectsContext->getMapGeometry()->distance(cx, cy, gcx, gcy);
                     double newCost = distanceCost + tempCost;
 //                        pUnit->log(std::format(
