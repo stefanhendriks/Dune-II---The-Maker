@@ -1675,6 +1675,24 @@ bool cPlayer::hasAnyUnitSelected() {
     return false;
 }
 
+sSelectedUnitTypes cPlayer::getSelectedUnitTypes() const
+{
+    sSelectedUnitTypes result;
+    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+        if (result.hasInfantry && result.hasVehicles) break;
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
+        if (!pUnit->belongsTo(this)) continue;
+        if (!pUnit->isSelected()) continue;
+        if (pUnit->isInfantryUnit()) {
+            result.hasInfantry = true;
+        } else {
+            result.hasVehicles = true;
+        }
+    }
+    return result;
+}
+
 bool cPlayer::hasEnoughPowerFor(int structureType) const
 {
     assert(structureType > -1 && "hasEnoughPowerFor called with structureType < 0!");

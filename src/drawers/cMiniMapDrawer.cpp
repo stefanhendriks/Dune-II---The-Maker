@@ -25,6 +25,7 @@
 
 #include "data/gfxaudio.h"
 #include "gameobjects/particles/cParticle.h"
+#include "utils/RNG.hpp"
 
 cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
@@ -421,6 +422,14 @@ void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
 
             auto absPoint = m_map->getGeometry().getAbsolutePositionFromCell(mouseCellOnMinimap);
             cParticle::create(absPoint.x, absPoint.y, D2TM_PARTICLE_MOVE, -1, -1);
+
+            sSelectedUnitTypes selectedUnitTypes = m_player->getSelectedUnitTypes();
+            if (selectedUnitTypes.hasInfantry) {
+                game.playSound(SOUND_MOVINGOUT + RNG::rnd(2));
+            }
+            if (selectedUnitTypes.hasVehicles) {
+                game.playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
+            }
         }
     }
 }
