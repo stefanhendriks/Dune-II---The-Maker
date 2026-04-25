@@ -31,6 +31,7 @@ enum class eKeyAction {
     RETURN_TO_BASE,
     SEND_TO_REFINERY,
     SELECT_SAME_TYPE_ON_SCREEN,
+    SELECT_INFANTRY_ON_SCREEN,
     SELECT_ALL_MY_INFANTRY,
     // Groups
     GROUP_1,

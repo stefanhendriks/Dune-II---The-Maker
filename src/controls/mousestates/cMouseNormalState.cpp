@@ -230,6 +230,12 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(infantryUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
+
+    if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_SCREEN)) {
+        const auto infantryUnits = m_player->getMyInfantryUnitsWithinViewportRect(*game.m_mapViewport);
+        m_player->selectUnits(infantryUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
 }
 
 void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)

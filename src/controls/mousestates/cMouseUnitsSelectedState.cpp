@@ -478,6 +478,12 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(infantryUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
+
+    if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_SCREEN)) {
+        const auto infantryUnits = m_player->getMyInfantryUnitsWithinViewportRect(*game.m_mapViewport);
+        m_player->selectUnits(infantryUnits);
+        m_selectedUnits = m_player->getSelectedUnits();
+    }
 }
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
