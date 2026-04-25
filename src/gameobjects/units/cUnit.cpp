@@ -78,7 +78,7 @@ void cUnit::init(int i)
 
     bRemoveMe = false;
 
-    iGroup = -1;
+    iGroups.fill(false);
 
     // Movement
     movement.iNextCell = -1;      // where to move to (next cell)
@@ -640,9 +640,18 @@ void cUnit::draw_group(cTextDrawer* textDrawer)
     int drawy = draw_y() - (height_y + 2);
     // draw group
     // TODO: make text smaller depending on zoom factor?
-    if (iGroup > 0 && iPlayer == HUMAN) {
-        textDrawer->drawText(drawx + 26, drawy - 11, Color::Black,std::format("{}",iGroup));
-        textDrawer->drawText(drawx + 26, drawy - 12, Color::White,std::format("{}",iGroup));
+    if (iPlayer == HUMAN) {
+        std::string groups;
+        for (int i = 0; i < 5; i++) {
+            if (iGroups[i]) {
+                groups += std::to_string(i + 1);
+            }
+        }
+
+        if (!groups.empty()) {
+            textDrawer->drawText(drawx + 26, drawy - 11, Color::Black, groups);
+            textDrawer->drawText(drawx + 26, drawy - 12, Color::White, groups);
+        }
     }
 }
 
