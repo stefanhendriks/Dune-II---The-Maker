@@ -74,6 +74,11 @@ struct s_PlaceResult {
     std::set<int> structureIds = std::set<int>();
 };
 
+struct sSelectedUnitTypes {
+    bool hasInfantry = false;
+    bool hasVehicles = false;
+};
+
 struct sGameServices;
 class cGameSettings;
 class cInfoContext;
@@ -444,6 +449,7 @@ public:
     int getSpecialUnitType();
 
     bool hasAnyUnitSelected();
+    sSelectedUnitTypes getSelectedUnitTypes() const;
 
     static std::string getHouseNameForId(int house);
 
