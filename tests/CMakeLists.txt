@@ -13,6 +13,7 @@ set(TEST_SOURCES
 
 add_executable(d2tm_tests
     map/test_MapGeometry.cpp
+    utils/test_d2tm_math.cpp
     ${TEST_SOURCES}
 )
 
