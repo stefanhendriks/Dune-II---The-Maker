@@ -273,6 +273,18 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(launcherUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
+
+    if (event.isAction(eKeyAction::SELECT_HARVESTERS_ON_MAP)) {
+        const auto harvesterUnits = m_player->getHarvesterUnitsOnMap();
+        m_player->selectUnits(harvesterUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
+
+    if (event.isAction(eKeyAction::SELECT_HARVESTERS_ON_SCREEN)) {
+        const auto harvesterUnits = m_player->getMyHarvesterUnitsOnViewport(*game.m_mapViewport);
+        m_player->selectUnits(harvesterUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
 }
 
 void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
