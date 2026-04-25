@@ -42,6 +42,7 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::SEND_TO_REFINERY,          {SDL_SCANCODE_D});
     bind(eKeyAction::SELECT_SAME_TYPE_ON_SCREEN,{SDL_SCANCODE_Z}, true, false, false);
     bind(eKeyAction::SELECT_ALL_MY_INFANTRY,    {SDL_SCANCODE_I}, true, false, false);
+    bind(eKeyAction::SELECT_INFANTRY_ON_SCREEN, {SDL_SCANCODE_I}, false, false, true);
 
     // Groups
     bind(eKeyAction::GROUP_1, {SDL_SCANCODE_1});

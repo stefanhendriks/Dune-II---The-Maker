@@ -310,6 +310,8 @@ public:
     std::vector<int> getAllMyUnitsForType(int unitType) const;
 
     std::vector<int> getAllMyInfantryUnits() const;
+    std::vector<int> getMyInfantryUnitsWithinViewportRect(const cRectangle &rect) const;
+
 
     std::vector<int> getAllMyUnitsWithinViewportRect(const cRectangle &rect) const;
 
