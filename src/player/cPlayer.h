@@ -329,6 +329,8 @@ public:
     std::vector<int> getHarvesterUnitsOnMap() const;
     std::vector<int> getMyHarvesterUnitsOnViewport(const cRectangle &rect) const;
 
+    std::vector<int> getAttackingUnitsOnMap() const;
+
     std::vector<int> getAllMyUnitsWithinViewportRect(const cRectangle &rect) const;
 
     std::vector<int> getAllMyStructuresAsId();
