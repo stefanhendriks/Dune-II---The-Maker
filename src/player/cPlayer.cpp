@@ -452,7 +452,7 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
     return ids;
 }
 
-std::vector<int> cPlayer::getMyInfantryUnitsWithinViewportRect(const cRectangle &rect) const
+std::vector<int> cPlayer::getInfantryUnitsOnViewport(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
@@ -2181,6 +2181,22 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
             // TODO: what about units in a carry-all being transferred?
             if (pUnit->iType != unitType) continue; // not the same type? skip
         }
+
+        ids.push_back(i);
+    }
+    return ids;
+}
+
+std::vector<int> cPlayer::getInfantryUnitsOnMap() const
+{
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
+        if (!pUnit->isInfantryUnit()) continue;
 
         ids.push_back(i);
     }

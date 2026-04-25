@@ -225,14 +225,14 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
             m_mouseTile = MOUSE_RALLY;
         }
     }
-    if (event.isAction(eKeyAction::SELECT_ALL_MY_INFANTRY)) {
-        const auto infantryUnits = m_player->getAllMyInfantryUnits();
+    if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_MAP)) {
+        const auto infantryUnits = m_player->getInfantryUnitsOnMap();
         m_player->selectUnits(infantryUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
 
     if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_SCREEN)) {
-        const auto infantryUnits = m_player->getMyInfantryUnitsWithinViewportRect(*game.m_mapViewport);
+        const auto infantryUnits = m_player->getInfantryUnitsOnViewport(*game.m_mapViewport);
         m_player->selectUnits(infantryUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
