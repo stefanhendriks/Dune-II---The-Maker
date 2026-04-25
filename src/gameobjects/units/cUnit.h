@@ -16,6 +16,7 @@
 #include "utils/cRectangle.h"
 #include "gameobjects/units/cTimer.h"
 
+#include <array>
 #include <memory>
 #include <string>
 
@@ -143,7 +144,7 @@ public:
 
     int iID;            // index of unit in the unit array
     int iType;          // type of unit
-    int iGroup;         // belongs to group...
+    std::array<bool, 5> iGroups; // belongs to groups [0..4]
     int iPlayer;        // belongs to player
 
     sMovement movement;

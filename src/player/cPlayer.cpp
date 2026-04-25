@@ -33,6 +33,14 @@
 
 #include "data/gfxaudio.h"
 
+namespace {
+int groupIdToIndex(int groupId)
+{
+    if (groupId < 1 || groupId > 5) return -1;
+    return groupId - 1;
+}
+}
+
 cPlayer::cPlayer()
 {
     m_settings = nullptr;
@@ -387,25 +395,31 @@ int cPlayer::getAmountOfUnitsForType(int unitType) const
 
 void cPlayer::markUnitsForGroup(const int groupId) const
 {
+    const int groupIndex = groupIdToIndex(groupId);
+    if (groupIndex < 0) return;
+
     // go over all units, and mark units for this group if selected.
     // and unmark them for the group when not/no longer selected.
     for (auto &pUnit : *m_objects->getUnits()) {
         if (!pUnit.isValid()) continue;
         if (!pUnit.belongsTo(this)) continue;
         if (pUnit.isSelected()) {
-            pUnit.iGroup = groupId;
+            pUnit.iGroups[groupIndex] = true;
             continue;
         }
 
         // unit belongs to this group, but is not/no longer selected. So unmark it.
-        if (pUnit.iGroup == groupId) {
-            pUnit.iGroup = -1;
+        if (pUnit.iGroups[groupIndex]) {
+            pUnit.iGroups[groupIndex] = false;
         }
     }
 }
 
 std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
 {
+    const int groupIndex = groupIdToIndex(groupId);
+    if (groupIndex < 0) return {};
+
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
@@ -414,7 +428,7 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
 
-        if (pUnit->iGroup == groupId) {
+        if (pUnit->iGroups[groupIndex]) {
             ids.push_back(i);
         }
     }
