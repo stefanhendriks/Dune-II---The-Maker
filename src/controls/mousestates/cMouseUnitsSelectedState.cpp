@@ -472,6 +472,12 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
             selectSameUnitsOnScreen(pUnit->iType);
         }
     }
+
+    if (event.isAction(eKeyAction::SELECT_ALL_MY_INFANTRY)) {
+        const auto infantryUnits = m_player->getAllMyInfantryUnits();
+        m_player->selectUnits(infantryUnits);
+        m_selectedUnits = m_player->getSelectedUnits();
+    }
 }
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
