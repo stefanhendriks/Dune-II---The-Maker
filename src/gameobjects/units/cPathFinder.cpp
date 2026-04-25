@@ -228,13 +228,13 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                         if (idOfUnitAtCell != iUnitId) {
                             int iUID = idOfUnitAtCell;
 
-                            if (iPathCountUnits != 0) {
+                            // if (iPathCountUnits != 0) {
                                 if (iPathCountUnits <= 0) {
                                     // other units block our path
                                     good = false;
                                     pUnit->log("iPathCountUnits < 0 - variable 'good' becomes 'false'");
                                 }
-                            }
+                            // }
 
                             cUnit *unitAtCell = game.m_gameObjectsContext->getUnit(iUID);
                             if (!unitAtCell->getPlayer()->isSameTeamAs(pUnit->getPlayer())) {
