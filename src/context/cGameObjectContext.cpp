@@ -71,11 +71,11 @@ cUnits* cGameObjectContext::getUnits() const {
     return m_Units.get();
 }
 
-std::size_t cGameObjectContext::getUnitsSize() const {
+int cGameObjectContext::getUnitsSize() const {
     if (!m_Units) {
         throw std::runtime_error("cUnits not initialized in cGameObjectContext");
     }
-    return static_cast<std::size_t>(m_Units->size());
+    return m_Units->size();
 }
 
 cMap& cGameObjectContext::getMap() const {
@@ -139,4 +139,6 @@ void cGameObjectContext::serviceInit(sGameServices* services)
     m_Players->serviceInit(services);
     assert(m_map != nullptr);
     m_map->serviceInit(services);
+    assert(m_Units != nullptr);
+    m_Units->serviceInit(services);
 }

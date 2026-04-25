@@ -72,7 +72,7 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 int cPlayerBrainMissionKindAttack::findEnemyUnit() const
 {
     int target = -1;
-    for (size_t i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
+    for (int i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
         cUnit *pUnit = game.m_gameObjectsContext->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->getPlayer() == player) continue; // skip self
@@ -81,7 +81,7 @@ int cPlayerBrainMissionKindAttack::findEnemyUnit() const
         if (pUnit->isSandworm() || pUnit->isAirbornUnit()) continue; // don't attack air units or sandworms
 
         // enemy unit
-        target = static_cast<int>(i);
+        target = i;
         if (RNG::rnd(100) < 5) {
             break; // this way we kind of have randomly another target...
         }

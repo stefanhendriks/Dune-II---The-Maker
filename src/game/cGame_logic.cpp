@@ -1098,6 +1098,9 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
         case eGameEventType::GAME_EVENT_DESTROYED:
             onEventEntityDestroyed(event);
             break;
+        case eGameEventType::GAME_EVENT_DEPLOY_UNIT:
+            onEventDeployUnit(event);
+            break;
         default:
             break;
     }
@@ -1139,6 +1142,29 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
             false,
             RNG::genDouble(0.3, 0.8)
         );
+    }
+}
+
+void cGame::onEventDeployUnit(const s_GameEvent &event) {
+    if (event.entityType != eBuildType::UNIT) {
+        return;
+    }
+
+    if (event.player == nullptr || event.atCell < 0 || event.entitySpecificType < 0) {
+        return;
+    }
+
+    int id = cUnits::unitCreate(
+        event.atCell,
+        event.entitySpecificType,
+        event.player->getId(),
+        true,
+        event.isReinforce
+    );
+    if (id < 0) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_GAME, "Deploy unit", std::format("Failed to deploy unit of type {} at cell {} for player {}", event.entitySpecificType, event.atCell, event.player->getId()));
+    } else {
+        cLogger::getInstance()->log(LOG_INFO, COMP_GAME, "Deploy unit", std::format("Successfully deployed unit of type {} at cell {} for player {}, id={}", event.entitySpecificType, event.atCell, event.player->getId(), id));
     }
 }
 

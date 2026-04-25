@@ -35,7 +35,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "gameobjects/units/cUnit.h"
-#include "gameobjects/units/cUnits.h"
+// #include "gameobjects/units/cUnits.h"
 #include "drawers/cTextDrawer.h"
 #include "include/sGameServices.h"
 
@@ -384,7 +384,15 @@ void cMap::thinkAboutRespawningWorms()
                 continue;
             }
             logbook(std::format("cMap::thinkAboutRespawningWorms : Spawning sandworm at {}", cell));
-            cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            //cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                .entityType = eBuildType::UNIT,
+                .player = m_objects->getPlayer(AI_WORM),
+                .entitySpecificType = SANDWORM,
+                .atCell = cell
+            };
+            m_interface->onNotifyGameEvent(event);
             break;
         }
     }
@@ -568,7 +576,7 @@ void cMap::draw_units()
     //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit || !pUnit->isValid()) continue;
 
@@ -588,7 +596,7 @@ void cMap::draw_units()
     }
 
     // then: draw infantry units
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit || !pUnit->isValid()) continue;
 
@@ -604,7 +612,7 @@ void cMap::draw_units()
     }
 
     // then: draw ground units
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit || !pUnit->isValid()) continue;
 
@@ -636,7 +644,7 @@ void cMap::draw_units_2nd()
     auto *mapViewport = m_interface->getMapViewport();
 
     // draw health of units
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit || !pUnit->isValid()) continue;
         if (!pUnit->rendering.bHovered && !pUnit->isSelected()) continue;
@@ -652,7 +660,7 @@ void cMap::draw_units_2nd()
     }
 
     // draw airborn units
-    for (size_t i = 0; i < m_objects->getUnitsSize(); i++) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit || !pUnit->isValid()) continue;
         if (!pUnit->isAirbornUnit()) continue;
