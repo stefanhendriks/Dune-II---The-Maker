@@ -539,6 +539,12 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(harvesterUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
+
+    if (event.isAction(eKeyAction::SELECT_ATTACKING_ON_MAP)) {
+        const auto attackingUnits = m_player->getAttackingUnitsOnMap();
+        m_player->selectUnits(attackingUnits);
+        m_selectedUnits = m_player->getSelectedUnits();
+    }
 }
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)

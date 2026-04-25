@@ -285,6 +285,12 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(harvesterUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
+
+    if (event.isAction(eKeyAction::SELECT_ATTACKING_ON_MAP)) {
+        const auto attackingUnits = m_player->getAttackingUnitsOnMap();
+        m_player->selectUnits(attackingUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
 }
 
 void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)

@@ -2327,6 +2327,22 @@ bool cPlayer::hasMetQuota()
     return spiceQuota > 0 && hasEnoughCreditsFor(spiceQuota);
 }
 
+std::vector<int> cPlayer::getAttackingUnitsOnMap() const
+{
+    std::vector<int> ids = std::vector<int>();
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (!pUnit->belongsTo(this)) continue;
+        if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
+        if (!pUnit->isAttackingUnit()) continue;
+
+        ids.push_back(i);
+    }
+    return ids;
+}
+
 bool cPlayer::evaluateStillAlive()
 {
     alive = false;
