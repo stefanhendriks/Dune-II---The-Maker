@@ -81,7 +81,7 @@ TEST_CASE("fDegrees - cardinal directions from origin", "[math]")
     REQUIRE_THAT(fDegrees(0, 0, -1, 0), Catch::Matchers::WithinAbs(270.0f, 1e-4f));
 }
 
-TEST_CASE("fDegrees - result is always in [0, 360)", "[math]")
+TEST_CASE("fDegrees - result is always between 0 and 360", "[math]")
 {
     // spot-check several directions
     auto check = [](int x2, int y2) {
