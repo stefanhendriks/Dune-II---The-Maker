@@ -339,6 +339,9 @@ public:
     }
 
     bool isInfantryUnit() const;
+    bool isWheelUnit() const;
+    bool isTankUnit() const;
+    bool isLauncherUnit() const;
 
     int getBmpWidth() const;
 
