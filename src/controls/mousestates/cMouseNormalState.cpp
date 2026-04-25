@@ -225,6 +225,11 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
             m_mouseTile = MOUSE_RALLY;
         }
     }
+    if (event.isAction(eKeyAction::SELECT_ALL_MY_INFANTRY)) {
+        const auto infantryUnits = m_player->getAllMyInfantryUnits();
+        m_player->selectUnits(infantryUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
 }
 
 void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
