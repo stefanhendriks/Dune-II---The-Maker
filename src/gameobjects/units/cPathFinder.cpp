@@ -366,26 +366,20 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
         }
         else {
-//            int prevCell = temp_map[iCell].parent;
+            // No unvisited neighbor found: mark current cell as a dead end and backtrack to parent
+            temp_map[iCell].state = CLOSED;
+            int prevCell = temp_map[iCell].parent;
 
-//            if (prevCell > -1 ) {
-//                int halfTile = 16;
-//                int iPrevX = mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
-//                int iPrevY = mapCamera->getWindowYPositionFromCellWithOffset(iCell, halfTile);
-//
-//                int iDx = mapCamera->getWindowXPositionFromCellWithOffset(prevCell, halfTile);
-//                int iDy = mapCamera->getWindowYPositionFromCellWithOffset(prevCell, halfTile);
-//
-//                _renderDrawer->renderLine(screen, iPrevX, iPrevY, iDx, iDy, Color{255, 0, 0));
-//                pUnit->log(std::format("Failed to find new cell, backtracking. From {} back to {}", iCell, prevCell));
-//                iCell = prevCell; // back track
-//            } else {
-            pUnit->log(std::format("Failed to find new cell, backtracking failed!"));
-            valid = false;
-            success = false;
-            pUnit->log("FAILED TO CREATE PATH - nothing found to continue");
-            break;
-//            }
+            if (prevCell > -1) {
+                pUnit->log(std::format("Dead end at cell {}, backtracking to parent {}", iCell, prevCell));
+                iCell = prevCell;
+            } else {
+                pUnit->log("Failed to find new cell, backtracking failed - no parent!");
+                valid = false;
+                success = false;
+                pUnit->log("FAILED TO CREATE PATH - nothing found to continue");
+                break;
+            }
         }
 
     } // valid to run loop (and try to create a path)
