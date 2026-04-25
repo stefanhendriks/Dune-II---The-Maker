@@ -261,6 +261,18 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(tankUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
+
+    if (event.isAction(eKeyAction::SELECT_LAUNCHERS_ON_MAP)) {
+        const auto launcherUnits = m_player->getLauncherUnitsOnMap();
+        m_player->selectUnits(launcherUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
+
+    if (event.isAction(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN)) {
+        const auto launcherUnits = m_player->getMyLauncherUnitsOnViewport(*game.m_mapViewport);
+        m_player->selectUnits(launcherUnits);
+        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+    }
 }
 
 void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)

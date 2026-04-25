@@ -48,6 +48,8 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::SELECT_WHEELS_ON_SCREEN,   {SDL_SCANCODE_W}, false, false, true);
     bind(eKeyAction::SELECT_TANKS_ON_MAP,       {SDL_SCANCODE_T}, true, false, false);
     bind(eKeyAction::SELECT_TANKS_ON_SCREEN,    {SDL_SCANCODE_T}, false, false, true);
+    bind(eKeyAction::SELECT_LAUNCHERS_ON_MAP,   {SDL_SCANCODE_L}, true, false, false);
+    bind(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN,{SDL_SCANCODE_L}, false, false, true);
 
     // Groups
     bind(eKeyAction::GROUP_1, {SDL_SCANCODE_1});
@@ -121,6 +123,8 @@ void cKeyBindings::loadFromSection(const cSection &section)
         {"SELECT_WHEELS_ON_SCREEN",   eKeyAction::SELECT_WHEELS_ON_SCREEN},
         {"SELECT_TANKS_ON_MAP",       eKeyAction::SELECT_TANKS_ON_MAP},
         {"SELECT_TANKS_ON_SCREEN",    eKeyAction::SELECT_TANKS_ON_SCREEN},
+        {"SELECT_LAUNCHERS_ON_MAP",   eKeyAction::SELECT_LAUNCHERS_ON_MAP},
+        {"SELECT_LAUNCHERS_ON_SCREEN",eKeyAction::SELECT_LAUNCHERS_ON_SCREEN},
         {"GROUP_1",                   eKeyAction::GROUP_1},
         {"GROUP_2",                   eKeyAction::GROUP_2},
         {"GROUP_3",                   eKeyAction::GROUP_3},

@@ -318,6 +318,9 @@ public:
     std::vector<int> getTankUnitsOnMap() const;
     std::vector<int> getMyTankUnitsOnViewport(const cRectangle &rect) const;
 
+    std::vector<int> getLauncherUnitsOnMap() const;
+    std::vector<int> getMyLauncherUnitsOnViewport(const cRectangle &rect) const;
+
     std::vector<int> getAllMyUnitsWithinViewportRect(const cRectangle &rect) const;
 
     std::vector<int> getAllMyStructuresAsId();
