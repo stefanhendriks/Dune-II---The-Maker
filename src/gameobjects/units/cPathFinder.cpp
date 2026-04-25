@@ -520,7 +520,7 @@ int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
     int iStartX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll) - iSize;
     int iStartY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll) - iSize;
     int iEndX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll) + iSize;
-    int iEndY = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll) + iSize;
+    int iEndY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll) + iSize;
 
     float dDistance = 9999;
 
