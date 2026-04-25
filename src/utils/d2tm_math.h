@@ -8,6 +8,8 @@
 // Angle stuff for unit facing
 float fDegrees(int x1, int y1, int x2, int y2);
 float fRadians(int x1, int y1, int x2, int y2);
+float wrapDegrees(float value);
+bool isAngleBetween(int degrees, int angle1, int angle2);
 int faceAngle(float angle, int angles = 8);
 float invertDegrees(float degrees);
 int convertAngleToDrawIndex(int faceAngle, bool clockWiseBitmap = false, int offset = 2, int maxFacings = 8);
