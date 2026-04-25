@@ -503,6 +503,18 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         m_player->selectUnits(wheelUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
+
+    if (event.isAction(eKeyAction::SELECT_TANKS_ON_MAP)) {
+        const auto tankUnits = m_player->getTankUnitsOnMap();
+        m_player->selectUnits(tankUnits);
+        m_selectedUnits = m_player->getSelectedUnits();
+    }
+
+    if (event.isAction(eKeyAction::SELECT_TANKS_ON_SCREEN)) {
+        const auto tankUnits = m_player->getMyTankUnitsOnViewport(*game.m_mapViewport);
+        m_player->selectUnits(tankUnits);
+        m_selectedUnits = m_player->getSelectedUnits();
+    }
 }
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
