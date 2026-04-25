@@ -126,6 +126,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     while (valid) {
         // iCell reached Goal Cell. We should have bailed out sooner.
         if (iCell == goal_cell) {
+            pUnit->log(std::format("WARNING: iCell == goal_cell ({}) at loop start - should have been caught earlier", iCell));
             valid = false;
             success = true;
             break;
@@ -422,14 +423,19 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 }
             }
             else {
+                pUnit->log(std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", sc));
                 cp = false;
             }
 
-            if (pi >= MAX_PATH_SIZE)
+            if (pi >= MAX_PATH_SIZE) {
+                pUnit->log(std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
                 cp = false;
+            }
 
-            if (sc == pUnit->getCell())
+            if (sc == pUnit->getCell()) {
+                pUnit->log(std::format("WARNING: backtrace reached start cell ({}) before completing", sc));
                 cp = false;
+            }
         }
 
         // reverse
