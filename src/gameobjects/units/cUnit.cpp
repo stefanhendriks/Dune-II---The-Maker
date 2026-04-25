@@ -3054,6 +3054,21 @@ bool cUnit::isInfantryUnit() const
     return m_infos->getUnitInfo(iType).infantry;
 }
 
+bool cUnit::isWheelUnit() const
+{
+    return (iType == TRIKE || iType == RAIDER || iType == QUAD);
+}
+
+bool cUnit::isTankUnit() const
+{
+    return (iType == TANK || iType == SIEGETANK || iType == DEVASTATOR || iType == SONICTANK);
+}
+
+bool cUnit::isLauncherUnit() const
+{
+    return iType == LAUNCHER || iType == DEVIATOR;
+}
+
 cUnit::cUnit()
 {
     mission = -1;
