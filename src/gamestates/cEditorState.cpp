@@ -427,6 +427,9 @@ void cEditorState::loadMap(s_PreviewMap* map)
 {
     //std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->height, map->width);
+    m_mapAuthor = map->author;
+    m_mapDescription = map->description;
+    m_mapName = map->name;
     for (int i=0; i<MAX_SKIRMISHMAP_PLAYERS; i++) {
         if (map->iStartCell[i] !=-1) {
             //std::cout << "startCell " << map->iStartCell[i] << std::endl;
@@ -649,8 +652,10 @@ void cEditorState::saveMap() const
         return;
     }
     // map card
-    saveFile << "[SKIRMISH]\nTitle='Custom map'\n";
-    saveFile << "Author = -\nDescription = -\n";
+    saveFile << "[SKIRMISH]\n";
+    saveFile << "Title = " << m_mapName << "\n";
+    saveFile << "Author = "<< m_mapAuthor << "\n";
+    saveFile << "Description = "<< m_mapDescription << "\n\n";
     saveFile << "Width = " << m_mapData->getCols()-2 << "\nHeight = "<< m_mapData->getRows()-2 << "\n";
     saveFile << "StartCell=";
     for(size_t i=0; i<startCells.size(); i++) {
