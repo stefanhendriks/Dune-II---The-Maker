@@ -396,8 +396,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     if (success) {
         pUnit->log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
         // read path!
-        int temp_path[MAX_PATH_SIZE];
-
+        int temp_path[MAX_PATH_LOCAL_SIZE];
         memset(temp_path, -1, sizeof(temp_path));
 
         bool cp = true;
@@ -451,17 +450,24 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 }
             }
             else {
+                std::string msg = std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", sc);
+                pUnit->log(msg);
                 // std::cerr << msg << std::endl;
                 // std::cout << "pi = " << pi << std::endl;
                 cp = false;
             }
 
+            if (pi >= MAX_PATH_LOCAL_SIZE) {
+                std::string msg = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", MAX_PATH_LOCAL_SIZE);
+                pUnit->log(msg);
                 // std::cerr << msg << std::endl;
                 // std::cout << "pi = " << pi << std::endl;
                 cp = false;
             }
 
             if (sc == pUnit->getCell()) {
+                std::string msg = std::format("WARNING: backtrace reached start cell ({}) before completing", sc);
+                pUnit->log(msg);
                 //std::cerr << msg << std::endl;
                 //std::cout << "pi = " << pi << std::endl;
                 cp = false;
@@ -469,7 +475,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         }
 
         // reverse
-        int z = MAX_PATH_SIZE - 1;
+        int z = MAX_PATH_LOCAL_SIZE - 1;
         int a = 0;
         int iPrevCell = -1;
 
@@ -508,7 +514,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         pUnit->movement.iPathIndex = 1;
 
         // take the closest bordering cell as 'far' away to start with
-        for (int i = 1; i < MAX_PATH_SIZE; i++) {
+        for (int i = 1; i < MAX_PATH_LOCAL_SIZE; i++) {
             int pathCell = pUnit->movement.iPath[i];
             if (pathCell > -1) {
                 if (game.m_gameObjectsContext->getMapGeometry()->isCellAdjacentToOtherCell(pUnit->getCell(), pathCell)) {
@@ -519,7 +525,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
         // debug debug
         if (game.m_gameSettings->isDebugMode()) {
-            for (int i = 0; i < MAX_PATH_SIZE; i++) {
+            for (int i = 0; i < MAX_PATH_LOCAL_SIZE; i++) {
                 int pathCell = pUnit->movement.iPath[i];
                 if (pathCell > -1) {
                     pUnit->log(std::format("WAYPOINT {} = {} ", i, pathCell));
