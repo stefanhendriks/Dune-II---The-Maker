@@ -645,7 +645,7 @@ void cEditorState::drawStartCells() const
 void cEditorState::saveMap() const
 {
     // creating file
-    std::ofstream saveFile("skirmish/custom_map.ini");
+    std::ofstream saveFile("skirmish/"+m_mapName+".ini");
     // file verification
     if (!saveFile.is_open()){
         std::cerr << "unable to open modified map for saving" << std::endl;
