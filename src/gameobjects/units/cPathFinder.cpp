@@ -13,6 +13,9 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
 
+//#include <set>
+//#include <iostream> 
+
 // Initialize the static temp_map
 ASTAR cPathFinder::temp_map[16384];
 
@@ -74,6 +77,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     }
 
     int iCell = pUnit->getCell(); // current cell
+    // int startCell = iCell;  //for verifyPathContiguity()
 
     // When the goal == cell, then skip.
     if (iCell == pUnit->movement.iGoalCell) {
@@ -385,7 +389,6 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 break;
             }
         }
-
     } // valid to run loop (and try to create a path)
 
     pUnit->log("CREATE_PATH -- valid loop finished");
@@ -401,7 +404,16 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
         int sc = iCell;
         int pi = 0;
-
+        // // vérification : sc doit être dans les bornes de la map
+        // if (sc < 0 || sc >= 16384) {
+        //     std::string msg = std::format("ERREUR: sc (iCell) hors bornes au début du backtrace: {}", sc);
+        //     pUnit->log(msg);
+        //     std::cerr << msg << std::endl;
+        //     return -1;
+        // }
+        
+        // // vérif boucle
+        // std::set<int> deja_vus; 
         temp_path[pi] = sc;
         pi++;
 
@@ -409,6 +421,19 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
         // while we should create a path
         while (cp) {
+            // if (sc < 0 || sc >= 16384) {
+            //     std::string msg = std::format("ERREUR: sc hors bornes pendant backtrace: {}", sc);
+            //     pUnit->log(msg);
+            //     std::cerr << msg << std::endl;
+            //     break;
+            // }
+            // if (deja_vus.count(sc)) {
+            //     std::string msg = std::format("ERREUR: boucle détectée dans le backtrace à la cellule {}", sc);
+            //     pUnit->log(msg);
+            //     std::cerr << msg << std::endl;
+            //     break;
+            // }
+            // deja_vus.insert(sc);
             int tmp = temp_map[sc].parent;
             pUnit->log(std::format("sc = {} - temp_path[sc].parent = {}", sc, tmp));
             if (tmp > -1) {
@@ -426,17 +451,19 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 }
             }
             else {
-                pUnit->log(std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", sc));
+                // std::cerr << msg << std::endl;
+                // std::cout << "pi = " << pi << std::endl;
                 cp = false;
             }
 
-            if (pi >= MAX_PATH_SIZE) {
-                pUnit->log(std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
+                // std::cerr << msg << std::endl;
+                // std::cout << "pi = " << pi << std::endl;
                 cp = false;
             }
 
             if (sc == pUnit->getCell()) {
-                pUnit->log(std::format("WARNING: backtrace reached start cell ({}) before completing", sc));
+                //std::cerr << msg << std::endl;
+                //std::cout << "pi = " << pi << std::endl;
                 cp = false;
             }
         }
@@ -503,7 +530,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         pUnit->updateCellXAndY();
         pUnit->movement.bCalculateNewPath = false;
 
-
+        // verifyPathContiguity(pUnit, startCell); // Vérification du chemin
         //log("SUCCES");
         return 0; // success!
 
@@ -519,6 +546,28 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     return -1;
 }
 
+// void cPathFinder::verifyPathContiguity(const cUnit* pUnit, int firstCell)
+// {
+//     for (int i = 1; i < MAX_PATH_LOCAL_SIZE; ++i) {
+//         int prevCell = pUnit->movement.iPath[i - 1];
+//         int currCell = pUnit->movement.iPath[i];
+//         if (prevCell == -1 || currCell == -1) break; // fin du chemin
+
+//         if (!game.m_gameObjectsContext->getMapGeometry()->isCellAdjacentToOtherCell(prevCell, currCell)) {
+//             std::string msg = std::format("ERREUR: Chemin non contigu entre {} et {} à l'index {}", prevCell, currCell, i);
+//             pUnit->log(msg);
+//             std::cerr << msg << std::endl;
+//         }
+//     }
+//     if (firstCell == pUnit->movement.iPath[0])
+//         return;
+
+//     if (!game.m_gameObjectsContext->getMapGeometry()->isCellAdjacentToOtherCell(firstCell, pUnit->movement.iPath[0])) {
+//         std::string msg = std::format("ERREUR: Le premier cell du chemin ({}) n'est pas égal au cell de départ ({})", pUnit->movement.iPath[0], firstCell);
+//         pUnit->log(msg);
+//         std::cerr << msg << std::endl;
+//     }
+// }
 
 // find
 int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
