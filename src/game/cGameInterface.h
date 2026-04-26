@@ -70,5 +70,5 @@ public:
     int getTotalSpiceCapacityForPlayer(cPlayer *pPlayer) const;
     int getStructureTypeByUnitBuildId(int unitBuildId) const;
 private:
-    cGame* m_igame = nullptr;
+    cGame* m_game = nullptr;
 };
