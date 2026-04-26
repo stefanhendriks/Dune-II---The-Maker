@@ -20,7 +20,7 @@
 #include <memory>
 #include <string>
 
-static constexpr int MAX_PATH_SIZE = 256;
+static constexpr int MAX_PATH_SIZE = 512;
 
 class cPlayer;
 class cTextDrawer;

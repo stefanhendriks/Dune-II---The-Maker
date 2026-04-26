@@ -16,6 +16,8 @@
 // Initialize the static temp_map
 ASTAR cPathFinder::temp_map[16384];
 
+static const int MAX_PATH_LOCAL_SIZE = 4096;
+
 // Path creation definitions / var
 #define UNVISITED      -2
 #define CLOSED        -1
