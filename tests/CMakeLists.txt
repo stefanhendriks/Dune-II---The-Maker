@@ -11,11 +11,10 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/cRectangle.cpp
 )
 
+file(GLOB_RECURSE AUTO_TEST_FILES CONFIGURE_DEPENDS "*.cpp")
+
 add_executable(d2tm_tests
-    map/test_MapGeometry.cpp
-    utils/test_d2tm_math.cpp
-    utils/test_cRectangle.cpp
-    utils/test_cPoint.cpp
+    ${AUTO_TEST_FILES}
     ${TEST_SOURCES}
 )
 
