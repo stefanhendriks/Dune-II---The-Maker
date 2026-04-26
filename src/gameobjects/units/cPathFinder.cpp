@@ -348,7 +348,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
         // When found a new c(e)ll;
         if (the_cll > -1) {
-            pUnit->log(std::format("Found cell as best candidate: {}, parent is {}", the_cll, iCell));
+            //pUnit->log(std::format("Found cell as best candidate: {}, parent is {}", the_cll, iCell));
             // Open this one, so we do not check it again
             temp_map[the_cll].state = OPEN;
             temp_map[the_cll].parent = iCell;
@@ -379,7 +379,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             int prevCell = temp_map[iCell].parent;
 
             if (prevCell > -1) {
-                pUnit->log(std::format("Dead end at cell {}, backtracking to parent {}", iCell, prevCell));
+                //pUnit->log(std::format("Dead end at cell {}, backtracking to parent {}", iCell, prevCell));
                 iCell = prevCell;
             } else {
                 pUnit->log("Failed to find new cell, backtracking failed - no parent!");
@@ -435,7 +435,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             // }
             // deja_vus.insert(sc);
             int tmp = temp_map[sc].parent;
-            pUnit->log(std::format("sc = {} - temp_path[sc].parent = {}", sc, tmp));
+            //pUnit->log(std::format("sc = {} - temp_path[sc].parent = {}", sc, tmp));
             if (tmp > -1) {
                 // found terminator (PARENT=CURRENT)
                 if (tmp == sc) {
