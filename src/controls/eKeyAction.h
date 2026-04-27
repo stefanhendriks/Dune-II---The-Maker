@@ -41,6 +41,8 @@ enum class eKeyAction {
     EDITOR_SAVE,
     EDITOR_ZOOM_IN,
     EDITOR_ZOOM_OUT,
+    EDITOR_DISPLAY_GRID,
+    EDITOR_DISPLAY_AXES,
     // UI / menus
     MENU_BACK,
     MENU_CONFIRM,

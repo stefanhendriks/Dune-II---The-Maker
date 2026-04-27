@@ -92,6 +92,8 @@ private:
     // map modification 
     int idTerrainToMapModif = -1;
     int idStartCellPlayer = -1;
+    bool m_displayGrid = false;
+    bool m_displayAxes = false;
 
     // startCell positions 
     std::array<cPoint,5> startCells;

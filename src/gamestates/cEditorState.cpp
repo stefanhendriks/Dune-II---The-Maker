@@ -297,8 +297,10 @@ void cEditorState::thinkFast()
 void cEditorState::draw() const
 {
     drawMap();
-    drawGrid();
-    drawAxes();
+    if (m_displayGrid)
+        drawGrid();
+    if (m_displayAxes)
+        drawAxes();
     if (m_currentBar == m_startCellBar.get())
         drawStartCells();
     m_selectBar->draw();
@@ -392,6 +394,18 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         // to test : updateVisibleTiles();
         m_selectBar->onNotifyKeyboardEvent(event);
         m_currentBar->onNotifyKeyboardEvent(event);
+
+        if (event.isAction(eKeyAction::EDITOR_DISPLAY_GRID)) {
+            // toggle grid display
+            //std::cout << "Toggle grid display" << std::endl;
+            m_displayGrid = !m_displayGrid;
+
+        }
+        if (event.isAction(eKeyAction::EDITOR_DISPLAY_AXES)) {
+            // toggle axes display
+            //std::cout << "Toggle axes display" << std::endl;
+            m_displayAxes = !m_displayAxes;
+        }
     }
 
     if (event.isType(eKeyEventType::HOLD)) {
@@ -444,6 +458,8 @@ void cEditorState::loadMap(s_PreviewMap* map)
     }
     updateVisibleTiles();
     normalizeModifications();
+    m_displayGrid = false;
+    m_displayAxes = false;
 }
 
 void cEditorState::normalizeModifications()
