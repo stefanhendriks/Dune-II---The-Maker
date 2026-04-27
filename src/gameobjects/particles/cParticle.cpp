@@ -116,6 +116,11 @@ void cParticle::think_position()
 // draw
 void cParticle::draw()
 {
+    if (bmp == nullptr) {
+        logbook(std::format("cParticle::draw() - bmp is null for particle type [{}], iHousePal [{}], iAlpha [{}]", iType, iHousePal, iAlpha));
+        return;
+    }
+
     s_ParticleInfo particleInfo = getParticleInfo();
     int frameWidth = getFrameWidth();
     int frameHeight = getFrameHeight();
@@ -855,6 +860,9 @@ void cParticle::recolorForHouseIfGiven() {
         bmp = recoloredBmp;
         particleTextureCache[cacheKey] = recoloredBmp;
     } else {
-        bmp = gfxdata->getTexture(bmpIndex);
+        Texture* fallback = gfxdata->getTexture(bmpIndex);
+        if (fallback != nullptr) {
+            bmp = fallback;
+        }
     }
 }
