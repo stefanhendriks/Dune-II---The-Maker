@@ -1620,7 +1620,7 @@ void cUnit::thinkFast_move_airUnit()
                 // drop unit
                 if (iNewUnitType > -1) {
                     s_GameEvent event {
-                        .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                        .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
                         .entityType = eBuildType::UNIT,
                         .entityID = iID,
                         .player = getPlayer(),
