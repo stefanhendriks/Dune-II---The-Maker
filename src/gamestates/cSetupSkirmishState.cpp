@@ -728,7 +728,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             // when failure, create mcv instead
             // cUnits::unitCreate(pPlayer->getFocusCell(), MCV, p, true);
             s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
                 .entityType = eBuildType::UNIT,
                 .player = pPlayer,
                 .entitySpecificType = MCV,
@@ -849,7 +849,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             logbook(std::format("Spawning sandworm at {}", cell));
             // cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
             s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
                 .entityType = eBuildType::UNIT,
                 .player = m_objects->getPlayer(AI_WORM),
                 .entitySpecificType = SANDWORM,

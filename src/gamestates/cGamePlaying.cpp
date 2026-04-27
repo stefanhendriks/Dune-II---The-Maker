@@ -341,7 +341,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         if (event.isAction(eKeyAction::DEPLOY_UNIT)) {
             if (selectedStructure->getType() == REPAIR) {
                 s_GameEvent deployEvent {
-                    .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                    .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
                     .entityType = eBuildType::UNKNOWN,
                     .entityID = -1,
                     .player = humanPlayer
