@@ -1621,7 +1621,7 @@ void cUnit::thinkFast_move_airUnit()
                 // drop unit
                 if (iNewUnitType > -1) {
                     const s_GameEvent event {
-                        .eventType = eGameEventType::GAME_EVENT_DEPLOY_UNIT,
+                        .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
                         .data = DeployUnitEvent {
                             .iCell = position.iCell,
                             .unitType = iNewUnitType,

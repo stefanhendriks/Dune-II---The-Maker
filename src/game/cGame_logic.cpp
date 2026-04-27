@@ -1103,6 +1103,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
             }
             break;
         case eGameEventType::GAME_EVENT_DEPLOY_UNIT:
+        case eGameEventType::GAME_EVENT_CREATE_UNIT:
             if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
                 onEventDeployUnit(*deployEvent);
             }
