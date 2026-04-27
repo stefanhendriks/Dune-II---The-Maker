@@ -20,6 +20,7 @@ const int heightButtonSize = 40;
 const int minTileSize = 4;
 const int maxTileSize = 64;
 const int deltaTileSize = 4;
+const Color editorGridColor = Color{128, 128, 128, 180};
 
 
 cEditorState::cEditorState(sGameServices* services) 
@@ -295,6 +296,7 @@ void cEditorState::thinkFast()
 void cEditorState::draw() const
 {
     drawMap();
+    drawGrid();
     if (m_currentBar == m_startCellBar.get())
         drawStartCells();
     m_selectBar->draw();
@@ -534,6 +536,49 @@ void cEditorState::drawMap() const
         }
     }
 }
+
+void cEditorState::drawGrid() const
+{
+    if (m_mapData == nullptr) {
+        return;
+    }
+
+    const int viewportTop = heightBarSize;
+    const int viewportBottom = heightBarSize + mapSizeArea.getHeight() - 1;
+    const int viewportLeft = 0;
+    const int viewportRight = mapSizeArea.getWidth() - 1;
+
+    const int mapLeftOnScreen = -cameraX;
+    const int mapRightOnScreen = static_cast<int>(m_mapData->getCols() * tileLenSize) - cameraX;
+    const int mapTopOnScreen = heightBarSize - cameraY;
+    const int mapBottomOnScreen = heightBarSize + static_cast<int>(m_mapData->getRows() * tileLenSize) - cameraY;
+
+    const int gridLeft = std::max(viewportLeft, mapLeftOnScreen);
+    const int gridRight = std::min(viewportRight, mapRightOnScreen);
+    const int gridTop = std::max(viewportTop, mapTopOnScreen);
+    const int gridBottom = std::min(viewportBottom, mapBottomOnScreen);
+
+    if (gridLeft > gridRight || gridTop > gridBottom) {
+        return;
+    }
+
+    for (int i = startX; i <= static_cast<int>(endX); i++) {
+        int lineX = (i * tileLenSize) - cameraX;
+        if (lineX < gridLeft || lineX > gridRight) {
+            continue;
+        }
+        m_renderDrawer->renderLine(lineX, gridTop, lineX, gridBottom, editorGridColor);
+    }
+
+    for (int j = startY; j <= static_cast<int>(endY); j++) {
+        int lineY = heightBarSize + (j * tileLenSize) - cameraY;
+        if (lineY < gridTop || lineY > gridBottom) {
+            continue;
+        }
+        m_renderDrawer->renderLine(gridLeft, lineY, gridRight, lineY, editorGridColor);
+    }
+}
+
 
 void cEditorState::updateVisibleTiles()
 {
