@@ -57,6 +57,7 @@ private:
     void drawMap() const;
     void drawStartCells() const;
     void drawGrid() const;
+    void drawAxes() const;
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
     void normalizeModifications();
