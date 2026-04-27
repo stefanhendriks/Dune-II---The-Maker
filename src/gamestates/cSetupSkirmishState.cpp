@@ -645,13 +645,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 bool bOk = false;
 
                 while (bOk == false) {
-                    if (p > HUMAN) {
-                        iHouse = RNG::rnd(4) + 1;
-                        // cpu player
-                    }
-                    else {  // human may not be sardaukar
-                        iHouse = RNG::rnd(3) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
-                    }
+                    iHouse = RNG::rnd(4) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
 
                     bool houseInUse = false;
                     for (int pl = 0; pl < AI_WORM; pl++) {
@@ -926,15 +920,8 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
             // on click:
             if (houseRec.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.iHouse--;
-                if (p > 0) {
-                    if (sSkirmishPlayer.iHouse < 0) {
-                        sSkirmishPlayer.iHouse = SARDAUKAR;
-                    }
-                }
-                else {
-                    if (sSkirmishPlayer.iHouse < 0) {
-                        sSkirmishPlayer.iHouse = ORDOS;
-                    }
+                if (sSkirmishPlayer.iHouse < 0) {
+                    sSkirmishPlayer.iHouse = SARDAUKAR;
                 }
             }
 
@@ -1024,17 +1011,8 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
             // on click:
             if (houseRec.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.iHouse++;
-
-                // Only human player can be Sardaukar?
-                if (p > 0) {
-                    if (sSkirmishPlayer.iHouse > SARDAUKAR) {
-                        sSkirmishPlayer.iHouse = 0;
-                    }
-                }
-                else {
-                    if (sSkirmishPlayer.iHouse > ORDOS) {
-                        sSkirmishPlayer.iHouse = 0;
-                    }
+                if (sSkirmishPlayer.iHouse > SARDAUKAR) {
+                    sSkirmishPlayer.iHouse = 0;
                 }
             }
 
