@@ -12,6 +12,8 @@
 
 #include <cassert>
 
+static const int borderSize = 2;
+
 cNewMapEditorState::cNewMapEditorState(sGameServices* services)
     : cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
@@ -178,8 +180,8 @@ void cNewMapEditorState::constructWindow()
             std::string name = m_inputName->getText();
             std::string author = m_inputAuthor->getText();
             std::string desc = m_inputDescription->getText();
-            int width = m_cycleWidth->getSelectedValue()+2;
-            int height = m_cycleHeight->getSelectedValue()+2;
+            int width = m_cycleWidth->getSelectedValue()+borderSize;
+            int height = m_cycleHeight->getSelectedValue()+borderSize;
             s_PreviewMap newMap = cPreviewMaps::createEmptyMap(name, author, desc, width, height);
             m_interface->loadMapFromEditor(&newMap);
             m_interface->initiateFadingOut();
