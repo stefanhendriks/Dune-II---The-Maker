@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <array>
+#include <string>
 
 class Texture;
 class Graphics;
