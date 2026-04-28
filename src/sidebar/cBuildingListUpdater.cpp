@@ -266,7 +266,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
             list->addUnitToList(SIEGETANK, 0);
         }
 
-        if (techLevel > 7 && (house != HARKONNEN && house != SARDAUKAR)) {
+        if (techLevel > 7 && house != HARKONNEN) {
             list->addUnitToList(ORNITHOPTER, 0);
         }
 
@@ -345,7 +345,6 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
         }
         else {
             listUnits->addUnitToList(TRIKE, SUBLIST_LIGHTFCTRY);
-            listUnits->addUnitToList(RAIDER, SUBLIST_LIGHTFCTRY);
             listUnits->addUnitToList(QUAD, SUBLIST_LIGHTFCTRY);
         }
     }
@@ -373,7 +372,8 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     // Heavyfactory
     if (techLevel >= 7) {
         if (m_player->hasAtleastOneStructure(HEAVYFACTORY) &&
-                m_player->hasAtleastOneStructure(IX)) {
+            m_player->hasAtleastOneStructure(IX)) {
+
             if (m_player->getHouse() == ATREIDES) {
                 listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
             }
@@ -381,6 +381,10 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
                 listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
             }
             else if (m_player->getHouse() == ORDOS) {
+                listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
+            } else if (m_player->getHouse() == SARDAUKAR) {
+                listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
+                listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
                 listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
             }
         }
@@ -392,6 +396,10 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
                 listUnits->removeItemFromListByBuildId(DEVASTATOR);
             }
             else if (m_player->getHouse() == ORDOS) {
+                listUnits->removeItemFromListByBuildId(DEVIATOR);
+            } else if (m_player->getHouse() == SARDAUKAR) {
+                listUnits->removeItemFromListByBuildId(SONICTANK);
+                listUnits->removeItemFromListByBuildId(DEVASTATOR);
                 listUnits->removeItemFromListByBuildId(DEVIATOR);
             }
         }

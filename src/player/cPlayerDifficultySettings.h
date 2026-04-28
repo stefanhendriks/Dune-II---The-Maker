@@ -9,7 +9,7 @@
 
 /**
  * This class holds properties for a player which have overall influence on the
- * player performance. Typically these are characterized as house properties. For instance:
+ * player performance. Typically, these are characterized as house properties. For instance:
  * - overall harvesting speed
  * - overall move speed of units
  * - overall damage inflicted
