@@ -642,13 +642,28 @@ void cEditorState::drawStartCells() const
     }
 }
 
+static std::string normalizeStringForFileName(const std::string& input)
+{
+    std::string output = input;
+    // Replace spaces with underscores
+    std::replace(output.begin(), output.end(), ' ', '_');
+    // Remove characters that are not alphanumeric or underscores
+    output.erase(std::remove_if(output.begin(), output.end(),
+        [](char c) { return !std::isalnum(c) && c != '_'; }), output.end());
+    if (output.empty()) {
+        output = "custom_map";
+    }
+    return output;
+}
+
 void cEditorState::saveMap() const
 {
     // creating file
-    std::ofstream saveFile("skirmish/"+m_mapName+".ini");
+    std::string fileName = "skirmish/"+normalizeStringForFileName(m_mapName)+".ini";
+    std::ofstream saveFile(fileName);
     // file verification
     if (!saveFile.is_open()){
-        std::cerr << "unable to open modified map for saving" << std::endl;
+        std::cerr << "unable to open modified map for saving " << fileName << std::endl;
         return;
     }
     // map card
