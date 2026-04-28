@@ -1098,6 +1098,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
         case eGameEventType::GAME_EVENT_DESTROYED:
             onEventEntityDestroyed(event);
             break;
+        case eGameEventType::GAME_EVENT_DEPLOY_UNIT:
         case eGameEventType::GAME_EVENT_CREATE_UNIT:
             onEventDeployUnit(event);
             break;
