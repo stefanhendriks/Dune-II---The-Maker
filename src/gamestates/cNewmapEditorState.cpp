@@ -183,6 +183,7 @@ void cNewMapEditorState::constructWindow()
             int width = m_cycleWidth->getSelectedValue()+borderSize;
             int height = m_cycleHeight->getSelectedValue()+borderSize;
             s_PreviewMap newMap = cPreviewMaps::createEmptyMap(name, author, desc, width, height);
+            newMap.iStartCell.fill(-1);
             m_interface->loadMapFromEditor(&newMap);
             m_interface->initiateFadingOut();
             })
