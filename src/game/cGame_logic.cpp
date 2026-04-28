@@ -1099,7 +1099,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
             onEventEntityDestroyed(event);
             break;
         case eGameEventType::GAME_EVENT_CREATE_UNIT:
-            onEventDeployUnit(event);
+            onEventCreateUnit(event);
             break;
         default:
             break;
@@ -1145,7 +1145,7 @@ void cGame::onEventEntityDestroyed(const s_GameEvent &event) {
     }
 }
 
-void cGame::onEventDeployUnit(const s_GameEvent &event) {
+void cGame::onEventCreateUnit(const s_GameEvent &event) {
     if (event.entityType != eBuildType::UNIT) {
         return;
     }
