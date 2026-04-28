@@ -50,7 +50,7 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::GROUP_5, {SDL_SCANCODE_5});
 
     // Editor
-    bind(eKeyAction::EDITOR_SAVE,     {SDL_SCANCODE_S});
+    bind(eKeyAction::EDITOR_SAVE,     {SDL_SCANCODE_S}, true, false, false);
     bind(eKeyAction::EDITOR_ZOOM_IN,  {SDL_SCANCODE_PAGEUP});
     bind(eKeyAction::EDITOR_ZOOM_OUT, {SDL_SCANCODE_PAGEDOWN});
     bind(eKeyAction::EDITOR_DISPLAY_GRID, {SDL_SCANCODE_G});
