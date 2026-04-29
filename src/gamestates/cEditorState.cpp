@@ -107,7 +107,7 @@ void cEditorState::populateSelectBar()
     m_selectBar->addAutoGuiObject(std::move(guiButton));
 
     rectGui = cRectangle(m_settings->getScreenW()-heightButtonSize*3, (heightBarSize-heightButtonSize)/2, heightButtonSize, heightButtonSize);
-    std::cout << "Save icon position: x=" << rectGui.getX() << " y=" << rectGui.getY() << " w= " << rectGui.getWidth() << " h= " << rectGui.getHeight() << std::endl;
+    // std::cout << "Save icon position: x=" << rectGui.getX() << " y=" << rectGui.getY() << " w= " << rectGui.getWidth() << " h= " << rectGui.getHeight() << std::endl;
     auto guiIcon = GuiButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(SAVEICON))
@@ -766,7 +766,7 @@ static std::string normalizeStringForFileName(const std::string& input)
         [](unsigned char c) { return !std::isalnum(c) && c != '_'; }), output.end());
     if (output.empty()) {
         output = "custom_map";
-        //@mira : log warning about empty name after normalization*/
+        //TODO : log warning about empty name after normalization
     }
     return output;
 }
@@ -779,10 +779,10 @@ void cEditorState::saveMap() const
     // file verification
     if (!saveFile.is_open()){
         std::cerr << "unable to open modified map for saving " << fileName << std::endl;
-        //@mira : log error about unable to save map*/
+        //TODO : log error about unable to save map
         return;
     }
-    //std::cout << "Saveing map to " << fileName << std::endl;
+    //std::cout << "Saving map to " << fileName << std::endl;
     // map card
     saveFile << "[SKIRMISH]\n";
     saveFile << "Title = " << m_mapName << "\n";
@@ -830,5 +830,5 @@ void cEditorState::saveMap() const
     }
 
     saveFile.close();
-    //@mira : log info about successful map saving*/
+    // TODO:  log info about successful map saving
 }
