@@ -747,7 +747,7 @@ static std::string normalizeStringForFileName(const std::string& input)
     std::replace(output.begin(), output.end(), ' ', '_');
     // Remove characters that are not alphanumeric or underscores
     output.erase(std::remove_if(output.begin(), output.end(),
-        [](char c) { return !std::isalnum(c) && c != '_'; }), output.end());
+        [](unsigned char c) { return !std::isalnum(c) && c != '_'; }), output.end());
     if (output.empty()) {
         output = "custom_map";
     }
