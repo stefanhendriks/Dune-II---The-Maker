@@ -112,7 +112,7 @@ void cEditorState::populateSelectBar()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(SAVEICON))
             .withRenderer(m_renderDrawer)
-            .withKind(GuiRenderKind::WITH_STRECHED_TEXTURE)
+            .withKind(GuiRenderKind::WITH_STRETCHED_TEXTURE)
             .onClick([this]() {
                 saveMap();
             })

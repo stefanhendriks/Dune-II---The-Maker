@@ -40,7 +40,7 @@ void GuiCheckBox::draw() const
             drawBox();
             break;
         case WITH_TEXTURE:
-        case WITH_STRECHED_TEXTURE:
+        case WITH_STRETCHED_TEXTURE:
             assert(false);
             break;
     }

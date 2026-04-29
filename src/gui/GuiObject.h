@@ -10,7 +10,7 @@ enum GuiRenderKind {
     TRANSPARENT_WITH_BORDER = 2,
     TRANSPARENT_WITHOUT_BORDER = 3,
     WITH_TEXTURE =4,
-    WITH_STRECHED_TEXTURE = 5
+    WITH_STRETCHED_TEXTURE = 5
 };
 
 enum GuiTextAlignHorizontal {
