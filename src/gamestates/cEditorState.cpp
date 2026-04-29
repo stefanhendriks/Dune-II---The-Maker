@@ -15,6 +15,8 @@
 #include <cassert>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <cctype>
 
 const int heightBarSize = 48;
 const int heightButtonSize = 40;
