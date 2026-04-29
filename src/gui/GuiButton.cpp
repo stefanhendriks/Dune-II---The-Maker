@@ -59,6 +59,9 @@ void GuiButton::draw() const
         case WITH_TEXTURE:
             m_renderDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
             break;
+        case WITH_STRECHED_TEXTURE:
+            m_renderDrawer->renderStrechFullSprite(m_tex, m_rect, 255);
+            break;
     }
 }
 
