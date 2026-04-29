@@ -33,12 +33,10 @@
 
 #include "data/gfxaudio.h"
 
-namespace {
-int groupIdToIndex(int groupId)
+int cPlayer::groupIdToIndex(int groupId)
 {
-    if (groupId < 1 || groupId > 5) return -1;
+    if (groupId < 1 || groupId > MAX_UNIT_GROUPS) return -1;
     return groupId - 1;
-}
 }
 
 cPlayer::cPlayer()

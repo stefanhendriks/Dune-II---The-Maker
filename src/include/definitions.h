@@ -63,6 +63,8 @@
 #define AI_WORM			AI_CPU6
 #define MAX_PLAYERS     7
 
+constexpr int MAX_UNIT_GROUPS = 5;
+
 // // UNITS stuff
 // #define MAX_UNITTYPES       50    // maximum of unit types
 

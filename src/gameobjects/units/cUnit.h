@@ -144,7 +144,7 @@ public:
 
     int iID;            // index of unit in the unit array
     int iType;          // type of unit
-    std::array<bool, 5> iGroups; // belongs to groups [0..4]
+    std::array<bool, MAX_UNIT_GROUPS> iGroups; // belongs to groups [0..MAX_UNIT_GROUPS-1]
     int iPlayer;        // belongs to player
 
     sMovement movement;

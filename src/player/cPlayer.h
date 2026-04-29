@@ -517,6 +517,8 @@ public:
     int getSwapColor() const;
 
 private:
+    static int groupIdToIndex(int groupId);
+
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;
 
     void clearStructureTypeBitmaps();

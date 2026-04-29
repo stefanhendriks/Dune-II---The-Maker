@@ -642,7 +642,7 @@ void cUnit::draw_group(cTextDrawer* textDrawer)
     // TODO: make text smaller depending on zoom factor?
     if (iPlayer == HUMAN) {
         std::string groups;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < MAX_UNIT_GROUPS; i++) {
             if (iGroups[i]) {
                 if (!groups.empty()) {
                     groups += " ";
