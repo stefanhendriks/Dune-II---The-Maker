@@ -750,6 +750,7 @@ static std::string normalizeStringForFileName(const std::string& input)
         [](unsigned char c) { return !std::isalnum(c) && c != '_'; }), output.end());
     if (output.empty()) {
         output = "custom_map";
+        //@mira : log warning about empty name after normalization*/
     }
     return output;
 }
@@ -762,6 +763,7 @@ void cEditorState::saveMap() const
     // file verification
     if (!saveFile.is_open()){
         std::cerr << "unable to open modified map for saving " << fileName << std::endl;
+        //@mira : log error about unable to save map*/
         return;
     }
     // map card
@@ -811,4 +813,5 @@ void cEditorState::saveMap() const
     }
 
     saveFile.close();
+    //@mira : log info about successful map saving*/
 }
