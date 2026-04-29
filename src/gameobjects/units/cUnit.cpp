@@ -644,6 +644,9 @@ void cUnit::draw_group(cTextDrawer* textDrawer)
         std::string groups;
         for (int i = 0; i < 5; i++) {
             if (iGroups[i]) {
+                if (!groups.empty()) {
+                    groups += " ";
+                }
                 groups += std::to_string(i + 1);
             }
         }
