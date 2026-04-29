@@ -27,3 +27,4 @@
 #define FLIPHORZRL      26
 #define FLIPVERTBT      27
 #define FLIPVERTTB      28
+#define SAVEICON        29

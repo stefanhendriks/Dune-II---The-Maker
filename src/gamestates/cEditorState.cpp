@@ -2,6 +2,7 @@
 #include "controls/eKeyAction.h"
 #include "gui/GuiBar.h"
 #include "gui/GuiStateButton.h"
+#include "gui/GuiButton.h"
 #include "gui/GuiButtonGroup.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
@@ -102,6 +103,19 @@ void cEditorState::populateSelectBar()
             .build();
     guiButton->setGroup(m_selectGroup.get());
     m_selectBar->addAutoGuiObject(std::move(guiButton));
+
+    rectGui = cRectangle(m_settings->getScreenW()-heightButtonSize*3, (heightBarSize-heightButtonSize)/2, heightButtonSize, heightButtonSize);
+    std::cout << "Save icon position: x=" << rectGui.getX() << " y=" << rectGui.getY() << " w= " << rectGui.getWidth() << " h= " << rectGui.getHeight() << std::endl;
+    auto guiIcon = GuiButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(SAVEICON))
+            .withRenderer(m_renderDrawer)
+            .withKind(GuiRenderKind::WITH_STRECHED_TEXTURE)
+            .onClick([this]() {
+                saveMap();
+            })
+            .build();
+    m_selectBar->addGuiObject(std::move(guiIcon));
 }
 
 void cEditorState::populateTopologyBar()
@@ -766,6 +780,7 @@ void cEditorState::saveMap() const
         //@mira : log error about unable to save map*/
         return;
     }
+    //std::cout << "Saveing map to " << fileName << std::endl;
     // map card
     saveFile << "[SKIRMISH]\n";
     saveFile << "Title = " << m_mapName << "\n";
