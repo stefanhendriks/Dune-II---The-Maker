@@ -416,7 +416,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         temp_path[pi] = sc;
         pi++;
 
-        pUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, temp_path[pi]));
+        pUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, temp_path[pi-1]));
 
         // while we should create a path
         while (cp) {
