@@ -466,8 +466,9 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             }
 
             if (sc == pUnit->getCell()) {
-                std::string msg = std::format("WARNING: backtrace reached start cell ({}) before completing", sc);
-                pUnit->log(msg);
+                // normal end ?
+                // std::string msg = std::format("WARNING: backtrace reached start cell ({}) before completing", sc);
+                // pUnit->log(msg);
                 //std::cerr << msg << std::endl;
                 //std::cout << "pi = " << pi << std::endl;
                 cp = false;
