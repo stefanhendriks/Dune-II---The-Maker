@@ -245,7 +245,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_WHEELS_ON_SCREEN)) {
-        const auto wheelUnits = m_player->getMyWheelUnitsOnViewport(*game.m_mapViewport);
+        const auto wheelUnits = m_player->getWheelUnitsOnViewport(*game.m_mapViewport);
         m_player->selectUnits(wheelUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
@@ -257,7 +257,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_TANKS_ON_SCREEN)) {
-        const auto tankUnits = m_player->getMyTankUnitsOnViewport(*game.m_mapViewport);
+        const auto tankUnits = m_player->getTankUnitsOnViewport(*game.m_mapViewport);
         m_player->selectUnits(tankUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
@@ -269,7 +269,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN)) {
-        const auto launcherUnits = m_player->getMyLauncherUnitsOnViewport(*game.m_mapViewport);
+        const auto launcherUnits = m_player->getLauncherUnitsOnViewport(*game.m_mapViewport);
         m_player->selectUnits(launcherUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }
@@ -281,7 +281,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_HARVESTERS_ON_SCREEN)) {
-        const auto harvesterUnits = m_player->getMyHarvesterUnitsOnViewport(*game.m_mapViewport);
+        const auto harvesterUnits = m_player->getHarvesterUnitsOnViewport(*game.m_mapViewport);
         m_player->selectUnits(harvesterUnits);
         m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
     }

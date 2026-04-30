@@ -472,7 +472,7 @@ std::vector<int> cPlayer::getInfantryUnitsOnViewport(const cRectangle &rect) con
     return ids;
 }
 
-std::vector<int> cPlayer::getMyWheelUnitsOnViewport(const cRectangle &rect) const
+std::vector<int> cPlayer::getWheelUnitsOnViewport(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
@@ -492,7 +492,7 @@ std::vector<int> cPlayer::getMyWheelUnitsOnViewport(const cRectangle &rect) cons
     return ids;
 }
 
-std::vector<int> cPlayer::getMyTankUnitsOnViewport(const cRectangle &rect) const
+std::vector<int> cPlayer::getTankUnitsOnViewport(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
@@ -512,7 +512,7 @@ std::vector<int> cPlayer::getMyTankUnitsOnViewport(const cRectangle &rect) const
     return ids;
 }
 
-std::vector<int> cPlayer::getMyLauncherUnitsOnViewport(const cRectangle &rect) const
+std::vector<int> cPlayer::getLauncherUnitsOnViewport(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
@@ -532,7 +532,7 @@ std::vector<int> cPlayer::getMyLauncherUnitsOnViewport(const cRectangle &rect) c
     return ids;
 }
 
-std::vector<int> cPlayer::getMyHarvesterUnitsOnViewport(const cRectangle &rect) const
+std::vector<int> cPlayer::getHarvesterUnitsOnViewport(const cRectangle &rect) const
 {
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
