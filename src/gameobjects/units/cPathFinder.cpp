@@ -446,19 +446,19 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     temp_path[pi] = tmp;
                     sc = temp_map[sc].parent;
                     pi++;
-                    pUnit->log(std::format("Backtraced. Path index = {}, temp_path[0] = {}", pi, temp_path[pi]));
+
+                    if (pi >= MAX_PATH_LOCAL_SIZE) {
+                        std::string msg = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", MAX_PATH_LOCAL_SIZE);
+                        pUnit->log(msg);
+                        cp = false;
+                        continue;
+                    }
+
+                    pUnit->log(std::format("Backtraced. Path index = {}, temp_path[last] = {}", pi, temp_path[pi - 1]));
                 }
             }
             else {
                 std::string msg = std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", sc);
-                pUnit->log(msg);
-                // std::cerr << msg << std::endl;
-                // std::cout << "pi = " << pi << std::endl;
-                cp = false;
-            }
-
-            if (pi >= MAX_PATH_LOCAL_SIZE) {
-                std::string msg = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", MAX_PATH_LOCAL_SIZE);
                 pUnit->log(msg);
                 // std::cerr << msg << std::endl;
                 // std::cout << "pi = " << pi << std::endl;
