@@ -227,69 +227,95 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     }
     if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_MAP)) {
         const auto infantryUnits = m_player->getInfantryUnitsOnMap();
-        m_player->selectUnits(infantryUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(infantryUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
 
     if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_SCREEN)) {
         const auto infantryUnits = m_player->getInfantryUnitsOnViewport(*game.m_mapViewport);
-        m_player->selectUnits(infantryUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(infantryUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
 
 
     if (event.isAction(eKeyAction::SELECT_WHEELS_ON_MAP)) {
         const auto wheelUnits = m_player->getWheelUnitsOnMap();
-        m_player->selectUnits(wheelUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(wheelUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
 
     if (event.isAction(eKeyAction::SELECT_WHEELS_ON_SCREEN)) {
         const auto wheelUnits = m_player->getWheelUnitsOnViewport(*game.m_mapViewport);
-        m_player->selectUnits(wheelUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(wheelUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
 
     if (event.isAction(eKeyAction::SELECT_TANKS_ON_MAP)) {
         const auto tankUnits = m_player->getTankUnitsOnMap();
-        m_player->selectUnits(tankUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(tankUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
 
     if (event.isAction(eKeyAction::SELECT_TANKS_ON_SCREEN)) {
         const auto tankUnits = m_player->getTankUnitsOnViewport(*game.m_mapViewport);
-        m_player->selectUnits(tankUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(tankUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
 
     if (event.isAction(eKeyAction::SELECT_LAUNCHERS_ON_MAP)) {
         const auto launcherUnits = m_player->getLauncherUnitsOnMap();
-        m_player->selectUnits(launcherUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(launcherUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
+
 
     if (event.isAction(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN)) {
         const auto launcherUnits = m_player->getLauncherUnitsOnViewport(*game.m_mapViewport);
-        m_player->selectUnits(launcherUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(launcherUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
+
 
     if (event.isAction(eKeyAction::SELECT_HARVESTERS_ON_MAP)) {
         const auto harvesterUnits = m_player->getHarvesterUnitsOnMap();
-        m_player->selectUnits(harvesterUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(harvesterUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
+
 
     if (event.isAction(eKeyAction::SELECT_HARVESTERS_ON_SCREEN)) {
         const auto harvesterUnits = m_player->getHarvesterUnitsOnViewport(*game.m_mapViewport);
-        m_player->selectUnits(harvesterUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(harvesterUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
+
 
     if (event.isAction(eKeyAction::SELECT_ATTACKING_ON_MAP)) {
         const auto attackingUnits = m_player->getAttackingUnitsOnMap();
-        m_player->selectUnits(attackingUnits);
-        m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        bool hasUnit = m_player->selectUnits(attackingUnits);
+        if (hasUnit) {
+            m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
+        }
     }
 }
 
