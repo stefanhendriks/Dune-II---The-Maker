@@ -502,6 +502,10 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                         z = iGoodZ;
                 }
 
+                if (a >= MAX_PATH_SIZE) {
+                    pUnit->log(std::format("WARNING: path truncated - exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
+                    break;
+                }
                 pUnit->movement.iPath[a] = temp_path[z];
                 iPrevCell = temp_path[z];
                 a++;
