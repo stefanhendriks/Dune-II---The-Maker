@@ -475,7 +475,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         }
 
         // reverse
-        int z = MAX_PATH_LOCAL_SIZE - 1;
+        // int z = MAX_PATH_LOCAL_SIZE - 1;
+        int z = pi - 1; // start from the last valid index in temp_path
         int a = 0;
         int iPrevCell = -1;
 
