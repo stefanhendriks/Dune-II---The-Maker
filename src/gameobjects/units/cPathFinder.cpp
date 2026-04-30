@@ -244,7 +244,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                                 if (iPathCountUnits <= 0) {
                                     // other units block our path
                                     good = false;
-                                    pUnit->log("iPathCountUnits < 0 - variable 'good' becomes 'false'");
+                                    pUnit->log("iPathCountUnits <= 0 - variable 'good' becomes 'false'");
                                 }
                             // }
 
