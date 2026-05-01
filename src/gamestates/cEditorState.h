@@ -27,6 +27,7 @@ public:
     void thinkFast() override;
     void draw() const override;
     void loadMap(s_PreviewMap* map);
+    void setCursorSize(int value);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -52,6 +53,7 @@ private:
     void populateStartCellBar();
     void populateSelectBar();
     void populateSymmetricBar();
+    void setCurrentBar(GuiBar* bar);
     void modifySymmetricArea(Direction dir);
 
     void drawMap() const;
@@ -59,6 +61,8 @@ private:
     void drawStartCells() const;
     void drawGrid() const;
     void drawAxes() const;
+    int getActiveCursorSize() const;
+    int getNormalizedCursorSize() const;
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
     void normalizeModifications();
@@ -93,6 +97,8 @@ private:
     // map modification 
     int idTerrainToMapModif = -1;
     int idStartCellPlayer = -1;
+    int m_cursorSize = 1;
+    int m_topologyCursorSizeSentinel = 1;
     bool m_displayGrid = false;
     bool m_displayAxes = false;
 

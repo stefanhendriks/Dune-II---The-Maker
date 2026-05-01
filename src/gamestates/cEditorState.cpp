@@ -63,6 +63,7 @@ cEditorState::cEditorState(sGameServices* services)
     populateTopologyBar();
     populateStartCellBar();
     populateSymmetricBar();
+    setCurrentBar(m_topologyBar.get());
     startCells.fill({-1, -1});
 }
 
@@ -80,7 +81,7 @@ void cEditorState::populateSelectBar()
             .withTexture(m_gfxeditor->getTexture(STONELAYER))
             .withRenderer(m_renderDrawer)
             .onClick([this]() {
-                m_currentBar = m_topologyBar.get();
+                setCurrentBar(m_topologyBar.get());
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
@@ -92,7 +93,7 @@ void cEditorState::populateSelectBar()
             .withTexture(m_gfxeditor->getTexture(STARTPOSITION))
             .withRenderer(m_renderDrawer)
             .onClick([this]() {
-                m_currentBar = m_startCellBar.get();
+                setCurrentBar(m_startCellBar.get());
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
@@ -103,7 +104,7 @@ void cEditorState::populateSelectBar()
             .withTexture(m_gfxeditor->getTexture(FLIPHORZ))
             .withRenderer(m_renderDrawer)
             .onClick([this]() {
-                m_currentBar = m_symmetricBar.get();
+                setCurrentBar(m_symmetricBar.get());
             })
             .build();
     guiButton->setGroup(m_selectGroup.get());
@@ -482,6 +483,37 @@ void cEditorState::loadMap(s_PreviewMap* map)
     m_displayAxes = false;
 }
 
+void cEditorState::setCursorSize(int value)
+{
+    int normalizedValue = std::max(1, value);
+    if (normalizedValue % 2 == 0) {
+        normalizedValue += 1;
+    }
+
+    normalizedValue = std::min(normalizedValue, 7);
+    if (normalizedValue % 2 == 0) {
+        normalizedValue -= 1;
+    }
+
+    m_topologyCursorSizeSentinel = normalizedValue;
+    m_cursorSize = getActiveCursorSize();
+}
+
+void cEditorState::setCurrentBar(GuiBar* bar)
+{
+    m_currentBar = bar;
+    m_cursorSize = getActiveCursorSize();
+}
+
+int cEditorState::getActiveCursorSize() const
+{
+    if (m_currentBar == m_topologyBar.get()) {
+        return m_topologyCursorSizeSentinel;
+    }
+
+    return 1;
+}
+
 void cEditorState::normalizeModifications()
 {
     for (size_t j = 0; j < m_mapData->getRows(); j++) {
@@ -607,6 +639,16 @@ void cEditorState::drawHoveredCellHighlight() const
     cRectangle cellRect(cellScreenX, cellScreenY, tileLenSize, tileLenSize);
     m_renderDrawer->renderRectFillColor(cellRect, editorHoveredCellFillColor, editorHoveredCellFillColor.a);
     m_renderDrawer->renderRectColor(cellRect, editorHoveredCellBorderColor, editorHoveredCellBorderColor.a);
+}
+
+int cEditorState::getNormalizedCursorSize() const
+{
+    int cursorSize = std::max(1, getActiveCursorSize());
+    if (cursorSize % 2 == 0) {
+        cursorSize += 1;
+    }
+
+    return cursorSize;
 }
 
 void cEditorState::drawGrid() const
