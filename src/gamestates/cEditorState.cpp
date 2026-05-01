@@ -26,6 +26,7 @@ const int heightButtonSize = 40;
 const int minTileSize = 4;
 const int maxTileSize = 64;
 const int deltaTileSize = 4;
+const int maxPenSize = 11; // must be odd to have a center
 const Color editorGridColor = Color{128, 128, 128, 180};
 const Color editorCenterLineColor = Color{32, 176, 32, 220};
 const Color editorHoveredCellFillColor = Color{255, 230, 64, 96};
@@ -208,7 +209,7 @@ void cEditorState::populateTopologyBar()
             .withInitialValue(m_topologyCursorSizeSentinel)
         .withStepValue(2)
         .withMinValue(1)
-        .withMaxValue(11)
+        .withMaxValue(maxPenSize)
         .onChanged([this](int value) {
         setCursorSize(value);
         })
@@ -510,7 +511,7 @@ void cEditorState::setCursorSize(int value)
         normalizedValue += 1;
     }
 
-    normalizedValue = std::min(normalizedValue, 7);
+    normalizedValue = std::min(normalizedValue, maxPenSize);
     if (normalizedValue % 2 == 0) {
         normalizedValue -= 1;
     }
