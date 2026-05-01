@@ -63,6 +63,7 @@ private:
     void drawAxes() const;
     int getActiveCursorSize() const;
     int getNormalizedCursorSize() const;
+    void getBrushTileBounds(int centerTileX, int centerTileY, int &brushStartTileX, int &brushStartTileY, int &brushEndTileX, int &brushEndTileY) const;
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
     void normalizeModifications();

@@ -633,10 +633,22 @@ void cEditorState::drawHoveredCellHighlight() const
         return;
     }
 
-    const int cellScreenX = tileX * tileLenSize - cameraX;
-    const int cellScreenY = heightBarSize + tileY * tileLenSize - cameraY;
+    int highlightStartTileX = 0;
+    int highlightStartTileY = 0;
+    int highlightEndTileX = 0;
+    int highlightEndTileY = 0;
+    getBrushTileBounds(tileX, tileY, highlightStartTileX, highlightStartTileY, highlightEndTileX, highlightEndTileY);
 
-    cRectangle cellRect(cellScreenX, cellScreenY, tileLenSize, tileLenSize);
+    if (highlightStartTileX > highlightEndTileX || highlightStartTileY > highlightEndTileY) {
+        return;
+    }
+
+    const int cellScreenX = highlightStartTileX * tileLenSize - cameraX;
+    const int cellScreenY = heightBarSize + highlightStartTileY * tileLenSize - cameraY;
+    const int highlightWidth = (highlightEndTileX - highlightStartTileX + 1) * tileLenSize;
+    const int highlightHeight = (highlightEndTileY - highlightStartTileY + 1) * tileLenSize;
+
+    cRectangle cellRect(cellScreenX, cellScreenY, highlightWidth, highlightHeight);
     m_renderDrawer->renderRectFillColor(cellRect, editorHoveredCellFillColor, editorHoveredCellFillColor.a);
     m_renderDrawer->renderRectColor(cellRect, editorHoveredCellBorderColor, editorHoveredCellBorderColor.a);
 }
@@ -649,6 +661,16 @@ int cEditorState::getNormalizedCursorSize() const
     }
 
     return cursorSize;
+}
+
+void cEditorState::getBrushTileBounds(int centerTileX, int centerTileY, int &brushStartTileX, int &brushStartTileY, int &brushEndTileX, int &brushEndTileY) const
+{
+    const int cursorRadius = getNormalizedCursorSize() / 2;
+
+    brushStartTileX = std::max(1, centerTileX - cursorRadius);
+    brushStartTileY = std::max(1, centerTileY - cursorRadius);
+    brushEndTileX = std::min(static_cast<int>(m_mapData->getCols()) - 2, centerTileX + cursorRadius);
+    brushEndTileY = std::min(static_cast<int>(m_mapData->getRows()) - 2, centerTileY + cursorRadius);
 }
 
 void cEditorState::drawGrid() const
@@ -764,10 +786,24 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     if (tileID == -1) {
         return;
     }
+
     int tileX = (cameraX + posX) / tileLenSize;
     int tileY = (cameraY + posY) / tileLenSize;
-    if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
-        (*m_mapData)[tileY][tileX] = tileID;
+
+    if (m_mapData == nullptr || tileX < 1 || tileY < 1 || tileX >= static_cast<int>(m_mapData->getCols()) - 1 || tileY >= static_cast<int>(m_mapData->getRows()) - 1) {
+        return;
+    }
+
+    int brushStartTileX = 0;
+    int brushStartTileY = 0;
+    int brushEndTileX = 0;
+    int brushEndTileY = 0;
+    getBrushTileBounds(tileX, tileY, brushStartTileX, brushStartTileY, brushEndTileX, brushEndTileY);
+
+    for (int brushTileY = brushStartTileY; brushTileY <= brushEndTileY; brushTileY++) {
+        for (int brushTileX = brushStartTileX; brushTileX <= brushEndTileX; brushTileX++) {
+            (*m_mapData)[brushTileY][brushTileX] = tileID;
+        }
     }
 }
 
