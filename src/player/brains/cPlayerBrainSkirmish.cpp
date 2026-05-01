@@ -148,62 +148,47 @@ void cPlayerBrainSkirmish::addBuildOrder(s_buildOrder order)
 
 void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
 {
-    //if (event.player == player) && (event.entityType == eBuildType::STRUCTURE) {
-            switch (event.eventType) {
-                case eGameEventType::GAME_EVENT_DESTROYED:
-                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
-                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
-                            onMyStructureDestroyed(*commonEvent);
-                        }
-                    }
-                    break;
-                case eGameEventType::GAME_EVENT_CREATED:
-                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
-                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
-                            onMyStructureCreated(*commonEvent);
-                        }
-                    }
-                    break;
-                case eGameEventType::GAME_EVENT_DAMAGED:
-                    if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
-                        if ((damagedEvent->player == player) && (damagedEvent->entityType == eBuildType::STRUCTURE)) {
-                            onMyStructureAttacked(*damagedEvent);
-                        }
-                    }
-                    break;
-                    // help I'm under attack.. do something smart
-                    break;
-                case eGameEventType::GAME_EVENT_DECAY:
-                    if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
-                        if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
-                            onMyStructureDecayed(*commonEvent);
-                        }
-                    }
-                    // should repair when under 75%?
-                    break;
-                default:
-                    break;
+    switch (event.eventType) {
+        case eGameEventType::GAME_EVENT_DESTROYED:
+            if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                    onMyStructureDestroyed(*commonEvent);
+                }
             }
-        // }
-    
-        // if (event.entityType == eBuildType::UNIT) {
-            switch (event.eventType) {
-                case eGameEventType::GAME_EVENT_DAMAGED:
-                    if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
-                        if ((damagedEvent->player == player) && (damagedEvent->entityType == eBuildType::UNIT)) {
-                            onMyUnitAttacked(*damagedEvent);
-                        }
-                    }
-                    break;
-                default:
-                    break;
+            break;
+        case eGameEventType::GAME_EVENT_CREATED:
+            if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                    onMyStructureCreated(*commonEvent);
+                }
             }
-        // }
-
-    if (event.eventType == eGameEventType::GAME_EVENT_DISCOVERED) {
-        if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
-            onEntityDiscoveredEvent(*commonEvent);
-        }
+            break;
+        case eGameEventType::GAME_EVENT_DAMAGED:
+            if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
+                if (damagedEvent->player == player) {
+                    if (damagedEvent->entityType == eBuildType::STRUCTURE) {
+                        onMyStructureAttacked(*damagedEvent);
+                    } else if (damagedEvent->entityType == eBuildType::UNIT) {
+                        onMyUnitAttacked(*damagedEvent);
+                    }
+                }
+            }
+            break;
+        case eGameEventType::GAME_EVENT_DECAY:
+            if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
+                    onMyStructureDecayed(*commonEvent);
+                }
+            }
+            // should repair when under 75%?
+            break;
+        case eGameEventType::GAME_EVENT_DISCOVERED:
+            if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
+                onEntityDiscoveredEvent(*commonEvent);
+            }
+            break;
+        default:
+            break;
     }
 
     // notify mission about any kind of event
