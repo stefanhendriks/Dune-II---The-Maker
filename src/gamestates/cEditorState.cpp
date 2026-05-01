@@ -826,10 +826,12 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     int brushEndTileX = 0;
     int brushEndTileY = 0;
     getBrushTileBounds(tileX, tileY, brushStartTileX, brushStartTileY, brushEndTileX, brushEndTileY);
-    m_hasChanged = true;
     for (int brushTileY = brushStartTileY; brushTileY <= brushEndTileY; brushTileY++) {
         for (int brushTileX = brushStartTileX; brushTileX <= brushEndTileX; brushTileX++) {
-            (*m_mapData)[brushTileY][brushTileX] = tileID;
+            if ((*m_mapData)[brushTileY][brushTileX] != tileID) {
+                (*m_mapData)[brushTileY][brushTileX] = tileID;
+                m_hasChanged = true;
+            }
         }
     }
 }
@@ -843,6 +845,7 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     int tileY = (cameraY + posY) / tileLenSize;
     if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
         startCells[startCellID]={tileX, tileY};
+        m_hasChanged = true;
     }
 }
 
@@ -879,6 +882,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
     }
+    m_hasChanged = true;
 }
 
 void cEditorState::drawStartCells() const
