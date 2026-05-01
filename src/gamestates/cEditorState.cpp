@@ -207,7 +207,7 @@ void cEditorState::populateTopologyBar()
         .withTextDrawer(m_textDrawer)
         .withTheme(cGuiThemeBuilder().light().build())
         .withLabel("size")
-            .withInitialValue(m_topologyCursorSizeSentinel)
+            .withInitialValue(m_topologyCursorSize)
         .withStepValue(2)
         .withMinValue(1)
         .withMaxValue(maxPenSize)
@@ -522,7 +522,7 @@ void cEditorState::setCursorSize(int value)
         normalizedValue -= 1;
     }
 
-    m_topologyCursorSizeSentinel = normalizedValue;
+    m_topologyCursorSize = normalizedValue;
     m_cursorSize = getActiveCursorSize();
 }
 
@@ -535,7 +535,7 @@ void cEditorState::setCurrentBar(GuiBar* bar)
 int cEditorState::getActiveCursorSize() const
 {
     if (m_currentBar == m_topologyBar.get()) {
-        return m_topologyCursorSizeSentinel;
+        return m_topologyCursorSize;
     }
 
     return 1;

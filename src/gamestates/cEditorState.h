@@ -100,7 +100,7 @@ private:
     int idTerrainToMapModif = -1;
     int idStartCellPlayer = -1;
     int m_cursorSize = 1;
-    int m_topologyCursorSizeSentinel = 1;
+    int m_topologyCursorSize = 1;
     bool m_displayGrid = false;
     bool m_displayAxes = false;
     bool m_hasChanged = false;
