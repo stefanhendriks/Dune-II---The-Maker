@@ -124,6 +124,7 @@ void cEditorState::populateSelectBar()
             .withKind(GuiRenderKind::WITH_STRETCHED_TEXTURE)
             .onClick([this]() {
                 saveMap();
+                hasChanged = false;
             })
             .build();
     m_selectBar->addGuiObject(std::move(guiIcon));
@@ -419,11 +420,16 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
+            if (hasChanged) {
+                saveMap(true);
+                hasChanged = false;
+            }
             m_interface->setTransitionToWithFadingOut(GAME_MENU);
         }
         if (event.isAction(eKeyAction::EDITOR_SAVE)) {
             //std::cout << "Save" << std::endl;
             saveMap();
+            hasChanged = false;
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
             zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomIn);
@@ -820,7 +826,7 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     int brushEndTileX = 0;
     int brushEndTileY = 0;
     getBrushTileBounds(tileX, tileY, brushStartTileX, brushStartTileY, brushEndTileX, brushEndTileY);
-
+    hasChanged = true;
     for (int brushTileY = brushStartTileY; brushTileY <= brushEndTileY; brushTileY++) {
         for (int brushTileX = brushStartTileX; brushTileX <= brushEndTileX; brushTileX++) {
             (*m_mapData)[brushTileY][brushTileX] = tileID;
@@ -908,10 +914,17 @@ static std::string normalizeStringForFileName(const std::string& input)
     return output;
 }
 
-void cEditorState::saveMap() const
+void cEditorState::saveMap(bool backup) const
 {
+    std::string fileName;
     // creating file
-    std::string fileName = "skirmish/"+normalizeStringForFileName(m_mapName)+".ini";
+    if (!backup) {
+        // if no name provided, use map name
+        fileName = "skirmish/"+normalizeStringForFileName(m_mapName)+".ini";
+    } else {
+        fileName = "skirmish/backup.ini";
+    }
+    
     std::ofstream saveFile(fileName);
     // file verification
     if (!saveFile.is_open()){

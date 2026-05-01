@@ -73,7 +73,7 @@ private:
     void zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction);
     void updateVisibleTiles();
 
-    void saveMap() const;
+    void saveMap(bool backup = false) const;
     std::unique_ptr<GuiBar> m_selectBar;
     std::unique_ptr<GuiBar> m_topologyBar;
     std::unique_ptr<GuiBar> m_startCellBar;
@@ -103,6 +103,7 @@ private:
     int m_topologyCursorSizeSentinel = 1;
     bool m_displayGrid = false;
     bool m_displayAxes = false;
+    bool hasChanged = false;
 
     // startCell positions 
     std::array<cPoint,5> startCells;
