@@ -1,5 +1,5 @@
 #include "gamestates/cEditorState.h"
-#include "gamestates/cEditorState/EditorCam.h"
+#include "gamestates/cEditorState/cEditorCam.h"
 #include "gamestates/cEditorState/cEditorUndoRedoHistory.h"
 #include "controls/eKeyAction.h"
 #include "gui/GuiBar.h"
@@ -52,7 +52,7 @@ cEditorState::cEditorState(sGameServices* services)
     const cRectangle &selectRect = cRectangle(0, 0, m_settings->getScreenW(), heightBarSize);
     const cRectangle &modifRect = cRectangle(m_settings->getScreenW()-heightBarSize, heightBarSize, heightBarSize, m_settings->getScreenH()-heightBarSize);
     mapSizeArea = cRectangle(0,heightBarSize,m_settings->getScreenW()-heightBarSize,m_settings->getScreenH()-heightBarSize);
-    m_editorCam = std::make_unique<EditorCam>(mapSizeArea);
+    m_editorCam = std::make_unique<cEditorCam>(mapSizeArea);
     m_selectBar = std::make_unique<GuiBar>(m_renderDrawer, selectRect,GuiBarPlacement::HORIZONTAL,heightButtonSize);
     m_topologyBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
     m_startCellBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
@@ -363,10 +363,10 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         int mouseX = event.coords.x;
         int mouseY = event.coords.y - mapSizeArea.getY(); // offset barre
         if (event.eventType == MOUSE_SCROLLED_DOWN) {
-            m_editorCam->zoomAtMapPosition(mouseX, mouseY, EditorCam::ZoomDirection::zoomOut, *m_mapData);
+            m_editorCam->zoomAtMapPosition(mouseX, mouseY, cEditorCam::ZoomDirection::zoomOut, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
-            m_editorCam->zoomAtMapPosition(mouseX, mouseY, EditorCam::ZoomDirection::zoomIn, *m_mapData);
+            m_editorCam->zoomAtMapPosition(mouseX, mouseY, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get()) {
             modifyTile(mouseX, mouseY, idTerrainToMapModif);
@@ -410,11 +410,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_hasChanged = false;
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
-            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, EditorCam::ZoomDirection::zoomIn, *m_mapData);
+            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_OUT)) {
-            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, EditorCam::ZoomDirection::zoomOut, *m_mapData);
+            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, cEditorCam::ZoomDirection::zoomOut, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         // to test : updateVisibleTiles();
@@ -462,11 +462,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_UP)) {
-            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, EditorCam::ZoomDirection::zoomIn, *m_mapData);
+            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_DOWN)) {
-            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, EditorCam::ZoomDirection::zoomOut, *m_mapData);
+            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, cEditorCam::ZoomDirection::zoomOut, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         //to test : updateVisibleTiles();

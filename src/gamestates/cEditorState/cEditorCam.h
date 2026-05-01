@@ -5,14 +5,14 @@
 
 #include <cstddef>
 
-class EditorCam {
+class cEditorCam {
 public:
     enum class ZoomDirection : char {
         zoomIn,
         zoomOut
     };
 
-    explicit EditorCam(const cRectangle &mapArea);
+    explicit cEditorCam(const cRectangle &mapArea);
 
     void reset();
 

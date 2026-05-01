@@ -1,13 +1,13 @@
-#include "gamestates/cEditorState/EditorCam.h"
+#include "gamestates/cEditorState/cEditorCam.h"
 
 #include <algorithm>
 
-EditorCam::EditorCam(const cRectangle &mapArea)
+cEditorCam::cEditorCam(const cRectangle &mapArea)
     : m_mapArea(mapArea)
 {
 }
 
-void EditorCam::reset()
+void cEditorCam::reset()
 {
     m_tileLenSize = 16;
     m_cameraX = 0;
@@ -20,7 +20,7 @@ void EditorCam::reset()
     m_tilesDown = 0;
 }
 
-void EditorCam::zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction, const Matrix<int> &mapData)
+void cEditorCam::zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction, const Matrix<int> &mapData)
 {
     int previousTileSize = m_tileLenSize;
     if (direction == ZoomDirection::zoomOut) {
@@ -44,7 +44,7 @@ void EditorCam::zoomAtMapPosition(int screenX, int screenY, ZoomDirection direct
     clampCameraYToMapBounds(mapData);
 }
 
-void EditorCam::scrollByTiles(int deltaTilesX, int deltaTilesY, const Matrix<int> &mapData)
+void cEditorCam::scrollByTiles(int deltaTilesX, int deltaTilesY, const Matrix<int> &mapData)
 {
     m_cameraX += deltaTilesX * m_tileLenSize;
     m_cameraY += deltaTilesY * m_tileLenSize;
@@ -52,7 +52,7 @@ void EditorCam::scrollByTiles(int deltaTilesX, int deltaTilesY, const Matrix<int
     clampCameraYToMapBounds(mapData);
 }
 
-void EditorCam::updateVisibleTiles(const Matrix<int> &mapData)
+void cEditorCam::updateVisibleTiles(const Matrix<int> &mapData)
 {
     m_startX = m_cameraX / m_tileLenSize;
     m_startY = m_cameraY / m_tileLenSize;
@@ -82,52 +82,52 @@ void EditorCam::updateVisibleTiles(const Matrix<int> &mapData)
     }
 }
 
-int EditorCam::screenToTileX(int screenX) const
+int cEditorCam::screenToTileX(int screenX) const
 {
     return (m_cameraX + screenX) / m_tileLenSize;
 }
 
-int EditorCam::screenToTileY(int screenY) const
+int cEditorCam::screenToTileY(int screenY) const
 {
     return (m_cameraY + screenY) / m_tileLenSize;
 }
 
-int EditorCam::getCameraX() const
+int cEditorCam::getCameraX() const
 {
     return m_cameraX;
 }
 
-int EditorCam::getCameraY() const
+int cEditorCam::getCameraY() const
 {
     return m_cameraY;
 }
 
-int EditorCam::getTileSize() const
+int cEditorCam::getTileSize() const
 {
     return m_tileLenSize;
 }
 
-int EditorCam::getStartX() const
+int cEditorCam::getStartX() const
 {
     return m_startX;
 }
 
-int EditorCam::getStartY() const
+int cEditorCam::getStartY() const
 {
     return m_startY;
 }
 
-size_t EditorCam::getEndX() const
+size_t cEditorCam::getEndX() const
 {
     return m_endX;
 }
 
-size_t EditorCam::getEndY() const
+size_t cEditorCam::getEndY() const
 {
     return m_endY;
 }
 
-void EditorCam::clampCameraXToMapBounds(const Matrix<int> &mapData)
+void cEditorCam::clampCameraXToMapBounds(const Matrix<int> &mapData)
 {
     if (m_cameraX < 0) {
         m_cameraX = 0;
@@ -143,7 +143,7 @@ void EditorCam::clampCameraXToMapBounds(const Matrix<int> &mapData)
     }
 }
 
-void EditorCam::clampCameraYToMapBounds(const Matrix<int> &mapData)
+void cEditorCam::clampCameraYToMapBounds(const Matrix<int> &mapData)
 {
     if (m_cameraY < 0) {
         m_cameraY = 0;

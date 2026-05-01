@@ -19,7 +19,7 @@ class GuiButtonGroup;
 class cTextDrawer;
 class cGameInterface;
 class cEditorUndoRedoHistory;
-class EditorCam;
+class cEditorCam;
 
 class cEditorState : public cGameState {
 public:
@@ -75,7 +75,7 @@ private:
     std::unique_ptr<GuiButtonGroup> m_symmetricGroup;
 
     std::unique_ptr<cEditorUndoRedoHistory> m_undoRedo;
-    std::unique_ptr<EditorCam> m_editorCam;
+    std::unique_ptr<cEditorCam> m_editorCam;
 
     cRectangle mapSizeArea;
 
