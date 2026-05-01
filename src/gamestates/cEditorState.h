@@ -19,6 +19,7 @@ class GuiButtonGroup;
 class cTextDrawer;
 class cGameInterface;
 class cEditorUndoRedoHistory;
+class EditorCam;
 
 class cEditorState : public cGameState {
 public:
@@ -41,10 +42,6 @@ private:
     cGameInterface* m_interface = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
     std::string m_mapName, m_mapAuthor, m_mapDescription;
-    enum class ZoomDirection : char {
-        zoomIn,
-        zoomOut
-    };
     enum class Direction : char {
         top,
         bottom,
@@ -69,10 +66,6 @@ private:
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
     void normalizeModifications();
-    void clampCameraXToMapBounds();
-    void clampCameraYToMapBounds();
-    void zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction);
-    void updateVisibleTiles();
 
     void saveMap(bool backup = false) const;
     std::unique_ptr<GuiBar> m_selectBar;
@@ -87,17 +80,9 @@ private:
     std::unique_ptr<GuiButtonGroup> m_symmetricGroup;
 
     std::unique_ptr<cEditorUndoRedoHistory> m_undoRedo;
+    std::unique_ptr<EditorCam> m_editorCam;
 
     cRectangle mapSizeArea;
-    int tileLenSize = 16;
-
-    // Coordinates of the top left corner of the screen on the map (in pixels)
-    int cameraX = 0;
-    int cameraY = 0;
-    // Visible tile range, here to avoid creating them each frame
-    int startX = 0, startY = 0;
-    size_t endX = 0, endY = 0;
-    size_t tilesAcross = 0, tilesDown = 0;
 
     // map modification 
     int idTerrainToMapModif = -1;

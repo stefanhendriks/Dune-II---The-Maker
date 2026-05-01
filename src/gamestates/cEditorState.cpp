@@ -1,4 +1,5 @@
 #include "gamestates/cEditorState.h"
+#include "gamestates/cEditorState/EditorCam.h"
 #include "gamestates/cEditorState/cEditorUndoRedoHistory.h"
 #include "controls/eKeyAction.h"
 #include "gui/GuiBar.h"
@@ -25,9 +26,6 @@
 
 const int heightBarSize = 48;
 const int heightButtonSize = 40;
-const int minTileSize = 4;
-const int maxTileSize = 64;
-const int deltaTileSize = 4;
 const int maxPenSize = 11; // must be odd to have a center
 const Color editorGridColor = Color{128, 128, 128, 180};
 const Color editorCenterLineColor = Color{32, 176, 32, 220};
@@ -54,6 +52,7 @@ cEditorState::cEditorState(sGameServices* services)
     const cRectangle &selectRect = cRectangle(0, 0, m_settings->getScreenW(), heightBarSize);
     const cRectangle &modifRect = cRectangle(m_settings->getScreenW()-heightBarSize, heightBarSize, heightBarSize, m_settings->getScreenH()-heightBarSize);
     mapSizeArea = cRectangle(0,heightBarSize,m_settings->getScreenW()-heightBarSize,m_settings->getScreenH()-heightBarSize);
+    m_editorCam = std::make_unique<EditorCam>(mapSizeArea);
     m_selectBar = std::make_unique<GuiBar>(m_renderDrawer, selectRect,GuiBarPlacement::HORIZONTAL,heightButtonSize);
     m_topologyBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
     m_startCellBar = std::make_unique<GuiBar>(m_renderDrawer, modifRect,GuiBarPlacement::VERTICAL, heightButtonSize);
@@ -354,30 +353,6 @@ void cEditorState::draw() const
     m_interface->drawCursor();
 }
 
-void cEditorState::zoomAtMapPosition(int screenX, int screenY, ZoomDirection direction)
-{
-    int prevTileLenSize = tileLenSize;
-    if (direction == ZoomDirection::zoomOut) {
-        tileLenSize -= deltaTileSize;
-        tileLenSize = std::max(tileLenSize, minTileSize);
-    } else if (direction == ZoomDirection::zoomIn) {
-        tileLenSize += deltaTileSize;
-        tileLenSize = std::min(tileLenSize, maxTileSize);
-    }
-    // Zoom change
-    if (tileLenSize != prevTileLenSize) {
-        // Calculate the tile under the cursor before zooming
-        int worldTileX = (cameraX + screenX) / prevTileLenSize;
-        int worldTileY = (cameraY + screenY) / prevTileLenSize;
-        // Adjust the camera to keep the same tile under the cursor
-        cameraX = worldTileX * tileLenSize - screenX;
-        cameraY = worldTileY * tileLenSize - screenY;
-        // Clamp camera to map bounds
-        clampCameraXToMapBounds();
-        clampCameraYToMapBounds();
-    }
-}
-
 void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (m_mapData == nullptr) {
@@ -388,11 +363,11 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         int mouseX = event.coords.x;
         int mouseY = event.coords.y - mapSizeArea.getY(); // offset barre
         if (event.eventType == MOUSE_SCROLLED_DOWN) {
-            zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomOut);
-            updateVisibleTiles();
+            m_editorCam->zoomAtMapPosition(mouseX, mouseY, EditorCam::ZoomDirection::zoomOut, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
-            zoomAtMapPosition(mouseX, mouseY, ZoomDirection::zoomIn);
-            updateVisibleTiles();
+            m_editorCam->zoomAtMapPosition(mouseX, mouseY, EditorCam::ZoomDirection::zoomIn, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get()) {
             modifyTile(mouseX, mouseY, idTerrainToMapModif);
         }else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_startCellBar.get()) {
@@ -435,12 +410,12 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_hasChanged = false;
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
-            zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomIn);
-            updateVisibleTiles();
+            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, EditorCam::ZoomDirection::zoomIn, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_OUT)) {
-            zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomOut);
-            updateVisibleTiles();
+            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, EditorCam::ZoomDirection::zoomOut, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         }
         // to test : updateVisibleTiles();
         m_selectBar->onNotifyKeyboardEvent(event);
@@ -471,32 +446,28 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
     if (event.isType(eKeyEventType::HOLD)) {
         if (event.isAction(eKeyAction::SCROLL_LEFT)) {
-            cameraX -=tileLenSize;
-            clampCameraXToMapBounds();
-            updateVisibleTiles();
+            m_editorCam->scrollByTiles(-1, 0, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isAction(eKeyAction::SCROLL_RIGHT)) {
-            cameraX +=tileLenSize;
-            clampCameraXToMapBounds();
-            updateVisibleTiles();
+            m_editorCam->scrollByTiles(1, 0, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isAction(eKeyAction::SCROLL_UP)) {
-            cameraY -=tileLenSize;
-            clampCameraYToMapBounds();
-            updateVisibleTiles();
+            m_editorCam->scrollByTiles(0, -1, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isAction(eKeyAction::SCROLL_DOWN)) {
-            cameraY +=tileLenSize;
-            clampCameraYToMapBounds();
-            updateVisibleTiles();
+            m_editorCam->scrollByTiles(0, 1, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_UP)) {
-            zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomIn);
-            updateVisibleTiles();
+            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, EditorCam::ZoomDirection::zoomIn, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_DOWN)) {
-            zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomOut);
-            updateVisibleTiles();
+            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, EditorCam::ZoomDirection::zoomOut, *m_mapData);
+            m_editorCam->updateVisibleTiles(*m_mapData);
         }
         //to test : updateVisibleTiles();
     }
@@ -517,7 +488,8 @@ void cEditorState::loadMap(s_PreviewMap* map)
             startCells[i] = cPoint(w,h);
         }
     }
-    updateVisibleTiles();
+    m_editorCam->reset();
+    m_editorCam->updateVisibleTiles(*m_mapData);
     normalizeModifications();
     m_displayGrid = false;
     m_displayAxes = false;
@@ -568,41 +540,19 @@ void cEditorState::normalizeModifications()
     }
 }
 
-void cEditorState::clampCameraYToMapBounds()
-{
-    if (m_mapData == nullptr) {
-        cameraY = 0;
-        return;
-    }
-    if (cameraY < 0) {
-        cameraY = 0;
-        return;
-    }
-    int maxCameraY = m_mapData->getRows() * tileLenSize - mapSizeArea.getHeight();
-    if (maxCameraY < 0) maxCameraY = 0;
-    if (cameraY > maxCameraY) cameraY = maxCameraY;
-}
-
-void cEditorState::clampCameraXToMapBounds()
-{
-    if (m_mapData == nullptr) {
-        cameraX = 0;
-        return;
-    }
-    if (cameraX < 0) {
-        cameraX = 0;
-        return;
-    }
-    int maxCameraX = m_mapData->getCols() * tileLenSize - mapSizeArea.getWidth();
-    if (maxCameraX < 0) maxCameraX = 0;
-    if (cameraX > maxCameraX) cameraX = maxCameraX;
-}
-
 void cEditorState::drawMap() const
 {
     if (m_mapData == nullptr) {
         return;
     }
+
+    const int cameraX = m_editorCam->getCameraX();
+    const int cameraY = m_editorCam->getCameraY();
+    const int tileLenSize = m_editorCam->getTileSize();
+    const int startX = m_editorCam->getStartX();
+    const int startY = m_editorCam->getStartY();
+    const size_t endX = m_editorCam->getEndX();
+    const size_t endY = m_editorCam->getEndY();
     
     int tileID;
     int tile_world_x, tile_world_y;
@@ -610,8 +560,8 @@ void cEditorState::drawMap() const
 
     cRectangle destRect;
     cRectangle srcRect{0,0,32,32}; // we take the first full textured sprite
-    for (size_t j = startY; j < endY; j++) {
-        for (size_t i = startX; i < endX; i++) {
+    for (size_t j = static_cast<size_t>(startY); j < endY; j++) {
+        for (size_t i = static_cast<size_t>(startX); i < endX; i++) {
             // Ideal position in pixels if the map started at (0,0)
             tile_world_x = i * tileLenSize;
             tile_world_y = j * tileLenSize;
@@ -667,6 +617,9 @@ void cEditorState::drawHoveredCellHighlight() const
 
     const int mouseMapX = mouseCoords.x;
     const int mouseMapY = mouseCoords.y - mapSizeArea.getY();
+    const int cameraX = m_editorCam->getCameraX();
+    const int cameraY = m_editorCam->getCameraY();
+    const int tileLenSize = m_editorCam->getTileSize();
 
     const int tileX = (cameraX + mouseMapX) / tileLenSize;
     const int tileY = (cameraY + mouseMapY) / tileLenSize;
@@ -721,6 +674,14 @@ void cEditorState::drawGrid() const
         return;
     }
 
+    const int cameraX = m_editorCam->getCameraX();
+    const int cameraY = m_editorCam->getCameraY();
+    const int tileLenSize = m_editorCam->getTileSize();
+    const int startX = m_editorCam->getStartX();
+    const int startY = m_editorCam->getStartY();
+    const size_t endX = m_editorCam->getEndX();
+    const size_t endY = m_editorCam->getEndY();
+
     const int viewportTop = heightBarSize;
     const int viewportBottom = heightBarSize + mapSizeArea.getHeight() - 1;
     const int viewportLeft = 0;
@@ -763,6 +724,10 @@ void cEditorState::drawAxes() const
         return;
     }
 
+    const int cameraX = m_editorCam->getCameraX();
+    const int cameraY = m_editorCam->getCameraY();
+    const int tileLenSize = m_editorCam->getTileSize();
+
     const int viewportTop = heightBarSize;
     const int viewportBottom = heightBarSize + mapSizeArea.getHeight() - 1;
     const int viewportLeft = 0;
@@ -793,44 +758,14 @@ void cEditorState::drawAxes() const
     }
 }
 
-void cEditorState::updateVisibleTiles()
-{
-    // Convert the camera position (in pixels) to tile coordinates
-    startX = cameraX / tileLenSize;
-    startY = cameraY / tileLenSize;
-
-    // Calculating the number of tiles that fit on the screen (+1 to be sure of coverage)
-    tilesAcross = (mapSizeArea.getWidth() / tileLenSize) + 1;
-    tilesDown = (mapSizeArea.getHeight() / tileLenSize) + 1;
-
-    // Determine the end tile
-    endX = startX + tilesAcross;
-    endY = startY + tilesDown;
-    // Clamp to avoid wrong map m_mapData access
-    if (endX > m_mapData->getCols()) {
-        endX = m_mapData->getCols();
-        startX = endX - tilesAcross;
-        if (startX < 0) {
-            startX = 0; 
-        }
-    }
-    if (endY > m_mapData->getRows()) {
-        endY = m_mapData->getRows();
-        startY = endY - tilesDown;
-        if (startY < 0) {
-            startY = 0; 
-        }
-    }
-}
-
 void cEditorState::modifyTile(int posX, int posY, int tileID)
 {
     if (tileID == -1) {
         return;
     }
 
-    int tileX = (cameraX + posX) / tileLenSize;
-    int tileY = (cameraY + posY) / tileLenSize;
+    const int tileX = m_editorCam->screenToTileX(posX);
+    const int tileY = m_editorCam->screenToTileY(posY);
     if (m_mapData == nullptr || tileX < 1 || tileY < 1 || tileX >= static_cast<int>(m_mapData->getCols()) - 1 || tileY >= static_cast<int>(m_mapData->getRows()) - 1) {
         return;
     }
@@ -866,8 +801,8 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     if (startCellID == -1) {
         return;
     }
-    int tileX = (cameraX + posX) / tileLenSize;
-    int tileY = (cameraY + posY) / tileLenSize;
+    const int tileX = m_editorCam->screenToTileX(posX);
+    const int tileY = m_editorCam->screenToTileY(posY);
     if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
         cPoint oldPos = startCells[startCellID];
         cPoint newPos = {tileX, tileY};
@@ -944,6 +879,9 @@ void cEditorState::drawStartCells() const
 {
     cRectangle destRect;
     cRectangle srcRect{0,0,32,32}; // we take the first full textured sprite
+    const int cameraX = m_editorCam->getCameraX();
+    const int cameraY = m_editorCam->getCameraY();
+    const int tileLenSize = m_editorCam->getTileSize();
     int x,y;
     for(size_t i=0; i<startCells.size(); i++) {
         if (startCells[i].x != -1 && startCells[i].y != -1) {
