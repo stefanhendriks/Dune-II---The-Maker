@@ -181,7 +181,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
             list->addUnitToList(SIEGETANK, 0);
         }
 
-        if (techLevel > 7 && (house != HARKONNEN && house != SARDAUKAR)) {
+        if (techLevel > 7 && (house != HARKONNEN)) {
             list->addUnitToList(ORNITHOPTER, 0);
         }
     }
