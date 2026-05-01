@@ -103,7 +103,7 @@ private:
     int m_topologyCursorSizeSentinel = 1;
     bool m_displayGrid = false;
     bool m_displayAxes = false;
-    bool hasChanged = false;
+    bool m_hasChanged = false;
 
     // startCell positions 
     std::array<cPoint,5> startCells;

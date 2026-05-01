@@ -124,7 +124,7 @@ void cEditorState::populateSelectBar()
             .withKind(GuiRenderKind::WITH_STRETCHED_TEXTURE)
             .onClick([this]() {
                 saveMap();
-                hasChanged = false;
+                m_hasChanged = false;
             })
             .build();
     m_selectBar->addGuiObject(std::move(guiIcon));
@@ -420,16 +420,16 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            if (hasChanged) {
+            if (m_hasChanged) {
                 saveMap(true);
-                hasChanged = false;
+                m_hasChanged = false;
             }
             m_interface->setTransitionToWithFadingOut(GAME_MENU);
         }
         if (event.isAction(eKeyAction::EDITOR_SAVE)) {
             //std::cout << "Save" << std::endl;
             saveMap();
-            hasChanged = false;
+            m_hasChanged = false;
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
             zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, ZoomDirection::zoomIn);
@@ -826,7 +826,7 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     int brushEndTileX = 0;
     int brushEndTileY = 0;
     getBrushTileBounds(tileX, tileY, brushStartTileX, brushStartTileY, brushEndTileX, brushEndTileY);
-    hasChanged = true;
+    m_hasChanged = true;
     for (int brushTileY = brushStartTileY; brushTileY <= brushEndTileY; brushTileY++) {
         for (int brushTileX = brushStartTileX; brushTileX <= brushEndTileX; brushTileX++) {
             (*m_mapData)[brushTileY][brushTileX] = tileID;
