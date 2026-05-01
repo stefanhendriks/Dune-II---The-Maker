@@ -38,6 +38,7 @@ private:
     Graphics *m_gfxeditor = nullptr;
     cGameSettings *m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    cTextDrawer *m_textDrawer = nullptr;
     std::string m_mapName, m_mapAuthor, m_mapDescription;
     enum class ZoomDirection : char {
         zoomIn,

@@ -4,8 +4,10 @@
 #include "gui/GuiStateButton.h"
 #include "gui/GuiButton.h"
 #include "gui/GuiButtonGroup.h"
+#include "gui/GuiValueButton.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
+#include "drawers/cTextDrawer.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
@@ -35,12 +37,14 @@ cEditorState::cEditorState(sGameServices* services)
     m_gfxdata(m_ctx->getGraphicsContext()->gfxdata.get()),
     m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get()),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface())
+    m_interface(m_ctx->getGameInterface()),
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
 {
     assert(m_gfxdata != nullptr);
     assert(m_gfxeditor != nullptr);
     assert(m_settings != nullptr);
     assert(m_interface != nullptr);
+    assert(m_textDrawer != nullptr);
 
     const cRectangle &selectRect = cRectangle(0, 0, m_settings->getScreenW(), heightBarSize);
     const cRectangle &modifRect = cRectangle(m_settings->getScreenW()-heightBarSize, heightBarSize, heightBarSize, m_settings->getScreenH()-heightBarSize);
@@ -194,6 +198,22 @@ void cEditorState::populateTopologyBar()
             .build();
     guiButton->setGroup(m_topologyGroup.get());
     m_topologyBar->addAutoGuiObject(std::move(guiButton));
+
+    auto cursorSizeButton = GuiValueButtonBuilder()
+        .withRect(cRectangle(0, 0, heightButtonSize, heightButtonSize))
+        .withRenderer(m_renderDrawer)
+        .withTextDrawer(m_textDrawer)
+        .withTheme(cGuiThemeBuilder().light().build())
+        .withLabel("size")
+            .withInitialValue(m_topologyCursorSizeSentinel)
+        .withStepValue(2)
+        .withMinValue(1)
+        .withMaxValue(11)
+        .onChanged([this](int value) {
+        setCursorSize(value);
+        })
+        .build();
+    m_topologyBar->addAutoGuiObject(std::move(cursorSizeButton));
 }
 
 void cEditorState::populateStartCellBar()
