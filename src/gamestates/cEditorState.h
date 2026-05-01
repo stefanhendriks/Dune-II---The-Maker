@@ -42,12 +42,7 @@ private:
     cGameInterface* m_interface = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
     std::string m_mapName, m_mapAuthor, m_mapDescription;
-    enum class Direction : char {
-        top,
-        bottom,
-        left,
-        right
-    };
+    enum class Direction : char { top, bottom, left, right };
     void populateTopologyBar();
     void populateStartCellBar();
     void populateSelectBar();
