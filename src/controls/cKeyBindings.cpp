@@ -67,6 +67,8 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::EDITOR_ZOOM_OUT, {SDL_SCANCODE_PAGEDOWN});
     bind(eKeyAction::EDITOR_DISPLAY_GRID, {SDL_SCANCODE_G});
     bind(eKeyAction::EDITOR_DISPLAY_AXES, {SDL_SCANCODE_A});
+    bind(eKeyAction::EDITOR_UNDO,     {SDL_SCANCODE_Z}, true, false, false);
+    bind(eKeyAction::EDITOR_REDO,     {SDL_SCANCODE_Y}, true, false, false);
 
     // UI / menus
     bind(eKeyAction::MENU_BACK,    {SDL_SCANCODE_ESCAPE});
@@ -143,6 +145,8 @@ void cKeyBindings::loadFromSection(const cSection &section)
         {"EDITOR_ZOOM_OUT",           eKeyAction::EDITOR_ZOOM_OUT},
         {"EDITOR_DISPLAY_GRID",       eKeyAction::EDITOR_DISPLAY_GRID},
         {"EDITOR_DISPLAY_AXES",       eKeyAction::EDITOR_DISPLAY_AXES},
+        {"EDITOR_UNDO",               eKeyAction::EDITOR_UNDO},
+        {"EDITOR_REDO",               eKeyAction::EDITOR_REDO},
         {"MENU_BACK",                 eKeyAction::MENU_BACK},
         {"MENU_CONFIRM",              eKeyAction::MENU_CONFIRM},
         {"MENU_CANCEL",               eKeyAction::MENU_CANCEL},

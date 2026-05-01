@@ -9,6 +9,8 @@
 #include <memory>
 #include <array>
 #include <string>
+#include <variant>
+#include <vector>
 
 class Texture;
 class Graphics;
@@ -34,6 +36,21 @@ public:
 
     eGameStateType getType() override;
 private:
+    // ---- Undo/Redo -------------------------------------------------------
+    struct Marker {};
+    struct TileChange    { int col, row, oldTileID, newTileID; };
+    struct StartCellChange { int playerID; cPoint oldPos, newPos; };
+    using EditorChange = std::variant<Marker, TileChange, StartCellChange>;
+
+    std::vector<EditorChange> m_undoStack;
+    std::vector<EditorChange> m_redoStack;
+
+    void recordTileChange(int col, int row, int oldTileID, int newTileID);
+    void recordStartCellChange(int playerID, cPoint oldPos, cPoint newPos);
+    void beginRecordGroup();
+    void applyUndo();
+    void applyRedo();
+    // -----------------------------------------------------------------------
     Graphics *m_gfxdata = nullptr;
     Graphics *m_gfxeditor = nullptr;
     cGameSettings *m_settings = nullptr;

@@ -77,6 +77,87 @@ cEditorState::~cEditorState()
 
 }
 
+// ---- Undo/Redo helpers ---------------------------------------------------
+
+void cEditorState::beginRecordGroup()
+{
+    m_undoStack.push_back(Marker{});
+    m_redoStack.clear();
+}
+
+void cEditorState::recordTileChange(int col, int row, int oldTileID, int newTileID)
+{
+    m_undoStack.push_back(TileChange{col, row, oldTileID, newTileID});
+}
+
+void cEditorState::recordStartCellChange(int playerID, cPoint oldPos, cPoint newPos)
+{
+    m_undoStack.push_back(StartCellChange{playerID, oldPos, newPos});
+}
+
+void cEditorState::applyUndo()
+{
+    if (m_undoStack.empty()) return;
+
+    // Collect entries back to the most recent Marker
+    std::vector<EditorChange> group;
+    while (!m_undoStack.empty() && !std::holds_alternative<Marker>(m_undoStack.back())) {
+        group.push_back(m_undoStack.back());
+        m_undoStack.pop_back();
+    }
+    if (!m_undoStack.empty()) {
+        m_undoStack.pop_back(); // pop the Marker itself
+    }
+
+    if (group.empty()) return;
+
+    // Push redo marker + reversed changes
+    m_redoStack.push_back(Marker{});
+    for (auto &change : group) {
+        if (auto *tc = std::get_if<TileChange>(&change)) {
+            (*m_mapData)[tc->row][tc->col] = tc->oldTileID;
+            m_redoStack.push_back(TileChange{tc->col, tc->row, tc->oldTileID, tc->newTileID});
+        } else if (auto *sc = std::get_if<StartCellChange>(&change)) {
+            startCells[sc->playerID] = sc->oldPos;
+            m_redoStack.push_back(StartCellChange{sc->playerID, sc->oldPos, sc->newPos});
+        }
+    }
+
+    m_hasChanged = true;
+}
+
+void cEditorState::applyRedo()
+{
+    if (m_redoStack.empty()) return;
+
+    std::vector<EditorChange> group;
+    while (!m_redoStack.empty() && !std::holds_alternative<Marker>(m_redoStack.back())) {
+        group.push_back(m_redoStack.back());
+        m_redoStack.pop_back();
+    }
+    if (!m_redoStack.empty()) {
+        m_redoStack.pop_back(); // pop the Marker
+    }
+
+    if (group.empty()) return;
+
+    // Push undo marker + re-applied changes
+    m_undoStack.push_back(Marker{});
+    for (auto &change : group) {
+        if (auto *tc = std::get_if<TileChange>(&change)) {
+            (*m_mapData)[tc->row][tc->col] = tc->newTileID;
+            m_undoStack.push_back(TileChange{tc->col, tc->row, tc->oldTileID, tc->newTileID});
+        } else if (auto *sc = std::get_if<StartCellChange>(&change)) {
+            startCells[sc->playerID] = sc->newPos;
+            m_undoStack.push_back(StartCellChange{sc->playerID, sc->oldPos, sc->newPos});
+        }
+    }
+
+    m_hasChanged = true;
+}
+
+// --------------------------------------------------------------------------
+
 void cEditorState::populateSelectBar()
 {
     m_selectGroup = std::make_unique<GuiButtonGroup>();
@@ -454,6 +535,12 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             //std::cout << "Toggle axes display" << std::endl;
             m_displayAxes = !m_displayAxes;
         }
+        if (event.isAction(eKeyAction::EDITOR_UNDO)) {
+            applyUndo();
+        }
+        if (event.isAction(eKeyAction::EDITOR_REDO)) {
+            applyRedo();
+        }
     }
 
     if (event.isType(eKeyEventType::HOLD)) {
@@ -508,6 +595,9 @@ void cEditorState::loadMap(s_PreviewMap* map)
     normalizeModifications();
     m_displayGrid = false;
     m_displayAxes = false;
+    m_hasChanged = false;
+    m_undoStack.clear();
+    m_redoStack.clear();
 }
 
 void cEditorState::setCursorSize(int value)
@@ -816,7 +906,6 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
 
     int tileX = (cameraX + posX) / tileLenSize;
     int tileY = (cameraY + posY) / tileLenSize;
-
     if (m_mapData == nullptr || tileX < 1 || tileY < 1 || tileX >= static_cast<int>(m_mapData->getCols()) - 1 || tileY >= static_cast<int>(m_mapData->getRows()) - 1) {
         return;
     }
@@ -826,12 +915,23 @@ void cEditorState::modifyTile(int posX, int posY, int tileID)
     int brushEndTileX = 0;
     int brushEndTileY = 0;
     getBrushTileBounds(tileX, tileY, brushStartTileX, brushStartTileY, brushEndTileX, brushEndTileY);
+
+    bool hasRecordedGroup = false;
     for (int brushTileY = brushStartTileY; brushTileY <= brushEndTileY; brushTileY++) {
         for (int brushTileX = brushStartTileX; brushTileX <= brushEndTileX; brushTileX++) {
-            if ((*m_mapData)[brushTileY][brushTileX] != tileID) {
-                (*m_mapData)[brushTileY][brushTileX] = tileID;
-                m_hasChanged = true;
+            int oldTileID = (*m_mapData)[brushTileY][brushTileX];
+            if (oldTileID == tileID) {
+                continue;
             }
+
+            if (!hasRecordedGroup) {
+                beginRecordGroup();
+                hasRecordedGroup = true;
+            }
+
+            recordTileChange(brushTileX, brushTileY, oldTileID, tileID);
+            (*m_mapData)[brushTileY][brushTileX] = tileID;
+            m_hasChanged = true;
         }
     }
 }
@@ -844,7 +944,12 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     int tileX = (cameraX + posX) / tileLenSize;
     int tileY = (cameraY + posY) / tileLenSize;
     if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
-        startCells[startCellID]={tileX, tileY};
+        cPoint oldPos = startCells[startCellID];
+        cPoint newPos = {tileX, tileY};
+        if (oldPos.x == newPos.x && oldPos.y == newPos.y) return;
+        beginRecordGroup();
+        recordStartCellChange(startCellID, oldPos, newPos);
+        startCells[startCellID] = newPos;
         m_hasChanged = true;
     }
 }
@@ -852,32 +957,57 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
 void cEditorState::modifySymmetricArea(Direction dir)
 {
     // std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
+    beginRecordGroup();
     switch (dir) {
         case Direction::bottom:
             for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
                 for (size_t i = 1; i < m_mapData->getCols(); i++) {
-                    (*m_mapData)[(m_mapData->getRows()-1)-j][i] = (*m_mapData)[j][i];
+                    size_t mirrorJ = (m_mapData->getRows()-1)-j;
+                    int oldVal = (*m_mapData)[mirrorJ][i];
+                    int newVal = (*m_mapData)[j][i];
+                    if (oldVal != newVal) {
+                        recordTileChange(i, mirrorJ, oldVal, newVal);
+                        (*m_mapData)[mirrorJ][i] = newVal;
+                    }
                 }
             }
             break;
         case Direction::top:
             for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
                 for (size_t i = 1; i < m_mapData->getCols(); i++) {
-                    (*m_mapData)[j][i] = (*m_mapData)[(m_mapData->getRows()-1)-j][i];
+                    size_t mirrorJ = (m_mapData->getRows()-1)-j;
+                    int oldVal = (*m_mapData)[j][i];
+                    int newVal = (*m_mapData)[mirrorJ][i];
+                    if (oldVal != newVal) {
+                        recordTileChange(i, j, oldVal, newVal);
+                        (*m_mapData)[j][i] = newVal;
+                    }
                 }
             }
             break;
         case Direction::right:
             for (size_t j = 1; j < m_mapData->getRows(); j++) {
                 for (size_t i = 1; i < (m_mapData->getCols())/2; i++) {
-                    (*m_mapData)[j][(m_mapData->getCols()-1)-i] = (*m_mapData)[j][i];
+                    size_t mirrorI = (m_mapData->getCols()-1)-i;
+                    int oldVal = (*m_mapData)[j][mirrorI];
+                    int newVal = (*m_mapData)[j][i];
+                    if (oldVal != newVal) {
+                        recordTileChange(mirrorI, j, oldVal, newVal);
+                        (*m_mapData)[j][mirrorI] = newVal;
+                    }
                 }
             }
             break;
         case Direction::left:
             for (size_t j = 1; j < m_mapData->getRows(); j++) {
                 for (size_t i = 1; i < (m_mapData->getCols())/2; i++) {
-                    (*m_mapData)[j][i] = (*m_mapData)[j][(m_mapData->getCols()-1)-i];
+                    size_t mirrorI = (m_mapData->getCols()-1)-i;
+                    int oldVal = (*m_mapData)[j][i];
+                    int newVal = (*m_mapData)[j][mirrorI];
+                    if (oldVal != newVal) {
+                        recordTileChange(i, j, oldVal, newVal);
+                        (*m_mapData)[j][i] = newVal;
+                    }
                 }
             }
             break;

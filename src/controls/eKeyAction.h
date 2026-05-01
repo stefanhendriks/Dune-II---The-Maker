@@ -55,6 +55,8 @@ enum class eKeyAction {
     EDITOR_ZOOM_OUT,
     EDITOR_DISPLAY_GRID,
     EDITOR_DISPLAY_AXES,
+    EDITOR_UNDO,
+    EDITOR_REDO,
     // UI / menus
     MENU_BACK,
     MENU_CONFIRM,
