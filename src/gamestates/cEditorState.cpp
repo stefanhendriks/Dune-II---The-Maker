@@ -410,11 +410,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_hasChanged = false;
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
-            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
+            m_editorCam->zoomAtMapPosition(mapSizeArea.getWidth()/2, mapSizeArea.getHeight()/2, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_OUT)) {
-            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, cEditorCam::ZoomDirection::zoomOut, *m_mapData);
+            m_editorCam->zoomAtMapPosition(mapSizeArea.getWidth()/2, mapSizeArea.getHeight()/2, cEditorCam::ZoomDirection::zoomOut, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         // to test : updateVisibleTiles();
@@ -462,11 +462,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_UP)) {
-            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
+            m_editorCam->zoomAtMapPosition(mapSizeArea.getWidth()/2, mapSizeArea.getHeight()/2, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_DOWN)) {
-            m_editorCam->zoomAtMapPosition(m_settings->getScreenW()/2, m_settings->getScreenH()/2, cEditorCam::ZoomDirection::zoomOut, *m_mapData);
+            m_editorCam->zoomAtMapPosition(mapSizeArea.getWidth()/2, mapSizeArea.getHeight()/2, cEditorCam::ZoomDirection::zoomOut, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         //to test : updateVisibleTiles();
