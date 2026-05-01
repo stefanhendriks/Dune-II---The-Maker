@@ -55,6 +55,7 @@ private:
     void modifySymmetricArea(Direction dir);
 
     void drawMap() const;
+    void drawHoveredCellHighlight() const;
     void drawStartCells() const;
     void drawGrid() const;
     void drawAxes() const;

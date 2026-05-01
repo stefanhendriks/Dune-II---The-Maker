@@ -9,6 +9,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 #include "map/cPreviewMaps.h"
 #include "data/gfxeditor.h"
 
@@ -25,6 +26,8 @@ const int maxTileSize = 64;
 const int deltaTileSize = 4;
 const Color editorGridColor = Color{128, 128, 128, 180};
 const Color editorCenterLineColor = Color{32, 176, 32, 220};
+const Color editorHoveredCellFillColor = Color{255, 230, 64, 96};
+const Color editorHoveredCellBorderColor = Color{255, 230, 64, 220};
 
 
 cEditorState::cEditorState(sGameServices* services) 
@@ -313,6 +316,7 @@ void cEditorState::thinkFast()
 void cEditorState::draw() const
 {
     drawMap();
+    drawHoveredCellHighlight();
     if (m_displayGrid)
         drawGrid();
     if (m_displayAxes)
@@ -569,6 +573,40 @@ void cEditorState::drawMap() const
             }
         }
     }
+}
+
+void cEditorState::drawHoveredCellHighlight() const
+{
+    if (m_mapData == nullptr) {
+        return;
+    }
+
+    cMouse *mouse = m_interface->getMouse();
+    if (mouse == nullptr) {
+        return;
+    }
+
+    const cPoint mouseCoords = mouse->getMouseCoords();
+    if (!mouseCoords.isWithinRectangle(&mapSizeArea)) {
+        return;
+    }
+
+    const int mouseMapX = mouseCoords.x;
+    const int mouseMapY = mouseCoords.y - mapSizeArea.getY();
+
+    const int tileX = (cameraX + mouseMapX) / tileLenSize;
+    const int tileY = (cameraY + mouseMapY) / tileLenSize;
+
+    if (tileX < 0 || tileY < 0 || tileX >= static_cast<int>(m_mapData->getCols()) || tileY >= static_cast<int>(m_mapData->getRows())) {
+        return;
+    }
+
+    const int cellScreenX = tileX * tileLenSize - cameraX;
+    const int cellScreenY = heightBarSize + tileY * tileLenSize - cameraY;
+
+    cRectangle cellRect(cellScreenX, cellScreenY, tileLenSize, tileLenSize);
+    m_renderDrawer->renderRectFillColor(cellRect, editorHoveredCellFillColor, editorHoveredCellFillColor.a);
+    m_renderDrawer->renderRectColor(cellRect, editorHoveredCellBorderColor, editorHoveredCellBorderColor.a);
 }
 
 void cEditorState::drawGrid() const
