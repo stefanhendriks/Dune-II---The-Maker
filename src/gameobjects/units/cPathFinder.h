@@ -18,6 +18,12 @@ public:
     int returnCloseGoal(int iCll, int iMyCell, int iID);
     void resize(int newSize);
 private:
+    int validateCreatePathInput(int iUnitId);
+    void initializeCreatePathSearch(int iPathCountUnits);
+    void executeCreatePathSearch();
+    int finalizeCreatePathResult();
+    int buildPathAndApplyToUnit();
+
     cUnit *m_activeUnit = nullptr;
     int m_currentCell = -1;
     int m_goalCell = -1;
