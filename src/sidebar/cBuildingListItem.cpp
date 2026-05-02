@@ -5,7 +5,6 @@
 #include "include/d2tmc.h"
 #include "sidebar/cBuildingList.h"
 #include "context/cInfoContext.h"
-#include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
 #include <format>
 #include <cassert>
@@ -112,6 +111,10 @@ cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, cBuildingList 
 }
 
 cBuildingListItem::cBuildingListItem(int theID, s_UnitInfo entry, int subList) : cBuildingListItem(theID, entry, nullptr, subList)
+{
+}
+
+cBuildingListItem::cBuildingListItem(int theID, s_UpgradeInfo entry) : cBuildingListItem(theID, entry, entry.providesTypeSubList)
 {
 }
 

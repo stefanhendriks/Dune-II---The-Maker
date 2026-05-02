@@ -29,7 +29,7 @@ public:
     cBuildingListItem(int theID, s_StructureInfo entry, int subList);
     cBuildingListItem(int theID, s_SpecialInfo entry, int subList);
     cBuildingListItem(int theID, s_UnitInfo entry, int subList);
-    cBuildingListItem(int theID, s_UpgradeInfo entry, int subList);
+    cBuildingListItem(int theID, s_UpgradeInfo entry);
 
     static const int DefaultTimerCap = 35;
     static const int DebugTimerCap = 2;
@@ -256,6 +256,8 @@ public:
     void decreaseFlashingTimer();
 
 private:
+    cBuildingListItem(int theID, s_UpgradeInfo entry, int subList);
+
     void setProgress(int value) {
         m_progress = value;
     }

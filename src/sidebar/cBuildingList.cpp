@@ -79,8 +79,12 @@ cBuildingListItem *cBuildingList::getItemByBuildId(int buildId)
 
 void cBuildingList::addUpgradeToList(int upgradeType)
 {
-    cBuildingListItem *item = new cBuildingListItem(upgradeType, game.m_infoContext->getUpgradeInfo(upgradeType),
-            game.m_infoContext->getUpgradeInfo(upgradeType).providesTypeSubList);
+    auto upgradeInfo = game.m_infoContext->getUpgradeInfo(upgradeType);
+    cBuildingListItem *item = new cBuildingListItem(
+        upgradeType,
+        upgradeInfo
+    );
+
     if (!addItemToList(item)) {
         delete item;
     }
