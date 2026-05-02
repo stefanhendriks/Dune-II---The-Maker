@@ -52,16 +52,15 @@ cMap::cMap()
     m_reinforcements = nullptr;
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
+    m_pathFinder = std::make_unique<cPathFinder>();
     m_mapGeometry = std::make_unique<MapGeometry>(64,64);
     init(64, 64);
     m_terrainInfo = nullptr;
-
     m_settings = nullptr;
     m_infos = nullptr;
     m_objects = nullptr;
     m_interface = nullptr;
     m_log = nullptr;
-    m_pathFinder = std::make_unique<cPathFinder>();
 }
 
 cMap::~cMap() = default;
@@ -140,6 +139,7 @@ void cMap::init(int width, int height)
     m_width = width;
     m_height = height;
     m_mapGeometry->resize(m_width, m_height);
+    m_pathFinder->resize(m_maxCells);
 }
 
 void cMap::smudge_increase(SmudgeType iType, int iCell)

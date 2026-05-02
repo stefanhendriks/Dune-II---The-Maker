@@ -12,9 +12,12 @@ struct ASTAR {
 
 class cPathFinder {
 public:
+    cPathFinder() = default;
+    ~cPathFinder() = default;
     int createPath(int iUnitId, int iPathCountUnits);
     int returnCloseGoal(int iCll, int iMyCell, int iID);
+    void resize(int newSize);
 private:
-    ASTAR temp_map[16384];
+    std::vector<ASTAR> temp_map;
     // static void verifyPathContiguity(const cUnit* pUnit, int firstCell);
 };

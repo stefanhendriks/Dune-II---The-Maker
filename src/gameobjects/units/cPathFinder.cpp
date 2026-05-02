@@ -23,6 +23,11 @@ static const int MAX_PATH_LOCAL_SIZE = 4096;
 #define CLOSED        -1
 #define OPEN          0
 
+void cPathFinder::resize(int newSize)
+{
+    temp_map.resize(newSize);
+}
+
 /*
   Pathfinder
 
