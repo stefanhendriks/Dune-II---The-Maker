@@ -204,19 +204,19 @@ void cEditorState::populateTopologyBar()
     m_topologyBar->addAutoGuiObject(std::move(guiButton));
 
     auto cursorSizeButton = GuiValueButtonBuilder()
-        .withRect(cRectangle(0, 0, heightButtonSize, heightButtonSize))
-        .withRenderer(m_renderDrawer)
-        .withTextDrawer(m_textDrawer)
-        .withTheme(cGuiThemeBuilder().light().build())
-        .withLabel("size")
+            .withRect(cRectangle(0, 0, heightButtonSize, heightButtonSize))
+            .withRenderer(m_renderDrawer)
+            .withTextDrawer(m_textDrawer)
+            .withTheme(cGuiThemeBuilder().light().build())
+            .withLabel("size")
             .withInitialValue(m_topologyCursorSize)
-        .withStepValue(2)
-        .withMinValue(1)
-        .withMaxValue(maxPenSize)
-        .onChanged([this](int value) {
-        setCursorSize(value);
-        })
-        .build();
+            .withStepValue(2)
+            .withMinValue(1)
+            .withMaxValue(maxPenSize)
+            .onChanged([this](int value) {
+            setCursorSize(value);
+            })
+            .build();
     m_topologyBar->addAutoGuiObject(std::move(cursorSizeButton));
 }
 
