@@ -77,8 +77,16 @@ void GuiStateButton::setPressed(bool value)
     }
 }
 
-void GuiStateButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
+void GuiStateButton::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
+    if (!event.isType(eKeyEventType::PRESSED) || !m_group.has_value()) {
+        return;
+    }
+
+    const int groupNumber = event.getGroupNumber();
+    if (groupNumber > 0) {
+        m_group.value()->updateState(groupNumber - 1);
+    }
 }
 
 void GuiStateButton::setOnLeftMouseButtonClickedAction(std::function<void()> action)
