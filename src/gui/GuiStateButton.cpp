@@ -70,8 +70,11 @@ void GuiStateButton::onNotifyMouseEvent(const s_MouseEvent &event)
 void GuiStateButton::setPressed(bool value)
 {
     if (value) {
-        changeState(GuiState::CLICKED);
-        m_onLeftMouseButtonClickedAction();
+        // Only execute the click action if the state actually changes from UNCLICKED to CLICKED
+        if (m_state != GuiState::CLICKED) {
+            changeState(GuiState::CLICKED);
+            m_onLeftMouseButtonClickedAction();
+        }
     } else {
         changeState(GuiState::UNCLICKED);
     }

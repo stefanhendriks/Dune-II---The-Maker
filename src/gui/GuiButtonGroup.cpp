@@ -3,13 +3,16 @@
 
 void GuiButtonGroup::updateStates(GuiStateButton* clickedButton)
 {
-    for (GuiStateButton* btn : members) {
-        if (btn == clickedButton) {
-            btn->setPressed(true);
-        } else {
-            btn->setPressed(false);
-        }
+    if (clickedButton == nullptr || m_currentlySelected == clickedButton) {
+        return;
     }
+
+    if (m_currentlySelected != nullptr) {
+        m_currentlySelected->setPressed(false);
+    }
+
+    m_currentlySelected = clickedButton;
+    m_currentlySelected->setPressed(true);
 }
 
 void GuiButtonGroup::updateState(int index)
@@ -19,4 +22,9 @@ void GuiButtonGroup::updateState(int index)
     }
 
     updateStates(members[index]);
+}
+
+void GuiButtonGroup::add(GuiStateButton* button)
+{
+    members.push_back(button);
 }
