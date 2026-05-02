@@ -18,6 +18,6 @@ public:
     int returnCloseGoal(int iCll, int iMyCell, int iID);
     void resize(int newSize);
 private:
-    std::vector<ASTAR> temp_map;
+    std::vector<ASTAR> m_pathMap;
     // static void verifyPathContiguity(const cUnit* pUnit, int firstCell);
 };

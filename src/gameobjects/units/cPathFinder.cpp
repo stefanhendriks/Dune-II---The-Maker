@@ -25,7 +25,7 @@ static const int MAX_PATH_LOCAL_SIZE = 4096;
 
 void cPathFinder::resize(int newSize)
 {
-    temp_map.resize(newSize);
+    m_pathMap.resize(newSize);
 }
 
 /*
@@ -107,7 +107,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
     //game.m_pathsCreated++;
     game.m_gameSettings->setPathsCreated(game.m_gameSettings->getPathsCreated()+1);
-    for (auto& cell : temp_map) {
+    for (auto& cell : m_pathMap) {
         cell.cost = -1;
         cell.parent = -1;
         cell.state = UNVISITED;
@@ -120,9 +120,9 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
 
     // set very first... our start cell
-    temp_map[iCell].cost = ABS_length(cx, cy, game.m_gameObjectsContext->getMapGeometry()->getCellX(goal_cell), game.m_gameObjectsContext->getMapGeometry()->getCellY(goal_cell));
-    temp_map[iCell].parent = -1;
-    temp_map[iCell].state = OPEN; // this one is opened by default
+    m_pathMap[iCell].cost = ABS_length(cx, cy, game.m_gameObjectsContext->getMapGeometry()->getCellX(goal_cell), game.m_gameObjectsContext->getMapGeometry()->getCellY(goal_cell));
+    m_pathMap[iCell].parent = -1;
+    m_pathMap[iCell].state = OPEN; // this one is opened by default
 
     bool valid = true;
     bool success = false;
@@ -303,7 +303,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     break;
                 }
 
-                bool isUnvisited = temp_map[cll].state == UNVISITED;
+                bool isUnvisited = m_pathMap[cll].state == UNVISITED;
 
                 // when the cell (the attached one) is NOT the cell we are on and
                 // the cell is UNVISITED (not yet explored)
@@ -314,7 +314,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
                     // calculate the cost
                     // treat unvisited cells (cost == -1) as 0 to avoid corrupting newCost
-                    int tempCost = (temp_map[cll].cost >= 0) ? temp_map[cll].cost : 0;
+                    int tempCost = (m_pathMap[cll].cost >= 0) ? m_pathMap[cll].cost : 0;
                     double distanceCost = game.m_gameObjectsContext->getMapGeometry()->distance(cx, cy, gcx, gcy);
                     double newCost = distanceCost + tempCost;
 //                        pUnit->log(std::format(
@@ -352,9 +352,9 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         if (the_cll > -1) {
             //pUnit->log(std::format("Found cell as best candidate: {}, parent is {}", the_cll, iCell));
             // Open this one, so we do not check it again
-            temp_map[the_cll].state = OPEN;
-            temp_map[the_cll].parent = iCell;
-            temp_map[the_cll].cost = cost;
+            m_pathMap[the_cll].state = OPEN;
+            m_pathMap[the_cll].parent = iCell;
+            m_pathMap[the_cll].cost = cost;
 
             // int halfTile = 16;
             // int iPrevX = game.m_mapCamera->getWindowXPositionFromCellWithOffset(iCell, halfTile);
@@ -377,8 +377,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         }
         else {
             // No unvisited neighbor found: mark current cell as a dead end and backtrack to parent
-            temp_map[iCell].state = CLOSED;
-            int prevCell = temp_map[iCell].parent;
+            m_pathMap[iCell].state = CLOSED;
+            int prevCell = m_pathMap[iCell].parent;
 
             if (prevCell > -1) {
                 //pUnit->log(std::format("Dead end at cell {}, backtracking to parent {}", iCell, prevCell));
@@ -435,7 +435,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             //     break;
             // }
             // deja_vus.insert(sc);
-            int tmp = temp_map[sc].parent;
+            int tmp = m_pathMap[sc].parent;
             //pUnit->log(std::format("sc = {} - temp_path[sc].parent = {}", sc, tmp));
             if (tmp > -1) {
                 // found terminator (PARENT=CURRENT)
@@ -446,7 +446,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 }
                 else {
                     temp_path[pi] = tmp;
-                    sc = temp_map[sc].parent;
+                    sc = m_pathMap[sc].parent;
                     pi++;
 
                     if (pi >= MAX_PATH_LOCAL_SIZE) {
