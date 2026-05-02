@@ -145,6 +145,11 @@ constexpr int MAX_UNIT_GROUPS = 5;
 // Barracks (Atreides & Ordos)
 #define UPGRADE_TYPE_BARRACKS_INFANTRY            9 // upgrade BARRACKS to get Infantry
 
+// Heavy Factory: Sardaukar only
+#define UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK     10 // upgrade for Sardaukar to get Sonic Tank
+#define UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR      11 // upgrade for Sardaukar to get Deviator
+#define UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR    12 // upgrade for Sardaukar to get Devastator
+
 #define MUSIC_WIN           0
 #define MUSIC_LOSE          1
 #define MUSIC_ATTACK        2

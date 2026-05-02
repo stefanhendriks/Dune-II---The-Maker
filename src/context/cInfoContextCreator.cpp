@@ -1264,6 +1264,57 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
         upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
     strcpy(upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
+
+    // HEAVY FACTORY: Sardaukar - Allow building Sonic Tank
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].enabled = true;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].house = Sardaukar;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].techLevel = 3;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].icon = ICON_UNIT_SONICTANK;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].cost = game.m_infoContext->getUnitInfo(SONICTANK).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].structureType = IX;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].atUpgradeLevel = 0; // After upgrade to Rocket Launcher
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesType = UNIT;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesTypeId = SONICTANK;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesTypeList = eListType::LIST_UNITS;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    if (!game.m_gameSettings->isCheatMode()) {
+        upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].buildTime = 150;
+    }
+    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].description, "Build SonicTank at Heavy Factory");
+
+    // HEAVY FACTORY: Sardaukar - Allow building Deviator
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].enabled = true;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].house = Sardaukar;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].techLevel = 3;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].icon = ICON_UNIT_DEVIATOR;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].cost = game.m_infoContext->getUnitInfo(DEVIATOR).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].structureType = IX;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].atUpgradeLevel = 0; // After upgrade to Rocket Launcher
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesType = UNIT;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesTypeId = DEVIATOR;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesTypeList = eListType::LIST_UNITS;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    if (!game.m_gameSettings->isCheatMode()) {
+        upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].buildTime = 150;
+    }
+    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].description, "Build Deviator at Heavy Factory");
+
+    // HEAVY FACTORY: Sardaukar - Allow building Devastator
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].enabled = true;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].house = Sardaukar;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].techLevel = 3;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].icon = ICON_UNIT_DEVASTATOR;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].cost = game.m_infoContext->getUnitInfo(DEVASTATOR).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].structureType = IX;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].atUpgradeLevel = 0; // After upgrade to Rocket Launcher
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesType = UNIT;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesTypeId = DEVASTATOR;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesTypeList = eListType::LIST_UNITS;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesTypeSubList = SUBLIST_HEAVYFCTRY;
+    if (!game.m_gameSettings->isCheatMode()) {
+        upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].buildTime = 150;
+    }
+    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].description, "Build Devastator at Heavy Factory");
 }
 
 /*****************************
