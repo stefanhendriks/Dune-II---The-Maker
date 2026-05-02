@@ -12,7 +12,7 @@ class cUnit;
 
 class cPathFinder {
 public:
-    cPathFinder() = default;
+    cPathFinder();
     ~cPathFinder() = default;
     int createPath(int iUnitId, int iPathCountUnits);
     int returnCloseGoal(int iCll, int iMyCell, int iID);
@@ -33,5 +33,6 @@ private:
     bool m_success = false;
 
     std::vector<ASTAR> m_pathMap;
+    std::vector<int> m_tempPath;
     // static void verifyPathContiguity(const cUnit* pUnit, int firstCell);
 };

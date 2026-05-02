@@ -13,6 +13,7 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
 
+#include <algorithm>
 //#include <set>
 //#include <iostream> 
 
@@ -23,9 +24,15 @@ static const int MAX_PATH_LOCAL_SIZE = 4096;
 #define CLOSED        -1
 #define OPEN          0
 
+cPathFinder::cPathFinder()
+{
+    m_tempPath.resize(MAX_PATH_LOCAL_SIZE);
+}
+
 void cPathFinder::resize(int newSize)
 {
     m_pathMap.resize(newSize);
+    std::fill(m_tempPath.begin(), m_tempPath.end(), -1);
 }
 
 int cPathFinder::validateCreatePathInput(int iUnitId)
@@ -352,17 +359,16 @@ int cPathFinder::buildPathAndApplyToUnit()
 {
     m_activeUnit->log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
     // read path!
-    int temp_path[MAX_PATH_LOCAL_SIZE];
-    memset(temp_path, -1, sizeof(temp_path));
+    std::fill(m_tempPath.begin(), m_tempPath.end(), -1);
 
     bool cp = true;
 
     int sc = m_currentCell;
     int pi = 0;
-    temp_path[pi] = sc;
+    m_tempPath[pi] = sc;
     pi++;
 
-    m_activeUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, temp_path[pi - 1]));
+    m_activeUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, m_tempPath[pi - 1]));
 
     // while we should create a path
     while (cp) {
@@ -375,18 +381,18 @@ int cPathFinder::buildPathAndApplyToUnit()
                 continue;
             }
             else {
-                temp_path[pi] = tmp;
+                m_tempPath[pi] = tmp;
                 sc = m_pathMap[sc].parent;
                 pi++;
 
-                if (pi >= MAX_PATH_LOCAL_SIZE) {
-                    std::string msg = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", MAX_PATH_LOCAL_SIZE);
+                if (pi >= static_cast<int>(m_tempPath.size())) {
+                    std::string msg = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", m_tempPath.size());
                     m_activeUnit->log(msg);
                     cp = false;
                     continue;
                 }
 
-                m_activeUnit->log(std::format("Backtraced. Path index = {}, temp_path[last] = {}", pi, temp_path[pi - 1]));
+                m_activeUnit->log(std::format("Backtraced. Path index = {}, temp_path[last] = {}", pi, m_tempPath[pi - 1]));
             }
         }
         else {
@@ -406,15 +412,15 @@ int cPathFinder::buildPathAndApplyToUnit()
     int iPrevCell = -1;
 
     while (z > -1) {
-        if (temp_path[z] > -1) {
+        if (m_tempPath[z] > -1) {
             // check if any other cell of temp_path also borders to the previous given cell, as that will save us time
             if (iPrevCell > -1) {
                 int iGoodZ = -1;
 
                 for (int sz = z; sz > 0; sz--) {
-                    if (temp_path[sz] > -1) {
+                    if (m_tempPath[sz] > -1) {
 
-                        if (game.m_gameObjectsContext->getMapGeometry()->isCellAdjacentToOtherCell(iPrevCell, temp_path[sz])) {
+                        if (game.m_gameObjectsContext->getMapGeometry()->isCellAdjacentToOtherCell(iPrevCell, m_tempPath[sz])) {
                             iGoodZ = sz;
                         }
                     }
@@ -432,8 +438,8 @@ int cPathFinder::buildPathAndApplyToUnit()
                 m_activeUnit->log(std::format("WARNING: path truncated - exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
                 break;
             }
-            m_activeUnit->movement.iPath[a] = temp_path[z];
-            iPrevCell = temp_path[z];
+            m_activeUnit->movement.iPath[a] = m_tempPath[z];
+            iPrevCell = m_tempPath[z];
             a++;
         }
         z--;
