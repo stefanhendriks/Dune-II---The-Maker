@@ -214,7 +214,7 @@ void cEditorState::populateTopologyBar()
             .withMinValue(1)
             .withMaxValue(maxPenSize)
             .onChanged([this](int value) {
-            setCursorSize(value);
+                setCursorSize(value);
             })
             .build();
     m_topologyBar->addAutoGuiObject(std::move(cursorSizeButton));
