@@ -54,56 +54,58 @@ void cPathFinder::resize(int newSize)
 int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 {
     logbook("CREATE_PATH -- START");
+    m_pathCountUnits = iPathCountUnits;
+
     if (iUnitId < 0) {
         logbook("CREATE_PATH -- END 1");
         return -99; // Wut!?
     }
 
-    cUnit *pUnit = game.m_gameObjectsContext->getUnit(iUnitId);
-    if (!pUnit->isValid() || pUnit->isDead()) {
+    m_activeUnit = game.m_gameObjectsContext->getUnit(iUnitId);
+    if (!m_activeUnit->isValid() || m_activeUnit->isDead()) {
         return -99; // for now...
     }
 
     // do not start calculating anything before we are on 0,0 x,y wise on a cell
-    if (pUnit->isMovingBetweenCells()) {
-        pUnit->log("CREATE_PATH -- END 2");
+    if (m_activeUnit->isMovingBetweenCells()) {
+        m_activeUnit->log("CREATE_PATH -- END 2");
         return -4; // no calculation before we are straight on a cell
     }
 
     // Too many paths where created , so we wait a little.
     // make sure not to create too many paths at once
     if (game.m_gameSettings->getPathsCreated() > 40) {
-        pUnit->log("CREATE_PATH -- END 3");
-        pUnit->movewaitTimer.reset(50 + RNG::rnd(50));
+        m_activeUnit->log("CREATE_PATH -- END 3");
+        m_activeUnit->movewaitTimer.reset(50 + RNG::rnd(50));
         return -3;
     }
 
-    int iCell = pUnit->getCell(); // current cell
-    // int startCell = iCell;  //for verifyPathContiguity()
+    m_currentCell = m_activeUnit->getCell(); // current cell
+    // int startCell = m_currentCell;  //for verifyPathContiguity()
 
     // When the goal == cell, then skip.
-    if (iCell == pUnit->movement.iGoalCell) {
-        pUnit->log("CREATE_PATH -- END 4");
-        pUnit->log("ODD: The goal = cell?");
+    if (m_currentCell == m_activeUnit->movement.iGoalCell) {
+        m_activeUnit->log("CREATE_PATH -- END 4");
+        m_activeUnit->log("ODD: The goal = cell?");
         return -1;
     }
 
     // when all around the unit there is no space, dont even bother
-    if (pUnit->isUnableToMove()) {
-        pUnit->log("CREATE_PATH -- END 5");
-        pUnit->movewaitTimer.reset(30 + RNG::rnd(50));
+    if (m_activeUnit->isUnableToMove()) {
+        m_activeUnit->log("CREATE_PATH -- END 5");
+        m_activeUnit->movewaitTimer.reset(30 + RNG::rnd(50));
         return -2;
     }
 
     // Now start create path
     // Clear unit path settings (index & path string)
-    memset(pUnit->movement.iPath, -1, sizeof(pUnit->movement.iPath));
-    pUnit->movement.iPathIndex = -1;
+    memset(m_activeUnit->movement.iPath, -1, sizeof(m_activeUnit->movement.iPath));
+    m_activeUnit->movement.iPathIndex = -1;
 
     // Search around a cell:
     int cx, cy, the_cll, ex, ey;
-    int goal_cell = pUnit->movement.iGoalCell;
-    int controller = pUnit->iPlayer;
+    m_goalCell = m_activeUnit->movement.iGoalCell;
+    m_controller = m_activeUnit->iPlayer;
 
     //game.m_pathsCreated++;
     game.m_gameSettings->setPathsCreated(game.m_gameSettings->getPathsCreated()+1);
@@ -116,51 +118,51 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     the_cll = -1;
     ex = -1;
     ey = -1;
-    cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
-    cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
+    cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(m_currentCell);
+    cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(m_currentCell);
 
     // set very first... our start cell
-    m_pathMap[iCell].cost = ABS_length(cx, cy, game.m_gameObjectsContext->getMapGeometry()->getCellX(goal_cell), game.m_gameObjectsContext->getMapGeometry()->getCellY(goal_cell));
-    m_pathMap[iCell].parent = -1;
-    m_pathMap[iCell].state = OPEN; // this one is opened by default
+    m_pathMap[m_currentCell].cost = ABS_length(cx, cy, game.m_gameObjectsContext->getMapGeometry()->getCellX(m_goalCell), game.m_gameObjectsContext->getMapGeometry()->getCellY(m_goalCell));
+    m_pathMap[m_currentCell].parent = -1;
+    m_pathMap[m_currentCell].state = OPEN; // this one is opened by default
 
-    bool valid = true;
-    bool success = false;
+    m_valid = true;
+    m_success = false;
 
     int sx, sy;
     double cost = -1;
 
     // WHILE VALID TO RUN THIS LOOP
-    while (valid) {
+    while (m_valid) {
         // iCell reached Goal Cell. We should have bailed out sooner.
-        if (iCell == goal_cell) {
-            pUnit->log(std::format("WARNING: iCell == goal_cell ({}) at loop start - should have been caught earlier", iCell));
-            valid = false;
-            success = true;
+        if (m_currentCell == m_goalCell) {
+            m_activeUnit->log(std::format("WARNING: iCell == goal_cell ({}) at loop start - should have been caught earlier", m_currentCell));
+            m_valid = false;
+            m_success = true;
             break;
         }
 
-        int idOfStructureAtCell = game.m_gameObjectsContext->getMap().cellGetIdFromLayer(iCell, MAPID_STRUCTURES);
-        if (pUnit->iStructureID > -1) {
-            if (idOfStructureAtCell == pUnit->iStructureID) {
-                valid = false;
-                success = true;
-                pUnit->log("Found structure ID");
+        int idOfStructureAtCell = game.m_gameObjectsContext->getMap().cellGetIdFromLayer(m_currentCell, MAPID_STRUCTURES);
+        if (m_activeUnit->iStructureID > -1) {
+            if (idOfStructureAtCell == m_activeUnit->iStructureID) {
+                m_valid = false;
+                m_success = true;
+                m_activeUnit->log("Found structure ID");
                 break;
             }
         }
 
-        if (pUnit->combat.iAttackStructure > -1) {
-            if (idOfStructureAtCell == pUnit->combat.iAttackStructure) {
-                valid = false;
-                success = true;
-                pUnit->log("Found attack structure ID");
+        if (m_activeUnit->combat.iAttackStructure > -1) {
+            if (idOfStructureAtCell == m_activeUnit->combat.iAttackStructure) {
+                m_valid = false;
+                m_success = true;
+                m_activeUnit->log("Found attack structure ID");
                 break;
             }
         }
 
-        cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
-        cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
+        cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(m_currentCell);
+        cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(m_currentCell);
 
         // starting position is cx-1 and cy-1
         sx = cx - 1;
@@ -197,7 +199,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     continue;
 
                 // DO NOT CHECK SELF
-                if (cll == iCell)
+                if (cll == m_currentCell)
                     continue;
 
 //                if (cll == startCell) {
@@ -209,7 +211,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
                 // not a sandworm
                 int cellType = game.m_gameObjectsContext->getMap().getCellType(cll);
-                if (!pUnit->isSandworm()) {
+                if (!m_activeUnit->isSandworm()) {
                     // Step by step determine if its good
                     // 2 fases:
                     // 1 -> Occupation by unit/structures
@@ -226,12 +228,12 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     if (idOfStructureAtCell > -1) {
                         // when the cell is a structure, and it is the structure we want to attack, it is good
 
-                        if (pUnit->combat.iAttackStructure > -1)
-                            if (idOfStructureAtCell == pUnit->combat.iAttackStructure)
+                        if (m_activeUnit->combat.iAttackStructure > -1)
+                            if (idOfStructureAtCell == m_activeUnit->combat.iAttackStructure)
                                 good = true;
 
-                        if (pUnit->iStructureID > -1)
-                            if (idOfStructureAtCell == pUnit->iStructureID)
+                        if (m_activeUnit->iStructureID > -1)
+                            if (idOfStructureAtCell == m_activeUnit->iStructureID)
                                 good = true;
 
                     }
@@ -243,18 +245,18 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                             int iUID = idOfUnitAtCell;
 
                             // if (iPathCountUnits != 0) {
-                                if (iPathCountUnits <= 0) {
+                                if (m_pathCountUnits <= 0) {
                                     // other units block our path
                                     good = false;
-                                    pUnit->log("iPathCountUnits <= 0 - variable 'good' becomes 'false'");
+                                    m_activeUnit->log("iPathCountUnits <= 0 - variable 'good' becomes 'false'");
                                 }
                             // }
 
                             cUnit *unitAtCell = game.m_gameObjectsContext->getUnit(iUID);
-                            if (!unitAtCell->getPlayer()->isSameTeamAs(pUnit->getPlayer())) {
+                            if (!unitAtCell->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer())) {
                                 // allow running over enemy infantry/squishable units
                                 if (unitAtCell->isInfantryUnit() &&
-                                        pUnit->canSquishInfantry()) // and the current unit can squish
+                                        m_activeUnit->canSquishInfantry()) // and the current unit can squish
                                     good = true; // its infantry we want to run over, so don't be bothered!
                             }
                             // it is not good, other unit blocks
@@ -265,7 +267,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                     }
 
                     // is not visible, always good (since we don't know yet if its blocked!)
-                    if (game.m_gameObjectsContext->getMap().isVisible(cll, controller) == false) {
+                    if (game.m_gameObjectsContext->getMap().isVisible(cll, m_controller) == false) {
                         good = true;
                     }
                     else {
@@ -275,7 +277,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                         }
 
                         // When we are infantry, we move through mountains. However, normal units do not
-                        if (!pUnit->isInfantryUnit()) {
+                        if (!m_activeUnit->isInfantryUnit()) {
                             if (cellType == TERRAIN_MOUNTAIN) {
                                 good = false;
                             }
@@ -295,11 +297,11 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 //                                      cll, iCell, temp_map[cll].state, good));
 
                 // it is the goal cell
-                if (cll == goal_cell) {
+                if (cll == m_goalCell) {
                     the_cll = cll;
                     cost = 0;
                     bail_out = true;
-                    pUnit->log("CREATE_PATH: Found the goal cell, success, bailing out");
+                    m_activeUnit->log("CREATE_PATH: Found the goal cell, success, bailing out");
                     break;
                 }
 
@@ -307,10 +309,10 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
                 // when the cell (the attached one) is NOT the cell we are on and
                 // the cell is UNVISITED (not yet explored)
-                if (cll != iCell &&         // not checking on our own
+                if (cll != m_currentCell &&         // not checking on our own
                         isUnvisited) {         // and is unvisited (else it's not valid to check)
-                    int gcx = game.m_gameObjectsContext->getMapGeometry()->getCellX(goal_cell);
-                    int gcy = game.m_gameObjectsContext->getMapGeometry()->getCellY(goal_cell);
+                    int gcx = game.m_gameObjectsContext->getMapGeometry()->getCellX(m_goalCell);
+                    int gcy = game.m_gameObjectsContext->getMapGeometry()->getCellY(m_goalCell);
 
                     // calculate the cost
                     // treat unvisited cells (cost == -1) as 0 to avoid corrupting newCost
@@ -327,7 +329,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                         the_cll = cll;
                         cost = newCost;
                         // found a new cell, now decrease ipathcountunits
-                        iPathCountUnits--;
+                        m_pathCountUnits--;
 //                            pUnit->log(std::format(
 //                                    "CREATE_PATH: Waypoint found : cell {} - goalcell = {}, iPathCountUnits = {}", cll,
 //                                    goal_cell, iPathCountUnits));
@@ -342,7 +344,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
             // bail out
             if (bail_out) {
-                pUnit->log("CREATE_PATH: BAIL");
+                m_activeUnit->log("CREATE_PATH: BAIL");
                 break;
             }
 
@@ -353,7 +355,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             //pUnit->log(std::format("Found cell as best candidate: {}, parent is {}", the_cll, iCell));
             // Open this one, so we do not check it again
             m_pathMap[the_cll].state = OPEN;
-            m_pathMap[the_cll].parent = iCell;
+            m_pathMap[the_cll].parent = m_currentCell;
             m_pathMap[the_cll].cost = cost;
 
             // int halfTile = 16;
@@ -368,42 +370,42 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             // }
 
             // Now set c to the cll
-            iCell = the_cll;
-            if (iCell == goal_cell) {
-                valid = false;
-                success = true;
+            m_currentCell = the_cll;
+            if (m_currentCell == m_goalCell) {
+                m_valid = false;
+                m_success = true;
             }
 
         }
         else {
             // No unvisited neighbor found: mark current cell as a dead end and backtrack to parent
-            m_pathMap[iCell].state = CLOSED;
-            int prevCell = m_pathMap[iCell].parent;
+            m_pathMap[m_currentCell].state = CLOSED;
+            int prevCell = m_pathMap[m_currentCell].parent;
 
             if (prevCell > -1) {
                 //pUnit->log(std::format("Dead end at cell {}, backtracking to parent {}", iCell, prevCell));
-                iCell = prevCell;
+                m_currentCell = prevCell;
             } else {
-                pUnit->log("Failed to find new cell, backtracking failed - no parent!");
-                valid = false;
-                success = false;
-                pUnit->log("FAILED TO CREATE PATH - nothing found to continue");
+                m_activeUnit->log("Failed to find new cell, backtracking failed - no parent!");
+                m_valid = false;
+                m_success = false;
+                m_activeUnit->log("FAILED TO CREATE PATH - nothing found to continue");
                 break;
             }
         }
     } // valid to run loop (and try to create a path)
 
-    pUnit->log("CREATE_PATH -- valid loop finished");
+    m_activeUnit->log("CREATE_PATH -- valid loop finished");
 
-    if (success) {
-        pUnit->log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
+    if (m_success) {
+        m_activeUnit->log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
         // read path!
         int temp_path[MAX_PATH_LOCAL_SIZE];
         memset(temp_path, -1, sizeof(temp_path));
 
         bool cp = true;
 
-        int sc = iCell;
+        int sc = m_currentCell;
         int pi = 0;
         // // vérification : sc doit être dans les bornes de la map
         // if (sc < 0 || sc >= 16384) {
@@ -418,7 +420,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         temp_path[pi] = sc;
         pi++;
 
-        pUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, temp_path[pi-1]));
+        m_activeUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, temp_path[pi-1]));
 
         // while we should create a path
         while (cp) {
@@ -440,7 +442,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
             if (tmp > -1) {
                 // found terminator (PARENT=CURRENT)
                 if (tmp == sc) {
-                    pUnit->log("found terminator, stop!");
+                    m_activeUnit->log("found terminator, stop!");
                     cp = false;
                     continue;
                 }
@@ -451,23 +453,23 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
                     if (pi >= MAX_PATH_LOCAL_SIZE) {
                         std::string msg = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", MAX_PATH_LOCAL_SIZE);
-                        pUnit->log(msg);
+                        m_activeUnit->log(msg);
                         cp = false;
                         continue;
                     }
 
-                    pUnit->log(std::format("Backtraced. Path index = {}, temp_path[last] = {}", pi, temp_path[pi - 1]));
+                    m_activeUnit->log(std::format("Backtraced. Path index = {}, temp_path[last] = {}", pi, temp_path[pi - 1]));
                 }
             }
             else {
                 std::string msg = std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", sc);
-                pUnit->log(msg);
+                m_activeUnit->log(msg);
                 // std::cerr << msg << std::endl;
                 // std::cout << "pi = " << pi << std::endl;
                 cp = false;
             }
 
-            if (sc == pUnit->getCell()) {
+            if (sc == m_activeUnit->getCell()) {
                 // normal end ?
                 // std::string msg = std::format("WARNING: backtrace reached start cell ({}) before completing", sc);
                 // pUnit->log(msg);
@@ -507,10 +509,10 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
                 }
 
                 if (a >= MAX_PATH_SIZE) {
-                    pUnit->log(std::format("WARNING: path truncated - exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
+                    m_activeUnit->log(std::format("WARNING: path truncated - exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
                     break;
                 }
-                pUnit->movement.iPath[a] = temp_path[z];
+                m_activeUnit->movement.iPath[a] = temp_path[z];
                 iPrevCell = temp_path[z];
                 a++;
             }
@@ -519,14 +521,14 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
         // optimize path
         //nextcell=cell;
-        pUnit->movement.iPathIndex = 1;
+        m_activeUnit->movement.iPathIndex = 1;
 
         // take the closest bordering cell as 'far' away to start with
         for (int i = 1; i < MAX_PATH_SIZE; i++) {
-            int pathCell = pUnit->movement.iPath[i];
+            int pathCell = m_activeUnit->movement.iPath[i];
             if (pathCell > -1) {
-                if (game.m_gameObjectsContext->getMapGeometry()->isCellAdjacentToOtherCell(pUnit->getCell(), pathCell)) {
-                    pUnit->movement.iPathIndex = i;
+                if (game.m_gameObjectsContext->getMapGeometry()->isCellAdjacentToOtherCell(m_activeUnit->getCell(), pathCell)) {
+                    m_activeUnit->movement.iPathIndex = i;
                 }
             }
         }
@@ -534,15 +536,15 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
         // debug debug
         if (game.m_gameSettings->isDebugMode()) {
             for (int i = 0; i < MAX_PATH_SIZE; i++) {
-                int pathCell = pUnit->movement.iPath[i];
+                int pathCell = m_activeUnit->movement.iPath[i];
                 if (pathCell > -1) {
-                    pUnit->log(std::format("WAYPOINT {} = {} ", i, pathCell));
+                    m_activeUnit->log(std::format("WAYPOINT {} = {} ", i, pathCell));
                 }
             }
         }
 
-        pUnit->updateCellXAndY();
-        pUnit->movement.bCalculateNewPath = false;
+        m_activeUnit->updateCellXAndY();
+        m_activeUnit->movement.bCalculateNewPath = false;
 
         // verifyPathContiguity(pUnit, startCell); // Vérification du chemin
         //log("SUCCES");
@@ -550,13 +552,13 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
     }
     else {
-        pUnit->log("CREATE_PATH -- not valid");
+        m_activeUnit->log("CREATE_PATH -- not valid");
 
         // perhaps we can get closer when we DO take units into account?
         //path_id=-1;
     }
 
-    pUnit->log("CREATE_PATH: Failed to create path!");
+    m_activeUnit->log("CREATE_PATH: Failed to create path!");
     return -1;
 }
 
