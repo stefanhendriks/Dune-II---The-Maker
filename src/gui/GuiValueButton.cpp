@@ -32,13 +32,13 @@ void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
             if (m_rect.isPointWithin(event.coords)) {
-                decreaseValue();
+                increaseValue();
             }
             m_pressed = false;
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
             if (m_rect.isPointWithin(event.coords)) {
-                increaseValue();
+                decreaseValue();
             }
             m_pressed = false;
             break;
