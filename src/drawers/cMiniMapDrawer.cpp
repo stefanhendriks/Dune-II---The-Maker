@@ -42,9 +42,10 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
     assert(player!=nullptr);
     assert(mapCamera!=nullptr);
 
-    int reportX = cSideBar::WidthOfMinimap / getMapWidthInPixels();
-    int reportY = cSideBar::HeightOfMinimap / getMapHeightInPixels();
+    float reportX = cSideBar::WidthOfMinimap*1.f / getMapWidthInPixels();
+    float reportY = cSideBar::HeightOfMinimap*1.f / getMapHeightInPixels();
     m_factorZoom = std::min(reportX, reportY);
+    //std::cout << "Minimap zoom factor: " << m_factorZoom << std::endl;
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;

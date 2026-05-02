@@ -94,5 +94,5 @@ private:
     int m_centerX, m_centerY; // the center of the minimap
 
     // bool isBigMap;
-    int m_factorZoom = 1; // factor to zoom the minimap, based on the map size and the minimap size
+    float m_factorZoom = 1.f; // factor to zoom the minimap, based on the map size and the minimap size
 };
