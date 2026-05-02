@@ -11,3 +11,12 @@ void GuiButtonGroup::updateStates(GuiStateButton* clickedButton)
         }
     }
 }
+
+void GuiButtonGroup::updateState(int index)
+{
+    if (index < 0 || index >= static_cast<int>(members.size())) {
+        return;
+    }
+
+    updateStates(members[index]);
+}

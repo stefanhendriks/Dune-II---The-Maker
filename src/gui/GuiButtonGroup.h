@@ -9,6 +9,7 @@ public:
         members.push_back(button);
     }
     void updateStates(GuiStateButton* clickedButton);
+    void updateState(int index);
 private:
     std::vector<GuiStateButton*> members;
 };
