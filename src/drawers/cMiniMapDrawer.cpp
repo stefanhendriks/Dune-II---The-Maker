@@ -21,6 +21,8 @@
 #include "context/cGameObjectContext.h"
 #include "map/cMap.h"
 #include <cassert>
+#include <algorithm>
+#include <cmath>
 //#include <iostream>
 
 #include "data/gfxaudio.h"
@@ -260,13 +262,16 @@ void cMiniMapDrawer::drawViewPortRectangle()
     iWidth--;
     iHeight--;
 
-    int pixelSize = m_factorZoom;
+    const float pixelSize = std::max(m_factorZoom, 0.001f);
 
-    int startX = m_drawX + ((m_mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
-    int startY = m_drawY + ((m_mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
+    const float startXf = m_drawX + ((m_mapCamera->getViewportStartX() / TILESIZE_WIDTH_PIXELS) * pixelSize);
+    const float startYf = m_drawY + ((m_mapCamera->getViewportStartY() / TILESIZE_HEIGHT_PIXELS) * pixelSize);
 
-    int minimapWidth = iWidth * (pixelSize) + 1;
-    int minimapHeight = iHeight * (pixelSize) + 1;
+    int startX = static_cast<int>(std::floor(startXf));
+    int startY = static_cast<int>(std::floor(startYf));
+
+    int minimapWidth = std::max(1, static_cast<int>(std::ceil(iWidth * pixelSize + 1.0f)));
+    int minimapHeight = std::max(1, static_cast<int>(std::ceil(iHeight * pixelSize + 1.0f)));
 
     //cap the rectangle to the minimap size
     if (startX < m_RectFullMinimap.getX()) {
@@ -471,10 +476,13 @@ void cMiniMapDrawer::cleanDrawTerrain() const {
 
 int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
 {
-    int mouseMiniMapX = mouseX - m_drawX;
-    int mouseMiniMapY = mouseY - m_drawY;
-    mouseMiniMapX /= m_factorZoom;
-    mouseMiniMapY /= m_factorZoom;
+    const float safeZoom = std::max(m_factorZoom, 0.001f);
+    const float mouseMiniMapXf = (mouseX - m_drawX) / safeZoom;
+    const float mouseMiniMapYf = (mouseY - m_drawY) / safeZoom;
+
+    int mouseMiniMapX = static_cast<int>(std::floor(mouseMiniMapXf));
+    int mouseMiniMapY = static_cast<int>(std::floor(mouseMiniMapYf));
+
     auto mouseMiniMapPoint = m_map->getGeometry().fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
     return m_map->getGeometry().getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
