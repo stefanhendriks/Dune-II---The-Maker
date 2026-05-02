@@ -418,7 +418,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_editorCam->updateVisibleTiles(*m_mapData);
         }
         // to test : updateVisibleTiles();
-        m_selectBar->onNotifyKeyboardEvent(event);
+        //m_selectBar->onNotifyKeyboardEvent(event);
         m_currentBar->onNotifyKeyboardEvent(event);
 
         if (event.isAction(eKeyAction::EDITOR_DISPLAY_GRID)) {
