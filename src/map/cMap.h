@@ -40,6 +40,7 @@ class cInfoContext;
 class cGameObjectContext;
 class cGameInterface;
 class cLog;
+class cPathFinder;
 
 class cMap : public cScenarioObserver {
 
@@ -438,6 +439,10 @@ public:
 
     [[nodiscard]] MapGeometry &getGeometry() const;
 
+    [[nodiscard]] cPathFinder *getPathFinder() const {
+        return m_pathFinder.get();
+    }
+
     void setTerrainInfo(s_TerrainInfo* terrainInfo);
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
@@ -452,6 +457,7 @@ private:
     cTextDrawer *m_textDrawer = nullptr;
 
     std::unique_ptr<MapGeometry> m_mapGeometry;
+    std::unique_ptr<cPathFinder> m_pathFinder;
 
     // Spice Blooms related
     bool m_bAutoSpawnSpiceBlooms;

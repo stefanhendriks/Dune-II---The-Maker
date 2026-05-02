@@ -164,6 +164,8 @@ void cUnit::serviceInit(sGameServices* services)
     assert(m_mapCamera != nullptr);
     m_map = &m_objects->getMap();
     assert(m_map != nullptr);
+    m_pathFinder = m_map->getPathFinder();
+    assert(m_pathFinder != nullptr);
 }
 
 void cUnit::recreateDimensions()
@@ -2496,7 +2498,7 @@ void cUnit::thinkFast_move()
 
             // when we do have a different goal, we should get a path:
             if (movement.iGoalCell != position.iCell) {
-                int iResult = cPathFinder::createPath(iID, 0); // do not take units into account yet
+                int iResult = m_pathFinder->createPath(iID, 0); // do not take units into account yet
                 log(std::format("Create path ... result = {}", iResult));
 
                 // On fail:
@@ -2513,7 +2515,7 @@ void cUnit::thinkFast_move()
                         if (uID > -1 && uID != iID) {
                             // occupied, not by self
                             // find a goal cell near to it
-                            int iNewGoal = cPathFinder::returnCloseGoal(movement.iGoalCell, position.iCell, iID);
+                            int iNewGoal = m_pathFinder->returnCloseGoal(movement.iGoalCell, position.iCell, iID);
 
                             if (iNewGoal == movement.iGoalCell) {
                                 // same goal, cant find new, stop

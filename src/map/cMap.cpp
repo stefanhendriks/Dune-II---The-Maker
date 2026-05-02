@@ -26,6 +26,7 @@
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "gameobjects/units/cReinforcements.h"
+#include "gameobjects/units/cPathFinder.h"
 #include "utils/RNG.hpp"
 #include "map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
@@ -60,6 +61,7 @@ cMap::cMap()
     m_objects = nullptr;
     m_interface = nullptr;
     m_log = nullptr;
+    m_pathFinder = std::make_unique<cPathFinder>();
 }
 
 cMap::~cMap() = default;
