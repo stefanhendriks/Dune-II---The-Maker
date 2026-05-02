@@ -39,12 +39,17 @@ int cPathFinder::validateCreatePathInput(int iUnitId)
 {
     logbook("CREATE_PATH -- START");
     if (iUnitId < 0) {
-        logbook("CREATE_PATH -- END 1");
+        logbook("CREATE_PATH -- END (iUnitId < 0)");
         return -99; // Wut!?
     }
 
     m_activeUnit = game.m_gameObjectsContext->getUnit(iUnitId);
+    if (m_activeUnit == nullptr) {
+        logbook("CREATE_PATH -- END (no unit iUnitId found)");
+        return -99; // Wut!?
+    }
     if (!m_activeUnit->isValid() || m_activeUnit->isDead()) {
+        logbook("CREATE_PATH -- END (iUnitId isDead or not Valid)");
         return -99; // for now...
     }
 
