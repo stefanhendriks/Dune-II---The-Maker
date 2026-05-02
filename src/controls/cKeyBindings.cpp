@@ -60,6 +60,7 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::GROUP_3, {SDL_SCANCODE_3});
     bind(eKeyAction::GROUP_4, {SDL_SCANCODE_4});
     bind(eKeyAction::GROUP_5, {SDL_SCANCODE_5});
+    bind(eKeyAction::GROUP_6, {SDL_SCANCODE_6});
 
     // Editor
     bind(eKeyAction::EDITOR_SAVE,     {SDL_SCANCODE_S}, true, false, false);
@@ -140,6 +141,7 @@ void cKeyBindings::loadFromSection(const cSection &section)
         {"GROUP_3",                   eKeyAction::GROUP_3},
         {"GROUP_4",                   eKeyAction::GROUP_4},
         {"GROUP_5",                   eKeyAction::GROUP_5},
+        {"GROUP_6",                   eKeyAction::GROUP_6},
         {"EDITOR_SAVE",               eKeyAction::EDITOR_SAVE},
         {"EDITOR_ZOOM_IN",            eKeyAction::EDITOR_ZOOM_IN},
         {"EDITOR_ZOOM_OUT",           eKeyAction::EDITOR_ZOOM_OUT},

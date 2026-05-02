@@ -23,6 +23,7 @@ int cKeyboardEvent::getGroupNumber() const
     if (isAction(eKeyAction::GROUP_3)) return 3;
     if (isAction(eKeyAction::GROUP_4)) return 4;
     if (isAction(eKeyAction::GROUP_5)) return 5;
+    if (isAction(eKeyAction::GROUP_6)) return 6;
     return 0;
 }
 

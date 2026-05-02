@@ -49,6 +49,7 @@ enum class eKeyAction {
     GROUP_3,
     GROUP_4,
     GROUP_5,
+    GROUP_6,
     // Editor
     EDITOR_SAVE,
     EDITOR_ZOOM_IN,
