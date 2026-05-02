@@ -402,7 +402,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
                 saveMap(true);
                 m_hasChanged = false;
             }
-            m_interface->setTransitionToWithFadingOut(GAME_MENU);
+            m_interface->setNextStateToTransitionTo(GAME_OPTIONS);
         }
         if (event.isAction(eKeyAction::EDITOR_SAVE)) {
             //std::cout << "Save" << std::endl;
