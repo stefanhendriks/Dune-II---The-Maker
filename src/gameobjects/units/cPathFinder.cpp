@@ -120,7 +120,6 @@ void cPathFinder::initializeCreatePathSearch(int iPathCountUnits)
     m_valid = true;
     m_success = false;
 
-    // m_settings->setPathsCreated(m_settings->getPathsCreated() + 1);
     m_pathsCreated++;
     for (auto &cell : m_pathMap) {
         cell.cost = -1;
