@@ -16,6 +16,7 @@
 #include "include/sGameServices.h"
 
 #include <algorithm>
+#include <cassert>
 //#include <set>
 //#include <iostream> 
 
