@@ -50,6 +50,10 @@ void cPathFinder::serviceInit(sGameServices* services)
     assert(m_settings != nullptr);
     m_objects = services->objects;
     assert(m_objects != nullptr);
+    m_map = &m_objects->getMap();
+    assert(m_map != nullptr);
+    m_mapGeometry = m_objects->getMapGeometry();
+    assert(m_mapGeometry != nullptr);
 }
 
 int cPathFinder::validateCreatePathInput(int iUnitId)
@@ -123,13 +127,13 @@ void cPathFinder::initializeCreatePathSearch(int iPathCountUnits)
         cell.state = UNVISITED;
     }
 
-    int cx = m_objects->getMapGeometry()->getCellX(m_currentCell);
-    int cy = m_objects->getMapGeometry()->getCellY(m_currentCell);
+    int cx = m_mapGeometry->getCellX(m_currentCell);
+    int cy = m_mapGeometry->getCellY(m_currentCell);
 
     // set very first... our start cell
     m_pathMap[m_currentCell].cost = ABS_length(cx, cy,
-                                               m_objects->getMapGeometry()->getCellX(m_goalCell),
-                                               m_objects->getMapGeometry()->getCellY(m_goalCell));
+                                               m_mapGeometry->getCellX(m_goalCell),
+                                               m_mapGeometry->getCellY(m_goalCell));
     m_pathMap[m_currentCell].parent = -1;
     m_pathMap[m_currentCell].state = OPEN; // this one is opened by default
 }
@@ -146,7 +150,7 @@ void cPathFinder::executeCreatePathSearch()
             break;
         }
 
-        int idOfStructureAtCell = m_objects->getMap().cellGetIdFromLayer(m_currentCell, MAPID_STRUCTURES);
+        int idOfStructureAtCell = m_map->cellGetIdFromLayer(m_currentCell, MAPID_STRUCTURES);
         if (m_activeUnit->iStructureID > -1) {
             if (idOfStructureAtCell == m_activeUnit->iStructureID) {
                 m_valid = false;
@@ -165,8 +169,8 @@ void cPathFinder::executeCreatePathSearch()
             }
         }
 
-        int cx = m_objects->getMapGeometry()->getCellX(m_currentCell);
-        int cy = m_objects->getMapGeometry()->getCellY(m_currentCell);
+        int cx = m_mapGeometry->getCellX(m_currentCell);
+        int cy = m_mapGeometry->getCellY(m_currentCell);
 
         // starting position is cx-1 and cy-1
         int sx = cx - 1;
@@ -177,8 +181,8 @@ void cPathFinder::executeCreatePathSearch()
         int ey = cy + 1;
 
         // boundaries
-        cPoint::split(sx, sy) = m_objects->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(sx, sy);
-        cPoint::split(ex, ey) = m_objects->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(ex, ey);
+        cPoint::split(sx, sy) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(sx, sy);
+        cPoint::split(ex, ey) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(ex, ey);
 
         double cost = 999999999;
         int the_cll = -1;
@@ -191,7 +195,7 @@ void cPathFinder::executeCreatePathSearch()
             // circle around cell Y wise
             for (cy = sy; cy <= ey; cy++) {
                 // only check the 'cell' that is NOT the current cell.
-                int cll = m_objects->getMapGeometry()->getCellWithMapBorders(cx, cy);
+                int cll = m_mapGeometry->getCellWithMapBorders(cx, cy);
 
                 // skip invalid cells
                 if (cll < 0)
@@ -205,15 +209,15 @@ void cPathFinder::executeCreatePathSearch()
                 bool good = false; // not good by default
 
                 // not a sandworm
-                int cellType = m_objects->getMap().getCellType(cll);
+                int cellType = m_map->getCellType(cll);
                 if (!m_activeUnit->isSandworm()) {
                     // Step by step determine if its good
                     // 2 fases:
                     // 1 -> Occupation by unit/structures
                     // 2 -> Occupation by terrain (but only when it is visible, since we do not want to have an
                     //      advantage or some super intelligence by units for unknown territories!)
-                    int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(cll);
-                    int idOfStructureAtCellNearby = m_objects->getMap().getCellIdStructuresLayer(cll);
+                    int idOfUnitAtCell = m_map->getCellIdUnitLayer(cll);
+                    int idOfStructureAtCellNearby = m_map->getCellIdStructuresLayer(cll);
 
                     if (idOfUnitAtCell == -1 && idOfStructureAtCellNearby == -1) {
                         // there is nothing on this cell, that is good
@@ -260,7 +264,7 @@ void cPathFinder::executeCreatePathSearch()
                     }
 
                     // is not visible, always good (since we don't know yet if its blocked!)
-                    if (m_objects->getMap().isVisible(cll, m_controller) == false) {
+                    if (m_map->isVisible(cll, m_controller) == false) {
                         good = true;
                     }
                     else {
@@ -279,7 +283,7 @@ void cPathFinder::executeCreatePathSearch()
                 }
                 else {
                     // Sandworm only cares about terrain type for good/bad cells
-                    good = m_objects->getMap().isCellPassableForWorm(cll);
+                    good = m_map->isCellPassableForWorm(cll);
                 }
 
                 if (!good) {
@@ -304,13 +308,13 @@ void cPathFinder::executeCreatePathSearch()
                 // the cell is UNVISITED (not yet explored)
                 if (cll != m_currentCell && // not checking on our own
                     isUnvisited) { // and is unvisited (else it's not valid to check)
-                    int gcx = m_objects->getMapGeometry()->getCellX(m_goalCell);
-                    int gcy = m_objects->getMapGeometry()->getCellY(m_goalCell);
+                    int gcx = m_mapGeometry->getCellX(m_goalCell);
+                    int gcy = m_mapGeometry->getCellY(m_goalCell);
 
                     // calculate the cost
                     // treat unvisited cells (cost == -1) as 0 to avoid corrupting newCost
                     int tempCost = (m_pathMap[cll].cost >= 0) ? m_pathMap[cll].cost : 0;
-                    double distanceCost = m_objects->getMapGeometry()->distance(cx, cy, gcx, gcy);
+                    double distanceCost = m_mapGeometry->distance(cx, cy, gcx, gcy);
                     double newCost = distanceCost + tempCost;
 //                        pUnit->log(std::format(
 //                                "CREATE_PATH: tempCost [{}] + distanceCost [{}] = newCost = [{}] vs current cost [{}]",
@@ -442,7 +446,7 @@ int cPathFinder::buildPathAndApplyToUnit()
                 for (int sz = z; sz > 0; sz--) {
                     if (m_tempPath[sz] > -1) {
 
-                        if (m_objects->getMapGeometry()->isCellAdjacentToOtherCell(iPrevCell, m_tempPath[sz])) {
+                        if (m_mapGeometry->isCellAdjacentToOtherCell(iPrevCell, m_tempPath[sz])) {
                             iGoodZ = sz;
                         }
                     }
@@ -473,7 +477,7 @@ int cPathFinder::buildPathAndApplyToUnit()
     for (int i = 1; i < MAX_PATH_SIZE; i++) {
         int pathCell = m_activeUnit->movement.iPath[i];
         if (pathCell > -1) {
-            if (m_objects->getMapGeometry()->isCellAdjacentToOtherCell(m_activeUnit->getCell(), pathCell)) {
+            if (m_mapGeometry->isCellAdjacentToOtherCell(m_activeUnit->getCell(), pathCell)) {
                 m_activeUnit->movement.iPathIndex = i;
             }
         }
@@ -552,7 +556,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 //         int currCell = pUnit->movement.iPath[i];
 //         if (prevCell == -1 || currCell == -1) break; // fin du chemin
 
-//         if (!m_objects->getMapGeometry()->isCellAdjacentToOtherCell(prevCell, currCell)) {
+//         if (!m_mapGeometry->isCellAdjacentToOtherCell(prevCell, currCell)) {
 //             std::string msg = std::format("ERREUR: Chemin non contigu entre {} et {} à l'index {}", prevCell, currCell, i);
 //             pUnit->log(msg);
 //             std::cerr << msg << std::endl;
@@ -561,7 +565,7 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 //     if (firstCell == pUnit->movement.iPath[0])
 //         return;
 
-//     if (!m_objects->getMapGeometry()->isCellAdjacentToOtherCell(firstCell, pUnit->movement.iPath[0])) {
+//     if (!m_mapGeometry->isCellAdjacentToOtherCell(firstCell, pUnit->movement.iPath[0])) {
 //         std::string msg = std::format("ERREUR: Le premier cell du chemin ({}) n'est pas égal au cell de départ ({})", pUnit->movement.iPath[0], firstCell);
 //         pUnit->log(msg);
 //         std::cerr << msg << std::endl;
@@ -573,44 +577,44 @@ int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
 {
     //
     int iSize = 1;
-    int iStartX = m_objects->getMapGeometry()->getCellX(iCll) - iSize;
-    int iStartY = m_objects->getMapGeometry()->getCellY(iCll) - iSize;
-    int iEndX = m_objects->getMapGeometry()->getCellX(iCll) + iSize;
-    int iEndY = m_objects->getMapGeometry()->getCellY(iCll) + iSize;
+    int iStartX = m_mapGeometry->getCellX(iCll) - iSize;
+    int iStartY = m_mapGeometry->getCellY(iCll) - iSize;
+    int iEndX = m_mapGeometry->getCellX(iCll) + iSize;
+    int iEndY = m_mapGeometry->getCellY(iCll) + iSize;
 
     float dDistance = 9999;
 
-    int ix = m_objects->getMapGeometry()->getCellX(iMyCell);
-    int iy = m_objects->getMapGeometry()->getCellY(iMyCell);
+    int ix = m_mapGeometry->getCellX(iMyCell);
+    int iy = m_mapGeometry->getCellY(iMyCell);
 
     bool bSearch = true;
 
     int iTheClosest = -1;
 
     while (bSearch) {
-        iStartX = m_objects->getMapGeometry()->getCellX(iCll) - iSize;
-        iStartY = m_objects->getMapGeometry()->getCellY(iCll) - iSize;
-        iEndX = m_objects->getMapGeometry()->getCellX(iCll) + iSize;
-        iEndY = m_objects->getMapGeometry()->getCellY(iCll) + iSize;
+        iStartX = m_mapGeometry->getCellX(iCll) - iSize;
+        iStartY = m_mapGeometry->getCellY(iCll) - iSize;
+        iEndX = m_mapGeometry->getCellX(iCll) + iSize;
+        iEndY = m_mapGeometry->getCellY(iCll) + iSize;
 
         // Fix boundaries
-        cPoint::split(iStartX, iStartY) = m_objects->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
-        cPoint::split(iEndX, iEndY) = m_objects->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
+        cPoint::split(iStartX, iStartY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
+        cPoint::split(iEndX, iEndY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
 
         // search
         for (int iSX = iStartX; iSX < iEndX; iSX++)
             for (int iSY = iStartY; iSY < iEndY; iSY++) {
                 // find an empty cell
-                int cll = m_objects->getMapGeometry()->getCellWithMapDimensions(iSX, iSY);
+                int cll = m_mapGeometry->getCellWithMapDimensions(iSX, iSY);
 
                 float dDistance2 = ABS_length(iSX, iSY, ix, iy);
 
-                int idOfStructureAtCell = m_objects->getMap().getCellIdStructuresLayer(cll);
-                int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(cll);
+                int idOfStructureAtCell = m_map->getCellIdStructuresLayer(cll);
+                int idOfUnitAtCell = m_map->getCellIdUnitLayer(cll);
 
                 if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) { // no unit or structure at cell
                     // depending on unit type, do not choose walls (or mountains)
-                    int cellType = m_objects->getMap().getCellType(cll);
+                    int cellType = m_map->getCellType(cll);
                     if (m_infos->getUnitInfo(m_objects->getUnit(iID)->iType).infantry) {
                         if (cellType == TERRAIN_MOUNTAIN)
                             continue; // do not use this one

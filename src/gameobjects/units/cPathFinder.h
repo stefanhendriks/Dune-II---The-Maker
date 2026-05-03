@@ -15,6 +15,8 @@ class cGameObjectContext;
 class cGameInfoContext;
 class cLog;
 class cInfoContext;
+class cMap;
+class MapGeometry;
 
 class cPathFinder {
 public:
@@ -29,6 +31,8 @@ private:
     cGameObjectContext *m_objects = nullptr;
     cInfoContext *m_infos = nullptr;
     cLog *m_log = nullptr;
+    cMap *m_map = nullptr;
+    MapGeometry* m_mapGeometry = nullptr;
     int validateCreatePathInput(int iUnitId);
     void initializeCreatePathSearch(int iPathCountUnits);
     void executeCreatePathSearch();
