@@ -128,8 +128,8 @@ void cUnit::init(int i)
     iCredits = 0;
 
     // Drawing
-    rendering.iBodyFacing = 0;    // Body of tanks facing
-    rendering.iHeadFacing = 0;    // Head of tanks facing
+    rendering.iBodyFacing = Facing::UP;    // Body of tanks facing
+    rendering.iHeadFacing = Facing::UP;    // Head of tanks facing
     rendering.iBodyShouldFace = rendering.iBodyFacing;    // where should the unit body look at?
     rendering.iHeadShouldFace = rendering.iHeadFacing;    // where should th eunit look at?
 
@@ -297,7 +297,8 @@ void cUnit::createExplosionParticle()
     }
 
     if ((iType == SIEGETANK || iType == DEVASTATOR) && RNG::rnd(100) < 25) {
-        if (rendering.iBodyFacing == FACE_UPLEFT || rendering.iBodyFacing == FACE_DOWNRIGHT) {
+        if (rendering.iBodyFacing == Facing::UPLEFT ||
+            rendering.iBodyFacing == Facing::DOWNRIGHT) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SIEGEDIE, iPlayer, -1);
         }
     }
@@ -769,8 +770,8 @@ void cUnit::draw()
     const int bmp_height = unitType.bmp_height;
 
     // the multiplier we will use to draw the unit
-    const int bmp_head = convertAngleToDrawIndex(rendering.iHeadFacing);
-    const int bmp_body = convertAngleToDrawIndex(rendering.iBodyFacing);
+    const int bmp_head = convertAngleToDrawIndex(facingToInt(rendering.iHeadFacing));
+    const int bmp_body = convertAngleToDrawIndex(facingToInt(rendering.iBodyFacing));
 
     // draw body first
     int start_x = bmp_body * bmp_width;
@@ -1030,8 +1031,8 @@ void cUnit::thinkFast_guard()
     }
 
     if (boredTimer.incrementUntil(3500)) {
-        rendering.iBodyShouldFace = RNG::rnd(8);
-        rendering.iHeadShouldFace = RNG::rnd(8);
+        rendering.iBodyShouldFace = randomFacing();
+        rendering.iHeadShouldFace = randomFacing();
     }
 
     guardTimer.decrementUntil(0);
@@ -1358,13 +1359,14 @@ void cUnit::think_turn_to_desired_body_facing()
     } // turn body
 }
 
-int cUnit::determineNewFacing(int currentFacing, int desiredFacing)
+Facing cUnit::determineNewFacing(Facing currentFacing, Facing desiredFacing)
 {
-    int newFacing = currentFacing;
+    int newFacing = facingToInt(currentFacing);
+    const int desiredFacingInt = facingToInt(desiredFacing);
 
     int d = 1;
 
-    int toleft = (newFacing + 8) - desiredFacing;
+    int toleft = (newFacing + 8) - desiredFacingInt;
     if (toleft > 7) toleft -= 8;
 
     int toright = abs(toleft - 8);
@@ -1381,7 +1383,7 @@ int cUnit::determineNewFacing(int currentFacing, int desiredFacing)
     if (newFacing > 7)
         newFacing = 0;
 
-    return newFacing;
+    return facingFromInt(newFacing);
 }
 
 // aircraft specific thinking
@@ -1738,8 +1740,8 @@ void cUnit::thinkFast_move_airUnit()
 
     // air units 'turn around' facing the ideal angle. But they can't turn around swiftly, only when very close.
     int d = fDegrees(position.iCellX, position.iCellY, goalCellX, goalCellY);
-    int idealAngle = faceAngle(d);
-    int f = faceAngle(d); // get the angle
+    Facing idealAngle = facingFromInt(faceAngle(d));
+    Facing f = facingFromInt(faceAngle(d)); // get the angle
     float angle = 0;
 
     rendering.iBodyShouldFace = idealAngle;
@@ -1750,33 +1752,35 @@ void cUnit::thinkFast_move_airUnit()
         int nextY = position.iCellY;
 
         switch (rendering.iBodyFacing) {
-            case FACE_UP:
+            case Facing::UP:
                 nextY--;
                 break;
-            case FACE_UPRIGHT:
+            case Facing::UPRIGHT:
                 nextY--;
                 nextX++;
                 break;
-            case FACE_RIGHT:
+            case Facing::RIGHT:
                 nextX++;
                 break;
-            case FACE_DOWNRIGHT:
+            case Facing::DOWNRIGHT:
                 nextY++;
                 nextX++;
                 break;
-            case FACE_DOWN:
+            case Facing::DOWN:
                 nextY++;
                 break;
-            case FACE_DOWNLEFT:
+            case Facing::DOWNLEFT:
                 nextY++;
                 nextX--;
                 break;
-            case FACE_LEFT:
+            case Facing::LEFT:
                 nextX--;
                 break;
-            case FACE_UPLEFT:
+            case Facing::UPLEFT:
                 nextY--;
                 nextX--;
+                break;
+            case Facing::COUNT:
                 break;
         }
         angle = fRadians(position.iCellX, position.iCellY, nextX, nextY);
@@ -1922,7 +1926,7 @@ void cUnit::shoot(int iTargetCell)
     // particles are rendered at the center, so do it here as well
     int iShootX = pos_x() + (getBmpWidth() / 2);
     int iShootY = pos_y() + (getBmpHeight() / 2);
-    int bmp_head = convertAngleToDrawIndex(rendering.iHeadFacing);
+    int bmp_head = convertAngleToDrawIndex(facingToInt(rendering.iHeadFacing));
 
     // TODO: add this in sUnitInfo
     if (iType == TANK) {
@@ -2342,10 +2346,10 @@ void cUnit::actionGuard()
     combat.iAttackStructure =-1;
 }
 
-int cUnit::getFaceAngleToCell(int cell) const
+Facing cUnit::getFaceAngleToCell(int cell) const
 {
     int d = fDegrees(position.iCellX, position.iCellY, m_objects->getMapGeometry()->getCellX(cell), m_objects->getMapGeometry()->getCellY(cell));
-    return faceAngle(d); // get the angle
+    return facingFromInt(faceAngle(d)); // get the angle
 }
 
 void cUnit::startChasingTarget()
@@ -2383,7 +2387,7 @@ bool cUnit::setAngleTowardsTargetAndFireBullets(int distance)
     // in range , fire and such
 
     // Facing
-    int angle = getFaceAngleToCell(movement.iGoalCell);
+    Facing angle = getFaceAngleToCell(movement.iGoalCell);
 
     rendering.iBodyShouldFace = angle;
     rendering.iHeadShouldFace = angle;

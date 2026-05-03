@@ -160,8 +160,8 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     newUnit->init(iNewId);
 
     newUnit->setCell(iCll);
-    newUnit->rendering.iBodyFacing = RNG::rnd(8);
-    newUnit->rendering.iHeadFacing = RNG::rnd(8);
+    newUnit->rendering.iBodyFacing = randomFacing();
+    newUnit->rendering.iHeadFacing = randomFacing();
 
     newUnit->rendering.iBodyShouldFace = newUnit->rendering.iBodyFacing;
     newUnit->rendering.iHeadShouldFace = newUnit->rendering.iHeadFacing;

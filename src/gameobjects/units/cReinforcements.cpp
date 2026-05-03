@@ -207,7 +207,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     int cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
 
     int d = fDegrees(iCellX, iCellY, cx, cy);
-    int f = faceAngle(d); // get the angle
+    Facing f = facingFromInt(faceAngle(d)); // get the angle
 
     cUnit *carryall = game.m_gameObjectsContext->getUnit(iUnit);
     carryall->rendering.iBodyShouldFace = f;

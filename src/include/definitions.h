@@ -81,16 +81,6 @@ constexpr int MAX_UNIT_GROUPS = 5;
 #define MAX_ICONS       30          // max of 30 icons per list
 #define MAX_ITEMS		MAX_ICONS   // because in theory the item builder should be able to build each icon simultaniously
 
-// FACING
-#define FACE_UP           0
-#define FACE_UPRIGHT      1
-#define FACE_RIGHT        2
-#define FACE_DOWNRIGHT    3
-#define FACE_DOWN         4
-#define FACE_DOWNLEFT     5
-#define FACE_LEFT         6
-#define FACE_UPLEFT       7
-
 // House id's
 #define GENERALHOUSE   0     // no house at all, general house (gray)
 #define HARKONNEN 1

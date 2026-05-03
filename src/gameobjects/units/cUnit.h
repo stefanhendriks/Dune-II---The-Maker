@@ -12,6 +12,7 @@
 #pragma once
 
 #include "definitions.h"
+#include "Facing.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "utils/cRectangle.h"
 #include "gameobjects/units/cTimer.h"
@@ -104,10 +105,10 @@ struct sMovement {
 };
 
 struct sRendering {
-    int iBodyFacing;    // Body of tanks facing
-    int iHeadFacing;    // Head of tanks facing
-    int iBodyShouldFace;    // where should the unit body look at?
-    int iHeadShouldFace;    // where should the unit look at?
+    Facing iBodyFacing;    // Body of tanks facing
+    Facing iHeadFacing;    // Head of tanks facing
+    Facing iBodyShouldFace;    // where should the unit body look at?
+    Facing iHeadShouldFace;    // where should the unit look at?
     int iFrame;         // framed (animated stuff)
     bool bHovered;      // mouse hovers over this unit or not?
 };
@@ -534,13 +535,13 @@ private:
 
     void thinkActionAgnostic();       // thinking in general
 
-    int determineNewFacing(int currentFacing, int desiredFacing);
+    Facing determineNewFacing(Facing currentFacing, Facing desiredFacing);
 
     bool setAngleTowardsTargetAndFireBullets(int distance);
 
     void startChasingTarget();
 
-    int getFaceAngleToCell(int cell) const;
+    Facing getFaceAngleToCell(int cell) const;
 
     void attack(int goalCell, int unitId, int structureId, int attackCell, bool chaseWhenOutOfRange);
 

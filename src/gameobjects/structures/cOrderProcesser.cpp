@@ -257,7 +257,7 @@ void cOrderProcesser::sendFrigate()
             int cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(destinationCell);
 
             int d = fDegrees(iCellX, iCellY, cx, cy);
-            int f = faceAngle(d); // get the angle
+            Facing f = facingFromInt(faceAngle(d)); // get the angle
 
             game.m_gameObjectsContext->getUnit(unitId)->rendering.iBodyShouldFace = f;
             game.m_gameObjectsContext->getUnit(unitId)->rendering.iBodyFacing = f;
