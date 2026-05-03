@@ -945,7 +945,7 @@ void cSetupSkirmishState::onMouseRightButtonClickedAtPlayerList()  // draw playe
             // on click:
             if (startingUnitsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.startingUnits--;
-                if (sSkirmishPlayer.startingUnits < 1) {
+                if (sSkirmishPlayer.startingUnits < 0) {
                     sSkirmishPlayer.startingUnits = 10;
                 }
             }
@@ -1036,7 +1036,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtPlayerList()
             if (startingUnitsRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                 sSkirmishPlayer.startingUnits++;
                 if (sSkirmishPlayer.startingUnits > 10) {
-                    sSkirmishPlayer.startingUnits = 1;
+                    sSkirmishPlayer.startingUnits = 0;
                 }
             }
 
