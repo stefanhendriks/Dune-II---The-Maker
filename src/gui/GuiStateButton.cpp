@@ -68,6 +68,10 @@ void GuiStateButton::onNotifyMouseEvent(const s_MouseEvent &event)
             setPressed(true);
             //m_onLeftMouseButtonClickedAction();
         }
+    } else if (event.eventType == eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED) {
+        if (m_onRightMouseButtonClickedAction) {
+            m_onRightMouseButtonClickedAction();
+        }
     }
 }
 
