@@ -76,6 +76,7 @@ public:
     void smudge_increase(SmudgeType iType, int iCell);
 
     void thinkFast();
+    void thinkSlow();
 
     void clear_all(int playerId);
 

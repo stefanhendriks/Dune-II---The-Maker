@@ -95,6 +95,7 @@ void cMap::serviceInit(sGameServices* services)
     assert(m_objects != nullptr);
     m_interface = m_ctx->getGameInterface();
     assert(m_interface != nullptr);
+    m_pathFinder->serviceInit(services);
 }
 
 void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
@@ -361,6 +362,11 @@ void cMap::thinkFast()
     thinkAutoDetonateSpiceBlooms();
     thinkAboutSpawningNewSpiceBlooms();
     thinkAboutRespawningWorms();
+}
+
+void cMap::thinkSlow()
+{
+    m_pathFinder->resetPathCreatedByUnit();
 }
 
 void cMap::thinkAboutRespawningWorms()
