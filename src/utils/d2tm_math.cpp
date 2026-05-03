@@ -18,7 +18,6 @@
 
 #include <format>
 
-#include "definitions.h"
 #include "common.h"
 
 #include <cassert>
