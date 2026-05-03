@@ -1,7 +1,7 @@
 #pragma once
 
-// #include "map/cMap.h"
-// #include "map/cMapCamera.h"
+// #include "gameobjects/map/cMap.h"
+// #include "gameobjects/map/cMapCamera.h"
 
 struct SDL_Surface;
 class cPlayer;

@@ -4,7 +4,7 @@ find_package(Catch2 3 REQUIRED)
 # No SDL runtime linkage required — SDL2 headers are needed only to compile
 # cRectangle.h (which declares an inline toSDL() helper using SDL_Rect).
 set(TEST_SOURCES
-    ${CMAKE_SOURCE_DIR}/src/map/MapGeometry.cpp
+    ${CMAKE_SOURCE_DIR}/src/gameobjects/map/MapGeometry.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/RNG.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/d2tm_math.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cPoint.cpp

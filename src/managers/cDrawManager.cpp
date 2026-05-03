@@ -20,8 +20,8 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "map/cMapCamera.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMapCamera.h"
+#include "gameobjects/map/cMap.h"
 #include "drawers/cSideBarDrawer.h"
 
 #include <SDL2/SDL.h>

@@ -1,4 +1,4 @@
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
 #include <cmath>

@@ -4,7 +4,7 @@
 
 #include "game/cGame.h"
 #include "include/d2tmc.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include "player/cPlayer.h"
 #include <cassert>
 

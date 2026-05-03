@@ -2,7 +2,7 @@
 
 #include "game/cGame.h"
 #include "include/d2tmc.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cStructures.h"
@@ -11,7 +11,7 @@
 #include "player/cPlayer.h"
 #include "sidebar/cSideBar.h"
 #include "utils/cSoundPlayer.h"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include <algorithm>

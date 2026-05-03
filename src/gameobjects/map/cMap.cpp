@@ -28,7 +28,7 @@
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/units/cPathFinder.h"
 #include "utils/RNG.hpp"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
 #include "gameobjects/sTerrainInfo.h"
 #include "utils/d2tm_math.h"

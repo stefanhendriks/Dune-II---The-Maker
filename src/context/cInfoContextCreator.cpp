@@ -15,7 +15,7 @@
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include "gameobjects/sTerrainInfo.h"
 
 

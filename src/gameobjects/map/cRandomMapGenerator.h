@@ -1,6 +1,6 @@
 #pragma once
 
-#include "map/cPreviewMaps.h"
+#include "gameobjects/map/cPreviewMaps.h"
 
 class cRandomMapGenerator {
 public:

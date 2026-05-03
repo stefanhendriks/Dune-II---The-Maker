@@ -1,10 +1,10 @@
 #include "cMapEditor.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
 #include "utils/common.h"
 #include "utils/d2tm_math.h"
 #include "utils/RNG.hpp"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 #include <format>
 
 #include <cassert>

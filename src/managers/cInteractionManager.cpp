@@ -8,7 +8,7 @@
 #include "include/d2tmc.h"
 #include "drawers/cMiniMapDrawer.h"
 #include "player/cPlayer.h"
-#include "map/cMapCamera.h"
+#include "gameobjects/map/cMapCamera.h"
 
 cInteractionManager::cInteractionManager(cPlayer *thePlayer) : cInputObserver()
 {

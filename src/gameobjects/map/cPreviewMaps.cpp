@@ -1,7 +1,7 @@
 #include "cPreviewMaps.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "include/d2tmc.h"
 #include "include/Texture.hpp"
 #include "utils/common.h"

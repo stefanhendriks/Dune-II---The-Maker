@@ -21,9 +21,9 @@
 #include "include/sDataCampaign.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "managers/cDrawManager.h" // TODO: an ini file reader should not depend on drawing code
-#include "map/cMapCamera.h"
-#include "map/cMapEditor.h"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/cMapCamera.h"
+#include "gameobjects/map/cMapEditor.h"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "mentat/AbstractMentat.h"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"

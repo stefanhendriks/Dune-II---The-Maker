@@ -2,7 +2,7 @@
 
 #include "building/cItemBuilder.h"
 #include "game/cGameInterface.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureFactory.h"
@@ -13,7 +13,7 @@
 #include "utils/Graphics.hpp"
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "controls/cGameControlsContext.h"
 #include "player/cPlayerDifficultySettings.h"

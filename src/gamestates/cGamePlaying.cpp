@@ -20,8 +20,8 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"
 #include "controls/eKeyAction.h"
-#include "map/cMapCamera.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMapCamera.h"
+#include "gameobjects/map/cMap.h"
 
 #include <cassert>
 

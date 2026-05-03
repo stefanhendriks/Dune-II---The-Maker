@@ -3,7 +3,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnits.h"
-#include "map/cMapCamera.h"
+#include "gameobjects/map/cMapCamera.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
@@ -14,12 +14,12 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
 #include <SDL2/SDL.h>
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include <cassert>
 #include <algorithm>
 #include <cmath>

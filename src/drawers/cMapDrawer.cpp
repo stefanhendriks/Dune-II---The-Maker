@@ -9,9 +9,9 @@
 #include "drawers/cTextDrawer.h"
 #include "player/cPlayer.h"
 #include "utils/Graphics.hpp"
-#include "map/cMap.h"
-#include "map/cMapCamera.h"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/cMap.h"
+#include "gameobjects/map/cMapCamera.h"
+#include "gameobjects/map/MapGeometry.hpp"
 
 #include <SDL2/SDL.h>
 #include <cmath>

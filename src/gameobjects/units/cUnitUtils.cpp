@@ -2,7 +2,7 @@
 
 #include "game/cGame.h"
 #include "include/d2tmc.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include "definitions.h"
 #include "gameobjects/units/cUnits.h"
 #include "context/cInfoContext.h"

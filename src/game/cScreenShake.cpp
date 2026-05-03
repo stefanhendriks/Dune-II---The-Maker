@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
-#include "map/cMapCamera.h"
+#include "gameobjects/map/cMapCamera.h"
 #include "utils/RNG.hpp"
 
 cScreenShake::cScreenShake()

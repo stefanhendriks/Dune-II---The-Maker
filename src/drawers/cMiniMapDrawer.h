@@ -7,8 +7,8 @@
 
 #pragma once
 
-// #include "map/cMap.h"
-// #include "map/cMapCamera.h"
+// #include "gameobjects/map/cMap.h"
+// #include "gameobjects/map/cMapCamera.h"
 #include "utils/cRectangle.h"
 #include "utils/Color.hpp"
 #include "sMouseEvent.h"

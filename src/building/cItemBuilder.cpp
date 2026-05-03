@@ -2,7 +2,7 @@
 
 #include "game/cGame.h"
 #include "include/d2tmc.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnit.h"
@@ -19,7 +19,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 #include "utils/RNG.hpp"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"

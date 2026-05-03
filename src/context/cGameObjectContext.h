@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <cstddef>
 #include <memory>
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/MapGeometry.hpp"
 
 class cBullets;
 class cPlayers;

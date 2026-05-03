@@ -25,9 +25,9 @@
 #include "gameobjects/structures/cStarPort.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/projectiles/cBullets.h"
-#include "map/cMapCamera.h"
-#include "map/cMapEditor.h"
-#include "map/MapGeometry.hpp"
+#include "gameobjects/map/cMapCamera.h"
+#include "gameobjects/map/cMapEditor.h"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "player/cPlayer.h"
 #include "player/cPlayers.h"
 #include "utils/cSoundPlayer.h"
@@ -43,7 +43,7 @@
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
-#include "map/cMap.h"
+#include "gameobjects/map/cMap.h"
 #include <cmath>
 
 #include "data/gfxaudio.h"

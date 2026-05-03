@@ -14,7 +14,7 @@
 #include "definitions.h"
 //#include "gameobjects/structures/cAbstractStructure.h"
 // #include "gameobjects/units/cUnit.h"
-#include "map/cCell.h"
+#include "gameobjects/map/cCell.h"
 #include "observers/cScenarioObserver.h"
 #include "sGameEvent.h"
 // #include "utils/d2tm_math.h"

@@ -4,7 +4,7 @@
 #include "include/d2tmc.h"
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
-#include "map/cMapCamera.h"
+#include "gameobjects/map/cMapCamera.h"
 #include "player/cPlayer.h"
 
 cHeavyFactory::cHeavyFactory()

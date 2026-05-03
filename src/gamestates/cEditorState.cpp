@@ -14,7 +14,7 @@
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
-#include "map/cPreviewMaps.h"
+#include "gameobjects/map/cPreviewMaps.h"
 #include "data/gfxeditor.h"
 
 #include <cassert>

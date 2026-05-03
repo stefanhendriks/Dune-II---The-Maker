@@ -8,7 +8,7 @@
 #include "gui/GuiCycleButton.h"
 #include "context/GameContext.hpp"
 #include "drawers/cTextDrawer.h"
-#include "map/cPreviewMaps.h"
+#include "gameobjects/map/cPreviewMaps.h"
 
 #include <cassert>
 

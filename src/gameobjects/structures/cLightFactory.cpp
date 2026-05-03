@@ -4,7 +4,7 @@
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "definitions.h"
-#include "map/cMapCamera.h"
+#include "gameobjects/map/cMapCamera.h"
 #include "player/cPlayer.h"
 
 // Constructor
