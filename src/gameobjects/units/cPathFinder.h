@@ -26,6 +26,7 @@ public:
     int returnCloseGoal(int iCll, int iMyCell, int iID);
     void resize(int newSize);
     void serviceInit(sGameServices* services);
+    void resetPathCreatedByUnit();
 private:
     cGameSettings *m_settings = nullptr;
     cGameObjectContext *m_objects = nullptr;
@@ -46,6 +47,7 @@ private:
     int m_pathCountUnits = 0;
     bool m_valid = false;
     bool m_success = false;
+    int m_pathsCreated = 0;
 
     std::vector<ASTAR> m_pathMap;
     std::vector<int> m_tempPath;

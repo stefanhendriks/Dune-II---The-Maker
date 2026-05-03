@@ -364,6 +364,11 @@ void cMap::thinkFast()
     thinkAboutRespawningWorms();
 }
 
+void cMap::thinkSlow()
+{
+    m_pathFinder->resetPathCreatedByUnit();
+}
+
 void cMap::thinkAboutRespawningWorms()
 {
     if (m_iTIMER_respawnSandworms < 0) return;

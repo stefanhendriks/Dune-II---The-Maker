@@ -82,7 +82,7 @@ int cPathFinder::validateCreatePathInput(int iUnitId)
 
     // Too many paths where created , so we wait a little.
     // make sure not to create too many paths at once
-    if (m_settings->getPathsCreated() > 40) {
+    if (m_pathsCreated > 40) {
         m_activeUnit->log("CREATE_PATH -- END 3");
         m_activeUnit->movewaitTimer.reset(50 + RNG::rnd(50));
         return -3;
@@ -120,7 +120,8 @@ void cPathFinder::initializeCreatePathSearch(int iPathCountUnits)
     m_valid = true;
     m_success = false;
 
-    m_settings->setPathsCreated(m_settings->getPathsCreated() + 1);
+    // m_settings->setPathsCreated(m_settings->getPathsCreated() + 1);
+    m_pathsCreated++;
     for (auto &cell : m_pathMap) {
         cell.cost = -1;
         cell.parent = -1;
@@ -643,4 +644,9 @@ int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
 
     // fail
     return iCll;
+}
+
+void cPathFinder::resetPathCreatedByUnit()
+{
+    m_pathsCreated = 0;
 }

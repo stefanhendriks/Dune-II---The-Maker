@@ -68,12 +68,12 @@ public:
     bool isAllowRepeatingReinforcements() const {
         return m_allowRepeatingReinforcements;
     }
-    int getPathsCreated() const {
-        return m_pathsCreated;
-    }
-    void setPathsCreated(int value) {
-        m_pathsCreated = value;
-    }
+    // int getPathsCreated() const {
+    //     return m_pathsCreated;
+    // }
+    // void setPathsCreated(int value) {
+    //     m_pathsCreated = value;
+    // }
     int getMusicType() const {
         return m_musicType;
     }
@@ -110,7 +110,7 @@ private:
     bool m_drawTime;
     bool m_allowRepeatingReinforcements;
 
-    int m_pathsCreated;
+    // int m_pathsCreated;
     int m_musicType;
 
     //-----------------------

@@ -34,7 +34,7 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     assert(m_settings != nullptr);
     m_TIMER_evaluatePlayerStatus = 5;
 
-    m_settings->setPathsCreated(0);
+    // m_settings->setPathsCreated(0);
     
     //fix others pointers
     m_interface = m_ctx->getGameInterface();
@@ -129,7 +129,8 @@ void cGamePlaying::thinkSlow()
 {
     evaluatePlayerStatus(); // so we can call non-const from a const :S
 
-    m_settings->setPathsCreated(0);
+    // m_settings->setPathsCreated(0);
+    m_objects->getMap().thinkSlow();
 
     //@mira
     if (!m_settings->isDisableReinforcements()) {
@@ -245,7 +246,8 @@ void cGamePlaying::drawCombatMouse() const
 
 void cGamePlaying::missionInit()
 {
-    m_settings->setPathsCreated(0);
+    // m_settings->setPathsCreated(0);
+    m_objects->getMap().thinkSlow();
     m_TIMER_evaluatePlayerStatus = 5;
 }
 
