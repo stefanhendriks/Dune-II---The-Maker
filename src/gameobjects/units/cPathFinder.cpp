@@ -9,9 +9,13 @@
 #include "utils/RNG.hpp"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "utils/d2tm_math.h"
+
+#include "game/cGameSettings.h"
+#include "controls/cGameControlsContext.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "game/cGameSettings.h"
+#include "context/GameContext.hpp"
+#include "include/sGameServices.h"
 
 #include <algorithm>
 //#include <set>
@@ -33,6 +37,21 @@ void cPathFinder::resize(int newSize)
 {
     m_pathMap.resize(newSize);
     std::fill(m_tempPath.begin(), m_tempPath.end(), -1);
+}
+
+void cPathFinder::serviceInit(sGameServices* services)
+{
+    assert(services != nullptr);
+    auto ctx = services->ctx;
+    assert(ctx != nullptr);
+    m_log = ctx->getLog();
+    assert(m_log != nullptr);
+    m_infos = services->info;
+    assert(m_infos != nullptr);
+    m_settings = services->settings;
+    assert(m_settings != nullptr);
+    m_objects = services->objects;
+    assert(m_objects != nullptr);
 }
 
 int cPathFinder::validateCreatePathInput(int iUnitId)

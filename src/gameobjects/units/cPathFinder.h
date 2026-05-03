@@ -9,6 +9,12 @@ struct ASTAR {
 };
 
 class cUnit;
+class sGameServices;
+class cGameSettings;
+class cGameObjectContext;
+class cGameInfoContext;
+class cLog;
+class cInfoContext;
 
 class cPathFinder {
 public:
@@ -17,7 +23,12 @@ public:
     int createPath(int iUnitId, int iPathCountUnits);
     int returnCloseGoal(int iCll, int iMyCell, int iID);
     void resize(int newSize);
+    void serviceInit(sGameServices* services);
 private:
+    cGameSettings *m_settings = nullptr;
+    cGameObjectContext *m_objects = nullptr;
+    cInfoContext *m_infos = nullptr;
+    cLog *m_log = nullptr;
     int validateCreatePathInput(int iUnitId);
     void initializeCreatePathSearch(int iPathCountUnits);
     void executeCreatePathSearch();
