@@ -24,7 +24,7 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
-#include "mentat/AbstractMentat.h"
+#include "gameobjects/mentat/AbstractMentat.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "utils/cLog.h"

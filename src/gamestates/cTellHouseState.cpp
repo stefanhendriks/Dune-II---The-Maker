@@ -1,5 +1,5 @@
 #include "gamestates/cTellHouseState.h"
-#include "mentat/BeneMentat.h"
+#include "gameobjects/mentat/BeneMentat.h"
 #include "utils/ini.h"
 #include "controls/cMouse.h"
 #include "include/iniDefine.h"

@@ -1994,7 +1994,7 @@ bool cPlayer::startBuilding(cBuildingListItem *pItem)
 
 void cPlayer::onEntityDiscovered(const CommonEvent &event)
 {
-//    if (!event.player->isHuman()) { // todo == interacting player? (have a mentat/sound thing that listens to events??)
+//    if (!event.player->isHuman()) { // todo == interacting player? (have a gameobjects/mentat/sound thing that listens to events??)
 //        // do nothing
 //        return;
 //    }

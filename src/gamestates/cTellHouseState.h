@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cGameState.h"
-#include "mentat/AbstractMentat.h"
+#include "gameobjects/mentat/AbstractMentat.h"
 
 #include <memory>
 
