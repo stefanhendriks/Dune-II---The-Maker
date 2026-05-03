@@ -5,7 +5,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "definitions.h"
 #include "gameobjects/map/cMapCamera.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 
 // Constructor
 cLightFactory::cLightFactory()

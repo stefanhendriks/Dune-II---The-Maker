@@ -9,8 +9,8 @@
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
 #include "utils/cStructureUtils.h"
-#include "player/cPlayer.h"
-#include "player/cPlayerDifficultySettings.h"
+#include "gameobjects/players/cPlayer.h"
+#include "gameobjects/players/cPlayerDifficultySettings.h"
 #include "sGameEvent.h"
 #include "sidebar/cBuildingList.h"
 

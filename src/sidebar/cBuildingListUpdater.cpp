@@ -2,7 +2,7 @@
 #include "building/cItemBuilder.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/cLog.h"
 #include "sidebar/cSideBar.h"
 #include "gameobjects/structures/cOrderProcesser.h"

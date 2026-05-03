@@ -1,6 +1,6 @@
 #include "cRespondToThreatAction.h"
 
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"

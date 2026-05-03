@@ -10,7 +10,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/units/cUnit.h"
 #include "utils/d2tm_math.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"

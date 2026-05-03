@@ -4,7 +4,7 @@
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "include/Texture.hpp"
 #include <cassert>
 

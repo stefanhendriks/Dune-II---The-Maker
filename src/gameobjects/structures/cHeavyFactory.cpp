@@ -5,7 +5,7 @@
 #include "definitions.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 
 cHeavyFactory::cHeavyFactory()
 {

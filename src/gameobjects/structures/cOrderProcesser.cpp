@@ -9,7 +9,7 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 #include "gameobjects/structures/cStructures.h"

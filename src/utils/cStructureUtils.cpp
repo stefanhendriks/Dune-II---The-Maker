@@ -13,7 +13,7 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/map/MapGeometry.hpp"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 
 #include <format>
 

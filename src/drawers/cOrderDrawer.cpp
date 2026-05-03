@@ -5,7 +5,7 @@
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cOrderProcesser.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
 #include "utils/texture_utils.h"

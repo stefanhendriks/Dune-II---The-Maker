@@ -7,7 +7,7 @@
 #include "context/GameContext.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/Graphics.hpp"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/map/cMapCamera.h"

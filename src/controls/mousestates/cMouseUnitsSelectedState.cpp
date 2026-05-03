@@ -12,7 +12,7 @@
 #include "utils/cStructureUtils.h"
 #include "sidebar/cSideBar.h"
 #include "gameobjects/map/cMapCamera.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
 

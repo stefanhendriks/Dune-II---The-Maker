@@ -2,7 +2,7 @@
 
 #include "cPlayerBrainMissionKind.h"
 #include "observers/cScenarioObserver.h"
-#include "player/brains/cPlayerBrainData.h"
+#include "gameobjects/players/brains/cPlayerBrainData.h"
 
 #include <vector>
 

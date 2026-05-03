@@ -7,7 +7,7 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "drawers/cMiniMapDrawer.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "gameobjects/map/cMapCamera.h"
 
 cInteractionManager::cInteractionManager(cPlayer *thePlayer) : cInputObserver()

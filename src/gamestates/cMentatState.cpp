@@ -11,7 +11,7 @@
 #include "utils/ini.h"
 #include "include/iniDefine.h"
 #include "utils/RNG.hpp"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "data/gfxdata.h"
 #include "include/sDataCampaign.h"
 

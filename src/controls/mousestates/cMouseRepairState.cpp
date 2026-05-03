@@ -10,7 +10,7 @@
 #include "context/cGameObjectContext.h"
 #include "gameobjects/units/cUnits.h"
 #include "utils/cStructureUtils.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 
 #include <algorithm>
 #include <cassert>

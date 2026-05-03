@@ -8,7 +8,7 @@
 #include "gameobjects/structures/cSpiceSilo.h"
 #include "gameobjects/structures/cWindTrap.h"
 #include "gui/cTextWriter.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 
 #include <SDL2/SDL.h>
 #include <algorithm>

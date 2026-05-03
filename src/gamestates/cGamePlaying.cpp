@@ -14,8 +14,8 @@
 #include "gameobjects/units/cUnits.h"
 #include <SDL2/SDL.h>
 #include "managers/cDrawManager.h"
-#include "player/cPlayer.h"
-#include "player/cPlayers.h"
+#include "gameobjects/players/cPlayer.h"
+#include "gameobjects/players/cPlayers.h"
 #include "controls/cGameControlsContext.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"

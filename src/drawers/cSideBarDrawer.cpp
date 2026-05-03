@@ -6,7 +6,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cOrderDrawer.h"
 #include "managers/cDrawManager.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/Graphics.hpp"
 #include "utils/texture_utils.h"
 #include "context/GameContext.hpp"

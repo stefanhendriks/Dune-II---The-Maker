@@ -5,9 +5,9 @@
 #include "definitions.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/units/cUnit.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/cSoundPlayer.h"
-#include "player/cPlayerDifficultySettings.h"
+#include "gameobjects/players/cPlayerDifficultySettings.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 

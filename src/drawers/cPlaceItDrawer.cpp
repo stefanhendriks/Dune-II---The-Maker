@@ -7,7 +7,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/MapGeometry.hpp"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/Graphics.hpp"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/structures/cStructures.h"

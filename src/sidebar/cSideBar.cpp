@@ -4,7 +4,7 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/cLog.h"
 #include "utils/cSoundPlayer.h"
 #include "controls/cGameControlsContext.h"

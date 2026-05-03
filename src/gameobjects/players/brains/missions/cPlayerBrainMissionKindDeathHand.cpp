@@ -11,7 +11,7 @@
 #include "include/sGameEvent.h"
 #include "gameobjects/map/cMap.h"
 #include "definitions.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
 #include <cassert>

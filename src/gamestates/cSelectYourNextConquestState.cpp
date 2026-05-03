@@ -11,7 +11,7 @@
 #include "utils/texture_utils.h"
 #include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"

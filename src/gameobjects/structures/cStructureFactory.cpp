@@ -27,8 +27,8 @@
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "utils/cStructureUtils.h"
-#include "player/cPlayer.h"
-#include "player/cPlayers.h"
+#include "gameobjects/players/cPlayer.h"
+#include "gameobjects/players/cPlayers.h"
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"
 #include <format>

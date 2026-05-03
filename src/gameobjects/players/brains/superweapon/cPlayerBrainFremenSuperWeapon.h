@@ -1,6 +1,6 @@
 #pragma once
 
-#include "player/brains/cPlayerBrain.h"
+#include "gameobjects/players/brains/cPlayerBrain.h"
 
 namespace brains {
 

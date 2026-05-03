@@ -6,7 +6,7 @@
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cUnits.h"
-#include "player/cPlayers.h"
+#include "gameobjects/players/cPlayers.h"
 #include "gameobjects/map/cMap.h"
 
 std::unique_ptr<cGameObjectContext> cGameObjectsContextCreator::create()

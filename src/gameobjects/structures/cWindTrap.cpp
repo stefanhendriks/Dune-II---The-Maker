@@ -4,7 +4,7 @@
 #include "include/d2tmc.h"
 #include "utils/cLog.h"
 #include "definitions.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"

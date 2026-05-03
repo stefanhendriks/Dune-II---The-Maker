@@ -24,7 +24,7 @@
 #include "cPlayerNotification.h"
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
-#include "player/brains/cPlayerBrain.h"
+#include "gameobjects/players/brains/cPlayerBrain.h"
 #include "utils/cRectangle.h"
 
 
@@ -441,7 +441,7 @@ public:
     int findRandomStructureTarget(int iAttackPlayer);
 
     /**
-     * Places structure (if allowed), source is building list item (ie something the player/AI built and wanted to place). Also
+     * Places structure (if allowed), source is building list item (ie something the gameobjects/players/AI built and wanted to place). Also
      * takes care of the buildingList management after placement. The buildingList management is applied regardless if
      * the structure got placed or not.
      *

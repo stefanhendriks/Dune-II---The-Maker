@@ -4,8 +4,8 @@
 #include "game/cGame.h"
 #include "utils/cLog.h"
 #include "include/d2tmc.h"
-#include "player/cPlayer.h"
-#include "player/cPlayers.h"
+#include "gameobjects/players/cPlayer.h"
+#include "gameobjects/players/cPlayers.h"
 
 #include <cassert>
 

@@ -1,5 +1,5 @@
 #include "texture_utils.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "game/cGame.h"
 #include "include/d2tmc.h"

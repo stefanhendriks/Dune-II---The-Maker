@@ -1,4 +1,4 @@
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "cPlayerBrainMission.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"

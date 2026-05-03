@@ -4,7 +4,7 @@
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "sidebar/cSideBar.h"
 
 #include <algorithm>

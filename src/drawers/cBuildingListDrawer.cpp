@@ -5,7 +5,7 @@
 #include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "gameobjects/structures/cOrderProcesser.h"
-#include "player/cPlayer.h"
+#include "gameobjects/players/cPlayer.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"

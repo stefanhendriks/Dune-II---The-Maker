@@ -1,9 +1,9 @@
 #pragma once
 
 #include "gameobjects/units/cUnit.h"
-#include "player/brains/cPlayerBrain.h"
-#include "player/brains/cPlayerBrainData.h"
-#include "player/brains/missions/cPlayerBrainMission.h"
+#include "gameobjects/players/brains/cPlayerBrain.h"
+#include "gameobjects/players/brains/cPlayerBrainData.h"
+#include "gameobjects/players/brains/missions/cPlayerBrainMission.h"
 
 #include <set>
 

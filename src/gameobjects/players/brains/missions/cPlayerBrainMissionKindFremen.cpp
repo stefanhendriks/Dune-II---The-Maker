@@ -3,8 +3,8 @@
 #include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
-#include "player/cPlayer.h"
-#include "player/cPlayers.h"
+#include "gameobjects/players/cPlayer.h"
+#include "gameobjects/players/cPlayers.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include <cassert>
