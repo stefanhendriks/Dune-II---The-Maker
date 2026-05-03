@@ -9,7 +9,7 @@ struct ASTAR {
 };
 
 class cUnit;
-class sGameServices;
+struct sGameServices;
 class cGameSettings;
 class cGameObjectContext;
 class cGameInfoContext;
