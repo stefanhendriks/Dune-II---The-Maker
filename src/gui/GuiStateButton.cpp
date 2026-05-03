@@ -59,6 +59,10 @@ void GuiStateButton::onNotifyMouseEvent(const s_MouseEvent &event)
         return;
     if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
         if (m_group.has_value()) {
+            if (m_group.value()->isCurrentlySelected(this) && m_onLeftMouseButtonClickedAction) {
+                m_onLeftMouseButtonClickedAction();
+                return;
+            }
             m_group.value()->updateStates(this);
         } else {
             setPressed(true);

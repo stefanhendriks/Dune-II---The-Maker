@@ -28,3 +28,8 @@ void GuiButtonGroup::add(GuiStateButton* button)
 {
     members.push_back(button);
 }
+
+bool GuiButtonGroup::isCurrentlySelected(const GuiStateButton* button) const
+{
+    return m_currentlySelected == button;
+}
