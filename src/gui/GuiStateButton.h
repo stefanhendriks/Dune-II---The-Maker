@@ -12,7 +12,6 @@ class GuiButtonGroup;
 struct GuiStateButtonParams {
     cRectangle rect;
     SDLDrawer* renderer = nullptr;
-    GuiRenderKind kind = GuiRenderKind::TRANSPARENT_WITHOUT_BORDER;
     GuiTheme theme = cGuiThemeBuilder().light().build();
     std::function<void()> onLeftClick = nullptr;
     std::function<void()> onRightClick = nullptr;
@@ -28,7 +27,6 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
     void setTexture(Texture* tex);
-    void setRenderKind(GuiRenderKind value);
     void setPressed(bool value);
     void setGroup(GuiButtonGroup* group);
     void draw() const override;
@@ -39,7 +37,6 @@ private:
     void changeState(GuiState newState);
     Texture* m_tex =nullptr;
     EnumArray<std::unique_ptr<cRectangle>,GuiState> rectState;
-    GuiRenderKind m_renderKind;
     GuiState m_state;
     cRectangle* m_currentRectState;
     std::function<void()> m_onLeftMouseButtonClickedAction;
@@ -60,11 +57,6 @@ public:
         return *this;
     }
     
-    GuiStateButtonBuilder& withKind(GuiRenderKind kind) {
-        params.kind = kind;
-        return *this;
-    }
-
     GuiStateButtonBuilder& onClick(std::function<void()> callback) {
         params.onLeftClick = std::move(callback);
         return *this;
@@ -87,7 +79,6 @@ public:
 
     std::unique_ptr<GuiStateButton> build() const {
         auto btn = std::make_unique<GuiStateButton>(params.renderer, params.rect);
-        btn->setRenderKind(params.kind);
         btn->setTheme(params.theme);
         btn->setTexture(params.tex);
         if (params.group) {
@@ -98,7 +89,7 @@ public:
         }
         if (params.onRightClick) {
             btn->setOnRightMouseButtonClickedAction(params.onRightClick);
-        }        
+        }
         return btn;
     }
 

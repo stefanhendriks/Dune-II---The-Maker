@@ -105,8 +105,3 @@ void GuiStateButton::setOnRightMouseButtonClickedAction(std::function<void()> ac
 {
     m_onRightMouseButtonClickedAction = std::move(action);
 }
-
-void GuiStateButton::setRenderKind(GuiRenderKind value)
-{
-    m_renderKind = value;
-}
