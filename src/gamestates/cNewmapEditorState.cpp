@@ -178,8 +178,17 @@ void cNewMapEditorState::constructWindow()
         .onClick([this](){
             // On récupère les valeurs localement pour être sûr
             std::string name = m_inputName->getText();
+            if (name.empty()) {
+                name = "New unamed map";
+            }
             std::string author = m_inputAuthor->getText();
+            if (author.empty()) {
+                author = "Unknown user";
+            }
             std::string desc = m_inputDescription->getText();
+            if (desc.empty()) {
+                desc = "Made with D2TM: Internal Editor";
+            }
             int width = m_cycleWidth->getSelectedValue()+borderSize;
             int height = m_cycleHeight->getSelectedValue()+borderSize;
             s_PreviewMap newMap = cPreviewMaps::createEmptyMap(name, author, desc, width, height);
