@@ -11,6 +11,7 @@
 #include "gameobjects/map/cPreviewMaps.h"
 
 #include <cassert>
+#include <chrono>
 
 static const int borderSize = 2;
 
@@ -179,7 +180,8 @@ void cNewMapEditorState::constructWindow()
             // On récupère les valeurs localement pour être sûr
             std::string name = m_inputName->getText();
             if (name.empty()) {
-                name = "New unamed map";
+                auto now = std::chrono::system_clock::now();
+                std::string name = std::format("New unnamed map {:%Y-%m-%d %H:%M:%S}", now);
             }
             std::string author = m_inputAuthor->getText();
             if (author.empty()) {
