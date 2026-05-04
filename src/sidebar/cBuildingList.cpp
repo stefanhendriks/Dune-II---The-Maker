@@ -118,8 +118,6 @@ void cBuildingList::addSpecialToList(int specialType, int subList)
 bool cBuildingList::addItemToList(cBuildingListItem *item)
 {
     if (isItemInList(item)) {
-//		logbook("Will not add, item is already in list.");
-        // item is already in list, do not add
         return false;
     }
 
@@ -136,9 +134,6 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
     item->setSlotId(slotId);
     item->setList(this);
     m_maxItems = slotId + 1;
-//	char msg[355];
-//	sprintf(msg, "Icon added with id [%d] added to cBuilding list, put in slot[%d], set m_maxItems to [%d]", item->getBuildId(), slot, m_maxItems);
-//	logbook(msg);
 
     // notify game that the item just has been added!
     cPlayer *pPlayer = m_itemBuilder->getPlayer();

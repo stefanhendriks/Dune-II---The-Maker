@@ -151,11 +151,22 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
         if (house == ATREIDES) {
             listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
         }
-        else if (house == HARKONNEN || house == SARDAUKAR) {
+        else if (house == HARKONNEN) {
             listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
         }
         else if (house == ORDOS) {
             listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
+        }
+        else if (house == SARDAUKAR) {
+            if (m_player->isUpgradeApplied(UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK)) {
+                listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
+            }
+            if (m_player->isUpgradeApplied(UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR)) {
+                listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
+            }
+            if (m_player->isUpgradeApplied(UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR)) {
+                listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
+            }
         }
     }
 
@@ -383,9 +394,15 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
             else if (m_player->getHouse() == ORDOS) {
                 listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
             } else if (m_player->getHouse() == SARDAUKAR) {
-                listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
-                listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
-                listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
+                if (m_player->isUpgradeApplied(UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK)) {
+                    listUnits->addUnitToList(SONICTANK, SUBLIST_HEAVYFCTRY);
+                }
+                if (m_player->isUpgradeApplied(UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR)) {
+                    listUnits->addUnitToList(DEVASTATOR, SUBLIST_HEAVYFCTRY);
+                }
+                if (m_player->isUpgradeApplied(UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR)) {
+                    listUnits->addUnitToList(DEVIATOR, SUBLIST_HEAVYFCTRY);
+                }
             }
         }
         else {
@@ -528,30 +545,40 @@ void cBuildingListUpdater::evaluateUpgrades()
             }
         }
 
-        // check if the structure to upgradeInfo is at the expected level
-        int structureUpgradeLevel = m_player->getStructureUpgradeLevel(upgradeInfo.structureType);
+        // check if the upgrade has been done already / is at the expected level
+        if (upgradeInfo.dependsOnStructureLevel) {
+            int structureUpgradeLevel = m_player->getStructureUpgradeLevel(upgradeInfo.structureType);
 
-        if (structureUpgradeLevel != upgradeInfo.atUpgradeLevel) {
-            // already at correct upgradeInfo level, no = comparison because that means it should be offered
-            if (structureUpgradeLevel > upgradeInfo.atUpgradeLevel) {
-                // this upgradeInfo has been executed already, so apply again,
-                // but only if we have the required structure(s)
+            if (structureUpgradeLevel != upgradeInfo.atUpgradeLevel) {
+                // already at correct upgradeInfo level, no = comparison because that means it should be offered
+                if (structureUpgradeLevel > upgradeInfo.atUpgradeLevel) {
+                    // this upgradeInfo has been executed already, so apply again,
+                    // but only if we have the required structure(s)
+                    if (hasRequiredStructureType) {
+                        applyUpgrade(upgradeInfo);
+                        m_player->log(std::format(
+                                        "Upgrade [{}] has already been achieved, so re-apply. StructureUpgradeLevel={} and upgradeInfo.atUpgradeLevel={}.",
+                                        upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel));
+                    }
+                    else {
+                        m_player->log(std::format(
+                                        "Upgrade [{}] has already been achieved, But will not be re-applied because required (additional) structure type is/are present.",
+                                        upgradeInfo.description));
+                    }
+                }
+                addToUpgradesList = false;
+                m_player->log(std::format(
+                                "Upgrade [{}] will not be offered because it has a different atUpgradeLevel. StructureUpgradeLevel={} and upgradeInfo.atUpgradeLevel={} not required additional structureType (upgradeInfo.needsStructureType).",
+                                upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel));
+            }
+        } else {
+            if (m_player->isUpgradeApplied(i)) {
                 if (hasRequiredStructureType) {
                     applyUpgrade(upgradeInfo);
-                    m_player->log(std::format(
-                                    "Upgrade [{}] has already been achieved, so re-apply. StructureUpgradeLevel={} and upgradeInfo.atUpgradeLevel={}.",
-                                    upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel));
+                    m_player->log(std::format("Upgrade [{}] has already been applied independently, so re-apply.", upgradeInfo.description));
                 }
-                else {
-                    m_player->log(std::format(
-                                    "Upgrade [{}] has already been achieved, But will not be re-applied because required (additional) structure type is/are present.",
-                                    upgradeInfo.description));
-                }
+                addToUpgradesList = false;
             }
-            addToUpgradesList = false;
-            m_player->log(std::format(
-                            "Upgrade [{}] will not be offered because it has a different atUpgradeLevel. StructureUpgradeLevel={} and upgradeInfo.atUpgradeLevel={} not required additional structureType (upgradeInfo.needsStructureType).",
-                            upgradeInfo.description, structureUpgradeLevel, upgradeInfo.atUpgradeLevel));
         }
 
         if (addToUpgradesList) {
@@ -599,7 +626,11 @@ void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item)
     const s_UpgradeInfo &upgradeType = item->getUpgradeInfo();
 
     // Upgrade structure + provide any unit or structure
-    m_player->increaseStructureUpgradeLevel(upgradeType.structureType);
+    if (upgradeType.dependsOnStructureLevel) {
+        m_player->increaseStructureUpgradeLevel(upgradeType.structureType);
+    } else {
+        m_player->setUpgradeApplied(item->getBuildId());
+    }
 
     applyUpgrade(upgradeType);
 

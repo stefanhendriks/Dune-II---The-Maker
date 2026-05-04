@@ -1272,7 +1272,9 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].icon = ICON_UNIT_SONICTANK;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].cost = game.m_infoContext->getUnitInfo(SONICTANK).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].structureType = IX;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].atUpgradeLevel = 0; // After upgrade to Rocket Launcher
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].needsStructureType = HEAVYFACTORY;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].atUpgradeLevel = 0;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].dependsOnStructureLevel = false;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesType = UNIT;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesTypeId = SONICTANK;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesTypeList = eListType::LIST_UNITS;
@@ -1289,7 +1291,9 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].icon = ICON_UNIT_DEVIATOR;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].cost = game.m_infoContext->getUnitInfo(DEVIATOR).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].structureType = IX;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].atUpgradeLevel = 0; // After upgrade to Rocket Launcher
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].needsStructureType = HEAVYFACTORY;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].atUpgradeLevel = 0;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].dependsOnStructureLevel = false;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesType = UNIT;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesTypeId = DEVIATOR;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesTypeList = eListType::LIST_UNITS;
@@ -1306,7 +1310,9 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].icon = ICON_UNIT_DEVASTATOR;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].cost = game.m_infoContext->getUnitInfo(DEVASTATOR).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].structureType = IX;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].atUpgradeLevel = 0; // After upgrade to Rocket Launcher
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].needsStructureType = HEAVYFACTORY;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].atUpgradeLevel = 0;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].dependsOnStructureLevel = false;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesType = UNIT;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesTypeId = DEVASTATOR;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesTypeList = eListType::LIST_UNITS;

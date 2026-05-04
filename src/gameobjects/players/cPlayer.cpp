@@ -230,6 +230,10 @@ void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
         iStructureUpgradeLevel[i] = 0;
     }
 
+    for (int i = 0; i < MAX_UPGRADETYPES; i++) {
+        m_appliedUpgrades[i] = false;
+    }
+
     credits = 0;
     maxCredits_ = 1000;
     focusCell_ = 0;

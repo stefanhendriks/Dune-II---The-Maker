@@ -28,6 +28,7 @@
 #include "utils/cRectangle.h"
 
 
+#include "gameobjects/cUpgradeInfo.h"
 #include "gameobjects/units/cUnitInfos.h"
 
 #include <set>
@@ -283,6 +284,20 @@ public:
         if (structureType < 0) return;
         if (structureType >= MAX_STRUCTURETYPES) return;
         iStructureUpgradeLevel[structureType]++;
+    }
+
+    bool isUpgradeApplied(int upgradeIndex) const {
+        if (upgradeIndex < 0 || upgradeIndex >= MAX_UPGRADETYPES) {
+            return false;
+        }
+        return m_appliedUpgrades[upgradeIndex];
+    }
+
+    void setUpgradeApplied(int upgradeIndex) {
+        if (upgradeIndex < 0 || upgradeIndex >= MAX_UPGRADETYPES) {
+            return;
+        }
+        m_appliedUpgrades[upgradeIndex] = true;
     }
 
     void setTeam(int value) {
@@ -596,6 +611,7 @@ private:
     int iPrimaryBuilding[MAX_STRUCTURETYPES];    // remember the primary ID (structure id) of each structure type
     int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
     int iStructureUpgradeLevel[MAX_STRUCTURETYPES]; // remember the upgrade level for each structure type
+    bool m_appliedUpgrades[MAX_UPGRADETYPES]; // tracks which independent upgrades have been applied
 
     int powerUsage_;      // total amount of power usage
     int powerProduce_;      // total amount of power generated

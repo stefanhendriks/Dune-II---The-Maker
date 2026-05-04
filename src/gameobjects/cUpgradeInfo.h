@@ -24,6 +24,7 @@ struct s_UpgradeInfo {
     unsigned char house; // 8-bit-flag for which house this upgrade applies.
     int techLevel;      // the minimum techlevel required for this upgrade
     int atUpgradeLevel; // linear upgradeLevel per structure type, this is the nr where this upgrade is offered. (0 = start)
+    bool dependsOnStructureLevel = true; // when true, uses the shared linear structureUpgradeLevel chain; when false, tracked individually per upgrade
     int structureType;  // if > -1 then increase upgradeLevel for structureType (this is the structureType being 'upgraded')
     int needsStructureType; // the upgrade is only available when this structure is available, this is additional to the structureType property
     // above, so if you require CONSTYARD *and* RADAR you set structureType=CONSTYARD and needsStructure=RADAR, keep -1
