@@ -94,6 +94,7 @@ public:
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
     std::unique_ptr<cStructureUtils>   m_structureUtils;
+    std::shared_ptr<cReinforcements> m_reinforcements;
     // end
 
     //todo: this should get moved to private, but not yet.
@@ -201,7 +202,7 @@ public:
 
     void goingToWinLoseBrief(int value);
 
-    cReinforcements* getReinforcements() const;
+    // cReinforcements* getReinforcements() const;
 
     s_DataCampaign* getDataCampaign() const;
 
@@ -236,7 +237,6 @@ private:
 
     std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
-    std::shared_ptr<cReinforcements> m_reinforcements;
     std::unique_ptr<InitialGameSettings> m_initialGameSettings;
 
     // Non-owning shortcut to the players container (owned by m_gameObjectsContext)

@@ -101,7 +101,7 @@ void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const
 
 cReinforcements* cGameInterface::getReinforcements() const
 {
-    return m_game->getReinforcements();
+    return m_game->m_reinforcements.get();
 }
 
 void cGameInterface::setMissionWon() const
