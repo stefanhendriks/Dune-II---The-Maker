@@ -98,9 +98,10 @@ void cMap::serviceInit(sGameServices* services)
     m_pathFinder->serviceInit(services);
 }
 
-void cMap::setReinforcements(std::shared_ptr<cReinforcements> reinforcements)
+void cMap::setReinforcements(cReinforcements* reinforcements)
 {
     m_reinforcements = reinforcements;
+    assert(m_reinforcements != nullptr);
 }
 
 void cMap::setTerrainInfo(s_TerrainInfo* terrainInfo)

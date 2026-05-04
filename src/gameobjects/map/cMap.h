@@ -436,7 +436,7 @@ public:
 
     void setDesiredAmountOfWorms(int value);
 
-    void setReinforcements(std::shared_ptr<cReinforcements> reinforcements);
+    void setReinforcements(cReinforcements* reinforcements);
 
     [[nodiscard]] MapGeometry &getGeometry() const;
 
@@ -466,7 +466,7 @@ private:
     int m_iTIMER_blooms;
     std::map<int, int> m_mBloomTimers;
 
-    std::shared_ptr<cReinforcements> m_reinforcements;
+    cReinforcements* m_reinforcements = nullptr;
     s_TerrainInfo* m_terrainInfo = nullptr;
     // Sandworms related
     int m_iDesiredAmountOfWorms;

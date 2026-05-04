@@ -94,7 +94,7 @@ public:
     cMapCamera					*m_mapCamera;
     cDrawManager                *m_drawManager;
     std::unique_ptr<cStructureUtils>   m_structureUtils;
-    std::shared_ptr<cReinforcements> m_reinforcements;
+    std::unique_ptr<cReinforcements> m_reinforcements;
     // end
 
     //todo: this should get moved to private, but not yet.

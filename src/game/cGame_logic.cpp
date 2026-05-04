@@ -540,8 +540,8 @@ bool cGame::setupGame()
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_gameSettings->m_debugMode);
     std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_gameSettings->m_debugMode);
 
-    m_reinforcements = std::make_shared<cReinforcements>();
-    m_gameObjectsContext->getMap().setReinforcements(m_reinforcements);
+    m_reinforcements = std::make_unique<cReinforcements>();
+    m_gameObjectsContext->getMap().setReinforcements(m_reinforcements.get());
 
     game.init(); // Must be first! (loads game.ini file at the end, which is required before going on...)
 
