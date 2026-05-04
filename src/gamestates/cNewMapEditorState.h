@@ -39,5 +39,5 @@ private:
     GuiTextInput* m_inputDescription = nullptr;
     GuiCycleButton* m_cycleWidth = nullptr;
     GuiCycleButton* m_cycleHeight = nullptr;
-    std::vector<int> m_sizesMap = {16, 24, 32, 64, 96, 128, 160, 192, 224, 256};
+    std::vector<int> m_sizesMap = {16, 24, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 232, 256};
 };
