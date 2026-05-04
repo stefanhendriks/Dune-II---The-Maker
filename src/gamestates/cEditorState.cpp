@@ -480,6 +480,7 @@ void cEditorState::loadMap(s_PreviewMap* map)
     m_mapAuthor = map->author;
     m_mapDescription = map->description;
     m_mapName = map->name;
+    startCells.fill({-1, -1});
     for (int i=0; i<MAX_SKIRMISHMAP_PLAYERS; i++) {
         if (map->iStartCell[i] !=-1) {
             //std::cout << "startCell " << map->iStartCell[i] << std::endl;
