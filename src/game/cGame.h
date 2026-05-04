@@ -202,8 +202,6 @@ public:
 
     void goingToWinLoseBrief(int value);
 
-    // cReinforcements* getReinforcements() const;
-
     s_DataCampaign* getDataCampaign() const;
 
     int getCurrentState() const;
