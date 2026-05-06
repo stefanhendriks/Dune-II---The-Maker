@@ -324,7 +324,7 @@ Color cPlayer::getEmblemBackgroundColorForHouse(int houseId)
         case ORDOS:
             return Color{0, 32, 0,255};
         case SARDAUKAR:
-            return Color{128, 0, 128,255};
+            return Color{101, 12, 101,255};
         default:
             return Color{100, 255, 100,255};
     }
