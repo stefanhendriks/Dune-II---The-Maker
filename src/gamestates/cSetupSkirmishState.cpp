@@ -1229,11 +1229,18 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
             textColor = colorDisabled;
         }
 
-        std::string displayName = mapToRender.name;
-        if (displayName.length() > 18) {
-            displayName = displayName.substr(0, 15) + "...";
+        const int availableTextWidth = mapItemButtonWidth - 8;
+        const std::string *nameToRender = &mapToRender.name;
+        std::string truncatedName;
+        if (m_textDrawer->getTextLength(mapToRender.name) > availableTextWidth) {
+            truncatedName = mapToRender.name;
+            while (!truncatedName.empty() && m_textDrawer->getTextLength(truncatedName + "...") > availableTextWidth) {
+                truncatedName.pop_back();
+            }
+            truncatedName += "...";
+            nameToRender = &truncatedName;
         }
-        m_textDrawer->drawText(iDrawX + 4, iDrawY + 4, textColor, displayName);
+        m_textDrawer->drawText(iDrawX + 4, iDrawY + 4, textColor, *nameToRender);
 
         Texture *tex = nullptr;
         if (mapIndexToRender == 0) {
