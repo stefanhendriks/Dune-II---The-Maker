@@ -15,12 +15,9 @@ cWindTrap::cWindTrap()
 {
     cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting cWindTrap", 
                 std::format("(cWindTrap)(ID {}) Constructor", this->id));
-    // other variables (class specific)
-    iFade = RNG::rnd(63);
-    bFadeDir = true;
 
-    // Timers
-    TIMER_fade = 0;
+    m_flagDir = true;
+    iFrame = RNG::rnd(6); // start with random frame, so not all windtraps are in sync
 }
 
 int cWindTrap::getType() const
@@ -38,47 +35,30 @@ void cWindTrap::thinkFast()
 {
     // think like base class
     cAbstractStructure::thinkFast();
-}
+    TIMER_flag++;
 
-void cWindTrap::think_fade()
-{
-    TIMER_fade++;
-
-    int iTime; // the speed of fading
-
-    // depending on fade direction, fade in slower/faster
-    if (bFadeDir) { // go to blue
-        iTime = 3;
-    }
-    else {   // go to black
-        iTime = 4;
-    }
-
-    // time passed, we may change fade color
-    if (TIMER_fade > iTime) {
-        if (bFadeDir) {
-            iFade++;
-
-            if (iFade > 254) {
-                bFadeDir = false;
-            }
+    if (TIMER_flag > 108) {
+        if (m_flagDir) {
+            iFrame++;
         }
         else {
-            iFade--;
-
-            if (iFade < 1) {
-                bFadeDir = true;
-            }
+            iFrame--;
         }
-
-        TIMER_fade = 0;
+        // switch between 2 and 6.
+        if (iFrame >= 6) {
+            m_flagDir = false;
+        }
+        else if (iFrame <= 2) {
+            m_flagDir = true;
+        }
+        TIMER_flag=0;
     }
+
 }
 
 void cWindTrap::think_animation()
 {
     cAbstractStructure::think_animation();
-    think_fade(); // windtrap specific blue fading
     cAbstractStructure::think_flag_new();
 }
 
@@ -88,7 +68,6 @@ void cWindTrap::think_guard()
 }
 
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
-
 int cWindTrap::getPowerOut() const
 {
     float percentage = ((float) getHitPoints() / (float) game.m_infoContext->getStructureInfo(getType()).hp);
