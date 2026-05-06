@@ -219,7 +219,7 @@ void cSideBarDrawer::drawMinimap()
     m_renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,game.m_gameSettings->getScreenW()-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1),
                                       m_player->getEmblemBackgroundColor());
 
-    if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS)) {
+    if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS) || m_player->isHouse(SARDAUKAR)) {
         int bitmapId = BMP_SELECT_HOUSE_ATREIDES;
 
         int srcX = 11;
@@ -237,6 +237,12 @@ void cSideBarDrawer::drawMinimap()
             bitmapId = BMP_SELECT_HOUSE_ORDOS;
             emblemHeight = 49;
             srcY = 11;
+        }
+
+        if (m_player->isHouse(SARDAUKAR)) {
+            bitmapId = BMP_SELECT_HOUSE_SARDAUKAR;
+            //emblemHeight = 49;
+            //srcY = 11;
         }
 
         int emblemDesiredWidth = (emblemWidth * 2);
