@@ -479,6 +479,12 @@ int cPathFinder::returnCloseGoal(int targetCell, int originCell, int unitId)
     int originX = m_mapGeometry->getCellX(originCell);
     int originY = m_mapGeometry->getCellY(originCell);
 
+    cUnit *unit = m_objects->getUnit(unitId);
+    bool unitIsInfantry = false;
+    if (unit != nullptr) {
+        unitIsInfantry = m_infos->getUnitInfo(unit->iType).infantry;
+    }
+
     bool continueSearch = true;
 
     int closestCell = -1;
@@ -503,7 +509,7 @@ int cPathFinder::returnCloseGoal(int targetCell, int originCell, int unitId)
 
                 if ((structureIdAtCandidateCell < 0) && (unitIdAtCandidateCell < 0)) {
                     int terrainType = m_map->getCellType(candidateCell);
-                    if (m_infos->getUnitInfo(m_objects->getUnit(unitId)->iType).infantry) {
+                    if (unitIsInfantry) {
                         if (terrainType == TERRAIN_MOUNTAIN)
                             continue;
                     }
