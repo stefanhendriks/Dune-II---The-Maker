@@ -141,9 +141,9 @@ void cPathFinder::executeCreatePathSearch()
             break;
         }
 
-        int idOfStructureAtCell = m_map->cellGetIdFromLayer(m_currentCell, MAPID_STRUCTURES);
+        int structureIdAtCurrentCell = m_map->cellGetIdFromLayer(m_currentCell, MAPID_STRUCTURES);
         if (m_activeUnit->iStructureID > -1) {
-            if (idOfStructureAtCell == m_activeUnit->iStructureID) {
+            if (structureIdAtCurrentCell == m_activeUnit->iStructureID) {
                 m_valid = false;
                 m_success = true;
                 m_activeUnit->log("Found structure ID");
@@ -152,7 +152,7 @@ void cPathFinder::executeCreatePathSearch()
         }
 
         if (m_activeUnit->combat.iAttackStructure > -1) {
-            if (idOfStructureAtCell == m_activeUnit->combat.iAttackStructure) {
+            if (structureIdAtCurrentCell == m_activeUnit->combat.iAttackStructure) {
                 m_valid = false;
                 m_success = true;
                 m_activeUnit->log("Found attack structure ID");
@@ -160,143 +160,143 @@ void cPathFinder::executeCreatePathSearch()
             }
         }
 
-        int cx = m_mapGeometry->getCellX(m_currentCell);
-        int cy = m_mapGeometry->getCellY(m_currentCell);
+        int currentX = m_mapGeometry->getCellX(m_currentCell);
+        int currentY = m_mapGeometry->getCellY(m_currentCell);
 
-        int sx = cx - 1;
-        int sy = cy - 1;
+        int minNeighborX = currentX - 1;
+        int minNeighborY = currentY - 1;
 
-        int ex = cx + 1;
-        int ey = cy + 1;
+        int maxNeighborX = currentX + 1;
+        int maxNeighborY = currentY + 1;
 
-        cPoint::split(sx, sy) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(sx, sy);
-        cPoint::split(ex, ey) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(ex, ey);
+        cPoint::split(minNeighborX, minNeighborY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(minNeighborX, minNeighborY);
+        cPoint::split(maxNeighborX, maxNeighborY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(maxNeighborX, maxNeighborY);
 
-        double cost = 999999999;
-        int the_cll = -1;
+        double bestCandidateCost = 999999999;
+        int bestCandidateCell = -1;
 
-        bool bail_out = false;
+        bool reachedGoalNeighbor = false;
 
         // Explore the 3x3 neighborhood around the current cell.
-        for (cx = sx; cx <= ex; cx++) {
-            for (cy = sy; cy <= ey; cy++) {
-                int cll = m_mapGeometry->getCellWithMapBorders(cx, cy);
+        for (int neighborX = minNeighborX; neighborX <= maxNeighborX; neighborX++) {
+            for (int neighborY = minNeighborY; neighborY <= maxNeighborY; neighborY++) {
+                int candidateCell = m_mapGeometry->getCellWithMapBorders(neighborX, neighborY);
 
-                if (cll < 0)
+                if (candidateCell < 0)
                     continue;
 
-                if (cll == m_currentCell)
+                if (candidateCell == m_currentCell)
                     continue;
 
-                bool good = false;
+                bool candidateIsPassable = false;
 
-                int cellType = m_map->getCellType(cll);
+                int candidateTerrainType = m_map->getCellType(candidateCell);
                 if (!m_activeUnit->isSandworm()) {
                     // For regular units, traversability depends on occupancy
                     // (units/structures), visibility, and terrain.
-                    int idOfUnitAtCell = m_map->getCellIdUnitLayer(cll);
-                    int idOfStructureAtCellNearby = m_map->getCellIdStructuresLayer(cll);
+                    int unitIdAtCandidateCell = m_map->getCellIdUnitLayer(candidateCell);
+                    int structureIdAtCandidateCell = m_map->getCellIdStructuresLayer(candidateCell);
 
-                    if (idOfUnitAtCell == -1 && idOfStructureAtCellNearby == -1) {
-                        good = true;
+                    if (unitIdAtCandidateCell == -1 && structureIdAtCandidateCell == -1) {
+                        candidateIsPassable = true;
                     }
 
-                    if (idOfStructureAtCellNearby > -1) {
+                    if (structureIdAtCandidateCell > -1) {
                         if (m_activeUnit->combat.iAttackStructure > -1)
-                            if (idOfStructureAtCellNearby == m_activeUnit->combat.iAttackStructure)
-                                good = true;
+                            if (structureIdAtCandidateCell == m_activeUnit->combat.iAttackStructure)
+                                candidateIsPassable = true;
 
                         if (m_activeUnit->iStructureID > -1)
-                            if (idOfStructureAtCellNearby == m_activeUnit->iStructureID)
-                                good = true;
+                            if (structureIdAtCandidateCell == m_activeUnit->iStructureID)
+                                candidateIsPassable = true;
 
                     }
 
-                    if (idOfUnitAtCell > -1) {
-                        if (idOfUnitAtCell != m_activeUnit->iID) {
-                            int iUID = idOfUnitAtCell;
+                    if (unitIdAtCandidateCell > -1) {
+                        if (unitIdAtCandidateCell != m_activeUnit->iID) {
+                            int blockingUnitId = unitIdAtCandidateCell;
 
                             if (m_pathCountUnits <= 0) {
-                                good = false;
+                                candidateIsPassable = false;
                                 m_activeUnit->log("iPathCountUnits <= 0 - variable 'good' becomes 'false'");
                             }
 
-                            cUnit *unitAtCell = m_objects->getUnit(iUID);
-                            if (!unitAtCell->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer())) {
-                                if (unitAtCell->isInfantryUnit() &&
+                            cUnit *blockingUnit = m_objects->getUnit(blockingUnitId);
+                            if (!blockingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer())) {
+                                if (blockingUnit->isInfantryUnit() &&
                                     m_activeUnit->canSquishInfantry())
-                                    good = true;
+                                    candidateIsPassable = true;
                             }
                         }
                         else {
-                            good = true;
+                            candidateIsPassable = true;
                         }
                     }
 
-                    if (m_map->isVisible(cll, m_controller) == false) {
-                        good = true;
+                    if (m_map->isVisible(candidateCell, m_controller) == false) {
+                        candidateIsPassable = true;
                     }
                     else {
-                        if (cellType == TERRAIN_WALL) {
-                            good = false;
+                        if (candidateTerrainType == TERRAIN_WALL) {
+                            candidateIsPassable = false;
                         }
 
                         if (!m_activeUnit->isInfantryUnit()) {
-                            if (cellType == TERRAIN_MOUNTAIN) {
-                                good = false;
+                            if (candidateTerrainType == TERRAIN_MOUNTAIN) {
+                                candidateIsPassable = false;
                             }
                         }
                     }
                 }
                 else {
-                    good = m_map->isCellPassableForWorm(cll);
+                    candidateIsPassable = m_map->isCellPassableForWorm(candidateCell);
                 }
 
-                if (!good) {
+                if (!candidateIsPassable) {
                     continue;
                 }
 
-                if (cll == m_goalCell) {
-                    the_cll = cll;
-                    cost = 0;
-                    bail_out = true;
+                if (candidateCell == m_goalCell) {
+                    bestCandidateCell = candidateCell;
+                    bestCandidateCost = 0;
+                    reachedGoalNeighbor = true;
                     m_activeUnit->log("CREATE_PATH: Found the goal cell, success, bailing out");
                     break;
                 }
 
-                bool isUnvisited = m_pathMap[cll].state == UNVISITED;
+                bool isUnvisited = m_pathMap[candidateCell].state == UNVISITED;
 
-                if (cll != m_currentCell &&
+                if (candidateCell != m_currentCell &&
                     isUnvisited) {
-                    int gcx = m_mapGeometry->getCellX(m_goalCell);
-                    int gcy = m_mapGeometry->getCellY(m_goalCell);
+                    int goalX = m_mapGeometry->getCellX(m_goalCell);
+                    int goalY = m_mapGeometry->getCellY(m_goalCell);
 
-                    int tempCost = (m_pathMap[cll].cost >= 0) ? m_pathMap[cll].cost : 0;
-                    double distanceCost = m_mapGeometry->distance(cx, cy, gcx, gcy);
-                    double newCost = distanceCost + tempCost;
+                    int candidateAccumulatedCost = (m_pathMap[candidateCell].cost >= 0) ? m_pathMap[candidateCell].cost : 0;
+                    double goalDistanceCost = m_mapGeometry->distance(neighborX, neighborY, goalX, goalY);
+                    double candidateScore = goalDistanceCost + candidateAccumulatedCost;
 
-                    if (newCost < cost) {
+                    if (candidateScore < bestCandidateCost) {
                         // Heuristic: keep the neighbor that minimizes distance to the goal.
-                        the_cll = cll;
-                        cost = newCost;
+                        bestCandidateCell = candidateCell;
+                        bestCandidateCost = candidateScore;
                         m_pathCountUnits--;
                     }
                 }
             }
 
-            if (bail_out) {
+            if (reachedGoalNeighbor) {
                 m_activeUnit->log("CREATE_PATH: BAIL");
                 break;
             }
         }
 
-        if (the_cll > -1) {
+        if (bestCandidateCell > -1) {
             // Move forward: the chosen neighbor becomes the new current cell.
-            m_pathMap[the_cll].state = OPEN;
-            m_pathMap[the_cll].parent = m_currentCell;
-            m_pathMap[the_cll].cost = cost;
+            m_pathMap[bestCandidateCell].state = OPEN;
+            m_pathMap[bestCandidateCell].parent = m_currentCell;
+            m_pathMap[bestCandidateCell].cost = bestCandidateCost;
 
-            m_currentCell = the_cll;
+            m_currentCell = bestCandidateCell;
             if (m_currentCell == m_goalCell) {
                 m_valid = false;
                 m_success = true;
@@ -306,10 +306,10 @@ void cPathFinder::executeCreatePathSearch()
         else {
             // Dead end: close the current cell and backtrack to its parent.
             m_pathMap[m_currentCell].state = CLOSED;
-            int prevCell = m_pathMap[m_currentCell].parent;
+            int parentCell = m_pathMap[m_currentCell].parent;
 
-            if (prevCell > -1) {
-                m_currentCell = prevCell;
+            if (parentCell > -1) {
+                m_currentCell = parentCell;
             } else {
                 m_activeUnit->log("Failed to find new cell, backtracking failed - no parent!");
                 m_valid = false;
