@@ -282,7 +282,6 @@ void cPathFinder::executeCreatePathSearch()
                         // Heuristic: keep the neighbor that minimizes distance to the goal.
                         bestCandidateCell = candidateCell;
                         bestCandidateCost = candidateScore;
-                        m_pathCountUnits--;
                     }
                 }
             }
@@ -298,6 +297,9 @@ void cPathFinder::executeCreatePathSearch()
             m_pathMap[bestCandidateCell].state = OPEN;
             m_pathMap[bestCandidateCell].parent = m_currentCell;
             m_pathMap[bestCandidateCell].cost = bestCandidateCost;
+
+            // Spend one budget unit only when a move candidate is effectively selected.
+            m_pathCountUnits--;
 
             m_currentCell = bestCandidateCell;
             if (m_currentCell == m_goalCell) {
