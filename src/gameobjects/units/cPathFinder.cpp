@@ -99,30 +99,30 @@ int cPathFinder::validateCreatePathInput(int unitId)
     return 0;
 }
 
-void cPathFinder::initializeCreatePathSearch(int iPathCountUnits)
+void cPathFinder::initializeCreatePathSearch(int pathCountUnitsBudget)
 {
     memset(m_activeUnit->movement.iPath, -1, sizeof(m_activeUnit->movement.iPath));
     m_activeUnit->movement.iPathIndex = -1;
 
     m_goalCell = m_activeUnit->movement.iGoalCell;
     m_controller = m_activeUnit->iPlayer;
-    m_pathCountUnits = iPathCountUnits;
+    m_pathCountUnits = pathCountUnitsBudget;
 
     m_valid = true;
     m_success = false;
 
     m_pathsCreated++;
     // Reset the search map (cost + parent + per-cell state).
-    for (auto &cell : m_pathMap) {
-        cell.cost = -1;
-        cell.parent = -1;
-        cell.state = UNVISITED;
+    for (auto &pathCell : m_pathMap) {
+        pathCell.cost = -1;
+        pathCell.parent = -1;
+        pathCell.state = UNVISITED;
     }
 
-    int cx = m_mapGeometry->getCellX(m_currentCell);
-    int cy = m_mapGeometry->getCellY(m_currentCell);
+    int currentCellX = m_mapGeometry->getCellX(m_currentCell);
+    int currentCellY = m_mapGeometry->getCellY(m_currentCell);
 
-    m_pathMap[m_currentCell].cost = ABS_length(cx, cy,
+    m_pathMap[m_currentCell].cost = ABS_length(currentCellX, currentCellY,
                                                m_mapGeometry->getCellX(m_goalCell),
                                                m_mapGeometry->getCellY(m_goalCell));
     m_pathMap[m_currentCell].parent = -1;

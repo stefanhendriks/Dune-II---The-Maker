@@ -35,7 +35,7 @@ private:
     cMap *m_map = nullptr;
     MapGeometry* m_mapGeometry = nullptr;
     int validateCreatePathInput(int unitId);
-    void initializeCreatePathSearch(int iPathCountUnits);
+    void initializeCreatePathSearch(int pathCountUnitsBudget);
     void executeCreatePathSearch();
     int backtracePathToTempBuffer();
     void applyTempPathToUnit(int backtraceLength);
