@@ -461,72 +461,72 @@ int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
     return 0;
 }
 
-int cPathFinder::returnCloseGoal(int iCll, int iMyCell, int iID)
+int cPathFinder::returnCloseGoal(int targetCell, int originCell, int unitId)
 {
-    // Find a free cell near iCll by gradually expanding the search radius,
-    // then pick the one closest to iMyCell.
-    int iSize = 1;
-    int iStartX = m_mapGeometry->getCellX(iCll) - iSize;
-    int iStartY = m_mapGeometry->getCellY(iCll) - iSize;
-    int iEndX = m_mapGeometry->getCellX(iCll) + iSize;
-    int iEndY = m_mapGeometry->getCellY(iCll) + iSize;
+    // Find a free cell near targetCell by gradually expanding the search radius,
+    // then pick the one closest to originCell.
+    int searchRadius = 1;
+    int startX = m_mapGeometry->getCellX(targetCell) - searchRadius;
+    int startY = m_mapGeometry->getCellY(targetCell) - searchRadius;
+    int endX = m_mapGeometry->getCellX(targetCell) + searchRadius;
+    int endY = m_mapGeometry->getCellY(targetCell) + searchRadius;
 
-    float dDistance = 9999;
+    float bestDistance = 9999;
 
-    int ix = m_mapGeometry->getCellX(iMyCell);
-    int iy = m_mapGeometry->getCellY(iMyCell);
+    int originX = m_mapGeometry->getCellX(originCell);
+    int originY = m_mapGeometry->getCellY(originCell);
 
-    bool bSearch = true;
+    bool continueSearch = true;
 
-    int iTheClosest = -1;
+    int closestCell = -1;
 
-    while (bSearch) {
-        iStartX = m_mapGeometry->getCellX(iCll) - iSize;
-        iStartY = m_mapGeometry->getCellY(iCll) - iSize;
-        iEndX = m_mapGeometry->getCellX(iCll) + iSize;
-        iEndY = m_mapGeometry->getCellY(iCll) + iSize;
+    while (continueSearch) {
+        startX = m_mapGeometry->getCellX(targetCell) - searchRadius;
+        startY = m_mapGeometry->getCellY(targetCell) - searchRadius;
+        endX = m_mapGeometry->getCellX(targetCell) + searchRadius;
+        endY = m_mapGeometry->getCellY(targetCell) + searchRadius;
 
-        cPoint::split(iStartX, iStartY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(iStartX, iStartY);
-        cPoint::split(iEndX, iEndY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(iEndX, iEndY);
+        cPoint::split(startX, startY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(startX, startY);
+        cPoint::split(endX, endY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(endX, endY);
 
-        for (int iSX = iStartX; iSX < iEndX; iSX++)
-            for (int iSY = iStartY; iSY < iEndY; iSY++) {
-                int cll = m_mapGeometry->getCellWithMapDimensions(iSX, iSY);
+        for (int searchX = startX; searchX < endX; searchX++)
+            for (int searchY = startY; searchY < endY; searchY++) {
+                int candidateCell = m_mapGeometry->getCellWithMapDimensions(searchX, searchY);
 
-                float dDistance2 = ABS_length(iSX, iSY, ix, iy);
+                float candidateDistance = ABS_length(searchX, searchY, originX, originY);
 
-                int idOfStructureAtCell = m_map->getCellIdStructuresLayer(cll);
-                int idOfUnitAtCell = m_map->getCellIdUnitLayer(cll);
+                int structureIdAtCandidateCell = m_map->getCellIdStructuresLayer(candidateCell);
+                int unitIdAtCandidateCell = m_map->getCellIdUnitLayer(candidateCell);
 
-                if ((idOfStructureAtCell < 0) && (idOfUnitAtCell < 0)) {
-                    int cellType = m_map->getCellType(cll);
-                    if (m_infos->getUnitInfo(m_objects->getUnit(iID)->iType).infantry) {
-                        if (cellType == TERRAIN_MOUNTAIN)
+                if ((structureIdAtCandidateCell < 0) && (unitIdAtCandidateCell < 0)) {
+                    int terrainType = m_map->getCellType(candidateCell);
+                    if (m_infos->getUnitInfo(m_objects->getUnit(unitId)->iType).infantry) {
+                        if (terrainType == TERRAIN_MOUNTAIN)
                             continue;
                     }
 
-                    if (cellType == TERRAIN_WALL)
+                    if (terrainType == TERRAIN_WALL)
                         continue;
 
-                    if (dDistance2 < dDistance) {
-                        dDistance = dDistance2;
-                        iTheClosest = cll;
+                    if (candidateDistance < bestDistance) {
+                        bestDistance = candidateDistance;
+                        closestCell = candidateCell;
                     }
                 }
             }
 
-        if (iTheClosest > -1)
-            return iTheClosest;
+        if (closestCell > -1)
+            return closestCell;
 
-        iSize++;
+        searchRadius++;
 
-        if (iSize > 9) {
-            bSearch = false;
+        if (searchRadius > 9) {
+            continueSearch = false;
             break;
         }
     }
 
-    return iCll;
+    return targetCell;
 }
 
 void cPathFinder::resetPathCreatedByUnit()

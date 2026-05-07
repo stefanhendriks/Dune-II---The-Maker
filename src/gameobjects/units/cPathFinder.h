@@ -23,7 +23,7 @@ public:
     cPathFinder();
     ~cPathFinder() = default;
     int createPath(int unitId, int pathCountUnitsBudget);
-    int returnCloseGoal(int iCll, int iMyCell, int iID);
+    int returnCloseGoal(int targetCell, int originCell, int unitId);
     void resize(int newSize);
     void serviceInit(sGameServices* services);
     void resetPathCreatedByUnit();
