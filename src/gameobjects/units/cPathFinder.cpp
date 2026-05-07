@@ -222,7 +222,10 @@ void cPathFinder::executeCreatePathSearch()
                             }
 
                             cUnit *blockingUnit = m_objects->getUnit(blockingUnitId);
-                            if (!blockingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer())) {
+                            if (blockingUnit == nullptr) {
+                                candidateIsPassable = false;
+                            }
+                            else if (!blockingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer())) {
                                 if (blockingUnit->isInfantryUnit() &&
                                     m_activeUnit->canSquishInfantry())
                                     candidateIsPassable = true;
