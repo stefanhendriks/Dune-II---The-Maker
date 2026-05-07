@@ -372,24 +372,24 @@ int cPathFinder::backtracePathToTempBuffer()
     return pathLength;
 }
 
-void cPathFinder::applyTempPathToUnit(int backtraceLength)
+void cPathFinder::applyTempPathToUnit(int backtracedPathLength)
 {
     // Reverse the backtraced path and compact intermediate points when
     // a farther cell is still adjacent to the previous selected cell.
-    int z = backtraceLength - 1;
-    int a = 0;
-    int iPrevCell = -1;
+    int tempPathReadIndex = backtracedPathLength - 1;
+    int unitPathWriteIndex = 0;
+    int previousAssignedCell = -1;
 
-    while (z > -1) {
-        if (m_tempPath[z] > -1) {
-            if (iPrevCell > -1) {
-                int iGoodZ = -1;
+    while (tempPathReadIndex > -1) {
+        if (m_tempPath[tempPathReadIndex] > -1) {
+            if (previousAssignedCell > -1) {
+                int farthestAdjacentIndex = -1;
 
-                for (int sz = z; sz > 0; sz--) {
-                    if (m_tempPath[sz] > -1) {
+                for (int scanIndex = tempPathReadIndex; scanIndex > 0; scanIndex--) {
+                    if (m_tempPath[scanIndex] > -1) {
 
-                        if (m_mapGeometry->isCellAdjacentToOtherCell(iPrevCell, m_tempPath[sz])) {
-                            iGoodZ = sz;
+                        if (m_mapGeometry->isCellAdjacentToOtherCell(previousAssignedCell, m_tempPath[scanIndex])) {
+                            farthestAdjacentIndex = scanIndex;
                         }
                     }
                     else {
@@ -397,29 +397,29 @@ void cPathFinder::applyTempPathToUnit(int backtraceLength)
                     }
                 }
 
-                if (iGoodZ < z && iGoodZ > -1) {
-                    z = iGoodZ;
+                if (farthestAdjacentIndex < tempPathReadIndex && farthestAdjacentIndex > -1) {
+                    tempPathReadIndex = farthestAdjacentIndex;
                 }
             }
 
-            if (a >= MAX_PATH_SIZE) {
+            if (unitPathWriteIndex >= MAX_PATH_SIZE) {
                 m_activeUnit->log(std::format("WARNING: path truncated - exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
                 break;
             }
-            m_activeUnit->movement.iPath[a] = m_tempPath[z];
-            iPrevCell = m_tempPath[z];
-            a++;
+            m_activeUnit->movement.iPath[unitPathWriteIndex] = m_tempPath[tempPathReadIndex];
+            previousAssignedCell = m_tempPath[tempPathReadIndex];
+            unitPathWriteIndex++;
         }
-        z--;
+        tempPathReadIndex--;
     }
 
     m_activeUnit->movement.iPathIndex = 1;
 
-    for (int i = 1; i < MAX_PATH_SIZE; i++) {
-        int pathCell = m_activeUnit->movement.iPath[i];
+    for (int pathIndex = 1; pathIndex < MAX_PATH_SIZE; pathIndex++) {
+        int pathCell = m_activeUnit->movement.iPath[pathIndex];
         if (pathCell > -1) {
             if (m_mapGeometry->isCellAdjacentToOtherCell(m_activeUnit->getCell(), pathCell)) {
-                m_activeUnit->movement.iPathIndex = i;
+                m_activeUnit->movement.iPathIndex = pathIndex;
             }
         }
     }
@@ -443,8 +443,8 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     m_activeUnit->log("CREATE_PATH -- valid loop finished");
 
     m_activeUnit->log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
-    int backtraceLength = backtracePathToTempBuffer();
-    applyTempPathToUnit(backtraceLength);
+    int backtracedPathLength = backtracePathToTempBuffer();
+    applyTempPathToUnit(backtracedPathLength);
 
     if (m_settings->isDebugMode()) {
         for (int i = 0; i < MAX_PATH_SIZE; i++) {

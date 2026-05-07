@@ -38,7 +38,7 @@ private:
     void initializeCreatePathSearch(int pathCountUnitsBudget);
     void executeCreatePathSearch();
     int backtracePathToTempBuffer();
-    void applyTempPathToUnit(int backtraceLength);
+    void applyTempPathToUnit(int backtracedPathLength);
 
     cUnit *m_activeUnit = nullptr;
     int m_currentCell = -1;
