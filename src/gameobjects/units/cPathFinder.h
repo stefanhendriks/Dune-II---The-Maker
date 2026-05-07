@@ -37,7 +37,6 @@ private:
     int validateCreatePathInput(int iUnitId);
     void initializeCreatePathSearch(int iPathCountUnits);
     void executeCreatePathSearch();
-    int finalizeCreatePathResult();
     int buildPathAndApplyToUnit();
 
     cUnit *m_activeUnit = nullptr;

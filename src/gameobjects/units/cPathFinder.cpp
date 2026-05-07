@@ -498,19 +498,6 @@ int cPathFinder::buildPathAndApplyToUnit()
 
 }
 
-int cPathFinder::finalizeCreatePathResult()
-{
-    m_activeUnit->log("CREATE_PATH -- valid loop finished");
-
-    if (m_success) {
-        return buildPathAndApplyToUnit();
-    }
-
-    m_activeUnit->log("CREATE_PATH -- not valid");
-    m_activeUnit->log("CREATE_PATH: Failed to create path!");
-    return -1;
-}
-
 /*
   Pathfinder
 
@@ -544,7 +531,16 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
     initializeCreatePathSearch(iPathCountUnits);
     executeCreatePathSearch();
-    return finalizeCreatePathResult();
+
+    m_activeUnit->log("CREATE_PATH -- valid loop finished");
+
+    if (m_success) {
+        return buildPathAndApplyToUnit();
+    }
+
+    m_activeUnit->log("CREATE_PATH -- not valid");
+    m_activeUnit->log("CREATE_PATH: Failed to create path!");
+    return -1;
 }
 
 // void cPathFinder::verifyPathContiguity(const cUnit* pUnit, int firstCell)
