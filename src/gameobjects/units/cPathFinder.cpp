@@ -425,15 +425,15 @@ void cPathFinder::applyTempPathToUnit(int backtracedPathLength)
     }
 }
 
-int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
+int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
 {
     // Full pipeline: validate, search, rebuild, then apply to unit movement.
-    int validationResult = validateCreatePathInput(iUnitId);
-    if (validationResult != 0) {
-        return validationResult;
+    int validationStatus = validateCreatePathInput(unitId);
+    if (validationStatus != 0) {
+        return validationStatus;
     }
 
-    initializeCreatePathSearch(iPathCountUnits);
+    initializeCreatePathSearch(pathCountUnitsBudget);
     executeCreatePathSearch();
     if (!m_success) {
         m_activeUnit->log("CREATE_PATH -- not valid");
@@ -447,10 +447,10 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
     applyTempPathToUnit(backtracedPathLength);
 
     if (m_settings->isDebugMode()) {
-        for (int i = 0; i < MAX_PATH_SIZE; i++) {
-            int pathCell = m_activeUnit->movement.iPath[i];
+        for (int pathIndex = 0; pathIndex < MAX_PATH_SIZE; pathIndex++) {
+            int pathCell = m_activeUnit->movement.iPath[pathIndex];
             if (pathCell > -1) {
-                m_activeUnit->log(std::format("WAYPOINT {} = {} ", i, pathCell));
+                m_activeUnit->log(std::format("WAYPOINT {} = {} ", pathIndex, pathCell));
             }
         }
     }

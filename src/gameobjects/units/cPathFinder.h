@@ -22,7 +22,7 @@ class cPathFinder {
 public:
     cPathFinder();
     ~cPathFinder() = default;
-    int createPath(int iUnitId, int iPathCountUnits);
+    int createPath(int unitId, int pathCountUnitsBudget);
     int returnCloseGoal(int iCll, int iMyCell, int iID);
     void resize(int newSize);
     void serviceInit(sGameServices* services);
