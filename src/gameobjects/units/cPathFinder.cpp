@@ -51,23 +51,23 @@ void cPathFinder::serviceInit(sGameServices* services)
     assert(m_mapGeometry != nullptr);
 }
 
-int cPathFinder::validateCreatePathInput(int iUnitId)
+int cPathFinder::validateCreatePathInput(int unitId)
 {
     // Input guardrails: only run path creation for a valid unit,
     // aligned on a cell, and within an acceptable pathfinding load window.
     logbook("CREATE_PATH -- START");
-    if (iUnitId < 0) {
-        logbook("CREATE_PATH -- END (iUnitId < 0)");
+    if (unitId < 0) {
+        logbook("CREATE_PATH -- END (unitId < 0)");
         return -99;
     }
 
-    m_activeUnit = m_objects->getUnit(iUnitId);
+    m_activeUnit = m_objects->getUnit(unitId);
     if (m_activeUnit == nullptr) {
-        logbook("CREATE_PATH -- END (no unit iUnitId found)");
+        logbook("CREATE_PATH -- END (no unit unitId found)");
         return -99;
     }
     if (!m_activeUnit->isValid() || m_activeUnit->isDead()) {
-        logbook("CREATE_PATH -- END (iUnitId isDead or not Valid)");
+        logbook("CREATE_PATH -- END (unitId isDead or not Valid)");
         return -99;
     }
 

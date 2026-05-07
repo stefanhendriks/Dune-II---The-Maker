@@ -34,7 +34,7 @@ private:
     cLog *m_log = nullptr;
     cMap *m_map = nullptr;
     MapGeometry* m_mapGeometry = nullptr;
-    int validateCreatePathInput(int iUnitId);
+    int validateCreatePathInput(int unitId);
     void initializeCreatePathSearch(int iPathCountUnits);
     void executeCreatePathSearch();
     int backtracePathToTempBuffer();
