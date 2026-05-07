@@ -379,10 +379,8 @@ void cPathFinder::executeCreatePathSearch()
     }
 }
 
-int cPathFinder::buildPathAndApplyToUnit()
+int cPathFinder::backtracePathToTempBuffer()
 {
-    m_activeUnit->log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
-    // read path!
     std::fill(m_tempPath.begin(), m_tempPath.end(), -1);
 
     bool cp = true;
@@ -430,8 +428,13 @@ int cPathFinder::buildPathAndApplyToUnit()
         }
     }
 
+    return pi;
+}
+
+void cPathFinder::applyTempPathToUnit(int backtraceLength)
+{
     // reverse
-    int z = pi - 1; // start from the last valid index in temp_path
+    int z = backtraceLength - 1; // start from the last valid index in temp_path
     int a = 0;
     int iPrevCell = -1;
 
@@ -480,22 +483,6 @@ int cPathFinder::buildPathAndApplyToUnit()
             }
         }
     }
-
-    // debug debug
-    if (m_settings->isDebugMode()) {
-        for (int i = 0; i < MAX_PATH_SIZE; i++) {
-            int pathCell = m_activeUnit->movement.iPath[i];
-            if (pathCell > -1) {
-                m_activeUnit->log(std::format("WAYPOINT {} = {} ", i, pathCell));
-            }
-        }
-    }
-
-    m_activeUnit->updateCellXAndY();
-    m_activeUnit->movement.bCalculateNewPath = false;
-
-    return 0; // success!
-
 }
 
 /*
@@ -531,14 +518,31 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
     initializeCreatePathSearch(iPathCountUnits);
     executeCreatePathSearch();
-    m_activeUnit->log("CREATE_PATH -- valid loop finished");
-
     if (!m_success) {
         m_activeUnit->log("CREATE_PATH -- not valid");
         m_activeUnit->log("CREATE_PATH: Failed to create path!");
-        return -1;        
+        return -1;
     }
-    return buildPathAndApplyToUnit();
+    m_activeUnit->log("CREATE_PATH -- valid loop finished");
+
+    m_activeUnit->log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
+    int backtraceLength = backtracePathToTempBuffer();
+    applyTempPathToUnit(backtraceLength);
+
+    // debug debug
+    if (m_settings->isDebugMode()) {
+        for (int i = 0; i < MAX_PATH_SIZE; i++) {
+            int pathCell = m_activeUnit->movement.iPath[i];
+            if (pathCell > -1) {
+                m_activeUnit->log(std::format("WAYPOINT {} = {} ", i, pathCell));
+            }
+        }
+    }
+
+    m_activeUnit->updateCellXAndY();
+    m_activeUnit->movement.bCalculateNewPath = false;
+
+    return 0;
 }
 
 // void cPathFinder::verifyPathContiguity(const cUnit* pUnit, int firstCell)

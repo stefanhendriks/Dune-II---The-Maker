@@ -37,7 +37,8 @@ private:
     int validateCreatePathInput(int iUnitId);
     void initializeCreatePathSearch(int iPathCountUnits);
     void executeCreatePathSearch();
-    int buildPathAndApplyToUnit();
+    int backtracePathToTempBuffer();
+    void applyTempPathToUnit(int backtraceLength);
 
     cUnit *m_activeUnit = nullptr;
     int m_currentCell = -1;
