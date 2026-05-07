@@ -531,16 +531,14 @@ int cPathFinder::createPath(int iUnitId, int iPathCountUnits)
 
     initializeCreatePathSearch(iPathCountUnits);
     executeCreatePathSearch();
-
     m_activeUnit->log("CREATE_PATH -- valid loop finished");
 
-    if (m_success) {
-        return buildPathAndApplyToUnit();
+    if (!m_success) {
+        m_activeUnit->log("CREATE_PATH -- not valid");
+        m_activeUnit->log("CREATE_PATH: Failed to create path!");
+        return -1;        
     }
-
-    m_activeUnit->log("CREATE_PATH -- not valid");
-    m_activeUnit->log("CREATE_PATH: Failed to create path!");
-    return -1;
+    return buildPathAndApplyToUnit();
 }
 
 // void cPathFinder::verifyPathContiguity(const cUnit* pUnit, int firstCell)
