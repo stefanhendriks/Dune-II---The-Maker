@@ -326,50 +326,50 @@ int cPathFinder::backtracePathToTempBuffer()
     // Walk the parent chain from the final position back to the start.
     std::fill(m_tempPath.begin(), m_tempPath.end(), -1);
 
-    bool cp = true;
+    bool continueBacktrace = true;
 
-    int sc = m_currentCell;
-    int pi = 0;
-    m_tempPath[pi] = sc;
-    pi++;
+    int currentBacktraceCell = m_currentCell;
+    int pathLength = 0;
+    m_tempPath[pathLength] = currentBacktraceCell;
+    pathLength++;
 
-    m_activeUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pi, m_tempPath[pi - 1]));
+    m_activeUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pathLength, m_tempPath[pathLength - 1]));
 
-    while (cp) {
-        int tmp = m_pathMap[sc].parent;
-        if (tmp > -1) {
-            if (tmp == sc) {
+    while (continueBacktrace) {
+        int parentCell = m_pathMap[currentBacktraceCell].parent;
+        if (parentCell > -1) {
+            if (parentCell == currentBacktraceCell) {
                 m_activeUnit->log("found terminator, stop!");
-                cp = false;
+                continueBacktrace = false;
                 continue;
             }
             else {
-                m_tempPath[pi] = tmp;
-                sc = m_pathMap[sc].parent;
-                pi++;
+                m_tempPath[pathLength] = parentCell;
+                currentBacktraceCell = m_pathMap[currentBacktraceCell].parent;
+                pathLength++;
 
-                if (pi >= static_cast<int>(m_tempPath.size())) {
-                    std::string msg = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", m_tempPath.size());
-                    m_activeUnit->log(msg);
-                    cp = false;
+                if (pathLength >= static_cast<int>(m_tempPath.size())) {
+                    std::string warningMessage = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", m_tempPath.size());
+                    m_activeUnit->log(warningMessage);
+                    continueBacktrace = false;
                     continue;
                 }
 
-                m_activeUnit->log(std::format("Backtraced. Path index = {}, temp_path[last] = {}", pi, m_tempPath[pi - 1]));
+                m_activeUnit->log(std::format("Backtraced. Path index = {}, temp_path[last] = {}", pathLength, m_tempPath[pathLength - 1]));
             }
         }
         else {
-            std::string msg = std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", sc);
-            m_activeUnit->log(msg);
-            cp = false;
+            std::string warningMessage = std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", currentBacktraceCell);
+            m_activeUnit->log(warningMessage);
+            continueBacktrace = false;
         }
 
-        if (sc == m_activeUnit->getCell()) {
-            cp = false;
+        if (currentBacktraceCell == m_activeUnit->getCell()) {
+            continueBacktrace = false;
         }
     }
 
-    return pi;
+    return pathLength;
 }
 
 void cPathFinder::applyTempPathToUnit(int backtraceLength)
