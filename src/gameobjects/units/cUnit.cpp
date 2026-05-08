@@ -748,6 +748,18 @@ void cUnit::draw_path() const
         iPrevX = iDx;
         iPrevY = iDy;
     }
+
+    // Render remembered waypoint cells as blue dots.
+    for (int i = 0; i < MAX_WAYPOINTS_SIZE; i++) {
+        int waypointCell = movement.waypointCells[i];
+        if (waypointCell < 0) {
+            break;
+        }
+
+        int waypointX = m_mapCamera->getWindowXPositionFromCellWithOffset(waypointCell, halfTile);
+        int waypointY = m_mapCamera->getWindowYPositionFromCellWithOffset(waypointCell, halfTile);
+        global_renderDrawer->renderDot(waypointX-2, waypointY-2, Color{64, 160, 255, 192}, 4);
+    }
 }
 
 void cUnit::draw()
