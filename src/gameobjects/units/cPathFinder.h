@@ -40,6 +40,13 @@ private:
     void executeCreatePathSearch();
     int backtracePathToTempBuffer();
     void applyTempPathToUnit(int backtracedPathLength);
+    void restoreUnitMovementState(cUnit *unit,
+                                  int originalGoalCell,
+                                  int originalPathIndex,
+                                  int originalPathFails,
+                                  bool originalCalculateNewPath,
+                                  const int *originalWaypoints,
+                                  const int *originalPath) const;
 
     cUnit *m_activeUnit = nullptr;
     int m_currentCell = -1;

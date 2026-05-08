@@ -53,6 +53,22 @@ void cPathFinder::serviceInit(sGameServices* services)
     assert(m_mapGeometry != nullptr);
 }
 
+void cPathFinder::restoreUnitMovementState(cUnit *unit,
+                                           int originalGoalCell,
+                                           int originalPathIndex,
+                                           int originalPathFails,
+                                           bool originalCalculateNewPath,
+                                           const int *originalWaypoints,
+                                           const int *originalPath) const
+{
+    unit->movement.iGoalCell = originalGoalCell;
+    unit->movement.iPathIndex = originalPathIndex;
+    unit->movement.iPathFails = originalPathFails;
+    unit->movement.bCalculateNewPath = originalCalculateNewPath;
+    memcpy(unit->movement.waypointCells, originalWaypoints, sizeof(unit->movement.waypointCells));
+    memcpy(unit->movement.iPath, originalPath, sizeof(unit->movement.iPath));
+}
+
 int cPathFinder::validateCreatePathInput(int unitId)
 {
     // Input guardrails: only run path creation for a valid unit,
@@ -614,8 +630,11 @@ int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
             if (dotProduct < 0) {
                 m_activeUnit->log("CREATE_PATH: first step is opposite to goal direction, recomputing first segment");
                 m_isApplyingFirstSegmentCorrection = true;
-                (void)createPathToFirstReachableWaypointAndAppendExisting(unitId);
+                int correctionResult = createPathToFirstReachableWaypointAndAppendExisting(unitId);
                 m_isApplyingFirstSegmentCorrection = false;
+                if (correctionResult < 0) {
+                    m_activeUnit->log("CREATE_PATH: first segment correction failed, keeping original path");
+                }
             }
         }
     }
@@ -690,10 +709,8 @@ int cPathFinder::createPathToFirstReachableWaypointAndAppendExisting(int unitId)
 
     int waypointIndex = firstSearchWaypointIndex;
     if (waypointIndex >= MAX_WAYPOINTS_SIZE || originalWaypoints[waypointIndex] < 0) {
-        unit->movement.iGoalCell = originalGoalCell;
-        unit->movement.iPathIndex = originalPathIndex;
-        unit->movement.iPathFails = originalPathFails;
-        unit->movement.bCalculateNewPath = originalCalculateNewPath;
+        restoreUnitMovementState(unit, originalGoalCell, originalPathIndex, originalPathFails,
+                                 originalCalculateNewPath, originalWaypoints, originalPath);
         return -1;
     }
     // STEP 3: Locate this waypoint in the current path.
@@ -711,10 +728,8 @@ int cPathFinder::createPathToFirstReachableWaypointAndAppendExisting(int unitId)
     }
 
     if (waypointPathIndex < 0) {
-        unit->movement.iGoalCell = originalGoalCell;
-        unit->movement.iPathIndex = originalPathIndex;
-        unit->movement.iPathFails = originalPathFails;
-        unit->movement.bCalculateNewPath = originalCalculateNewPath;
+        restoreUnitMovementState(unit, originalGoalCell, originalPathIndex, originalPathFails,
+                                 originalCalculateNewPath, originalWaypoints, originalPath);
         return -1;
     }
 
@@ -762,10 +777,8 @@ int cPathFinder::createPathToFirstReachableWaypointAndAppendExisting(int unitId)
     unit->movement.iGoalCell = waypointCell;
     int detourResult = createPath(unitId, 0);
     if (detourResult < 0) {
-        unit->movement.iGoalCell = originalGoalCell;
-        unit->movement.iPathIndex = originalPathIndex;
-        unit->movement.iPathFails = originalPathFails;
-        unit->movement.bCalculateNewPath = originalCalculateNewPath;
+        restoreUnitMovementState(unit, originalGoalCell, originalPathIndex, originalPathFails,
+                                 originalCalculateNewPath, originalWaypoints, originalPath);
         return -1;
     }
 
@@ -781,10 +794,8 @@ int cPathFinder::createPathToFirstReachableWaypointAndAppendExisting(int unitId)
     }
 
     if (detourPathLength <= 0) {
-        unit->movement.iGoalCell = originalGoalCell;
-        unit->movement.iPathIndex = originalPathIndex;
-        unit->movement.iPathFails = originalPathFails;
-        unit->movement.bCalculateNewPath = originalCalculateNewPath;
+        restoreUnitMovementState(unit, originalGoalCell, originalPathIndex, originalPathFails,
+                                 originalCalculateNewPath, originalWaypoints, originalPath);
         return -1;
     }
 
