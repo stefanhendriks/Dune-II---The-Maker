@@ -2615,8 +2615,7 @@ void cUnit::thinkFast_move()
     int idOfUnitAtNextCell = m_map->getCellIdUnitLayer(movement.iNextCell);
 
     // Cell is occupied, not by self, so it is occupied...
-    if (idOfUnitAtNextCell > -1 &&
-            idOfUnitAtNextCell != iID) {
+    if (idOfUnitAtNextCell > -1 && idOfUnitAtNextCell != iID) {
         // get it
         int iUID = idOfUnitAtNextCell;
 
