@@ -19,7 +19,7 @@ public:
 
     void handleEvent(const SDL_Event &event);
 
-    void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
+    void updateState(); // updates state from SDL, calls appropriate on* methods on gameControlContext class
 
     void setMouseObserver(cInputObserver *mouseObserver);
 
