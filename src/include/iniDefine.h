@@ -22,8 +22,8 @@
 #define INI_TERRAINS   222
 
 #define INI_NEWID      10
-#define INI_GAME       11       // mod.ini / game.ini
-#define INI_BULLETS    17       // game.ini
+#define INI_GAME       11
+#define INI_BULLETS    17
 #define INI_EXPLOSIONS 18
 #define INI_BASIC	   20
 #define INI_SKIRMISH   21
@@ -53,73 +53,73 @@
 #define WORD_DESCRIPTION 3
 #define WORD_PREBUILD    9
 #define WORD_POWER       10
-#define WORD_MODID       11     // mod.ini
-#define WORD_TITLE       12     // mod.ini
-#define WORD_VERSION     13     // mod.ini
-#define WORD_DIR         14     // mod.ini
-#define WORD_TITLEBITMAP 15     // game.ini
-#define WORD_MENUCLICKSOUND 16  // game.ini
+#define WORD_MODID       11
+#define WORD_TITLE       12
+#define WORD_VERSION     13
+#define WORD_DIR         14
+#define WORD_TITLEBITMAP 15     
+#define WORD_MENUCLICKSOUND 16  
 #define WORD_MOUSENORMAL  17
 #define WORD_MOUSEMOVE    18
 #define WORD_MOUSEATTACK  19
 #define WORD_MOUSEDEPLOY  20
-#define WORD_MOUSENOMOVE  21    // game.ini
-#define WORD_RED          22    // game.ini
-#define WORD_GREEN        23    // game.ini
-#define WORD_BLUE         24    // game.ini
-#define WORD_BITMAP       28    // game.ini
-#define WORD_BITMAP_WIDTH 29    // game.ini
-#define WORD_BITMAP_HEIGHT 30     // game.ini
-#define WORD_BITMAP_FRAMES 31     // game.ini
-#define WORD_BITMAP_DEADFRAMES 32 // game.ini
-#define WORD_DAMAGE_VEHICLE 33    // game.ini
-#define WORD_DEFINITION   34    // game.ini
-#define WORD_BITMAP_DEAD  35    // game.ini
-#define WORD_BITMAP_TOP   36    // game.ini
-#define WORD_ICON         37    // game.ini
-#define WORD_HITPOINTS    38    // game.ini
-#define WORD_COST         40    // game.ini
-#define WORD_BULLETTYPE   41    // game.ini
-#define WORD_ATTACKFREQ   42    // game.ini (attack freq-uency)
-#define WORD_SIGHT        43    // game.ini (sight)
-#define WORD_RANGE        44    // game.ini (range)
-#define WORD_BUILDTIME    45    // game.ini (build time for unit)
-#define WORD_MOVESPEED    46    // game.ini (move speed)
-#define WORD_TURNSPEED    47    // game.ini (turn speed)
-#define WORD_SOUND        48    // game.ini (sound)
-#define WORD_ISHARVESTER  49    // game.ini (IsHarvester, is it a harvester or not?)
-#define WORD_FIRETWICE   50    // game.ini (SecondShot, makes unit shoot twice?)
-#define WORD_ISAIRBORN    51    // game.ini (Unit is airborn?)
-#define WORD_ABLETOCARRY  52    // game.ini (Able to transport units, aka CarryAll)
-#define WORD_FREEROAM     53    // game.ini (Will freely roam around the map?)
-#define WORD_ISINFANTRY   54    // game.ini (Act as infantry?)
-#define WORD_HARVESTAMOUNT 55   // game.ini (How much a harvester takes every step)
-#define WORD_HARVESTSPEED  56   // game.ini (How many ticks needed per step)
-#define WORD_HARVESTLIMIT  57   // game.ini (Max a harvester can hold)
-#define WORD_NEXTATTACKFREQ   59   // game.ini (next attack frequency)
-#define WORD_PRODUCER	88		// game.ini (Producing structure of unit)
-#define WORD_ISSQUISHABLE 189    // game.ini (Is unit squishable?)
-#define WORD_CANSQUISH    190    // game.ini (Can squish unit?)
-#define WORD_APPETITE     191    // game.ini (How much appetite has a sandworm?)
-#define WORD_SMOKEHFACTOR 192    // game.ini (Smoke HP Factor)
-#define WORD_SQUISH       193    // game.ini (Can squish infantry?)
-#define WORD_CANATTACKAIRUNITS 194 // game.ini (Can attack air units?)
-#define WORD_CANATTACKUNITS 195    // game.ini (Can attack ground units?)
-#define WORD_DAMAGE_INFANTRY 196    // game.ini (Damage to infantry)
-#define WORD_EXPLOSION_SIZE 197    // game.ini (Explosion size)
-#define WORD_DEVIATE_PROBABILITY 199  // game.ini (Deviation probability)
-#define WORD_GROUND_BULLET 200  // game.ini (blocked by mountains, walls, structures)
-#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN 201  // game.ini (structures, how many units to spawn if destroyed? (min))
-#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX 202  // game.ini (structures, how many units to spawn if destroyed? (max))
-#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE  203  // game.ini (structures, which type of unit to spawn if destroyed?)
+#define WORD_MOUSENOMOVE  21    
+#define WORD_RED          22    
+#define WORD_GREEN        23    
+#define WORD_BLUE         24    
+#define WORD_BITMAP       28    
+#define WORD_BITMAP_WIDTH 29    
+#define WORD_BITMAP_HEIGHT 30     
+#define WORD_BITMAP_FRAMES 31     
+#define WORD_BITMAP_DEADFRAMES 32 
+#define WORD_DAMAGE_VEHICLE 33    
+#define WORD_DEFINITION   34    
+#define WORD_BITMAP_DEAD  35    
+#define WORD_BITMAP_TOP   36    
+#define WORD_ICON         37    
+#define WORD_HITPOINTS    38    
+#define WORD_COST         40    
+#define WORD_BULLETTYPE   41    
+#define WORD_ATTACKFREQ   42    // (attack freq-uency)
+#define WORD_SIGHT        43    // (sight)
+#define WORD_RANGE        44    // (range)
+#define WORD_BUILDTIME    45    // (build time for unit)
+#define WORD_MOVESPEED    46    // (move speed)
+#define WORD_TURNSPEED    47    // (turn speed)
+#define WORD_SOUND        48    // (sound)
+#define WORD_ISHARVESTER  49    // (IsHarvester, is it a harvester or not?)
+#define WORD_FIRETWICE   50    // (SecondShot, makes unit shoot twice?)
+#define WORD_ISAIRBORN    51    // (Unit is airborn?)
+#define WORD_ABLETOCARRY  52    // (Able to transport units, aka CarryAll)
+#define WORD_FREEROAM     53    // (Will freely roam around the map?)
+#define WORD_ISINFANTRY   54    // (Act as infantry?)
+#define WORD_HARVESTAMOUNT 55   // (How much a harvester takes every step)
+#define WORD_HARVESTSPEED  56   // (How many ticks needed per step)
+#define WORD_HARVESTLIMIT  57   // (Max a harvester can hold)
+#define WORD_NEXTATTACKFREQ 59  // (next attack frequency)
+#define WORD_PRODUCER	88		     // (Producing structure of unit)
+#define WORD_ISSQUISHABLE 189    // (Is unit squishable?)
+#define WORD_CANSQUISH    190    // (Can squish unit?)
+#define WORD_APPETITE     191    // (How much appetite has a sandworm?)
+#define WORD_SMOKEHFACTOR 192    // (Smoke HP Factor)
+#define WORD_SQUISH       193    // (Can squish infantry?)
+#define WORD_CANATTACKAIRUNITS 194 // (Can attack air units?)
+#define WORD_CANATTACKUNITS 195    // (Can attack ground units?)
+#define WORD_DAMAGE_INFANTRY 196    // (Damage to infantry)
+#define WORD_EXPLOSION_SIZE 197    // (Explosion size)
+#define WORD_DEVIATE_PROBABILITY 199  // (Deviation probability)
+#define WORD_GROUND_BULLET 200  // (blocked by mountains, walls, structures)
+#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN 201  // (structures, how many units to spawn if destroyed? (min))
+#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX 202  // (structures, how many units to spawn if destroyed? (max))
+#define WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE  203  // (structures, which type of unit to spawn if destroyed?)
 
 
-#define WORD_BLOOMTIMERDURATION 241 // game.ini BLOOM TIMER DURATION
-#define WORD_TERRAIN_MINSPICE 242   // game.ini minimal spice on SPICETERRAIN
-#define WORD_TERRAIN_MAXSPICE 243   // game.ini maximal spice on SPICETERRAIN
-#define WORD_TERRAINHILL_MINSPICE 244 // game.ini minimal spice on SPICEHILL
-#define WORD_TERRAINHILL_MAXSPICE 245 // game.ini maximal spice on SPICEHILL
-#define WORD_TERRAINWALL_HP 246  //game.ini HP of TERRAINWALL
+#define WORD_BLOOMTIMERDURATION 241 // BLOOM TIMER DURATION
+#define WORD_TERRAIN_MINSPICE 242   // minimal spice on SPICETERRAIN
+#define WORD_TERRAIN_MAXSPICE 243   // maximal spice on SPICETERRAIN
+#define WORD_TERRAINHILL_MINSPICE 244 // minimal spice on SPICEHILL
+#define WORD_TERRAINHILL_MAXSPICE 245 // maximal spice on SPICEHILL
+#define WORD_TERRAINWALL_HP 246  // HP of TERRAINWALL
 
 //
 #define WORD_HOUSE			60
