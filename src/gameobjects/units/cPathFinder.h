@@ -49,6 +49,7 @@ private:
     bool m_valid = false;
     bool m_success = false;
     int m_pathsCreated = 0;
+    bool m_isApplyingFirstSegmentCorrection = false;
 
     std::vector<ASTAR> m_pathMap;
     std::vector<int> m_tempPath;

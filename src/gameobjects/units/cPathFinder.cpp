@@ -485,6 +485,44 @@ int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
     int backtracedPathLength = backtracePathToTempBuffer();
     applyTempPathToUnit(backtracedPathLength);
 
+    // General rule: if first expected step goes away from the final goal direction,
+    // recompute the first segment by re-hooking through waypoint logic.
+    if (!m_isApplyingFirstSegmentCorrection) {
+        int firstStepCell = -1;
+        for (int pathIndex = 1; pathIndex < MAX_PATH_SIZE; pathIndex++) {
+            int pathCell = m_activeUnit->movement.iPath[pathIndex];
+            if (pathCell < 0) {
+                break;
+            }
+            if (m_mapGeometry->isCellAdjacentToOtherCell(m_activeUnit->getCell(), pathCell)) {
+                firstStepCell = pathCell;
+                break;
+            }
+        }
+
+        if (firstStepCell > -1) {
+            int unitX = m_mapGeometry->getCellX(m_activeUnit->getCell());
+            int unitY = m_mapGeometry->getCellY(m_activeUnit->getCell());
+            int goalX = m_mapGeometry->getCellX(m_activeUnit->movement.iGoalCell);
+            int goalY = m_mapGeometry->getCellY(m_activeUnit->movement.iGoalCell);
+            int stepX = m_mapGeometry->getCellX(firstStepCell);
+            int stepY = m_mapGeometry->getCellY(firstStepCell);
+
+            int goalVectorX = goalX - unitX;
+            int goalVectorY = goalY - unitY;
+            int stepVectorX = stepX - unitX;
+            int stepVectorY = stepY - unitY;
+            int dotProduct = (goalVectorX * stepVectorX) + (goalVectorY * stepVectorY);
+
+            if (dotProduct < 0) {
+                m_activeUnit->log("CREATE_PATH: first step is opposite to goal direction, recomputing first segment");
+                m_isApplyingFirstSegmentCorrection = true;
+                (void)createPathToFirstReachableWaypointAndAppendExisting(unitId);
+                m_isApplyingFirstSegmentCorrection = false;
+            }
+        }
+    }
+
     if (m_settings->isDebugMode()) {
         for (int pathIndex = 0; pathIndex < MAX_PATH_SIZE; pathIndex++) {
             int pathCell = m_activeUnit->movement.iPath[pathIndex];
