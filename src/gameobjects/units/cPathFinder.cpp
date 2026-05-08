@@ -891,8 +891,8 @@ int cPathFinder::returnCloseGoal(int targetCell, int originCell, int unitId)
         cPoint::split(startX, startY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(startX, startY);
         cPoint::split(endX, endY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(endX, endY);
 
-        for (int searchX = startX; searchX < endX; searchX++)
-            for (int searchY = startY; searchY < endY; searchY++) {
+        for (int searchX = startX; searchX <= endX; searchX++)
+            for (int searchY = startY; searchY <= endY; searchY++) {
                 int candidateCell = m_mapGeometry->getCellWithMapDimensions(searchX, searchY);
 
                 float candidateDistance = ABS_length(searchX, searchY, originX, originY);
