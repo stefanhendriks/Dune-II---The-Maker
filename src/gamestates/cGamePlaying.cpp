@@ -232,7 +232,7 @@ void cGamePlaying::drawCombatMouse() const
 {
     auto m_mouse = m_interface->getMouse();
     if (m_mouse->isBoxSelecting()) {
-        m_renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(),255,255,255,255);
+        m_renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(), Color::Blue);
     }
 
     if (m_mouse->isMapScrolling()) {
