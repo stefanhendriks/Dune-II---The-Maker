@@ -22,7 +22,7 @@
 #include <string>
 
 static constexpr int MAX_PATH_SIZE = 512;
-static constexpr int MAX_WAYPOINTS_SIZE = 128;
+static constexpr int MAX_WAYPOINTS_SIZE = 48;
 
 class cPlayer;
 class cTextDrawer;
