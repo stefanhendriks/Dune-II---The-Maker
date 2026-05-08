@@ -16,6 +16,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <format>
 
 static const int MAX_PATH_LOCAL_SIZE = 4096;
 static constexpr int WAYPOINT_STEP_CELLS = 32;
