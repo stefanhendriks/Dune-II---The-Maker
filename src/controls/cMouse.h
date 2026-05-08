@@ -21,9 +21,7 @@ public:
 
     void updateState(); // updates state from Allegro, calls appropriate on* methods on gameControlContext class
 
-    void setMouseObserver(cInputObserver *mouseObserver) {
-        this->m_mouseObserver = mouseObserver;
-    }
+    void setMouseObserver(cInputObserver *mouseObserver);
 
     void init();
 
@@ -93,7 +91,7 @@ public:
     cPoint getDragLineEndPoint();
 
 private:
-    cInputObserver *m_mouseObserver;
+    cInputObserver *m_mouseObserver = nullptr;
     GameContext* m_ctx = nullptr;
     SDLDrawer* m_renderDrawer = nullptr;
 

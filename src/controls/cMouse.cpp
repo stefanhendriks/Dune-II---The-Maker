@@ -24,6 +24,7 @@ cMouse::cMouse(GameContext *ctx) :
     m_coords(cPoint(0,0))
 {
     assert(m_ctx!=nullptr);
+    assert(m_renderDrawer!=nullptr);
     m_leftButtonPressed=false;
     m_rightButtonPressed=false;
     m_leftButtonReleased=false;
@@ -307,6 +308,13 @@ bool cMouse::isTile(int value)
 {
     return m_mouseTile == value;
 }
+
+void cMouse::setMouseObserver(cInputObserver *mouseObserver)
+{
+    m_mouseObserver = mouseObserver;
+    assert(m_mouseObserver != nullptr);
+}
+
 
 void cMouse::draw()
 {
