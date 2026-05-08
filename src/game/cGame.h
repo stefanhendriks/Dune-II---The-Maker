@@ -40,6 +40,7 @@ class cReinforcements;
 class cPreviewMaps;
 struct InitialGameSettings;
 class cGameSettings;
+class cTextDrawer;
 
 class cStructureFactory;
 class cSideBarFactory;

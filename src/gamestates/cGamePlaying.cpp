@@ -22,6 +22,7 @@
 #include "controls/eKeyAction.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMap.h"
+#include "drawers/cTextDrawer.h"
 
 #include <cassert>
 
@@ -45,6 +46,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     assert(m_structureFactory != nullptr);
     m_drawManager = m_interface->getRenderDrawManager();
     assert(m_drawManager != nullptr);
+    m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
+    assert(m_textDrawer != nullptr);
 }
 
 cGamePlaying::~cGamePlaying()
@@ -238,6 +241,11 @@ void cGamePlaying::drawCombatMouse() const
         m_renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, Color{255,255,255,255});
     }
     m_mouse->draw();
+
+    if (m_settings->isDebugMode()) {
+        int mouseCell = m_objects->getPlayer(HUMAN)->getGameControlsContext()->getMouseCell();
+        m_textDrawer->drawText(0, cSideBar::TopBarHeight + 1, std::format("MouseCell {}", mouseCell));
+    }
 }
 
 void cGamePlaying::missionInit()

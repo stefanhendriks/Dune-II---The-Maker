@@ -2,7 +2,6 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "drawers/cTextDrawer.h"
 #include "sMouseEvent.h"
 
 class Texture;
@@ -13,6 +12,7 @@ class cMapCamera;
 class cGameInterface;
 class cStructureFactory;
 class cDrawManager;
+class cTextDrawer;
 
 class cGamePlaying : public cGameState {
 public:
@@ -39,6 +39,7 @@ private:
     cMapCamera* m_mapCamera = nullptr;
     cStructureFactory* m_structureFactory = nullptr;
     cDrawManager *m_drawManager = nullptr;
+    cTextDrawer* m_textDrawer = nullptr;
     void evaluatePlayerStatus();
     void drawCombatMouse() const;
     int m_TIMER_evaluatePlayerStatus;
