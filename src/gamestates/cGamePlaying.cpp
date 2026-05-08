@@ -439,6 +439,16 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
             pUnit->die(true, false);
         }
     }
+
+    if (event.isAction(eKeyAction::DEBUG_SPAWN_ORNITHOPTER)) {
+        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
+        cUnits::unitCreate(mc, ORNITHOPTER, 1, false, false);
+    }
+
+    if (event.isAction(eKeyAction::DEBUG_SPAWN_WORM)) {
+        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
+        cUnits::unitCreate(mc, SANDWORM, AI_WORM, false, false);
+    }
 }
 
 void cGamePlaying::update()

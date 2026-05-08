@@ -85,6 +85,7 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::DEBUG_DAMAGE_AT_CURSOR,     {SDL_SCANCODE_F5}, false, false, true);
     bind(eKeyAction::DEBUG_KILL_CARRYALLS,       {SDL_SCANCODE_F6});
     bind(eKeyAction::DEBUG_SPAWN_ORNITHOPTER,    {SDL_SCANCODE_F8});
+    bind(eKeyAction::DEBUG_SPAWN_WORM,           {SDL_SCANCODE_F9});
     bind(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR, {SDL_SCANCODE_F4}, true, false, false);
     bind(eKeyAction::DEBUG_SWITCH_PLAYER_0,      {SDL_SCANCODE_0});
     bind(eKeyAction::DEBUG_SWITCH_PLAYER_1,      {SDL_SCANCODE_1});
@@ -160,6 +161,7 @@ void cKeyBindings::loadFromSection(const cSection &section)
         {"DEBUG_DAMAGE_AT_CURSOR",    eKeyAction::DEBUG_DAMAGE_AT_CURSOR},
         {"DEBUG_KILL_CARRYALLS",      eKeyAction::DEBUG_KILL_CARRYALLS},
         {"DEBUG_SPAWN_ORNITHOPTER",   eKeyAction::DEBUG_SPAWN_ORNITHOPTER},
+        {"DEBUG_SPAWN_WORM",          eKeyAction::DEBUG_SPAWN_WORM},
         {"DEBUG_CLEAR_SHROUD_AT_CURSOR", eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR},
         {"DEBUG_SWITCH_PLAYER_0",     eKeyAction::DEBUG_SWITCH_PLAYER_0},
         {"DEBUG_SWITCH_PLAYER_1",     eKeyAction::DEBUG_SWITCH_PLAYER_1},
