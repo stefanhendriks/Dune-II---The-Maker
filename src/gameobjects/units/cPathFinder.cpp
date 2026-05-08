@@ -226,6 +226,9 @@ void cPathFinder::executeCreatePathSearch()
                             if (blockingUnit == nullptr) {
                                 candidateIsPassable = false;
                             }
+                            else if (blockingUnit->isMovingBetweenCells()) {
+                                candidateIsPassable = true;
+                            }
                             else if (!blockingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer())) {
                                 if (blockingUnit->isInfantryUnit() && m_activeUnit->canSquishInfantry())
                                     candidateIsPassable = true;
