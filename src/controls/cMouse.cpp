@@ -256,9 +256,6 @@ void cMouse::boxSelectLogic(int mouseCell)
             if (m_mouseCoY2 < cSideBar::TopBarHeight) {
                 m_mouseCoY2 = cSideBar::TopBarHeight;
             }
-
-            // and draw the selection box
-            m_renderDrawer->renderRectColor(m_mouseCoX1, m_mouseCoY1, m_mouseCoX2-m_mouseCoX1, m_mouseCoY2-m_mouseCoY1, game.getColorFadeSelected(255, 255, 255));
         }
 
         // Note that we have to fix up the coordinates when checking 'within border'
