@@ -1580,11 +1580,6 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         }
     }
 
-    if (event.isAction(eKeyAction::DEBUG_SPAWN_ORNITHOPTER)) {
-        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
-        cUnits::unitCreate(mc, ORNITHOPTER, 1, false, false);
-    }
-
     if (event.isAction(eKeyAction::DEBUG_DESTROY_AT_CURSOR)) {
         int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
