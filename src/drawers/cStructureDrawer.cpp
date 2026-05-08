@@ -1,6 +1,7 @@
 #include "cStructureDrawer.h"
 #include "game/cGameSettings.h"
 #include "drawers/SDLDrawer.hpp"
+#include "drawers/cTextDrawer.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/structures/cStructures.h"
@@ -28,10 +29,15 @@
 
 cStructureDrawer::cStructureDrawer(GameContext *ctx) :
     m_renderDrawer(ctx->getSDLDrawer()),
+    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
     assert(ctx != nullptr);
+    assert(m_renderDrawer != nullptr);
+    assert(m_textDrawer != nullptr);
+    assert(m_gfxinter != nullptr);
+    assert(m_gfxdata != nullptr);
 }
 
 
@@ -182,7 +188,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
             int facingAngle = faceAngle(degrees, facingAngles);
 
-            pMouse->addDebugLine(std::format("degrees = {}, faceAngle = {}", degrees, facingAngle));
+            m_textDrawer->drawText(x1 + 32, y1, std::format("degrees = {:.1f}, faceAngle = {}", degrees, facingAngle));
 
 //            int frame = convertAngleToDrawIndex(facingAngle, false, 4, 16);
             // override frame

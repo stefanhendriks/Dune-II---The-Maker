@@ -3,6 +3,7 @@
 class GameContext;
 class Graphics;
 class SDLDrawer;
+class cTextDrawer;
 
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "utils/cStructureUtils.h"
@@ -30,6 +31,7 @@ protected:
 
 private:
     SDLDrawer* m_renderDrawer;
+    cTextDrawer* m_textDrawer;
     Graphics *m_gfxinter;
     Graphics *m_gfxdata;
     cStructureUtils m_structureUtils;

@@ -6,7 +6,6 @@
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
-#include "drawers/cTextDrawer.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "sidebar/cSideBar.h"
@@ -21,7 +20,6 @@
 
 cMouse::cMouse(GameContext *ctx) :
     m_ctx(ctx),
-    m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_renderDrawer(ctx->getSDLDrawer()),
     m_coords(cPoint(0,0))
 {
@@ -35,7 +33,6 @@ cMouse::cMouse(GameContext *ctx) :
     m_leftButtonClickedInPreviousFrame = false;
     m_rightButtonClickedInPreviousFrame = false;
     m_mouseObserver = nullptr; // set later
-    m_debugLines = std::vector<std::string>();
     m_didMouseMove = false;
     init();
 }
@@ -58,8 +55,6 @@ void cMouse::init()
     m_mouseMvY1 = -1;
     m_mouseMvX2 = -1;
     m_mouseMvY2 = -1;
-
-    m_debugLines.clear();
 }
 
 void cMouse::handleEvent(const SDL_Event &event)
@@ -111,8 +106,6 @@ void cMouse::handleEvent(const SDL_Event &event)
 
 void cMouse::updateState()
 {
-    m_debugLines.clear();
-
     if (m_leftButtonClickedInPreviousFrame == true)
         m_leftButtonClicked = false;
     if (m_rightButtonClickedInPreviousFrame == true)
@@ -356,15 +349,7 @@ void cMouse::draw()
     }
 
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
-    global_renderDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
-
-    if (game.m_gameSettings->isDebugMode()) {
-        int y = mouseDrawY;
-        for (auto line: m_debugLines) {
-            m_textDrawer->drawText(mouseDrawX + 32, y, line.c_str());
-            y += m_textDrawer->getFontHeight() + 2;
-        }
-    }
+    m_renderDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
 }
 
 bool cMouse::isNormalRightClick()
@@ -427,7 +412,3 @@ std::string cMouse::mouseTileName(int tile)
     return "UNKNOWN";
 }
 
-void cMouse::addDebugLine(std::string basicString)
-{
-    this->m_debugLines.push_back(basicString);
-}

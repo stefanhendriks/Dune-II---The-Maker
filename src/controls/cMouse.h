@@ -4,12 +4,10 @@
 
 #include <SDL2/SDL.h>
 #include <string>
-#include <vector>
 
 class cRectangle;
 class GameContext;
 class SDLDrawer;
-class cTextDrawer;
 class cInputObserver;
 
 class cMouse {
@@ -94,12 +92,9 @@ public:
 
     cPoint getDragLineEndPoint();
 
-    void addDebugLine(std::string basicString);
-
 private:
     cInputObserver *m_mouseObserver;
     GameContext* m_ctx = nullptr;
-    cTextDrawer* m_textDrawer = nullptr;
     SDLDrawer* m_renderDrawer = nullptr;
 
     bool m_leftButtonPressed;
@@ -133,8 +128,6 @@ private:
     int m_mouseMvY2;        // dragging viewport
 
     int m_mouseTile;       // mouse picture in gfxdata
-
-    std::vector<std::string> m_debugLines;
 
     std::string mouseTileName(int tile);
 
