@@ -418,6 +418,39 @@ void cPathFinder::applyTempPathToUnit(int backtracedPathLength)
         tempPathReadIndex--;
     }
 
+    // Build waypoint memory: keep one waypoint every 32 path cells.
+    memset(m_activeUnit->movement.waypointCells, -1, sizeof(m_activeUnit->movement.waypointCells));
+    int waypointWriteIndex = 0;
+    for (int pathIndex = 0; pathIndex < unitPathWriteIndex; pathIndex += 16) {
+        if (waypointWriteIndex >= MAX_WAYPOINTS_SIZE) {
+            break;
+        }
+
+        int pathCell = m_activeUnit->movement.iPath[pathIndex];
+        if (pathCell > -1) {
+            m_activeUnit->movement.waypointCells[waypointWriteIndex] = pathCell;
+            waypointWriteIndex++;
+        }
+    }
+
+    // Also remember the final valid path cell so destination is represented.
+    if (unitPathWriteIndex > 0 && waypointWriteIndex < MAX_WAYPOINTS_SIZE) {
+        int lastPathCell = m_activeUnit->movement.iPath[unitPathWriteIndex - 1];
+        if (lastPathCell > -1) {
+            bool alreadyStored = false;
+            for (int i = 0; i < waypointWriteIndex; i++) {
+                if (m_activeUnit->movement.waypointCells[i] == lastPathCell) {
+                    alreadyStored = true;
+                    break;
+                }
+            }
+
+            if (!alreadyStored) {
+                m_activeUnit->movement.waypointCells[waypointWriteIndex] = lastPathCell;
+            }
+        }
+    }
+
     m_activeUnit->movement.iPathIndex = 1;
 
     for (int pathIndex = 1; pathIndex < MAX_PATH_SIZE; pathIndex++) {
