@@ -22,6 +22,7 @@
 #include <string>
 
 static constexpr int MAX_PATH_SIZE = 512;
+static constexpr int MAX_WAYPOINTS_SIZE = 128;
 
 class cPlayer;
 class cTextDrawer;
@@ -99,6 +100,7 @@ struct sMovement {
     int iNextCell;      // where to move to (next cell)
     int iGoalCell;      // the goal cell (goal of path)
     int iPath[MAX_PATH_SIZE];    // path of unit
+    int waypointCells[MAX_WAYPOINTS_SIZE]; // the cells that are waypoints (ie, where unit needs to turn)
     int iPathIndex;     // where are we?
     int iPathFails;     // failed...
     bool bCalculateNewPath;  // calculate new path?

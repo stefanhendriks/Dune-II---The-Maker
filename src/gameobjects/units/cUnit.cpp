@@ -89,6 +89,7 @@ void cUnit::init(int i)
     position.posX = -1;
     position.posY = -1;
     memset(movement.iPath, -1, sizeof(movement.iPath));    // path of unit
+    memset(movement.waypointCells, -1, sizeof(movement.waypointCells)); // remembered waypoints on path
     movement.iPathIndex = -1;     // where are we?
     movement.iPathFails = 0;
     movement.bCalculateNewPath = false;
@@ -3062,6 +3063,7 @@ void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne()
 void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait)
 {
     memset(movement.iPath, -1, sizeof(movement.iPath));
+    memset(movement.waypointCells, -1, sizeof(movement.waypointCells));
     movement.iPathIndex = -1;
     movewaitTimer.reset(timeToWait);
 }
