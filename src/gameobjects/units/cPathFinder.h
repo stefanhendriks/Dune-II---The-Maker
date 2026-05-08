@@ -23,6 +23,7 @@ public:
     cPathFinder();
     ~cPathFinder() = default;
     int createPath(int unitId, int pathCountUnitsBudget);
+    int createPathToFirstReachableWaypointAndAppendExisting(int unitId);
     int returnCloseGoal(int targetCell, int originCell, int unitId);
     void resize(int newSize);
     void serviceInit(sGameServices* services);

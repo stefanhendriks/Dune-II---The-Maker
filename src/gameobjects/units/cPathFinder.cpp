@@ -18,6 +18,7 @@
 #include <cassert>
 
 static const int MAX_PATH_LOCAL_SIZE = 4096;
+static constexpr int WAYPOINT_STEP_CELLS = 32;
 
 #define UNVISITED      -2
 #define CLOSED        -1
@@ -418,10 +419,10 @@ void cPathFinder::applyTempPathToUnit(int backtracedPathLength)
         tempPathReadIndex--;
     }
 
-    // Build waypoint memory: keep one waypoint every 32 path cells.
+    // Build waypoint memory: keep one waypoint every WAYPOINT_STEP_CELLS path cells.
     memset(m_activeUnit->movement.waypointCells, -1, sizeof(m_activeUnit->movement.waypointCells));
     int waypointWriteIndex = 0;
-    for (int pathIndex = 0; pathIndex < unitPathWriteIndex; pathIndex += 16) {
+    for (int pathIndex = 0; pathIndex < unitPathWriteIndex; pathIndex += WAYPOINT_STEP_CELLS) {
         if (waypointWriteIndex >= MAX_WAYPOINTS_SIZE) {
             break;
         }
@@ -496,6 +497,228 @@ int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
     m_activeUnit->updateCellXAndY();
     m_activeUnit->movement.bCalculateNewPath = false;
 
+    return 0;
+}
+
+int cPathFinder::createPathToFirstReachableWaypointAndAppendExisting(int unitId)
+{
+    // STEP 1: Save original movement state and waypoint snapshot for rollback.
+    if (unitId < 0) {
+        return -1;
+    }
+
+    cUnit *unit = m_objects->getUnit(unitId);
+    if (unit == nullptr || !unit->isValid() || unit->isDead()) {
+        return -1;
+    }
+
+    const int originalGoalCell = unit->movement.iGoalCell;
+    const int originalPathIndex = unit->movement.iPathIndex;
+    const int originalPathFails = unit->movement.iPathFails;
+    const bool originalCalculateNewPath = unit->movement.bCalculateNewPath;
+
+    int originalWaypoints[MAX_WAYPOINTS_SIZE];
+    memcpy(originalWaypoints, unit->movement.waypointCells, sizeof(originalWaypoints));
+
+    int originalPath[MAX_PATH_SIZE];
+    memcpy(originalPath, unit->movement.iPath, sizeof(originalPath));
+
+    int firstSearchPathIndex = originalPathIndex;
+    if (firstSearchPathIndex < 0) {
+        firstSearchPathIndex = 0;
+    }
+
+    // STEP 2: Find the first waypoint that is still ahead of current path progress.
+    // This is the first waypoint that we will try to reach with a detour path.
+    // note it's not obligatory a multiple of WAYPOINT_STEP_CELLS,
+    // as the unit might have already progressed after the last waypoint.
+    int firstSearchWaypointIndex = 0;
+    while (firstSearchWaypointIndex < MAX_WAYPOINTS_SIZE && originalWaypoints[firstSearchWaypointIndex] > -1) {
+        int waypointCell = originalWaypoints[firstSearchWaypointIndex];
+        bool isBeforeCurrentPathIndex = true;
+        for (int pathIndex = firstSearchPathIndex; pathIndex < MAX_PATH_SIZE; pathIndex++) {
+            int pathCell = unit->movement.iPath[pathIndex];
+            if (pathCell < 0) {
+                break;
+            }
+            if (pathCell == waypointCell) {
+                isBeforeCurrentPathIndex = false;
+                break;
+            }
+        }
+
+        if (!isBeforeCurrentPathIndex) {
+            break;
+        }
+        firstSearchWaypointIndex++;
+    }
+
+    int waypointIndex = firstSearchWaypointIndex;
+    if (waypointIndex >= MAX_WAYPOINTS_SIZE || originalWaypoints[waypointIndex] < 0) {
+        unit->movement.iGoalCell = originalGoalCell;
+        unit->movement.iPathIndex = originalPathIndex;
+        unit->movement.iPathFails = originalPathFails;
+        unit->movement.bCalculateNewPath = originalCalculateNewPath;
+        return -1;
+    }
+    // STEP 3: Locate this waypoint in the current path.
+    int waypointCell = originalWaypoints[waypointIndex];
+    int waypointPathIndex = -1;
+    for (int pathIndex = firstSearchPathIndex; pathIndex < MAX_PATH_SIZE; pathIndex++) {
+        int pathCell = originalPath[pathIndex];
+        if (pathCell < 0) {
+            break;
+        }
+        if (pathCell == waypointCell) {
+            waypointPathIndex = pathIndex;
+            break;
+        }
+    }
+
+    if (waypointPathIndex < 0) {
+        unit->movement.iGoalCell = originalGoalCell;
+        unit->movement.iPathIndex = originalPathIndex;
+        unit->movement.iPathFails = originalPathFails;
+        unit->movement.bCalculateNewPath = originalCalculateNewPath;
+        return -1;
+    }
+
+    // If we are already close in path steps, target the following waypoint for extra freedom.
+    const int cellsToWaypoint = waypointPathIndex - firstSearchPathIndex;
+    if (cellsToWaypoint < 6) {
+        const int candidateNextWaypointIndex = waypointIndex + 1;
+        if (candidateNextWaypointIndex < MAX_WAYPOINTS_SIZE && originalWaypoints[candidateNextWaypointIndex] > -1) {
+            int candidateNextWaypointPathIndex = -1;
+            const int candidateNextWaypointCell = originalWaypoints[candidateNextWaypointIndex];
+            for (int pathIndex = waypointPathIndex + 1; pathIndex < MAX_PATH_SIZE; pathIndex++) {
+                int pathCell = originalPath[pathIndex];
+                if (pathCell < 0) {
+                    break;
+                }
+                if (pathCell == candidateNextWaypointCell) {
+                    candidateNextWaypointPathIndex = pathIndex;
+                    break;
+                }
+            }
+
+            if (candidateNextWaypointPathIndex > -1) {
+                waypointIndex = candidateNextWaypointIndex;
+                waypointCell = candidateNextWaypointCell;
+                waypointPathIndex = candidateNextWaypointPathIndex;
+            }
+        }
+    }
+
+    // STEP 4: Snapshot the full remaining suffix after this waypoint from the original path.
+    int remainingPathLength = 0;
+    int remainingPath[MAX_PATH_SIZE];
+    memset(remainingPath, -1, sizeof(remainingPath));
+    for (int pathIndex = waypointPathIndex + 1; pathIndex < MAX_PATH_SIZE && remainingPathLength < MAX_PATH_SIZE; pathIndex++) {
+        int pathCell = originalPath[pathIndex];
+        if (pathCell < 0) {
+            break;
+        }
+
+        remainingPath[remainingPathLength] = pathCell;
+        remainingPathLength++;
+    }
+
+    // STEP 5: Try the selected waypoint and compute a detour path.
+    unit->movement.iGoalCell = waypointCell;
+    int detourResult = createPath(unitId, 0);
+    if (detourResult < 0) {
+        unit->movement.iGoalCell = originalGoalCell;
+        unit->movement.iPathIndex = originalPathIndex;
+        unit->movement.iPathFails = originalPathFails;
+        unit->movement.bCalculateNewPath = originalCalculateNewPath;
+        return -1;
+    }
+
+    int detourPath[MAX_PATH_SIZE];
+    memcpy(detourPath, unit->movement.iPath, sizeof(detourPath));
+
+    int detourPathLength = 0;
+    for (int i = 0; i < MAX_PATH_SIZE; i++) {
+        if (detourPath[i] < 0) {
+            break;
+        }
+        detourPathLength++;
+    }
+
+    if (detourPathLength <= 0) {
+        unit->movement.iGoalCell = originalGoalCell;
+        unit->movement.iPathIndex = originalPathIndex;
+        unit->movement.iPathFails = originalPathFails;
+        unit->movement.bCalculateNewPath = originalCalculateNewPath;
+        return -1;
+    }
+
+    // STEP 6: Build a combined path = detour + full remaining original suffix.
+    int combinedPath[MAX_PATH_SIZE];
+    memset(combinedPath, -1, sizeof(combinedPath));
+
+    int writeIndex = 0;
+    for (int i = 0; i < detourPathLength && writeIndex < MAX_PATH_SIZE; i++) {
+        combinedPath[writeIndex] = detourPath[i];
+        writeIndex++;
+    }
+
+    for (int i = 0; i < remainingPathLength && writeIndex < MAX_PATH_SIZE; i++) {
+        int remainingCell = remainingPath[i];
+        if (writeIndex > 0 && combinedPath[writeIndex - 1] == remainingCell) {
+            continue;
+        }
+
+        combinedPath[writeIndex] = remainingCell;
+        writeIndex++;
+    }
+
+    memcpy(unit->movement.iPath, combinedPath, sizeof(combinedPath));
+
+    // STEP 7: Apply combined path and rebuild movement metadata (waypoints, index, flags).
+    memset(unit->movement.waypointCells, -1, sizeof(unit->movement.waypointCells));
+    int waypointWriteIndex = 0;
+    for (int pathIndex = 0; pathIndex < writeIndex; pathIndex += WAYPOINT_STEP_CELLS) {
+        if (waypointWriteIndex >= MAX_WAYPOINTS_SIZE) {
+            break;
+        }
+
+        int pathCell = unit->movement.iPath[pathIndex];
+        if (pathCell > -1) {
+            unit->movement.waypointCells[waypointWriteIndex] = pathCell;
+            waypointWriteIndex++;
+        }
+    }
+
+    if (writeIndex > 0 && waypointWriteIndex < MAX_WAYPOINTS_SIZE) {
+        int lastPathCell = unit->movement.iPath[writeIndex - 1];
+        if (lastPathCell > -1) {
+            bool alreadyStored = false;
+            for (int i = 0; i < waypointWriteIndex; i++) {
+                if (unit->movement.waypointCells[i] == lastPathCell) {
+                    alreadyStored = true;
+                    break;
+                }
+            }
+
+            if (!alreadyStored) {
+                unit->movement.waypointCells[waypointWriteIndex] = lastPathCell;
+            }
+        }
+    }
+
+    unit->movement.iGoalCell = originalGoalCell;
+    unit->movement.iPathIndex = 1;
+    for (int pathIndex = 1; pathIndex < MAX_PATH_SIZE; pathIndex++) {
+        int pathCell = unit->movement.iPath[pathIndex];
+        if (pathCell > -1 && m_mapGeometry->isCellAdjacentToOtherCell(unit->getCell(), pathCell)) {
+            unit->movement.iPathIndex = pathIndex;
+        }
+    }
+
+    unit->movement.iPathFails = 0;
+    unit->movement.bCalculateNewPath = false;
+    unit->log(std::format("CREATE_PATH: Hooked to waypoint {} and appended remaining original path", waypointCell));
     return 0;
 }
 
