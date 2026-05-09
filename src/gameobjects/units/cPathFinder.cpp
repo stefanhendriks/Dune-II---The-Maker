@@ -153,7 +153,36 @@ void cPathFinder::executeCreatePathSearch()
 {
     // Local greedy search with backtracking: pick the best unvisited neighbor,
     // and walk back to the parent as soon as a dead end is reached.
+    const int goalX = m_mapGeometry->getCellX(m_goalCell);
+    const int goalY = m_mapGeometry->getCellY(m_goalCell);
+
+    const int mapCellCount = m_map->getWidth() * m_map->getHeight();
+    const int maxSearchIterations = std::max(128, std::min(mapCellCount, MAX_PATH_LOCAL_SIZE));
+    int searchIterations = 0;
+
+    int bestReachedCell = m_currentCell;
+    double bestReachedGoalDistance = m_mapGeometry->distance(m_mapGeometry->getCellX(m_currentCell),
+                                                             m_mapGeometry->getCellY(m_currentCell),
+                                                             goalX,
+                                                             goalY);
+
     while (m_valid) {
+        searchIterations++;
+        if (searchIterations > maxSearchIterations) {
+            if (bestReachedCell > -1 && bestReachedCell != m_activeUnit->getCell()) {
+                m_currentCell = bestReachedCell;
+                m_valid = false;
+                m_success = true;
+                m_activeUnit->log(std::format("CREATE_PATH: search capped after {} iterations, using closest reached cell {}", searchIterations, bestReachedCell));
+            }
+            else {
+                m_valid = false;
+                m_success = false;
+                m_activeUnit->log(std::format("CREATE_PATH: search capped after {} iterations, no progress possible", searchIterations));
+            }
+            break;
+        }
+
         if (m_currentCell == m_goalCell) {
             m_activeUnit->log(std::format("WARNING: iCell == goal_cell ({}) at loop start - should have been caught earlier", m_currentCell));
             m_valid = false;
@@ -182,6 +211,12 @@ void cPathFinder::executeCreatePathSearch()
 
         int currentX = m_mapGeometry->getCellX(m_currentCell);
         int currentY = m_mapGeometry->getCellY(m_currentCell);
+
+        double currentGoalDistance = m_mapGeometry->distance(currentX, currentY, goalX, goalY);
+        if (currentGoalDistance < bestReachedGoalDistance) {
+            bestReachedGoalDistance = currentGoalDistance;
+            bestReachedCell = m_currentCell;
+        }
 
         int minNeighborX = currentX - 1;
         int minNeighborY = currentY - 1;
