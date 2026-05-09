@@ -94,6 +94,14 @@ int cPathFinder::validateCreatePathInput(int unitId)
         return -4;
     }
 
+    if (!m_activeUnit->isInfantryUnit()) {
+        const int goalCell = m_activeUnit->movement.iGoalCell;
+        if (goalCell > -1 && m_map->getCellType(goalCell) == TERRAIN_MOUNTAIN) {
+            m_activeUnit->log("CREATE_PATH -- END 5 invalid goal terrain (mountain)");
+            return -5;
+        }
+    }
+
     if (m_pathsCreated > 40) {
         m_activeUnit->log("CREATE_PATH -- Too many paths END 3");
         m_activeUnit->movewaitTimer.reset(50 + RNG::rnd(50));
