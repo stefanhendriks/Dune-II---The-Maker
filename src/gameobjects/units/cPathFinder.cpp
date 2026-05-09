@@ -920,7 +920,7 @@ int cPathFinder::returnCloseGoal(int targetCell, int originCell, int unitId)
 
                 if ((structureIdAtCandidateCell < 0) && (unitIdAtCandidateCell < 0)) {
                     int terrainType = m_map->getCellType(candidateCell);
-                    if (unitIsInfantry) {
+                    if (!unitIsInfantry) {
                         if (terrainType == TERRAIN_MOUNTAIN)
                             continue;
                     }
