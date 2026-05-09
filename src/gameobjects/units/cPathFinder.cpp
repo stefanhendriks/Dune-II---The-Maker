@@ -651,11 +651,7 @@ int cPathFinder::returnCloseGoal(int targetCell, int originCell, int unitId)
     // Find a free cell near targetCell by gradually expanding the search radius,
     // then pick the one closest to originCell.
     int searchRadius = 1;
-    int startX = m_mapGeometry->getCellX(targetCell) - searchRadius;
-    int startY = m_mapGeometry->getCellY(targetCell) - searchRadius;
-    int endX = m_mapGeometry->getCellX(targetCell) + searchRadius;
-    int endY = m_mapGeometry->getCellY(targetCell) + searchRadius;
-
+    int startX, startY, endX, endY;
     float bestDistance = 9999;
 
     int originX = m_mapGeometry->getCellX(originCell);
