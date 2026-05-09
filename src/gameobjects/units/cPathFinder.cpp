@@ -238,7 +238,6 @@ void cPathFinder::executeCreatePathSearch()
 
                             if (m_pathCountUnits <= 0) {
                                 candidateIsPassable = false;
-                                m_activeUnit->log("m_pathCountUnits <= 0 - variable 'good' becomes 'false'");
                             }
 
                             cUnit *blockingUnit = m_objects->getUnit(blockingUnitId);
