@@ -53,22 +53,6 @@ void cPathFinder::serviceInit(sGameServices* services)
     assert(m_mapGeometry != nullptr);
 }
 
-void cPathFinder::restoreUnitMovementState(cUnit *unit,
-                                           int originalGoalCell,
-                                           int originalPathIndex,
-                                           int originalPathFails,
-                                           bool originalCalculateNewPath,
-                                           const int *originalWaypoints,
-                                           const int *originalPath) const
-{
-    unit->movement.iGoalCell = originalGoalCell;
-    unit->movement.iPathIndex = originalPathIndex;
-    unit->movement.iPathFails = originalPathFails;
-    unit->movement.bCalculateNewPath = originalCalculateNewPath;
-    memcpy(unit->movement.waypointCells, originalWaypoints, sizeof(unit->movement.waypointCells));
-    memcpy(unit->movement.iPath, originalPath, sizeof(unit->movement.iPath));
-}
-
 int cPathFinder::validateCreatePathInput(int unitId)
 {
     // Input guardrails: only run path creation for a valid unit,
