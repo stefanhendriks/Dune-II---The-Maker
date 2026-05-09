@@ -42,7 +42,7 @@ cPlayers::cPlayers()
 void cPlayers::serviceInit(sGameServices* services)
 {
     assert(services != nullptr);
-    m_log = services->ctx->getLog();
+    m_log = services->m_log;
     assert(m_log != nullptr);
 
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {

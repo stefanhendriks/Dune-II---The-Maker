@@ -100,17 +100,3 @@ cGameInterface *GameContext::getGameInterface() const {
     }
     throw std::runtime_error("cGameInterface not defined");
 }
-
-void GameContext::setLog(cLog *log) {
-    if (!log) {
-        throw std::runtime_error("cLog is not initialized!");
-    }
-    m_log = log;
-}
-
-cLog *GameContext::getLog() const {
-    if (m_log) {
-        return m_log;
-    }
-    throw std::runtime_error("cLog not defined");
-}

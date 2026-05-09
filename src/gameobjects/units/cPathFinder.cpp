@@ -12,7 +12,6 @@
 #include "controls/cGameControlsContext.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "context/GameContext.hpp"
 #include "include/sGameServices.h"
 
 #include <algorithm>
@@ -41,9 +40,7 @@ void cPathFinder::resize(int newSize)
 void cPathFinder::serviceInit(sGameServices* services)
 {
     assert(services != nullptr);
-    auto ctx = services->ctx;
-    assert(ctx != nullptr);
-    m_log = ctx->getLog();
+    m_log = services->m_log;
     assert(m_log != nullptr);
     m_infos = services->info;
     assert(m_infos != nullptr);

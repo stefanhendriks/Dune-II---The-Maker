@@ -4,6 +4,7 @@ class GameContext;
 class cGameObjectContext;
 class cInfoContext;
 class cGameSettings;
+class cLog;
 
 struct sGameServices
 {
@@ -11,4 +12,5 @@ struct sGameServices
     cGameObjectContext *objects = nullptr;
     cInfoContext *info = nullptr;
     cGameSettings *settings = nullptr;
+    cLog *m_log = nullptr;
 };

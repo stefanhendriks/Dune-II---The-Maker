@@ -160,6 +160,7 @@ cGame::cGame()
     m_services->objects = m_gameObjectsContext.get();
     m_services->info = m_infoContext.get();
     m_services->settings = m_gameSettings.get();
+    m_services->m_log = nullptr;
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
@@ -598,7 +599,6 @@ bool cGame::setupGame()
 
     // create ressources from scratch
     context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
-    ctx->setLog(m_log);
     // share Graphics to all class what use ctx !
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !
@@ -1703,4 +1703,11 @@ void cGame::loadMapFromEditor(s_PreviewMap *map)
     setState(GAME_EDITOR);
     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
     pState->loadMap(map);
+}
+
+void cGame::getLog(cLog *log)
+{
+    assert(log != nullptr);
+    m_log = log;
+    m_services->m_log = m_log;
 }

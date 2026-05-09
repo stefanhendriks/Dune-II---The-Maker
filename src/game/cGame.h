@@ -85,10 +85,7 @@ public:
         m_gameFilename = filename;
     }
 
-    void getLog(cLog *log) {
-        assert(log != nullptr);
-        m_log = log;
-    }
+    void getLog(cLog *log);
     cRectangle *m_mapViewport;
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
