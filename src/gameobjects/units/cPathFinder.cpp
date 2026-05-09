@@ -292,10 +292,7 @@ void cPathFinder::executeCreatePathSearch()
 
                 if (candidateCell != m_currentCell &&
                     isUnvisited) {
-                    int goalX = m_mapGeometry->getCellX(m_goalCell);
-                    int goalY = m_mapGeometry->getCellY(m_goalCell);
-
-                    int candidateAccumulatedCost = (m_pathMap[candidateCell].cost >= 0) ? m_pathMap[candidateCell].cost : 0;
+                    int candidateAccumulatedCost = (m_pathMap[m_currentCell].cost >= 0) ? (m_pathMap[m_currentCell].cost + 1) : 1;
                     double goalDistanceCost = m_mapGeometry->distance(neighborX, neighborY, goalX, goalY);
                     double candidateScore = goalDistanceCost + candidateAccumulatedCost;
 
