@@ -81,21 +81,21 @@ int cPathFinder::validateCreatePathInput(int unitId)
 
     m_activeUnit = m_objects->getUnit(unitId);
     if (m_activeUnit == nullptr) {
-        logbook("CREATE_PATH -- END (no unit unitId found)");
+        logbook("CREATE_PATH -- END (no unit "+ std::to_string(unitId) + " found)");
         return -99;
     }
     if (!m_activeUnit->isValid() || m_activeUnit->isDead()) {
-        logbook("CREATE_PATH -- END (unitId isDead or not Valid)");
+        logbook("CREATE_PATH -- END (unitId "+ std::to_string(unitId) + " isDead or not Valid)");
         return -99;
     }
 
     if (m_activeUnit->isMovingBetweenCells()) {
-        m_activeUnit->log("CREATE_PATH -- END 2");
+        m_activeUnit->log("CREATE_PATH -- END 2 moving Unit "+ std::to_string(unitId));
         return -4;
     }
 
     if (m_pathsCreated > 40) {
-        m_activeUnit->log("CREATE_PATH -- END 3");
+        m_activeUnit->log("CREATE_PATH -- Too many paths END 3");
         m_activeUnit->movewaitTimer.reset(50 + RNG::rnd(50));
         return -3;
     }
@@ -103,13 +103,12 @@ int cPathFinder::validateCreatePathInput(int unitId)
     m_currentCell = m_activeUnit->getCell();
 
     if (m_currentCell == m_activeUnit->movement.iGoalCell) {
-        m_activeUnit->log("CREATE_PATH -- END 4");
-        m_activeUnit->log("ODD: The goal = cell?");
+        m_activeUnit->log("CREATE_PATH -- END 4 ODD: The goal = cell?");
         return -1;
     }
 
     if (m_activeUnit->isUnableToMove()) {
-        m_activeUnit->log("CREATE_PATH -- END 5");
+        m_activeUnit->log("CREATE_PATH -- END unit "+ std::to_string(unitId) + "cannot move");
         m_activeUnit->movewaitTimer.reset(30 + RNG::rnd(50));
         return -2;
     }
@@ -236,7 +235,7 @@ void cPathFinder::executeCreatePathSearch()
 
                             if (m_pathCountUnits <= 0) {
                                 candidateIsPassable = false;
-                                m_activeUnit->log("iPathCountUnits <= 0 - variable 'good' becomes 'false'");
+                                m_activeUnit->log("m_pathCountUnits <= 0 - variable 'good' becomes 'false'");
                             }
 
                             cUnit *blockingUnit = m_objects->getUnit(blockingUnitId);
