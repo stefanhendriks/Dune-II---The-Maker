@@ -144,12 +144,7 @@ void cPathFinder::initializeCreatePathSearch(int pathCountUnitsBudget)
         pathCell.state = UNVISITED;
     }
 
-    int currentCellX = m_mapGeometry->getCellX(m_currentCell);
-    int currentCellY = m_mapGeometry->getCellY(m_currentCell);
-
-    m_pathMap[m_currentCell].cost = ABS_length(currentCellX, currentCellY,
-                                               m_mapGeometry->getCellX(m_goalCell),
-                                               m_mapGeometry->getCellY(m_goalCell));
+    m_pathMap[m_currentCell].cost = 0;
     m_pathMap[m_currentCell].parent = -1;
     m_pathMap[m_currentCell].state = OPEN;
 }
