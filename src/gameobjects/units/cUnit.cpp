@@ -2754,9 +2754,7 @@ void cUnit::thinkFast_move()
         }
         else if (idOfStructureAtNextCell > -1) {
             // blocked by structure
-            if (m_pathFinder->createPathToFirstReachableWaypointAndAppendExisting(iID) < 0) {
                 forgetAboutCurrentPathAndPrepareToCreateNewOne();
-            }
         }
         else if (idOfUnitAtNextCell > -1) {
             // From here, assume a unit is standing in our way. First check if this unit will
@@ -2774,9 +2772,7 @@ void cUnit::thinkFast_move()
             }
             else {
                 // this unit has no intention to move away, so create path around it.
-                if (m_pathFinder->createPathToFirstReachableWaypointAndAppendExisting(iID) < 0) {
                     forgetAboutCurrentPathAndPrepareToCreateNewOne();
-                }
             }
         }
         else {
