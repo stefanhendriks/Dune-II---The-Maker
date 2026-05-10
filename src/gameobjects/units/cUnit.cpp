@@ -3817,7 +3817,8 @@ void cUnit::think_harvester()
     if (position.iCell == movement.iGoalCell) {
         int cellType = m_map->getCellType(position.iCell);
         // when on spice, harvest
-        if (cellType == TERRAIN_SPICE ||cellType == TERRAIN_SPICEHILL) {
+        if (cellType == TERRAIN_SPICE || cellType == TERRAIN_SPICEHILL) {
+            iHarvestCellMemory = position.iCell;
             // do timer stuff
             if (iCredits < getUnitInfo().credit_capacity)
                 harvestTimer.increment();
@@ -3990,6 +3991,33 @@ int cUnit::findHarvestSpot(int id)
     int TargetSpiceDistance = 40;
     int TargetSpiceHillDistance = 40;
 
+    int rememberedHarvestCell = cUnit->iHarvestCellMemory;
+    if (rememberedHarvestCell > -1 &&
+            game.m_gameObjectsContext->getMapGeometry()->isValidCell(rememberedHarvestCell) &&
+            game.m_gameObjectsContext->getMap().getCellCredits(rememberedHarvestCell) > 0) {
+
+        int rememberedCellType = game.m_gameObjectsContext->getMap().getCellType(rememberedHarvestCell);
+        if (rememberedCellType == TERRAIN_SPICE || rememberedCellType == TERRAIN_SPICEHILL) {
+            int rememberedDx = game.m_gameObjectsContext->getMapGeometry()->getCellX(rememberedHarvestCell);
+            int rememberedDy = game.m_gameObjectsContext->getMapGeometry()->getCellY(rememberedHarvestCell);
+
+            if (game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(rememberedDx, rememberedDy)) {
+                bool rememberedCellCanBeUsed = true;
+
+                if (rememberedHarvestCell != cUnit->getCell()) {
+                    int idOfUnitAtRememberedCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(rememberedHarvestCell);
+                    if (idOfUnitAtRememberedCell > -1 || game.m_gameObjectsContext->getMap().occupied(rememberedHarvestCell, id)) {
+                        rememberedCellCanBeUsed = false;
+                    }
+                }
+
+                if (rememberedCellCanBeUsed) {
+                    return rememberedHarvestCell;
+                }
+            }
+        }
+    }
+
 
     for (int i = 0; i < game.m_gameObjectsContext->getMap().getMaxCells(); i++)
         if (game.m_gameObjectsContext->getMap().getCellCredits(i) > 0 && i != cUnit->getCell()) {
@@ -4040,16 +4068,19 @@ int cUnit::findHarvestSpot(int id)
         }
 
     // when distance is greater then 3 (meaning 'far' away)
-    if (TargetSpiceHillDistance >= 3 && TargetSpiceDistance >= 3) {
-        return TargetSpice;
-    }
-    else {
+    int chosenCell = TargetSpice;
+    if (!(TargetSpiceHillDistance >= 3 && TargetSpiceDistance >= 3)) {
         // when both are close, prefer spice hill
-        if (TargetSpiceHill > -1 && (TargetSpiceHillDistance <= TargetSpiceDistance))
-            return TargetSpiceHill;
+        if (TargetSpiceHill > -1 && (TargetSpiceHillDistance <= TargetSpiceDistance)) {
+            chosenCell = TargetSpiceHill;
+        }
     }
 
-    return TargetSpice;
+    if (chosenCell > -1) {
+        cUnit->iHarvestCellMemory = chosenCell;
+    }
+
+    return chosenCell;
 }
 
 int cUnit::carryallFreeForTransfer(int iPlayer)

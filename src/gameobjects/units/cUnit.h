@@ -166,6 +166,7 @@ public:
 
     // Harvester specific
     int iCredits;       // credits stored in this baby
+    int iHarvestCellMemory; // remembers the last spice cell this harvester was working on
 
     // Carry-All specific
     // -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
