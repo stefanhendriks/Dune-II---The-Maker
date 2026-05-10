@@ -537,69 +537,62 @@ int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
 
 int cPathFinder::returnCloseGoal(int targetCell, int originCell, int unitId)
 {
-    // Find a free cell near targetCell by gradually expanding the search radius,
-    // then pick the one closest to originCell.
-    int searchRadius = 1;
-    int startX, startY, endX, endY;
-    float bestDistance = 9999;
-
-    int originX = m_mapGeometry->getCellX(originCell);
-    int originY = m_mapGeometry->getCellY(originCell);
+    // Find a free cell near targetCell, scanning only the outer ring at each radius.
+    // Returns the free cell closest to originCell, or targetCell if nothing found.
+    const int targetX = m_mapGeometry->getCellX(targetCell);
+    const int targetY = m_mapGeometry->getCellY(targetCell);
+    const int originX = m_mapGeometry->getCellX(originCell);
+    const int originY = m_mapGeometry->getCellY(originCell);
 
     cUnit *unit = m_objects->getUnit(unitId);
-    bool unitIsInfantry = false;
-    if (unit != nullptr) {
-        unitIsInfantry = m_infos->getUnitInfo(unit->iType).infantry;
-    }
+    const bool unitIsInfantry = (unit != nullptr) && m_infos->getUnitInfo(unit->iType).infantry;
 
-    bool continueSearch = true;
+    for (int searchRadius = 1; searchRadius <= 9; searchRadius++) {
+        float bestDistance = 9999;
+        int closestCell = -1;
 
-    int closestCell = -1;
-
-    while (continueSearch) {
-        startX = m_mapGeometry->getCellX(targetCell) - searchRadius;
-        startY = m_mapGeometry->getCellY(targetCell) - searchRadius;
-        endX = m_mapGeometry->getCellX(targetCell) + searchRadius;
-        endY = m_mapGeometry->getCellY(targetCell) + searchRadius;
-
-        cPoint::split(startX, startY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(startX, startY);
-        cPoint::split(endX, endY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(endX, endY);
-
-        for (int searchX = startX; searchX <= endX; searchX++)
-            for (int searchY = startY; searchY <= endY; searchY++) {
-                int candidateCell = m_mapGeometry->getCellWithMapDimensions(searchX, searchY);
-
-                float candidateDistance = ABS_length(searchX, searchY, originX, originY);
-
-                int structureIdAtCandidateCell = m_map->getCellIdStructuresLayer(candidateCell);
-                int unitIdAtCandidateCell = m_map->getCellIdUnitLayer(candidateCell);
-
-                if ((structureIdAtCandidateCell < 0) && (unitIdAtCandidateCell < 0)) {
-                    int terrainType = m_map->getCellType(candidateCell);
-                    if (!unitIsInfantry) {
-                        if (terrainType == TERRAIN_MOUNTAIN)
-                            continue;
-                    }
-
-                    if (terrainType == TERRAIN_WALL)
-                        continue;
-
-                    if (candidateDistance < bestDistance) {
-                        bestDistance = candidateDistance;
-                        closestCell = candidateCell;
-                    }
-                }
+        // Only iterate the outer ring of the square at this radius.
+        // Top and bottom rows (full width), then left/right columns (inner height only).
+        auto tryCell = [&](int cx, int cy) {
+            int candidateCell = m_mapGeometry->getCellWithMapDimensions(cx, cy);
+            if (candidateCell < 0) return;
+            if (m_map->getCellIdStructuresLayer(candidateCell) >= 0) return;
+            if (m_map->getCellIdUnitLayer(candidateCell) >= 0) return;
+            int terrainType = m_map->getCellType(candidateCell);
+            if (terrainType == TERRAIN_WALL) return;
+            if (!unitIsInfantry && terrainType == TERRAIN_MOUNTAIN) return;
+            float dist = ABS_length(cx, cy, originX, originY);
+            if (dist < bestDistance) {
+                bestDistance = dist;
+                closestCell = candidateCell;
             }
+        };
+
+        const int minX = targetX - searchRadius;
+        const int maxX = targetX + searchRadius;
+        const int minY = targetY - searchRadius;
+        const int maxY = targetY + searchRadius;
+
+        // Clamp to map bounds
+        int clampedMinX = minX, clampedMinY = minY, clampedMaxX = maxX, clampedMaxY = maxY;
+        cPoint::split(clampedMinX, clampedMinY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(minX, minY);
+        cPoint::split(clampedMaxX, clampedMaxY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(maxX, maxY);
+
+        // Top row
+        if (minY >= clampedMinY)
+            for (int x = clampedMinX; x <= clampedMaxX; x++) tryCell(x, minY);
+        // Bottom row
+        if (maxY <= clampedMaxY)
+            for (int x = clampedMinX; x <= clampedMaxX; x++) tryCell(x, maxY);
+        // Left column (excluding corners)
+        if (minX >= clampedMinX)
+            for (int y = clampedMinY + 1; y <= clampedMaxY - 1; y++) tryCell(minX, y);
+        // Right column (excluding corners)
+        if (maxX <= clampedMaxX)
+            for (int y = clampedMinY + 1; y <= clampedMaxY - 1; y++) tryCell(maxX, y);
 
         if (closestCell > -1)
             return closestCell;
-
-        searchRadius++;
-
-        if (searchRadius > 9) {
-            continueSearch = false;
-            break;
-        }
     }
 
     return targetCell;
