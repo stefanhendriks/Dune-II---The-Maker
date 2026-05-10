@@ -20,6 +20,8 @@
 
 static const int MAX_PATH_LOCAL_SIZE = 4096;
 static constexpr int WAYPOINT_STEP_CELLS = 32;
+static constexpr float ORTHOGONAL_MOVE_COST = 1.0f;
+static constexpr float DIAGONAL_MOVE_COST = 1.41421356f;
 
 #define UNVISITED      -2
 #define CLOSED        -1
@@ -135,12 +137,12 @@ void cPathFinder::initializeCreatePathSearch(int pathCountUnitsBudget)
     m_pathsCreated++;
     // Reset the search map (cost + parent + per-cell state).
     for (auto &pathCell : m_pathMap) {
-        pathCell.cost = -1;
+        pathCell.cost = -1.0f;
         pathCell.parent = -1;
         pathCell.state = UNVISITED;
     }
 
-    m_pathMap[m_currentCell].cost = 0;
+    m_pathMap[m_currentCell].cost = 0.0f;
     m_pathMap[m_currentCell].parent = -1;
     m_pathMap[m_currentCell].state = OPEN;
 }
@@ -223,7 +225,7 @@ void cPathFinder::executeCreatePathSearch()
         cPoint::split(minNeighborX, minNeighborY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(minNeighborX, minNeighborY);
         cPoint::split(maxNeighborX, maxNeighborY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(maxNeighborX, maxNeighborY);
 
-        double bestCandidateCost = 999999999;
+        float bestCandidateCost = 999999999.0f;
         int bestCandidateCell = -1;
 
         bool reachedGoalNeighbor = false;
@@ -313,7 +315,7 @@ void cPathFinder::executeCreatePathSearch()
 
                 if (candidateCell == m_goalCell) {
                     bestCandidateCell = candidateCell;
-                    bestCandidateCost = 0;
+                    bestCandidateCost = 0.0f;
                     reachedGoalNeighbor = true;
                     m_activeUnit->log("CREATE_PATH: Found the goal cell, success, bailing out");
                     break;
@@ -322,9 +324,13 @@ void cPathFinder::executeCreatePathSearch()
                 bool isUnvisited = m_pathMap[candidateCell].state == UNVISITED;
 
                 if (isUnvisited) {
-                    int candidateAccumulatedCost = (m_pathMap[m_currentCell].cost >= 0) ? (m_pathMap[m_currentCell].cost + 1) : 1;
-                    double goalDistanceCost = m_mapGeometry->distance(neighborX, neighborY, goalX, goalY);
-                    double candidateScore = goalDistanceCost + candidateAccumulatedCost;
+                    const bool isDiagonalMove = (neighborX != currentX) && (neighborY != currentY);
+                    const float moveCost = isDiagonalMove ? DIAGONAL_MOVE_COST : ORTHOGONAL_MOVE_COST;
+                    const float candidateAccumulatedCost = (m_pathMap[m_currentCell].cost >= 0.0f)
+                                                                ? (m_pathMap[m_currentCell].cost + moveCost)
+                                                                : moveCost;
+                    const float goalDistanceCost = static_cast<float>(m_mapGeometry->distance(neighborX, neighborY, goalX, goalY));
+                    const float candidateScore = goalDistanceCost + candidateAccumulatedCost;
 
                     if (candidateScore < bestCandidateCost) {
                         // Heuristic: keep the neighbor that minimizes distance to the goal.
