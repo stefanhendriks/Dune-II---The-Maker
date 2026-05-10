@@ -23,6 +23,15 @@ static constexpr int WAYPOINT_STEP_CELLS = 32;
 static constexpr float ORTHOGONAL_MOVE_COST = 1.0f;
 static constexpr float DIAGONAL_MOVE_COST = 1.41421356f;
 
+static float octileDistance(int x1, int y1, int x2, int y2)
+{
+    const int dx = std::abs(x2 - x1);
+    const int dy = std::abs(y2 - y1);
+    const int minDelta = std::min(dx, dy);
+    const int maxDelta = std::max(dx, dy);
+    return static_cast<float>(maxDelta - minDelta) + static_cast<float>(minDelta) * DIAGONAL_MOVE_COST;
+}
+
 #define UNVISITED      -2
 #define CLOSED        -1
 #define OPEN          0
@@ -159,10 +168,10 @@ void cPathFinder::executeCreatePathSearch()
     int searchIterations = 0;
 
     int bestReachedCell = m_currentCell;
-    double bestReachedGoalDistance = m_mapGeometry->distance(m_mapGeometry->getCellX(m_currentCell),
-                                                             m_mapGeometry->getCellY(m_currentCell),
-                                                             goalX,
-                                                             goalY);
+    float bestReachedGoalDistance = octileDistance(m_mapGeometry->getCellX(m_currentCell),
+                                                   m_mapGeometry->getCellY(m_currentCell),
+                                                   goalX,
+                                                   goalY);
 
     while (m_valid) {
         searchIterations++;
@@ -210,7 +219,7 @@ void cPathFinder::executeCreatePathSearch()
         int currentX = m_mapGeometry->getCellX(m_currentCell);
         int currentY = m_mapGeometry->getCellY(m_currentCell);
 
-        double currentGoalDistance = m_mapGeometry->distance(currentX, currentY, goalX, goalY);
+        float currentGoalDistance = octileDistance(currentX, currentY, goalX, goalY);
         if (currentGoalDistance < bestReachedGoalDistance) {
             bestReachedGoalDistance = currentGoalDistance;
             bestReachedCell = m_currentCell;
@@ -329,7 +338,7 @@ void cPathFinder::executeCreatePathSearch()
                     const float candidateAccumulatedCost = (m_pathMap[m_currentCell].cost >= 0.0f)
                                                                 ? (m_pathMap[m_currentCell].cost + moveCost)
                                                                 : moveCost;
-                    const float goalDistanceCost = static_cast<float>(m_mapGeometry->distance(neighborX, neighborY, goalX, goalY));
+                    const float goalDistanceCost = octileDistance(neighborX, neighborY, goalX, goalY);
                     const float candidateScore = goalDistanceCost + candidateAccumulatedCost;
 
                     if (candidateScore < bestCandidateCost) {
