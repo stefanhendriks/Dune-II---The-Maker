@@ -17,24 +17,12 @@
 #include <algorithm>
 #include <cassert>
 #include <format>
+#include <limits>
+#include <queue>
 
 static const int MAX_PATH_LOCAL_SIZE = 4096;
 static constexpr int WAYPOINT_STEP_CELLS = 32;
-static constexpr int ORTHOGONAL_MOVE_COST = 10;
-static constexpr int DIAGONAL_MOVE_COST = 14;
-
-static int octileDistance(int x1, int y1, int x2, int y2)
-{
-    const int dx = std::abs(x2 - x1);
-    const int dy = std::abs(y2 - y1);
-    const int minDelta = std::min(dx, dy);
-    const int maxDelta = std::max(dx, dy);
-    return (maxDelta - minDelta) * ORTHOGONAL_MOVE_COST + minDelta * DIAGONAL_MOVE_COST;
-}
-
-#define UNVISITED      -2
-#define CLOSED        -1
-#define OPEN          0
+static constexpr int DISTANCE_INF = std::numeric_limits<int>::max();
 
 cPathFinder::cPathFinder()
 {
@@ -144,341 +132,211 @@ void cPathFinder::initializeCreatePathSearch(int pathCountUnitsBudget)
     m_success = false;
 
     m_pathsCreated++;
-    // Reset the search map (cost + parent + per-cell state).
+    // Reset the distance field (distance + parent toward goal).
     for (auto &pathCell : m_pathMap) {
-        pathCell.cost = -1;
+        pathCell.cost = DISTANCE_INF;
         pathCell.parent = -1;
-        pathCell.state = UNVISITED;
+        pathCell.state = 0;
+    }
+}
+
+bool cPathFinder::isCellPassableForActiveUnit(int candidateCell) const
+{
+    if (candidateCell < 0) {
+        return false;
     }
 
-    m_pathMap[m_currentCell].cost = 0;
-    m_pathMap[m_currentCell].parent = -1;
-    m_pathMap[m_currentCell].state = OPEN;
+    // Never allow traversing the invisible 1-cell map border.
+    const int mapWidth = m_map->getWidth();
+    const int mapHeight = m_map->getHeight();
+    const int cellX = candidateCell % mapWidth;
+    const int cellY = candidateCell / mapWidth;
+    if (cellX <= 0 || cellY <= 0 || cellX >= (mapWidth - 1) || cellY >= (mapHeight - 1)) {
+        return false;
+    }
+
+    if (m_activeUnit->isSandworm()) {
+        return m_map->isCellPassableForWorm(candidateCell);
+    }
+
+    int unitIdAtCandidateCell = m_map->getCellIdUnitLayer(candidateCell);
+    int structureIdAtCandidateCell = m_map->getCellIdStructuresLayer(candidateCell);
+    int candidateTerrainType = m_map->getCellType(candidateCell);
+
+    if (candidateTerrainType < 0) {
+        return false;
+    }
+
+    bool candidateIsPassable = false;
+
+    if (unitIdAtCandidateCell == -1 && structureIdAtCandidateCell == -1) {
+        candidateIsPassable = true;
+    }
+
+    if (structureIdAtCandidateCell > -1) {
+        if (m_activeUnit->combat.iAttackStructure > -1 &&
+            structureIdAtCandidateCell == m_activeUnit->combat.iAttackStructure) {
+            candidateIsPassable = true;
+        }
+
+        if (m_activeUnit->iStructureID > -1 &&
+            structureIdAtCandidateCell == m_activeUnit->iStructureID) {
+            candidateIsPassable = true;
+        }
+    }
+
+    if (unitIdAtCandidateCell > -1) {
+        if (unitIdAtCandidateCell == m_activeUnit->iID) {
+            candidateIsPassable = true;
+        }
+        else {
+            candidateIsPassable = false;
+
+            if (m_pathCountUnits > 0) {
+                cUnit *blockingUnit = m_objects->getUnit(unitIdAtCandidateCell);
+                if (blockingUnit != nullptr &&
+                    !blockingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer()) &&
+                    blockingUnit->isInfantryUnit() &&
+                    m_activeUnit->canSquishInfantry()) {
+                    candidateIsPassable = true;
+                }
+            }
+        }
+    }
+
+    if (!m_map->isVisible(candidateCell, m_controller)) {
+        return true;
+    }
+
+    if (candidateTerrainType == TERRAIN_WALL) {
+        return false;
+    }
+
+    if (!m_activeUnit->isInfantryUnit() && candidateTerrainType == TERRAIN_MOUNTAIN) {
+        return false;
+    }
+
+    return candidateIsPassable;
 }
 
 void cPathFinder::executeCreatePathSearch()
 {
-    // Local greedy search with backtracking: pick the best unvisited neighbor,
-    // and walk back to the parent as soon as a dead end is reached.
-    const int goalX = m_mapGeometry->getCellX(m_goalCell);
-    const int goalY = m_mapGeometry->getCellY(m_goalCell);
+    // Compute a distance field from destination to all reachable cells, then
+    // follow decreasing costs from unit position to build the path.
+    if (m_goalCell < 0 || m_goalCell >= static_cast<int>(m_pathMap.size())) {
+        m_valid = false;
+        m_success = false;
+        return;
+    }
 
-    const int mapCellCount = m_map->getWidth() * m_map->getHeight();
-    const int maxSearchIterations = std::max(128, std::min(mapCellCount, MAX_PATH_LOCAL_SIZE));
-    int searchIterations = 0;
+    std::queue<int> frontier;
+    const int mapWidth = m_map->getWidth();
+    const int mapHeight = m_map->getHeight();
 
-    int bestReachedCell = m_currentCell;
-    int bestReachedGoalDistance = octileDistance(m_mapGeometry->getCellX(m_currentCell),
-                                                 m_mapGeometry->getCellY(m_currentCell),
-                                                 goalX,
-                                                 goalY);
+    m_pathMap[m_goalCell].cost = 0;
+    m_pathMap[m_goalCell].parent = -1;
+    frontier.push(m_goalCell);
 
-    while (m_valid) {
-        searchIterations++;
-        if (searchIterations > maxSearchIterations) {
-            if (bestReachedCell > -1 && bestReachedCell != m_activeUnit->getCell()) {
-                m_currentCell = bestReachedCell;
-                m_valid = false;
-                m_success = true;
-                m_activeUnit->log(std::format("CREATE_PATH: search capped after {} iterations, using closest reached cell {}", searchIterations, bestReachedCell));
-            }
-            else {
-                m_valid = false;
-                m_success = false;
-                m_activeUnit->log(std::format("CREATE_PATH: search capped after {} iterations, no progress possible", searchIterations));
-            }
-            break;
-        }
+    while (!frontier.empty()) {
+        const int currentCell = frontier.front();
+        frontier.pop();
 
-        if (m_currentCell == m_goalCell) {
-            m_activeUnit->log(std::format("WARNING: iCell == goal_cell ({}) at loop start - should have been caught earlier", m_currentCell));
-            m_valid = false;
-            m_success = true;
-            break;
-        }
+        const int currentDistance = m_pathMap[currentCell].cost;
+        const int currentX = currentCell % mapWidth;
+        const int currentY = currentCell / mapWidth;
 
-        int structureIdAtCurrentCell = m_map->cellGetIdFromLayer(m_currentCell, MAPID_STRUCTURES);
-        if (m_activeUnit->iStructureID > -1) {
-            if (structureIdAtCurrentCell == m_activeUnit->iStructureID) {
-                m_valid = false;
-                m_success = true;
-                m_activeUnit->log("Found structure ID");
-                break;
-            }
-        }
-
-        if (m_activeUnit->combat.iAttackStructure > -1) {
-            if (structureIdAtCurrentCell == m_activeUnit->combat.iAttackStructure) {
-                m_valid = false;
-                m_success = true;
-                m_activeUnit->log("Found attack structure ID");
-                break;
-            }
-        }
-
-        int currentX = m_mapGeometry->getCellX(m_currentCell);
-        int currentY = m_mapGeometry->getCellY(m_currentCell);
-
-        int currentGoalDistance = octileDistance(currentX, currentY, goalX, goalY);
-        if (currentGoalDistance < bestReachedGoalDistance) {
-            bestReachedGoalDistance = currentGoalDistance;
-            bestReachedCell = m_currentCell;
-        }
-
-        int minNeighborX = currentX - 1;
-        int minNeighborY = currentY - 1;
-
-        int maxNeighborX = currentX + 1;
-        int maxNeighborY = currentY + 1;
-
-        cPoint::split(minNeighborX, minNeighborY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(minNeighborX, minNeighborY);
-        cPoint::split(maxNeighborX, maxNeighborY) = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(maxNeighborX, maxNeighborY);
-
-        int bestCandidateCost = 999999999;
-        int bestCandidateCell = -1;
-
-        bool reachedGoalNeighbor = false;
-
-        // Explore the 3x3 neighborhood around the current cell.
-        for (int neighborX = minNeighborX; neighborX <= maxNeighborX; neighborX++) {
-            for (int neighborY = minNeighborY; neighborY <= maxNeighborY; neighborY++) {
-                int candidateCell = m_mapGeometry->getCellWithMapBorders(neighborX, neighborY);
-
-                if (candidateCell < 0)
-                    continue;
-
-                if (candidateCell == m_currentCell)
-                    continue;
-
-                bool candidateIsPassable = false;
-
-                int candidateTerrainType = m_map->getCellType(candidateCell);
-                if (!m_activeUnit->isSandworm()) {
-                    // For regular units, traversability depends on occupancy
-                    // (units/structures), visibility, and terrain.
-                    int unitIdAtCandidateCell = m_map->getCellIdUnitLayer(candidateCell);
-                    int structureIdAtCandidateCell = m_map->getCellIdStructuresLayer(candidateCell);
-
-                    if (unitIdAtCandidateCell == -1 && structureIdAtCandidateCell == -1) {
-                        candidateIsPassable = true;
-                    }
-
-                    if (structureIdAtCandidateCell > -1) {
-                        if (m_activeUnit->combat.iAttackStructure > -1)
-                            if (structureIdAtCandidateCell == m_activeUnit->combat.iAttackStructure)
-                                candidateIsPassable = true;
-
-                        if (m_activeUnit->iStructureID > -1)
-                            if (structureIdAtCandidateCell == m_activeUnit->iStructureID)
-                                candidateIsPassable = true;
-
-                    }
-
-                    if (unitIdAtCandidateCell > -1) {
-                        if (unitIdAtCandidateCell != m_activeUnit->iID) {
-                            int blockingUnitId = unitIdAtCandidateCell;
-
-                            if (m_pathCountUnits <= 0) {
-                                candidateIsPassable = false;
-                            }
-
-                            cUnit *blockingUnit = m_objects->getUnit(blockingUnitId);
-                            if (blockingUnit == nullptr) {
-                                candidateIsPassable = false;
-                            }
-                            // else if (blockingUnit->isMovingBetweenCells()) {
-                            //     candidateIsPassable = true;
-                            // }
-                            else if (!blockingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer())) {
-                                if (blockingUnit->isInfantryUnit() && m_activeUnit->canSquishInfantry())
-                                    candidateIsPassable = true;
-                            }
-                        }
-                        else {
-                            candidateIsPassable = true;
-                        }
-                    }
-
-                    if (m_map->isVisible(candidateCell, m_controller) == false) {
-                        candidateIsPassable = true;
-                    }
-                    else {
-                        if (candidateTerrainType == TERRAIN_WALL) {
-                            candidateIsPassable = false;
-                        }
-
-                        if (!m_activeUnit->isInfantryUnit()) {
-                            if (candidateTerrainType == TERRAIN_MOUNTAIN) {
-                                candidateIsPassable = false;
-                            }
-                        }
-                    }
-                }
-                else {
-                    candidateIsPassable = m_map->isCellPassableForWorm(candidateCell);
-                }
-
-                if (!candidateIsPassable) {
+        for (int y = currentY - 1; y <= currentY + 1; y++) {
+            for (int x = currentX - 1; x <= currentX + 1; x++) {
+                if (x == currentX && y == currentY) {
                     continue;
                 }
 
-                if (candidateCell == m_goalCell) {
-                    bestCandidateCell = candidateCell;
-                    bestCandidateCost = 0;
-                    reachedGoalNeighbor = true;
-                    m_activeUnit->log("CREATE_PATH: Found the goal cell, success, bailing out");
-                    break;
+                if (x <= 0 || y <= 0 || x >= (mapWidth - 1) || y >= (mapHeight - 1)) {
+                    continue;
                 }
 
-                bool isUnvisited = m_pathMap[candidateCell].state == UNVISITED;
+                const int neighborCell = (y * mapWidth) + x;
 
-                if (isUnvisited) {
-                    const bool isDiagonalMove = (neighborX != currentX) && (neighborY != currentY);
-                    const int moveCost = isDiagonalMove ? DIAGONAL_MOVE_COST : ORTHOGONAL_MOVE_COST;
-                    const int candidateAccumulatedCost = (m_pathMap[m_currentCell].cost >= 0)
-                                                             ? (m_pathMap[m_currentCell].cost + moveCost)
-                                                             : moveCost;
-                    const int goalDistanceCost = octileDistance(neighborX, neighborY, goalX, goalY);
-                    const int candidateScore = goalDistanceCost + candidateAccumulatedCost;
-
-                    if (candidateScore < bestCandidateCost) {
-                        // Heuristic: keep the neighbor that minimizes distance to the goal.
-                        bestCandidateCell = candidateCell;
-                        bestCandidateCost = candidateScore;
-                    }
+                if (m_pathMap[neighborCell].cost != DISTANCE_INF) {
+                    continue;
                 }
-            }
 
-            if (reachedGoalNeighbor) {
-                m_activeUnit->log("CREATE_PATH: BAIL");
-                break;
-            }
-        }
+                if (neighborCell != m_goalCell && !isCellPassableForActiveUnit(neighborCell)) {
+                    continue;
+                }
 
-        if (bestCandidateCell > -1) {
-            // Move forward: the chosen neighbor becomes the new current cell.
-            m_pathMap[bestCandidateCell].state = OPEN;
-            m_pathMap[bestCandidateCell].parent = m_currentCell;
-            m_pathMap[bestCandidateCell].cost = bestCandidateCost;
-
-            // Spend one budget unit only when a move candidate is effectively selected.
-            m_pathCountUnits--;
-
-            m_currentCell = bestCandidateCell;
-            if (m_currentCell == m_goalCell) {
-                m_valid = false;
-                m_success = true;
-            }
-
-        }
-        else {
-            // Dead end: close the current cell and backtrack to its parent.
-            m_pathMap[m_currentCell].state = CLOSED;
-            int parentCell = m_pathMap[m_currentCell].parent;
-
-            if (parentCell > -1) {
-                m_currentCell = parentCell;
-            } else {
-                m_activeUnit->log("Failed to find new cell, backtracking failed - no parent!");
-                m_valid = false;
-                m_success = false;
-                m_activeUnit->log("FAILED TO CREATE PATH - nothing found to continue");
-                break;
+                m_pathMap[neighborCell].cost = currentDistance + 1;
+                m_pathMap[neighborCell].parent = currentCell;
+                frontier.push(neighborCell);
             }
         }
+    }
+
+    m_valid = false;
+    m_success = m_pathMap[m_currentCell].cost != DISTANCE_INF;
+
+    if (!m_success) {
+        const int currentX = m_currentCell % mapWidth;
+        const int currentY = m_currentCell / mapWidth;
+        const int goalX = m_goalCell % mapWidth;
+        const int goalY = m_goalCell / mapWidth;
+        const int directDistance = std::abs(goalX - currentX) + std::abs(goalY - currentY);
+        m_activeUnit->log(std::format("CREATE_PATH: distance field found no route from {} to {} (direct dist {})", m_currentCell, m_goalCell, directDistance));
     }
 }
 
 int cPathFinder::backtracePathToTempBuffer()
 {
-    // Walk the parent chain from the final position back to the start.
+    // Follow parent pointers from current unit cell to goal (gradient descent).
     std::fill(m_tempPath.begin(), m_tempPath.end(), -1);
 
-    bool continueBacktrace = true;
-
-    int currentBacktraceCell = m_currentCell;
+    int currentCell = m_activeUnit->getCell();
     int pathLength = 0;
-    m_tempPath[pathLength] = currentBacktraceCell;
-    pathLength++;
 
-    m_activeUnit->log(std::format("Starting backtracing. Path index = {}, temp_path[0] = {}", pathLength, m_tempPath[pathLength - 1]));
-
-    while (continueBacktrace) {
-        int parentCell = m_pathMap[currentBacktraceCell].parent;
-        if (parentCell > -1) {
-            if (parentCell == currentBacktraceCell) {
-                m_activeUnit->log("found terminator, stop!");
-                continueBacktrace = false;
-                continue;
-            }
-            else {
-                m_tempPath[pathLength] = parentCell;
-                currentBacktraceCell = m_pathMap[currentBacktraceCell].parent;
-                pathLength++;
-
-                if (pathLength >= static_cast<int>(m_tempPath.size())) {
-                    std::string warningMessage = std::format("WARNING: backtrace truncated - path exceeds MAX_PATH_LOCAL_SIZE ({})", m_tempPath.size());
-                    m_activeUnit->log(warningMessage);
-                    continueBacktrace = false;
-                    continue;
-                }
-
-                m_activeUnit->log(std::format("Backtraced. Path index = {}, temp_path[last] = {}", pathLength, m_tempPath[pathLength - 1]));
-            }
-        }
-        else {
-            std::string warningMessage = std::format("WARNING: backtrace stopped at cell {} - parent is -1 (no parent found)", currentBacktraceCell);
-            m_activeUnit->log(warningMessage);
-            continueBacktrace = false;
+    while (currentCell > -1 && pathLength < static_cast<int>(m_tempPath.size())) {
+        m_tempPath[pathLength++] = currentCell;
+        if (currentCell == m_goalCell) {
+            return pathLength;
         }
 
-        if (currentBacktraceCell == m_activeUnit->getCell()) {
-            continueBacktrace = false;
+        int parentCell = m_pathMap[currentCell].parent;
+        if (parentCell == currentCell) {
+            m_activeUnit->log("WARNING: path reconstruction aborted due to self-parent");
+            return 0;
         }
+
+        if (parentCell < 0) {
+            m_activeUnit->log(std::format("WARNING: path reconstruction failed from cell {} (no parent)", currentCell));
+            return 0;
+        }
+
+        currentCell = parentCell;
     }
 
-    return pathLength;
+    if (pathLength >= static_cast<int>(m_tempPath.size())) {
+        m_activeUnit->log(std::format("WARNING: path reconstruction truncated - exceeds MAX_PATH_LOCAL_SIZE ({})", m_tempPath.size()));
+    }
+
+    return 0;
 }
 
 void cPathFinder::applyTempPathToUnit(int backtracedPathLength)
 {
-    // Reverse the backtraced path and compact intermediate points when
-    // a farther cell is still adjacent to the previous selected cell.
-    int tempPathReadIndex = backtracedPathLength - 1;
+    // Temp path is already ordered from start to goal.
     int unitPathWriteIndex = 0;
-    int previousAssignedCell = -1;
 
-    while (tempPathReadIndex > -1) {
-        if (m_tempPath[tempPathReadIndex] > -1) {
-            if (previousAssignedCell > -1) {
-                int farthestAdjacentIndex = -1;
-
-                for (int scanIndex = tempPathReadIndex; scanIndex > 0; scanIndex--) {
-                    if (m_tempPath[scanIndex] > -1) {
-
-                        if (m_mapGeometry->isCellAdjacentToOtherCell(previousAssignedCell, m_tempPath[scanIndex])) {
-                            farthestAdjacentIndex = scanIndex;
-                        }
-                    }
-                    else {
-                        break;
-                    }
-                }
-
-                if (farthestAdjacentIndex < tempPathReadIndex && farthestAdjacentIndex > -1) {
-                    tempPathReadIndex = farthestAdjacentIndex;
-                }
-            }
-
-            if (unitPathWriteIndex >= MAX_PATH_SIZE) {
-                m_activeUnit->log(std::format("WARNING: path truncated - exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
-                break;
-            }
-            m_activeUnit->movement.iPath[unitPathWriteIndex] = m_tempPath[tempPathReadIndex];
-            previousAssignedCell = m_tempPath[tempPathReadIndex];
-            unitPathWriteIndex++;
+    for (int i = 0; i < backtracedPathLength; i++) {
+        int pathCell = m_tempPath[i];
+        if (pathCell < 0) {
+            break;
         }
-        tempPathReadIndex--;
+
+        if (unitPathWriteIndex >= MAX_PATH_SIZE) {
+            m_activeUnit->log(std::format("WARNING: path truncated - exceeds MAX_PATH_SIZE ({})", MAX_PATH_SIZE));
+            break;
+        }
+
+        m_activeUnit->movement.iPath[unitPathWriteIndex++] = pathCell;
     }
 
     // Build waypoint memory: keep one waypoint every WAYPOINT_STEP_CELLS path cells.
@@ -514,7 +372,7 @@ void cPathFinder::applyTempPathToUnit(int backtracedPathLength)
         }
     }
 
-    m_activeUnit->movement.iPathIndex = 1;
+    m_activeUnit->movement.iPathIndex = (unitPathWriteIndex > 1) ? 1 : -1;
 
     for (int pathIndex = 1; pathIndex < MAX_PATH_SIZE; pathIndex++) {
         int pathCell = m_activeUnit->movement.iPath[pathIndex];
@@ -543,8 +401,12 @@ int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
     }
     m_activeUnit->log("CREATE_PATH -- valid loop finished");
 
-    m_activeUnit->log("CREATE_PATH -- pathfinder got to goal-cell. Backtracing ideal path.");
+    m_activeUnit->log("CREATE_PATH -- distance field built. Reconstructing path.");
     int backtracedPathLength = backtracePathToTempBuffer();
+    if (backtracedPathLength <= 1) {
+        m_activeUnit->log("CREATE_PATH: reconstruction failed or empty path");
+        return -1;
+    }
     applyTempPathToUnit(backtracedPathLength);
 
     if (m_settings->isDebugMode()) {

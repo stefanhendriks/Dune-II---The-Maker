@@ -37,6 +37,7 @@ private:
     int validateCreatePathInput(int unitId);
     void initializeCreatePathSearch(int pathCountUnitsBudget);
     void executeCreatePathSearch();
+    bool isCellPassableForActiveUnit(int candidateCell) const;
     int backtracePathToTempBuffer();
     void applyTempPathToUnit(int backtracedPathLength);
 
