@@ -238,7 +238,82 @@ void cPathFinder::executeCreatePathSearch()
 
     m_pathMap[m_goalCell].cost = 0;
     m_pathMap[m_goalCell].parent = -1;
-    frontier.push(m_goalCell);
+
+    // Fast path: walk directly from goal to start, prioritizing the diagonal direction.
+    // If blocked, we fall back to regular BFS expansion.
+    {
+        auto sign = [](int value) {
+            return (value > 0) - (value < 0);
+        };
+
+        std::vector<int> directPathCells;
+        directPathCells.reserve(64);
+        directPathCells.push_back(m_goalCell);
+
+        int currentLineCell = m_goalCell;
+        bool directPathBlocked = false;
+
+        while (currentLineCell != m_currentCell) {
+            const int lineX = currentLineCell % mapWidth;
+            const int lineY = currentLineCell / mapWidth;
+            const int stepX = sign(targetX - lineX);
+            const int stepY = sign(targetY - lineY);
+
+            const int preferredDx[3] = {stepX, stepX, 0};
+            const int preferredDy[3] = {stepY, 0, stepY};
+
+            bool advanced = false;
+            for (int i = 0; i < 3; i++) {
+                const int dx = preferredDx[i];
+                const int dy = preferredDy[i];
+
+                if (dx == 0 && dy == 0) {
+                    continue;
+                }
+
+                const int nextX = lineX + dx;
+                const int nextY = lineY + dy;
+
+                if (nextX <= 0 || nextY <= 0 || nextX >= (mapWidth - 1) || nextY >= (mapHeight - 1)) {
+                    continue;
+                }
+
+                const int nextCell = (nextY * mapWidth) + nextX;
+                if (nextCell != m_currentCell && nextCell != m_goalCell && !isCellPassableForActiveUnit(nextCell)) {
+                    continue;
+                }
+
+                directPathCells.push_back(nextCell);
+                currentLineCell = nextCell;
+                advanced = true;
+                break;
+            }
+
+            if (!advanced) {
+                directPathBlocked = true;
+                break;
+            }
+
+            if (directPathCells.size() >= static_cast<size_t>(MAX_PATH_LOCAL_SIZE)) {
+                directPathBlocked = true;
+                break;
+            }
+        }
+
+        if (!directPathBlocked && currentLineCell == m_currentCell) {
+            for (int i = 1; i < static_cast<int>(directPathCells.size()); i++) {
+                const int pathCell = directPathCells[i];
+                const int parentCell = directPathCells[i - 1];
+                m_pathMap[pathCell].cost = i;
+                m_pathMap[pathCell].parent = parentCell;
+            }
+            reachedCurrentCell = true;
+        }
+    }
+
+    if (!reachedCurrentCell) {
+        frontier.push(m_goalCell);
+    }
 
     while (!frontier.empty() && !reachedCurrentCell) {
         const int currentCell = frontier.front();
