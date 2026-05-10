@@ -232,6 +232,8 @@ void cPathFinder::executeCreatePathSearch()
     std::queue<int> frontier;
     const int mapWidth = m_map->getWidth();
     const int mapHeight = m_map->getHeight();
+    const int targetX = m_currentCell % mapWidth;
+    const int targetY = m_currentCell / mapWidth;
     bool reachedCurrentCell = false;
 
     m_pathMap[m_goalCell].cost = 0;
@@ -251,40 +253,73 @@ void cPathFinder::executeCreatePathSearch()
         const int currentX = currentCell % mapWidth;
         const int currentY = currentCell / mapWidth;
 
-        for (int y = currentY - 1; y <= currentY + 1; y++) {
-            for (int x = currentX - 1; x <= currentX + 1; x++) {
-                if (x == currentX && y == currentY) {
-                    continue;
-                }
+        const int sx = (targetX > currentX) - (targetX < currentX);
+        const int sy = (targetY > currentY) - (targetY < currentY);
 
-                if (x <= 0 || y <= 0 || x >= (mapWidth - 1) || y >= (mapHeight - 1)) {
-                    continue;
-                }
+        int orderedDx[8] = {0};
+        int orderedDy[8] = {0};
+        int orderedCount = 0;
 
-                const int neighborCell = (y * mapWidth) + x;
-
-                if (m_pathMap[neighborCell].cost != DISTANCE_INF) {
-                    continue;
-                }
-
-                if (neighborCell != m_goalCell && !isCellPassableForActiveUnit(neighborCell)) {
-                    continue;
-                }
-
-                m_pathMap[neighborCell].cost = currentDistance + 1;
-                m_pathMap[neighborCell].parent = currentCell;
-
-                if (neighborCell == m_currentCell) {
-                    reachedCurrentCell = true;
-                    break;
-                }
-
-                frontier.push(neighborCell);
+        auto addDirection = [&](int dx, int dy) {
+            if (dx == 0 && dy == 0) {
+                return;
             }
 
-            if (reachedCurrentCell) {
+            for (int i = 0; i < orderedCount; i++) {
+                if (orderedDx[i] == dx && orderedDy[i] == dy) {
+                    return;
+                }
+            }
+
+            if (orderedCount < 8) {
+                orderedDx[orderedCount] = dx;
+                orderedDy[orderedCount] = dy;
+                orderedCount++;
+            }
+        };
+
+        addDirection(sx, sy);
+        addDirection(sx, 0);
+        addDirection(0, sy);
+        addDirection(sx, -sy);
+        addDirection(-sx, sy);
+        addDirection(-sx, 0);
+        addDirection(0, -sy);
+        addDirection(-sx, -sy);
+
+        static constexpr int fallbackDx[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
+        static constexpr int fallbackDy[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+        for (int i = 0; i < 8; i++) {
+            addDirection(fallbackDx[i], fallbackDy[i]);
+        }
+
+        for (int i = 0; i < orderedCount; i++) {
+            const int x = currentX + orderedDx[i];
+            const int y = currentY + orderedDy[i];
+
+            if (x <= 0 || y <= 0 || x >= (mapWidth - 1) || y >= (mapHeight - 1)) {
+                continue;
+            }
+
+            const int neighborCell = (y * mapWidth) + x;
+
+            if (m_pathMap[neighborCell].cost != DISTANCE_INF) {
+                continue;
+            }
+
+            if (neighborCell != m_goalCell && !isCellPassableForActiveUnit(neighborCell)) {
+                continue;
+            }
+
+            m_pathMap[neighborCell].cost = currentDistance + 1;
+            m_pathMap[neighborCell].parent = currentCell;
+
+            if (neighborCell == m_currentCell) {
+                reachedCurrentCell = true;
                 break;
             }
+
+            frontier.push(neighborCell);
         }
     }
 
