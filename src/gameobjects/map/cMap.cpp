@@ -141,7 +141,7 @@ void cMap::init(int width, int height)
     m_width = width;
     m_height = height;
     m_mapGeometry->resize(m_width, m_height);
-    m_pathFinder->resize(m_maxCells);
+    m_pathFinder->resize(m_maxCells, m_width, m_height);
 }
 
 void cMap::smudge_increase(SmudgeType iType, int iCell)

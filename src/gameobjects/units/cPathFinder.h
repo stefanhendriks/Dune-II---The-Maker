@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <vector>
 
 struct ASTAR {
@@ -24,7 +25,7 @@ public:
     ~cPathFinder() = default;
     int createPath(int unitId, int pathCountUnitsBudget);
     int returnCloseGoal(int targetCell, int originCell, int unitId);
-    void resize(int newSize);
+    void resize(int newSize, int width, int height);
     void serviceInit(sGameServices* services);
     void resetPathCreatedByUnit();
 private:
@@ -36,6 +37,7 @@ private:
     MapGeometry* m_mapGeometry = nullptr;
     int validateCreatePathInput(int unitId);
     void initializeCreatePathSearch(int pathCountUnitsBudget);
+    void ensureNeighborCache(int mapWidth, int mapHeight);
     void executeCreatePathSearch();
     bool isCellPassableForActiveUnit(int candidateCell) const;
     int backtracePathToTempBuffer();
@@ -52,4 +54,7 @@ private:
 
     std::vector<ASTAR> m_pathMap;
     std::vector<int> m_tempPath;
+    std::vector<std::array<int, 8>> m_neighbors;
+    int m_neighborsWidth = -1;
+    int m_neighborsHeight = -1;
 };

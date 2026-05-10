@@ -24,15 +24,80 @@ static const int MAX_PATH_LOCAL_SIZE = 4096;
 static constexpr int WAYPOINT_STEP_CELLS = 32;
 static constexpr int DISTANCE_INF = std::numeric_limits<int>::max();
 
+static int directionToNeighborIndex(int dx, int dy)
+{
+    if (dx == -1 && dy == -1) return 0;
+    if (dx ==  0 && dy == -1) return 1;
+    if (dx ==  1 && dy == -1) return 2;
+    if (dx == -1 && dy ==  0) return 3;
+    if (dx ==  1 && dy ==  0) return 4;
+    if (dx == -1 && dy ==  1) return 5;
+    if (dx ==  0 && dy ==  1) return 6;
+    if (dx ==  1 && dy ==  1) return 7;
+    return -1;
+}
+
+static int buildPreferredNeighborOrder(int sx, int sy, int orderedNeighborIndices[8])
+{
+    int orderedCount = 0;
+
+    auto addDirection = [&](int dx, int dy) {
+        if (dx == 0 && dy == 0) {
+            return;
+        }
+
+        const int neighborIndex = directionToNeighborIndex(dx, dy);
+        if (neighborIndex < 0) {
+            return;
+        }
+
+        for (int i = 0; i < orderedCount; i++) {
+            if (orderedNeighborIndices[i] == neighborIndex) {
+                return;
+            }
+        }
+
+        if (orderedCount < 8) {
+            orderedNeighborIndices[orderedCount] = neighborIndex;
+            orderedCount++;
+        }
+    };
+
+    // Priority: toward target diagonal first, then main axes, then alternatives.
+    addDirection(sx, sy);
+    addDirection(sx, 0);
+    addDirection(0, sy);
+    addDirection(sx, -sy);
+    addDirection(-sx, sy);
+    addDirection(-sx, 0);
+    addDirection(0, -sy);
+    addDirection(-sx, -sy);
+
+    // Ensure full coverage only when some directions are still missing.
+    if (orderedCount < 8) {
+        static constexpr int fallbackDx[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
+        static constexpr int fallbackDy[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+        for (int i = 0; i < 8; i++) {
+            addDirection(fallbackDx[i], fallbackDy[i]);
+        }
+    }
+
+    return orderedCount;
+}
+
 cPathFinder::cPathFinder()
 {
     m_tempPath.resize(MAX_PATH_LOCAL_SIZE);
 }
 
-void cPathFinder::resize(int newSize)
+void cPathFinder::resize(int newSize, int width, int height)
 {
     m_pathMap.resize(newSize);
     std::fill(m_tempPath.begin(), m_tempPath.end(), -1);
+    m_neighbors.clear();
+    m_neighborsWidth = -1;
+    m_neighborsHeight = -1;
+    ensureNeighborCache(width, height);
 }
 
 void cPathFinder::serviceInit(sGameServices* services)
@@ -140,6 +205,41 @@ void cPathFinder::initializeCreatePathSearch(int pathCountUnitsBudget)
     }
 }
 
+void cPathFinder::ensureNeighborCache(int mapWidth, int mapHeight)
+{
+    if (m_neighborsWidth == mapWidth &&
+        m_neighborsHeight == mapHeight &&
+        static_cast<int>(m_neighbors.size()) == mapWidth * mapHeight) {
+        return;
+    }
+
+    const int maxCells = mapWidth * mapHeight;
+    m_neighbors.assign(maxCells, std::array<int, 8>{-1, -1, -1, -1, -1, -1, -1, -1});
+
+    static constexpr int dx[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
+    static constexpr int dy[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+
+    for (int cell = 0; cell < maxCells; cell++) {
+        const int x = cell % mapWidth;
+        const int y = cell / mapWidth;
+
+        for (int i = 0; i < 8; i++) {
+            const int nx = x + dx[i];
+            const int ny = y + dy[i];
+
+            if (nx < 0 || ny < 0 || nx >= mapWidth || ny >= mapHeight) {
+                m_neighbors[cell][i] = -1;
+                continue;
+            }
+
+            m_neighbors[cell][i] = (ny * mapWidth) + nx;
+        }
+    }
+
+    m_neighborsWidth = mapWidth;
+    m_neighborsHeight = mapHeight;
+}
+
 bool cPathFinder::isCellPassableForActiveUnit(int candidateCell) const
 {
     if (candidateCell < 0) {
@@ -231,7 +331,6 @@ void cPathFinder::executeCreatePathSearch()
 
     std::queue<int> frontier;
     const int mapWidth = m_map->getWidth();
-    const int mapHeight = m_map->getHeight();
     const int targetX = m_currentCell % mapWidth;
     const int targetY = m_currentCell / mapWidth;
     bool reachedCurrentCell = false;
@@ -271,14 +370,16 @@ void cPathFinder::executeCreatePathSearch()
                     continue;
                 }
 
-                const int nextX = lineX + dx;
-                const int nextY = lineY + dy;
-
-                if (nextX <= 0 || nextY <= 0 || nextX >= (mapWidth - 1) || nextY >= (mapHeight - 1)) {
+                const int directionIndex = directionToNeighborIndex(dx, dy);
+                if (directionIndex < 0) {
                     continue;
                 }
 
-                const int nextCell = (nextY * mapWidth) + nextX;
+                const int nextCell = m_neighbors[currentLineCell][directionIndex];
+                if (nextCell < 0) {
+                    continue;
+                }
+
                 if (nextCell != m_currentCell && nextCell != m_goalCell && !isCellPassableForActiveUnit(nextCell)) {
                     continue;
                 }
@@ -331,52 +432,14 @@ void cPathFinder::executeCreatePathSearch()
         const int sx = (targetX > currentX) - (targetX < currentX);
         const int sy = (targetY > currentY) - (targetY < currentY);
 
-        int orderedDx[8] = {0};
-        int orderedDy[8] = {0};
-        int orderedCount = 0;
-
-        auto addDirection = [&](int dx, int dy) {
-            if (dx == 0 && dy == 0) {
-                return;
-            }
-
-            for (int i = 0; i < orderedCount; i++) {
-                if (orderedDx[i] == dx && orderedDy[i] == dy) {
-                    return;
-                }
-            }
-
-            if (orderedCount < 8) {
-                orderedDx[orderedCount] = dx;
-                orderedDy[orderedCount] = dy;
-                orderedCount++;
-            }
-        };
-
-        addDirection(sx, sy);
-        addDirection(sx, 0);
-        addDirection(0, sy);
-        addDirection(sx, -sy);
-        addDirection(-sx, sy);
-        addDirection(-sx, 0);
-        addDirection(0, -sy);
-        addDirection(-sx, -sy);
-
-        static constexpr int fallbackDx[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
-        static constexpr int fallbackDy[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
-        for (int i = 0; i < 8; i++) {
-            addDirection(fallbackDx[i], fallbackDy[i]);
-        }
+        int orderedNeighborIndices[8] = {0};
+        const int orderedCount = buildPreferredNeighborOrder(sx, sy, orderedNeighborIndices);
 
         for (int i = 0; i < orderedCount; i++) {
-            const int x = currentX + orderedDx[i];
-            const int y = currentY + orderedDy[i];
-
-            if (x <= 0 || y <= 0 || x >= (mapWidth - 1) || y >= (mapHeight - 1)) {
+            const int neighborCell = m_neighbors[currentCell][orderedNeighborIndices[i]];
+            if (neighborCell < 0) {
                 continue;
             }
-
-            const int neighborCell = (y * mapWidth) + x;
 
             if (m_pathMap[neighborCell].cost != DISTANCE_INF) {
                 continue;
