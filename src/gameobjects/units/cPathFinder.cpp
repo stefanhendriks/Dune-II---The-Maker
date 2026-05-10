@@ -78,8 +78,20 @@ int cPathFinder::validateCreatePathInput(int unitId)
         return -4;
     }
 
+    const int goalCell = m_activeUnit->movement.iGoalCell;
+    if (goalCell > -1) {
+        int occupyingUnitId = m_map->getCellIdUnitLayer(goalCell);
+        if (occupyingUnitId > -1 && occupyingUnitId != unitId) {
+            cUnit *occupyingUnit = m_objects->getUnit(occupyingUnitId);
+            if (occupyingUnit != nullptr &&
+                occupyingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer())) {
+                m_activeUnit->log(std::format("CREATE_PATH -- END goal {} occupied by allied unit {}", goalCell, occupyingUnitId));
+                return -1;
+            }
+        }
+    }
+
     if (!m_activeUnit->isInfantryUnit()) {
-        const int goalCell = m_activeUnit->movement.iGoalCell;
         if (goalCell > -1 && m_map->getCellType(goalCell) == TERRAIN_MOUNTAIN) {
             m_activeUnit->log("CREATE_PATH -- END 5 invalid goal terrain (mountain)");
             return -5;
