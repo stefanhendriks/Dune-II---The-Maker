@@ -232,14 +232,20 @@ void cPathFinder::executeCreatePathSearch()
     std::queue<int> frontier;
     const int mapWidth = m_map->getWidth();
     const int mapHeight = m_map->getHeight();
+    bool reachedCurrentCell = false;
 
     m_pathMap[m_goalCell].cost = 0;
     m_pathMap[m_goalCell].parent = -1;
     frontier.push(m_goalCell);
 
-    while (!frontier.empty()) {
+    while (!frontier.empty() && !reachedCurrentCell) {
         const int currentCell = frontier.front();
         frontier.pop();
+
+        if (currentCell == m_currentCell) {
+            reachedCurrentCell = true;
+            break;
+        }
 
         const int currentDistance = m_pathMap[currentCell].cost;
         const int currentX = currentCell % mapWidth;
@@ -267,7 +273,17 @@ void cPathFinder::executeCreatePathSearch()
 
                 m_pathMap[neighborCell].cost = currentDistance + 1;
                 m_pathMap[neighborCell].parent = currentCell;
+
+                if (neighborCell == m_currentCell) {
+                    reachedCurrentCell = true;
+                    break;
+                }
+
                 frontier.push(neighborCell);
+            }
+
+            if (reachedCurrentCell) {
+                break;
             }
         }
     }
