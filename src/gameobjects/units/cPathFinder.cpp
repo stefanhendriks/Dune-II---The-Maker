@@ -63,14 +63,14 @@ static int buildPreferredNeighborOrder(int sx, int sy, int orderedNeighborIndice
         }
     };
 
-    // Priority: toward target diagonal first, then main axes, then alternatives.
-    addDirection(sx, sy);
+    // Priority: toward target main axes first, then diagonal, then alternatives.
     addDirection(sx, 0);
     addDirection(0, sy);
+    addDirection(-sx, 0);
+    addDirection(0, -sy);    
+    addDirection(sx, sy);
     addDirection(sx, -sy);
     addDirection(-sx, sy);
-    addDirection(-sx, 0);
-    addDirection(0, -sy);
     addDirection(-sx, -sy);
 
     // Ensure full coverage only when some directions are still missing.
