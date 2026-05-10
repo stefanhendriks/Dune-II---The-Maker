@@ -3,7 +3,7 @@
 #include <vector>
 
 struct ASTAR {
-    int cost;
+    float cost;
     int parent;
     int state;
 };
