@@ -380,7 +380,13 @@ void cPathFinder::executeCreatePathSearch()
                     continue;
                 }
 
-                if (nextCell != m_currentCell && nextCell != m_goalCell && !isCellPassableForActiveUnit(nextCell)) {
+                // Keep legacy behavior for regular units (goal cell may be occupied/special),
+                // but sandworms must stay on worm-passable terrain even for the goal cell.
+                const bool skipPassabilityCheck =
+                    (nextCell == m_currentCell) ||
+                    (nextCell == m_goalCell && !m_activeUnit->isSandworm());
+
+                if (!skipPassabilityCheck && !isCellPassableForActiveUnit(nextCell)) {
                     continue;
                 }
 
@@ -445,7 +451,10 @@ void cPathFinder::executeCreatePathSearch()
                 continue;
             }
 
-            if (neighborCell != m_goalCell && !isCellPassableForActiveUnit(neighborCell)) {
+            const bool skipNeighborPassabilityCheck =
+                (neighborCell == m_goalCell && !m_activeUnit->isSandworm());
+
+            if (!skipNeighborPassabilityCheck && !isCellPassableForActiveUnit(neighborCell)) {
                 continue;
             }
 

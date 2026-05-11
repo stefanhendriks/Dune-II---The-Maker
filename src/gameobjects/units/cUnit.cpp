@@ -2362,9 +2362,21 @@ void cUnit::think_attack_sandworm()
         return;
     }
 
+    // Sandworms may only chase/eat units on worm-passable terrain.
+    if (!m_map->isCellPassableForWorm(attackUnit->position.iCell)) {
+        actionGuard();
+        return;
+    }
+
     // update movement.iGoalCell with where the attacking unit is (chase)
     setGoalCell(attackUnit->position.iCell);
     if (movement.iGoalCell == position.iCell) {
+        // Defensive guardrail: never eat on forbidden terrain.
+        if (!m_map->isCellPassableForWorm(position.iCell)) {
+            actionGuard();
+            return;
+        }
+
         attackUnit->die(false, false);
         unitsEaten++;
         long x = pos_x_centered();
@@ -2387,12 +2399,6 @@ void cUnit::think_attack_sandworm()
         cLogger::getInstance()->log(LOG_DEBUG, COMP_UNITS, "think_attack_sandworm() -> eaten unit", 
                 std::format("think_attack_sandworm() -> eaten unit. Units eaten {}, TIMER_guard {}",
                 unitsEaten, guardTimer.get()));
-        return;
-    }
-
-    if (attackUnit->isIdle() && !m_map->isCellPassableForWorm(attackUnit->position.iCell)) {
-        // forget about unit that is not reachable
-        actionGuard();
         return;
     }
 
@@ -3638,6 +3644,7 @@ void cUnit::thinkFast_guard_sandworm()
         if (potentialDinner->getPlayer()->isSameTeamAs(getPlayer())) continue;
         if (potentialDinner->isAirbornUnit()) continue;
         if (potentialDinner->isSandworm()) continue; // don't eat other worms
+        if (!m_map->isCellPassableForWorm(potentialDinner->position.iCell)) continue;
 
         double distance = m_objects->getMapGeometry()->distance(position.iCell, potentialDinner->position.iCell);
 
