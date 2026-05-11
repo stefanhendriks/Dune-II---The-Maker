@@ -3768,8 +3768,7 @@ void cUnit::think_harvester()
     if (position.iCell == movement.iGoalCell) {
         int cellType = m_map->getCellType(position.iCell);
         // when on spice, harvest
-        if (cellType == TERRAIN_SPICE ||
-                cellType == TERRAIN_SPICEHILL) {
+        if (cellType == TERRAIN_SPICE ||cellType == TERRAIN_SPICEHILL) {
             // do timer stuff
             if (iCredits < getUnitInfo().credit_capacity)
                 harvestTimer.increment();
@@ -3792,33 +3791,35 @@ void cUnit::think_harvester()
             bFindRefinery = true;
 
         // when we should harvest...
-        cPlayerDifficultySettings *difficultySettings = m_objects->getPlayer(iPlayer)->getDifficultySettings();
-        if (harvestTimer.get() > (difficultySettings->getHarvestSpeed(m_infos->getUnitInfo(iType).harvesting_speed)) &&
-                iCredits < getUnitInfo().credit_capacity) {
-            harvestTimer.reset(1);
+        if (cellType == TERRAIN_SPICE ||cellType == TERRAIN_SPICEHILL) {
+            cPlayerDifficultySettings *difficultySettings = m_objects->getPlayer(iPlayer)->getDifficultySettings();
+            if (harvestTimer.get() > (difficultySettings->getHarvestSpeed(m_infos->getUnitInfo(iType).harvesting_speed)) &&
+                    iCredits < getUnitInfo().credit_capacity) {
+                harvestTimer.reset(1);
 
-            rendering.iFrame++;
+                rendering.iFrame++;
 
-            if (rendering.iFrame > 3)
-                rendering.iFrame = 1;
+                if (rendering.iFrame > 3)
+                    rendering.iFrame = 1;
 
-            iCredits += m_infos->getUnitInfo(iType).harvesting_amount;
-            m_map->cellTakeCredits(position.iCell, m_infos->getUnitInfo(iType).harvesting_amount);
+                iCredits += m_infos->getUnitInfo(iType).harvesting_amount;
+                m_map->cellTakeCredits(position.iCell, m_infos->getUnitInfo(iType).harvesting_amount);
 
-            // turn into sand/spice (when spicehill)
-            if (m_map->getCellCredits(position.iCell) <= 0) {
-                if (cellType == TERRAIN_SPICEHILL) {
-                    m_map->cellChangeType(position.iCell, TERRAIN_SPICE);
-                    m_map->cellGiveCredits(position.iCell, RNG::rnd(100));
+                // turn into sand/spice (when spicehill)
+                if (m_map->getCellCredits(position.iCell) <= 0) {
+                    if (cellType == TERRAIN_SPICEHILL) {
+                        m_map->cellChangeType(position.iCell, TERRAIN_SPICE);
+                        m_map->cellGiveCredits(position.iCell, RNG::rnd(100));
+                    }
+                    else {
+                        m_map->cellChangeType(position.iCell, TERRAIN_SAND);
+                        m_map->cellChangeTile(position.iCell, 0);
+                    }
+
+                    move_to(findHarvestSpot(iID), -1, -1);
+
+                    cMapEditor(*m_map).smoothAroundCell(position.iCell);
                 }
-                else {
-                    m_map->cellChangeType(position.iCell, TERRAIN_SAND);
-                    m_map->cellChangeTile(position.iCell, 0);
-                }
-
-                move_to(findHarvestSpot(iID), -1, -1);
-
-                cMapEditor(*m_map).smoothAroundCell(position.iCell);
             }
         }
 
