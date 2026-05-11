@@ -9,7 +9,6 @@
 #include "utils/d2tm_math.h"
 
 #include "game/cGameSettings.h"
-#include "controls/cGameControlsContext.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "include/sGameServices.h"
@@ -193,7 +192,6 @@ void cPathFinder::initializeCreatePathSearch(int pathCountUnitsBudget)
     m_controller = m_activeUnit->iPlayer;
     m_pathCountUnits = pathCountUnitsBudget;
 
-    m_valid = true;
     m_success = false;
 
     m_pathsCreated++;
@@ -324,7 +322,6 @@ void cPathFinder::executeCreatePathSearch()
     // Compute a distance field from destination to all reachable cells, then
     // follow decreasing costs from unit position to build the path.
     if (m_goalCell < 0 || m_goalCell >= static_cast<int>(m_pathMap.size())) {
-        m_valid = false;
         m_success = false;
         return;
     }
@@ -470,7 +467,6 @@ void cPathFinder::executeCreatePathSearch()
         }
     }
 
-    m_valid = false;
     m_success = m_pathMap[m_currentCell].cost != DISTANCE_INF;
 
     if (!m_success) {

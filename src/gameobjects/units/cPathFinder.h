@@ -48,7 +48,6 @@ private:
     int m_goalCell = -1;
     int m_controller = -1;
     int m_pathCountUnits = 0;
-    bool m_valid = false;
     bool m_success = false;
     int m_pathsCreated = 0;
 
