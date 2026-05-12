@@ -132,15 +132,34 @@ void cGamePlaying::thinkFast()
         std::erase_if(m_trackedUnitIds, [&](int id) {
             return !m_objects->getUnit(id)->isValid();
         });
-        float sumX = 0, sumY = 0;
-        int count = 0;
-        for (int id : m_trackedUnitIds) {
-            cUnit* u = m_objects->getUnit(id);
-            sumX += u->getPosX();
-            sumY += u->getPosY();
-            count++;
-        }
-        if (count > 0) {
+        if (!m_trackedUnitIds.empty()) {
+            float sumX = 0, sumY = 0;
+            float minX = m_objects->getUnit(m_trackedUnitIds[0])->getPosX();
+            float maxX = minX;
+            float minY = m_objects->getUnit(m_trackedUnitIds[0])->getPosY();
+            float maxY = minY;
+            for (int id : m_trackedUnitIds) {
+                cUnit* u = m_objects->getUnit(id);
+                float px = u->getPosX(), py = u->getPosY();
+                sumX += px; sumY += py;
+                if (px < minX) minX = px;
+                if (px > maxX) maxX = px;
+                if (py < minY) minY = py;
+                if (py > maxY) maxY = py;
+            }
+            int count = static_cast<int>(m_trackedUnitIds.size());
+
+            // Zoom out as needed to keep all tracked units in view (3-cell padding per side).
+            // Never zoom in past 1.0 — only auto-zoom out.
+            const float padding = 3 * TILESIZE_WIDTH_PIXELS;
+            float boundW = (maxX - minX) + 2 * padding;
+            float boundH = (maxY - minY) + 2 * padding;
+            float desiredZoom = std::min(
+                static_cast<float>(m_mapCamera->getWindowWidth()) / boundW,
+                static_cast<float>(m_mapCamera->getWindowHeight()) / boundH
+            );
+            m_mapCamera->setZoomLevel(std::min(desiredZoom, 1.0f));
+
             m_mapCamera->trackToAbsPosition(sumX / count, sumY / count);
         }
     }
