@@ -252,6 +252,7 @@ void cGamePlaying::missionInit()
 {
     m_objects->getMap().thinkSlow();
     m_TIMER_evaluatePlayerStatus = 5;
+    m_controlledPlayer = m_objects->getPlayer(HUMAN);
 }
 
 
@@ -366,20 +367,24 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     const cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
 
     if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
-        m_drawManager->setPlayerToDraw(m_objects->getPlayer(0));
-        m_interface->setPlayerToInteractFor(m_objects->getPlayer(0));
+        m_controlledPlayer = m_objects->getPlayer(0);
+        m_drawManager->setPlayerToDraw(m_controlledPlayer);
+        m_interface->setPlayerToInteractFor(m_controlledPlayer);
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
-        m_drawManager->setPlayerToDraw(m_objects->getPlayer(1));
-        m_interface->setPlayerToInteractFor(m_objects->getPlayer(1));
+        m_controlledPlayer = m_objects->getPlayer(1);
+        m_drawManager->setPlayerToDraw(m_controlledPlayer);
+        m_interface->setPlayerToInteractFor(m_controlledPlayer);
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
-        m_drawManager->setPlayerToDraw(m_objects->getPlayer(2));
-        m_interface->setPlayerToInteractFor(m_objects->getPlayer(2));
+        m_controlledPlayer = m_objects->getPlayer(2);
+        m_drawManager->setPlayerToDraw(m_controlledPlayer);
+        m_interface->setPlayerToInteractFor(m_controlledPlayer);
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
-        m_drawManager->setPlayerToDraw(m_objects->getPlayer(3));
-        m_interface->setPlayerToInteractFor(m_objects->getPlayer(3));
+        m_controlledPlayer = m_objects->getPlayer(3);
+        m_drawManager->setPlayerToDraw(m_controlledPlayer);
+        m_interface->setPlayerToInteractFor(m_controlledPlayer);
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
@@ -442,7 +447,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::DEBUG_SPAWN_ORNITHOPTER)) {
         int mc = humanPlayer->getGameControlsContext()->getMouseCell();
-        cUnits::unitCreate(mc, ORNITHOPTER, m_drawManager->getPlayer()->getId(), false, false);
+        cUnits::unitCreate(mc, ORNITHOPTER, m_controlledPlayer->getId(), false, false);
     }
 
     if (event.isAction(eKeyAction::DEBUG_SPAWN_WORM)) {

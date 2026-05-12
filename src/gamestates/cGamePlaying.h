@@ -12,6 +12,7 @@ class cMapCamera;
 class cGameInterface;
 class cStructureFactory;
 class cDrawManager;
+class cPlayer;
 class cTextDrawer;
 
 class cGamePlaying : public cGameState {
@@ -39,6 +40,7 @@ private:
     cMapCamera* m_mapCamera = nullptr;
     cStructureFactory* m_structureFactory = nullptr;
     cDrawManager *m_drawManager = nullptr;
+    cPlayer *m_controlledPlayer = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     void evaluatePlayerStatus();
     void drawCombatMouse() const;
