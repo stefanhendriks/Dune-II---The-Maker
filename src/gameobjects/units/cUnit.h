@@ -393,6 +393,8 @@ public:
     int getCellY() {
         return position.iCellY;
     }
+    float getPosX() const { return position.posX; }
+    float getPosY() const { return position.posY; }
 
     cPlayer *getPlayer();
 

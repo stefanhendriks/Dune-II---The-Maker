@@ -24,6 +24,7 @@
 #include "gameobjects/map/cMap.h"
 #include "drawers/cTextDrawer.h"
 
+#include <algorithm>
 #include <cassert>
 
 cGamePlaying::cGamePlaying(sGameServices* services) :
@@ -56,6 +57,22 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
 
 cGamePlaying::~cGamePlaying()
 {
+}
+
+void cGamePlaying::centerCameraOnUnits(const std::vector<int>& unitIds)
+{
+    int sumX = 0, sumY = 0, count = 0;
+    int mapWidth = m_objects->getMap().getWidth();
+    for (int id : unitIds) {
+        cUnit* u = m_objects->getUnit(id);
+        if (!u->isValid()) continue;
+        sumX += u->getCellX();
+        sumY += u->getCellY();
+        count++;
+    }
+    if (count == 0) return;
+    int centroidCell = (sumY / count) * mapWidth + (sumX / count);
+    m_mapCamera->centerAndJumpViewPortToCell(centroidCell);
 }
 
 void cGamePlaying::thinkFast()
@@ -109,6 +126,23 @@ void cGamePlaying::thinkFast()
     for (cBullet &cBullet : m_objects->getBullets()) {
         if (!cBullet.bAlive) continue;
         cBullet.thinkFast();
+    }
+
+    if (!m_trackedUnitIds.empty()) {
+        std::erase_if(m_trackedUnitIds, [&](int id) {
+            return !m_objects->getUnit(id)->isValid();
+        });
+        float sumX = 0, sumY = 0;
+        int count = 0;
+        for (int id : m_trackedUnitIds) {
+            cUnit* u = m_objects->getUnit(id);
+            sumX += u->getPosX();
+            sumY += u->getPosY();
+            count++;
+        }
+        if (count > 0) {
+            m_mapCamera->trackToAbsPosition(sumX / count, sumY / count);
+        }
     }
 }
 
@@ -312,6 +346,51 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
 {
     cPlayer* humanPlayer = m_objects->getPlayer(HUMAN);
+
+    if (event.isAction(eKeyAction::TRACK_UNIT)) {
+        if (!m_trackedUnitIds.empty()) {
+            m_trackedUnitIds.clear();
+        } else {
+            auto selected = m_objects->getPlayer(HUMAN)->getSelectedUnits();
+            if (!selected.empty()) {
+                m_trackedUnitIds = selected;
+            }
+        }
+    }
+
+    int iGroup = event.getGroupNumber();
+    if (iGroup > 0) {
+        Uint32 now = SDL_GetTicks();
+        bool doublePress = (iGroup == m_lastGroupKeyPressed &&
+                            now - m_lastGroupKeyPressedTick < 400u);
+        m_lastGroupKeyPressed = iGroup;
+        m_lastGroupKeyPressedTick = now;
+
+        if (doublePress) {
+            auto unitIds = humanPlayer->getAllMyUnitsForGroupNr(iGroup);
+            if (!unitIds.empty()) {
+                int minX = m_objects->getUnit(unitIds[0])->getCellX();
+                int maxX = minX;
+                int minY = m_objects->getUnit(unitIds[0])->getCellY();
+                int maxY = minY;
+                for (int id : unitIds) {
+                    cUnit* u = m_objects->getUnit(id);
+                    if (u->getCellX() < minX) minX = u->getCellX();
+                    if (u->getCellX() > maxX) maxX = u->getCellX();
+                    if (u->getCellY() < minY) minY = u->getCellY();
+                    if (u->getCellY() > maxY) maxY = u->getCellY();
+                }
+                // Zoom so bounding box (with 2-cell padding) fits in window
+                const int padding = 2 * TILESIZE_WIDTH_PIXELS;
+                int boundW = (maxX - minX + 1) * TILESIZE_WIDTH_PIXELS + 2 * padding;
+                int boundH = (maxY - minY + 1) * TILESIZE_HEIGHT_PIXELS + 2 * padding;
+                float zoomX = static_cast<float>(m_mapCamera->getWindowWidth()) / boundW;
+                float zoomY = static_cast<float>(m_mapCamera->getWindowHeight()) / boundH;
+                m_mapCamera->setZoomLevel(std::min(zoomX, zoomY));
+                centerCameraOnUnits(unitIds);
+            }
+        }
+    }
 
     if (event.isAction(eKeyAction::TOGGLE_FPS)) {
         m_settings->setDrawFps(false);

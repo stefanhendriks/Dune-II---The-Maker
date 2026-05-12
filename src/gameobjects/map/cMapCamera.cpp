@@ -53,6 +53,22 @@ cMapCamera::~cMapCamera()
 {
 }
 
+void cMapCamera::trackToAbsPosition(float absX, float absY)
+{
+    m_viewportStartX = absX - (m_viewportWidth / 2.0f);
+    m_viewportStartY = absY - (m_viewportHeight / 2.0f);
+    keepViewportWithinReasonableBounds();
+}
+
+void cMapCamera::setZoomLevel(float zoom)
+{
+    if (zoom < 0.25f) zoom = 0.25f;
+    if (zoom > 4.0f) zoom = 4.0f;
+    m_zoomLevel = zoom;
+    calibrate();
+    keepViewportWithinReasonableBounds();
+}
+
 void cMapCamera::zoomIn()
 {
     if (m_zoomLevel < 4.0) {

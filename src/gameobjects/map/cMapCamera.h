@@ -37,6 +37,8 @@ public:
         keepViewportWithinReasonableBounds();
     }
 
+    void setZoomLevel(float zoom);
+
     void jumpTo(int theX, int theY);
 
     void moveTo(int theX, int theY);
@@ -132,6 +134,8 @@ public:
     }
 
     void centerAndJumpViewPortToCell(int cell);
+
+    void trackToAbsPosition(float absX, float absY);
 
     float getZoomedTileWidth() const {
         return m_tileWidth;

@@ -3,6 +3,8 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "sMouseEvent.h"
+#include <vector>
+#include <SDL2/SDL.h>
 
 class Texture;
 
@@ -50,4 +52,10 @@ private:
     void onKeyDownGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
     void onKeyDownDebugMode(const cKeyboardEvent &event);
+
+    void centerCameraOnUnits(const std::vector<int>& unitIds);
+
+    std::vector<int> m_trackedUnitIds;
+    int m_lastGroupKeyPressed = 0;
+    Uint32 m_lastGroupKeyPressedTick = 0;
 };

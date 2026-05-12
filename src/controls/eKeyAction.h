@@ -19,6 +19,7 @@ enum class eKeyAction {
     CENTER_ON_HOME,
     CENTER_ON_STRUCTURE,
     ZOOM_RESET,
+    TRACK_UNIT,
     TOGGLE_FPS,
     TOGGLE_TIME_DISPLAY,
     OPEN_MENU,

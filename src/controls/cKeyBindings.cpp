@@ -48,6 +48,7 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::SELECT_WHEELS_ON_SCREEN,   {SDL_SCANCODE_W}, false, false, true);
     bind(eKeyAction::SELECT_TANKS_ON_MAP,       {SDL_SCANCODE_T}, true, false, false);
     bind(eKeyAction::SELECT_TANKS_ON_SCREEN,    {SDL_SCANCODE_T}, false, false, true);
+    bind(eKeyAction::TRACK_UNIT,               {SDL_SCANCODE_T});
     bind(eKeyAction::SELECT_LAUNCHERS_ON_MAP,   {SDL_SCANCODE_L}, true, false, false);
     bind(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN,{SDL_SCANCODE_L}, false, false, true);
     bind(eKeyAction::SELECT_HARVESTERS_ON_MAP,  {SDL_SCANCODE_H}, true, false, false);
@@ -132,6 +133,7 @@ void cKeyBindings::loadFromSection(const cSection &section)
         {"SELECT_WHEELS_ON_SCREEN",   eKeyAction::SELECT_WHEELS_ON_SCREEN},
         {"SELECT_TANKS_ON_MAP",       eKeyAction::SELECT_TANKS_ON_MAP},
         {"SELECT_TANKS_ON_SCREEN",    eKeyAction::SELECT_TANKS_ON_SCREEN},
+        {"TRACK_UNIT",                eKeyAction::TRACK_UNIT},
         {"SELECT_LAUNCHERS_ON_MAP",   eKeyAction::SELECT_LAUNCHERS_ON_MAP},
         {"SELECT_LAUNCHERS_ON_SCREEN",eKeyAction::SELECT_LAUNCHERS_ON_SCREEN},
         {"SELECT_HARVESTERS_ON_MAP",  eKeyAction::SELECT_HARVESTERS_ON_MAP},
