@@ -23,6 +23,7 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMap.h"
 #include "drawers/cTextDrawer.h"
+#include "utils/ExpandingRectangle.h"
 
 #include <algorithm>
 #include <cassert>
@@ -136,24 +137,17 @@ void cGamePlaying::thinkFast()
         });
         if (!m_trackedUnitIds.empty()) {
             float sumX = 0, sumY = 0;
-            float minX = m_objects->getUnit(m_trackedUnitIds[0])->getPosX();
-            float maxX = minX;
-            float minY = m_objects->getUnit(m_trackedUnitIds[0])->getPosY();
-            float maxY = minY;
+            ExpandingRectangle bounds;
             for (int id : m_trackedUnitIds) {
                 cUnit* u = m_objects->getUnit(id);
                 float px = u->getPosX(), py = u->getPosY();
                 sumX += px; sumY += py;
-                if (px < minX) minX = px;
-                if (px > maxX) maxX = px;
-                if (py < minY) minY = py;
-                if (py > maxY) maxY = py;
+                bounds.expand(px, py);
             }
+            bounds.expandBy(3 * TILESIZE_WIDTH_PIXELS);
+            m_mapCamera->zoomOutToFit(bounds);
+
             int count = static_cast<int>(m_trackedUnitIds.size());
-
-            const float padding = 3 * TILESIZE_WIDTH_PIXELS;
-            m_mapCamera->zoomOutToFit((maxX - minX) + 2 * padding, (maxY - minY) + 2 * padding);
-
             m_mapCamera->trackToAbsPosition(sumX / count, sumY / count);
         }
     }
@@ -413,20 +407,13 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         if (doublePress) {
             auto unitIds = humanPlayer->getAllMyUnitsForGroupNr(iGroup);
             if (!unitIds.empty()) {
-                float minX = m_objects->getUnit(unitIds[0])->getPosX();
-                float maxX = minX;
-                float minY = m_objects->getUnit(unitIds[0])->getPosY();
-                float maxY = minY;
+                ExpandingRectangle bounds;
                 for (int id : unitIds) {
                     cUnit* u = m_objects->getUnit(id);
-                    float px = u->getPosX(), py = u->getPosY();
-                    if (px < minX) minX = px;
-                    if (px > maxX) maxX = px;
-                    if (py < minY) minY = py;
-                    if (py > maxY) maxY = py;
+                    bounds.expand(u->getPosX(), u->getPosY());
                 }
-                const float padding = 2 * TILESIZE_WIDTH_PIXELS;
-                m_mapCamera->zoomOutToFit((maxX - minX) + 2 * padding, (maxY - minY) + 2 * padding);
+                bounds.expandBy(3 * TILESIZE_WIDTH_PIXELS);
+                m_mapCamera->zoomOutToFit(bounds);
                 centerCameraOnUnits(unitIds);
             }
         }

@@ -6,6 +6,7 @@
 class cRectangle {
 public:
     cRectangle();
+    virtual ~cRectangle() = default;
 
     cRectangle(int x, int y, int width, int height) : topLeft(cPoint(x,y)), width(width), height(height) {
     }
@@ -44,10 +45,10 @@ public:
     int getEndY() const {
         return topLeft.y + height;
     }
-    int getWidth() const {
+    virtual int getWidth() const {
         return width;
     }
-    int getHeight() const {
+    virtual int getHeight() const {
         return height;
     }
 

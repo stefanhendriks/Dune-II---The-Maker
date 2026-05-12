@@ -60,11 +60,11 @@ void cMapCamera::trackToAbsPosition(float absX, float absY)
     keepViewportWithinReasonableBounds();
 }
 
-void cMapCamera::zoomOutToFit(float boundW, float boundH)
+void cMapCamera::zoomOutToFit(const cRectangle& bounds)
 {
     float zoomToFit = std::min(
-        static_cast<float>(m_windowWidth) / boundW,
-        static_cast<float>(m_windowHeight) / boundH
+        static_cast<float>(m_windowWidth) / bounds.getWidth(),
+        static_cast<float>(m_windowHeight) / bounds.getHeight()
     );
     if (zoomToFit < m_zoomLevel) {
         setZoomLevel(zoomToFit);

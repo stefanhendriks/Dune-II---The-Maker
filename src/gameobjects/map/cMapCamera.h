@@ -14,6 +14,7 @@
 // #include "cMap.h"
 
 #include "observers/cInputObserver.h"
+#include "utils/cRectangle.h"
 #include <cmath>
 
 class cMap;
@@ -39,7 +40,7 @@ public:
 
     void setZoomLevel(float zoom);
 
-    void zoomOutToFit(float boundW, float boundH);
+    void zoomOutToFit(const cRectangle& bounds);
 
     void jumpTo(int theX, int theY);
 
