@@ -236,13 +236,13 @@ void cGamePlaying::drawCombatMouse() const
 {
     auto m_mouse = m_interface->getMouse();
     if (m_mouse->isBoxSelecting()) {
-        m_renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(), Color::White);
+        m_renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(), m_interface->getColorFadeSelected(255, 255, 255));
     }
 
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
-        m_renderDrawer->renderLine( startPoint.x, startPoint.y, endPoint.x, endPoint.y, Color{255,255,255,255});
+        m_renderDrawer->renderLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y, m_interface->getColorFadeSelected(255, 255, 255));
     }
     m_mouse->draw();
 
