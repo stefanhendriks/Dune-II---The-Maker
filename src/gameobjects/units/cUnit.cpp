@@ -879,13 +879,35 @@ void cUnit::attackUnit(int targetUnit, bool chaseWhenOutOfRange)
         log(std::format("attackUnit() : targetUnit is [{}] Cannot attack self.", targetUnit));
         return;
     }
-    attack(m_objects->getUnit(targetUnit)->position.iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
+
+    cUnit *target = m_objects->getUnit(targetUnit);
+    if (target == nullptr || !target->isValid()) {
+        log(std::format("attackUnit() : targetUnit is [{}] Invalid target.", targetUnit));
+        return;
+    }
+    if (target->getPlayer()->isSameTeamAs(getPlayer())) {
+        log(std::format("attackUnit() : targetUnit is [{}] Cannot attack allied unit.", targetUnit));
+        return;
+    }
+
+    attack(target->position.iCell, targetUnit, -1, -1, chaseWhenOutOfRange);
 }
 
 void cUnit::attackStructure(int targetStructure)
 {
     log(std::format("attackStructure() : target is [{}]", targetStructure));
-    attack(m_objects->getStructures()[targetStructure]->getCell(), -1, targetStructure, -1, true);
+
+    cAbstractStructure *target = m_objects->getStructures()[targetStructure];
+    if (target == nullptr || !target->isValid()) {
+        log(std::format("attackStructure() : target is [{}] Invalid target.", targetStructure));
+        return;
+    }
+    if (target->getPlayer()->isSameTeamAs(getPlayer())) {
+        log(std::format("attackStructure() : target is [{}] Cannot attack allied structure.", targetStructure));
+        return;
+    }
+
+    attack(target->getCell(), -1, targetStructure, -1, true);
 }
 
 void cUnit::attackCell(int cell)
@@ -911,6 +933,30 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
     if (unitId == iID) {
         log("Cannot attack self");
         return;
+    }
+
+    if (unitId > -1) {
+        cUnit *targetUnit = m_objects->getUnit(unitId);
+        if (targetUnit == nullptr || !targetUnit->isValid()) {
+            log(std::format("attack() : unit target [{}] invalid", unitId));
+            return;
+        }
+        if (targetUnit->getPlayer()->isSameTeamAs(getPlayer())) {
+            log(std::format("attack() : unit target [{}] is allied", unitId));
+            return;
+        }
+    }
+
+    if (structureId > -1) {
+        cAbstractStructure *targetStructure = m_objects->getStructures()[structureId];
+        if (targetStructure == nullptr || !targetStructure->isValid()) {
+            log(std::format("attack() : structure target [{}] invalid", structureId));
+            return;
+        }
+        if (targetStructure->getPlayer()->isSameTeamAs(getPlayer())) {
+            log(std::format("attack() : structure target [{}] is allied", structureId));
+            return;
+        }
     }
 
     // TODO: We have somewhere else something with "intents", so this whole if statement should be removed / replaced?
