@@ -48,6 +48,10 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
     assert(m_textDrawer != nullptr);
+
+    m_controlledPlayer = m_objects->getPlayer(HUMAN);
+    m_drawManager->setPlayerToDraw(m_controlledPlayer);
+    m_interface->setPlayerToInteractFor(m_controlledPlayer);
 }
 
 cGamePlaying::~cGamePlaying()
