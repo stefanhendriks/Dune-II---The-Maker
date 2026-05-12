@@ -151,16 +151,8 @@ void cGamePlaying::thinkFast()
             }
             int count = static_cast<int>(m_trackedUnitIds.size());
 
-            // Zoom out as needed to keep all tracked units in view (3-cell padding per side).
-            // Never zoom in past 1.0 — only auto-zoom out.
             const float padding = 3 * TILESIZE_WIDTH_PIXELS;
-            float boundW = (maxX - minX) + 2 * padding;
-            float boundH = (maxY - minY) + 2 * padding;
-            float desiredZoom = std::min(
-                static_cast<float>(m_mapCamera->getWindowWidth()) / boundW,
-                static_cast<float>(m_mapCamera->getWindowHeight()) / boundH
-            );
-            m_mapCamera->setZoomLevel(std::min(desiredZoom, m_mapCamera->getZoomLevel()));
+            m_mapCamera->zoomOutToFit((maxX - minX) + 2 * padding, (maxY - minY) + 2 * padding);
 
             m_mapCamera->trackToAbsPosition(sumX / count, sumY / count);
         }
@@ -421,24 +413,20 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         if (doublePress) {
             auto unitIds = humanPlayer->getAllMyUnitsForGroupNr(iGroup);
             if (!unitIds.empty()) {
-                int minX = m_objects->getUnit(unitIds[0])->getCellX();
-                int maxX = minX;
-                int minY = m_objects->getUnit(unitIds[0])->getCellY();
-                int maxY = minY;
+                float minX = m_objects->getUnit(unitIds[0])->getPosX();
+                float maxX = minX;
+                float minY = m_objects->getUnit(unitIds[0])->getPosY();
+                float maxY = minY;
                 for (int id : unitIds) {
                     cUnit* u = m_objects->getUnit(id);
-                    if (u->getCellX() < minX) minX = u->getCellX();
-                    if (u->getCellX() > maxX) maxX = u->getCellX();
-                    if (u->getCellY() < minY) minY = u->getCellY();
-                    if (u->getCellY() > maxY) maxY = u->getCellY();
+                    float px = u->getPosX(), py = u->getPosY();
+                    if (px < minX) minX = px;
+                    if (px > maxX) maxX = px;
+                    if (py < minY) minY = py;
+                    if (py > maxY) maxY = py;
                 }
-                // Zoom so bounding box (with 2-cell padding) fits in window
-                const int padding = 2 * TILESIZE_WIDTH_PIXELS;
-                int boundW = (maxX - minX + 1) * TILESIZE_WIDTH_PIXELS + 2 * padding;
-                int boundH = (maxY - minY + 1) * TILESIZE_HEIGHT_PIXELS + 2 * padding;
-                float zoomX = static_cast<float>(m_mapCamera->getWindowWidth()) / boundW;
-                float zoomY = static_cast<float>(m_mapCamera->getWindowHeight()) / boundH;
-                m_mapCamera->setZoomLevel(std::min(zoomX, zoomY));
+                const float padding = 2 * TILESIZE_WIDTH_PIXELS;
+                m_mapCamera->zoomOutToFit((maxX - minX) + 2 * padding, (maxY - minY) + 2 * padding);
                 centerCameraOnUnits(unitIds);
             }
         }

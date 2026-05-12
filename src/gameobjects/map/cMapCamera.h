@@ -39,6 +39,8 @@ public:
 
     void setZoomLevel(float zoom);
 
+    void zoomOutToFit(float boundW, float boundH);
+
     void jumpTo(int theX, int theY);
 
     void moveTo(int theX, int theY);
