@@ -402,7 +402,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::DEBUG_DESTROY_AT_CURSOR)) {
-        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
+        int mc = m_controlledPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
             int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
@@ -434,7 +434,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
             }
         }
     } else if (event.isAction(eKeyAction::DEBUG_REVEAL_MAP)) {
-        m_objects->getMap().clear_all(HUMAN);
+        m_objects->getMap().clear_all(m_controlledPlayer->getId());
     }
 
     if (event.isAction(eKeyAction::DEBUG_KILL_CARRYALLS)) {
