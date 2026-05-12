@@ -48,7 +48,7 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::SELECT_WHEELS_ON_SCREEN,   {SDL_SCANCODE_W}, false, false, true);
     bind(eKeyAction::SELECT_TANKS_ON_MAP,       {SDL_SCANCODE_T}, true, false, false);
     bind(eKeyAction::SELECT_TANKS_ON_SCREEN,    {SDL_SCANCODE_T}, false, false, true);
-    bind(eKeyAction::TRACK_UNIT,               {SDL_SCANCODE_T});
+    bind(eKeyAction::TRACK_UNIT,                {SDL_SCANCODE_T});
     bind(eKeyAction::SELECT_LAUNCHERS_ON_MAP,   {SDL_SCANCODE_L}, true, false, false);
     bind(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN,{SDL_SCANCODE_L}, false, false, true);
     bind(eKeyAction::SELECT_HARVESTERS_ON_MAP,  {SDL_SCANCODE_H}, true, false, false);
