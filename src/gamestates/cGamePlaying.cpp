@@ -158,7 +158,7 @@ void cGamePlaying::thinkFast()
                 static_cast<float>(m_mapCamera->getWindowWidth()) / boundW,
                 static_cast<float>(m_mapCamera->getWindowHeight()) / boundH
             );
-            m_mapCamera->setZoomLevel(std::min(desiredZoom, 1.0f));
+            m_mapCamera->setZoomLevel(std::min(desiredZoom, m_mapCamera->getZoomLevel()));
 
             m_mapCamera->trackToAbsPosition(sumX / count, sumY / count);
         }
