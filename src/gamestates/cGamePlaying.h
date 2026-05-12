@@ -54,6 +54,7 @@ private:
     void onKeyDownDebugMode(const cKeyboardEvent &event);
 
     void centerCameraOnUnits(const std::vector<int>& unitIds);
+    void drawTrackingOverlays() const;
 
     std::vector<int> m_trackedUnitIds;
     int m_lastGroupKeyPressed = 0;

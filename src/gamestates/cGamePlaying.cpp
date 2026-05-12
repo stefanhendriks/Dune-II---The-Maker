@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include "sidebar/cSideBar.h"
 
 cGamePlaying::cGamePlaying(sGameServices* services) :
     cGameState(services),
@@ -209,9 +210,18 @@ void cGamePlaying::thinkSlow()
 }
 
 
+void cGamePlaying::drawTrackingOverlays() const
+{
+    if (m_trackedUnitIds.empty()) return;
+
+    const cRectangle* battlefield = m_interface->getMapViewport();
+    m_textDrawer->drawTextCentered("Tracking", battlefield->getX(), battlefield->getWidth(), cSideBar::TopBarHeight + 10, Color::Yellow);
+}
+
 void cGamePlaying::draw() const
 {
     m_drawManager->drawCombatState();
+    drawTrackingOverlays();
     if (m_settings->shouldDrawFps()) {
         m_interface->drawTextFps();
     }
