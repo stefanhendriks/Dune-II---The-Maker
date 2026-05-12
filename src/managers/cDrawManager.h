@@ -66,6 +66,8 @@ public:
 
     void setPlayerToDraw(cPlayer *playerToDraw);
 
+    cPlayer *getPlayer() const { return m_player; }
+
     void think();
 
     void init();
