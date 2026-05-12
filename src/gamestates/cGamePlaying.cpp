@@ -23,7 +23,7 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMap.h"
 #include "drawers/cTextDrawer.h"
-#include "utils/ExpandingRectangle.h"
+#include "utils/cExpandingRectangle.h"
 
 #include <algorithm>
 #include <cassert>
@@ -137,7 +137,7 @@ void cGamePlaying::thinkFast()
         });
         if (!m_trackedUnitIds.empty()) {
             float sumX = 0, sumY = 0;
-            ExpandingRectangle bounds;
+            cExpandingRectangle bounds;
             for (int id : m_trackedUnitIds) {
                 cUnit* u = m_objects->getUnit(id);
                 float px = u->getPosX(), py = u->getPosY();
@@ -407,7 +407,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         if (doublePress) {
             auto unitIds = humanPlayer->getAllMyUnitsForGroupNr(iGroup);
             if (!unitIds.empty()) {
-                ExpandingRectangle bounds;
+                cExpandingRectangle bounds;
                 for (int id : unitIds) {
                     cUnit* u = m_objects->getUnit(id);
                     bounds.expand(u->getPosX(), u->getPosY());
