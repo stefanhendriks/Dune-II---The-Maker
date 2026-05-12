@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include "sidebar/cSideBar.h"
 
 cGamePlaying::cGamePlaying(sGameServices* services) :
@@ -214,8 +215,30 @@ void cGamePlaying::drawTrackingOverlays() const
 {
     if (m_trackedUnitIds.empty()) return;
 
+    float pulse = 0.5f + 0.5f * std::sin(SDL_GetTicks() * 0.004f);
+    Uint8 alpha = static_cast<Uint8>(128 + 127 * pulse);
+    Color fadingYellow = Color::Yellow.withAlpha(alpha);
+
+    int count = static_cast<int>(m_trackedUnitIds.size());
+    std::string label = count == 1 ? "Tracking 1 unit" : std::format("Tracking {} units", count);
+
     const cRectangle* battlefield = m_interface->getMapViewport();
-    m_textDrawer->drawTextCentered("Tracking", battlefield->getX(), battlefield->getWidth(), cSideBar::TopBarHeight + 10, Color::Yellow);
+    m_textDrawer->drawTextCentered(label, battlefield->getX(), battlefield->getWidth(), cSideBar::TopBarHeight + 10, fadingYellow);
+
+    m_renderDrawer->setClippingFor(battlefield->getX(), battlefield->getY(),
+                                   battlefield->getX() + battlefield->getWidth(),
+                                   battlefield->getY() + battlefield->getHeight());
+
+    for (int id : m_trackedUnitIds) {
+        cUnit* u = m_objects->getUnit(id);
+        if (!u->isValid()) continue;
+        cRectangle box(u->draw_x(), u->draw_y(),
+                       static_cast<int>(m_mapCamera->factorZoomLevel(u->getBmpWidth())),
+                       static_cast<int>(m_mapCamera->factorZoomLevel(u->getBmpHeight())));
+        m_renderDrawer->renderRectColor(box, Color::Yellow, alpha);
+    }
+
+    m_renderDrawer->resetClippingFor();
 }
 
 void cGamePlaying::draw() const
