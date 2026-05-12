@@ -446,7 +446,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::DEBUG_SPAWN_ORNITHOPTER)) {
-        int mc = humanPlayer->getGameControlsContext()->getMouseCell();
+        int mc = m_controlledPlayer->getGameControlsContext()->getMouseCell();
         cUnits::unitCreate(mc, ORNITHOPTER, m_controlledPlayer->getId(), false, false);
     }
 
