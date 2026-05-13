@@ -500,10 +500,19 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     eKeyAction switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_0; // placeholder
     int switchTarget = -1;
-    if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0))      { switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_0; switchTarget = 0; }
-    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) { switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_1; switchTarget = 1; }
-    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) { switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_2; switchTarget = 2; }
-    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) { switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_3; switchTarget = 3; }
+    if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
+        switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_0;
+        switchTarget = 0;
+    } else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
+        switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_1;
+        switchTarget = 1;
+    } else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
+        switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_2;
+        switchTarget = 2;
+    } else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
+        switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_3;
+        switchTarget = 3;
+    }
 
     if (switchTarget >= 0) {
         if (!m_lastDebugSwitchAction || *m_lastDebugSwitchAction != switchAction) {
