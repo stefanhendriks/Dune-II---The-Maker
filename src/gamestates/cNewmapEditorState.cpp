@@ -7,6 +7,7 @@
 #include "gui/GuiTextInput.h"
 #include "gui/GuiCycleButton.h"
 #include "context/GameContext.hpp"
+#include "context/cGameObjectContext.h"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/map/cPreviewMaps.h"
 
@@ -20,7 +21,8 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services)
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
-    m_guiWindow(nullptr)
+    m_guiWindow(nullptr),
+    m_previewMap(services->objects->getPreviewMaps())
 {
     assert(m_textDrawer != nullptr);
     assert(m_settings != nullptr);

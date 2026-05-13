@@ -13,6 +13,7 @@ class cGameInterface;
 class GuiWindow;
 class GuiCycleButton;
 class GuiTextInput;
+class cPreviewMaps;
 
 
 class cNewMapEditorState : public cGameState {
@@ -33,6 +34,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
+    cPreviewMaps* m_previewMap = nullptr;
     void constructWindow();
     GuiTextInput* m_inputName = nullptr;
     GuiTextInput* m_inputAuthor = nullptr;
