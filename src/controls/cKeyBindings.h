@@ -22,7 +22,6 @@ class cKeyBindings {
 public:
     void loadDefaults();
     void loadFromSection(const cSection &section);
-    void checkForClashes() const;
 
     /**
      * Returns true when the given key set and modifier combo match the binding for the given action.
@@ -38,4 +37,5 @@ private:
 
     static s_KeyBinding parseBinding(const std::string &value);
     static const std::vector<std::pair<std::string, eKeyAction>>& getActionTable();
+    void checkForClashes(const std::set<eKeyAction> &changedActions) const;
 };
