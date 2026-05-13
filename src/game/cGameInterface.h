@@ -57,6 +57,7 @@ public:
     void reduceShaking() const;
     void shakeScreen(int duration) const;
     Color getColorFadeSelectedLimited(int r, int g, int b, float minFade) const;
+    Color getColorFadeSelectedLimited(Color color, float minFade) const;
     Color getColorFadeSelected(int r, int g, int b) const;
     void setWinFlags(int value) const;
     void setLoseFlags(int value) const;

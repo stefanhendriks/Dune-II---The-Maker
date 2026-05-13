@@ -189,6 +189,11 @@ Color cGameInterface::getColorFadeSelectedLimited(int r, int g, int b, float min
     return m_game->getColorFadeSelectedLimited(r, g, b, minFade);
 }
 
+Color cGameInterface::getColorFadeSelectedLimited(Color color, float minFade) const
+{
+    return m_game->getColorFadeSelectedLimited(color, minFade);
+}
+
 Color cGameInterface::getColorFadeSelected(int r, int g, int b) const
 {
     return m_game->getColorFadeSelected(r, g, b);

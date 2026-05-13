@@ -98,6 +98,11 @@ Color cScreenFader::getColorFadeSelectedLimited(int r, int g, int b, float minFa
     return Color{desiredRed, desiredGreen, desiredBlue, 255};
 }
 
+Color cScreenFader::getColorFadeSelectedLimited(Color color, float minFade)
+{
+    return getColorFadeSelectedLimited(color.r, color.g, color.b, minFade);
+}
+
 Color cScreenFader::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
     return getColorFadeSelectedLimited(r, g, b, 0.0f, rFlag, gFlag, bFlag);

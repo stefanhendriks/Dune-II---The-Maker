@@ -19,6 +19,7 @@ public:
     void inititialize();
 
     Color getColorFadeSelectedLimited(int r, int g, int b, float minFade, bool rFlag = true, bool gFlag = true, bool bFlag = true);
+    Color getColorFadeSelectedLimited(Color color, float minFade);
     Color getColorFadeSelected(int r, int g, int b, bool rFlag = true, bool gFlag = true, bool bFlag = true);
 
 private:
