@@ -184,11 +184,6 @@ void cGameInterface::loadScenario() const
     m_game->loadScenario();
 }
 
-Color cGameInterface::getColorFadeSelectedLimited(int r, int g, int b, float minFade) const
-{
-    return m_game->getColorFadeSelectedLimited(r, g, b, minFade);
-}
-
 Color cGameInterface::getColorFadeSelectedLimited(Color color, float minFade) const
 {
     return m_game->getColorFadeSelectedLimited(color, minFade);

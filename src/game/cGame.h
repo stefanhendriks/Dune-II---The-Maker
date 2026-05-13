@@ -145,7 +145,6 @@ public:
 
     int getMaxVolume();
 
-    Color getColorFadeSelectedLimited(int r, int g, int b, float minFade);
     Color getColorFadeSelectedLimited(Color color, float minFade);
     Color getColorFadeSelected(int r, int g, int b, bool rFlag = true, bool gFlag = true, bool bFlag = true);
 

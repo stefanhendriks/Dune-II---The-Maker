@@ -18,11 +18,11 @@ public:
     eFadeAction getAction() const;
     void inititialize();
 
-    Color getColorFadeSelectedLimited(int r, int g, int b, float minFade, bool rFlag = true, bool gFlag = true, bool bFlag = true);
     Color getColorFadeSelectedLimited(Color color, float minFade);
     Color getColorFadeSelected(int r, int g, int b, bool rFlag = true, bool gFlag = true, bool bFlag = true);
 
 private:
+    Color getColorFadeSelectedLimited(int r, int g, int b, float minFade, bool rFlag = true, bool gFlag = true, bool bFlag = true);
     eFadeAction m_action;
     Uint8 m_alpha;
     float m_fadeSelect;                 // fade color when selected
