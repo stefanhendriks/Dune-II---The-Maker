@@ -252,18 +252,19 @@ void cPreviewMaps::initRandomMap()
     firstSkirmishMap.previewTex = nullptr;
 }
 
-std::string cPreviewMaps::getMapSize(int i) const {
+std::string cPreviewMaps::getMapSize(int i) const
+{
     if (i > MAX_SKIRMISHMAPS_CAPACITY) {
         return "Invalid";
     }
     int playableCells = (m_PreviewMap[i].width-2) * (m_PreviewMap[i].height-2);
-    if (playableCells < 32 *32) {
+    if (playableCells <= 32 *32) {
         return "SMALL";
     }
-    if (playableCells < 64 * 64) {
+    if (playableCells <= 64 * 64) {
         return "MEDIUM";
     }
-    if (playableCells < 128 * 128) {
+    if (playableCells <= 128 * 64) {
         return "LARGE";
     }
     return "HUGE";
