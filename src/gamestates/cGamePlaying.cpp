@@ -244,8 +244,11 @@ void cGamePlaying::draw() const
     m_drawManager->drawCombatMouse();
 }
 
-void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent& )
+void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (event.eventType == eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED && m_interface->getMouse()->isMapScrolling()) {
+        m_trackedUnitIds.clear();
+    }
 }
 
 eGameStateType cGamePlaying::getType()
@@ -354,6 +357,12 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
                 m_objects->getMap().clearShroud(mouseCell, 6, HUMAN);
             }
         }
+    }
+
+    if (!m_trackedUnitIds.empty() &&
+        (event.isAction(eKeyAction::SCROLL_LEFT) || event.isAction(eKeyAction::SCROLL_RIGHT) ||
+         event.isAction(eKeyAction::SCROLL_UP)   || event.isAction(eKeyAction::SCROLL_DOWN))) {
+        m_trackedUnitIds.clear();
     }
 
     if (event.isAction(eKeyAction::ZOOM_RESET)) {
