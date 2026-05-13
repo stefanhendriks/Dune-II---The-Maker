@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <sstream>
 #include <format>
+#include <tuple>
 
 void cKeyBindings::loadDefaults()
 {
@@ -94,12 +95,9 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::DEBUG_SWITCH_PLAYER_3,      {SDL_SCANCODE_3});
 }
 
-void cKeyBindings::loadFromSection(const cSection &section)
+const std::vector<std::pair<std::string, eKeyAction>>& cKeyBindings::getActionTable()
 {
-    // Mapping from INI key name to eKeyAction.
-    // When a key is found in the section, only the scancode(s) are updated.
-    // Modifier requirements (requireCtrl/requireAlt/requireShift) are preserved from loadDefaults().
-    static const std::vector<std::pair<std::string, eKeyAction>> ACTIONS = {
+    static const std::vector<std::pair<std::string, eKeyAction>> TABLE = {
         {"SCREENSHOT",                eKeyAction::SCREENSHOT},
         {"TOGGLE_MUSIC",              eKeyAction::TOGGLE_MUSIC},
         {"MUSIC_VOLUME_DOWN",         eKeyAction::MUSIC_VOLUME_DOWN},
@@ -170,8 +168,14 @@ void cKeyBindings::loadFromSection(const cSection &section)
         {"DEBUG_SWITCH_PLAYER_2",     eKeyAction::DEBUG_SWITCH_PLAYER_2},
         {"DEBUG_SWITCH_PLAYER_3",     eKeyAction::DEBUG_SWITCH_PLAYER_3},
     };
+    return TABLE;
+}
 
-    for (auto &[name, action] : ACTIONS) {
+void cKeyBindings::loadFromSection(const cSection &section)
+{
+    // When a key is found in the section, only the scancode(s) are updated.
+    // Modifier requirements (requireCtrl/requireAlt/requireShift) are preserved from loadDefaults().
+    for (auto &[name, action] : getActionTable()) {
         if (section.hasValue(name)) {
             std::string value = section.getStringValue(name);
             s_KeyBinding parsed = parseBinding(value);
@@ -182,6 +186,40 @@ void cKeyBindings::loadFromSection(const cSection &section)
                     std::format("No valid key found for action '{}' (value: '{}'), keeping default", name, value));
             }
         }
+    }
+    checkForClashes();
+}
+
+void cKeyBindings::checkForClashes() const
+{
+    std::map<eKeyAction, std::string> nameOf;
+    for (auto &[name, action] : getActionTable()) {
+        nameOf[action] = name;
+    }
+
+    // Build map: (scancode, ctrl, alt, shift) -> action names that share it
+    std::map<std::tuple<SDL_Scancode, bool, bool, bool>, std::vector<std::string>> keyMap;
+    for (auto &[action, binding] : m_bindings) {
+        std::string name = nameOf.count(action) ? nameOf.at(action) : std::to_string(static_cast<int>(action));
+        for (SDL_Scancode sc : binding.keys) {
+            keyMap[{sc, binding.requireCtrl, binding.requireAlt, binding.requireShift}].push_back(name);
+        }
+    }
+
+    for (auto &[key, names] : keyMap) {
+        if (names.size() < 2) continue;
+        auto [sc, ctrl, alt, shift] = key;
+        std::string modifiers;
+        if (ctrl)  modifiers += "Ctrl+";
+        if (alt)   modifiers += "Alt+";
+        if (shift) modifiers += "Shift+";
+        std::string nameList;
+        for (size_t i = 0; i < names.size(); ++i) {
+            if (i > 0) nameList += ", ";
+            nameList += names[i];
+        }
+        cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
+            std::format("Key clash: {}{} is bound to multiple actions: {}", modifiers, SDL_GetScancodeName(sc), nameList));
     }
 }
 
