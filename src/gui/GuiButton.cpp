@@ -89,7 +89,7 @@ void GuiButton::drawText() const
 {
     Color textColor = m_focus ? m_theme.textColorHover : m_theme.textColor;
     if (!m_enabled) {
-        textColor = m_focus ? m_theme.borderDark : m_theme.borderLight;
+        textColor = m_theme.disabled;
     }
 
     switch (m_textAlignHorizontal) {
