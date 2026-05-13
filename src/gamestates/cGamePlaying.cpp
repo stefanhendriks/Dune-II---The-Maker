@@ -347,10 +347,6 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (m_settings->isDebugMode()) { // debug mode has additional keys
-        if (event.hasKey(SDL_SCANCODE_TAB)) {
-            onKeyDownDebugMode(event);
-        }
-
         if (event.isAction(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR)) {
             int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
@@ -426,6 +422,10 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
                 centerCameraOnUnits(unitIds);
             }
         }
+    }
+
+    if (m_settings->isDebugMode() && event.hasKey(SDL_SCANCODE_TAB)) {
+        onKeyDownDebugMode(event);
     }
 
     if (event.isAction(eKeyAction::TOGGLE_FPS)) {
