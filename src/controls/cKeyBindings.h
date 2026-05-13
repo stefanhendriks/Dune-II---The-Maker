@@ -37,5 +37,5 @@ private:
 
     static s_KeyBinding parseBinding(const std::string &value);
     static const std::vector<std::pair<std::string, eKeyAction>>& getActionTable();
-    void checkForClashes(const std::set<eKeyAction> &changedActions) const;
+    void checkForClashes() const;
 };

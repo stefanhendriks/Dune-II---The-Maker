@@ -175,58 +175,48 @@ void cKeyBindings::loadFromSection(const cSection &section)
 {
     // When a key is found in the section, only the scancode(s) are updated.
     // Modifier requirements (requireCtrl/requireAlt/requireShift) are preserved from loadDefaults().
-    std::set<eKeyAction> changedActions;
     for (auto &[name, action] : getActionTable()) {
         if (section.hasValue(name)) {
             std::string value = section.getStringValue(name);
             s_KeyBinding parsed = parseBinding(value);
             if (!parsed.keys.empty()) {
                 m_bindings[action] = parsed;
-                changedActions.insert(action);
             } else {
                 cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
                     std::format("No valid key found for action '{}' (value: '{}'), keeping default", name, value));
             }
         }
     }
-    checkForClashes(changedActions);
+    checkForClashes();
 }
 
-void cKeyBindings::checkForClashes(const std::set<eKeyAction> &changedActions) const
+void cKeyBindings::checkForClashes() const
 {
-    if (changedActions.empty()) return;
-
     std::map<eKeyAction, std::string> nameOf;
     for (auto &[name, action] : getActionTable()) {
         nameOf[action] = name;
     }
 
-    // Build map: (scancode, ctrl, alt, shift) -> actions that share it
-    std::map<std::tuple<SDL_Scancode, bool, bool, bool>, std::vector<eKeyAction>> keyMap;
+    // Build map: (scancode, ctrl, alt, shift) -> action names that share it
+    std::map<std::tuple<SDL_Scancode, bool, bool, bool>, std::vector<std::string>> keyMap;
     for (auto &[action, binding] : m_bindings) {
+        std::string name = nameOf.count(action) ? nameOf.at(action) : std::to_string(static_cast<int>(action));
         for (SDL_Scancode sc : binding.keys) {
-            keyMap[{sc, binding.requireCtrl, binding.requireAlt, binding.requireShift}].push_back(action);
+            keyMap[{sc, binding.requireCtrl, binding.requireAlt, binding.requireShift}].push_back(name);
         }
     }
 
-    // Only report clashes that involve at least one user-changed action
-    for (auto &[key, actions] : keyMap) {
-        if (actions.size() < 2) continue;
-        bool affectsChanged = std::any_of(actions.begin(), actions.end(), [&](eKeyAction a) {
-            return changedActions.count(a) > 0;
-        });
-        if (!affectsChanged) continue;
-
+    for (auto &[key, names] : keyMap) {
+        if (names.size() < 2) continue;
         auto [sc, ctrl, alt, shift] = key;
         std::string modifiers;
         if (ctrl)  modifiers += "Ctrl+";
         if (alt)   modifiers += "Alt+";
         if (shift) modifiers += "Shift+";
         std::string nameList;
-        for (size_t i = 0; i < actions.size(); ++i) {
+        for (size_t i = 0; i < names.size(); ++i) {
             if (i > 0) nameList += ", ";
-            eKeyAction a = actions[i];
-            nameList += nameOf.count(a) ? nameOf.at(a) : std::to_string(static_cast<int>(a));
+            nameList += names[i];
         }
         cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
             std::format("Key clash: {}{} is bound to multiple actions: {}", modifiers, SDL_GetScancodeName(sc), nameList));
