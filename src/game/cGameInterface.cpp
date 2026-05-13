@@ -59,10 +59,10 @@ void cGameInterface::setNextStateToTransitionTo(int newState) const
     m_game->setNextStateToTransitionTo(newState);
 }
 
-void cGameInterface::loadSkirmishMaps() const
-{
-    m_game->loadSkirmishMaps();
-}
+// void cGameInterface::loadSkirmishMaps() const
+// {
+//     m_game->loadSkirmishMaps();
+// }
 
 void cGameInterface::initSkirmish() const
 {

@@ -41,7 +41,7 @@ public:
     void setTransitionToWithFadingOut(int newState) const;
     void initiateFadingOut() const;
     void setNextStateToTransitionTo(int newState) const;
-    void loadSkirmishMaps() const;
+    // void loadSkirmishMaps() const;
     void initSkirmish() const;
     void loadMapFromEditor(s_PreviewMap *map) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;

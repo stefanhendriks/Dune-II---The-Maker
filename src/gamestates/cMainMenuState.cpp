@@ -112,7 +112,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_interface->loadSkirmishMaps();
+                // m_interface->loadSkirmishMaps();
                 m_interface->initSkirmish();
                 m_interface->setTransitionToWithFadingOut(GAME_SETUPSKIRMISH);
                 })
