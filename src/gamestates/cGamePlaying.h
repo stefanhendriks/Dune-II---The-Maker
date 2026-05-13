@@ -2,7 +2,9 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
+#include "controls/eKeyAction.h"
 #include "sMouseEvent.h"
+#include <optional>
 #include <vector>
 #include <SDL2/SDL.h>
 
@@ -60,4 +62,5 @@ private:
     std::vector<int> m_trackedUnitIds;
     int m_lastGroupKeyPressed = 0;
     Uint32 m_lastGroupKeyPressedTick = 0;
+    std::optional<eKeyAction> m_lastDebugSwitchAction;
 };

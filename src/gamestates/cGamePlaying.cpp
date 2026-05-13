@@ -347,6 +347,10 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (m_settings->isDebugMode()) { // debug mode has additional keys
+        if (event.hasKey(SDL_SCANCODE_TAB)) {
+            onKeyDownDebugMode(event);
+        }
+
         if (event.isAction(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR)) {
             int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
@@ -424,10 +428,6 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
         }
     }
 
-    if (m_settings->isDebugMode() && event.hasKey(SDL_SCANCODE_TAB)) {
-        onKeyDownDebugMode(event);
-    }
-
     if (event.isAction(eKeyAction::TOGGLE_FPS)) {
         m_settings->setDrawFps(false);
     }
@@ -498,17 +498,20 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
     const cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
 
-    if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
-        tryDebugSwitchToPlayer(0);
-    }
-    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
-        tryDebugSwitchToPlayer(1);
-    }
-    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
-        tryDebugSwitchToPlayer(2);
-    }
-    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
-        tryDebugSwitchToPlayer(3);
+    eKeyAction switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_0; // placeholder
+    int switchTarget = -1;
+    if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0))      { switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_0; switchTarget = 0; }
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) { switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_1; switchTarget = 1; }
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) { switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_2; switchTarget = 2; }
+    else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) { switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_3; switchTarget = 3; }
+
+    if (switchTarget >= 0) {
+        if (!m_lastDebugSwitchAction || *m_lastDebugSwitchAction != switchAction) {
+            m_lastDebugSwitchAction = switchAction;
+            tryDebugSwitchToPlayer(switchTarget);
+        }
+    } else {
+        m_lastDebugSwitchAction.reset(); // no switch key held: allow next press
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
