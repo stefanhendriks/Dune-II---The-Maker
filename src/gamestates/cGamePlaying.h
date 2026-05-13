@@ -52,6 +52,7 @@ private:
     void onKeyDownGamePlaying(const cKeyboardEvent &event);
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
     void onKeyDownDebugMode(const cKeyboardEvent &event);
+    void tryDebugSwitchToPlayer(int playerIndex);
 
     void centerCameraOnUnits(const std::vector<int>& unitIds);
     void drawTrackingOverlays() const;

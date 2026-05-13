@@ -481,29 +481,34 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 }
 
+void cGamePlaying::tryDebugSwitchToPlayer(int playerIndex)
+{
+    cPlayer *targetPlayer = m_objects->getPlayer(playerIndex);
+    if (targetPlayer->getHouse() == GENERALHOUSE || !targetPlayer->isAlive()) {
+        m_controlledPlayer->addNotification(
+            std::format("Player {} is not active.", playerIndex), eNotificationType::NEUTRAL);
+        return;
+    }
+    m_controlledPlayer = targetPlayer;
+    m_drawManager->setPlayerToDraw(m_controlledPlayer);
+    m_interface->setPlayerToInteractFor(m_controlledPlayer);
+}
+
 void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
     const cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
 
     if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
-        m_controlledPlayer = m_objects->getPlayer(0);
-        m_drawManager->setPlayerToDraw(m_controlledPlayer);
-        m_interface->setPlayerToInteractFor(m_controlledPlayer);
+        tryDebugSwitchToPlayer(0);
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
-        m_controlledPlayer = m_objects->getPlayer(1);
-        m_drawManager->setPlayerToDraw(m_controlledPlayer);
-        m_interface->setPlayerToInteractFor(m_controlledPlayer);
+        tryDebugSwitchToPlayer(1);
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
-        m_controlledPlayer = m_objects->getPlayer(2);
-        m_drawManager->setPlayerToDraw(m_controlledPlayer);
-        m_interface->setPlayerToInteractFor(m_controlledPlayer);
+        tryDebugSwitchToPlayer(2);
     }
     else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
-        m_controlledPlayer = m_objects->getPlayer(3);
-        m_drawManager->setPlayerToDraw(m_controlledPlayer);
-        m_interface->setPlayerToInteractFor(m_controlledPlayer);
+        tryDebugSwitchToPlayer(3);
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
