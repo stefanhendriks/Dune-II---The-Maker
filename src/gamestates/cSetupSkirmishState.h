@@ -35,7 +35,7 @@ struct s_SkirmishPlayer {
 class cSetupSkirmishState : public cGameState {
 
 public:
-    explicit cSetupSkirmishState(sGameServices* services, std::shared_ptr<cPreviewMaps> previewMaps, s_DataCampaign* dataCompaign);
+    explicit cSetupSkirmishState(sGameServices* services, cPreviewMaps* previewMaps, s_DataCampaign* dataCompaign);
     ~cSetupSkirmishState() override;
 
     void thinkFast() override;
@@ -52,7 +52,7 @@ private:
     cGameInterface* m_interface = nullptr;
     cGameObjectContext* m_objects = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
-    std::shared_ptr<cPreviewMaps> m_previewMaps;
+    cPreviewMaps* m_previewMaps = nullptr;
     Graphics* m_gfxinter = nullptr;
     cMouse *m_mouse = nullptr;
 

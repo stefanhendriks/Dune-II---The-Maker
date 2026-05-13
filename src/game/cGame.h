@@ -232,7 +232,7 @@ private:
 
     cSoundPlayer* m_soundPlayer;
 
-    std::shared_ptr<cPreviewMaps> m_PreviewMaps;
+    // std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
     std::unique_ptr<InitialGameSettings> m_initialGameSettings;
 

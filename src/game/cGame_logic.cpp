@@ -366,7 +366,7 @@ void cGame::initSkirmish() const
 
 void cGame::loadSkirmishMaps() const
 {
-    m_PreviewMaps->loadSkirmishMaps();
+    m_gameObjectsContext->getPreviewMaps()->loadSkirmishMaps();
 }
 
 void cGame::shakeScreenAndBlitBuffer()
@@ -502,9 +502,9 @@ void cGame::shutdown()
         }
     }
 
-    if (m_PreviewMaps != nullptr) {
-        m_PreviewMaps->destroy();
-    }
+    // if (m_PreviewMaps != nullptr) {
+    //     m_PreviewMaps->destroy();
+    // }
 
     delete m_mapViewport;
 
@@ -698,7 +698,7 @@ bool cGame::setupGame()
     m_keyboard->setKeyboardObserver(m_interactionManager.get());
 
     // I need m_renderDrawer to create cPreviewMaps
-    m_PreviewMaps = std::make_shared<cPreviewMaps>();
+    // m_PreviewMaps = std::make_shared<cPreviewMaps>();
 
     // m_gameObjectsContext->getMap().setGameContext(ctx.get());
     // Injection of services
@@ -866,7 +866,8 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_SETUPSKIRMISH) {
                 m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
-                newStatePtr = new cSetupSkirmishState(m_services.get(), m_PreviewMaps, m_dataCampaign.get());
+                auto previewMaps = m_gameObjectsContext->getPreviewMaps();
+                newStatePtr = new cSetupSkirmishState(m_services.get(), previewMaps, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
             else if (newState == GAME_CREDITS) {
@@ -1700,7 +1701,8 @@ void cGame::loadMapFromEditor(int map)
 {
     setState(GAME_EDITOR);
     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
-    s_PreviewMap *selectedMap = &m_PreviewMaps->getMap(map);
+    auto previewMaps = m_gameObjectsContext->getPreviewMaps();
+    s_PreviewMap *selectedMap = &previewMaps->getMap(map);
     pState->loadMap(selectedMap);
 }
 
