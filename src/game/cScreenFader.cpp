@@ -1,6 +1,6 @@
 #include "game/cScreenFader.h"
 #include "utils/Color.hpp"
-// #include <algorithm>
+#include <algorithm>
 
 cScreenFader::cScreenFader() : m_action(eFadeAction::None), m_alpha(0)
 {}
@@ -89,10 +89,16 @@ eFadeAction cScreenFader::getAction() const
     return m_action;
 }
 
+Color cScreenFader::getColorFadeSelectedLimited(int r, int g, int b, float minFade, bool rFlag, bool gFlag, bool bFlag)
+{
+    float fade = std::max(m_fadeSelect, minFade);
+    unsigned char desiredRed = rFlag ? r * fade : r;
+    unsigned char desiredGreen = gFlag ? g * fade : g;
+    unsigned char desiredBlue = bFlag ? b * fade : b;
+    return Color{desiredRed, desiredGreen, desiredBlue, 255};
+}
+
 Color cScreenFader::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
-    unsigned char desiredRed = rFlag ? r * m_fadeSelect : r;
-    unsigned char desiredGreen = gFlag ? g * m_fadeSelect : g;
-    unsigned char desiredBlue = bFlag ? b * m_fadeSelect : b;
-    return Color{desiredRed, desiredGreen, desiredBlue,255};
+    return getColorFadeSelectedLimited(r, g, b, 0.0f, rFlag, gFlag, bFlag);
 }

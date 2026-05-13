@@ -1261,6 +1261,11 @@ void cGame::reduceShaking() const {
 }
 
 
+Color cGame::getColorFadeSelectedLimited(int r, int g, int b, float minFade)
+{
+    return m_cScreenFader->getColorFadeSelectedLimited(r, g, b, minFade);
+}
+
 Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
 {
     return m_cScreenFader->getColorFadeSelected(r,g,b,rFlag,gFlag,bFlag);
