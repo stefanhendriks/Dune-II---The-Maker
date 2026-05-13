@@ -498,7 +498,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
     const cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
 
-    eKeyAction switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_0; // placeholder
+    eKeyAction switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_0;
     int switchTarget = -1;
     if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
         switchAction = eKeyAction::DEBUG_SWITCH_PLAYER_0;
@@ -515,7 +515,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (switchTarget >= 0) {
-        if (!m_lastDebugSwitchAction || *m_lastDebugSwitchAction != switchAction) {
+        if (!m_lastDebugSwitchAction || m_lastDebugSwitchAction != switchAction) {
             m_lastDebugSwitchAction = switchAction;
             tryDebugSwitchToPlayer(switchTarget);
         }
