@@ -26,7 +26,7 @@ struct s_PreviewMap {
 
 class cPreviewMaps {
 public:
-    explicit cPreviewMaps(SDLDrawer *renderDrawer, bool debugMode);
+    explicit cPreviewMaps(SDLDrawer *renderDrawer);
 
     ~cPreviewMaps() = default;
 
@@ -57,5 +57,4 @@ private:
 
     std::array<s_PreviewMap, MAX_SKIRMISHMAPS_CAPACITY> m_PreviewMap;
     SDLDrawer * m_renderDrawer;
-    bool m_debugMode;
 };

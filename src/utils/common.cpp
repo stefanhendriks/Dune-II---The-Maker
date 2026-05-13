@@ -39,7 +39,7 @@
 
 std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& filename)
 {
-    std::shared_ptr<cIniFile> file = std::make_shared<cIniFile>(filename, true);
+    std::shared_ptr<cIniFile> file = std::make_shared<cIniFile>(filename);
     std::unique_ptr<InitialGameSettings> gameSettings = std::make_unique<InitialGameSettings>();
 
     if (!file->hasSection("SETTINGS")) {

@@ -28,16 +28,14 @@ cSection::~cSection()
     m_dataConfs.clear();
 }
 
-cSection::cSection(const std::string &secName, bool debugMode) : m_debugMode(debugMode), m_sectionName(secName) {}
+cSection::cSection(const std::string &secName) : m_sectionName(secName) {}
 
 bool cSection::addValue(const std::string &key, const std::string &value)
 {
     if (m_sectionConf.find(key) != m_sectionConf.end()) {
         // disable multiple values in ini files (to many bug with it)
-        if (m_debugMode) {
-            cLogger::getInstance()->log(LOG_INFO, COMP_GAMERULES, "(cSection)",
-                        std::format("Key {} already exist on section {}", key, m_sectionName));
-        }
+        cLogger::getInstance()->log(LOG_INFO, COMP_GAMERULES, "(cSection)",
+                    std::format("Key {} already exist on section {}", key, m_sectionName));
     }
     m_sectionConf[key] = value;
     return true;
@@ -71,10 +69,8 @@ std::string cSection::getStringValue(const std::string &key) const
         return m_sectionConf.at(key);
     }
     else {
-        if (m_debugMode) {
-            cLogger::getInstance()->log(LOG_WARN, COMP_GAMERULES, "(cSection)",
+        cLogger::getInstance()->log(LOG_WARN, COMP_GAMERULES, "(cSection)",
                         std::format("Key {} didn't exist on section {}", key, m_sectionName));
-        }
         return std::string();
     }
 }
@@ -123,8 +119,8 @@ double cSection::getDouble(const std::string &key) const
 //
 // cIniFile class
 //
-cIniFile::cIniFile(const std::string &configFileName, bool debugMode)
-    : m_loadSuccess(false), m_debugMode(debugMode), m_fileName(configFileName)
+cIniFile::cIniFile(const std::string &configFileName)
+    : m_loadSuccess(false), m_fileName(configFileName)
 {
     m_loadSuccess = load(m_fileName);
 }
@@ -164,13 +160,11 @@ bool cIniFile::load(const std::string &config)
         if (isSectionName(line) && !m_actualSection.empty()) {
             // test if already exist
             if (m_mapConfig.find(m_actualSection) != m_mapConfig.end()) {
-                if (m_debugMode) {
-                    logger->log(LOG_WARN, COMP_GAMERULES, "(cIniFile)",
+                logger->log(LOG_WARN, COMP_GAMERULES, "(cIniFile)",
                                 std::format("section {} already exist", m_actualSection));
-                }
                 continue;
             }
-            m_mapConfig[m_actualSection] = cSection(m_actualSection, m_debugMode);
+            m_mapConfig[m_actualSection] = cSection(m_actualSection);
             continue;
         }
         // test if key=value
@@ -245,12 +239,10 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
         return getSection(section).getStringValue(key);
     }
     else {
-        if (m_debugMode) {
-            //std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
-            cLogger *logger = cLogger::getInstance();
-            logger->log(LOG_ERROR, COMP_GAMERULES, "(cIniFile)",
-                        std::format(" getStringValue section {} didn't exist", section));
-        }
+        //std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
+        cLogger *logger = cLogger::getInstance();
+        logger->log(LOG_ERROR, COMP_GAMERULES, "(cIniFile)",
+                    std::format(" getStringValue section {} didn't exist", section));
         return std::string();
     }
 }

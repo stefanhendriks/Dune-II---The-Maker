@@ -538,8 +538,8 @@ bool cGame::setupGame()
                 std::format("Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__));
 
     // SETTINGS.INI
-    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini", m_gameSettings->m_debugMode);
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename, m_gameSettings->m_debugMode);
+    std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename);
 
     m_reinforcements = std::make_unique<cReinforcements>();
     m_gameObjectsContext->getMap().setReinforcements(m_reinforcements.get());
@@ -697,7 +697,7 @@ bool cGame::setupGame()
     m_keyboard->setKeyboardObserver(m_interactionManager.get());
 
     // I need m_renderDrawer to create cPreviewMaps
-    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer, m_gameSettings->m_debugMode);
+    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer);
 
     // m_gameObjectsContext->getMap().setGameContext(ctx.get());
     // Injection of services

@@ -13,7 +13,7 @@ class cSection {
 public:
     cSection();
 
-    explicit cSection(const std::string &secName, bool debugMode);
+    explicit cSection(const std::string &secName);
 
     ~cSection();
 
@@ -39,7 +39,6 @@ public:
     T FromString(std::string value) const;
 
 private:
-    bool m_debugMode;
     std::string m_sectionName;
     std::vector<std::string> m_dataConfs;
     std::map<std::string, std::string> m_sectionConf;
@@ -49,7 +48,7 @@ class cIniFile {
 public:
     cIniFile() = default;
 
-    explicit cIniFile(const std::string &configFileName, bool debugMode);
+    explicit cIniFile(const std::string &configFileName);
 
     ~cIniFile();
 
@@ -70,7 +69,6 @@ private:
     bool isKeyValue(std::string inputLine);
 
     bool m_loadSuccess;
-    bool m_debugMode;
 
     std::string m_fileName;
     std::map<std::string, cSection> m_mapConfig;

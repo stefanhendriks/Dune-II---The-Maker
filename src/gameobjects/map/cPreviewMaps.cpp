@@ -15,7 +15,7 @@ namespace fs = std::filesystem;
 #include <format>
 
 
-cPreviewMaps::cPreviewMaps(SDLDrawer *renderDrawer, bool debugMode) : m_renderDrawer(renderDrawer), m_debugMode(debugMode)
+cPreviewMaps::cPreviewMaps(SDLDrawer *renderDrawer) : m_renderDrawer(renderDrawer)
 {
     assert(renderDrawer != nullptr);
 }
@@ -49,7 +49,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         return;
     }
 
-    cIniFile conf = cIniFile(filename, m_debugMode);
+    cIniFile conf = cIniFile(filename);
     if (!conf.isLoadSuccess()) {
         logbook(std::format("Could not load file : {} ", filename));
         return; // skip this map loading
@@ -89,9 +89,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             int startCell = numbers[i];
             if (startCell < 0 || startCell >= maxCells) {
                 previewMap.validMap = false;
-                if (m_debugMode) {
-                    logbook(std::format("StartCell [{}] invalid. (value must be between range [0-{}]), Map {}- is invalid" , startCell , maxCells, filename));
-                }
+                logbook(std::format("StartCell [{}] invalid. (value must be between range [0-{}]), Map {}- is invalid" , startCell , maxCells, filename));
             }
             else {
                 previewMap.iStartCell[i] = startCell;
@@ -99,9 +97,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
         catch (std::invalid_argument const &e) {
             // could not perform conversion
-            if (m_debugMode) {
-                logbook(std::format("Could not convert startCell [{}] to an int. Reason: {}", numbers[i], e.what()));
-            }
+            logbook(std::format("Could not convert startCell [{}] to an int. Reason: {}", numbers[i], e.what()));
         }
     }
 
@@ -187,10 +183,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         previewMap.previewTex = new Texture(out, previewMap.terrain->w, previewMap.terrain->h);
     }
     m_numberOfMaps++;
-    if (m_debugMode) {
-        logbook(std::format("Loaded skirmish map: {}, width: {}, height: {}",
-                            previewMap.name, previewMap.width, previewMap.height));
-    }
+    logbook(std::format("Loaded skirmish map: {}, width: {}, height: {}",
+                        previewMap.name, previewMap.width, previewMap.height));
 }
 
 /*
