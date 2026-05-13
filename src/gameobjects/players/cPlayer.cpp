@@ -1697,10 +1697,9 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
 
         case eGameEventType::GAME_EVENT_LIST_ITEM_ADDED:
         case eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED:
-        case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
-            if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
-                if (cBuildingListItem::isAutoBuild(commonEvent->entityType, commonEvent->entitySpecificType)) {
-                    startBuilding(commonEvent->entityType, commonEvent->entitySpecificType);
+            if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
+                if (buildEvent->player == this && cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType)) {
+                    startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
                 }
             }
             break;
