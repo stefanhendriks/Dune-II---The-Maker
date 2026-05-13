@@ -24,7 +24,7 @@
 | C | Center view on selected structure |
 | Z | Reset zoom level |
 | Arrow keys (hold) | Scroll map |
-| T (hold) | Show tooltips |
+| T | Track selected units (press again or scroll map to stop) |
 | F (hold) | Show FPS counter |
 
 ---
