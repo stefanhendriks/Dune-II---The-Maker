@@ -60,6 +60,6 @@ private:
     std::unique_ptr<cStructures> m_pStructures;
     std::unique_ptr<cUnits> m_Units;
     std::unique_ptr<cMap> m_map;
-    std::unique_ptr<cStructureFactory> m_structureFactory;
     std::unique_ptr<cPreviewMaps> m_previewMaps;
+    std::unique_ptr<cStructureFactory> m_structureFactory;
 };
