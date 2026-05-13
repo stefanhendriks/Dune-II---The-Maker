@@ -154,7 +154,7 @@ int cPathFinder::validateCreatePathInput(int unitId)
         }
     }
 
-    if (!m_activeUnit->isInfantryUnit()) {
+    if (!m_activeUnit->isInfantryUnit() && m_map->isVisible(goalCell, m_controller)) {
         if (goalCell > -1 && m_map->getCellType(goalCell) == TERRAIN_MOUNTAIN) {
             m_activeUnit->log("CREATE_PATH -- END 5 invalid goal terrain (mountain)");
             return -5;
