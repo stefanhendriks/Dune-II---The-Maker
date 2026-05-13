@@ -3981,16 +3981,8 @@ int cUnit::findHarvestSpot(int id)
     // finds the closest harvest spot
     cUnit *cUnit = game.m_gameObjectsContext->getUnit(id);
     cUnit->updateCellXAndY();
-    int cx = cUnit->getCellX();
-    int cy = cUnit->getCellY();
 
-    int TargetSpice = -1;
-    int TargetSpiceHill = -1;
-
-    // distances
-    int TargetSpiceDistance = 40;
-    int TargetSpiceHillDistance = 40;
-
+    // for rememberedHarvestCell first
     int rememberedHarvestCell = cUnit->iHarvestCellMemory;
     if (rememberedHarvestCell > -1 &&
             game.m_gameObjectsContext->getMapGeometry()->isValidCell(rememberedHarvestCell) &&
@@ -4018,6 +4010,16 @@ int cUnit::findHarvestSpot(int id)
         }
     }
 
+    // Next attempt: research for new one area
+    int cx = cUnit->getCellX();
+    int cy = cUnit->getCellY();
+
+    int TargetSpice = -1;
+    int TargetSpiceHill = -1;
+
+    // distances
+    int TargetSpiceDistance = 40;
+    int TargetSpiceHillDistance = 40;
 
     for (int i = 0; i < game.m_gameObjectsContext->getMap().getMaxCells(); i++)
         if (game.m_gameObjectsContext->getMap().getCellCredits(i) > 0 && i != cUnit->getCell()) {
