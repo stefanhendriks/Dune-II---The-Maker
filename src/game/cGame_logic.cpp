@@ -623,6 +623,7 @@ bool cGame::setupGame()
     // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
     global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
     // -----------------------------------
+    m_gameObjectsContext->getPreviewMaps()->setRenderDrawer(m_renderDrawer); // inject render drawer into cPreviewMaps that is part of game objects context, so it can be used to create textures for map previews
     ctx->setSDLDrawer(std::move(renderDrawer));
 
     // do it here, because it depends on fonts to be loaded
@@ -697,7 +698,7 @@ bool cGame::setupGame()
     m_keyboard->setKeyboardObserver(m_interactionManager.get());
 
     // I need m_renderDrawer to create cPreviewMaps
-    m_PreviewMaps = std::make_shared<cPreviewMaps>(m_renderDrawer);
+    m_PreviewMaps = std::make_shared<cPreviewMaps>();
 
     // m_gameObjectsContext->getMap().setGameContext(ctx.get());
     // Injection of services

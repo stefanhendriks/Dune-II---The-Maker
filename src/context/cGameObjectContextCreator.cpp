@@ -8,6 +8,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/players/cPlayers.h"
 #include "gameobjects/map/cMap.h"
+#include "gameobjects/map/cPreviewMaps.h"
 
 std::unique_ptr<cGameObjectContext> cGameObjectsContextCreator::create()
 {
@@ -18,6 +19,7 @@ std::unique_ptr<cGameObjectContext> cGameObjectsContextCreator::create()
         std::make_unique<cStructures>(),
         std::make_unique<cUnits>(),
         std::make_unique<cMap>(),
+        std::make_unique<cPreviewMaps>(),
         std::make_unique<cStructureFactory>()
     );
 }

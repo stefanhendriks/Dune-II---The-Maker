@@ -15,9 +15,9 @@ namespace fs = std::filesystem;
 #include <format>
 
 
-cPreviewMaps::cPreviewMaps(SDLDrawer *renderDrawer) : m_renderDrawer(renderDrawer)
+void cPreviewMaps::setRenderDrawer(SDLDrawer *renderDrawer)
 {
-    assert(renderDrawer != nullptr);
+    m_renderDrawer = renderDrawer;
 }
 
 void cPreviewMaps::destroy()

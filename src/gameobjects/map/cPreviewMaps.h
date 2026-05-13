@@ -26,7 +26,9 @@ struct s_PreviewMap {
 
 class cPreviewMaps {
 public:
-    explicit cPreviewMaps(SDLDrawer *renderDrawer);
+    cPreviewMaps() = default;
+
+    void setRenderDrawer(SDLDrawer *renderDrawer);
 
     ~cPreviewMaps() = default;
 
