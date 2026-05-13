@@ -9,6 +9,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/d2tm_math.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cPoint.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cRectangle.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/cExpandingRectangle.cpp
 )
 
 file(GLOB_RECURSE AUTO_TEST_FILES CONFIGURE_DEPENDS "*.cpp")
