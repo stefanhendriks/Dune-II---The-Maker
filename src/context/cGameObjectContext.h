@@ -11,6 +11,7 @@ class cParticles;
 class cStructures;
 class cUnits;
 class cMap;
+class cPreviewMaps;
 class cPlayer;
 class cUnit;
 class cAbstractStructure;
@@ -27,6 +28,7 @@ public:
         std::unique_ptr<cStructures> structures,
         std::unique_ptr<cUnits> units,
         std::unique_ptr<cMap> map,
+        std::unique_ptr<cPreviewMaps> previewMaps,
         std::unique_ptr<cStructureFactory> structureFactory);
     ~cGameObjectContext();
 
@@ -38,6 +40,7 @@ public:
 
     cStructures& getStructures() const;
     cAbstractStructure* getStructure(int index);
+    cPreviewMaps* getPreviewMaps() const;
 
     cUnits* getUnits() const;
     int getUnitsSize() const;
@@ -58,4 +61,5 @@ private:
     std::unique_ptr<cUnits> m_Units;
     std::unique_ptr<cMap> m_map;
     std::unique_ptr<cStructureFactory> m_structureFactory;
+    std::unique_ptr<cPreviewMaps> m_previewMaps;
 };

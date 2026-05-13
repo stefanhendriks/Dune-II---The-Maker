@@ -5,6 +5,7 @@
 #include "gameobjects/projectiles/cBullets.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/map/cPreviewMaps.h"
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/players/cPlayers.h"
 #include "gameobjects/map/cMap.h"
@@ -18,6 +19,7 @@ cGameObjectContext::cGameObjectContext(
     std::unique_ptr<cStructures> structures,
     std::unique_ptr<cUnits> units,
     std::unique_ptr<cMap> map,
+    std::unique_ptr<cPreviewMaps> previewMaps,
     std::unique_ptr<cStructureFactory> structureFactory)
     : m_Bullets(std::move(bullets))
     , m_Players(std::move(players))
@@ -25,6 +27,7 @@ cGameObjectContext::cGameObjectContext(
     , m_pStructures(std::move(structures))
     , m_Units(std::move(units))
     , m_map(std::move(map))
+    , m_previewMaps(std::move(previewMaps))
     , m_structureFactory(std::move(structureFactory))
 {
     //hack: I didn't want to do, but I want to clear out all existing structures when creating a new context,
@@ -36,56 +39,72 @@ cGameObjectContext::cGameObjectContext(
 
 cGameObjectContext::~cGameObjectContext() = default;
 
-cBullets& cGameObjectContext::getBullets() const {
+cBullets& cGameObjectContext::getBullets() const
+{
     if (!m_Bullets) {
         throw std::runtime_error("cBullets not initialized in cGameObjectContext");
     }
     return *m_Bullets;
 }
 
-cPlayers* cGameObjectContext::getPlayers() const {
+cPlayers* cGameObjectContext::getPlayers() const
+{
     if (!m_Players) {
         throw std::runtime_error("cPlayers not initialized in cGameObjectContext");
     }
     return m_Players.get();
 }
 
-cParticles& cGameObjectContext::getParticles() const {
+cParticles& cGameObjectContext::getParticles() const
+{
     if (!m_particles) {
         throw std::runtime_error("cParticles not initialized in cGameObjectContext");
     }
     return *m_particles;
 }
 
-cStructures& cGameObjectContext::getStructures() const {
+cStructures& cGameObjectContext::getStructures() const
+{
     if (!m_pStructures) {
         throw std::runtime_error("cStructures not initialized in cGameObjectContext");
     }
     return *m_pStructures;
 }
 
-cUnits* cGameObjectContext::getUnits() const {
+cUnits* cGameObjectContext::getUnits() const
+{
     if (!m_Units) {
         throw std::runtime_error("cUnits not initialized in cGameObjectContext");
     }
     return m_Units.get();
 }
 
-int cGameObjectContext::getUnitsSize() const {
+int cGameObjectContext::getUnitsSize() const
+{
     if (!m_Units) {
         throw std::runtime_error("cUnits not initialized in cGameObjectContext");
     }
     return m_Units->size();
 }
 
-cMap& cGameObjectContext::getMap() const {
+cMap& cGameObjectContext::getMap() const
+{
     if (!m_map) {
         throw std::runtime_error("cMap not initialized in cGameObjectContext");
     }
     return *m_map;
 }
 
-MapGeometry* cGameObjectContext::getMapGeometry() const {
+cPreviewMaps* cGameObjectContext::getPreviewMaps() const
+{
+    if (!m_previewMaps) {
+        throw std::runtime_error("cPreviewMaps not initialized in cGameObjectContext");
+    }
+    return m_previewMaps.get();
+}
+
+MapGeometry* cGameObjectContext::getMapGeometry() const
+{
     if (!m_map) {
         throw std::runtime_error("cMap not initialized in cGameObjectContext");
     }
