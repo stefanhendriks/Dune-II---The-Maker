@@ -3982,29 +3982,51 @@ int cUnit::findHarvestSpot(int id)
     cUnit *cUnit = game.m_gameObjectsContext->getUnit(id);
     cUnit->updateCellXAndY();
 
-    // for rememberedHarvestCell first
+    // First attempt: only look around remembered harvest cell (max radius 2),
+    // then fall back to the old global search.
     int rememberedHarvestCell = cUnit->iHarvestCellMemory;
     if (rememberedHarvestCell > -1 &&
-            game.m_gameObjectsContext->getMapGeometry()->isValidCell(rememberedHarvestCell) &&
-            game.m_gameObjectsContext->getMap().getCellCredits(rememberedHarvestCell) > 0) {
+            game.m_gameObjectsContext->getMapGeometry()->isValidCell(rememberedHarvestCell)) {
 
-        int rememberedCellType = game.m_gameObjectsContext->getMap().getCellType(rememberedHarvestCell);
-        if (rememberedCellType == TERRAIN_SPICE || rememberedCellType == TERRAIN_SPICEHILL) {
-            int rememberedDx = game.m_gameObjectsContext->getMapGeometry()->getCellX(rememberedHarvestCell);
-            int rememberedDy = game.m_gameObjectsContext->getMapGeometry()->getCellY(rememberedHarvestCell);
+        auto canUseHarvestCell = [&](int candidateCell) {
+            if (candidateCell < 0) return false;
+            if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(candidateCell)) return false;
+            if (game.m_gameObjectsContext->getMap().getCellCredits(candidateCell) <= 0) return false;
 
-            if (game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(rememberedDx, rememberedDy)) {
-                bool rememberedCellCanBeUsed = true;
+            int cellType = game.m_gameObjectsContext->getMap().getCellType(candidateCell);
+            if (cellType != TERRAIN_SPICE && cellType != TERRAIN_SPICEHILL) return false;
 
-                if (rememberedHarvestCell != cUnit->getCell()) {
-                    int idOfUnitAtRememberedCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(rememberedHarvestCell);
-                    if (idOfUnitAtRememberedCell > -1 || game.m_gameObjectsContext->getMap().occupied(rememberedHarvestCell, id)) {
-                        rememberedCellCanBeUsed = false;
-                    }
-                }
+            int candidateDx = game.m_gameObjectsContext->getMapGeometry()->getCellX(candidateCell);
+            int candidateDy = game.m_gameObjectsContext->getMapGeometry()->getCellY(candidateCell);
+            if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(candidateDx, candidateDy)) return false;
 
-                if (rememberedCellCanBeUsed) {
-                    return rememberedHarvestCell;
+            if (candidateCell != cUnit->getCell()) {
+                int idOfUnitAtCandidateCell = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(candidateCell);
+                if (idOfUnitAtCandidateCell > -1 || game.m_gameObjectsContext->getMap().occupied(candidateCell, id)) return false;
+            }
+
+            return true;
+        };
+
+        int rememberedDx = game.m_gameObjectsContext->getMapGeometry()->getCellX(rememberedHarvestCell);
+        int rememberedDy = game.m_gameObjectsContext->getMapGeometry()->getCellY(rememberedHarvestCell);
+
+        // Radius 0 checks remembered cell first, then ring 1 and ring 2.
+        for (int searchRadius = 0; searchRadius <= 2; searchRadius++) {
+            for (int dx = -searchRadius; dx <= searchRadius; dx++) {
+                for (int dy = -searchRadius; dy <= searchRadius; dy++) {
+                    if (searchRadius > 0 && std::abs(dx) != searchRadius && std::abs(dy) != searchRadius) continue;
+
+                    int candidateDx = rememberedDx + dx;
+                    int candidateDy = rememberedDy + dy;
+
+                    if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(candidateDx, candidateDy)) continue;
+
+                    int candidateCell = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(candidateDx, candidateDy);
+                    if (!canUseHarvestCell(candidateCell)) continue;
+
+                    cUnit->iHarvestCellMemory = candidateCell;
+                    return candidateCell;
                 }
             }
         }
