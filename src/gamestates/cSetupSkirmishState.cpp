@@ -282,7 +282,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     int modifyButtonX = screen_x - startButtonWidth-modifyButtonWidth - 35;
     cRectangle modifyButtonRect = cRectangle(modifyButtonX, modifyButtonY, modifyButtonWidth, modifyButtonHeight);
     modifyButton = GuiButtonBuilder()
-            .withRect(modifyButtonRect)        
+            .withRect(modifyButtonRect)
             .withLabel("Modify")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
@@ -295,7 +295,22 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
                 }
             })
             .build();
-    
+
+    // Surprise me button (bottom right, left of Modify)
+    int surpriseMeButtonWidth = m_textDrawer->getTextLength("Surprise me");
+    int surpriseMeButtonY = screen_y - topBarHeight;
+    int surpriseMeButtonX = modifyButtonX - surpriseMeButtonWidth - 15;
+    cRectangle surpriseMeButtonRect = cRectangle(surpriseMeButtonX, surpriseMeButtonY, surpriseMeButtonWidth, topBarHeight);
+    surpriseMeButton = GuiButtonBuilder()
+            .withRect(surpriseMeButtonRect)
+            .withLabel("Surprise me")
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
+            .withTheme(theme)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() { surpriseMe(); })
+            .build();
+
     // Create new map button (bottom right, only visible when random map is selected)
     int newMapButtonWidth = m_textDrawer->getTextLength("Create New Map");
     int newMapButtonHeight = topBarHeight;
@@ -303,7 +318,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     int newMapButtonX = screen_x - startButtonWidth - newMapButtonWidth - modifyButtonWidth - 70;
     cRectangle newMapButtonRect = cRectangle(newMapButtonX, newMapButtonY, newMapButtonWidth, newMapButtonHeight);
     newMapButton = GuiButtonBuilder()
-            .withRect(newMapButtonRect)        
+            .withRect(newMapButtonRect)
             .withLabel("New Map")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
@@ -432,6 +447,7 @@ void cSetupSkirmishState::draw() const
     startButton->draw();
     modifyButton->draw();
     newMapButton->draw();
+    surpriseMeButton->draw();
     nextMapButton->draw();
     previousMapButton->draw();
 
@@ -912,6 +928,7 @@ void cSetupSkirmishState::onNotifyMouseEvent(const s_MouseEvent &event)
     startButton->onNotifyMouseEvent(event);
     modifyButton->onNotifyMouseEvent(event);
     newMapButton->onNotifyMouseEvent(event);
+    surpriseMeButton->onNotifyMouseEvent(event);
     nextMapButton->onNotifyMouseEvent(event);
     previousMapButton->onNotifyMouseEvent(event);
 }
@@ -1171,6 +1188,48 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
             iDrawY += mapItemButtonHeight + 15;
         }
     }
+}
+
+void cSetupSkirmishState::surpriseMe()
+{
+    // Collect valid map indices
+    int mapCount = m_previewMaps->getMapCount();
+    std::vector<int> validIndices;
+    for (int i = 0; i < mapCount; i++) {
+        if (m_previewMaps->getMap(i).validMap) {
+            validIndices.push_back(i);
+        }
+    }
+    if (validIndices.empty()) {
+        return;
+    }
+
+    iSkirmishMap = validIndices[RNG::rnd(validIndices.size())];
+
+    if (iSkirmishMap == 0) {
+        iStartingPoints = 2 + RNG::rnd(3); // 2 to 4
+        generateRandomMap();
+    }
+    else {
+        auto &selectedMap = m_previewMaps->getMap(iSkirmishMap);
+        int maxPlayers = 0;
+        for (int s : selectedMap.iStartCell) {
+            if (s > -1) {
+                maxPlayers++;
+            }
+        }
+        iStartingPoints = 2 + RNG::rnd(maxPlayers - 1); // 2 to maxPlayers
+    }
+
+    for (int p = 0; p < (AI_WORM - 1); p++) {
+        s_SkirmishPlayer &player = skirmishPlayer[p];
+        player.bPlaying = (p < iStartingPoints);
+        player.iHouse = 0;
+        player.iCredits = 1000 + RNG::rnd(19) * 500;
+    }
+    skirmishPlayer[HUMAN].bPlaying = true;
+
+    prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
 }
 
 void cSetupSkirmishState::generateRandomMap()

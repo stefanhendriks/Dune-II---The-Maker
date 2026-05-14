@@ -118,11 +118,13 @@ private:
     std::unique_ptr<GuiButton> startButton;
     std::unique_ptr<GuiButton> modifyButton;
     std::unique_ptr<GuiButton> newMapButton;
+    std::unique_ptr<GuiButton> surpriseMeButton;
     std::unique_ptr<GuiButton> nextMapButton;
     std::unique_ptr<GuiButton> previousMapButton;
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
+    void surpriseMe();
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
     void onMouseRightButtonClicked(const s_MouseEvent &event);    
