@@ -1369,24 +1369,29 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
         else {
             m_soundPlayer->playMusic(m_newMusicSample);
         }
+        m_notificationArea->addNotification("Music toggle successfully", eNotificationType::NEUTRAL);
     }
 
     if (event.isAction(eKeyAction::MUSIC_VOLUME_DOWN)) {
         m_soundPlayer->changeMusicVolume(-10);
+        m_notificationArea->addNotification("Music volume down", eNotificationType::NEUTRAL);
     }
 
     if (event.isAction(eKeyAction::MUSIC_VOLUME_UP)) {
         m_soundPlayer->changeMusicVolume(10);
+        m_notificationArea->addNotification("Music volume up", eNotificationType::NEUTRAL);
     }
 
     if (event.isAction(eKeyAction::GAME_SPEED_UP)) {
         auto timerManager = ctx->getTimeManager();
         timerManager->setGlobalSpeedVariation(-1);
+        m_notificationArea->addNotification("Game speed up", eNotificationType::NEUTRAL);
     }
 
     if (event.isAction(eKeyAction::GAME_SPEED_DOWN)) {
         auto timerManager = ctx->getTimeManager();
         timerManager->setGlobalSpeedVariation(1);
+        m_notificationArea->addNotification("Game speed down", eNotificationType::NEUTRAL);
     }
 
     if (event.isAction(eKeyAction::TOGGLE_FULLSCREEN)) {
@@ -1402,6 +1407,7 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::TOGGLE_CHEAT)) {
         m_gameSettings->m_cheatMode = !m_gameSettings->m_cheatMode;
         cLogger::getInstance()->log(LOG_INFO, COMP_CHEATS, "Cheat mode enabled", "All cheats are now enabled. Have fun!");
+        m_notificationArea->addNotification("Cheat mode toggle !", eNotificationType::NEUTRAL);
     }
 }
 

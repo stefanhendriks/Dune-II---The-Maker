@@ -17,6 +17,7 @@
 #include "controls/cMouse.h"
 #include "gameobjects/map/cPreviewMaps.h"
 #include "data/gfxeditor.h"
+#include "include/sGameEvent.h"
 
 #include <cassert>
 #include <iostream>
@@ -983,4 +984,12 @@ void cEditorState::saveMap(bool backup) const
     saveFile.close();
     // TODO:  log info about successful map saving
     m_previewMaps->loadSkirmish(fileName);
+    const s_GameEvent newEvent {
+        .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+        .data = NotificationEvent {
+            .message = "Map saved successfully",
+            .type = eNotificationType::NEUTRAL,
+        }
+    };                
+    m_interface->onNotifyGameEvent(newEvent);
 }
