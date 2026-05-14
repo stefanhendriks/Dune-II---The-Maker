@@ -53,6 +53,8 @@ const char *s_GameEvent::toString(const eGameEventType &eventType)
             return "GAME_EVENT_DEPLOY_UNIT";
         case eGameEventType::GAME_EVENT_CREATE_UNIT:
             return "GAME_EVENT_CREATE_UNIT";
+        case eGameEventType::GAME_EVENT_NOTIFICATION:
+            return "GAME_EVENT_NOTIFICATION";
         default:
             assert(false && "Unknown game event type for toString()");
             break;

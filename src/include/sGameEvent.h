@@ -84,7 +84,8 @@ struct NotificationEvent {
 
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
-    using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent, DamagedEvent, BuildingEvent, CommonEvent>;
+    using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent, 
+                            DamagedEvent, BuildingEvent, CommonEvent, NotificationEvent>;
     GameEventData data = std::monostate{};
 
     static const char *toString(const eGameEventType &eventType);

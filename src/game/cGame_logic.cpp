@@ -1100,6 +1100,11 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
 
     // game itself handles events
     switch (event.eventType) {
+        case eGameEventType::GAME_EVENT_NOTIFICATION:
+            if (const auto *notifEvent = std::get_if<NotificationEvent>(&event.data)) {
+                m_notificationArea.addNotification(notifEvent->message, notifEvent->type);
+            }
+            break;
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
             if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
                 onEventSpecialLaunch(*launchEvent);
