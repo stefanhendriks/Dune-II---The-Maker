@@ -6,7 +6,7 @@
 
 class cTextDrawer;
 
-class NotificationArea {
+class cNotificationArea {
 public:
     void clear();
 

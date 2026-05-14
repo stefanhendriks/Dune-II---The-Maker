@@ -2475,12 +2475,12 @@ bool cPlayer::evaluateStillAlive()
 //     return notificationArea.getNotifications();
 // }
 
-// NotificationArea &cPlayer::getNotificationArea()
+// cNotificationArea &cPlayer::getNotificationArea()
 // {
 //     return notificationArea;
 // }
 
-// const NotificationArea &cPlayer::getNotificationArea() const
+// const cNotificationArea &cPlayer::getNotificationArea() const
 // {
 //     return notificationArea;
 // }
