@@ -42,7 +42,7 @@ struct InitialGameSettings;
 class cGameSettings;
 class cTextDrawer;
 
-class NotificationArea;
+class cNotificationArea;
 
 class cStructureFactory;
 class cSideBarFactory;
@@ -258,7 +258,7 @@ private:
     int m_newMusicCountdown;
 
     std::unique_ptr<cScreenShake> m_screenShake;
-    std::unique_ptr<NotificationArea> m_notificationArea;
+    std::unique_ptr<cNotificationArea> m_notificationArea;
 
     void thinkFast_audio();
     void thinkFast_fading();

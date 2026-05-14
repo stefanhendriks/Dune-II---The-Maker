@@ -94,7 +94,7 @@
 #include "data/gfxaudio.h"
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
-#include "game/NotificationArea.h"
+#include "game/cNotificationArea.h"
 
 cGame::cGame()
 {
@@ -116,7 +116,7 @@ cGame::cGame()
     m_cameraBorderOrKeyMoveSpeed=0.5;
     m_cameraEdgeMove = true;
 
-    m_notificationArea = std::make_unique<NotificationArea>();
+    m_notificationArea = std::make_unique<cNotificationArea>();
 
     std::unique_ptr<cGameInterface> gameInterface = std::make_unique<cGameInterface>(this);
 
