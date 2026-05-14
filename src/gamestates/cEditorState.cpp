@@ -979,4 +979,5 @@ void cEditorState::saveMap(bool backup) const
 
     saveFile.close();
     // TODO:  log info about successful map saving
+    m_previewMaps->loadSkirmish(fileName);
 }

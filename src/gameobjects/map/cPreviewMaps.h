@@ -47,11 +47,12 @@ public:
         return m_numberOfMaps+1;
     }
 
-    static s_PreviewMap createEmptyMap(const std::string &name, const std::string &author,
+    // create map and return his index in m_PreviewMap, return -1 if error
+    int createEmptyMap(const std::string &name, const std::string &author,
             const std::string &desciption, int width, int height);
 
-private:
     void loadSkirmish(const std::string &filename);
+private:
     void initRandomMap();
     void initPreviews();
     int m_numberOfMaps = 0; // Review Stefan 25/10/2025 -> Replace with size of array m_PreviewMap?

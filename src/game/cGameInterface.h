@@ -43,7 +43,7 @@ public:
     void setNextStateToTransitionTo(int newState) const;
     // void loadSkirmishMaps() const;
     void initSkirmish() const;
-    void loadMapFromEditor(s_PreviewMap *map) const;
+    // void loadMapFromEditor(s_PreviewMap *map) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
     void jumpToSelectYourNextConquestMission(int index) const;
     void loadMapFromEditor(int iSkirmishMap) const;

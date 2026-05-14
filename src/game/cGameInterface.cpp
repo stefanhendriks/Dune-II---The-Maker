@@ -69,10 +69,10 @@ void cGameInterface::initSkirmish() const
     m_game->initSkirmish();
 }
 
-void cGameInterface::loadMapFromEditor(s_PreviewMap *map) const
-{
-    m_game->loadMapFromEditor(map);
-}
+// void cGameInterface::loadMapFromEditor(s_PreviewMap *map) const
+// {
+//     m_game->loadMapFromEditor(map);
+// }
 
 void cGameInterface::drawCursor() const
 {

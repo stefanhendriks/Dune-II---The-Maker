@@ -1709,12 +1709,12 @@ void cGame::loadMapFromEditor(int map)
     pState->loadMap(selectedMap);
 }
 
-void cGame::loadMapFromEditor(s_PreviewMap *map)
-{
-    setState(GAME_EDITOR);
-    auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
-    pState->loadMap(map);
-}
+// void cGame::loadMapFromEditor(s_PreviewMap *map)
+// {
+//     setState(GAME_EDITOR);
+//     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
+//     pState->loadMap(map);
+// }
 
 void cGame::getLog(cLog *log)
 {

@@ -60,7 +60,7 @@ class cStructureUtils;
 class Texture;
 
 struct s_DataCampaign;
-struct s_PreviewMap;
+// struct s_PreviewMap;
 // Naming thoughts:
 // member variables, start with m_<camelCasedVariableName>
 //
@@ -192,7 +192,7 @@ public:
     void applySettings(std::unique_ptr<InitialGameSettings> gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
-    void loadMapFromEditor(s_PreviewMap *map);
+    // void loadMapFromEditor(s_PreviewMap *map);
 
     Texture* getScreenTexture() const {
         return screenTexture;
