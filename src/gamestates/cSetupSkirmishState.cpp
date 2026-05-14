@@ -238,14 +238,14 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     int techLevelHitBoxHeight = 16;
     techLevelRect = cRectangle(techLevelX, techLevelY, techLevelHitBoxWidth, techLevelHitBoxHeight);
 
-    int backButtonWidth = m_textDrawer->getTextLength(" BACK");
+    int backButtonWidth = m_textDrawer->getTextLength(" Back");
     int backButtonHeight = topBarHeight;
     int backButtonY = screen_y - topBarHeight;
     int backButtonX = 0;
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
     backButton = GuiButtonBuilder()
             .withRect(backButtonRect)        
-            .withLabel("BACK")
+            .withLabel("Back")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
@@ -259,12 +259,12 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     const int bottomY = screen_y - topBarHeight;
 
     // Right group: [Surprise me] [START]
-    int startButtonWidth = m_textDrawer->getTextLength("START");
+    int startButtonWidth = m_textDrawer->getTextLength("Start");
     int startButtonX = screen_x - startButtonWidth;
     cRectangle startButtonRect = cRectangle(startButtonX, bottomY, startButtonWidth, topBarHeight);
     startButton = GuiButtonBuilder()
             .withRect(startButtonRect)
-            .withLabel("START")
+            .withLabel("Start")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
