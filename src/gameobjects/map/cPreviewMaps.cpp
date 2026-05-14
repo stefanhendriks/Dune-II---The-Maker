@@ -22,7 +22,8 @@ cPreviewMaps::cPreviewMaps() :
     //initPreviews();
 }
 
-s_PreviewMap *cPreviewMaps::getMap(int i) {
+s_PreviewMap *cPreviewMaps::getMap(int i)
+{
     if (i == -1) {
         return m_emptyMap.get();
     }
@@ -35,7 +36,8 @@ s_PreviewMap *cPreviewMaps::getMap(int i) {
     return m_PreviewMap[i].get();
 }
 
-int cPreviewMaps::getMapCount() const {
+int cPreviewMaps::getMapCount() const
+{
     return static_cast<int>(m_PreviewMap.size()-1); // -1 because the first map is reserved for the random map, which is not a real skirmish map
 }
 
@@ -181,7 +183,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     }
 
     // starting points
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < MAX_SKIRMISHMAP_PLAYERS; i++) {
         int startCell = previewMap->iStartCell[i];
         if (startCell > -1) {
             int x = mapGeom.getCellX(startCell);
