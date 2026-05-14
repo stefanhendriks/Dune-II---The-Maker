@@ -820,7 +820,7 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
 
 void cEditorState::modifySymmetricArea(Direction dir)
 {
-    std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
+    //std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
     m_undoRedo->beginRecordGroup();
     switch (dir) {
         case Direction::bottom:
