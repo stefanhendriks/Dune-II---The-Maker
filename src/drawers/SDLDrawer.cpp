@@ -145,10 +145,13 @@ void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow,
     SDL_RenderDrawRect(renderer, &tmp );
 
     // lines to darken the right sides
+    int endX = (x1+width) - 1;
+    int endY = (y1+height) - 1;
+
     renderChangeColor(gui_colorBorderDark);
-    SDL_RenderDrawLine(renderer, x1+width, y1, x1+width, y1+height);
+    SDL_RenderDrawLine(renderer, endX, y1, endX, endY);
     renderChangeColor(gui_colorBorderDark);
-    SDL_RenderDrawLine(renderer, x1, y1+height, x1+width, y1+height);
+    SDL_RenderDrawLine(renderer, x1, endY, endX, endY);
 }
 
 void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorBorderLight, Color gui_colorBorderDark)
@@ -161,9 +164,12 @@ void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorB
     renderChangeColor(gui_colorBorderLight);
     SDL_RenderDrawRect(renderer, &tmp);
     renderChangeColor(gui_colorBorderDark);
-    SDL_RenderDrawLine(renderer, x1+width, y1, x1+width, y1+height);
+
+    int endX = (x1+width) - 1;
+    int endY = (y1+height) - 1;
+    SDL_RenderDrawLine(renderer, endX, y1, endX, endY);
     renderChangeColor(gui_colorBorderDark);
-    SDL_RenderDrawLine(renderer, x1, y1+height, x1+width, y1+height);
+    SDL_RenderDrawLine(renderer, x1, endY, endX, endY);
 }
 
 void SDLDrawer::renderClearToColor(Color color)
