@@ -13,7 +13,7 @@ namespace fs = std::filesystem;
 #include <algorithm>
 #include <cassert>
 #include <format>
-#include <iostream>
+// #include <iostream>
 
 cPreviewMaps::cPreviewMaps() :
     m_emptyMap(std::make_unique<s_PreviewMap>()),
@@ -46,7 +46,7 @@ void cPreviewMaps::setRenderDrawer(SDLDrawer *renderDrawer)
 
 void cPreviewMaps::destroy()
 {
-    std::cout << "Destroying preview maps" << std::endl;
+    // std::cout << "Destroying preview maps" << std::endl;
     for (auto& previewMap : m_PreviewMap) {
         if (previewMap == nullptr) {
             continue;
@@ -217,7 +217,7 @@ void cPreviewMaps::loadSkirmishMaps()
     const std::filesystem::path pathfile{"skirmish"};
     for (auto const &file: std::filesystem::directory_iterator{pathfile}) {
         auto fullname = file.path().string();
-        std::cout << "Found file: " << fullname << std::endl;
+        // std::cout << "Found file: " << fullname << std::endl;
         if (file.path().extension() == ".ini") {
             loadSkirmish(fullname);
             logbook(std::format("Loading skirmish map: {}", fullname));
@@ -238,7 +238,7 @@ void cPreviewMaps::initPreviews()
 
 void cPreviewMaps::initRandomMap()
 {
-    std::cout << "Initializing random map" << std::endl;
+    // std::cout << "Initializing random map" << std::endl;
     auto firstSkirmishMap = std::make_unique<s_PreviewMap>();
     firstSkirmishMap->name = "Random map";
     firstSkirmishMap->validMap = false;
@@ -253,11 +253,11 @@ void cPreviewMaps::initRandomMap()
     // }
     firstSkirmishMap->previewTex = nullptr;
     if (m_PreviewMap.empty() || m_PreviewMap[0] == nullptr) {
-        std::cout << "Pushing random map as first map in the list" << std::endl;
+        // std::cout << "Pushing random map as first map in the list" << std::endl;
         m_PreviewMap.push_back(std::move(firstSkirmishMap));
     }
     else {
-        std::cout << "Replacing first map in the list with random map" << std::endl;
+        // std::cout << "Replacing first map in the list with random map" << std::endl;
         m_PreviewMap[0] = std::move(firstSkirmishMap);
     }
     //m_PreviewMap.push_back(std::move(firstSkirmishMap));
