@@ -242,7 +242,7 @@ void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
     powerProduce_ = 0;
 
     iTeam = -1;
-    notificationArea.clear();
+    // notificationArea.clear();
 }
 
 /**
@@ -960,7 +960,7 @@ void cPlayer::thinkFast()
         brain_->thinkFast();
     }
 
-    notificationArea.thinkFast();
+    // notificationArea.thinkFast();
 }
 
 
@@ -2470,28 +2470,29 @@ bool cPlayer::evaluateStillAlive()
     return isAlive();
 }
 
-std::vector<cPlayerNotification> &cPlayer::getNotifications()
-{
-    return notificationArea.getNotifications();
-}
+// std::vector<cPlayerNotification> &cPlayer::getNotifications()
+// {
+//     return notificationArea.getNotifications();
+// }
 
-NotificationArea &cPlayer::getNotificationArea()
-{
-    return notificationArea;
-}
+// NotificationArea &cPlayer::getNotificationArea()
+// {
+//     return notificationArea;
+// }
 
-const NotificationArea &cPlayer::getNotificationArea() const
-{
-    return notificationArea;
-}
+// const NotificationArea &cPlayer::getNotificationArea() const
+// {
+//     return notificationArea;
+// }
 
-void cPlayer::addNotification(const std::string &msg, eNotificationType type)
-{
-    notificationArea.addNotification(msg, type);
-    if (m_settings->isDebugMode()) {
-        log(std::format("addNotification : type {} - {}", eNotificationTypeString(type), msg));
-    }
-}
+// void cPlayer::addNotification(const std::string &msg, eNotificationType type)
+// {
+//     notificationArea.addNotification(msg, type);
+
+//     if (m_settings->isDebugMode()) {
+//         log(std::format("addNotification : type {} - {}", eNotificationTypeString(type), msg));
+//     }
+// }
 
 cAbstractStructure *cPlayer::getSelectedStructure() const
 {
