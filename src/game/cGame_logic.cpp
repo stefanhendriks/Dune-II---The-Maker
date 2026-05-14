@@ -1704,9 +1704,9 @@ void cGame::loadMapFromEditor(int map)
 {
     setState(GAME_EDITOR);
     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
-    auto previewMaps = m_gameObjectsContext->getPreviewMaps();
-    s_PreviewMap *selectedMap = &previewMaps->getMap(map);
-    pState->loadMap(selectedMap);
+    // auto previewMaps = m_gameObjectsContext->getPreviewMaps();
+    // s_PreviewMap *selectedMap = &previewMaps->getMap(map);
+    pState->loadMap(map);
 }
 
 // void cGame::loadMapFromEditor(s_PreviewMap *map)

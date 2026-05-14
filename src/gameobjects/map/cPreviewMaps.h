@@ -36,6 +36,9 @@ public:
     void destroy();
 
     s_PreviewMap &getMap(int i) {
+        if (i == -1) {
+            return m_emptyMap;
+        }
         if (i > MAX_SKIRMISHMAPS_CAPACITY) {
             return m_PreviewMap[0];
         }
@@ -48,7 +51,7 @@ public:
     }
 
     // create map and return his index in m_PreviewMap, return -1 if error
-    int createEmptyMap(const std::string &name, const std::string &author,
+    void createEmptyMap(const std::string &name, const std::string &author,
             const std::string &desciption, int width, int height);
 
     void loadSkirmish(const std::string &filename);
@@ -57,6 +60,7 @@ private:
     void initPreviews();
     int m_numberOfMaps = 0; // Review Stefan 25/10/2025 -> Replace with size of array m_PreviewMap?
     static constexpr int MAX_SKIRMISHMAPS_CAPACITY = 300;
+    s_PreviewMap m_emptyMap;
 
     std::array<s_PreviewMap, MAX_SKIRMISHMAPS_CAPACITY> m_PreviewMap;
     SDLDrawer * m_renderDrawer;

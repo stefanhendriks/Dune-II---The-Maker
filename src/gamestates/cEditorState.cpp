@@ -12,6 +12,7 @@
 #include "drawers/cTextDrawer.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
+#include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 #include "gameobjects/map/cPreviewMaps.h"
@@ -39,7 +40,8 @@ cEditorState::cEditorState(sGameServices* services)
     m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
-    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_previewMaps(services->objects->getPreviewMaps())
 {
     assert(m_gfxdata != nullptr);
     assert(m_gfxeditor != nullptr);
@@ -473,8 +475,9 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
 }
 
-void cEditorState::loadMap(s_PreviewMap* map)
+void cEditorState::loadMap(int mapIndex)
 {
+    s_PreviewMap* map = &m_previewMaps->getMap(mapIndex);
     //std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->height, map->width);
     m_mapAuthor = map->author;

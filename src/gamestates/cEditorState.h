@@ -14,6 +14,7 @@ class Texture;
 class Graphics;
 
 struct s_PreviewMap;
+class cPreviewMaps;
 class GuiBar;
 class GuiButtonGroup;
 class cTextDrawer;
@@ -28,7 +29,8 @@ public:
 
     void thinkFast() override;
     void draw() const override;
-    void loadMap(s_PreviewMap* map);
+    // load mapIndex from cPreviewMaps, if -1 is given, load the currently edited map (m_editedMap)
+    void loadMap(int mapIndex);
     void setCursorSize(int value);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -41,6 +43,7 @@ private:
     cGameSettings *m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
+    cPreviewMaps* m_previewMaps = nullptr;
     std::string m_mapName, m_mapAuthor, m_mapDescription;
     enum class Direction : char { top, bottom, left, right };
     void populateTopologyBar();

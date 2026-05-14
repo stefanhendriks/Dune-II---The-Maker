@@ -195,9 +195,9 @@ void cNewMapEditorState::constructWindow()
             }
             int width = m_cycleWidth->getSelectedValue()+borderSize;
             int height = m_cycleHeight->getSelectedValue()+borderSize;
-            int newMap = m_previewMap->createEmptyMap(name, author, desc, width, height);
+            m_previewMap->createEmptyMap(name, author, desc, width, height);
             // newMap.iStartCell.fill(-1);
-            m_interface->loadMapFromEditor(newMap);
+            m_interface->loadMapFromEditor(-1); // -1 means load the map from the editor, instead of loading a skirmish map
             m_interface->initiateFadingOut();
             })
         .build();

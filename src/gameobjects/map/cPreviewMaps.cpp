@@ -270,19 +270,20 @@ std::string cPreviewMaps::getMapSize(int i) const
     return "HUGE";
 }
 
-int cPreviewMaps::createEmptyMap(const std::string &name, const std::string &author, 
+void cPreviewMaps::createEmptyMap(const std::string &name, const std::string &author, 
             const std::string &desciption, int width, int height)
 {
-    s_PreviewMap emptyMap;
-    emptyMap.name = name;
-    emptyMap.author = author;
-    emptyMap.description = desciption;
-    emptyMap.width = width;
-    emptyMap.height = height;
-    emptyMap.validMap = true;
-    emptyMap.terrainType = std::vector<int>(width * height, TERRAIN_SAND);
-    emptyMap.iStartCell.fill(-1);
-    m_numberOfMaps=m_numberOfMaps+1;
-    m_PreviewMap[m_numberOfMaps] = emptyMap;
-    return m_numberOfMaps;
+    // s_PreviewMap emptyMap;
+    m_emptyMap.name = name;
+    m_emptyMap.author = author;
+    m_emptyMap.description = desciption;
+    m_emptyMap.width = width;
+    m_emptyMap.height = height;
+    m_emptyMap.validMap = true;
+    m_emptyMap.terrainType = std::vector<int>(width * height, TERRAIN_SAND);
+    m_emptyMap.iStartCell.fill(-1);
+
+    // m_numberOfMaps=m_numberOfMaps+1;
+    // m_PreviewMap[m_numberOfMaps] = emptyMap;
+    // return m_numberOfMaps;
 }
