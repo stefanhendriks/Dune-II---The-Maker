@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cPlayerNotification.h"
+#include "gameobjects/players/cPlayerNotification.h"
 
 #include <string>
 #include <vector>

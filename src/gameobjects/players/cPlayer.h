@@ -21,7 +21,7 @@
 
 
 #include "controls/mousestates/eMouseStates.h"
-#include "NotificationArea.h"
+#include "game/NotificationArea.h"
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/players/brains/cPlayerBrain.h"
