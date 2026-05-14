@@ -114,8 +114,6 @@ void cDrawManager::drawCombatState()
     // THE MESSAGE
     drawMessage();
 
-    // drawNotifications();
-
     m_renderDrawer->resetClippingFor();
 
     if (game.m_gameSettings->isDrawUsages()) {
@@ -281,11 +279,6 @@ void cDrawManager::drawOptionBar()
         m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }
-
-// void cDrawManager::drawNotifications()
-// {
-//     m_player->getNotificationArea().draw(m_textDrawer, 4, game.m_gameSettings->getScreenH() - 44);
-// }
 
 void cDrawManager::think()
 {

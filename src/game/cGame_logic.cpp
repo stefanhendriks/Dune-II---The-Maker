@@ -1576,28 +1576,6 @@ void cGame::thinkCache()
 void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
 {
     const cPlayer *humanPlayer = m_gameObjectsContext->getPlayer(HUMAN);
-
-    // if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_0)) {
-    //     m_drawManager->setPlayerToDraw(m_gameObjectsContext->getPlayer(0));
-    //     setPlayerToInteractFor(m_gameObjectsContext->getPlayer(0));
-    //     m_notificationArea->addNotification("Switched to player 0", eNotificationType::NEUTRAL);
-    // }
-    // else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_1)) {
-    //     m_drawManager->setPlayerToDraw(m_gameObjectsContext->getPlayer(1));
-    //     setPlayerToInteractFor(m_gameObjectsContext->getPlayer(1));
-    //     m_notificationArea->addNotification("Switched to player 1", eNotificationType::NEUTRAL);
-    // }
-    // else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_2)) {
-    //     m_drawManager->setPlayerToDraw(m_gameObjectsContext->getPlayer(2));
-    //     setPlayerToInteractFor(m_gameObjectsContext->getPlayer(2));
-    //     m_notificationArea->addNotification("Switched to player 2", eNotificationType::NEUTRAL);
-    // }
-    // else if (event.isAction(eKeyAction::DEBUG_SWITCH_PLAYER_3)) {
-    //     m_drawManager->setPlayerToDraw(m_gameObjectsContext->getPlayer(3));
-    //     setPlayerToInteractFor(m_gameObjectsContext->getPlayer(3));
-    //     m_notificationArea->addNotification("Switched to player 3", eNotificationType::NEUTRAL);
-    // }
-
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
         setMissionWon();
     }
