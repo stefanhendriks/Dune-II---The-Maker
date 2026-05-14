@@ -24,7 +24,7 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     auto settings =services->settings;
     assert(settings != nullptr);
 
-    backButtonRect = m_textDrawer->getAsRectangle(0, settings->getScreenH() - m_textDrawer->getFontHeight(), " BACK");
+    backButtonRect = m_textDrawer->getAsRectangle(0, settings->getScreenH() - m_textDrawer->getFontHeight(), " Back");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);
 
     int duneAtTheRight = settings->getScreenW() - bmp_Dune->w;
@@ -84,7 +84,7 @@ void cChooseHouseState::draw() const
     // BACK (bottom right
     // TODO: Use actual cGuiButton
     Color color = hoversOverBackButton ? Color{255, 0, 0,255} : Color{255, 255, 255,255};
-    m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " BACK");
+    m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " Back");
 
     // MOUSE
     m_interface->drawCursor();

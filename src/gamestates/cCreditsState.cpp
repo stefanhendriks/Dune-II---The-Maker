@@ -41,14 +41,14 @@ cCreditsState::cCreditsState(sGameServices* services) :
     m_titleX = centerOfScreen - (titleWidth / 2);
     resetCrawler();
 
-    int backButtonWidth = m_textDrawer->getTextLength(" BACK");
+    int backButtonWidth = m_textDrawer->getTextLength(" Back");
     int backButtonHeight = 21;
     int backButtonY = m_settings->getScreenH() - 21;
     int backButtonX = 0;
     cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
     backButton = GuiButtonBuilder()
             .withRect(backButtonRect)
-            .withLabel("BACK")
+            .withLabel("Back")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
