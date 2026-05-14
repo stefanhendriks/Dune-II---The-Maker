@@ -105,9 +105,9 @@ private:
     cRectangle mapList;
     cRectangle mapListTitle;
 
-    cRectangle previewMapTitle;
-    cRectangle previewMap;
-    cRectangle previewMapRect;
+    cRectangle previewMapTitle; // the title above the sidebar of the preview map
+    cRectangle previewMap; // the sidebar where the map is within
+    cRectangle previewMapRect; // the actual 'map' image
 
     cRectangle startPointsRect;
     cRectangle wormsRect;

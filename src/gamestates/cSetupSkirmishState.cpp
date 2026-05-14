@@ -119,14 +119,14 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     int playerTitleBarWidth = screen_x - widthOfSidebar;
     int playerTitleBarHeight = topBarHeight;
     int playerTitleBarX = 0;
-    int playerTitleBarY = topBarHeight;
+    int playerTitleBarY = topBarHeight-1;
     playerTitleBar = cRectangle(playerTitleBarX, playerTitleBarY, playerTitleBarWidth, playerTitleBarHeight);
 
     // this is the box at the right from the Player list
     int topRightBoxWidth = widthOfSidebar;
     int topRightBoxHeight = playerTitleBarHeight + previewMapHeight+playerTitleBarHeight;
     int topRightBoxX = screen_x - topRightBoxWidth;
-    int topRightBoxY = topBarHeight;
+    int topRightBoxY = topBarHeight-1;
     topRightBox = cRectangle(topRightBoxX, topRightBoxY, topRightBoxWidth, topRightBoxHeight);
 
     // player list
@@ -159,9 +159,9 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     int mapListTopY = mapListTitle.getY() + mapListTitle.getHeight();
 
     int previewMapY = playerListBarY + playerListBarHeight + previewMapFrameHeight;
-    int previewMapX = (screen_x - widthOfSidebar) + 1;
+    int previewMapX = (screen_x - widthOfSidebar);
     int heightOfRightColumn = screen_y - (playerListBarHeight + previewMapFrameHeight);
-    previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn, heightOfRightColumn);
+    previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn + 2, heightOfRightColumn);
     previewMapRect = cRectangle(previewMap.getX()+23, previewMap.getY()+23, 256, 256);
 
     selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
@@ -347,9 +347,11 @@ bool cSetupSkirmishState::guiDrawFramePressed(int x1, int y1, int width, int hei
     m_renderDrawer->renderRectFillColor(x1, y1, width, height, colorLightBackground);
     m_renderDrawer->renderRectColor(x1, y1, width, height, colorOtherBorder);
 
+    int endX = (x1+width)-1;
+    int endY = (y1+height)-1;
     // lines to darken the right sides
-    m_renderDrawer->renderLine(x1+width, y1, x1+width, y1+height, colorDarkishBorder);
-    m_renderDrawer->renderLine(x1, y1+height, x1+width, y1+height, colorDarkishBorder);
+    m_renderDrawer->renderLine(endX, y1, endX, endY, colorDarkishBorder);
+    m_renderDrawer->renderLine(x1, endY, endX, endY, colorDarkishBorder);
 
     return mouse_within_rect(m_mouse, x1, y1, width, height);
 }
@@ -362,7 +364,7 @@ void cSetupSkirmishState::draw() const
 {
     // Draw top-bar / title-bar
     m_renderDrawer->gui_DrawRect(topBar, colorLightBackground, colorDarkishBorder, colorOtherBorder);
-    m_textDrawer->drawTextCentered("Skirmish", 1);
+    m_textDrawer->drawTextCentered("Skirmish", 4);
 
     // Draw Players/House/Credits/Units/Team rectangle
     m_renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::White, Color::White);
