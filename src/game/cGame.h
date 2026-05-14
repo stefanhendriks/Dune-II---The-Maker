@@ -19,6 +19,7 @@
 #include "observers/cScenarioObserver.h"
 #include "utils/Color.hpp"
 #include "utils/Log.h"
+#include "game/NotificationArea.h"
 
 #include <memory>
 #include <string>
@@ -256,6 +257,7 @@ private:
     int m_newMusicCountdown;
 
     std::unique_ptr<cScreenShake> m_screenShake;
+    NotificationArea m_notificationArea;
 
     void thinkFast_audio();
     void thinkFast_fading();

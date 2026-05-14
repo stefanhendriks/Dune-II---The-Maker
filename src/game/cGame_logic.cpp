@@ -217,6 +217,7 @@ void cGame::init()
     m_currentState = nullptr;
     m_gameSettings->m_playing = true;
     m_gameSettings->m_skirmish = false;
+    m_notificationArea.clear();
 
     m_musicVolume = 96; // volume is 0...
 
@@ -400,6 +401,7 @@ void cGame::drawState()
     }
 
     m_currentState->draw();
+    m_notificationArea.draw(m_textDrawer, 4, m_gameSettings->getScreenH() - 44);
 }
 
 /**
@@ -1076,6 +1078,7 @@ void cGame::thinkFast()
 {
     thinkFast_fading();
     thinkFast_audio();
+    m_notificationArea.thinkFast();
     if (m_currentState) {
         m_currentState->thinkFast();
     }
@@ -1335,7 +1338,7 @@ void cGame::setNextStateToTransitionTo(int newState)
 void cGame::saveBmpScreenToDisk()
 {
     if (cScreenShotSaver::saveScreen(renderer, m_gameSettings->m_screenW, m_gameSettings->m_screenH)) {
-        m_gameObjectsContext->getPlayer(HUMAN)->addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
+        m_notificationArea.addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
 }
 
