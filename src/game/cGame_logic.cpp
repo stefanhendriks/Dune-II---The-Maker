@@ -404,7 +404,7 @@ void cGame::drawState()
     }
 
     m_currentState->draw();
-    m_notificationArea->draw(m_textDrawer, 4, m_gameSettings->getScreenH() - 44);
+    m_notificationArea->draw(m_textDrawer, 14, m_gameSettings->getScreenH() - 44);
 }
 
 /**
@@ -628,6 +628,7 @@ bool cGame::setupGame()
     // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
     global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
     // -----------------------------------
+    m_notificationArea->setDrawer(m_renderDrawer);
     auto previewMaps = m_gameObjectsContext->getPreviewMaps();
     previewMaps->setRenderDrawer(m_renderDrawer); // inject render drawer into cPreviewMaps that is part of game objects context, so it can be used to create textures for map previews
     previewMaps->loadSkirmishMaps(); // load skirmish maps, so they are ready when we need them in the skirmish setup state
