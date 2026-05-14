@@ -21,7 +21,6 @@
 
 
 #include "controls/mousestates/eMouseStates.h"
-// #include "game/cNotificationArea.h"
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/players/brains/cPlayerBrain.h"
@@ -521,14 +520,6 @@ public:
         return alive;
     }
 
-    // std::vector<cPlayerNotification> &getNotifications();
-
-    // cNotificationArea &getNotificationArea();
-
-    // const cNotificationArea &getNotificationArea() const;
-
-    // void addNotification(const std::string &msg, eNotificationType type);
-
     // properties (for now public, should become private)
     int selected_structure;
 
@@ -634,8 +625,6 @@ private:
     int spiceQuota;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)
 
     bool alive;
-
-    // cNotificationArea notificationArea;
 
     void reinforceHarvesterIfNeeded(int cell);
 };
