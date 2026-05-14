@@ -92,12 +92,12 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     colorDarkishBackground = theme.background;
     colorDarkishBorder = theme.borderLight;
     colorDarkerYellow = theme.textDarkColor;
-    colorDisabled = theme.disabled;
+    colorDisabled = theme.disabledTextColor;
     colorLightBackground = theme.fillColor;
     colorOtherBorder = theme.borderDark;
 
     // Basic coordinates
-    topBarHeight = 21;
+    topBarHeight = 25;
     previewMapHeight = 129;
     previewMapWidth = 129;
     widthOfRightColumn = 300;
@@ -157,10 +157,12 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
 
     // actual list of maps
     int mapListTopY = mapListTitle.getY() + mapListTitle.getHeight();
-    int previewMapY = playerListBarY + playerListBarHeight+previewMapFrameHeight;
-    int previewMapX = screen_x - widthOfSidebar;
-    previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn, widthOfRightColumn+65);
-    previewMapRect = cRectangle(previewMapX+25, previewMapY+25, widthOfRightColumn-50, widthOfRightColumn-50);
+
+    int previewMapY = playerListBarY + playerListBarHeight + previewMapFrameHeight;
+    int previewMapX = (screen_x - widthOfSidebar) + 1;
+    int heightOfRightColumn = screen_y - (playerListBarHeight + previewMapFrameHeight);
+    previewMap = cRectangle(previewMapX, previewMapY, widthOfRightColumn, heightOfRightColumn);
+    previewMapRect = cRectangle(previewMap.getX()+23, previewMap.getY()+23, 256, 256);
 
     selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
     int margin = 10;
@@ -238,37 +240,40 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     int techLevelHitBoxHeight = 16;
     techLevelRect = cRectangle(techLevelX, techLevelY, techLevelHitBoxWidth, techLevelHitBoxHeight);
 
-    int backButtonWidth = m_textDrawer->getTextLength(" Back");
-    int backButtonHeight = topBarHeight;
-    int backButtonY = screen_y - topBarHeight;
+    const int btnHPad = 8;
+    const int btnVPad = 2;
+    const int btnHeight = topBarHeight - (btnVPad * 2);
+
+    int backButtonWidth = m_textDrawer->getTextLength("Back") + btnHPad;
+    int backButtonY = screen_y - topBarHeight + btnVPad;
     int backButtonX = 0;
-    cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, backButtonHeight);
+    cRectangle backButtonRect(backButtonX, backButtonY, backButtonWidth, btnHeight);
     backButton = GuiButtonBuilder()
-            .withRect(backButtonRect)        
+            .withRect(backButtonRect)
             .withLabel("Back")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
                 m_interface->setTransitionToWithFadingOut(GAME_MENU);
             })
             .build();
 
     const int btnGap = 15;
-    const int bottomY = screen_y - topBarHeight;
+    const int bottomY = screen_y - topBarHeight + btnVPad;
 
     // Right group: [Surprise me] [START]
-    int startButtonWidth = m_textDrawer->getTextLength("Start");
+    int startButtonWidth = m_textDrawer->getTextLength("Start") + btnHPad;
     int startButtonX = screen_x - startButtonWidth;
-    cRectangle startButtonRect = cRectangle(startButtonX, bottomY, startButtonWidth, topBarHeight);
+    cRectangle startButtonRect = cRectangle(startButtonX, bottomY, startButtonWidth, btnHeight);
     startButton = GuiButtonBuilder()
             .withRect(startButtonRect)
             .withLabel("Start")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
                     prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
@@ -276,46 +281,46 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             })
             .build();
 
-    int surpriseMeButtonWidth = m_textDrawer->getTextLength("Surprise me");
+    int surpriseMeButtonWidth = m_textDrawer->getTextLength("Surprise me") + btnHPad;
     int surpriseMeButtonX = startButtonX - btnGap - surpriseMeButtonWidth;
-    cRectangle surpriseMeButtonRect = cRectangle(surpriseMeButtonX, bottomY, surpriseMeButtonWidth, topBarHeight);
+    cRectangle surpriseMeButtonRect = cRectangle(surpriseMeButtonX, bottomY, surpriseMeButtonWidth, btnHeight);
     surpriseMeButton = GuiButtonBuilder()
             .withRect(surpriseMeButtonRect)
             .withLabel("Surprise me")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() { surpriseMe(); })
             .build();
 
     // Center group: [New Map] [Modify]
-    int newMapButtonWidth = m_textDrawer->getTextLength("New Map");
-    int modifyButtonWidth = m_textDrawer->getTextLength("Modify");
+    int newMapButtonWidth = m_textDrawer->getTextLength("New Map") + btnHPad;
+    int modifyButtonWidth = m_textDrawer->getTextLength("Modify") + btnHPad;
     int centerGroupWidth = newMapButtonWidth + btnGap + modifyButtonWidth;
     int centerGroupX = screen_x / 2 - centerGroupWidth / 2;
-    cRectangle newMapButtonRect = cRectangle(centerGroupX, bottomY, newMapButtonWidth, topBarHeight);
+    cRectangle newMapButtonRect = cRectangle(centerGroupX, bottomY, newMapButtonWidth, btnHeight);
     newMapButton = GuiButtonBuilder()
             .withRect(newMapButtonRect)
             .withLabel("New Map")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
                 m_interface->setTransitionToWithFadingOut(GAME_NEW_MAP_EDITOR);
             })
             .build();
 
     int modifyButtonX = centerGroupX + newMapButtonWidth + btnGap;
-    cRectangle modifyButtonRect = cRectangle(modifyButtonX, bottomY, modifyButtonWidth, topBarHeight);
+    cRectangle modifyButtonRect = cRectangle(modifyButtonX, bottomY, modifyButtonWidth, btnHeight);
     modifyButton = GuiButtonBuilder()
             .withRect(modifyButtonRect)
             .withLabel("Modify")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
             .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
                     m_interface->loadMapFromEditor(iSkirmishMap);
@@ -355,20 +360,29 @@ void cSetupSkirmishState::thinkFast()
 
 void cSetupSkirmishState::draw() const
 {
-    // @Mira rewrite it on Texture
+    // Draw top-bar / title-bar
     m_renderDrawer->gui_DrawRect(topBar, colorLightBackground, colorDarkishBorder, colorOtherBorder);
-
     m_textDrawer->drawTextCentered("Skirmish", 1);
 
+    // Draw Players/House/Credits/Units/Team rectangle
     m_renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::White, Color::White);
-    m_renderDrawer->gui_DrawRect(topRightBox, colorLightBackground, colorDarkishBorder, colorOtherBorder);
+    // Draw rectangle for the actual players (beneath playerTitleBar)
     m_renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::White, Color::White);
-    m_renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
 
+    // Draw top-right rectangle for "Startpoints"
+    m_renderDrawer->gui_DrawRect(topRightBox, colorLightBackground, colorDarkishBorder, colorOtherBorder);
+
+    // Draw "Maps" (yellow title), rectangle
+    m_renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     m_textDrawer->drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::Yellow);
+
+    // Draw "Preview" bar + title (right to "Maps")
     m_renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
     m_textDrawer->drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::Yellow);
+
+    // Draw the right bar where we render the map selected + any information
     m_renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+
     m_renderDrawer->gui_DrawRect(selectArea, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     ///////
     /// DRAW PREVIEW MAP

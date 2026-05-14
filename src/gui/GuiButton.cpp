@@ -38,12 +38,16 @@ void GuiButton::draw() const
             drawText();
             break;
         case OPAQUE_WITH_BORDER:
-            m_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            m_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_enabled ? m_theme.fillColor : m_theme.disabledFillColor);
             if (m_pressed) {
                 m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
-                m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                if (m_enabled) {
+                    m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                } else {
+                    m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.disabledBorderLight, m_theme.disabledBorderDark);
+                }
             }
             drawText();
             break;
@@ -89,7 +93,7 @@ void GuiButton::drawText() const
 {
     Color textColor = m_focus ? m_theme.textColorHover : m_theme.textColor;
     if (!m_enabled) {
-        textColor = m_focus ? m_theme.borderDark : m_theme.borderLight;
+        textColor = m_theme.disabledTextColor;
     }
 
     switch (m_textAlignHorizontal) {
