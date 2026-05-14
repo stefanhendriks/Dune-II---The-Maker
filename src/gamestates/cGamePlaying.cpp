@@ -500,6 +500,15 @@ void cGamePlaying::tryDebugSwitchToPlayer(int playerIndex)
     m_controlledPlayer = targetPlayer;
     m_drawManager->setPlayerToDraw(m_controlledPlayer);
     m_interface->setPlayerToInteractFor(m_controlledPlayer);
+
+    const s_GameEvent newEvent {
+        .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+        .data = NotificationEvent {
+            .message = std::format("Switched to player {}", playerIndex),
+            .type = eNotificationType::NEUTRAL,
+        }
+    };
+    m_interface->onNotifyGameEvent(newEvent);
 }
 
 void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
