@@ -179,27 +179,10 @@ void cNewMapEditorState::constructWindow()
         .withRenderer(m_renderDrawer)
         .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this](){
-            // On récupère les valeurs localement pour être sûr
-            std::string name = m_inputName->getText();
-            if (name.empty()) {
-                auto now = std::chrono::system_clock::now();
-                name = std::format("New unnamed map {:%Y-%m-%d %H:%M:%S}", now);
-            }
-            std::string author = m_inputAuthor->getText();
-            if (author.empty()) {
-                author = "Unknown user";
-            }
-            std::string desc = m_inputDescription->getText();
-            if (desc.empty()) {
-                desc = "Made with D2TM: Internal Editor";
-            }
-            int width = m_cycleWidth->getSelectedValue()+borderSize;
-            int height = m_cycleHeight->getSelectedValue()+borderSize;
-            m_previewMap->createEmptyMap(name, author, desc, width, height);
-            // newMap.iStartCell.fill(-1);
+            this->constructEmptyMap();
             m_interface->loadMapFromEditor(-1); // -1 means load the map from the editor, instead of loading a skirmish map
-            m_interface->initiateFadingOut();
-            })
+            m_interface->setTransitionToWithFadingOut(GAME_EDITOR);
+        })
         .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));
 }
@@ -233,4 +216,26 @@ eGameStateType cNewMapEditorState::getType()
 void cNewMapEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     m_guiWindow->onNotifyKeyboardEvent(event);
+}
+
+
+void cNewMapEditorState::constructEmptyMap()
+{
+    // On récupère les valeurs localement pour être sûr
+    std::string name = m_inputName->getText();
+    if (name.empty()) {
+        auto now = std::chrono::system_clock::now();
+        name = std::format("New unnamed map {:%Y-%m-%d %H:%M:%S}", now);
+    }
+    std::string author = m_inputAuthor->getText();
+    if (author.empty()) {
+        author = "Unknown user";
+    }
+    std::string desc = m_inputDescription->getText();
+    if (desc.empty()) {
+        desc = "Made with D2TM: Internal Editor";
+    }
+    int width = m_cycleWidth->getSelectedValue()+borderSize;
+    int height = m_cycleHeight->getSelectedValue()+borderSize;
+    m_previewMap->createEmptyMap(name, author, desc, width, height);
 }
