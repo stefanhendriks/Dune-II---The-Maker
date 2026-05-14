@@ -485,8 +485,16 @@ void cGamePlaying::tryDebugSwitchToPlayer(int playerIndex)
 {
     cPlayer *targetPlayer = m_objects->getPlayer(playerIndex);
     if (targetPlayer->getHouse() == GENERALHOUSE || !targetPlayer->isAlive()) {
-        m_controlledPlayer->addNotification(
-            std::format("Player {} is not active.", playerIndex), eNotificationType::NEUTRAL);
+        // m_controlledPlayer->addNotification(
+        //     std::format("Player {} is not active.", playerIndex), eNotificationType::NEUTRAL);
+        const s_GameEvent newEvent {
+            .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+            .data = NotificationEvent {
+                .message = std::format("Player {} is not active.", playerIndex),
+                .type = eNotificationType::NEUTRAL,
+            }
+        };                
+        m_interface->onNotifyGameEvent(newEvent);
         return;
     }
     m_controlledPlayer = targetPlayer;

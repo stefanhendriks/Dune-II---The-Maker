@@ -26,6 +26,7 @@
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/players/brains/cPlayerBrain.h"
 #include "utils/cRectangle.h"
+#include "utils/Color.hpp"
 
 
 #include "gameobjects/cUpgradeInfo.h"

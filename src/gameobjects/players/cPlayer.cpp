@@ -1622,14 +1622,30 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
             if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
                 auto msg = std::format("Player {} ({}) has been defeated.", commonEvent->player->getId(),
                                        commonEvent->player->getHouseName());
-                addNotification(msg, eNotificationType::BAD);
+                // addNotification(msg, eNotificationType::BAD);
+                const s_GameEvent newEvent {
+                    .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                    .data = NotificationEvent {
+                        .message = msg,
+                        .type = eNotificationType::BAD,
+                    }
+                };                
+                m_interface->onNotifyGameEvent(newEvent);
             }
             break;
 
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED:
             if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
                 auto msg = std::format("{} launched!", buildEvent->buildingListItem->getNameString());
-                addNotification(msg, eNotificationType::BAD);
+                // addNotification(msg, eNotificationType::BAD);
+                const s_GameEvent newEvent {
+                    .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                    .data = NotificationEvent {
+                        .message = msg,
+                        .type = eNotificationType::BAD,
+                    }
+                };
+                m_interface->onNotifyGameEvent(newEvent);
             }
             break;
 
@@ -1638,7 +1654,15 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                 if (buildEvent->player == this) {
                     auto msg = std::format("{} is ready for deployment.",
                                            buildEvent->buildingListItem->getNameString());
-                    addNotification(msg, eNotificationType::PRIORITY);
+                    // addNotification(msg, eNotificationType::PRIORITY);
+                    const s_GameEvent newEvent {
+                        .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                        .data = NotificationEvent {
+                            .message = msg,
+                            .type = eNotificationType::PRIORITY,
+                        }
+                    };
+                    m_interface->onNotifyGameEvent(newEvent);
                 }
             }
             break;
@@ -1674,7 +1698,15 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
             if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
                 if (buildEvent->player == this && buildEvent->entityType == eBuildType::UPGRADE) {
                     auto msg = std::format("Upgrade: {} completed.", buildEvent->buildingListItem->getNameString());
-                    addNotification(msg, eNotificationType::PRIORITY);
+                    //addNotification(msg, eNotificationType::PRIORITY);
+                    const s_GameEvent newEvent {
+                        .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                        .data = NotificationEvent {
+                            .message = msg,
+                            .type = eNotificationType::PRIORITY,
+                        }
+                    };
+                    m_interface->onNotifyGameEvent(newEvent);
                 }
                 if (cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType)) {
                     startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
@@ -2141,14 +2173,30 @@ void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
     // If a harvester died, and it is the last. And we have atleast one REFINERY; then send a Harvester to that
     // player
     if (pUnit->isHarvester()) { // a harvester died
-        addNotification("You've lost a Harvester.", eNotificationType::PRIORITY);
+        // addNotification("You've lost a Harvester.", eNotificationType::PRIORITY);
+        const s_GameEvent newEvent {
+            .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
+            .data = NotificationEvent {
+                .message = "You've lost a Harvester",
+                .type = eNotificationType::PRIORITY,
+            }
+        };
+        m_interface->onNotifyGameEvent(newEvent);
         const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
 
         int harvesters = getAmountOfUnitsForType(HARVESTER);
 
         // if 1, or less
         if (harvesters == 1) {
-            addNotification("You have one Harvester left.", eNotificationType::NEUTRAL);
+            //addNotification("You have one Harvester left.", eNotificationType::NEUTRAL);
+            const s_GameEvent newEvent {
+                .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                .data = NotificationEvent {
+                    .message = "You have one Harvester left",
+                    .type = eNotificationType::NEUTRAL,
+                }
+            };
+            m_interface->onNotifyGameEvent(newEvent);
         }
 
         if (!refineries.empty()) { // and its player still has a refinery
@@ -2161,7 +2209,15 @@ void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
         }
         else {
             if (harvesters < 1) {
-                addNotification("No harvesters and refineries left!", eNotificationType::BAD);
+                // addNotification("No harvesters and refineries left!", eNotificationType::BAD);
+                const s_GameEvent newEvent {
+                    .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                    .data = NotificationEvent {
+                        .message = "No harvesters and refineries left!",
+                        .type = eNotificationType::BAD,
+                    }
+                };
+                m_interface->onNotifyGameEvent(newEvent);
             }
         }
     }
@@ -2182,8 +2238,15 @@ void cPlayer::reinforceHarvesterIfNeeded(int cell)
 
         // No harvester found, deliver one
         if (harvesters < 1) {
-            addNotification("No more Harvester left, reinforcing...", BAD);
-
+            //addNotification("No more Harvester left, reinforcing...", BAD);
+            const s_GameEvent event {
+                .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                .data = NotificationEvent {
+                    .message = "No more Harvester left, reinforcing...",
+                    .type = eNotificationType::BAD,
+                }
+            };
+            m_interface->onNotifyGameEvent(event);
             // deliver
             cAbstractStructure *refinery = m_objects->getMap().findClosestStructureType(cell, REFINERY, this);
 
