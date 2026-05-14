@@ -5,9 +5,12 @@
 #include <vector>
 
 class cTextDrawer;
+class SDLDrawer;
 
 class cNotificationArea {
 public:
+    cNotificationArea() = default;
+    void setDrawer(SDLDrawer* renderer);
     void clear();
 
     void addNotification(const std::string &msg, eNotificationType type);
@@ -21,4 +24,5 @@ public:
 
 private:
     std::vector<cPlayerNotification> m_notifications;
+    SDLDrawer* m_drawer = nullptr;
 };

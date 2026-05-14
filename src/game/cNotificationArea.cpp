@@ -1,8 +1,16 @@
 #include "cNotificationArea.h"
 
 #include "drawers/cTextDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 
 #include <algorithm>
+#include <cassert>
+
+void cNotificationArea::setDrawer(SDLDrawer* renderer)
+{
+    m_drawer = renderer;
+    assert(m_drawer != nullptr);
+}
 
 void cNotificationArea::clear()
 {
@@ -36,11 +44,14 @@ void cNotificationArea::thinkFast()
 void cNotificationArea::draw(const cTextDrawer *textDrawer, int x, int y) const
 {
     if (!textDrawer) return;
+    if (m_notifications.size() == 0) return;
 
+    auto height = 20 * m_notifications.size();
+    m_drawer->renderRectFillColor(cRectangle(x-5,y-5-height+20, 500+5, 5+height), {0, 0, 0, 128}, 64); // clear the area before drawing notifications
     for (const auto &notification : m_notifications) {
         textDrawer->drawText(x, y, notification.getColor(), notification.getMessage());
-        y -= 15;
-    }
+        y -= 20;
+    }    
 }
 
 std::vector<cPlayerNotification> &cNotificationArea::getNotifications()
