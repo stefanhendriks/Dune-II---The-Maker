@@ -30,4 +30,5 @@ enum eGameEventType {
     GAME_EVENT_PLAYER_DEFEATED,         // a player got defeated
     GAME_EVENT_DEPLOY_UNIT,             // Notify a unit should be deployed
     GAME_EVENT_CREATE_UNIT,             // Notify a unit should be created (for example, for reinforcements)
+    GAME_EVENT_NOTIFICATION             // a notification should be shown to the player
 };
