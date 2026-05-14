@@ -169,19 +169,6 @@ void GuiButton::onMouseMovedTo(const s_MouseEvent &event)
 
 void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
 {
-    if (game.m_gameSettings->isDebugMode()) {
-
-        // TODO: replace with code in onNotifyKeyboardEvent
-        // DEBUG: Shift through render kinds
-
-        // if (key[SDL_SCANCODE_LSHIFT]) {
-        //     if (m_focus) toggleTextAlignHorizontal();
-        // } else {
-        if (m_focus) {
-            nextRenderKind();
-        }
-        // }
-    }
     if (m_focus) {
         if (m_enabled && m_onRightMouseButtonClickedAction) {
             m_onRightMouseButtonClickedAction();
