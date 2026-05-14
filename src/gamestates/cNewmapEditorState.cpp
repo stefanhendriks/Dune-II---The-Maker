@@ -183,7 +183,7 @@ void cNewMapEditorState::constructWindow()
             std::string name = m_inputName->getText();
             if (name.empty()) {
                 auto now = std::chrono::system_clock::now();
-                std::string name = std::format("New unnamed map {:%Y-%m-%d %H:%M:%S}", now);
+                name = std::format("New unnamed map {:%Y-%m-%d %H:%M:%S}", now);
             }
             std::string author = m_inputAuthor->getText();
             if (author.empty()) {
