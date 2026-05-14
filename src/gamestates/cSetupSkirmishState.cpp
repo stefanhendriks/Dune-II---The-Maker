@@ -279,7 +279,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     int modifyButtonWidth = m_textDrawer->getTextLength("Modify");
     int modifyButtonHeight = topBarHeight;
     int modifyButtonY = screen_y - topBarHeight;
-    int modifyButtonX = screen_x - startButtonWidth-modifyButtonWidth - 15;
+    int modifyButtonX = screen_x - startButtonWidth-modifyButtonWidth - 35;
     cRectangle modifyButtonRect = cRectangle(modifyButtonX, modifyButtonY, modifyButtonWidth, modifyButtonHeight);
     modifyButton = GuiButtonBuilder()
             .withRect(modifyButtonRect)        
@@ -293,6 +293,24 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
                     m_interface->loadMapFromEditor(iSkirmishMap);
                     m_interface->initiateFadingOut();
                 }
+            })
+            .build();
+    
+    // Create new map button (bottom right, only visible when random map is selected)
+    int newMapButtonWidth = m_textDrawer->getTextLength("Create New Map");
+    int newMapButtonHeight = topBarHeight;
+    int newMapButtonY = screen_y - topBarHeight;
+    int newMapButtonX = screen_x - startButtonWidth - newMapButtonWidth - modifyButtonWidth - 70;
+    cRectangle newMapButtonRect = cRectangle(newMapButtonX, newMapButtonY, newMapButtonWidth, newMapButtonHeight);
+    newMapButton = GuiButtonBuilder()
+            .withRect(newMapButtonRect)        
+            .withLabel("New Map")
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
+            .withTheme(theme)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                m_interface->setTransitionToWithFadingOut(GAME_NEW_MAP_EDITOR);
             })
             .build();
 }
@@ -413,6 +431,7 @@ void cSetupSkirmishState::draw() const
     backButton->draw();
     startButton->draw();
     modifyButton->draw();
+    newMapButton->draw();
     nextMapButton->draw();
     previousMapButton->draw();
 
@@ -892,6 +911,7 @@ void cSetupSkirmishState::onNotifyMouseEvent(const s_MouseEvent &event)
     backButton->onNotifyMouseEvent(event);
     startButton->onNotifyMouseEvent(event);
     modifyButton->onNotifyMouseEvent(event);
+    newMapButton->onNotifyMouseEvent(event);
     nextMapButton->onNotifyMouseEvent(event);
     previousMapButton->onNotifyMouseEvent(event);
 }

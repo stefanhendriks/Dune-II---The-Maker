@@ -117,6 +117,7 @@ private:
     std::unique_ptr<GuiButton> backButton;
     std::unique_ptr<GuiButton> startButton;
     std::unique_ptr<GuiButton> modifyButton;
+    std::unique_ptr<GuiButton> newMapButton;
     std::unique_ptr<GuiButton> nextMapButton;
     std::unique_ptr<GuiButton> previousMapButton;
 
