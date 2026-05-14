@@ -157,7 +157,6 @@ void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorB
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
-    //std::cout <<":" << x1 << " " << y1 << " " << width << " " << height << std::endl;
     SDL_Rect tmp = {x1,y1,width,height};
     renderChangeColor(gui_colorBorderLight);
     SDL_RenderDrawRect(renderer, &tmp);
