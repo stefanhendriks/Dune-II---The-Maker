@@ -21,7 +21,7 @@
 
 
 #include "controls/mousestates/eMouseStates.h"
-#include "game/NotificationArea.h"
+// #include "game/NotificationArea.h"
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/players/brains/cPlayerBrain.h"
@@ -521,13 +521,13 @@ public:
         return alive;
     }
 
-    std::vector<cPlayerNotification> &getNotifications();
+    // std::vector<cPlayerNotification> &getNotifications();
 
-    NotificationArea &getNotificationArea();
+    // NotificationArea &getNotificationArea();
 
-    const NotificationArea &getNotificationArea() const;
+    // const NotificationArea &getNotificationArea() const;
 
-    void addNotification(const std::string &msg, eNotificationType type);
+    // void addNotification(const std::string &msg, eNotificationType type);
 
     // properties (for now public, should become private)
     int selected_structure;
@@ -635,7 +635,7 @@ private:
 
     bool alive;
 
-    NotificationArea notificationArea;
+    // NotificationArea notificationArea;
 
     void reinforceHarvesterIfNeeded(int cell);
 };

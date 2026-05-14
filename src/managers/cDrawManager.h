@@ -105,7 +105,7 @@ private:
 
     void drawDebugInfoUsages() const;
 
-    void drawNotifications();
+    // void drawNotifications();
 
     // Properties:
     std::unique_ptr<cSideBarDrawer> m_sidebarDrawer;

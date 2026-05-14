@@ -114,7 +114,7 @@ void cDrawManager::drawCombatState()
     // THE MESSAGE
     drawMessage();
 
-    drawNotifications();
+    // drawNotifications();
 
     m_renderDrawer->resetClippingFor();
 
@@ -282,10 +282,10 @@ void cDrawManager::drawOptionBar()
     }
 }
 
-void cDrawManager::drawNotifications()
-{
-    m_player->getNotificationArea().draw(m_textDrawer, 4, game.m_gameSettings->getScreenH() - 44);
-}
+// void cDrawManager::drawNotifications()
+// {
+//     m_player->getNotificationArea().draw(m_textDrawer, 4, game.m_gameSettings->getScreenH() - 44);
+// }
 
 void cDrawManager::think()
 {
