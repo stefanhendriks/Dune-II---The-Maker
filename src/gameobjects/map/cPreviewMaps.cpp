@@ -13,7 +13,31 @@ namespace fs = std::filesystem;
 #include <algorithm>
 #include <cassert>
 #include <format>
+#include <iostream>
 
+cPreviewMaps::cPreviewMaps() :
+    m_emptyMap(std::make_unique<s_PreviewMap>()),
+    m_PreviewMap()
+{
+    //initPreviews();
+}
+
+s_PreviewMap &cPreviewMaps::getMap(int i) {
+    if (i == -1) {
+        return *m_emptyMap;
+    }
+    if (i < 0 || i >= static_cast<int>(m_PreviewMap.size()) || m_PreviewMap[i] == nullptr) {
+        if (m_PreviewMap.empty() || m_PreviewMap[0] == nullptr) {
+            return *m_emptyMap;
+        }
+        return *m_PreviewMap[0];
+    }
+    return *m_PreviewMap[i];
+}
+
+int cPreviewMaps::getMapCount() const {
+    return static_cast<int>(m_PreviewMap.size()-1); // -1 because the first map is reserved for the random map, which is not a real skirmish map
+}
 
 void cPreviewMaps::setRenderDrawer(SDLDrawer *renderDrawer)
 {
@@ -22,44 +46,35 @@ void cPreviewMaps::setRenderDrawer(SDLDrawer *renderDrawer)
 
 void cPreviewMaps::destroy()
 {
-    for (int i = 0; i < MAX_SKIRMISHMAPS_CAPACITY; i++) {
-        s_PreviewMap &previewMap = m_PreviewMap[i];
-        if (previewMap.terrain) {
-            SDL_FreeSurface(previewMap.terrain);
-            previewMap.terrain = nullptr;
+    std::cout << "Destroying preview maps" << std::endl;
+    for (auto& previewMap : m_PreviewMap) {
+        if (previewMap == nullptr) {
+            continue;
         }
-        if (previewMap.previewTex) {
-            delete previewMap.previewTex;
-            previewMap.previewTex = nullptr;
+        if (previewMap->terrain) {
+            SDL_FreeSurface(previewMap->terrain);
+            previewMap->terrain = nullptr;
+        }
+        if (previewMap->previewTex) {
+            delete previewMap->previewTex;
+            previewMap->previewTex = nullptr;
         }
     }
 }
 
 void cPreviewMaps::loadSkirmish(const std::string &filename)
 {
-    int iNew = -1;
-    for (int i = 0; i < MAX_SKIRMISHMAPS_CAPACITY; i++) {
-        if (m_PreviewMap[i].name[0] == '\0') {
-            iNew = i;
-            break;
-        }
-    }
-
-    if (iNew < 0) {
-        return;
-    }
-
     cIniFile conf = cIniFile(filename);
     if (!conf.isLoadSuccess()) {
         logbook(std::format("Could not load file : {} ", filename));
         return; // skip this map loading
     }
 
+    std::unique_ptr<s_PreviewMap> previewMap = std::make_unique<s_PreviewMap>();
     const cSection &section = conf.getSection("SKIRMISH");
-    s_PreviewMap &previewMap = m_PreviewMap[iNew];
-    previewMap.name = section.getStringValue("Title");
-    previewMap.author = section.getStringValue("Author");
-    previewMap.description = section.getStringValue("Description");
+    previewMap->name = section.getStringValue("Title");
+    previewMap->author = section.getStringValue("Author");
+    previewMap->description = section.getStringValue("Description");
 
     const cSection &mapSection = conf.getSection("MAP");
     std::vector<std::string> vecmap = mapSection.getData();
@@ -68,8 +83,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     int maxHeight = vecmap.size();
     int maxCells = (maxWidth + 2) * (maxHeight + 2);
 
-    previewMap.terrain = nullptr;
-    previewMap.iStartCell.fill(-1); // set all starting cells to -1
+    previewMap->terrain = nullptr;
+    previewMap->iStartCell.fill(-1); // set all starting cells to -1
 
     std::vector<int> numbers;
     std::stringstream ss(section.getStringValue("StartCell"));
@@ -88,11 +103,11 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         try {
             int startCell = numbers[i];
             if (startCell < 0 || startCell >= maxCells) {
-                previewMap.validMap = false;
+                previewMap->validMap = false;
                 logbook(std::format("StartCell [{}] invalid. (value must be between range [0-{}]), Map {}- is invalid" , startCell , maxCells, filename));
             }
             else {
-                previewMap.iStartCell[i] = startCell;
+                previewMap->iStartCell[i] = startCell;
             }
         }
         catch (std::invalid_argument const &e) {
@@ -101,16 +116,16 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
     }
 
-    previewMap.width = maxWidth + 2;
-    previewMap.height = maxHeight + 2;
+    previewMap->width = maxWidth + 2;
+    previewMap->height = maxHeight + 2;
 
-    MapGeometry mapGeom(previewMap.width , previewMap.height);
-    previewMap.terrainType = std::vector<int>(maxCells, -1);
+    MapGeometry mapGeom(previewMap->width , previewMap->height);
+    previewMap->terrainType = std::vector<int>(maxCells, -1);
 
-    if (previewMap.terrain == nullptr) {
-        previewMap.terrain = SDL_CreateRGBSurface(0,previewMap.width, previewMap.height,32,0,0,0,255);
+    if (previewMap->terrain == nullptr) {
+        previewMap->terrain = SDL_CreateRGBSurface(0,previewMap->width, previewMap->height,32,0,0,0,255);
     }
-    m_renderDrawer->FillWithColor(previewMap.terrain, Color::Black);
+    m_renderDrawer->FillWithColor(previewMap->terrain, Color::Black);
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -160,31 +175,31 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
                 iColor = Color{160, 32, 240, 255}; // show as purple to indicate wrong char
             }
 
-            previewMap.terrainType[iCll] = terrainType;
-            m_renderDrawer->setPixel(previewMap.terrain, 1 + iX, 1 + iY, iColor);
+            previewMap->terrainType[iCll] = terrainType;
+            m_renderDrawer->setPixel(previewMap->terrain, 1 + iX, 1 + iY, iColor);
         }
     }
 
     // starting points
     for (int i = 0; i < 5; i++) {
-        int startCell = previewMap.iStartCell[i];
+        int startCell = previewMap->iStartCell[i];
         if (startCell > -1) {
             int x = mapGeom.getCellX(startCell);
             int y = mapGeom.getCellY(startCell);
-            m_renderDrawer->setPixel(previewMap.terrain, 1 + x, 1 + y, Color::White);
+            m_renderDrawer->setPixel(previewMap->terrain, 1 + x, 1 + y, Color::White);
         }
     }
-    if (previewMap.terrain!= nullptr){
-        SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), previewMap.terrain);
+    if (previewMap->terrain!= nullptr){
+        SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), previewMap->terrain);
         if (out == nullptr) {
             logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
             return;
         }
-        previewMap.previewTex = new Texture(out, previewMap.terrain->w, previewMap.terrain->h);
+        previewMap->previewTex = new Texture(out, previewMap->terrain->w, previewMap->terrain->h);
     }
-    m_numberOfMaps++;
     logbook(std::format("Loaded skirmish map: {}, width: {}, height: {}",
-                        previewMap.name, previewMap.width, previewMap.height));
+                        previewMap->name, previewMap->width, previewMap->height));
+    m_PreviewMap.push_back(std::move(previewMap));
 }
 
 /*
@@ -197,12 +212,12 @@ Scanning of skirmish maps:
 */
 void cPreviewMaps::loadSkirmishMaps()
 {
-    m_numberOfMaps = 0; // reset number of maps
     initPreviews(); // clear all of them
 
     const std::filesystem::path pathfile{"skirmish"};
     for (auto const &file: std::filesystem::directory_iterator{pathfile}) {
         auto fullname = file.path().string();
+        std::cout << "Found file: " << fullname << std::endl;
         if (file.path().extension() == ".ini") {
             loadSkirmish(fullname);
             logbook(std::format("Loading skirmish map: {}", fullname));
@@ -215,49 +230,45 @@ void cPreviewMaps::initPreviews()
 {
     //reset all ressources
     destroy();
-    for (int i = 0; i < MAX_SKIRMISHMAPS_CAPACITY; i++) {
-        s_PreviewMap &previewMap = m_PreviewMap[i];
-        // clear out name
-        previewMap.name.clear();
-
-        // clear out map data
-        previewMap.terrainType.clear();
-
-        // by default we assume this is a valid map
-        previewMap.validMap = true;
-
-        previewMap.width = 0;
-        previewMap.height = 0;
-
-        previewMap.iStartCell.fill(-1); // set all starting cells to -1
-    }
+    m_PreviewMap.clear();
+    //m_previewMap->push_back(std::make_unique<s_PreviewMap>());
     initRandomMap();
 }
 
 
 void cPreviewMaps::initRandomMap()
 {
-    s_PreviewMap &firstSkirmishMap = m_PreviewMap[0];
-    firstSkirmishMap.name = "Random map";
-    firstSkirmishMap.validMap = false;
+    std::cout << "Initializing random map" << std::endl;
+    auto firstSkirmishMap = std::make_unique<s_PreviewMap>();
+    firstSkirmishMap->name = "Random map";
+    firstSkirmishMap->validMap = false;
 
-    firstSkirmishMap.terrainType = std::vector<int>(1, -1);
-    if (firstSkirmishMap.terrain != nullptr) {
-        SDL_FreeSurface(firstSkirmishMap.terrain);
+    firstSkirmishMap->terrainType = std::vector<int>(1, -1);
+    // if (firstSkirmishMap.terrain != nullptr) {
+    //     SDL_FreeSurface(firstSkirmishMap.terrain);
+    // }
+    firstSkirmishMap->terrain = nullptr;
+    // if (firstSkirmishMap.previewTex != nullptr) {
+        // delete firstSkirmishMap.previewTex;
+    // }
+    firstSkirmishMap->previewTex = nullptr;
+    if (m_PreviewMap.empty() || m_PreviewMap[0] == nullptr) {
+        std::cout << "Pushing random map as first map in the list" << std::endl;
+        m_PreviewMap.push_back(std::move(firstSkirmishMap));
     }
-    firstSkirmishMap.terrain = nullptr;
-    if (firstSkirmishMap.previewTex != nullptr) {
-        delete firstSkirmishMap.previewTex;
+    else {
+        std::cout << "Replacing first map in the list with random map" << std::endl;
+        m_PreviewMap[0] = std::move(firstSkirmishMap);
     }
-    firstSkirmishMap.previewTex = nullptr;
+    //m_PreviewMap.push_back(std::move(firstSkirmishMap));
 }
 
 std::string cPreviewMaps::getMapSize(int i) const
 {
-    if (i > MAX_SKIRMISHMAPS_CAPACITY) {
+    if (i < 0 || i >= static_cast<int>(m_PreviewMap.size()) || m_PreviewMap[i] == nullptr) {
         return "Invalid";
     }
-    int playableCells = (m_PreviewMap[i].width-2) * (m_PreviewMap[i].height-2);
+    int playableCells = (m_PreviewMap[i]->width-2) * (m_PreviewMap[i]->height-2);
     if (playableCells <= 32 *32) {
         return "SMALL";
     }
@@ -273,17 +284,15 @@ std::string cPreviewMaps::getMapSize(int i) const
 void cPreviewMaps::createEmptyMap(const std::string &name, const std::string &author, 
             const std::string &desciption, int width, int height)
 {
-    // s_PreviewMap emptyMap;
-    m_emptyMap.name = name;
-    m_emptyMap.author = author;
-    m_emptyMap.description = desciption;
-    m_emptyMap.width = width;
-    m_emptyMap.height = height;
-    m_emptyMap.validMap = true;
-    m_emptyMap.terrainType = std::vector<int>(width * height, TERRAIN_SAND);
-    m_emptyMap.iStartCell.fill(-1);
-
-    // m_numberOfMaps=m_numberOfMaps+1;
-    // m_PreviewMap[m_numberOfMaps] = emptyMap;
-    // return m_numberOfMaps;
+    if (m_emptyMap == nullptr) {
+        m_emptyMap = std::make_unique<s_PreviewMap>();
+    }
+    m_emptyMap->name = name;
+    m_emptyMap->author = author;
+    m_emptyMap->description = desciption;
+    m_emptyMap->width = width;
+    m_emptyMap->height = height;
+    m_emptyMap->validMap = true;
+    m_emptyMap->terrainType = std::vector<int>(width * height, TERRAIN_SAND);
+    m_emptyMap->iStartCell.fill(-1);
 }

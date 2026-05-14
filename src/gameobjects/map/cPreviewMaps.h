@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <array>
+#include <memory>
 
 class Texture;
 class SDLDrawer;
@@ -26,7 +27,7 @@ struct s_PreviewMap {
 
 class cPreviewMaps {
 public:
-    cPreviewMaps() = default;
+    cPreviewMaps();
 
     void setRenderDrawer(SDLDrawer *renderDrawer);
 
@@ -35,22 +36,11 @@ public:
     void loadSkirmishMaps();
     void destroy();
 
-    s_PreviewMap &getMap(int i) {
-        if (i == -1) {
-            return m_emptyMap;
-        }
-        if (i > MAX_SKIRMISHMAPS_CAPACITY) {
-            return m_PreviewMap[0];
-        }
-        return m_PreviewMap[i];
-    }
+    s_PreviewMap &getMap(int i);
 
     std::string getMapSize(int i) const;
-    int getMapCount() const {
-        return m_numberOfMaps+1;
-    }
+    int getMapCount() const;
 
-    // create map and return his index in m_PreviewMap, return -1 if error
     void createEmptyMap(const std::string &name, const std::string &author,
             const std::string &desciption, int width, int height);
 
@@ -58,10 +48,8 @@ public:
 private:
     void initRandomMap();
     void initPreviews();
-    int m_numberOfMaps = 0; // Review Stefan 25/10/2025 -> Replace with size of array m_PreviewMap?
-    static constexpr int MAX_SKIRMISHMAPS_CAPACITY = 300;
-    s_PreviewMap m_emptyMap;
+    std::unique_ptr<s_PreviewMap> m_emptyMap;
 
-    std::array<s_PreviewMap, MAX_SKIRMISHMAPS_CAPACITY> m_PreviewMap;
-    SDLDrawer * m_renderDrawer;
+    std::vector<std::unique_ptr<s_PreviewMap>> m_PreviewMap;
+    SDLDrawer * m_renderDrawer = nullptr;
 };
