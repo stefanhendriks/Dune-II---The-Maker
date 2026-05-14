@@ -255,14 +255,15 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             })
             .build();
 
-    // Start skirmish mission (bottom right)
+    const int btnGap = 15;
+    const int bottomY = screen_y - topBarHeight;
+
+    // Right group: [Surprise me] [START]
     int startButtonWidth = m_textDrawer->getTextLength("START");
-    int startButtonHeight = topBarHeight;
-    int startButtonY = screen_y - topBarHeight;
     int startButtonX = screen_x - startButtonWidth;
-    cRectangle startButtonRect = cRectangle(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+    cRectangle startButtonRect = cRectangle(startButtonX, bottomY, startButtonWidth, topBarHeight);
     startButton = GuiButtonBuilder()
-            .withRect(startButtonRect)        
+            .withRect(startButtonRect)
             .withLabel("START")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_renderDrawer)
@@ -275,12 +276,39 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             })
             .build();
 
-    // Modifiymap mission (bottom right)
+    int surpriseMeButtonWidth = m_textDrawer->getTextLength("Surprise me");
+    int surpriseMeButtonX = startButtonX - btnGap - surpriseMeButtonWidth;
+    cRectangle surpriseMeButtonRect = cRectangle(surpriseMeButtonX, bottomY, surpriseMeButtonWidth, topBarHeight);
+    surpriseMeButton = GuiButtonBuilder()
+            .withRect(surpriseMeButtonRect)
+            .withLabel("Surprise me")
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
+            .withTheme(theme)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() { surpriseMe(); })
+            .build();
+
+    // Center group: [New Map] [Modify]
+    int newMapButtonWidth = m_textDrawer->getTextLength("New Map");
     int modifyButtonWidth = m_textDrawer->getTextLength("Modify");
-    int modifyButtonHeight = topBarHeight;
-    int modifyButtonY = screen_y - topBarHeight;
-    int modifyButtonX = screen_x - startButtonWidth-modifyButtonWidth - 35;
-    cRectangle modifyButtonRect = cRectangle(modifyButtonX, modifyButtonY, modifyButtonWidth, modifyButtonHeight);
+    int centerGroupWidth = newMapButtonWidth + btnGap + modifyButtonWidth;
+    int centerGroupX = screen_x / 2 - centerGroupWidth / 2;
+    cRectangle newMapButtonRect = cRectangle(centerGroupX, bottomY, newMapButtonWidth, topBarHeight);
+    newMapButton = GuiButtonBuilder()
+            .withRect(newMapButtonRect)
+            .withLabel("New Map")
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
+            .withTheme(theme)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this]() {
+                m_interface->setTransitionToWithFadingOut(GAME_NEW_MAP_EDITOR);
+            })
+            .build();
+
+    int modifyButtonX = centerGroupX + newMapButtonWidth + btnGap;
+    cRectangle modifyButtonRect = cRectangle(modifyButtonX, bottomY, modifyButtonWidth, topBarHeight);
     modifyButton = GuiButtonBuilder()
             .withRect(modifyButtonRect)
             .withLabel("Modify")
@@ -293,39 +321,6 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
                     m_interface->loadMapFromEditor(iSkirmishMap);
                     m_interface->initiateFadingOut();
                 }
-            })
-            .build();
-
-    // Surprise me button (bottom right, left of Modify)
-    int surpriseMeButtonWidth = m_textDrawer->getTextLength("Surprise me");
-    int surpriseMeButtonY = screen_y - topBarHeight;
-    int surpriseMeButtonX = modifyButtonX - surpriseMeButtonWidth - 15;
-    cRectangle surpriseMeButtonRect = cRectangle(surpriseMeButtonX, surpriseMeButtonY, surpriseMeButtonWidth, topBarHeight);
-    surpriseMeButton = GuiButtonBuilder()
-            .withRect(surpriseMeButtonRect)
-            .withLabel("Surprise me")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
-            .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() { surpriseMe(); })
-            .build();
-
-    // Create new map button (bottom right, only visible when random map is selected)
-    int newMapButtonWidth = m_textDrawer->getTextLength("Create New Map");
-    int newMapButtonHeight = topBarHeight;
-    int newMapButtonY = screen_y - topBarHeight;
-    int newMapButtonX = screen_x - startButtonWidth - newMapButtonWidth - modifyButtonWidth - 70;
-    cRectangle newMapButtonRect = cRectangle(newMapButtonX, newMapButtonY, newMapButtonWidth, newMapButtonHeight);
-    newMapButton = GuiButtonBuilder()
-            .withRect(newMapButtonRect)
-            .withLabel("New Map")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
-            .withTheme(theme)
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() {
-                m_interface->setTransitionToWithFadingOut(GAME_NEW_MAP_EDITOR);
             })
             .build();
 }
@@ -1196,7 +1191,7 @@ void cSetupSkirmishState::surpriseMe()
     int mapCount = m_previewMaps->getMapCount();
     std::vector<int> validIndices;
     for (int i = 0; i < mapCount; i++) {
-        if (m_previewMaps->getMap(i).validMap) {
+        if (m_previewMaps->getMap(i)->validMap) {
             validIndices.push_back(i);
         }
     }
@@ -1211,9 +1206,9 @@ void cSetupSkirmishState::surpriseMe()
         generateRandomMap();
     }
     else {
-        auto &selectedMap = m_previewMaps->getMap(iSkirmishMap);
+        auto *selectedMap = m_previewMaps->getMap(iSkirmishMap);
         int maxPlayers = 0;
-        for (int s : selectedMap.iStartCell) {
+        for (int s : selectedMap->iStartCell) {
             if (s > -1) {
                 maxPlayers++;
             }
