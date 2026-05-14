@@ -133,22 +133,23 @@ void SDLDrawer::setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int
 
 void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow, Color gui_colorBorderLight, Color gui_colorBorderDark)
 {
-    int x1= rectangle.getX();
+    int x1 = rectangle.getX();
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
-    //std::cout << x1 << " " << y1 << " " << width << " " << height << std::endl;
-    SDL_Rect tmp = {x1,y1, width, height};
+    SDL_Rect tmp = {x1, y1, width, height};
     renderChangeColor(gui_colorWindow);
-    SDL_RenderFillRect(renderer, &tmp );
+    SDL_RenderFillRect(renderer, &tmp);
     renderChangeColor(gui_colorBorderLight);
-    SDL_RenderDrawRect(renderer, &tmp );
+    SDL_RenderDrawRect(renderer, &tmp);
 
     // lines to darken the right sides
-    int endX = (x1+width) - 1;
-    int endY = (y1+height) - 1;
-
     renderChangeColor(gui_colorBorderDark);
+    // SDL Lines are drawn *including* end coordinate, so need to subtract 1 to make it match
+    // with the SDL_RenderFillRect and DrawRect functions.
+    int endX = (x1 + width) - 1;
+    int endY = (y1 + height) - 1;
+
     SDL_RenderDrawLine(renderer, endX, y1, endX, endY);
     renderChangeColor(gui_colorBorderDark);
     SDL_RenderDrawLine(renderer, x1, endY, endX, endY);
@@ -165,8 +166,10 @@ void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorB
     SDL_RenderDrawRect(renderer, &tmp);
     renderChangeColor(gui_colorBorderDark);
 
-    int endX = (x1+width) - 1;
-    int endY = (y1+height) - 1;
+    // SDL Lines are drawn *including* end coordinate, so need to subtract 1 to make it match
+    // with the SDL_RenderFillRect and DrawRect functions.
+    int endX = (x1 + width) - 1;
+    int endY = (y1 + height) - 1;
     SDL_RenderDrawLine(renderer, endX, y1, endX, endY);
     renderChangeColor(gui_colorBorderDark);
     SDL_RenderDrawLine(renderer, x1, endY, endX, endY);
