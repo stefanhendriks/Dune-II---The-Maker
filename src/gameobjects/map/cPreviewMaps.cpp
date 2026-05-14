@@ -22,17 +22,17 @@ cPreviewMaps::cPreviewMaps() :
     //initPreviews();
 }
 
-s_PreviewMap &cPreviewMaps::getMap(int i) {
+s_PreviewMap *cPreviewMaps::getMap(int i) {
     if (i == -1) {
-        return *m_emptyMap;
+        return m_emptyMap.get();
     }
     if (i < 0 || i >= static_cast<int>(m_PreviewMap.size()) || m_PreviewMap[i] == nullptr) {
         if (m_PreviewMap.empty() || m_PreviewMap[0] == nullptr) {
-            return *m_emptyMap;
+            return m_emptyMap.get();
         }
-        return *m_PreviewMap[0];
+        return m_PreviewMap[0].get();
     }
-    return *m_PreviewMap[i];
+    return m_PreviewMap[i].get();
 }
 
 int cPreviewMaps::getMapCount() const {

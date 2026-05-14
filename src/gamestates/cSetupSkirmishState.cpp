@@ -493,22 +493,22 @@ void cSetupSkirmishState::drawStartPoints(int iStartingPoints, const cRectangle 
 void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect) const
 {
     if (iSkirmishMap > -1) {
-        s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
+        s_PreviewMap *selectedMap = m_previewMaps->getMap(iSkirmishMap);
         // Render skirmish map as-is (pre-loaded map)
         if (iSkirmishMap > 0) {
-            if (selectedMap.name[0] != '\0') {
-                if (selectedMap.terrain) {
+            if (selectedMap->name[0] != '\0') {
+                if (selectedMap->terrain) {
                     cRectangle dst;
-                    if (selectedMap.previewTex->w > selectedMap.previewTex->h) {
+                    if (selectedMap->previewTex->w > selectedMap->previewTex->h) {
                         dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
-                                         previewMapRect.getWidth(), previewMapRect.getWidth() * selectedMap.previewTex->h / selectedMap.previewTex->w);
+                                         previewMapRect.getWidth(), previewMapRect.getWidth() * selectedMap->previewTex->h / selectedMap->previewTex->w);
                     }
                     else {
                         dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
-                                         previewMapRect.getHeight() * selectedMap.previewTex->w / selectedMap.previewTex->h, previewMapRect.getHeight());
+                                         previewMapRect.getHeight() * selectedMap->previewTex->w / selectedMap->previewTex->h, previewMapRect.getHeight());
 
                     }
-                    m_renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
+                    m_renderDrawer->renderStrechFullSprite(selectedMap->previewTex, dst);
                 }
             }
         }
@@ -516,19 +516,19 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
             // render the 'random generated skirmish map'
             cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
             if (previewMapRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-                    m_renderDrawer->renderStrechFullSprite(selectedMap.previewTex, dst);
+                    m_renderDrawer->renderStrechFullSprite(selectedMap->previewTex, dst);
             } else {
                 m_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), dst);
             }
         }
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
-                            Color::Yellow, std::format("Name: {}", selectedMap.name));
+                            Color::Yellow, std::format("Name: {}", selectedMap->name));
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+8,
-                            Color::White, std::format("Author: {}", selectedMap.author));
+                            Color::White, std::format("Author: {}", selectedMap->author));
         m_textDrawer->drawText(previewMapRect.getEndX() -50, previewMapRect.getY() + previewMapRect.getHeight() + 16,
                             colorDarkerYellow, std::format("{}", m_previewMaps->getMapSize(iSkirmishMap)));
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 32+30,
-                            Color::White, std::format("{}", selectedMap.description));
+                            Color::White, std::format("{}", selectedMap->description));
     }
 }
 
@@ -567,7 +567,7 @@ void cSetupSkirmishState::drawTechLevel(const cRectangle &techLevelRect) const
 
 void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap)
 {
-    s_PreviewMap &selectedMap = m_previewMaps->getMap(iSkirmishMap);
+    s_PreviewMap *selectedMap = m_previewMaps->getMap(iSkirmishMap);
 
     // this needs to be before setupPlayers :/
     m_dataCampaign->mission = techLevel;
@@ -581,7 +581,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     std::vector<int> iStartPositions;
     int startCellsOnSkirmishMap = 0;
     for (int s = 0; s < 5; s++) {
-        int startPosition = selectedMap.iStartCell[s];
+        int startPosition = selectedMap->iStartCell[s];
         if (startPosition < 0) continue;
         iStartPositions.push_back(startPosition);
     }
@@ -589,11 +589,11 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     startCellsOnSkirmishMap = iStartPositions.size();
 
     // REGENERATE MAP DATA FROM INFO
-    m_objects->getMap().init(selectedMap.width, selectedMap.height);
+    m_objects->getMap().init(selectedMap->width, selectedMap->height);
 
     auto mapEditor = cMapEditor(m_objects->getMap());
     for (int c = 0; c < m_objects->getMap().getMaxCells(); c++) {
-        mapEditor.createCell(c, selectedMap.terrainType[c], 0);
+        mapEditor.createCell(c, selectedMap->terrainType[c], 0);
     }
     mapEditor.smoothMap();
 
@@ -1113,15 +1113,15 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
         }
 
         // no title, safety measure
-        auto &mapToConsiderClickedAt = m_previewMaps->getMap(mapIndexToConsiderClickedAt);
-        if (mapToConsiderClickedAt.name.empty()) {
+        s_PreviewMap *mapToConsiderClickedAt = m_previewMaps->getMap(mapIndexToConsiderClickedAt);
+        if (mapToConsiderClickedAt->name.empty()) {
             continue;
         }
 
         cRectangle rect = cRectangle(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         const bool mouseHoversOverMapTile = rect.isPointWithin(m_mouse->getMouseCoords());
 
-        if (mapToConsiderClickedAt.validMap && mouseHoversOverMapTile) {
+        if (mapToConsiderClickedAt->validMap && mouseHoversOverMapTile) {
             // Mark map as selected
             iSkirmishMap = mapIndexToConsiderClickedAt;
 
@@ -1131,7 +1131,7 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
             } else {
                 // Else, count the starting points from selected map, and set it
                 iStartingPoints = 0;
-                for (int s : mapToConsiderClickedAt.iStartCell) {
+                for (int s : mapToConsiderClickedAt->iStartCell) {
                     if (s > -1) {
                         iStartingPoints++;
                     }
@@ -1155,33 +1155,33 @@ void cSetupSkirmishState::onMouseLeftButtonClickedAtMapList(const cRectangle &se
 
 void cSetupSkirmishState::generateRandomMap()
 {
-    auto &randomMap = m_previewMaps->getMap(0);
+    s_PreviewMap *randomMap = m_previewMaps->getMap(0);
     int randomMapWidth = 128;
     int randomMapHeight = 128;
     int maxCells = randomMapWidth * randomMapHeight;
-    randomMap.terrainType = std::vector<int>(maxCells, -1);
+    randomMap->terrainType = std::vector<int>(maxCells, -1);
 
-    if (randomMap.terrain == nullptr) {
-        randomMap.terrain = SDL_CreateRGBSurface(0, randomMapWidth, randomMapHeight,32,0,0,0,255);
+    if (randomMap->terrain == nullptr) {
+        randomMap->terrain = SDL_CreateRGBSurface(0, randomMapWidth, randomMapHeight,32,0,0,0,255);
     }
 
     // delete any preview texture if it exists
-    delete randomMap.previewTex;
+    delete randomMap->previewTex;
 
-    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, randomMap);
+    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomMap);
 
     // @mira do better than (game.m_gameObjectsContext->getMap().getWidth() * game.m_gameObjectsContext->getMap().getHeight() > 64 * 64)
     spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
 
-    randomMap.validMap = true;
-    randomMap.author = "D2TM";
+    randomMap->validMap = true;
+    randomMap->author = "D2TM";
 
-    SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), randomMap.terrain);
+    SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), randomMap->terrain);
     if (out == nullptr) {
         logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
         return;
     }
-    randomMap.previewTex = new Texture(out, randomMap.terrain->w, randomMap.terrain->h);
+    randomMap->previewTex = new Texture(out, randomMap->terrain->w, randomMap->terrain->h);
 }
 
 void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
@@ -1201,8 +1201,8 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
         }
 
         // no title, safety measure
-        auto &mapToRender = m_previewMaps->getMap(mapIndexToRender);
-        if (mapToRender.name.empty()) continue;
+        s_PreviewMap *mapToRender = m_previewMaps->getMap(mapIndexToRender);
+        if (mapToRender->name.empty()) continue;
 
         // Start rendering
         bool isRenderingSelectedMap = mapIndexToRender == iSkirmishMap;
@@ -1212,7 +1212,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
 
         Color textColor = bHover ? Color::Red : Color::White;
 
-        if (bHover && mapToRender.validMap && m_mouse->isLeftButtonClicked()) {
+        if (bHover && mapToRender->validMap && m_mouse->isLeftButtonClicked()) {
             // RENDERS (AGAIN)!
             guiDrawFramePressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
@@ -1225,15 +1225,15 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
         }
 
         // In case invalid map, render as not-selectable
-        if (!mapToRender.validMap) {
+        if (!mapToRender->validMap) {
             textColor = colorDisabled;
         }
 
         const int availableTextWidth = mapItemButtonWidth - 8;
-        const std::string *nameToRender = &mapToRender.name;
+        const std::string *nameToRender = &mapToRender->name;
         std::string truncatedName;
-        if (m_textDrawer->getTextLength(mapToRender.name) > availableTextWidth) {
-            truncatedName = mapToRender.name;
+        if (m_textDrawer->getTextLength(mapToRender->name) > availableTextWidth) {
+            truncatedName = mapToRender->name;
             while (!truncatedName.empty() && m_textDrawer->getTextLength(truncatedName + "...") > availableTextWidth) {
                 truncatedName.pop_back();
             }
@@ -1247,7 +1247,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
             // random map, render the 'random map' texture
             tex = m_gfxinter->getTexture(BMP_UNKNOWNMAP);
         } else {
-            tex = mapToRender.previewTex;
+            tex = mapToRender->previewTex;
         }
 
         // Render preview map on tile

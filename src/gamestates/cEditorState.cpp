@@ -477,7 +477,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cEditorState::loadMap(int mapIndex)
 {
-    s_PreviewMap* map = &m_previewMaps->getMap(mapIndex);
+    s_PreviewMap* map = m_previewMaps->getMap(mapIndex);
     //std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->height, map->width);
     m_mapAuthor = map->author;

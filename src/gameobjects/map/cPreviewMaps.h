@@ -36,7 +36,7 @@ public:
     void loadSkirmishMaps();
     void destroy();
 
-    s_PreviewMap &getMap(int i);
+    s_PreviewMap *getMap(int i);
 
     std::string getMapSize(int i) const;
     int getMapCount() const;
