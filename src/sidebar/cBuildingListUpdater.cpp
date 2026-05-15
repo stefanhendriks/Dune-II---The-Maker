@@ -311,7 +311,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
             }
             else if (
                 house == HARKONNEN ||
-                house == SARDAUKAR ||
+                // house == SARDAUKAR ||
                 house == FREMEN ||
                 house == MERCENARY) {
                 listConstYard->addStructureToList(WOR, 0);
