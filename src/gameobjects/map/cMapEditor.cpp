@@ -11,8 +11,8 @@
 
 cMapEditor::cMapEditor(cMap *map) : m_map(map), m_mapGeometry(map->getGeometry())
 {
-    assert(m_mapGeometry != nullptr);
     assert(m_map != nullptr);
+    assert(m_mapGeometry != nullptr);
 }
 
 
