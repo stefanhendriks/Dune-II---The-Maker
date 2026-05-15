@@ -44,7 +44,7 @@ inline void d2tm_assert(
     std::cerr << "\n" << report_str << std::endl;
     std::cerr.flush();
 
-    if (std::ofstream file{"bump.log", std::ios::app}) {
+    if (std::ofstream file{"dump.log", std::ios::app}) {
         file << report_str << "\n";
         file.flush(); // to avoid end before write in case of crash
     }
