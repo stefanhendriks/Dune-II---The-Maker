@@ -211,29 +211,29 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
     }
 
     if (iStructureType == SLAB4) {
-        if (game.m_gameObjectsContext->getMap().occupiedByUnit(iCell) == false) {
-            if (game.m_gameObjectsContext->getMap().getCellType(iCell) == TERRAIN_ROCK) {
+        if (game.m_gameObjectsContext->getMap()->occupiedByUnit(iCell) == false) {
+            if (game.m_gameObjectsContext->getMap()->getCellType(iCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
             }
         }
 
         int cellRight = game.m_gameObjectsContext->getMapGeometry()->getCellRight(iCell);
-        if (game.m_gameObjectsContext->getMap().occupiedByUnit(cellRight) == false) {
-            if (game.m_gameObjectsContext->getMap().getCellType(cellRight) == TERRAIN_ROCK) {
+        if (game.m_gameObjectsContext->getMap()->occupiedByUnit(cellRight) == false) {
+            if (game.m_gameObjectsContext->getMap()->getCellType(cellRight) == TERRAIN_ROCK) {
                 mapEditor.createCell(cellRight, TERRAIN_SLAB, 0);
             }
         }
 
         int oneRowBelowCell = game.m_gameObjectsContext->getMapGeometry()->getCellBelow(iCell);
-        if (game.m_gameObjectsContext->getMap().occupiedByUnit(oneRowBelowCell) == false) {
-            if (game.m_gameObjectsContext->getMap().getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
+        if (game.m_gameObjectsContext->getMap()->occupiedByUnit(oneRowBelowCell) == false) {
+            if (game.m_gameObjectsContext->getMap()->getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(oneRowBelowCell, TERRAIN_SLAB, 0);
             }
         }
 
         int rightToRowBelowCell = game.m_gameObjectsContext->getMapGeometry()->getCellRight(oneRowBelowCell);
-        if (game.m_gameObjectsContext->getMap().occupiedByUnit(rightToRowBelowCell) == false) {
-            if (game.m_gameObjectsContext->getMap().getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
+        if (game.m_gameObjectsContext->getMap()->occupiedByUnit(rightToRowBelowCell) == false) {
+            if (game.m_gameObjectsContext->getMap()->getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(rightToRowBelowCell, TERRAIN_SLAB, 0);
             }
         }
@@ -279,7 +279,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 
     for (int x = iCellX; x < iCellXMax; x++) {
         for (int y = iCellY; y < iCellYMax; y++) {
-            game.m_gameObjectsContext->getMap().clearShroud(game.m_gameObjectsContext->getMapGeometry()->makeCell(x, y), iSight, iPlayer);
+            game.m_gameObjectsContext->getMap()->clearShroud(game.m_gameObjectsContext->getMapGeometry()->makeCell(x, y), iSight, iPlayer);
         }
     }
 }
@@ -333,7 +333,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType)
             }
 
             // If the 'terrain' type is 'slab' increase value of found slabs.
-            if (game.m_gameObjectsContext->getMap().getCellType(cll) == TERRAIN_SLAB) {
+            if (game.m_gameObjectsContext->getMap()->getCellType(cll) == TERRAIN_SLAB) {
                 slabs++;
             }
         }

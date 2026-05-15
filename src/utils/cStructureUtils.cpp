@@ -238,7 +238,7 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
             int iCell = game.m_gameObjectsContext->getMapGeometry()->makeCell(xOfStructureCell + w, yOfStructureCell + h);
 
-            game.m_gameObjectsContext->getMap().cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
+            game.m_gameObjectsContext->getMap()->cellSetIdForLayer(iCell, dimensionId, theStructure->getStructureId());
         }
     }
 }

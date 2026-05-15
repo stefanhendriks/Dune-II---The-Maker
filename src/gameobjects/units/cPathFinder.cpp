@@ -110,7 +110,7 @@ void cPathFinder::serviceInit(sGameServices* services)
     assert(m_settings != nullptr);
     m_objects = services->objects;
     assert(m_objects != nullptr);
-    m_map = &m_objects->getMap();
+    m_map = m_objects->getMap();
     assert(m_map != nullptr);
     m_mapGeometry = m_objects->getMapGeometry();
     assert(m_mapGeometry != nullptr);

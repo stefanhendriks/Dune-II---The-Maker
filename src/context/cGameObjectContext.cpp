@@ -87,12 +87,12 @@ int cGameObjectContext::getUnitsSize() const
     return m_Units->size();
 }
 
-cMap& cGameObjectContext::getMap() const
+cMap* cGameObjectContext::getMap() const
 {
     if (!m_map) {
         throw std::runtime_error("cMap not initialized in cGameObjectContext");
     }
-    return *m_map;
+    return m_map.get();
 }
 
 cPreviewMaps* cGameObjectContext::getPreviewMaps() const

@@ -676,7 +676,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
     // }
 
     mapEditor.smoothMap();
-    game.m_gameObjectsContext->getMap().setDesiredAmountOfWorms(game.m_gameObjectsContext->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM));
+    game.m_gameObjectsContext->getMap()->setDesiredAmountOfWorms(game.m_gameObjectsContext->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM));
 }
 
 void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& linefeed)
@@ -738,7 +738,7 @@ int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credi
 
 void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std::string& slinefeed)
 {
-    game.m_gameObjectsContext->getMap().init(64, 64);
+    game.m_gameObjectsContext->getMap()->init(64, 64);
 
     // original dune 2 maps have 64x64 maps
     if (wordtype == WORD_MAPSEED) {

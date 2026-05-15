@@ -446,7 +446,7 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
 
         if (iCll > -1) {
             // create bloom (can deal with < -1 cell)
-            cMapEditor(*this).createCell(iCll, TERRAIN_BLOOM, 0);
+            cMapEditor(this).createCell(iCll, TERRAIN_BLOOM, 0);
         }
         else {
             m_iTIMER_blooms = (1000 / 5) * 5; // try again sooner than 30 secs
@@ -1319,7 +1319,7 @@ void cMap::detonateSpiceBloom(int cell)
     if (cellTypeAtCell != TERRAIN_BLOOM) return;
 
     // change type of terrain to sand
-    auto mapEditor = cMapEditor(*this);
+    auto mapEditor = cMapEditor(this);
     mapEditor.createCell(cell, TERRAIN_SAND, 0);
     int size = 75 + (RNG::rnd(100));
     mapEditor.createRandomField(cell, TERRAIN_SPICE, size);

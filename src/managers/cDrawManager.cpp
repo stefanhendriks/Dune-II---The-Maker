@@ -51,8 +51,8 @@ void cDrawManager::reset()
     m_sidebarDrawer = std::make_unique<cSideBarDrawer>(m_ctx, m_player);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(m_ctx, m_player);
     m_orderDrawer = std::make_unique<cOrderDrawer>(m_ctx, m_player);
-    m_mapDrawer = std::make_unique<cMapDrawer>(m_ctx, &game.m_gameObjectsContext->getMap(), m_player, game.m_mapCamera);
-    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(m_ctx, &game.m_gameObjectsContext->getMap(), m_player, game.m_mapCamera);
+    m_mapDrawer = std::make_unique<cMapDrawer>(m_ctx, game.m_gameObjectsContext->getMap(), m_player, game.m_mapCamera);
+    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(m_ctx, game.m_gameObjectsContext->getMap(), m_player, game.m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx,m_player);
@@ -82,13 +82,13 @@ void cDrawManager::drawCombatState()
     m_particleDrawer->determineParticlesToDraw(*game.m_mapViewport);
     m_particleDrawer->drawLowerLayer();
 
-    game.m_gameObjectsContext->getMap().draw_units();
+    game.m_gameObjectsContext->getMap()->draw_units();
 
-    game.m_gameObjectsContext->getMap().draw_bullets();
+    game.m_gameObjectsContext->getMap()->draw_bullets();
 
     m_structureDrawer->drawStructuresSecondLayer();
 
-    game.m_gameObjectsContext->getMap().draw_units_2nd();
+    game.m_gameObjectsContext->getMap()->draw_units_2nd();
 
     m_particleDrawer->drawTopLayer();
     m_structureDrawer->drawStructuresHealthBars();

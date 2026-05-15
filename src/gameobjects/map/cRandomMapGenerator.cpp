@@ -21,7 +21,7 @@ cRandomMapGenerator::cRandomMapGenerator()
 void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMapEntry)
 {
     // create random map
-    game.m_gameObjectsContext->getMap().init(width, height);
+    game.m_gameObjectsContext->getMap()->init(width, height);
     auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
 
     int a_spice = RNG::rnd((startingPoints * 8)) + (startingPoints * 12);
@@ -124,8 +124,8 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     global_renderDrawer->FillWithColor(randomMapEntry.terrain, Color::Black);
 
     // now put in previewmap 0
-    for (int x = 0; x < game.m_gameObjectsContext->getMap().getWidth(); x++) {
-        for (int y = 0; y < game.m_gameObjectsContext->getMap().getHeight(); y++) {
+    for (int x = 0; x < game.m_gameObjectsContext->getMap()->getWidth(); x++) {
+        for (int y = 0; y < game.m_gameObjectsContext->getMap()->getHeight(); y++) {
 
             int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
@@ -133,7 +133,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
             Color iColor = Color{194, 125, 60,255};
 
             // rock
-            int cellType = game.m_gameObjectsContext->getMap().getCellType(cll);
+            int cellType = game.m_gameObjectsContext->getMap()->getCellType(cll);
             if (cellType == TERRAIN_ROCK) iColor = Color{80, 80, 60,255};
             if (cellType == TERRAIN_MOUNTAIN) iColor = Color{48, 48, 36,255};
             if (cellType == TERRAIN_SPICEHILL) iColor = Color{180, 90, 25,255}; // a bit darker

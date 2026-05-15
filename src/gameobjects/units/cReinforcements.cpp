@@ -178,7 +178,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
 
     if (iStartCell < 0) {
         iStart += RNG::rnd(64);
-        if (iStart >= game.m_gameObjectsContext->getMap().getMaxCells())
+        if (iStart >= game.m_gameObjectsContext->getMap()->getMaxCells())
             iStart -= 64;
 
         iStartCell = iFindCloseBorderCell(iStart);

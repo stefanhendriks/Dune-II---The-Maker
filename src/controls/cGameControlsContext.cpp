@@ -95,11 +95,11 @@ void cGameControlsContext::determineHoveringOverStructureId()
 {
     m_mouseHoveringOverStructureId = -1;
 
-    if (!game.m_gameObjectsContext->getMap().isVisible(m_mouseCell, this->m_player)) {
+    if (!game.m_gameObjectsContext->getMap()->isVisible(m_mouseCell, this->m_player)) {
         return; // cell not visible
     }
 
-    m_mouseHoveringOverStructureId = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(m_mouseCell);
+    m_mouseHoveringOverStructureId = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(m_mouseCell);
 }
 
 void cGameControlsContext::determineHoveringOverUnitId()
@@ -112,10 +112,10 @@ void cGameControlsContext::determineHoveringOverUnitId()
     }
     m_mouseHoveringOverUnitId = -1;
     int mc = getMouseCell();
-    tCell *cellOfMouse = game.m_gameObjectsContext->getMap().getCell(mc);
+    tCell *cellOfMouse = game.m_gameObjectsContext->getMap()->getCell(mc);
     if (cellOfMouse == nullptr) return; // mouse is not on battlefield
 
-    if (!game.m_gameObjectsContext->getMap().isVisible(mc, this->m_player)) {
+    if (!game.m_gameObjectsContext->getMap()->isVisible(mc, this->m_player)) {
         return; // cell not visible
     }
 

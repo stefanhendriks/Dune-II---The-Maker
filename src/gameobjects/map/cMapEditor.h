@@ -5,7 +5,7 @@
 // the map editor is able to change map charactaristics
 class cMapEditor {
 public:
-    explicit cMapEditor(cMap &map);
+    explicit cMapEditor(cMap *map);
 
     void smoothCell(int cell);		// smooth a specific cell
     void smoothMap();				// smooth the entire map
@@ -42,6 +42,6 @@ private:
     int smoothSandHillCell(int cell);
     int smoothWallCell(int cell);
 
-    cMap &m_map;
+    cMap *m_map = nullptr;
     MapGeometry *m_mapGeometry = nullptr;
 };

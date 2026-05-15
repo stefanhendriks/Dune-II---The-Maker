@@ -65,7 +65,7 @@ cGamePlaying::~cGamePlaying()
 void cGamePlaying::centerCameraOnUnits(const std::vector<int>& unitIds)
 {
     int sumX = 0, sumY = 0, count = 0;
-    int mapWidth = m_objects->getMap().getWidth();
+    int mapWidth = m_objects->getMap()->getWidth();
     for (int id : unitIds) {
         cUnit* u = m_objects->getUnit(id);
         if (!u->isValid()) continue;
@@ -109,7 +109,7 @@ void cGamePlaying::thinkFast()
         }
     }
 
-    m_objects->getMap().thinkFast();
+    m_objects->getMap()->thinkFast();
 
     m_interface->reduceShaking();
 
@@ -175,7 +175,7 @@ void cGamePlaying::thinkSlow()
 {
     evaluatePlayerStatus(); // so we can call non-const from a const :S
 
-    m_objects->getMap().thinkSlow();
+    m_objects->getMap()->thinkSlow();
 
     if (!m_settings->isDisableReinforcements()) {
         m_reinforcements->thinkSlow();
@@ -329,7 +329,7 @@ void cGamePlaying::drawCombatMouse() const
 
 void cGamePlaying::missionInit()
 {
-    m_objects->getMap().thinkSlow();
+    m_objects->getMap()->thinkSlow();
     m_TIMER_evaluatePlayerStatus = 5;
     m_controlledPlayer = m_objects->getPlayer(HUMAN);
 }
@@ -354,7 +354,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         if (event.isAction(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR)) {
             int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
             if (mouseCell > -1) {
-                m_objects->getMap().clearShroud(mouseCell, 6, HUMAN);
+                m_objects->getMap()->clearShroud(mouseCell, 6, HUMAN);
             }
         }
     }
@@ -557,17 +557,17 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::DEBUG_DESTROY_AT_CURSOR)) {
         int mc = m_controlledPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = m_objects->getMap()->getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 m_objects->getUnit(idOfUnitAtCell)->die(true, false);
             }
 
-            int idOfStructureAtCell = m_objects->getMap().getCellIdStructuresLayer(mc);
+            int idOfStructureAtCell = m_objects->getMap()->getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
                 m_objects->getStructures()[idOfStructureAtCell]->die();
             }
 
-            idOfUnitAtCell = m_objects->getMap().getCellIdWormsLayer(mc);
+            idOfUnitAtCell = m_objects->getMap()->getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
                 m_objects->getUnit(idOfUnitAtCell)->die(false, false);
             }
@@ -577,7 +577,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::DEBUG_DAMAGE_AT_CURSOR)) {
         int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = m_objects->getMap()->getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 cUnit *pUnit = m_objects->getUnit(idOfUnitAtCell);
                 int damageToTake = pUnit->getHitPoints() - 25;
@@ -587,7 +587,7 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
             }
         }
     } else if (event.isAction(eKeyAction::DEBUG_REVEAL_MAP)) {
-        m_objects->getMap().clear_all(m_controlledPlayer->getId());
+        m_objects->getMap()->clear_all(m_controlledPlayer->getId());
     }
 
     if (event.isAction(eKeyAction::DEBUG_KILL_CARRYALLS)) {
