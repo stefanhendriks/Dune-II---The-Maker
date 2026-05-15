@@ -43,8 +43,6 @@ public:
 
     /**
      * Access unit by index (compatible with array syntax)
-     * @param index The unit index
-     * @return Reference to cUnit object
      */
     cUnit* operator[](int index);
     const cUnit* operator[](int index) const;
