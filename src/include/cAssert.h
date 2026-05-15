@@ -1,9 +1,11 @@
 #pragma once
 
 #include <iostream>
-#include <fstream>      // Pour l'écriture dans le fichier txt
+#include <fstream>
 #include <sstream>
+#ifdef __cpp_lib_stacktrace
 #include <stacktrace>
+#endif
 #include <source_location>
 #include <cstdlib>
 
@@ -23,12 +25,8 @@ inline void d2tm_assert(
     report << "Function: " << location.function_name() << "\n";
     report << "----------------------------------------\n";
     report << "Call Stack:\n";
-    
-    // Stack C++23 capture 
+#ifdef __cpp_lib_stacktrace
     auto trace = std::stacktrace::current();
-    
-    // Index 0: std::stacktrace::current() // rip !
-    // Index 1: my_my_assert()
     for (size_t i = 1; i < trace.size(); ++i) {
         const auto& entry = trace[i];
         report << i - 1 << "# " << entry.description();
@@ -38,6 +36,9 @@ inline void d2tm_assert(
             report << " : address: " << std::showbase << std::hex << entry.native_handle() << std::dec << "\n";
         }
     }
+#else
+    report << "  (stack trace not available on this platform)\n";
+#endif
     report << "========================================\n\n";
 
     const std::string report_str = report.str();
