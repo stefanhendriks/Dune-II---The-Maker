@@ -31,6 +31,8 @@ CONFIGURE_FILE (
   "${CMAKE_CURRENT_SOURCE_DIR}/src/include/config.h"
 )
 
+add_library(cpp_stacktrace INTERFACE)
+
 if(APPLE)
     message(STATUS "Using pkg-config to locate SDL2 libraries on macOS")
 
@@ -133,6 +135,8 @@ elseif (UNIX)
         #"-Wmismatched-tags"
         #"-Wdeprecated-declarations"
     )
+    target_link_libraries(cpp_stacktrace INTERFACE stdc++exp backtrace)
+
 else()
     target_compile_options(${PROJECT_NAME}
       PRIVATE
@@ -157,6 +161,9 @@ else()
     -lSDL2
     -mwindows
   )
+    target_link_options(cpp_stacktrace INTERFACE $<$<CONFIG:Debug>:/DEBUG>)
 endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE cpp_stacktrace)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
