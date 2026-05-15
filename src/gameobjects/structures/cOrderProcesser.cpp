@@ -236,7 +236,7 @@ void cOrderProcesser::sendFrigate()
         game.m_gameObjectsContext->getStructures()[structureId]->setAnimating(true);
         int destinationCell = game.m_gameObjectsContext->getStructures()[structureId]->getCell();
 
-        int iStartCell = game.m_gameObjectsContext->getMap().findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
+        int iStartCell = game.m_gameObjectsContext->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 
         if (iStartCell < 0) {
             logbook("cOrderProcesser::sendFrigate : unable to find start cell to spawn frigate");

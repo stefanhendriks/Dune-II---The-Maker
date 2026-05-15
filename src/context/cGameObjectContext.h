@@ -33,7 +33,7 @@ public:
     ~cGameObjectContext();
 
     cBullets& getBullets() const;
-    cMap& getMap() const;
+    cMap* getMap() const;
     MapGeometry* getMapGeometry() const;
     cPlayers* getPlayers() const;
     cParticles& getParticles() const;

@@ -9,9 +9,10 @@
 
 #include <cassert>
 
-cMapEditor::cMapEditor(cMap &map) : m_map(map), m_mapGeometry(map.getGeometry())
+cMapEditor::cMapEditor(cMap *map) : m_map(map), m_mapGeometry(map->getGeometry())
 {
     assert(m_mapGeometry != nullptr);
+    assert(m_map != nullptr);
 }
 
 
@@ -21,7 +22,7 @@ void cMapEditor::createCell(int cell, int terrainType, int tile)
     if (terrainType == TERRAIN_SLAB) {
         theTile = RNG::rnd(5);
     }
-    m_map.createCell(cell, terrainType, theTile);
+    m_map->createCell(cell, terrainType, theTile);
 }
 
 void cMapEditor::createRandomField(int cell, int terrainType, int size)
@@ -35,11 +36,11 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size)
     int y = m_mapGeometry->getCellY(cell);
 
     if (x < 0) {
-        x = RNG::rnd(m_map.getWidth());
+        x = RNG::rnd(m_map->getWidth());
     }
 
     if (y < 0) {
-        y = RNG::rnd(m_map.getHeight());
+        y = RNG::rnd(m_map->getHeight());
     }
 
     if (terrainType == TERRAIN_ROCK && size < 0) {
@@ -68,7 +69,7 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size)
 
         if (c > -1) {
             // if we are placing spice: if NOT a rock tile, then place spice on it.
-            int terrainTypeOfNewCell = m_map.getCellType(c);
+            int terrainTypeOfNewCell = m_map->getCellType(c);
             if (terrainType == TERRAIN_SPICE) {
                 if ((terrainTypeOfNewCell != TERRAIN_ROCK) &&
                         (terrainTypeOfNewCell != TERRAIN_SLAB) &&
@@ -230,7 +231,7 @@ bool cMapEditor::isAboveSpecificTerrainType(int sourceCell, int terrainType)
 bool cMapEditor::isSpecificTerrainType(int cell, int terrainType)
 {
     if (!m_mapGeometry->isValidCell(cell)) return false;
-    return m_map.getCellType(cell) == terrainType;
+    return m_map->getCellType(cell) == terrainType;
 }
 
 bool cMapEditor::isBelowSpecificTerrainType(int sourceCell, int terrainType)
@@ -362,7 +363,7 @@ int cMapEditor::smoothWallCell(int cell)
 void cMapEditor::smoothCell(int cell)
 {
     int tile = -1;
-    int terrainType = m_map.getCellType(cell);
+    int terrainType = m_map->getCellType(cell);
     if (terrainType == TERRAIN_ROCK) {
         tile = smoothRockCell(cell);
     }
@@ -386,13 +387,13 @@ void cMapEditor::smoothCell(int cell)
     }
     else {
         logbook(std::format("Unknown terrain type [{}] .", terrainType));
-        m_map.cellChangeType(cell, TERRAIN_SAND);
-        m_map.cellChangeTile(cell, 0);
+        m_map->cellChangeType(cell, TERRAIN_SAND);
+        m_map->cellChangeTile(cell, 0);
         return;
     }
 
     assert(tile > -1);
-    m_map.cellChangeTile(cell, tile);
+    m_map->cellChangeTile(cell, tile);
 }
 
 void cMapEditor::smoothAroundCell(int cell)
@@ -414,15 +415,15 @@ void cMapEditor::removeSingleRockSpots()
     // soft out rocky spots!
     int startX = 1;
     int startY = 1;
-    int endX = m_map.getWidth() - 1;
-    int endY = m_map.getHeight() - 1;
+    int endX = m_map->getWidth() - 1;
+    int endY = m_map->getHeight() - 1;
 
     for (int y = startY; y < endY; y++) {
         for (int x = startX; x < endX; x++) {
             int cll = m_mapGeometry->getCellWithMapDimensions(x, y);
             if (cll < 0) continue;
 
-            int terrainType = m_map.getCellType(cll);
+            int terrainType = m_map->getCellType(cll);
 
             // now count how many rock is around it
             if (terrainType == TERRAIN_ROCK) {
@@ -440,8 +441,8 @@ void cMapEditor::removeSingleRockSpots()
 
                 // when only 1 neighbor, then make sand as well
                 if (iC < 2) {
-                    m_map.cellChangeType(cll, TERRAIN_SAND);
-                    m_map.cellChangeTile(cll, 0);
+                    m_map->cellChangeType(cll, TERRAIN_SAND);
+                    m_map->cellChangeTile(cll, 0);
                 }
             }
         }
@@ -450,7 +451,7 @@ void cMapEditor::removeSingleRockSpots()
 
 void cMapEditor::smoothMap()
 {
-    for (int c = 0; c < m_map.getMaxCells(); c++) {
+    for (int c = 0; c < m_map->getMaxCells(); c++) {
         smoothCell(c);
     }
 }

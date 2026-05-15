@@ -1453,7 +1453,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
         if (cUnit->iPlayer != playerIndexToAttack) continue;
         // unit belongs to player of the player we wish to attack
 
-        bool isVisibleForPlayer = m_objects->getMap().isVisible(cUnit->getCell(), this);
+        bool isVisibleForPlayer = m_objects->getMap()->isVisible(cUnit->getCell(), this);
 
         if (m_settings->isDebugMode()) {
             log(std::format("Visible = {}", isVisibleForPlayer));
@@ -1487,7 +1487,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
     for (int i = 0; i < MAX_STRUCTURES; i++)
         if (m_objects->getStructures()[i])
             if (m_objects->getStructures()[i]->getOwner() == iAttackPlayer)
-                if (m_objects->getMap().isVisible(m_objects->getStructures()[i]->getCell(), this) ||
+                if (m_objects->getMap()->isVisible(m_objects->getStructures()[i]->getCell(), this) ||
                         m_settings->isSkirmish()) {
                     iTargets[iT] = i;
 
@@ -1952,17 +1952,17 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
         for (int cy = 0; cy < h; cy++) {
             int cll = m_objects->getMapGeometry()->getCellWithMapBorders(cx + x, cy + y);
 
-            if (!result.badTerrain && !m_objects->getMap().isValidTerrainForStructureAtCell(cll)) {
+            if (!result.badTerrain && !m_objects->getMap()->isValidTerrainForStructureAtCell(cll)) {
                 result.badTerrain = true;
             }
 
             // another structure found on this location, "blocked"
-            int structureId = m_objects->getMap().getCellIdStructuresLayer(cll);
+            int structureId = m_objects->getMap()->getCellIdStructuresLayer(cll);
             if (structureId > -1) {
                 result.structureIds.insert(structureId);
             }
 
-            int idOfUnitAtCell = m_objects->getMap().getCellIdUnitLayer(cll);
+            int idOfUnitAtCell = m_objects->getMap()->getCellIdUnitLayer(cll);
             if (idOfUnitAtCell > -1) {
                 if (m_objects->getUnit(idOfUnitAtCell)->isValid() && m_objects->getUnit(idOfUnitAtCell)->getPlayer() != this) {
                     foundUnitFromOtherPlayerThanMe = true;
@@ -2245,7 +2245,7 @@ void cPlayer::reinforceHarvesterIfNeeded(int cell)
             };
             m_interface->onNotifyGameEvent(event);
             // deliver
-            cAbstractStructure *refinery = m_objects->getMap().findClosestStructureType(cell, REFINERY, this);
+            cAbstractStructure *refinery = m_objects->getMap()->findClosestStructureType(cell, REFINERY, this);
 
             // found a refinery, deliver harvester to that
             if (refinery) {

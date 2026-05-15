@@ -218,8 +218,8 @@ void cBullet::think_move()
         return;
     }
 
-    int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCell);
-    int cellTypeAtCell = game.m_gameObjectsContext->getMap().getCellType(iCell);
+    int idOfStructureAtCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(iCell);
+    int cellTypeAtCell = game.m_gameObjectsContext->getMap()->getCellType(iCell);
 
     if (!isGroundBullet()) {
         return;
@@ -369,15 +369,15 @@ void cBullet::damageTerrain(int cell, double factor) const
 
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
-    int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(cell);
-    int cellTypeAtCell = game.m_gameObjectsContext->getMap().getCellType(cell);
+    int idOfStructureAtCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(cell);
+    int cellTypeAtCell = game.m_gameObjectsContext->getMap()->getCellType(cell);
 
-    game.m_gameObjectsContext->getMap().cellTakeDamage(cell, iDamage);
+    game.m_gameObjectsContext->getMap()->cellTakeDamage(cell, iDamage);
 
     if (cellTypeAtCell == TERRAIN_SLAB) {
         // change into rock, get destroyed. But only when we did not hit a structure.
         if (idOfStructureAtCell < 0) {
-            game.m_gameObjectsContext->getMap().cellChangeType(cell, TERRAIN_ROCK);
+            game.m_gameObjectsContext->getMap()->cellChangeType(cell, TERRAIN_ROCK);
             cMapEditor(game.m_gameObjectsContext->getMap()).smoothAroundCell(cell);
         }
     }
@@ -434,7 +434,7 @@ bool cBullet::damageAirUnit(int cell) const
 {
     if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return false;
     if (!canDamageAirUnits()) return false;
-    int unitIdOnAirLayer = game.m_gameObjectsContext->getMap().getCellIdAirUnitLayer(cell);
+    int unitIdOnAirLayer = game.m_gameObjectsContext->getMap()->getCellIdAirUnitLayer(cell);
 
     float iDamage = getDamageToInflictToNonInfantry();
 
@@ -456,7 +456,7 @@ bool cBullet::damageAirUnit(int cell) const
 bool cBullet::damageGroundUnit(int cell, double factor) const
 {
     if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return false;
-    int id = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(cell);
+    int id = game.m_gameObjectsContext->getMap()->getCellIdUnitLayer(cell);
     if (id < 0) return false;
     if (iOwnerUnit >= 0 && id == iOwnerUnit) return false; // do not damage self
 
@@ -552,13 +552,13 @@ float cBullet::getDamageToInflictToInfantry() const
  */
 void cBullet::detonateSpiceBloom(int cell) const
 {
-    game.m_gameObjectsContext->getMap().detonateSpiceBloom(cell);
+    game.m_gameObjectsContext->getMap()->detonateSpiceBloom(cell);
 }
 
 void cBullet::damageSandworm(int cell, double factor) const
 {
     if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return;
-    int id = game.m_gameObjectsContext->getMap().getCellIdWormsLayer(cell);
+    int id = game.m_gameObjectsContext->getMap()->getCellIdWormsLayer(cell);
     if (id < 0) return; // bail
 
     cUnit *worm = game.m_gameObjectsContext->getUnit(id);
@@ -585,19 +585,19 @@ bool cBullet::isAtDestination() const
 void cBullet::damageWall(int cell, double factor) const
 {
     if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(cell)) return;
-    int cellTypeAtCell = game.m_gameObjectsContext->getMap().getCellType(cell);
+    int cellTypeAtCell = game.m_gameObjectsContext->getMap()->getCellType(cell);
     if (cellTypeAtCell != TERRAIN_WALL) return;
 
     float iDamage = getDamageToInflictToNonInfantry() * factor;
 
-    game.m_gameObjectsContext->getMap().cellTakeDamage(cell, iDamage);
+    game.m_gameObjectsContext->getMap()->cellTakeDamage(cell, iDamage);
 
-    if (game.m_gameObjectsContext->getMap().getCellHealth(cell) < 0) {
+    if (game.m_gameObjectsContext->getMap()->getCellHealth(cell) < 0) {
         // remove wall, turn into smudge:
         auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
         mapEditor.createCell(cell, TERRAIN_ROCK, 0);
         mapEditor.smoothAroundCell(cell);
-        game.m_gameObjectsContext->getMap().smudge_increase(SmudgeType::S_WALL, cell);
+        game.m_gameObjectsContext->getMap()->smudge_increase(SmudgeType::S_WALL, cell);
     }
 }
 
@@ -668,7 +668,7 @@ cPlayer *cBullet::getPlayer() const
 void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 {
     if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(idOfStructureAtCell)) return;
-    int id = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(idOfStructureAtCell);
+    int id = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(idOfStructureAtCell);
     if (id < 0) return; // bail
 
     cPlayerDifficultySettings *difficultySettings = getDifficultySettings();

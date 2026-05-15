@@ -38,7 +38,7 @@ void cUnits::serviceInit(sGameServices* services)
     assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
     assert(m_interface != nullptr);
-    m_map = &m_objects->getMap();
+    m_map = m_objects->getMap();
     assert(m_map != nullptr);
 
     assert(services != nullptr);
@@ -120,7 +120,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     s_UnitInfo &sUnitType = game.m_infoContext->getUnitInfo(unitType);
 
     // check if unit already exists on location
-    if (!sUnitType.airborn && game.m_gameObjectsContext->getMap().cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
+    if (!sUnitType.airborn && game.m_gameObjectsContext->getMap()->cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
         return -1; // cannot place unit, structure exists at location
     }
 
@@ -133,18 +133,18 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     }
 
     // check if unit already exists on location
-    if (game.m_gameObjectsContext->getMap().cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
+    if (game.m_gameObjectsContext->getMap()->cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
         return -1; // cannot place unit
     }
 
     // check if placed on invalid terrain type
     if (unitType == SANDWORM) {
-        if (!game.m_gameObjectsContext->getMap().isCellPassableForWorm(iCll)) {
+        if (!game.m_gameObjectsContext->getMap()->isCellPassableForWorm(iCll)) {
             return -1;
         }
     }
 
-    bool validCell = game.m_gameObjectsContext->getMap().canDeployUnitTypeAtCell(iCll, unitType);
+    bool validCell = game.m_gameObjectsContext->getMap()->canDeployUnitTypeAtCell(iCll, unitType);
     if (!validCell) {
         return -1;
     }
@@ -199,11 +199,11 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     }
 
     // Put on map too!:
-    game.m_gameObjectsContext->getMap().cellSetIdForLayer(iCll, mapIdIndex, iNewId);
+    game.m_gameObjectsContext->getMap()->cellSetIdForLayer(iCll, mapIdIndex, iNewId);
 
     newUnit->updateCellXAndY();
 
-    game.m_gameObjectsContext->getMap().clearShroud(iCll, sUnitType.sight, iPlayer);
+    game.m_gameObjectsContext->getMap()->clearShroud(iCll, sUnitType.sight, iPlayer);
 
     const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_CREATED,

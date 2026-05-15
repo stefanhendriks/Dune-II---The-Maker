@@ -79,7 +79,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
             int iCll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
-                int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
+                int idOfStructureAtCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
 
@@ -91,8 +91,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     // TODO: Allow placement nearby allies?
                 }
 
-                if (game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_WALL ||
-                        game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_SLAB) {
+                if (game.m_gameObjectsContext->getMap()->getCellType(iCll) == TERRAIN_WALL ||
+                        game.m_gameObjectsContext->getMap()->getCellType(iCll) == TERRAIN_SLAB) {
                     bWithinBuildDistance=true;
                     // TODO: here we should actually find out if the slab is ours or not??
                     break;
@@ -101,8 +101,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
         }
     }
 
-    int iDrawX = game.m_gameObjectsContext->getMap().mouse_draw_x();
-    int iDrawY = game.m_gameObjectsContext->getMap().mouse_draw_y();
+    int iDrawX = game.m_gameObjectsContext->getMap()->mouse_draw_x();
+    int iDrawY = game.m_gameObjectsContext->getMap()->mouse_draw_y();
 
     if (!bWithinBuildDistance) {
         itemToPlaceColor = Color::PlaceNeutral;
@@ -122,21 +122,21 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
                 int iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(cellX, cellY);
 
-                if (!game.m_gameObjectsContext->getMap().isCellPassable(iCll) || game.m_gameObjectsContext->getMap().getCellType(iCll) != TERRAIN_ROCK) {
+                if (!game.m_gameObjectsContext->getMap()->isCellPassable(iCll) || game.m_gameObjectsContext->getMap()->getCellType(iCll) != TERRAIN_ROCK) {
                     itemToPlaceColor = Color::PlaceBad;
                 }
 
-                if (game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_SLAB) {
+                if (game.m_gameObjectsContext->getMap()->getCellType(iCll) == TERRAIN_SLAB) {
                     itemToPlaceColor = Color::PlaceGood;
                 }
 
                 // occupied by units or structures
-                int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
+                int idOfStructureAtCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     itemToPlaceColor = Color::PlaceBad;
                 }
 
-                int unitIdOnMap = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(iCll);
+                int unitIdOnMap = game.m_gameObjectsContext->getMap()->getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
                     if (!game.m_gameObjectsContext->getUnit(unitIdOnMap)->isDead()) {
@@ -163,8 +163,8 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
 
     int structureId = itemToPlace->getBuildId();
 
-    int iDrawX = game.m_gameObjectsContext->getMap().mouse_draw_x();
-    int iDrawY = game.m_gameObjectsContext->getMap().mouse_draw_y();
+    int iDrawX = game.m_gameObjectsContext->getMap()->mouse_draw_x();
+    int iDrawY = game.m_gameObjectsContext->getMap()->mouse_draw_y();
 
     int width = game.m_infoContext->getStructureInfo(structureId).bmp_width;
     int height = game.m_infoContext->getStructureInfo(structureId).bmp_height;

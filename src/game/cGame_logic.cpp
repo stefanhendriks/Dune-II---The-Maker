@@ -209,8 +209,8 @@ void cGame::init()
 {
     m_infoContext->initializeDefaultInfos();
 
-    auto &map = m_gameObjectsContext->getMap();
-    map.setTerrainInfo(m_infoContext->getTerrainInfo());
+    auto map = m_gameObjectsContext->getMap();
+    map->setTerrainInfo(m_infoContext->getTerrainInfo());
     m_newMusicSample = MUSIC_MENU;
     m_newMusicCountdown = 0;
 
@@ -236,7 +236,7 @@ void cGame::init()
 
     m_gameSettings->m_musicType = -1;
 
-    map.init(64, 64);
+    map->init(64, 64);
 
     m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
 
@@ -274,9 +274,9 @@ void cGame::missionInit()
 
     m_screenShake->reset();
 
-    m_gameObjectsContext->getMap().init(64, 64);
+    m_gameObjectsContext->getMap()->init(64, 64);
     // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
-    m_gameObjectsContext->getMap().setTerrainInfo(m_infoContext->getTerrainInfo());
+    m_gameObjectsContext->getMap()->setTerrainInfo(m_infoContext->getTerrainInfo());
 
     for (int i = 0; i < m_gameObjectsContext->getUnits()->size(); i++) {
         m_gameObjectsContext->getUnit(i)->init(i);
@@ -547,7 +547,7 @@ bool cGame::setupGame()
     std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename);
 
     m_reinforcements = std::make_unique<cReinforcements>();
-    m_gameObjectsContext->getMap().setReinforcements(m_reinforcements.get());
+    m_gameObjectsContext->getMap()->setReinforcements(m_reinforcements.get());
 
     init(); // Must be first! (loads ini file at the end, which is required before going on...)
 
@@ -608,7 +608,7 @@ bool cGame::setupGame()
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !
     ctx->setTextContext(context->createTextContext());
-    //m_gameObjectsContext->getMap().setGameContext(ctx.get());
+    //m_gameObjectsContext->getMap()->setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
 
@@ -681,7 +681,7 @@ bool cGame::setupGame()
     if (m_mapCamera != nullptr)
         delete m_mapCamera;
 
-    m_mapCamera = new cMapCamera(&m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove);
+    m_mapCamera = new cMapCamera(m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove);
 
     cIni::installGame(m_gameFilename);
     // Now we are ready for the menu state
@@ -709,7 +709,7 @@ bool cGame::setupGame()
     // I need m_renderDrawer to create cPreviewMaps
     // m_PreviewMaps = std::make_shared<cPreviewMaps>();
 
-    // m_gameObjectsContext->getMap().setGameContext(ctx.get());
+    // m_gameObjectsContext->getMap()->setGameContext(ctx.get());
     // Injection of services
     m_gameObjectsContext->serviceInit(m_services.get());
 
@@ -1100,7 +1100,7 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
 {
     logbook(s_GameEvent::toString(event));
 
-    m_gameObjectsContext->getMap().onNotifyGameEvent(event);
+    m_gameObjectsContext->getMap()->onNotifyGameEvent(event);
 
     // game itself handles events
     switch (event.eventType) {
@@ -1593,22 +1593,22 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::DEBUG_DESTROY_AT_CURSOR)) {
         int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = m_gameObjectsContext->getMap()->getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(true, false);
             }
 
-            int idOfStructureAtCell = m_gameObjectsContext->getMap().getCellIdStructuresLayer(mc);
+            int idOfStructureAtCell = m_gameObjectsContext->getMap()->getCellIdStructuresLayer(mc);
             if (idOfStructureAtCell > -1) {
                 m_gameObjectsContext->getStructures()[idOfStructureAtCell]->die();
             }
 
-            idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdWormsLayer(mc);
+            idOfUnitAtCell = m_gameObjectsContext->getMap()->getCellIdWormsLayer(mc);
             if (idOfUnitAtCell > -1) {
                 m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(false, false);
             }
 
-            idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdAirUnitLayer(mc);
+            idOfUnitAtCell = m_gameObjectsContext->getMap()->getCellIdAirUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 m_gameObjectsContext->getUnit(idOfUnitAtCell)->die(false, false);
             }
@@ -1618,7 +1618,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::DEBUG_DAMAGE_AT_CURSOR)) {
         int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         if (mc > -1) {
-            int idOfUnitAtCell = m_gameObjectsContext->getMap().getCellIdUnitLayer(mc);
+            int idOfUnitAtCell = m_gameObjectsContext->getMap()->getCellIdUnitLayer(mc);
             if (idOfUnitAtCell > -1) {
                 cUnit *pUnit = m_gameObjectsContext->getUnit(idOfUnitAtCell);
                 int damageToTake = pUnit->getHitPoints() - 25;
@@ -1629,7 +1629,7 @@ void cGame::onKeyDownDebugMode(const cKeyboardEvent &event)
         }
     } else if (event.isAction(eKeyAction::DEBUG_REVEAL_MAP)) {
         for (int i = 0; i < AI_WORM; i++) {
-            m_gameObjectsContext->getMap().clear_all(i);
+            m_gameObjectsContext->getMap()->clear_all(i);
         }
     }
 

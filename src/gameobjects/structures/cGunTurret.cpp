@@ -243,7 +243,7 @@ void cGunTurret::think_guard()
             if (!cUnit->isValid()) continue;
             if (cUnit->iPlayer == getOwner()) continue; // skip own units
             if (cUnit->getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
-            if (!game.m_gameObjectsContext->getMap().isVisible(cUnit->getCell(), getPlayer())) continue; // skip not visible
+            if (!game.m_gameObjectsContext->getMap()->isVisible(cUnit->getCell(), getPlayer())) continue; // skip not visible
 
             if (!canAttackAirUnits()) {
                 if (cUnit->isAirbornUnit()) {

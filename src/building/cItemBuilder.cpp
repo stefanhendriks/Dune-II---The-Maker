@@ -290,7 +290,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                         int iCll = game.m_gameObjectsContext->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(4);
 
                         for (int j = 0; j < special.units; j++) {
-                            bool passable = game.m_gameObjectsContext->getMap().isCellPassableForFootUnits(iCll);
+                            bool passable = game.m_gameObjectsContext->getMap()->isCellPassableForFootUnits(iCll);
 
                             if (passable) {
                                 cUnits::unitCreate(iCll, special.providesTypeId, FREMEN, false);

@@ -205,7 +205,7 @@ void cAbstractStructure::die()
         for (int h = 0; h < iHeight; h++) {
             iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(iCX + w, iCY + h);
 
-            game.m_gameObjectsContext->getMap().cellChangeType(iCll, TERRAIN_ROCK);
+            game.m_gameObjectsContext->getMap()->cellChangeType(iCll, TERRAIN_ROCK);
             cMapEditor(game.m_gameObjectsContext->getMap()).smoothAroundCell(iCll);
 
             int half = 16;
@@ -215,7 +215,7 @@ void cAbstractStructure::die()
             cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
 
             for (int i=0; i < 3; i++) {
-                game.m_gameObjectsContext->getMap().smudge_increase(SmudgeType::S_ROCK, iCll);
+                game.m_gameObjectsContext->getMap()->smudge_increase(SmudgeType::S_ROCK, iCll);
 
                 // create particle
                 int iType = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + RNG::rnd(2);
@@ -246,7 +246,7 @@ void cAbstractStructure::die()
     game.playSoundWithDistance(SOUND_CRUMBLE01 + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
     // remove from the playground
-    game.m_gameObjectsContext->getMap().remove_id(id, MAPID_STRUCTURES);
+    game.m_gameObjectsContext->getMap()->remove_id(id, MAPID_STRUCTURES);
 
     // screen shaking
     game.shakeScreen((iWidth * iHeight) * 20);
@@ -342,7 +342,7 @@ int cAbstractStructure::getNonOccupiedCellAroundStructure()
     const std::vector<int> &cells = getCellsAroundStructure();
 
     for (auto &cll : cells) {
-        if (!game.m_gameObjectsContext->getMap().occupied(cll)) {
+        if (!game.m_gameObjectsContext->getMap()->occupied(cll)) {
             return cll;
         }
     }
@@ -432,7 +432,7 @@ void cAbstractStructure::setHeight(int height)
 void cAbstractStructure::setRallyPoint(int cell)
 {
     assert(cell > -2); // -1 is allowed (means disable);
-    assert(cell < game.m_gameObjectsContext->getMap().getMaxCells());
+    assert(cell < game.m_gameObjectsContext->getMap()->getMaxCells());
     iRallyPoint = cell;
 }
 
@@ -776,7 +776,7 @@ void cAbstractStructure::enterStructure(int unitId)
     pUnit->setCell(getCell());
     pUnit->updateCellXAndY();
 
-    game.m_gameObjectsContext->getMap().remove_id(unitId, MAPID_UNITS);
+    game.m_gameObjectsContext->getMap()->remove_id(unitId, MAPID_UNITS);
 }
 
 void cAbstractStructure::unitLeavesStructure()
@@ -809,7 +809,7 @@ void cAbstractStructure::unitLeavesStructure()
         unitToLeave->move_to(getRallyPoint(), -1, -1);
     }
 
-    game.m_gameObjectsContext->getMap().cellSetIdForLayer(unitToLeave->getCell(), MAPID_UNITS, iUnitIDWithinStructure);
+    game.m_gameObjectsContext->getMap()->cellSetIdForLayer(unitToLeave->getCell(), MAPID_UNITS, iUnitIDWithinStructure);
 
     setUnitIdWithin(-1);
     setUnitIdHeadingTowards(-1);
@@ -830,7 +830,7 @@ void cAbstractStructure::unitHeadsTowardsStructure(int unitId)
 
 int cAbstractStructure::getRandomStructureCell()
 {
-    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * game.m_gameObjectsContext->getMap().getWidth());
+    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * game.m_gameObjectsContext->getMap()->getWidth());
 }
 
 /**

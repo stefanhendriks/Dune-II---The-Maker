@@ -111,7 +111,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
             int iCll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
-                int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
+                int idOfStructureAtCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
 
@@ -123,8 +123,8 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                     // TODO: Allow placement nearby allies?
                 }
 
-                if (game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_WALL ||
-                        game.m_gameObjectsContext->getMap().getCellType(iCll) == TERRAIN_SLAB) {
+                if (game.m_gameObjectsContext->getMap()->getCellType(iCll) == TERRAIN_WALL ||
+                        game.m_gameObjectsContext->getMap()->getCellType(iCll) == TERRAIN_SLAB) {
                     bWithinBuildDistance = true;
                     // TODO: here we should actually find out if the slab is ours or not??
                     break;
@@ -152,7 +152,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
             int iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(cellX, cellY);
 
             // occupied by units or structures
-            int idOfStructureAtCell = game.m_gameObjectsContext->getMap().getCellIdStructuresLayer(iCll);
+            int idOfStructureAtCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
                 // may not place when we're not placing a slab.. hack hack
                 if (structureIdToPlace != SLAB4) {
@@ -162,7 +162,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
 
             // non slab 'structures' can be blocked by units
             if (structureIdToPlace != SLAB4 && structureIdToPlace != SLAB1) {
-                int unitIdOnMap = game.m_gameObjectsContext->getMap().getCellIdUnitLayer(iCll);
+                int unitIdOnMap = game.m_gameObjectsContext->getMap()->getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
                     if (!game.m_gameObjectsContext->getUnit(unitIdOnMap)->isDead()) {

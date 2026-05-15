@@ -139,12 +139,12 @@ void cMapCamera::keepViewportWithinReasonableBounds()
         m_viewportStartY = -halfViewportHeight;
     }
 
-    int maxWidth = (game.m_gameObjectsContext->getMap().getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
+    int maxWidth = (game.m_gameObjectsContext->getMap()->getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
     if (getViewportEndX() > maxWidth) {
         m_viewportStartX = maxWidth - m_viewportWidth;
     }
 
-    int maxHeight = (game.m_gameObjectsContext->getMap().getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
+    int maxHeight = (game.m_gameObjectsContext->getMap()->getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
     if ((getViewportEndY()) > maxHeight) {
         m_viewportStartY = maxHeight - m_viewportHeight;
     }
@@ -154,7 +154,7 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell)
 {
     // fix any boundaries
     if (cell < 0) cell = 0;
-    if (cell >= game.m_gameObjectsContext->getMap().getMaxCells()) cell = (game.m_gameObjectsContext->getMap().getMaxCells()-1);
+    if (cell >= game.m_gameObjectsContext->getMap()->getMaxCells()) cell = (game.m_gameObjectsContext->getMap()->getMaxCells()-1);
 
     int mapCellX = m_mapGeometry->getAbsoluteXPositionFromCell(cell);
     int mapCellY = m_mapGeometry->getAbsoluteYPositionFromCell(cell);
