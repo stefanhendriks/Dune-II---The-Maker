@@ -40,6 +40,8 @@ void cUnits::serviceInit(sGameServices* services)
     assert(m_interface != nullptr);
     m_map = m_objects->getMap();
     assert(m_map != nullptr);
+    m_log = services->m_log;
+    assert(m_log != nullptr);
 
     assert(services != nullptr);
     for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
