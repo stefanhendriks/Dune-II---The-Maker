@@ -48,16 +48,16 @@ void cUnits::serviceInit(sGameServices* services)
 }
 
 
-cUnit& cUnits::operator[](int index)
+cUnit* cUnits::operator[](int index)
 {
     assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
-    return m_units[index];
+    return &m_units[index];
 }
 
-const cUnit& cUnits::operator[](int index) const
+const cUnit* cUnits::operator[](int index) const
 {
     assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
-    return m_units[index];
+    return &m_units[index];
 }
 
 cUnit* cUnits::getUnit(int index)
