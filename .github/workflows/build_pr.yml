@@ -32,7 +32,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
+          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "MinGW Makefiles"
       - name: Build
         run: |
           cd "${{ github.workspace }}\build"
@@ -65,7 +65,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -90,7 +90,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -115,7 +115,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"

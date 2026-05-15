@@ -78,7 +78,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
+          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=RelWithDebInfo -G "MinGW Makefiles"
       - name: Build
         run: |
           cd "${{ github.workspace }}\build"
@@ -130,7 +130,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -174,7 +174,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
@@ -218,7 +218,7 @@ jobs:
           cd "${{ github.workspace }}"
           mkdir build
           cd build
-          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DENV_D2TM_VERSION=${{ needs.Prepare.outputs.tag }} -DCMAKE_BUILD_TYPE=RelWithDebInfo
       - name: Build
         run: |
           cd "${{ github.workspace }}/build"
