@@ -3117,10 +3117,10 @@ int cUnit::pos_x_centered()
  * Clears the created path, resets next-cell to current cell. Sets timer to wait to 100. So that
  * after that the unit will think of a new path to create.
  */
-void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne()
-{
-    forgetAboutCurrentPathAndPrepareToCreateNewOne(35);
-}
+// void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne()
+// {
+//     forgetAboutCurrentPathAndPrepareToCreateNewOne(35);
+// }
 
 /**
  * Clears the created path, resets next-cell to current cell. Sets timer to wait to <timeToWait>. So that
