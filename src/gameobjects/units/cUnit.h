@@ -509,7 +509,6 @@ private:
 
     bool isSaboteur();
 
-    // void forgetAboutCurrentPathAndPrepareToCreateNewOne();
     void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait = 35);
 
     void takeDamage(int damage);
