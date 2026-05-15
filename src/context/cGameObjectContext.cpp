@@ -113,23 +113,24 @@ MapGeometry* cGameObjectContext::getMapGeometry() const
 
 cUnit* cGameObjectContext::getUnit(std::size_t index)
 {
-    if (!m_Units) return nullptr;
-    if (index >= static_cast<std::size_t>(m_Units->size())) return nullptr;
-    return (*m_Units)[static_cast<int>(index)];
+    // if (!m_Units) return nullptr;
+    // if (index >= static_cast<std::size_t>(m_Units->size())) return nullptr;
+    //     return (*m_Units)[static_cast<int>(index)];
+    return m_Units->getUnit(index);
 }
 
 cUnit* cGameObjectContext::getUnit(int index)
 {
-    if (index < 0) return nullptr;
-    return getUnit(static_cast<std::size_t>(index));
+    // if (index < 0) return nullptr;
+    return m_Units->getUnit(index);
 }
 
 cAbstractStructure* cGameObjectContext::getStructure(int index)
 {
-    if (index < 0) return nullptr;
+    // if (index < 0) return nullptr;
 
     auto &structures = getStructures();
-    if (index >= static_cast<int>(structures.size())) return nullptr;
+    // if (index >= static_cast<int>(structures.size())) return nullptr;
 
     return structures[index];
 }
