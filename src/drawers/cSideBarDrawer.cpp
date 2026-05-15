@@ -15,7 +15,7 @@
 #include "context/cGameObjectContext.h"
 #include <SDL2/SDL.h>
 #include <algorithm>
-#include <cassert>
+#include "include/cAssert.h"
 
 cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_player(player),
@@ -25,8 +25,8 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_sidebar(nullptr),
     m_sidebarColor(Color{214, 149, 20,255})
 {
-    assert(player!= nullptr);
-    assert(ctx != nullptr);
+    my_assert(player!= nullptr);
+    my_assert(ctx != nullptr);
 
     m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(
         m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cassert>
+#include "include/cAssert.h"
 
 enum eAnimationDirection {
     ANIM_NONE, // not animating
@@ -129,7 +129,7 @@ inline const char *eBuildTypeString(const eBuildType &buildType)
         case eBuildType::UNKNOWN:
             return "UNKNOWN";
         default:
-            assert(false && "Undefined buildType?");
+            my_assert(false && "Undefined buildType?");
             break;
     }
     return "";
@@ -152,7 +152,7 @@ inline const char *eBuildOrderStateString(const eBuildOrderState &state)
         case eBuildOrderState::BUILDING:
             return "BUILDING";
         default:
-            assert(false && "Unknown eBuildOrderState");
+            my_assert(false && "Unknown eBuildOrderState");
             break;
     }
     return "";

@@ -16,15 +16,15 @@
 #include "context/cGameObjectContext.h"
 #include <SDL2/SDL.h>
 #include <iostream>
-#include <cassert>
+#include "include/cAssert.h"
 
 cMouse::cMouse(GameContext *ctx) :
     m_ctx(ctx),
     m_renderDrawer(ctx->getSDLDrawer()),
     m_coords(cPoint(0,0))
 {
-    assert(m_ctx!=nullptr);
-    assert(m_renderDrawer!=nullptr);
+    my_assert(m_ctx!=nullptr);
+    my_assert(m_renderDrawer!=nullptr);
     m_leftButtonPressed=false;
     m_rightButtonPressed=false;
     m_leftButtonReleased=false;
@@ -312,7 +312,7 @@ bool cMouse::isTile(int value)
 void cMouse::setMouseObserver(cInputObserver *mouseObserver)
 {
     m_mouseObserver = mouseObserver;
-    assert(m_mouseObserver != nullptr);
+    my_assert(m_mouseObserver != nullptr);
 }
 
 

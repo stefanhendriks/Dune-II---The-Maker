@@ -22,7 +22,7 @@
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)
 {
-    assert(thePlayer);
+    my_assert(thePlayer);
     m_player = thePlayer;
     m_orderPlaced = false;
     m_frigateSent = false;
@@ -59,9 +59,9 @@ bool cOrderProcesser::hasOrderedAnything()
 
 void cOrderProcesser::markOrderAsDeployed(cBuildingListItem *item)
 {
-    assert(item);
+    my_assert(item);
     int slot = getSlotForItem(item);
-    assert(slot > -1);
+    my_assert(slot > -1);
     // remove item from the ordered items
     m_orderedItems[slot] = nullptr;
     m_pricePaidForItem[slot] = -1;
@@ -140,7 +140,7 @@ void cOrderProcesser::think()
 void cOrderProcesser::updatePricesForStarport()
 {
     cBuildingList *list = m_player->getSideBar()->getList(eListType::LIST_STARPORT);
-    assert(list);
+    my_assert(list);
     for (int i = 0; i < MAX_ICONS; i++) {
         cBuildingListItem *item = list->getItem(i);
         if (item) {
@@ -155,7 +155,7 @@ void cOrderProcesser::updatePricesForStarport()
 
 void cOrderProcesser::addOrder(cBuildingListItem *item)
 {
-    assert(item);
+    my_assert(item);
     int freeSlot = getFreeSlot();
     if (freeSlot > -1) {
         m_orderedItems[freeSlot] = item;
@@ -168,7 +168,7 @@ void cOrderProcesser::addOrder(cBuildingListItem *item)
 
 void cOrderProcesser::removeOrder(cBuildingListItem *item)
 {
-    assert(item);
+    my_assert(item);
     int slot = getSlotForItem(item);
     removeItem(slot);
 }
@@ -202,8 +202,8 @@ void cOrderProcesser::removeAllItems()
 
 void cOrderProcesser::removeItem(int slot)
 {
-    assert(slot >= 0);
-    assert(slot < kMaxItemsToOrder);
+    my_assert(slot >= 0);
+    my_assert(slot < kMaxItemsToOrder);
     m_orderedItems[slot] = nullptr;
     // give money back to player
     if (m_pricePaidForItem[slot] > 0) {

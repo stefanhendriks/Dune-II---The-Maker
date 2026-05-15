@@ -7,12 +7,12 @@
 #include "gameobjects/map/MapGeometry.hpp"
 #include <format>
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cMapEditor::cMapEditor(cMap *map) : m_map(map), m_mapGeometry(map->getGeometry())
 {
-    assert(m_map != nullptr);
-    assert(m_mapGeometry != nullptr);
+    my_assert(m_map != nullptr);
+    my_assert(m_mapGeometry != nullptr);
 }
 
 
@@ -27,8 +27,8 @@ void cMapEditor::createCell(int cell, int terrainType, int tile)
 
 void cMapEditor::createRandomField(int cell, int terrainType, int size)
 {
-    assert(terrainType >= TERRAIN_BLOOM);
-    assert(terrainType <= TERRAIN_WALL);
+    my_assert(terrainType >= TERRAIN_BLOOM);
+    my_assert(terrainType <= TERRAIN_WALL);
 
     if (cell < 0) return;
 
@@ -122,8 +122,8 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size)
 
 void cMapEditor::createSquaredField(int cell, int terrainType, int size)
 {
-    assert(terrainType >= TERRAIN_BLOOM);
-    assert(terrainType <= TERRAIN_WALL);
+    my_assert(terrainType >= TERRAIN_BLOOM);
+    my_assert(terrainType <= TERRAIN_WALL);
 
     if (cell < 0) return;
 
@@ -392,7 +392,7 @@ void cMapEditor::smoothCell(int cell)
         return;
     }
 
-    assert(tile > -1);
+    my_assert(tile > -1);
     m_map->cellChangeTile(cell, tile);
 }
 

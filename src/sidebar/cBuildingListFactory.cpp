@@ -22,7 +22,7 @@ int cBuildingListFactory::getButtonDrawXStart()
 
 void cBuildingListFactory::initializeList(cBuildingList *list, eListType listType)
 {
-    assert(list != NULL);
+    my_assert(list != NULL);
 
     // first clear the list
     list->removeAllItems();

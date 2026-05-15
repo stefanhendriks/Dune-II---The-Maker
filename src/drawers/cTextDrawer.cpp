@@ -6,13 +6,13 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Color.hpp"
 #include <iostream>
-#include <cassert>
+#include "include/cAssert.h"
 
 cTextDrawer::cTextDrawer(TTF_Font *theFont) :
     m_font(theFont),
     m_textCache(std::make_unique<cTextTextureCache>(theFont))
 {
-    assert(theFont != nullptr);
+    my_assert(theFont != nullptr);
 }
 
 cTextDrawer::~cTextDrawer()

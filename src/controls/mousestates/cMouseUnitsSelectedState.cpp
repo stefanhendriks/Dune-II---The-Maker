@@ -18,7 +18,7 @@
 
 #include <algorithm>
 #include <string>
-#include <cassert>
+#include "include/cAssert.h"
 
 #include "data/gfxaudio.h"
 
@@ -44,7 +44,7 @@ std::string mouseUnitsSelectedStateString(eMouseUnitsSelectedState state)
         case SELECTED_STATE_REFINERY:
             return "SELECTED_STATE_REFINERY";
         default:
-            assert(false);
+            my_assert(false);
             break;
     }
     return {};
@@ -61,9 +61,9 @@ cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControl
     m_state(SELECTED_STATE_MOVE),
     m_prevState(SELECTED_STATE_MOVE)
 {
-    assert(player!=nullptr);
-    assert(context!=nullptr);
-    assert(mouse!=nullptr);
+    my_assert(player!=nullptr);
+    my_assert(context!=nullptr);
+    my_assert(mouse!=nullptr);
 }
 
 void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event)

@@ -4,7 +4,7 @@
 #include "drawers/cTextDrawer.h"
 
 #include <algorithm>
-#include <cassert>
+#include "include/cAssert.h"
 
 GuiValueButton::GuiValueButton(SDLDrawer* drawer, const cRectangle& rect, int initialValue, int stepValue, int minValue, int maxValue)
     : GuiObject(drawer, rect)
@@ -13,7 +13,7 @@ GuiValueButton::GuiValueButton(SDLDrawer* drawer, const cRectangle& rect, int in
     , m_minValue(std::min(minValue, maxValue))
     , m_maxValue(std::max(minValue, maxValue))
 {
-    assert(drawer != nullptr);
+    my_assert(drawer != nullptr);
     updateValue(initialValue);
 }
 

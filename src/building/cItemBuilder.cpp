@@ -24,7 +24,7 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 #include "data/gfxaudio.h"
 
@@ -33,8 +33,8 @@ cItemBuilder::cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingLis
     m_buildingListUpdater(buildingListUpdater),
     m_buildItemMultiplierEnabled(false)
 {
-    assert(thePlayer!=nullptr);
-    assert(buildingListUpdater!=nullptr);
+    my_assert(thePlayer!=nullptr);
+    my_assert(buildingListUpdater!=nullptr);
     removeAllItems();
     memset(m_timers, 0, sizeof(m_timers));
 }
@@ -233,7 +233,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             m_buildingListUpdater->onBuildItemCompleted(item);
             item->decreaseTimesToBuild(); // decrease amount of times to build
 
-            assert(item->getTimesToBuild() > -1);
+            my_assert(item->getTimesToBuild() > -1);
 
             // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
             if (!item->getUnitInfo().airborn) {
@@ -360,7 +360,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 }
                 else {
                     // unsupported case
-                    assert(false && "Unsupported special case");
+                    my_assert(false && "Unsupported special case");
                 }
 
                 // We do NOT send a "Finished" event here; see above - we send a special_ready instead
@@ -397,7 +397,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
 void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
 {
     int structureTypeByItem = game.m_structureUtils->findStructureTypeByTypeOfList(item);
-    assert(structureTypeByItem > -1);
+    my_assert(structureTypeByItem > -1);
     int structureToDeployUnit = game.m_structureUtils->findStructureToDeployUnit(m_player, structureTypeByItem);
     int buildIdToProduce = buildId;
     if (structureToDeployUnit > -1) {
@@ -481,7 +481,7 @@ void cItemBuilder::removeAllItems()
  */
 void cItemBuilder::addItemToList(cBuildingListItem *item)
 {
-    assert(item != NULL);
+    my_assert(item != NULL);
     int slot = getFreeSlot();
     if (slot < 0) {
         logbook("ERROR: Unable to add item to list because no slots are free!");
@@ -532,7 +532,7 @@ bool cItemBuilder::isItemInList(cBuildingListItem *item)
  */
 cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListItem *item)
 {
-    assert(item != NULL);
+    my_assert(item != NULL);
 
     // get through the build list and find an item that is of the same list.
     for (int i = 0; i < MAX_ITEMS; i++) {
@@ -553,7 +553,7 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
  */
 bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item)
 {
-    assert(item != NULL);
+    my_assert(item != NULL);
 
     // get through the build list and find an item that is of the same list.
     for (int i = 0; i < MAX_ITEMS; i++) {
@@ -753,8 +753,8 @@ cBuildingListItem *cItemBuilder::getBuildingListItem(eBuildType buildType, int i
  */
 void cItemBuilder::removeItemFromList(int position)
 {
-    assert(position > -1);
-    assert(position < MAX_ICONS);
+    my_assert(position > -1);
+    my_assert(position < MAX_ICONS);
 
     // remove
     m_items[position] = nullptr;
@@ -763,8 +763,8 @@ void cItemBuilder::removeItemFromList(int position)
 
 cBuildingListItem *cItemBuilder::getItem(int position)
 {
-    assert(position > -1);
-    assert(position < MAX_ITEMS);
+    my_assert(position > -1);
+    my_assert(position < MAX_ITEMS);
     return m_items[position];
 }
 

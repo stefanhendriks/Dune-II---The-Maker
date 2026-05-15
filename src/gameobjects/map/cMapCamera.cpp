@@ -11,7 +11,7 @@
 #include "context/cGameObjectContext.h"
 #include "gameobjects/map/cMap.h"
 #include <algorithm>
-#include <cassert>
+#include "include/cAssert.h"
 
 namespace {
 constexpr auto kMapBoundaryScrollSpeed = 5.0f;
@@ -24,8 +24,8 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     m_pMap(theMap),
     m_mapGeometry(theMap ? theMap->getGeometry() : nullptr)
 {
-    assert(theMap != nullptr);
-    assert(m_mapGeometry != nullptr);
+    my_assert(theMap != nullptr);
+    my_assert(m_mapGeometry != nullptr);
     m_viewportStartX = m_viewportStartY = 32;
     m_zoomLevel = 1.0f;
 

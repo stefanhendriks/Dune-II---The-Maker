@@ -7,7 +7,7 @@
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 #define WINLOSEFLAGS_AI_NO_BUILDINGS        0x01
 #define WINLOSEFLAGS_HUMAN_HAS_BUILDINGS    0x02
@@ -16,7 +16,7 @@
 
 cGameConditionChecker::cGameConditionChecker(cGame* game) : m_game(game)
 {   
-    assert(game != nullptr); 
+    my_assert(game != nullptr); 
     m_winFlags = 0;
     m_loseFlags = 0;
 }

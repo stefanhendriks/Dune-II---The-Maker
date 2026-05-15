@@ -29,7 +29,7 @@
 #include <format>
 #include <algorithm>
 #include <utility>
-#include <cassert>
+#include "include/cAssert.h"
 
 #include "config.h"
 
@@ -49,12 +49,12 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     m_previewMaps(previewMaps),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
-    assert(m_textDrawer != nullptr);
-    assert(m_settings != nullptr);
-    assert(m_interface != nullptr);
-    assert(m_objects != nullptr);
-    assert(m_dataCampaign != nullptr);
-    assert(m_gfxinter != nullptr);
+    my_assert(m_textDrawer != nullptr);
+    my_assert(m_settings != nullptr);
+    my_assert(m_interface != nullptr);
+    my_assert(m_objects != nullptr);
+    my_assert(m_dataCampaign != nullptr);
+    my_assert(m_gfxinter != nullptr);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
         // index 0 == human player, but to keep our lives sane we don't change the index.

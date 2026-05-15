@@ -56,7 +56,7 @@ const char *s_GameEvent::toString(const eGameEventType &eventType)
         case eGameEventType::GAME_EVENT_NOTIFICATION:
             return "GAME_EVENT_NOTIFICATION";
         default:
-            assert(false && "Unknown game event type for toString()");
+            my_assert(false && "Unknown game event type for toString()");
             break;
     }
     return "";

@@ -42,12 +42,12 @@ public:
     cBulletInfos() = default;
 
     s_BulletInfo &operator[](std::size_t index) {
-        assert(index < MAX_BULLET_TYPES && "Index out of bounds for sBulletInfo");
+        my_assert(index < MAX_BULLET_TYPES && "Index out of bounds for sBulletInfo");
         return m_values[index];
     }
 
     const s_BulletInfo &operator[](std::size_t index) const {
-        assert(index < MAX_BULLET_TYPES && "Index out of bounds for sBulletInfo");
+        my_assert(index < MAX_BULLET_TYPES && "Index out of bounds for sBulletInfo");
         return m_values[index];
     }
 

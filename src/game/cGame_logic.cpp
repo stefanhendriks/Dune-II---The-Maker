@@ -153,7 +153,7 @@ cGame::cGame()
 
     m_gameObjectsContext = cGameObjectsContextCreator::create();
     m_players = m_gameObjectsContext->getPlayers();
-    assert(m_players != nullptr);
+    my_assert(m_players != nullptr);
 
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
@@ -497,7 +497,7 @@ void cGame::shutdown()
     }
 
     if (m_currentState != nullptr) {
-        assert(false);
+        my_assert(false);
         if (m_currentState->getType() != eGameStateType::GAMESTATE_SELECT_YOUR_NEXT_CONQUEST) {
             // destroy game state object, unless we talk about the region select
             delete m_currentState;
@@ -1521,11 +1521,11 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
             sampleId = MIDI_MENTAT_ORD;
         }
         else {
-            assert(false && "Undefined house.");
+            my_assert(false && "Undefined house.");
         }
     }
     else {
-        assert(false && "Undefined music type.");
+        my_assert(false && "Undefined music type.");
     }
 
     if (triggerWithVoice) {
@@ -1718,7 +1718,7 @@ void cGame::loadMapFromEditor(int map)
 
 void cGame::getLog(cLog *log)
 {
-    assert(log != nullptr);
+    my_assert(log != nullptr);
     m_log = log;
     m_services->m_log = m_log;
 }

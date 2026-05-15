@@ -298,7 +298,7 @@ const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int
         case eBuildType::UNKNOWN:
             return "Unknown";
         default:
-            assert(false && "Undefined buildType?");
+            my_assert(false && "Undefined buildType?");
             break;
     }
     return "";

@@ -5,7 +5,7 @@
 #include "include/d2tmc.h"
 #include "cBuildingListFactory.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cSideBarFactory::cSideBarFactory()
 {}
@@ -16,7 +16,7 @@ cSideBarFactory::~cSideBarFactory()
 // construct a cSideBar
 cSideBar *cSideBarFactory::createSideBar(cPlayer *thePlayer)
 {
-    assert(thePlayer!=nullptr);
+    my_assert(thePlayer!=nullptr);
     cSideBar *sidebar = new cSideBar(thePlayer);
 
     for (const auto listType : AllListTypes) {

@@ -8,7 +8,7 @@
 #include "context/cGameObjectContext.h"
 
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 namespace brains {
 
@@ -36,7 +36,7 @@ const char *ePlayerBrainMissionKindString(const ePlayerBrainMissionKind &kind)
         case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_HARASS:
             return "PLAYERBRAINMISSION_KIND_HARASS";
         default:
-            assert(false && "Unknown kind?");
+            my_assert(false && "Unknown kind?");
             break;
     }
     return "";
@@ -44,8 +44,8 @@ const char *ePlayerBrainMissionKindString(const ePlayerBrainMissionKind &kind)
 
 cPlayerBrainMissionKind::cPlayerBrainMissionKind(cPlayer *player, cPlayerBrainMission *mission) : player(player), mission(mission)
 {
-    assert(player != nullptr);
-    assert(mission != nullptr);
+    my_assert(player != nullptr);
+    my_assert(mission != nullptr);
     player->log("cPlayerBrainMissionKind() constructor");
     specificPlayerForEventToGoToSelectTargetState = player;
 

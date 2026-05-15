@@ -152,21 +152,21 @@ void cUnit::init(int i)
 
 void cUnit::serviceInit(sGameServices* services)
 {
-    assert(services != nullptr);
+    my_assert(services != nullptr);
     m_settings = services->settings;
-    assert(m_settings != nullptr);
+    my_assert(m_settings != nullptr);
     m_infos = services->info;
-    assert(m_infos != nullptr);
+    my_assert(m_infos != nullptr);
     m_objects = services->objects;
-    assert(m_objects != nullptr);
+    my_assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
-    assert(m_interface != nullptr);
+    my_assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
-    assert(m_mapCamera != nullptr);
+    my_assert(m_mapCamera != nullptr);
     m_map = m_objects->getMap();
-    assert(m_map != nullptr);
+    my_assert(m_map != nullptr);
     m_pathFinder = m_map->getPathFinder();
-    assert(m_pathFinder != nullptr);
+    my_assert(m_pathFinder != nullptr);
 }
 
 void cUnit::recreateDimensions()
@@ -398,7 +398,7 @@ void cUnit::createExplosionParticle()
                     int id = idOfStructureAtCell;
 
                     cAbstractStructure *pStructure = m_objects->getStructure(id);
-                    assert(pStructure);
+                    my_assert(pStructure);
                     if (pStructure->getHitPoints() > 0) {
 
                         int iDamage = 150 + RNG::rnd(100);
@@ -1899,7 +1899,7 @@ void cUnit::forgetAboutUnitToPickUp()  // forget about this
 
 cUnit &cUnit::getUnitToPickupOrDrop() const
 {
-    assert(iUnitID > -1 && "cUnit::getUnitToPickupOrDrop() called for invalid iUnitIDWithinStructure!");
+    my_assert(iUnitID > -1 && "cUnit::getUnitToPickupOrDrop() called for invalid iUnitIDWithinStructure!");
     return *m_objects->getUnit(iUnitID);
 }
 
@@ -2530,7 +2530,7 @@ s_UnitInfo &cUnit::getUnitInfo() const
 void cUnit::thinkFast_move()
 {
     if (!isValid()) {
-        assert(false && "Expected to have a valid unit calling thinkFast_move()");
+        my_assert(false && "Expected to have a valid unit calling thinkFast_move()");
     }
 
     if (isSandworm() && m_settings->isDisableWormAi()) {
@@ -3318,7 +3318,7 @@ std::string cUnit::eUnitActionIntentString(eUnitActionIntent intent)
         case eUnitActionIntent::INTENT_UNLOAD_SPICE:
             return "INTENT_UNLOAD_SPICE";
         default:
-            assert(false);
+            my_assert(false);
             break;
     }
     return "";
@@ -3411,7 +3411,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     eUnitActionIntent actionIntent)
 {
     rendering.iFrame = 0; // stop animating
-    assert(structureType > -1);
+    my_assert(structureType > -1);
 
     if (intent == actionIntent) {
         // same intent, so ignore?
@@ -3431,7 +3431,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     }
 
     cAbstractStructure *pStructure = result.structure;
-    assert(pStructure && "Expected to have a valid pStructure pointer here");
+    my_assert(pStructure && "Expected to have a valid pStructure pointer here");
 
     if (allowCarryallTransfer) {
         // TODO: Don't use cell based, but abs coordinates (pixel based) and use center

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <cassert>
+#include "include/cAssert.h"
 #include <cstddef>
 #include "definitions.h"
 #include "gameobjects/projectiles/bullet.h"
@@ -15,12 +15,12 @@ public:
     cBullets() = default;
 
     cBullet &operator[](std::size_t index) {
-        assert(index < MAX_BULLETS && "Index out of bounds for g_Bullet");
+        my_assert(index < MAX_BULLETS && "Index out of bounds for g_Bullet");
         return m_values[index];
     }
 
     const cBullet &operator[](std::size_t index) const {
-        assert(index < MAX_BULLETS && "Index out of bounds for g_Bullet");
+        my_assert(index < MAX_BULLETS && "Index out of bounds for g_Bullet");
         return m_values[index];
     }
 

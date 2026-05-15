@@ -90,7 +90,7 @@ inline std::string eActionTypeString(eActionType actionType)
         case eActionType::CHASE:
             return "CHASE";
         default:
-            assert(false);
+            my_assert(false);
             break;
     }
     return "";

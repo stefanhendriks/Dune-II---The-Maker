@@ -52,8 +52,8 @@ void cScreenFader::update()
 
     //std::clamp(m_alpha,Uint8(0),Uint8(255));
     // Fading
-    // assert(m_fadeAlpha >= kMinAlpha);
-    // assert(m_fadeAlpha <= kMaxAlpha);
+    // my_assert(m_fadeAlpha >= kMinAlpha);
+    // my_assert(m_fadeAlpha <= kMaxAlpha);
 
     // Fading / pulsating of selected stuff
     static constexpr float fadeSelectIncrement = 1 / 256.0f;

@@ -14,7 +14,7 @@
 #include "data/gfxaudio.h"
 
 #include <SDL2/SDL.h>
-#include <cassert>
+#include "include/cAssert.h"
 
 CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
     m_player(player),
@@ -23,8 +23,8 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_renderDrawer(ctx->getSDLDrawer())
 {
-    assert(player!= nullptr);
-    assert(ctx != nullptr);
+    my_assert(player!= nullptr);
+    my_assert(ctx != nullptr);
 
     memset(m_offset_credit, 0, sizeof(m_offset_credit));
     memset(m_offset_direction, 0, sizeof(m_offset_direction));

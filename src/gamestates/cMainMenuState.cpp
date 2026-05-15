@@ -15,7 +15,7 @@
 
 #include <SDL2/SDL_scancode.h>
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 cMainMenuState::cMainMenuState(sGameServices* services) :
     cGameState(services),
@@ -23,9 +23,9 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_interface(m_ctx->getGameInterface())
 {
-    assert(m_settings != nullptr);
-    assert(m_textDrawer != nullptr);
-    assert(m_interface != nullptr);
+    my_assert(m_settings != nullptr);
+    my_assert(m_textDrawer != nullptr);
+    my_assert(m_interface != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 

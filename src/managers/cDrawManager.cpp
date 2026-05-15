@@ -25,7 +25,7 @@
 #include "drawers/cSideBarDrawer.h"
 
 #include <SDL2/SDL.h>
-#include <cassert>
+#include "include/cAssert.h"
 
 cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_sidebarColor(Color{214, 149, 20,255}),
@@ -36,12 +36,12 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
-    assert(m_player!=nullptr);
-    assert(ctx != nullptr);
-    assert(m_textDrawer != nullptr);
-    assert(m_renderDrawer != nullptr);
-    assert(m_gfxdata != nullptr);
-    assert(m_gfxinter != nullptr);
+    my_assert(m_player!=nullptr);
+    my_assert(ctx != nullptr);
+    my_assert(m_textDrawer != nullptr);
+    my_assert(m_renderDrawer != nullptr);
+    my_assert(m_gfxdata != nullptr);
+    my_assert(m_gfxinter != nullptr);
     this->reset();
 }
 

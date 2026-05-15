@@ -14,7 +14,7 @@
 #include "include/sGameServices.h"
 
 #include <algorithm>
-#include <cassert>
+#include "include/cAssert.h"
 #include <format>
 #include <limits>
 #include <queue>
@@ -101,19 +101,19 @@ void cPathFinder::resize(int newSize, int width, int height)
 
 void cPathFinder::serviceInit(sGameServices* services)
 {
-    assert(services != nullptr);
+    my_assert(services != nullptr);
     m_log = services->m_log;
-    assert(m_log != nullptr);
+    my_assert(m_log != nullptr);
     m_infos = services->info;
-    assert(m_infos != nullptr);
+    my_assert(m_infos != nullptr);
     m_settings = services->settings;
-    assert(m_settings != nullptr);
+    my_assert(m_settings != nullptr);
     m_objects = services->objects;
-    assert(m_objects != nullptr);
+    my_assert(m_objects != nullptr);
     m_map = m_objects->getMap();
-    assert(m_map != nullptr);
+    my_assert(m_map != nullptr);
     m_mapGeometry = m_objects->getMapGeometry();
-    assert(m_mapGeometry != nullptr);
+    my_assert(m_mapGeometry != nullptr);
 }
 
 int cPathFinder::validateCreatePathInput(int unitId)

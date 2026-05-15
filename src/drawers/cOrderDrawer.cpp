@@ -12,15 +12,15 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include <SDL2/SDL.h>
-#include <cassert>
+#include "include/cAssert.h"
 
 cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
     m_ctx(ctx),
     m_renderDrawer(ctx->getSDLDrawer()),
     m_player(player)
 {
-    assert(player != nullptr);
-    assert(ctx != nullptr);
+    my_assert(player != nullptr);
+    my_assert(ctx != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = m_buttonBitmap->w / 2;
@@ -38,11 +38,11 @@ cOrderDrawer::~cOrderDrawer()
 
 void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
 {
-    assert(thePlayer);
+    my_assert(thePlayer);
 
     cOrderProcesser *orderProcesser = thePlayer->getOrderProcesser();
 
-    assert(orderProcesser);
+    my_assert(orderProcesser);
     m_renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
 
     bool canOrder = orderProcesser->canPlaceOrder();

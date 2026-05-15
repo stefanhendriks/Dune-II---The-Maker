@@ -10,14 +10,14 @@
 #include "gameobjects/map/cMap.h"
 #include "utils/RNG.hpp"
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 namespace brains {
 
 cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
-    assert(player != nullptr);
-    assert(mission != nullptr);
+    my_assert(player != nullptr);
+    my_assert(mission != nullptr);
     targetStructureID = -1;
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // saboteur created
     specificBuildTypeToGoToSelectTargetState = game.m_infoContext->getSpecialInfo(SPECIAL_SABOTEUR).providesType;
@@ -55,12 +55,12 @@ void cPlayerBrainMissionKindSaboteur::think_Execute()
 {
     if (targetStructureID < 0) {
         // this should not happen!
-        assert(false && "Cannot run think_Execute() code without targetStructureID!");
+        my_assert(false && "Cannot run think_Execute() code without targetStructureID!");
     }
 
     if (targetStructureID > -1) {
         cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[targetStructureID];
-        assert(pStructure != nullptr);
+        my_assert(pStructure != nullptr);
         if (pStructure->isValid()) {
             const std::vector<int> &units = mission->getUnits();
             for (auto &myUnit: units) {

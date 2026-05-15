@@ -12,7 +12,7 @@
 #include "context/GraphicsContext.hpp"
 #include "game/cGameInterface.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cCreditsState::cCreditsState(sGameServices* services) :
     cGameState(services),
@@ -21,11 +21,11 @@ cCreditsState::cCreditsState(sGameServices* services) :
     m_interface(m_ctx->getGameInterface()),
     m_moveSpeed(0.15f)
 {
-    assert(m_textDrawer != nullptr);
-    assert(m_settings != nullptr);
-    assert(m_interface != nullptr);
+    my_assert(m_textDrawer != nullptr);
+    my_assert(m_settings != nullptr);
+    my_assert(m_interface != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    assert(gfxinter != nullptr);
+    my_assert(gfxinter != nullptr);
 
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);

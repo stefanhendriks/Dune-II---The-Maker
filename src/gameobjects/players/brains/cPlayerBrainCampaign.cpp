@@ -13,7 +13,7 @@
 #include <format>
 #include "utils/RNG.hpp"
 #include <algorithm>
-#include <cassert>
+#include "include/cAssert.h"
 #include "include/sDataCampaign.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
@@ -26,8 +26,8 @@ cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player, s_DataCampaign* data
     m_thinkState(ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST),
     m_dataCampaign(dataCampaign)
 {
-    assert(player != nullptr);
-    assert(dataCampaign != nullptr);
+    my_assert(player != nullptr);
+    my_assert(dataCampaign != nullptr);
     // timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
     // 10*60 -> 1 minute. * 4 -> 4 minutes
     m_TIMER_rest = (10 * 60) * 4;
@@ -186,7 +186,7 @@ void cPlayerBrainCampaign::onMyStructureCreated(const CommonEvent &event)
         if (!structurePosition.isDestroyed) continue; // not destroyed, hence cannot be rebuilt
 
         if (structurePosition.cell == placedAtCell) {
-            assert(structurePosition.type == event.entitySpecificType); // should be same structure type...
+            my_assert(structurePosition.type == event.entitySpecificType); // should be same structure type...
             // seems my structure, same location.
             structurePosition.structureId = event.entityID;
             structurePosition.isDestroyed = false; // no longer destroyed!
@@ -242,7 +242,7 @@ void cPlayerBrainCampaign::onMyUnitAttacked(const DamagedEvent &event)
 
     cUnit *threat = nullptr;
     if (event.originType == eBuildType::UNIT) {
-        assert(event.originId > -1);
+        my_assert(event.originId > -1);
         threat = game.m_gameObjectsContext->getUnit(event.originId);
     }
 
@@ -1654,7 +1654,7 @@ void cPlayerBrainCampaign::thinkState_ProcessBuildOrders()
         if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME)
             continue; // only process those which are marked
 
-        assert(buildOrder.buildId > -1 && "(cPlayerBrainCampaign) A build order with no buildId got in the m_buildOrders list, which is not allowed!");
+        my_assert(buildOrder.buildId > -1 && "(cPlayerBrainCampaign) A build order with no buildId got in the m_buildOrders list, which is not allowed!");
 
         if (buildOrder.buildType == eBuildType::STRUCTURE) {
             if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {

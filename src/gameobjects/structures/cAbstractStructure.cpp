@@ -134,8 +134,8 @@ Texture *cAbstractStructure::getShadowBitmap()
 
 cPlayer *cAbstractStructure::getPlayer()
 {
-    assert(iPlayer >= HUMAN);
-    assert(iPlayer < MAX_PLAYERS);
+    my_assert(iPlayer >= HUMAN);
+    my_assert(iPlayer < MAX_PLAYERS);
     return game.m_gameObjectsContext->getPlayer(iPlayer);
 }
 
@@ -417,22 +417,22 @@ void cAbstractStructure::think_decay()
 
 void cAbstractStructure::setWidth(int width)
 {
-    assert(width > 0);
-    assert(width < 4);
+    my_assert(width > 0);
+    my_assert(width < 4);
     iWidth = width;
 }
 
 void cAbstractStructure::setHeight(int height)
 {
-    assert(height > 0);
-    assert(height < 4);
+    my_assert(height > 0);
+    my_assert(height < 4);
     iHeight = height;
 }
 
 void cAbstractStructure::setRallyPoint(int cell)
 {
-    assert(cell > -2); // -1 is allowed (means disable);
-    assert(cell < game.m_gameObjectsContext->getMap()->getMaxCells());
+    my_assert(cell > -2); // -1 is allowed (means disable);
+    my_assert(cell < game.m_gameObjectsContext->getMap()->getMaxCells());
     iRallyPoint = cell;
 }
 
@@ -544,7 +544,7 @@ void cAbstractStructure::setHitPoints(int hp)
         logbook(std::format("setHitpoints({}) while max is {}; capped at max.", hp, maxHp));
 
         // will fail (uncomment to let it be capped)
-        assert(iHitPoints <= maxHp); // may never be more than the maximum of that structure
+        my_assert(iHitPoints <= maxHp); // may never be more than the maximum of that structure
 
         iHitPoints = maxHp;
     }
@@ -612,7 +612,7 @@ void cAbstractStructure::think_repair()
                 bRepair=false;
             }
         }
-        assert(iHitPoints <= structureInfo.hp);
+        my_assert(iHitPoints <= structureInfo.hp);
     }
 }
 
@@ -733,7 +733,7 @@ void cAbstractStructure::setUnitIdWithin(int unitId)
 {
     if (unitId > -1) {
         if (unitId != iUnitIDWithinStructure) {
-            assert(iUnitIDWithinStructure < 0 &&
+            my_assert(iUnitIDWithinStructure < 0 &&
                    "cAbstractStructure::setUnitIdWithin - Cannot set iUnitIDWithinStructure, because it has been set already!");
         }
     }
@@ -744,7 +744,7 @@ void cAbstractStructure::setUnitIdHeadingTowards(int unitId)
 {
     if (unitId > -1) {
         if (unitId != iUnitIDHeadingForStructure) {
-            assert(iUnitIDHeadingForStructure < 0 &&
+            my_assert(iUnitIDHeadingForStructure < 0 &&
                    "cAbstractStructure::setUnitIdHeadingTowards - Cannot set iUnitIDHeadingForStructure, because it has been set already!");
         }
     }
@@ -755,7 +755,7 @@ void cAbstractStructure::setUnitIdEntering(int unitId)
 {
     if (unitId > -1) {
         if (unitId != iUnitIDEnteringStructure) {
-            assert(iUnitIDEnteringStructure < 0 &&
+            my_assert(iUnitIDEnteringStructure < 0 &&
                    "cAbstractStructure::setUnitIdHeadingTowards - Cannot set iUnitIDEnteringStructure, because it has been set already!");
         }
     }

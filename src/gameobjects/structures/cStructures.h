@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <cassert>
+#include "include/cAssert.h"
 #include <cstddef>
 #include "definitions.h"
 #include "gameobjects/structures/cAbstractStructure.h"
@@ -21,12 +21,12 @@ public:
     }
 
     cAbstractStructure* &operator[](std::size_t index) {
-        assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        my_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
         return m_values[index];
     }
 
     cAbstractStructure* const &operator[](std::size_t index) const {
-        assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        my_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
         return m_values[index];
     }
 

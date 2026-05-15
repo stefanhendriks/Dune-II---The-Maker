@@ -1,7 +1,7 @@
 #include "GuiWindow.h"
 #include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
-#include <cassert>
+#include "include/cAssert.h"
 
 GuiWindow::GuiWindow(SDLDrawer* drawer, const cRectangle &rect, cTextDrawer* _textDrawer) :
     GuiObject(drawer,rect),
@@ -9,8 +9,8 @@ GuiWindow::GuiWindow(SDLDrawer* drawer, const cRectangle &rect, cTextDrawer* _te
     title(""),
     m_textDrawer(_textDrawer)
 {
-    assert(drawer != nullptr);
-    assert(_textDrawer != nullptr);
+    my_assert(drawer != nullptr);
+    my_assert(_textDrawer != nullptr);
 }
 
 GuiWindow::~GuiWindow() noexcept

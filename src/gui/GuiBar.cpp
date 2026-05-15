@@ -1,12 +1,12 @@
 #include "gui/GuiBar.h"
 
 #include "drawers/SDLDrawer.hpp"
-#include <cassert>
+#include "include/cAssert.h"
 
 GuiBar::GuiBar(SDLDrawer* drawer, const cRectangle &rect, GuiBarPlacement placement, int heightBarSize) :
     GuiObject(drawer, rect), /*gui_objects(std::vector<GuiObject *>(0)),*/ m_placement(placement), placementPosition(0), heightBarSize(heightBarSize)
 {
-    assert(drawer != nullptr);
+    my_assert(drawer != nullptr);
     if (m_placement == GuiBarPlacement::HORIZONTAL) {
        halfMarginBetweenButtons = (rect.getHeight()-heightBarSize)/2;
     } else {

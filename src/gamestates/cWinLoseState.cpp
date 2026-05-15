@@ -7,21 +7,21 @@
 #include "game/cGameInterface.h"
 
 #include <SDL2/SDL.h>
-#include <cassert>
+#include "include/cAssert.h"
 
 cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) : 
     cGameState(services),
     m_settings(services->settings),
     m_statement(value)
 {
-    assert(services != nullptr);
-    assert(m_settings != nullptr);
+    my_assert(services != nullptr);
+    my_assert(m_settings != nullptr);
 
     auto ctx = services->ctx;
     m_interface = ctx->getGameInterface();
-    assert(m_interface != nullptr);
+    my_assert(m_interface != nullptr);
     auto gfxinter = ctx->getGraphicsContext()->gfxinter;
-    assert(gfxinter != nullptr);
+    my_assert(gfxinter != nullptr);
 
     if (m_interface->getScreenTexture() != nullptr)
         m_backgroundTexture = m_interface->getScreenTexture();

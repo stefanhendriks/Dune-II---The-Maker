@@ -6,12 +6,12 @@
 #include "context/TextContext.hpp"
 #include "drawers/cTextDrawer.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsValidator)
 {
-    assert(renderer!=nullptr);
-    assert(settingsValidator!=nullptr);
+    my_assert(renderer!=nullptr);
+    my_assert(settingsValidator!=nullptr);
     // 
     // loading all datapacks
     //

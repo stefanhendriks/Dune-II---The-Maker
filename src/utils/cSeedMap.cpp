@@ -2,7 +2,7 @@
 
 #include "data/gfxdata.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cSeedMap::cSeedMap() : map(kMapWidth*kMapHeight, TERRAIN_SAND)
 {
@@ -10,21 +10,21 @@ cSeedMap::cSeedMap() : map(kMapWidth*kMapHeight, TERRAIN_SAND)
 
 void cSeedMap::setCellType(int x, int y, int type)
 {
-    assert(x > -1);
-    assert(x < kMapWidth);
-    assert(y > -1);
-    assert(y < kMapHeight);
-    assert(type > -1);
-    assert(type < TERRAIN_WALL);
+    my_assert(x > -1);
+    my_assert(x < kMapWidth);
+    my_assert(y > -1);
+    my_assert(y < kMapHeight);
+    my_assert(type > -1);
+    my_assert(type < TERRAIN_WALL);
     map[x + kMapWidth * y] = type;
 }
 
 int cSeedMap::getCellType(int x, int y)
 {
-    assert(x > -1);
-    assert(x < kMapWidth);
-    assert(y > -1);
-    assert(y < kMapHeight);
+    my_assert(x > -1);
+    my_assert(x < kMapWidth);
+    my_assert(y > -1);
+    my_assert(y < kMapHeight);
     return map[x + kMapWidth * y];
 }
 

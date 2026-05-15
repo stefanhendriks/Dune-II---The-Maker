@@ -15,7 +15,7 @@
 
 #include <SDL2/SDL.h>
 #include <cmath>
-#include <cassert>
+#include "include/cAssert.h"
 
 cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera) :
     m_map(map),
@@ -28,11 +28,11 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     m_drawWithoutShroudTiles(false),
     m_drawGrid(false)
 {
-    assert(map!=nullptr);
-    assert(m_mapGeometry != nullptr);
-    assert(camera!=nullptr);
-    assert(player!=nullptr);
-    assert(ctx != nullptr);
+    my_assert(map!=nullptr);
+    my_assert(m_mapGeometry != nullptr);
+    my_assert(camera!=nullptr);
+    my_assert(player!=nullptr);
+    my_assert(ctx != nullptr);
 }
 
 cMapDrawer::~cMapDrawer()

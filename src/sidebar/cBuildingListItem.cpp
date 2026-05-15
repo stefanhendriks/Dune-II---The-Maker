@@ -7,11 +7,11 @@
 #include "context/cInfoContext.h"
 #include "game/cGameSettings.h"
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable)
 {
-    assert(buildId >= 0);
+    my_assert(buildId >= 0);
     m_icon = icon;
     m_buildId = buildId;
     m_type = type;

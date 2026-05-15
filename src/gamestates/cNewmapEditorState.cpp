@@ -11,7 +11,7 @@
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/map/cPreviewMaps.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 #include <chrono>
 
 static const int borderSize = 2;
@@ -24,9 +24,9 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services)
     m_guiWindow(nullptr),
     m_previewMap(services->objects->getPreviewMaps())
 {
-    assert(m_textDrawer != nullptr);
-    assert(m_settings != nullptr);
-    assert(m_interface != nullptr);
+    my_assert(m_textDrawer != nullptr);
+    my_assert(m_settings != nullptr);
+    my_assert(m_interface != nullptr);
     constructWindow();
 }
 

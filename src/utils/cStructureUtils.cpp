@@ -27,15 +27,15 @@ cStructureUtils::~cStructureUtils()
 
 int cStructureUtils::getHeightOfStructureTypeInCells(int structureType)
 {
-    assert(structureType >= 0);
-    assert(structureType < MAX_STRUCTURETYPES);
+    my_assert(structureType >= 0);
+    my_assert(structureType < MAX_STRUCTURETYPES);
     return game.m_infoContext->getStructureInfo(structureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
 }
 
 int cStructureUtils::getWidthOfStructureTypeInCells(int structureType)
 {
-    assert(structureType >= 0);
-    assert(structureType < MAX_STRUCTURETYPES);
+    my_assert(structureType >= 0);
+    my_assert(structureType < MAX_STRUCTURETYPES);
     return game.m_infoContext->getStructureInfo(structureType).bmp_width / TILESIZE_WIDTH_PIXELS;
 }
 
@@ -47,7 +47,7 @@ int cStructureUtils::getWidthOfStructureTypeInCells(int structureType)
  */
 int cStructureUtils::findStarportToDeployUnit(cPlayer *pPlayer)
 {
-    assert(pPlayer);
+    my_assert(pPlayer);
     int playerId = pPlayer->getId();
 
     // check primary building first if set
@@ -109,8 +109,8 @@ int cStructureUtils::findStarportToDeployUnit(cPlayer *pPlayer)
  */
 int cStructureUtils::findStructureToDeployUnit(cPlayer *pPlayer, int structureType)
 {
-    assert(pPlayer);
-    assert(structureType > -1);
+    my_assert(pPlayer);
+    my_assert(structureType > -1);
 
     int playerId = pPlayer->getId();
 
@@ -214,7 +214,7 @@ int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const
             return HIGHTECH;
         default:
             logbook(std::format("Item buildId is [{}], which is not mapped", unitBuildId));
-            assert(false);
+            my_assert(false);
             return -1;
     }
 }
@@ -229,7 +229,7 @@ void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructur
 
     int cellOfStructure = theStructure->getCell();
 
-    assert(cellOfStructure > -1);
+    my_assert(cellOfStructure > -1);
 
     for (int w = 0; w < theStructure->getWidth(); w++) {
         for (int h = 0; h < theStructure->getHeight(); h++)	{
@@ -346,7 +346,7 @@ int cStructureUtils::getTotalPowerOutForPlayer(cPlayer *pPlayer)
 
 int cStructureUtils::findHiTechToDeployAirUnit(cPlayer *pPlayer)
 {
-    assert(pPlayer);
+    my_assert(pPlayer);
 
     int playerId = pPlayer->getId();
 

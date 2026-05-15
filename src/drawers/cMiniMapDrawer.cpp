@@ -20,7 +20,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "gameobjects/map/cMap.h"
-#include <cassert>
+#include "include/cAssert.h"
 #include <algorithm>
 #include <cmath>
 //#include <iostream>
@@ -40,9 +40,9 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
     m_iStaticFrame(STAT14),
     m_iTrans(0)
 {
-    assert(map!=nullptr);
-    assert(player!=nullptr);
-    assert(mapCamera!=nullptr);
+    my_assert(map!=nullptr);
+    my_assert(player!=nullptr);
+    my_assert(mapCamera!=nullptr);
 
     float reportX = cSideBar::WidthOfMinimap*1.f / getMapWidthInPixels();
     float reportY = cSideBar::HeightOfMinimap*1.f / getMapHeightInPixels();

@@ -78,30 +78,30 @@ MapGeometry *cMap::getGeometry() const
 
 void cMap::serviceInit(sGameServices* services)
 {
-    assert(services != nullptr);
+    my_assert(services != nullptr);
     m_ctx = services->ctx;
-    assert(m_ctx != nullptr);
+    my_assert(m_ctx != nullptr);
     m_log = services->m_log;
-    assert(m_log != nullptr);
+    my_assert(m_log != nullptr);
 
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
-    assert(m_textDrawer != nullptr);
+    my_assert(m_textDrawer != nullptr);
 
     m_settings = services->settings;
-    assert(m_settings != nullptr);
+    my_assert(m_settings != nullptr);
     m_infos = services->info;
-    assert(m_infos != nullptr);
+    my_assert(m_infos != nullptr);
     m_objects = services->objects;
-    assert(m_objects != nullptr);
+    my_assert(m_objects != nullptr);
     m_interface = m_ctx->getGameInterface();
-    assert(m_interface != nullptr);
+    my_assert(m_interface != nullptr);
     m_pathFinder->serviceInit(services);
 }
 
 void cMap::setReinforcements(cReinforcements* reinforcements)
 {
     m_reinforcements = reinforcements;
-    assert(m_reinforcements != nullptr);
+    my_assert(m_reinforcements != nullptr);
 }
 
 void cMap::setTerrainInfo(s_TerrainInfo* terrainInfo)
@@ -760,7 +760,7 @@ int cMap::getCellSlowDown(int iCell)
 
 int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
 {
-    assert(destinationCell > -1);
+    my_assert(destinationCell > -1);
     // Cell x and y coordinates
     int iCllX = m_mapGeometry->getCellX(destinationCell);
     int iCllY = m_mapGeometry->getCellY(destinationCell);
@@ -845,10 +845,10 @@ void cMap::createCell(int cell, int terrainType, int tile)
     if (tile < 0) return;
     if (tile > 16) return;
 
-    assert(terrainType >= TERRAIN_BLOOM);
-    assert(terrainType <= TERRAIN_WALL);
-    assert(tile > -1);
-    assert(tile < 17);
+    my_assert(terrainType >= TERRAIN_BLOOM);
+    my_assert(terrainType <= TERRAIN_WALL);
+    my_assert(tile > -1);
+    my_assert(tile < 17);
 
     // Set
     cellChangeType(cell, terrainType);
@@ -1116,9 +1116,9 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
  */
 cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, cPlayer *player)
 {
-    assert(player);
-    assert(structureType > -1);
-    assert(isValidCell(cell));
+    my_assert(player);
+    my_assert(structureType > -1);
+    my_assert(isValidCell(cell));
 
     int foundStructureId = -1;    // found structure id
     long shortestDistance = 9999; // max distance to search in
@@ -1206,9 +1206,9 @@ void cMap::cellInit(int cellNr)
 
 cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer)
 {
-    assert(pPlayer);
-    assert(structureType > -1);
-    assert(isValidCell(cell));
+    my_assert(pPlayer);
+    my_assert(structureType > -1);
+    my_assert(isValidCell(cell));
 
     int foundStructureId = -1;    // found structure id
     long shortestDistance = 9999; // max distance to search in
@@ -1239,9 +1239,9 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
 cAbstractStructure *
 cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer *pPlayer)
 {
-    assert(pPlayer);
-    assert(structureType > -1);
-    assert(isValidCell(cell));
+    my_assert(pPlayer);
+    my_assert(structureType > -1);
+    my_assert(isValidCell(cell));
 
     int foundStructureId = -1;    // found structure id
     long shortestDistance = 9999; // max distance to search in
