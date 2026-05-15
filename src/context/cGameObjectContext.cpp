@@ -115,7 +115,7 @@ cUnit* cGameObjectContext::getUnit(std::size_t index)
 {
     if (!m_Units) return nullptr;
     if (index >= static_cast<std::size_t>(m_Units->size())) return nullptr;
-    return &(*m_Units)[static_cast<int>(index)];
+    return (*m_Units)[static_cast<int>(index)];
 }
 
 cUnit* cGameObjectContext::getUnit(int index)
