@@ -19,7 +19,7 @@
 
 cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera) :
     m_map(map),
-    m_mapGeometry(map ? &map->getGeometry() : nullptr),
+    m_mapGeometry(map ? map->getGeometry() : nullptr),
     m_player(player),
     m_camera(camera),
     m_ctx(ctx),

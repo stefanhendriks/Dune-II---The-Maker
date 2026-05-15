@@ -9,7 +9,7 @@
 
 #include <cassert>
 
-cMapEditor::cMapEditor(cMap &map) : m_map(map), m_mapGeometry(&map.getGeometry())
+cMapEditor::cMapEditor(cMap &map) : m_map(map), m_mapGeometry(map.getGeometry())
 {
     assert(m_mapGeometry != nullptr);
 }

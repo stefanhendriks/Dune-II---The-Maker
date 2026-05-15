@@ -236,7 +236,7 @@ void cMiniMapDrawer::drawTerrain()
         for (int y = 0; y < (m_map->getHeight()); y++) {
             iColor = Color{0, 0, 0,255};
             //@mira where is map ?
-            int iCll = m_map->getGeometry().makeCell(x, y);
+            int iCll = m_map->getGeometry()->makeCell(x, y);
 
             if (m_map->isVisible(iCll, m_player->getId())) {
                 iColor = getRGBColorForTerrainType(m_map->getCellType(iCll));
@@ -244,7 +244,7 @@ void cMiniMapDrawer::drawTerrain()
 
             // TODO: make flexible map borders
             // do not show the helper border
-            if (!m_map->getGeometry().isWithinBoundaries(x, y)) {
+            if (!m_map->getGeometry()->isWithinBoundaries(x, y)) {
                 iColor = Color{0, 0, 0,255};
             }
 
@@ -302,9 +302,9 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
     for (int x = 0; x < m_map->getWidth(); x++) {
         for (int y = 0; y < m_map->getHeight(); y++) {
             // do not show the helper border
-            if (!m_map->getGeometry().isWithinBoundaries(x, y)) continue;
+            if (!m_map->getGeometry()->isWithinBoundaries(x, y)) continue;
 
-            int iCll = m_map->getGeometry().makeCell(x, y);
+            int iCll = m_map->getGeometry()->makeCell(x, y);
 
             if (!m_map->isVisible(iCll, m_player->getId())) {
                 // invisible cell
@@ -426,7 +426,7 @@ void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
             cUnits *units = game.m_gameObjectsContext->getUnits();
             units->move_to(mouseCellOnMinimap);
 
-            auto absPoint = m_map->getGeometry().getAbsolutePositionFromCell(mouseCellOnMinimap);
+            auto absPoint = m_map->getGeometry()->getAbsolutePositionFromCell(mouseCellOnMinimap);
             cParticle::create(absPoint.x, absPoint.y, D2TM_PARTICLE_MOVE, -1, -1);
 
             sSelectedUnitTypes selectedUnitTypes = m_player->getSelectedUnitTypes();
@@ -483,7 +483,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     int mouseMiniMapX = static_cast<int>(std::floor(mouseMiniMapXf));
     int mouseMiniMapY = static_cast<int>(std::floor(mouseMiniMapYf));
 
-    auto mouseMiniMapPoint = m_map->getGeometry().fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
+    auto mouseMiniMapPoint = m_map->getGeometry()->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
-    return m_map->getGeometry().getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
+    return m_map->getGeometry()->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }
