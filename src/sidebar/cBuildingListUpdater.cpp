@@ -172,7 +172,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
 
     if (structureType == HIGHTECH) {
         listUnits->addUnitToList(CARRYALL, SUBLIST_HIGHTECH);
-        if (house == ATREIDES || house == ORDOS) {
+        if (house != HARKONNEN) {
             listUnits->addUnitToList(ORNITHOPTER, SUBLIST_HIGHTECH);
         }
     }
@@ -187,6 +187,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
         list->addUnitToList(MCV, 0);
         list->addUnitToList(HARVESTER, 0);
         list->addUnitToList(LAUNCHER, 0);
+		list->addUnitToList(CARRYALL, 0);
 
         if (techLevel > 6) {
             list->addUnitToList(SIEGETANK, 0);
@@ -238,7 +239,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
         m_player->log("onStructureCreated - added SLAB1 to list");
 
         if (techLevel >= 2) {
-            if (house == ATREIDES || house == ORDOS) {
+            if (house != HARKONNEN) {
                 listConstYard->addStructureToList(BARRACKS, 0);
                 m_player->log("onStructureCreated - added BARRACKS to list");
             }
@@ -247,6 +248,15 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
                 m_player->log("onStructureCreated - added WOR to list");
             }
         }
+		
+		if (structureType == BARRACKS) {
+			if (techLevel >= 3) {
+				if (house == SARDAUKAR) {
+					listConstYard->addStructureToList(WOR, 0);
+					m_player->log("onStructureCreated - added WOR to list");
+				}
+			}
+		
 
         if (techLevel >= 4) {
             //list->addItemToList(new cBuildingListItem(SLAB4, structures[SLAB4])); // only available after upgrading
