@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>      // Pour l'écriture dans le fichier txt
+#include <sstream>
 #include <stacktrace>
 #include <source_location>
 #include <cstdlib>
@@ -15,12 +17,13 @@ inline void my_assert(
         return;
     }
 
-    std::cerr << "\n========================================\n";
-    std::cerr << "ASSERT FAILED\n"; 
-    std::cerr << "File:     " << location.file_name() << ":" << location.line() << "\n";
-    std::cerr << "Function: " << location.function_name() << "\n";
-    std::cerr << "----------------------------------------\n";
-    std::cerr << "Call Stack:\n";
+    std::ostringstream report;
+    report << "========================================\n";
+    report << "ASSERT FAILED\n"; 
+    report << "File:     " << location.file_name() << ":" << location.line() << "\n";
+    report << "Function: " << location.function_name() << "\n";
+    report << "----------------------------------------\n";
+    report << "Call Stack:\n";
     
     // Stack C++23 capture 
     auto trace = std::stacktrace::current();
@@ -28,10 +31,19 @@ inline void my_assert(
     // Index 0: std::stacktrace::current() // rip !
     // Index 1: my_my_assert()
     for (size_t i = 1; i < trace.size(); ++i) {
-        std::cerr << i - 1 << "# " << trace[i].description() << "\n";
+        report << i - 1 << "# " << trace[i].description() << "\n";
     }
-    std::cerr << "========================================\n\n";
-    
+    report << "========================================\n\n";
+
+    const std::string report_str = report.str();
+    std::cerr << "\n" << report_str << std::endl;
+    std::cerr.flush();
+
+    if (std::ofstream file{"bump.log", std::ios::app}) {
+        file << report_str << "\n";
+        file.flush(); // to avoid end before write in case of crash
+    }
+
     std::abort();
 #else
     // In release mode, we choose to do nothing. Here we just ignore it.
