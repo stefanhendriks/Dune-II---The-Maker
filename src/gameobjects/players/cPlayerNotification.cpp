@@ -1,6 +1,6 @@
 #include "cPlayerNotification.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 
 std::string eNotificationTypeString(const eNotificationType &type)
@@ -13,7 +13,7 @@ std::string eNotificationTypeString(const eNotificationType &type)
         case eNotificationType::BAD:
             return "BAD";
         default:
-            assert(false && "Unknown eNotificationType?");
+            my_assert(false && "Unknown eNotificationType?");
             break;
     }
     return {};

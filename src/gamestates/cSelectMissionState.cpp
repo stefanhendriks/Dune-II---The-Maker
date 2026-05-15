@@ -9,7 +9,7 @@
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState) :
     cGameState(services),
@@ -17,7 +17,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface())
 {
-    assert(services != nullptr);
+    my_assert(services != nullptr);
     int margin = m_settings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;

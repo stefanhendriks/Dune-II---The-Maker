@@ -11,11 +11,11 @@
 #include "game/cGameSettings.h"
 
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer)
 {
-    assert(thePlayer!=nullptr);
+    my_assert(thePlayer!=nullptr);
     m_player = thePlayer;
 }
 
@@ -71,9 +71,9 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
     cLogger::getInstance()->log(LOG_TRACE, COMP_STRUCTURES, "onStructureCreatedCampaignMode",
                                 std::format("For m_player [{}], structureType [{}], techlevel [{}], house [{}]", m_player->getId(), structureType, techLevel, house));
 
-    assert(listConstYard);
-    assert(listFootUnits);
-    assert(listConstYard);
+    my_assert(listConstYard);
+    my_assert(listFootUnits);
+    my_assert(listConstYard);
 
     if (structureType == CONSTYARD) {
         // add items
@@ -229,9 +229,9 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     int house = m_player->getHouse();
     int techLevel = m_player->getTechLevel();
 
-    assert(listConstYard);
-    assert(listFootUnits);
-    assert(listConstYard);
+    my_assert(listConstYard);
+    my_assert(listFootUnits);
+    my_assert(listConstYard);
 
     if (structureType == CONSTYARD) {
         // add items
@@ -626,10 +626,10 @@ void cBuildingListUpdater::evaluateUpgrades()
  */
 void cBuildingListUpdater::onUpgradeCompleted(cBuildingListItem *item)
 {
-    assert(item);
+    my_assert(item);
     if (!item->isTypeUpgrade()) {
         m_player->log("ERROR ERROR ERROR! -> the provided item is NOT an upgrade type!");
-        assert(false && "the provided item is NOT an upgrade type!");
+        my_assert(false && "the provided item is NOT an upgrade type!");
         return;
     }
 
@@ -663,7 +663,7 @@ void cBuildingListUpdater::applyUpgrade(const s_UpgradeInfo &upgradeInfo)
     cBuildingList *listBeingUpgraded = sideBar->getList(listType);
     listBeingUpgraded->setStatusAvailable(subListType);
 
-    assert(upgradeInfo.providesTypeId > -1);
+    my_assert(upgradeInfo.providesTypeId > -1);
 
     cBuildingList *list = sideBar->getList(listType);
     if (upgradeInfo.providesType == UNIT) {
@@ -683,8 +683,8 @@ void cBuildingListUpdater::applyUpgrade(const s_UpgradeInfo &upgradeInfo)
  */
 void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem)
 {
-    assert(pItem);
-    assert(pItem->isTypeUpgrade() && "Expected type upgrade");
+    my_assert(pItem);
+    my_assert(pItem->isTypeUpgrade() && "Expected type upgrade");
     cSideBar *sideBar = m_player->getSideBar();
 
     // get the structure type it is upgrading
@@ -704,8 +704,8 @@ void cBuildingListUpdater::onUpgradeStarted(cBuildingListItem *pItem)
 void cBuildingListUpdater::onUpgradeCancelled(cBuildingListItem *pItem)
 {
     m_player->log("onUpgradeCancelled - start");
-    assert(pItem);
-    assert(pItem->isTypeUpgrade() && "Expected type Upgrade for onUpgradeCancelled");
+    my_assert(pItem);
+    my_assert(pItem->isTypeUpgrade() && "Expected type Upgrade for onUpgradeCancelled");
 
     cSideBar *sideBar = m_player->getSideBar();
 

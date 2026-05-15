@@ -15,7 +15,7 @@
 #include "data/gfxdata.h"
 #include "include/sDataCampaign.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cMentatState::cMentatState(sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign)
     : cGameState(services),
@@ -26,11 +26,11 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, s_DataCampa
       m_mode(mode),
       m_house(dataCampaign->housePlayer)
 {
-    assert(services != nullptr);
-    assert(m_dataCampaign != nullptr);
-    assert(m_settings != nullptr);
-    assert(m_interface != nullptr);
-    assert(m_objets != nullptr);
+    my_assert(services != nullptr);
+    my_assert(m_dataCampaign != nullptr);
+    my_assert(m_settings != nullptr);
+    my_assert(m_interface != nullptr);
+    my_assert(m_objets != nullptr);
     prepareMentat(m_house);
 }
 

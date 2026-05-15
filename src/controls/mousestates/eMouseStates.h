@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <assert.h>
+#include "include/cAssert.h"
 
 // states, apply to battlefield only
 enum eMouseState {
@@ -31,7 +31,7 @@ inline std::string mouseStateString(eMouseState state)
         case MOUSESTATE_DEPLOY:
             return "MOUSESTATE_DEPLOY";
         default:
-            assert(false);
+            my_assert(false);
             break;
     }
     return "";

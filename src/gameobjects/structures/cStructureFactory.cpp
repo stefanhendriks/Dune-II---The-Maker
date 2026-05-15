@@ -88,8 +88,8 @@ void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure)
 **/
 cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructureType, int iPlayer, int iPercent)
 {
-    assert(iPlayer >= 0);
-    assert(iPlayer <= MAX_PLAYERS);
+    my_assert(iPlayer >= 0);
+    my_assert(iPlayer <= MAX_PLAYERS);
 
     if (iPercent > 100) iPercent = 100;
 
@@ -345,7 +345,7 @@ int cStructureFactory::getSlabStatus(int iCell, int iStructureType)
 void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType)
 {
     // DUPLICATED BY slabStructure?
-    assert(iCell > -1);
+    my_assert(iCell > -1);
 
     int height = game.m_infoContext->getStructureInfo(iStructureType).bmp_height / 32;
     int width = game.m_infoContext->getStructureInfo(iStructureType).bmp_width / 32;

@@ -13,14 +13,14 @@
 #include "gameobjects/players/cPlayer.h"
 
 #include <algorithm>
-#include <cassert>
+#include "include/cAssert.h"
 
 cMouseRepairState::cMouseRepairState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)
 {
-    assert(player!=nullptr);
-    assert(context!=nullptr);
-    assert(mouse!=nullptr);
+    my_assert(player!=nullptr);
+    my_assert(context!=nullptr);
+    my_assert(mouse!=nullptr);
 }
 
 void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event)

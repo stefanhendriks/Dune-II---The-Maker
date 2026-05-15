@@ -26,7 +26,7 @@
 #include "utils/cExpandingRectangle.h"
 
 #include <algorithm>
-#include <cassert>
+#include "include/cAssert.h"
 #include <cmath>
 #include "sidebar/cSideBar.h"
 
@@ -35,23 +35,23 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     m_objects(services->objects),
     m_settings(services->settings)
 {
-    assert(m_objects != nullptr);
-    assert(m_settings != nullptr);
+    my_assert(m_objects != nullptr);
+    my_assert(m_settings != nullptr);
     m_TIMER_evaluatePlayerStatus = 5;
 
     //fix others pointers
     m_interface = m_ctx->getGameInterface();
-    assert(m_interface != nullptr);
+    my_assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
-    assert(m_mapCamera != nullptr);
+    my_assert(m_mapCamera != nullptr);
     m_reinforcements = m_interface->getReinforcements();
-    assert(m_reinforcements != nullptr);
+    my_assert(m_reinforcements != nullptr);
     m_structureFactory = services->objects->getStructureFactory();
-    assert(m_structureFactory != nullptr);
+    my_assert(m_structureFactory != nullptr);
     m_drawManager = m_interface->getRenderDrawManager();
-    assert(m_drawManager != nullptr);
+    my_assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
-    assert(m_textDrawer != nullptr);
+    my_assert(m_textDrawer != nullptr);
 
     m_controlledPlayer = m_objects->getPlayer(HUMAN);
     m_drawManager->setPlayerToDraw(m_controlledPlayer);

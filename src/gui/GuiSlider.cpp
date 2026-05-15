@@ -2,7 +2,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include <algorithm>
 #include <iostream>
-#include <cassert>
+#include "include/cAssert.h"
 static constexpr auto GUI_KNOB_WIDTH = 12;
 
 GuiSlider::GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue, int maxValue, int initialValue)
@@ -12,7 +12,7 @@ GuiSlider::GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue, in
     , m_value(std::clamp(initialValue, minValue, maxValue))
     , m_dragging(false)
 {
-    assert(drawer != nullptr);
+    my_assert(drawer != nullptr);
 }
 
 void GuiSlider::draw() const {

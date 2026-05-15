@@ -16,14 +16,14 @@
 #include "game/cGameInterface.h"
 
 #include "context/GameContext.hpp"
-#include <cassert>
+#include "include/cAssert.h"
 
 CreatorState::CreatorState(sGameServices* services, s_DataCampaign* dataCampaign)
     : m_services(services)
 {
     m_dataCampaign = dataCampaign;
-    assert(m_services != nullptr);
-    assert(m_dataCampaign != nullptr);
+    my_assert(m_services != nullptr);
+    my_assert(m_dataCampaign != nullptr);
     // all State should be recreate when needed to use
     needToRecreateState.fill(true);
     // this States should not be recreated when we need to use

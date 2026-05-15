@@ -10,7 +10,7 @@
 #include "game/cGameSettings.h"
 
 #include <SDL2/SDL.h>
-#include <cassert>
+#include "include/cAssert.h"
 
 // Game Playing State and SelectYourNextConquestState have their own version
 // this class has to be abstracted in such a way so it is used in both those states, yet without the wonky init
@@ -26,7 +26,7 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx) :
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    assert(ctx != nullptr);
+    my_assert(ctx != nullptr);
     m_bmpBar = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;

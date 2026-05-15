@@ -105,7 +105,7 @@ public:
     void setBrain(std::unique_ptr<brains::cPlayerBrain> brain);
 
     void setHousesInfo(cHousesInfo* housesInfo) {
-        assert(housesInfo != nullptr);
+        my_assert(housesInfo != nullptr);
         m_HousesInfo = housesInfo;
     }
 

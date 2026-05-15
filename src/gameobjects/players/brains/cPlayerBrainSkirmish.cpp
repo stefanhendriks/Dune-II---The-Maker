@@ -15,7 +15,7 @@
 #include "gameobjects/players/cPlayers.h"
 #include "utils/RNG.hpp"
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 #include <algorithm>
 
@@ -26,7 +26,7 @@ cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
     m_state(ePlayerBrainState::PLAYERBRAIN_PEACEFUL),
     m_thinkState(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST)
 {
-    assert(player != nullptr);
+    my_assert(player != nullptr);
 //         timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        m_TIMER_rest = (10 * 60) * 4;
@@ -298,7 +298,7 @@ void cPlayerBrainSkirmish::onMyStructureAttacked(const DamagedEvent &event)
 void cPlayerBrainSkirmish::respondToThreat(cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder)
 {
     // when we pass in a cell here by accident, it gets easily > 20
-    assert(maxUnitsToOrder < 20 && "Are you sure you used the correct parameter here?");
+    my_assert(maxUnitsToOrder < 20 && "Are you sure you used the correct parameter here?");
 
     cRespondToThreatAction(this->player, threat, victim, cellOriginOfThreat, maxUnitsToOrder).execute();
 }
@@ -1028,7 +1028,7 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
         if (buildOrder.state != buildOrder::eBuildOrderState::PROCESSME)
             continue; // only process those which are marked
 
-        assert(buildOrder.buildId > -1 && "(cPlayerBrainSkirmish) A build order with no buildId got in the m_buildOrders list, which is not allowed!");
+        my_assert(buildOrder.buildId > -1 && "(cPlayerBrainSkirmish) A build order with no buildId got in the m_buildOrders list, which is not allowed!");
 
         if (buildOrder.buildType == eBuildType::STRUCTURE) {
             if (player->canBuildStructure(buildOrder.buildId) == eCantBuildReason::NONE) {
@@ -1620,7 +1620,7 @@ void cPlayerBrainSkirmish::onMyUnitAttacked(const DamagedEvent &event)
 
     cUnit *threat = nullptr;
     if (event.originType == eBuildType::UNIT) {
-        assert(event.originId > -1);
+        my_assert(event.originId > -1);
         threat = game.m_gameObjectsContext->getUnit(event.originId);
     }
 

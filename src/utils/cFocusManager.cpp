@@ -1,11 +1,11 @@
 #include "utils/cFocusManager.h"
 #include "game/cTimeManager.h"
 #include <iostream>
-#include <cassert>
+#include "include/cAssert.h"
 
 cFocusManager::cFocusManager(cTimeManager* timeManager)
 {
-    assert(timeManager != nullptr);
+    my_assert(timeManager != nullptr);
     // Initialize focus manager with time manager if needed
     m_timeManager = timeManager;
 }

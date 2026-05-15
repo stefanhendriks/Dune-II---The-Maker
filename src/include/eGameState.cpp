@@ -1,4 +1,4 @@
-#include <cassert>
+#include "include/cAssert.h"
 #include "include/eGameState.h"
 
 
@@ -42,7 +42,7 @@ const char *stateToString(const int &state)
         case GAME_MISSIONSELECT:
             return "GAME_MISSIONSELECT";
         default:
-            assert(false);
+            my_assert(false);
             break;
     }
     return "";

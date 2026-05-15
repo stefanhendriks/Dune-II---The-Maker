@@ -20,7 +20,7 @@ inline const char *mouseNormalStateString(const eMouseNormalState &state)
         case SELECT_STATE_RALLY:
             return "SELECT_STATE_RALLY";
         default:
-            assert(false);
+            my_assert(false);
             break;
     }
     return "";

@@ -1,13 +1,13 @@
 #include "gui/GuiObject.h"
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>
-#include <cassert>
+#include "include/cAssert.h"
 
 
 GuiObject::GuiObject(SDLDrawer* drawer, const cRectangle &rect) : 
     m_rect(rect), m_renderDrawer(drawer)
 {
-    assert(drawer != nullptr);
+    my_assert(drawer != nullptr);
 }
 
 

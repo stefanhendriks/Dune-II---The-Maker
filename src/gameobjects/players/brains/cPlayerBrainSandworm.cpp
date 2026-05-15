@@ -6,12 +6,12 @@
 #include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
-#include <cassert>
+#include "include/cAssert.h"
 
 namespace brains {
 cPlayerBrainSandworm::cPlayerBrainSandworm(cPlayer *player) : cPlayerBrain(player)
 {
-    assert(player != nullptr);
+    my_assert(player != nullptr);
     TIMER_think = 0;
 }
 

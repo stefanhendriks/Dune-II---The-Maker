@@ -1,11 +1,11 @@
 #include "cTextWriter.h"
 #include "drawers/cTextDrawer.h"
-#include <cassert>
+#include "include/cAssert.h"
 
 cTextWriter::cTextWriter(cTextDrawer* _textDrawer, int theFontSize)
 {
-    assert(theFontSize > 0);
-    assert(_textDrawer != nullptr);
+    my_assert(theFontSize > 0);
+    my_assert(_textDrawer != nullptr);
     drawX=-1;
     drawY=-1;
     fontSize = theFontSize;

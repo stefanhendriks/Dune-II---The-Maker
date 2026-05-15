@@ -18,7 +18,7 @@
 #include "controls/mousestates/cMousePlaceState.h"
 #include "controls/mousestates/cMouseDeployState.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
     m_mouseHoveringOverStructureId(-1),
@@ -38,8 +38,8 @@ cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
     m_mouseDeployState(std::make_unique<cMouseDeployState>(player, this, m_mouse)),
     m_prevTickMouseAtBattleField(false)
 {
-    assert(player!=nullptr && "Expected player in cGameControlsContext constructor");
-    assert(mouse!=nullptr && "Expected mouse in cGameControlsContext constructor");
+    my_assert(player!=nullptr && "Expected player in cGameControlsContext constructor");
+    my_assert(mouse!=nullptr && "Expected mouse in cGameControlsContext constructor");
 }
 
 cGameControlsContext::~cGameControlsContext()

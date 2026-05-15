@@ -14,7 +14,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 #include <algorithm>
 
 namespace brains {
@@ -35,8 +35,8 @@ cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMiss
     , units()
     , group(group)
 {
-    assert(player != nullptr);
-    assert(brain != nullptr);
+    my_assert(player != nullptr);
+    my_assert(brain != nullptr);
     switch (kind) {
         case PLAYERBRAINMISSION_KIND_ATTACK:
             missionKind = new cPlayerBrainMissionKindAttack(player, this);
@@ -77,7 +77,7 @@ cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMiss
     for (auto &item : group) {
         log(std::format("Item buildType [{}], type/buildId[{}={}], amount required [{}]",
                         eBuildTypeString(item.buildType), item.type, toStringBuildTypeSpecificType(item.buildType, item.type), item.required).c_str());
-        assert(item.type > -1 && "type/buildId must be > -1 !");
+        my_assert(item.type > -1 && "type/buildId must be > -1 !");
     }
 }
 
@@ -289,7 +289,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
 
     // assumes group contains units, just create build orders from the desired group of units...?
     for (auto &thingIWant : group) {
-        assert(thingIWant.type > -1 && "cPlayerBrainMission - expected to have a type/buildId of > -1!");
+        my_assert(thingIWant.type > -1 && "cPlayerBrainMission - expected to have a type/buildId of > -1!");
         if (thingIWant.produced < thingIWant.required) {
             if (thingIWant.ordered <= thingIWant.produced) { // order one at a time only
 

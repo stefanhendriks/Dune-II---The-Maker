@@ -2,7 +2,7 @@
 
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>
-#include <cassert>
+#include "include/cAssert.h"
 
 GuiCheckBox::GuiCheckBox(SDLDrawer* drawer,const cRectangle &rect)
     : GuiObject(drawer, rect)
@@ -14,7 +14,7 @@ GuiCheckBox::GuiCheckBox(SDLDrawer* drawer,const cRectangle &rect)
     , m_enabled(true)
     , m_checked(true)
 {
-    assert(drawer != nullptr);
+    my_assert(drawer != nullptr);
 }
 
 GuiCheckBox::~GuiCheckBox()
@@ -41,7 +41,7 @@ void GuiCheckBox::draw() const
             break;
         case WITH_TEXTURE:
         case WITH_STRETCHED_TEXTURE:
-            assert(false);
+            my_assert(false);
             break;
     }
 }

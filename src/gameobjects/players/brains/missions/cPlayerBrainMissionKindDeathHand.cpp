@@ -14,14 +14,14 @@
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 namespace brains {
 
 cPlayerBrainMissionKindDeathHand::cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
-    assert(player != nullptr);
-    assert(mission != nullptr);
+    my_assert(player != nullptr);
+    my_assert(mission != nullptr);
     target = -1;
     itemToLaunch = nullptr;
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET; // ready for launch!
@@ -142,7 +142,7 @@ void cPlayerBrainMissionKindDeathHand::onNotify_SpecificStateSwitch(const Buildi
             itemToLaunch = event.buildingListItem;
         }
         else {
-            assert(false && "Expected to have a buildingListItem");
+            my_assert(false && "Expected to have a buildingListItem");
         }
     }
 }

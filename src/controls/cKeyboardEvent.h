@@ -77,7 +77,7 @@ private:
             case eKeyEventType::PRESSED:
                 return "PRESSED";
             default:
-                assert(false);
+                my_assert(false);
                 break;
         }
         return "";

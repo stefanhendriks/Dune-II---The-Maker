@@ -2,7 +2,7 @@
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
 #include <cmath>
-#include <cassert>
+#include "include/cAssert.h"
 #include <algorithm>
 
 #define TILESIZE_WIDTH_PIXELS 32
@@ -25,14 +25,14 @@ void MapGeometry::resize(int _mapWidth, int _mapHeight)
 int MapGeometry::getCellX(int c) const
 {
     if (!isValidCell(c)) return -1;
-    assert(c > -1 && c < maxCells);
+    my_assert(c > -1 && c < maxCells);
     return c % mapWidth;
 }
 
 int MapGeometry::getCellY(int c) const
 {
     if (!isValidCell(c)) return -1;
-    assert(c > -1 && c < maxCells);
+    my_assert(c > -1 && c < maxCells);
     return c / mapWidth;
 }
 
@@ -143,16 +143,16 @@ int MapGeometry::makeCell(cPoint point) const {
 
 int MapGeometry::makeCell(int x, int y) const
 {
-    assert(x > -1 && "makeCell x must be > -1");
-    assert(x < mapWidth && "makeCell x must be < width"); // should never be higher!
-    assert(y > -1 && "makeCell y must be > -1");
-    assert(y < mapHeight && "makeCell y must be < height");
+    my_assert(x > -1 && "makeCell x must be > -1");
+    my_assert(x < mapWidth && "makeCell x must be < width"); // should never be higher!
+    my_assert(y > -1 && "makeCell y must be > -1");
+    my_assert(y < mapHeight && "makeCell y must be < height");
 
     // create cell
     int result = getCellWithMapDimensions(x, y);
 
-    assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
-    assert(result > -1); // may never be < 0
+    my_assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
+    my_assert(result > -1); // may never be < 0
 
     return result;
 }

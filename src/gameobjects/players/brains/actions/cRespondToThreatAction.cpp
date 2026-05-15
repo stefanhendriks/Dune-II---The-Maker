@@ -9,7 +9,7 @@
 #include "context/cGameObjectContext.h"
 
 #include <vector>
-#include <cassert>
+#include "include/cAssert.h"
 
 cRespondToThreatAction::cRespondToThreatAction(cPlayer *player, cUnit *threat, cUnit *victim, int cellOriginOfThreat, int maxUnitsToOrder)
     :
@@ -19,7 +19,7 @@ cRespondToThreatAction::cRespondToThreatAction(cPlayer *player, cUnit *threat, c
     m_victim(victim),
     m_maxUnitsToOrder(maxUnitsToOrder)
 {
-    assert(player != nullptr);
+    my_assert(player != nullptr);
 }
 
 void cRespondToThreatAction::execute()

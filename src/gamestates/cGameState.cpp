@@ -2,15 +2,15 @@
 #include "context/GameContext.hpp"
 #include "drawers/SDLDrawer.hpp"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cGameState::cGameState(sGameServices* services) :
     m_ctx(services->ctx),
     m_renderDrawer(m_ctx->getSDLDrawer()),
     m_log(services->m_log)
 {
-    assert(m_ctx != nullptr);
-    assert(m_log != nullptr);
+    my_assert(m_ctx != nullptr);
+    my_assert(m_log != nullptr);
 }
 
 

@@ -13,14 +13,14 @@
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 namespace brains {
 
 cPlayerBrainMissionKindAttack::cPlayerBrainMissionKindAttack(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
-    assert(player != nullptr);
-    assert(mission != nullptr);
+    my_assert(player != nullptr);
+    my_assert(mission != nullptr);
     targetStructureID = -1;
     targetUnitID = -1;
 }
@@ -93,7 +93,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
 {
     if (targetStructureID < 0 && targetUnitID < 0) {
         // this should not happen!
-        assert(false);
+        my_assert(false);
     }
 
     if (targetStructureID > -1) {

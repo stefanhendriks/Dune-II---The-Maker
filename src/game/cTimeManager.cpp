@@ -9,7 +9,7 @@
 #include <SDL2/SDL_timer.h>
 #include <algorithm>
 #include <platform.h>
-#include <cassert>
+#include "include/cAssert.h"
 
 constexpr int IDEAL_FPS = 60; // ideal frames per second
 
@@ -18,7 +18,7 @@ cTimeManager::cTimeManager(cGame *game)
     : m_game(game)
     , m_gameTime(0)
 {
-    assert(game != nullptr);
+    my_assert(game != nullptr);
     // we fix time to 5 100 1000
     initTimers(5);
     m_timeCounter = std::make_unique<cTimeCounter>();

@@ -1,5 +1,5 @@
 #include "cPack.h"
-#include <assert.h>
+#include "include/cAssert.h"
 
 
 #include <string>

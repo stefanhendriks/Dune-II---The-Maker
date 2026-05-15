@@ -3,7 +3,7 @@
 #include "enums.h"
 #include "utils/cPoint.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 #include <string>
 #include <format>
 
@@ -39,7 +39,7 @@ struct s_MouseEvent {
             case eMouseEventType::MOUSE_NONE:
                 return "MOUSE_NONE";
             default:
-                assert(false);
+                my_assert(false);
                 break;
         }
         return "";

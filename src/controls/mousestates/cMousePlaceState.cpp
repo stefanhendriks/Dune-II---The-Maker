@@ -15,16 +15,16 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include <algorithm>
-#include <cassert>
+#include "include/cAssert.h"
 
 #include "data/gfxaudio.h"
 
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)
 {
-    assert(player!=nullptr);
-    assert(context!=nullptr);
-    assert(mouse!=nullptr);
+    my_assert(player!=nullptr);
+    my_assert(context!=nullptr);
+    my_assert(mouse!=nullptr);
 }
 
 void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -82,7 +82,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     }
 
     int structureIdToPlace = itemToPlace->getBuildId();
-    assert(structureIdToPlace > -1);
+    my_assert(structureIdToPlace > -1);
 
     bool bWithinBuildDistance = false;
 

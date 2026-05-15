@@ -5,7 +5,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/cGameSettings.h"
-#include <cassert>
+#include "include/cAssert.h"
 
 GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText)
     : GuiObject(drawer, rect)
@@ -20,7 +20,7 @@ GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::strin
     , m_pressed(false)
     , m_enabled(true)   // by default always enabled
 {
-    assert(drawer != nullptr);
+    my_assert(drawer != nullptr);
 }
 
 GuiButton::~GuiButton()

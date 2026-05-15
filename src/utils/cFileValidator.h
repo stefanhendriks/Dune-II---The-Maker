@@ -2,7 +2,7 @@
 
 #include <string>
 #include <map>
-#include <cassert>
+#include "include/cAssert.h"
 #include "enums.h"
 
 enum class eGameDirFileName {
@@ -39,7 +39,7 @@ inline constexpr std::string eGameDirFileNameString(const eGameDirFileName &valu
         case eGameDirFileName::GFXEDITOR:
             return "GFXEDITOR";
         default:
-            assert(false);
+            my_assert(false);
             break;
     }
     return "";

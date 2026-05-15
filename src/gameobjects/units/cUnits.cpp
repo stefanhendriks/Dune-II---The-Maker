@@ -22,7 +22,7 @@
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
 #include <format>
-#include <cassert>
+#include "include/cAssert.h"
 
 cUnits::cUnits() {
     // Units will be initialized through default constructors of std::array
@@ -31,19 +31,19 @@ cUnits::cUnits() {
 
 void cUnits::serviceInit(sGameServices* services)
 {
-    assert(services != nullptr);
+    my_assert(services != nullptr);
     m_infos = services->info;
-    assert(m_infos != nullptr);
+    my_assert(m_infos != nullptr);
     m_objects = services->objects;
-    assert(m_objects != nullptr);
+    my_assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
-    assert(m_interface != nullptr);
+    my_assert(m_interface != nullptr);
     m_map = m_objects->getMap();
-    assert(m_map != nullptr);
+    my_assert(m_map != nullptr);
     m_log = services->m_log;
-    assert(m_log != nullptr);
+    my_assert(m_log != nullptr);
 
-    assert(services != nullptr);
+    my_assert(services != nullptr);
     for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
         m_units[i].serviceInit(services);
     }
@@ -55,7 +55,7 @@ cUnit* cUnits::operator[](int index)
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         m_log->fatal( eLogComponent::COMP_UNITS , "operator[]", "Unit index {} is out of range", index);
     }
-    assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
+    my_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
     return &m_units[index];
 }
 
@@ -64,7 +64,7 @@ const cUnit* cUnits::operator[](int index) const
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         m_log->fatal( eLogComponent::COMP_UNITS , "operator[] const", "Unit index {} is out of range", index);
     }
-    assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
+    my_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
     return &m_units[index];
 }
 
@@ -73,7 +73,7 @@ cUnit* cUnits::getUnit(int index)
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         m_log->fatal( eLogComponent::COMP_UNITS , "getUnit", "Unit index {} is out of range", index);
     }
-    assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
+    my_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         return nullptr;
     }
@@ -84,7 +84,7 @@ const cUnit* cUnits::getUnit(int index) const {
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         m_log->fatal( eLogComponent::COMP_UNITS , "getUnit const", "Unit index {} is out of range", index);
     }
-    assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
+    my_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         return nullptr;
     }

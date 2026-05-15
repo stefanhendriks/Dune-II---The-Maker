@@ -9,18 +9,18 @@
 #include "context/GameContext.hpp"
 #include "include/definitions.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cTellHouseState::cTellHouseState(sGameServices* services, s_DataCampaign* dataCampaign)
     : cGameState(services),
     m_house(dataCampaign->housePlayer),
     m_dataCampaign(dataCampaign)
 {
-    assert(services != nullptr);
-    assert(dataCampaign != nullptr);
+    my_assert(services != nullptr);
+    my_assert(dataCampaign != nullptr);
     auto interface = services->ctx->getGameInterface();
     m_mouse = interface->getMouse();
-    assert(m_mouse != nullptr);
+    my_assert(m_mouse != nullptr);
     prepareMentat(m_house);
 }
 

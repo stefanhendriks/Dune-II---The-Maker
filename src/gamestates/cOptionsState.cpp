@@ -13,7 +13,7 @@
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 
 cOptionsState::cOptionsState(sGameServices* services, int prevState)
     : cGameState(services),
@@ -23,9 +23,9 @@ cOptionsState::cOptionsState(sGameServices* services, int prevState)
     m_prevState(prevState),
     m_guiWindow(nullptr)
 {
-    assert(m_textDrawer != nullptr);
-    assert(m_settings != nullptr);
-    assert(m_interface != nullptr);
+    my_assert(m_textDrawer != nullptr);
+    my_assert(m_settings != nullptr);
+    my_assert(m_interface != nullptr);
 
     refresh();
     m_backgroundTexture = m_interface->getScreenTexture();

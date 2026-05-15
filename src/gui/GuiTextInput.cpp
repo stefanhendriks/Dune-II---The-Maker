@@ -1,13 +1,13 @@
 #include "gui/GuiTextInput.h"
 #include "drawers/cTextDrawer.h"
 #include <iostream>
-#include <cassert>
+#include "include/cAssert.h"
 
 GuiTextInput::GuiTextInput(SDLDrawer* drawer,const cRectangle& rect, cTextDrawer* textDrawer)
     : GuiObject(drawer, rect), m_writer(textDrawer)
 {
-    assert(drawer != nullptr);
-    assert(textDrawer != nullptr);
+    my_assert(drawer != nullptr);
+    my_assert(textDrawer != nullptr);
 }
 
 void GuiTextInput::draw() const

@@ -25,7 +25,7 @@
 #include "context/cGameObjectContext.h"
 #include "utils/d2tm_math.h"
 #include <SDL2/SDL.h>
-#include <cassert>
+#include "include/cAssert.h"
 
 cStructureDrawer::cStructureDrawer(GameContext *ctx) :
     m_renderDrawer(ctx->getSDLDrawer()),
@@ -33,11 +33,11 @@ cStructureDrawer::cStructureDrawer(GameContext *ctx) :
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
-    assert(ctx != nullptr);
-    assert(m_renderDrawer != nullptr);
-    assert(m_textDrawer != nullptr);
-    assert(m_gfxinter != nullptr);
-    assert(m_gfxdata != nullptr);
+    my_assert(ctx != nullptr);
+    my_assert(m_renderDrawer != nullptr);
+    my_assert(m_textDrawer != nullptr);
+    my_assert(m_gfxinter != nullptr);
+    my_assert(m_gfxdata != nullptr);
 }
 
 
@@ -64,7 +64,7 @@ void cStructureDrawer::drawStructuresHealthBars()
 
 void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure, Color color)
 {
-    assert(theStructure);
+    my_assert(theStructure);
     int drawX = theStructure->iDrawX();
     int drawY = theStructure->iDrawY();
     int width = game.m_infoContext->getStructureInfo(theStructure->getType()).bmp_width - 1;
@@ -103,7 +103,7 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
 
 int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *structure)
 {
-    assert(structure);
+    my_assert(structure);
     int iBuildFase = structure->getBuildingFase();
     int height = structure->getHeight();
     int width = structure->getWidth();
@@ -138,8 +138,8 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *struct
 
 void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)
 {
-    assert(structure);
-    assert(structure->getType() == TURRET || structure->getType() == RTURRET);
+    my_assert(structure);
+    my_assert(structure->getType() == TURRET || structure->getType() == RTURRET);
 
     int iHeadFacing = -1;
     int facingAngles = 8;
@@ -153,7 +153,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
         iHeadFacing = rocketTurret->getHeadFacing();
         facingAngles = rocketTurret->getFacingAngles();
     }
-    assert(iHeadFacing > -1);
+    my_assert(iHeadFacing > -1);
 
     // for now support these 2 facing angles amounts
     if (facingAngles == 16) {
@@ -211,15 +211,15 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
 void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure *structure)
 {
-    assert(structure);
-    assert(structure->getType() == REFINERY);
+    my_assert(structure);
+    my_assert(structure->getType() == REFINERY);
 
     drawStructureAnimation(structure);
 }
 
 void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int layer)
 {
-    assert(structure);
+    my_assert(structure);
 
     // always select proper palette (of owner)
     // select_palette(players[structure->getOwner()].pal);
@@ -288,7 +288,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
 {
     cRepairFacility *repairFacility = dynamic_cast<cRepairFacility *>(structure);
-    assert(repairFacility);
+    my_assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
     cUnit *pUnit = game.m_gameObjectsContext->getUnit(unitId);
     int iconId = pUnit->getUnitInfo().icon;

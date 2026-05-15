@@ -19,7 +19,7 @@
 #include "data/gfxeditor.h"
 #include "include/sGameEvent.h"
 
-#include <cassert>
+#include "include/cAssert.h"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -44,11 +44,11 @@ cEditorState::cEditorState(sGameServices* services)
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_previewMaps(services->objects->getPreviewMaps())
 {
-    assert(m_gfxdata != nullptr);
-    assert(m_gfxeditor != nullptr);
-    assert(m_settings != nullptr);
-    assert(m_interface != nullptr);
-    assert(m_textDrawer != nullptr);
+    my_assert(m_gfxdata != nullptr);
+    my_assert(m_gfxeditor != nullptr);
+    my_assert(m_settings != nullptr);
+    my_assert(m_interface != nullptr);
+    my_assert(m_textDrawer != nullptr);
 
     m_undoRedo = std::make_unique<cEditorUndoRedoHistory>();
 

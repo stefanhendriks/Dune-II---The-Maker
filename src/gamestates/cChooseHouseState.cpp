@@ -10,7 +10,7 @@
 #include "context/GraphicsContext.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/cGameInterface.h"
-#include <cassert>
+#include "include/cAssert.h"
 
 cChooseHouseState::cChooseHouseState(sGameServices* services) :
     cGameState(services),
@@ -18,11 +18,11 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
     m_interface(m_ctx->getGameInterface())
 {
-    assert(m_textDrawer != nullptr);
-    assert(m_gfxinter != nullptr);
-    assert(m_interface != nullptr);
+    my_assert(m_textDrawer != nullptr);
+    my_assert(m_gfxinter != nullptr);
+    my_assert(m_interface != nullptr);
     auto settings =services->settings;
-    assert(settings != nullptr);
+    my_assert(settings != nullptr);
 
     backButtonRect = m_textDrawer->getAsRectangle(0, settings->getScreenH() - m_textDrawer->getFontHeight(), " Back");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);

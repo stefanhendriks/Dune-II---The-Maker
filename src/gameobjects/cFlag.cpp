@@ -6,7 +6,7 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/players/cPlayer.h"
 #include "include/Texture.hpp"
-#include <cassert>
+#include "include/cAssert.h"
 
 cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
     : m_absCoords(absCoords)
@@ -17,7 +17,7 @@ cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
     , m_frames(frames)
     , m_frame(0)
 {
-    assert(player != nullptr);
+    my_assert(player != nullptr);
 }
 
 void cFlag::draw()
