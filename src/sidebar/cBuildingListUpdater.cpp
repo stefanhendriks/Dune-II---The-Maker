@@ -239,7 +239,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
         m_player->log("onStructureCreated - added SLAB1 to list");
 
         if (techLevel >= 2) {
-            if (house == ATREIDES || house == ORDOS) {
+            if (house != HARKONNEN) {
                 listConstYard->addStructureToList(BARRACKS, 0);
                 m_player->log("onStructureCreated - added BARRACKS to list");
             }
@@ -257,6 +257,15 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
 
         listConstYard->addStructureToList(WINDTRAP, 0);
         m_player->log("onStructureCreated - added WINDTRAP to list");
+    }
+
+	if (structureType == BARRACKS) {
+		if (techLevel >= 3) {
+			if (house == SARDAUKAR) {
+				listConstYard->addStructureToList(WOR, 0);
+				m_player->log("onStructureCreated - added WOR to list");
+			}
+		}
     }
 
     if (structureType == WINDTRAP) {
