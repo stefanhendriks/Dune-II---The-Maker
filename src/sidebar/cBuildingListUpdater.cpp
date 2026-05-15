@@ -172,7 +172,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
 
     if (structureType == HIGHTECH) {
         listUnits->addUnitToList(CARRYALL, SUBLIST_HIGHTECH);
-        if (house == ATREIDES || house == ORDOS) {
+        if (house != HARKONNEN) {
             listUnits->addUnitToList(ORNITHOPTER, SUBLIST_HIGHTECH);
         }
     }
@@ -187,6 +187,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
         list->addUnitToList(MCV, 0);
         list->addUnitToList(HARVESTER, 0);
         list->addUnitToList(LAUNCHER, 0);
+		list->addUnitToList(CARRYALL, 0);
 
         if (techLevel > 6) {
             list->addUnitToList(SIEGETANK, 0);
