@@ -355,7 +355,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
             listConstYard->addStructureToList(STARPORT, 0);
         }
 
-        if (house == ATREIDES || house == SARDAUKER) {
+        if (house == ATREIDES || house == SARDAUKAR) {
             listUnits->addUnitToList(TRIKE, SUBLIST_LIGHTFCTRY);
         }
         else if (house == ORDOS) {
