@@ -31,7 +31,13 @@ inline void my_assert(
     // Index 0: std::stacktrace::current() // rip !
     // Index 1: my_my_assert()
     for (size_t i = 1; i < trace.size(); ++i) {
-        report << i - 1 << "# " << trace[i].description() << "\n";
+        const auto& entry = trace[i];
+        report << i - 1 << "# " << entry.description();
+        if (!entry.source_file().empty()) {
+            report << " :" << entry.source_line() << "\n";
+        } else {
+            report << " : address: " << std::showbase << std::hex << entry.native_handle() << std::dec << "\n";
+        }
     }
     report << "========================================\n\n";
 
