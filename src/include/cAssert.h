@@ -11,7 +11,6 @@ inline void my_assert(
     bool condition, 
     std::source_location location = std::source_location::current()) noexcept
 {
-#ifndef NDEBUG
     // Good way, optimised via [[likely]] to hint the compiler that the assert is expected to pass most of the time
     if (condition) [[likely]] {
         return;
@@ -51,8 +50,4 @@ inline void my_assert(
     }
 
     std::abort();
-#else
-    // In release mode, we choose to do nothing. Here we just ignore it.
-    (void)condition;
-#endif
 }
