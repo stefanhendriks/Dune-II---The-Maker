@@ -52,18 +52,27 @@ void cUnits::serviceInit(sGameServices* services)
 
 cUnit* cUnits::operator[](int index)
 {
+    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+        m_log->fatal( eLogComponent::COMP_UNITS , "operator[]", "Unit index {} is out of range", index);
+    }
     assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
     return &m_units[index];
 }
 
 const cUnit* cUnits::operator[](int index) const
 {
+    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+        m_log->fatal( eLogComponent::COMP_UNITS , "operator[] const", "Unit index {} is out of range", index);
+    }
     assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
     return &m_units[index];
 }
 
 cUnit* cUnits::getUnit(int index)
 {
+    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+        m_log->fatal( eLogComponent::COMP_UNITS , "getUnit", "Unit index {} is out of range", index);
+    }
     assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         return nullptr;
@@ -72,6 +81,9 @@ cUnit* cUnits::getUnit(int index)
 }
 
 const cUnit* cUnits::getUnit(int index) const {
+    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+        m_log->fatal( eLogComponent::COMP_UNITS , "getUnit const", "Unit index {} is out of range", index);
+    }
     assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
         return nullptr;
@@ -85,6 +97,7 @@ int cUnits::findAvailableSlot() const {
             return i;
         }
     }
+    m_log->warn( eLogComponent::COMP_UNITS , "findAvailableSlot", "No avariable slot");
     return -1; // No available slot
 }
 
