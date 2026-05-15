@@ -65,9 +65,9 @@ cMap::cMap()
 
 cMap::~cMap() = default;
 
-MapGeometry &cMap::getGeometry() const
+MapGeometry *cMap::getGeometry() const
 {
-    return *m_mapGeometry;
+    return m_mapGeometry.get();
 }
 
 // void cMap::setGameContext(GameContext* ctx)
@@ -928,7 +928,7 @@ int cMap::findNearestSpiceBloom(int iCell)
 
     if (iCell < 0) {
         // use cell at center
-        iCell = getGeometry().getCellWithMapDimensions(halfWidth, halfHeight);
+        iCell = getGeometry()->getCellWithMapDimensions(halfWidth, halfHeight);
         iDistance = getWidth();
     }
 

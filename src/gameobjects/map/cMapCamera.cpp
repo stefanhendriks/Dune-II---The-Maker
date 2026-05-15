@@ -22,7 +22,7 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     m_moveSpeedBorderOrKeys(moveSpeedBorderOrKeys),
     m_cameraEdgeMove(cameraEdgeMove),
     m_pMap(theMap),
-    m_mapGeometry(theMap ? &theMap->getGeometry() : nullptr)
+    m_mapGeometry(theMap ? theMap->getGeometry() : nullptr)
 {
     assert(theMap != nullptr);
     assert(m_mapGeometry != nullptr);

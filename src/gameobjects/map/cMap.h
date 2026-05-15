@@ -438,7 +438,7 @@ public:
 
     void setReinforcements(cReinforcements* reinforcements);
 
-    [[nodiscard]] MapGeometry &getGeometry() const;
+    [[nodiscard]] MapGeometry *getGeometry() const;
 
     [[nodiscard]] cPathFinder *getPathFinder() const {
         return m_pathFinder.get();

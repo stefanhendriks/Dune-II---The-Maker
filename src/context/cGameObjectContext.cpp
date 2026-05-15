@@ -108,7 +108,7 @@ MapGeometry* cGameObjectContext::getMapGeometry() const
     if (!m_map) {
         throw std::runtime_error("cMap not initialized in cGameObjectContext");
     }
-    return &m_map->getGeometry();
+    return m_map->getGeometry();
 }
 
 cUnit* cGameObjectContext::getUnit(std::size_t index)
