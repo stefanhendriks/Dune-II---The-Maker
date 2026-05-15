@@ -29,6 +29,7 @@ target_include_directories(d2tm_tests
 )
 
 target_link_libraries(d2tm_tests PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(d2tm_tests PRIVATE cpp_stacktrace)
 
 include(CTest)
 include(Catch)
