@@ -44,11 +44,11 @@ cEditorState::cEditorState(sGameServices* services)
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_previewMaps(services->objects->getPreviewMaps())
 {
-    my_assert(m_gfxdata != nullptr);
-    my_assert(m_gfxeditor != nullptr);
-    my_assert(m_settings != nullptr);
-    my_assert(m_interface != nullptr);
-    my_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_gfxdata != nullptr);
+    d2tm_assert(m_gfxeditor != nullptr);
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
 
     m_undoRedo = std::make_unique<cEditorUndoRedoHistory>();
 

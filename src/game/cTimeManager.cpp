@@ -18,7 +18,7 @@ cTimeManager::cTimeManager(cGame *game)
     : m_game(game)
     , m_gameTime(0)
 {
-    my_assert(game != nullptr);
+    d2tm_assert(game != nullptr);
     // we fix time to 5 100 1000
     initTimers(5);
     m_timeCounter = std::make_unique<cTimeCounter>();

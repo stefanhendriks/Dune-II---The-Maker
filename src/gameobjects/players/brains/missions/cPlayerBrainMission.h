@@ -178,7 +178,7 @@ private:
             case ePlayerBrainMissionState::PLAYERBRAINMISSION_STATE_INITIAL_DELAY:
                 return "PLAYERBRAINMISSION_STATE_INITIAL_DELAY";
             default:
-                my_assert(false);
+                d2tm_assert(false);
                 break;
         }
         return "";

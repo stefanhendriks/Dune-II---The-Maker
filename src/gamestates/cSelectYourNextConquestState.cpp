@@ -57,18 +57,18 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     m_gfxworld(m_ctx->getGraphicsContext()->gfxworld.get()),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
-    my_assert(m_settings != nullptr);
-    my_assert(m_interface != nullptr);
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_dataCompaign != nullptr);
-    my_assert(m_gfxworld != nullptr);
-    my_assert(m_gfxinter != nullptr);
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_dataCompaign != nullptr);
+    d2tm_assert(m_gfxworld != nullptr);
+    d2tm_assert(m_gfxinter != nullptr);
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
     m_mouse = m_interface->getMouse();
 
     m_drawManager = m_interface->getRenderDrawManager();
-	my_assert(m_drawManager != nullptr);
+	d2tm_assert(m_drawManager != nullptr);
     iRegionSceneAlpha = 0;  // alpha for scene in introduction state
 
     memset(iRegionConquer, -1, sizeof(iRegionConquer));

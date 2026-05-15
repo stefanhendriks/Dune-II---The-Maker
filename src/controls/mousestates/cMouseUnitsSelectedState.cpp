@@ -44,7 +44,7 @@ std::string mouseUnitsSelectedStateString(eMouseUnitsSelectedState state)
         case SELECTED_STATE_REFINERY:
             return "SELECTED_STATE_REFINERY";
         default:
-            my_assert(false);
+            d2tm_assert(false);
             break;
     }
     return {};
@@ -61,9 +61,9 @@ cMouseUnitsSelectedState::cMouseUnitsSelectedState(cPlayer *player, cGameControl
     m_state(SELECTED_STATE_MOVE),
     m_prevState(SELECTED_STATE_MOVE)
 {
-    my_assert(player!=nullptr);
-    my_assert(context!=nullptr);
-    my_assert(mouse!=nullptr);
+    d2tm_assert(player!=nullptr);
+    d2tm_assert(context!=nullptr);
+    d2tm_assert(mouse!=nullptr);
 }
 
 void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event)

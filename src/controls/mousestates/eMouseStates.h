@@ -31,7 +31,7 @@ inline std::string mouseStateString(eMouseState state)
         case MOUSESTATE_DEPLOY:
             return "MOUSESTATE_DEPLOY";
         default:
-            my_assert(false);
+            d2tm_assert(false);
             break;
     }
     return "";

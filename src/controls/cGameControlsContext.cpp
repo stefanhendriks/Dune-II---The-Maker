@@ -38,8 +38,8 @@ cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
     m_mouseDeployState(std::make_unique<cMouseDeployState>(player, this, m_mouse)),
     m_prevTickMouseAtBattleField(false)
 {
-    my_assert(player!=nullptr && "Expected player in cGameControlsContext constructor");
-    my_assert(mouse!=nullptr && "Expected mouse in cGameControlsContext constructor");
+    d2tm_assert(player!=nullptr && "Expected player in cGameControlsContext constructor");
+    d2tm_assert(mouse!=nullptr && "Expected mouse in cGameControlsContext constructor");
 }
 
 cGameControlsContext::~cGameControlsContext()

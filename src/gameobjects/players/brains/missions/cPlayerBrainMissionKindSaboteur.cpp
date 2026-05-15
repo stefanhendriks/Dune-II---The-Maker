@@ -16,8 +16,8 @@ namespace brains {
 
 cPlayerBrainMissionKindSaboteur::cPlayerBrainMissionKindSaboteur(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
-    my_assert(player != nullptr);
-    my_assert(mission != nullptr);
+    d2tm_assert(player != nullptr);
+    d2tm_assert(mission != nullptr);
     targetStructureID = -1;
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // saboteur created
     specificBuildTypeToGoToSelectTargetState = game.m_infoContext->getSpecialInfo(SPECIAL_SABOTEUR).providesType;
@@ -55,12 +55,12 @@ void cPlayerBrainMissionKindSaboteur::think_Execute()
 {
     if (targetStructureID < 0) {
         // this should not happen!
-        my_assert(false && "Cannot run think_Execute() code without targetStructureID!");
+        d2tm_assert(false && "Cannot run think_Execute() code without targetStructureID!");
     }
 
     if (targetStructureID > -1) {
         cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[targetStructureID];
-        my_assert(pStructure != nullptr);
+        d2tm_assert(pStructure != nullptr);
         if (pStructure->isValid()) {
             const std::vector<int> &units = mission->getUnits();
             for (auto &myUnit: units) {

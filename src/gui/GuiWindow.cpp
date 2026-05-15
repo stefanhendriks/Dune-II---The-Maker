@@ -9,8 +9,8 @@ GuiWindow::GuiWindow(SDLDrawer* drawer, const cRectangle &rect, cTextDrawer* _te
     title(""),
     m_textDrawer(_textDrawer)
 {
-    my_assert(drawer != nullptr);
-    my_assert(_textDrawer != nullptr);
+    d2tm_assert(drawer != nullptr);
+    d2tm_assert(_textDrawer != nullptr);
 }
 
 GuiWindow::~GuiWindow() noexcept

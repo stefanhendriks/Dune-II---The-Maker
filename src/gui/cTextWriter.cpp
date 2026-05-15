@@ -4,8 +4,8 @@
 
 cTextWriter::cTextWriter(cTextDrawer* _textDrawer, int theFontSize)
 {
-    my_assert(theFontSize > 0);
-    my_assert(_textDrawer != nullptr);
+    d2tm_assert(theFontSize > 0);
+    d2tm_assert(_textDrawer != nullptr);
     drawX=-1;
     drawY=-1;
     fontSize = theFontSize;

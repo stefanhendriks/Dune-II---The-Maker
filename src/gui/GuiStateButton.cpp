@@ -4,7 +4,7 @@
 GuiStateButton::GuiStateButton(SDLDrawer* drawer, const cRectangle &rect)
     : GuiObject(drawer, rect)
 {
-    my_assert(drawer != nullptr);
+    d2tm_assert(drawer != nullptr);
     m_state = GuiState::UNCLICKED;
     rectState[GuiState::UNCLICKED] = std::make_unique<cRectangle>(0,0,32, 32);
     rectState[GuiState::DISABLED] = std::make_unique<cRectangle>(32,0,32, 32);

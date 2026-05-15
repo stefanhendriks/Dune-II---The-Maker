@@ -9,7 +9,7 @@
 
 SDLDrawer::SDLDrawer(SDL_Renderer *_renderer)
 {
-    my_assert(_renderer != nullptr);
+    d2tm_assert(_renderer != nullptr);
     renderer = _renderer;
 }
 
@@ -306,7 +306,7 @@ Texture* SDLDrawer::createRenderTargetTexture(int width, int height)
 // Takes a pointer to the texture. If nullptr, returns to the main window.
 void SDLDrawer::beginDrawingToTexture(Texture* targetTexture)
 {
-    my_assert(targetTexture && targetTexture->isRenderTarget == true);
+    d2tm_assert(targetTexture && targetTexture->isRenderTarget == true);
     SDL_Texture* currentTarget = SDL_GetRenderTarget(renderer);
     renderTargetStack.push(currentTarget);
 
@@ -330,7 +330,7 @@ void SDLDrawer::endDrawingToTexture()
 
 Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, int paletteSwapStart)
 {
-    my_assert(referenceSurface && "referenceSurface must be given");
+    d2tm_assert(referenceSurface && "referenceSurface must be given");
 
     // Step 1: Create a copy of the surface (same INDEX8 format)
     SDL_Surface *modifiableSurface = SDL_CreateRGBSurfaceWithFormat(0, referenceSurface->w, referenceSurface->h, 8, SDL_PIXELFORMAT_INDEX8);

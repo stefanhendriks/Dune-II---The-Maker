@@ -88,7 +88,7 @@ private:
             case ePlayerBrainCampaignThinkState::PLAYERBRAIN_CAMPAIGN_STATE_REST:
                 return "PLAYERBRAIN_CAMPAIGN_STATE_REST";
             default:
-                my_assert(false);
+                d2tm_assert(false);
                 break;
         }
         return "";
@@ -105,7 +105,7 @@ private:
             case ePlayerBrainState::PLAYERBRAIN_WINNING:
                 return "PLAYERBRAIN_WINNING";
             default:
-                my_assert(false);
+                d2tm_assert(false);
                 break;
         }
         return "";

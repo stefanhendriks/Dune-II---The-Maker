@@ -39,7 +39,7 @@ struct s_MouseEvent {
             case eMouseEventType::MOUSE_NONE:
                 return "MOUSE_NONE";
             default:
-                my_assert(false);
+                d2tm_assert(false);
                 break;
         }
         return "";

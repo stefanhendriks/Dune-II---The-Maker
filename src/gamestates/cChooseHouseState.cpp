@@ -18,11 +18,11 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
     m_interface(m_ctx->getGameInterface())
 {
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_gfxinter != nullptr);
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_gfxinter != nullptr);
+    d2tm_assert(m_interface != nullptr);
     auto settings =services->settings;
-    my_assert(settings != nullptr);
+    d2tm_assert(settings != nullptr);
 
     backButtonRect = m_textDrawer->getAsRectangle(0, settings->getScreenH() - m_textDrawer->getFontHeight(), " Back");
     bmp_Dune = m_gfxinter->getTexture(BMP_GAME_DUNE);

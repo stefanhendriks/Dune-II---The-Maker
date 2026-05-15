@@ -13,7 +13,7 @@ GuiValueButton::GuiValueButton(SDLDrawer* drawer, const cRectangle& rect, int in
     , m_minValue(std::min(minValue, maxValue))
     , m_maxValue(std::max(minValue, maxValue))
 {
-    my_assert(drawer != nullptr);
+    d2tm_assert(drawer != nullptr);
     updateValue(initialValue);
 }
 

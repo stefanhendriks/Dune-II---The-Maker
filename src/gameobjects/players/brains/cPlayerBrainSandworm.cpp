@@ -11,7 +11,7 @@
 namespace brains {
 cPlayerBrainSandworm::cPlayerBrainSandworm(cPlayer *player) : cPlayerBrain(player)
 {
-    my_assert(player != nullptr);
+    d2tm_assert(player != nullptr);
     TIMER_think = 0;
 }
 

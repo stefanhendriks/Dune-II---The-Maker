@@ -9,8 +9,8 @@ cGameState::cGameState(sGameServices* services) :
     m_renderDrawer(m_ctx->getSDLDrawer()),
     m_log(services->m_log)
 {
-    my_assert(m_ctx != nullptr);
-    my_assert(m_log != nullptr);
+    d2tm_assert(m_ctx != nullptr);
+    d2tm_assert(m_log != nullptr);
 }
 
 

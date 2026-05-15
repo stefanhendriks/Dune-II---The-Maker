@@ -22,9 +22,9 @@
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)
 {
-    my_assert(player!=nullptr);
-    my_assert(context!=nullptr);
-    my_assert(mouse!=nullptr);
+    d2tm_assert(player!=nullptr);
+    d2tm_assert(context!=nullptr);
+    d2tm_assert(mouse!=nullptr);
 }
 
 void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -82,7 +82,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
     }
 
     int structureIdToPlace = itemToPlace->getBuildId();
-    my_assert(structureIdToPlace > -1);
+    d2tm_assert(structureIdToPlace > -1);
 
     bool bWithinBuildDistance = false;
 

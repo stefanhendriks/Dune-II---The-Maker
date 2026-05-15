@@ -36,7 +36,7 @@ const char *ePlayerBrainMissionKindString(const ePlayerBrainMissionKind &kind)
         case ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_HARASS:
             return "PLAYERBRAINMISSION_KIND_HARASS";
         default:
-            my_assert(false && "Unknown kind?");
+            d2tm_assert(false && "Unknown kind?");
             break;
     }
     return "";
@@ -44,8 +44,8 @@ const char *ePlayerBrainMissionKindString(const ePlayerBrainMissionKind &kind)
 
 cPlayerBrainMissionKind::cPlayerBrainMissionKind(cPlayer *player, cPlayerBrainMission *mission) : player(player), mission(mission)
 {
-    my_assert(player != nullptr);
-    my_assert(mission != nullptr);
+    d2tm_assert(player != nullptr);
+    d2tm_assert(mission != nullptr);
     player->log("cPlayerBrainMissionKind() constructor");
     specificPlayerForEventToGoToSelectTargetState = player;
 

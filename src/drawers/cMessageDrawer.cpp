@@ -26,7 +26,7 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx) :
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
 {
-    my_assert(ctx != nullptr);
+    d2tm_assert(ctx != nullptr);
     m_bmpBar = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;

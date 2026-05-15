@@ -23,9 +23,9 @@ cOptionsState::cOptionsState(sGameServices* services, int prevState)
     m_prevState(prevState),
     m_guiWindow(nullptr)
 {
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_settings != nullptr);
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_interface != nullptr);
 
     refresh();
     m_backgroundTexture = m_interface->getScreenTexture();

@@ -152,21 +152,21 @@ void cUnit::init(int i)
 
 void cUnit::serviceInit(sGameServices* services)
 {
-    my_assert(services != nullptr);
+    d2tm_assert(services != nullptr);
     m_settings = services->settings;
-    my_assert(m_settings != nullptr);
+    d2tm_assert(m_settings != nullptr);
     m_infos = services->info;
-    my_assert(m_infos != nullptr);
+    d2tm_assert(m_infos != nullptr);
     m_objects = services->objects;
-    my_assert(m_objects != nullptr);
+    d2tm_assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
-    my_assert(m_mapCamera != nullptr);
+    d2tm_assert(m_mapCamera != nullptr);
     m_map = m_objects->getMap();
-    my_assert(m_map != nullptr);
+    d2tm_assert(m_map != nullptr);
     m_pathFinder = m_map->getPathFinder();
-    my_assert(m_pathFinder != nullptr);
+    d2tm_assert(m_pathFinder != nullptr);
 }
 
 void cUnit::recreateDimensions()
@@ -398,7 +398,7 @@ void cUnit::createExplosionParticle()
                     int id = idOfStructureAtCell;
 
                     cAbstractStructure *pStructure = m_objects->getStructure(id);
-                    my_assert(pStructure);
+                    d2tm_assert(pStructure);
                     if (pStructure->getHitPoints() > 0) {
 
                         int iDamage = 150 + RNG::rnd(100);
@@ -1899,7 +1899,7 @@ void cUnit::forgetAboutUnitToPickUp()  // forget about this
 
 cUnit &cUnit::getUnitToPickupOrDrop() const
 {
-    my_assert(iUnitID > -1 && "cUnit::getUnitToPickupOrDrop() called for invalid iUnitIDWithinStructure!");
+    d2tm_assert(iUnitID > -1 && "cUnit::getUnitToPickupOrDrop() called for invalid iUnitIDWithinStructure!");
     return *m_objects->getUnit(iUnitID);
 }
 
@@ -2530,7 +2530,7 @@ s_UnitInfo &cUnit::getUnitInfo() const
 void cUnit::thinkFast_move()
 {
     if (!isValid()) {
-        my_assert(false && "Expected to have a valid unit calling thinkFast_move()");
+        d2tm_assert(false && "Expected to have a valid unit calling thinkFast_move()");
     }
 
     if (isSandworm() && m_settings->isDisableWormAi()) {
@@ -3318,7 +3318,7 @@ std::string cUnit::eUnitActionIntentString(eUnitActionIntent intent)
         case eUnitActionIntent::INTENT_UNLOAD_SPICE:
             return "INTENT_UNLOAD_SPICE";
         default:
-            my_assert(false);
+            d2tm_assert(false);
             break;
     }
     return "";
@@ -3411,7 +3411,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     eUnitActionIntent actionIntent)
 {
     rendering.iFrame = 0; // stop animating
-    my_assert(structureType > -1);
+    d2tm_assert(structureType > -1);
 
     if (intent == actionIntent) {
         // same intent, so ignore?
@@ -3431,7 +3431,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     }
 
     cAbstractStructure *pStructure = result.structure;
-    my_assert(pStructure && "Expected to have a valid pStructure pointer here");
+    d2tm_assert(pStructure && "Expected to have a valid pStructure pointer here");
 
     if (allowCarryallTransfer) {
         // TODO: Don't use cell based, but abs coordinates (pixel based) and use center

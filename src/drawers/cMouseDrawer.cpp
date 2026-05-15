@@ -16,8 +16,8 @@
 
 cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_player(thePlayer)
 {
-    my_assert(thePlayer != nullptr);
-    my_assert(textDrawer != nullptr);
+    d2tm_assert(thePlayer != nullptr);
+    d2tm_assert(textDrawer != nullptr);
     m_mouseX = m_mouseY = 0;
     m_textWriter = new cTextWriter(textDrawer,12);
 }
@@ -121,7 +121,7 @@ void cMouseDrawer::drawToolTip()
         int structureType = theStructure->getType();
         if (structureType == WINDTRAP) {
             cWindTrap *windTrap = dynamic_cast<cWindTrap *>(theStructure);
-            my_assert(windTrap);
+            d2tm_assert(windTrap);
             drawToolTipWindTrapInformation(windTrap);
         }
         else if (structureType == SILO || structureType == REFINERY) {
@@ -171,7 +171,7 @@ void cMouseDrawer::drawToolTipBackground()
 
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure)
 {
-    my_assert(theStructure);
+    d2tm_assert(theStructure);
     if (theStructure->belongsTo(m_player)) {
         m_textWriter->write(std::format("Sight : {}", theStructure->getSight()));
         m_textWriter->write(std::format("Range : {}", theStructure->getRange()));
@@ -184,7 +184,7 @@ void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure
 
 void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructure)
 {
-    my_assert(theStructure);
+    d2tm_assert(theStructure);
     const s_StructureInfo &structureType = theStructure->getStructureInfo();
 
     std::string description;
@@ -202,7 +202,7 @@ void cMouseDrawer::drawToolTipGeneralInformation(cAbstractStructure *theStructur
 
 void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap)
 {
-    my_assert(theWindTrap);
+    d2tm_assert(theWindTrap);
     if (theWindTrap->getOwner() == HUMAN) {
         int powerOut = theWindTrap->getPlayer()->getPowerProduced();
         int powerUse = theWindTrap->getPlayer()->getPowerUsage();
@@ -223,7 +223,7 @@ void cMouseDrawer::drawToolTipWindTrapInformation(cWindTrap *theWindTrap)
 
 void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure *theStructure)
 {
-    my_assert(theStructure);
+    d2tm_assert(theStructure);
 
     // TODO / IDEA --> Perhaps some 'spy on enemy intel' upgrade should be available for
     // house Ordos, so you can actually check on the enemy spice etc.
@@ -231,12 +231,12 @@ void cMouseDrawer::drawToolTipSiloInformation(cAbstractStructure *theStructure)
         int spiceCapacityOfStructure = 0;
         if (theStructure->getType() == REFINERY) {
             cRefinery *refinery = dynamic_cast<cRefinery *>(theStructure);
-            my_assert(refinery);
+            d2tm_assert(refinery);
             spiceCapacityOfStructure = refinery->getSpiceSiloCapacity();
         }
         else if (theStructure->getType() == SILO) {
             cSpiceSilo *spiceSilo = dynamic_cast<cSpiceSilo *>(theStructure);
-            my_assert(spiceSilo);
+            d2tm_assert(spiceSilo);
             spiceCapacityOfStructure = spiceSilo->getSpiceSiloCapacity();
         }
 

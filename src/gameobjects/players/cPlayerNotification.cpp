@@ -13,7 +13,7 @@ std::string eNotificationTypeString(const eNotificationType &type)
         case eNotificationType::BAD:
             return "BAD";
         default:
-            my_assert(false && "Unknown eNotificationType?");
+            d2tm_assert(false && "Unknown eNotificationType?");
             break;
     }
     return {};

@@ -13,8 +13,8 @@ namespace brains {
 
 cPlayerBrainMissionKindFremen::cPlayerBrainMissionKindFremen(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
-    my_assert(player != nullptr);
-    my_assert(mission != nullptr);
+    d2tm_assert(player != nullptr);
+    d2tm_assert(mission != nullptr);
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // fremen created
     specificBuildTypeToGoToSelectTargetState = game.m_infoContext->getSpecialInfo(SPECIAL_FREMEN).providesType;
     specificBuildIdToGoToSelectTargetState = game.m_infoContext->getSpecialInfo(SPECIAL_FREMEN).providesTypeId;

@@ -141,7 +141,7 @@ private:
             case ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST:
                 return "PLAYERBRAIN_SKIRMISH_STATE_REST";
             default:
-                my_assert(false);
+                d2tm_assert(false);
                 break;
         }
         return "";
@@ -160,7 +160,7 @@ private:
             case ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH:
                 return "PLAYERBRAIN_ECONOMY_STATE_SELL_FOR_CASH";
             default:
-                my_assert(false);
+                d2tm_assert(false);
                 break;
         }
         return "";
@@ -177,7 +177,7 @@ private:
             case ePlayerBrainState::PLAYERBRAIN_WINNING:
                 return "PLAYERBRAIN_WINNING";
             default:
-                my_assert(false);
+                d2tm_assert(false);
                 break;
         }
         return "";

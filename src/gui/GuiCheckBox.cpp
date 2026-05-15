@@ -14,7 +14,7 @@ GuiCheckBox::GuiCheckBox(SDLDrawer* drawer,const cRectangle &rect)
     , m_enabled(true)
     , m_checked(true)
 {
-    my_assert(drawer != nullptr);
+    d2tm_assert(drawer != nullptr);
 }
 
 GuiCheckBox::~GuiCheckBox()
@@ -41,7 +41,7 @@ void GuiCheckBox::draw() const
             break;
         case WITH_TEXTURE:
         case WITH_STRETCHED_TEXTURE:
-            my_assert(false);
+            d2tm_assert(false);
             break;
     }
 }

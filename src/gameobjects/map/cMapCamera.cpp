@@ -24,8 +24,8 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     m_pMap(theMap),
     m_mapGeometry(theMap ? theMap->getGeometry() : nullptr)
 {
-    my_assert(theMap != nullptr);
-    my_assert(m_mapGeometry != nullptr);
+    d2tm_assert(theMap != nullptr);
+    d2tm_assert(m_mapGeometry != nullptr);
     m_viewportStartX = m_viewportStartY = 32;
     m_zoomLevel = 1.0f;
 

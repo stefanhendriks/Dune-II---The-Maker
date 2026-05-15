@@ -49,12 +49,12 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     m_previewMaps(previewMaps),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
 {
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_settings != nullptr);
-    my_assert(m_interface != nullptr);
-    my_assert(m_objects != nullptr);
-    my_assert(m_dataCampaign != nullptr);
-    my_assert(m_gfxinter != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_objects != nullptr);
+    d2tm_assert(m_dataCampaign != nullptr);
+    d2tm_assert(m_gfxinter != nullptr);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         s_SkirmishPlayer &sSkirmishPlayer = skirmishPlayer[i];
         // index 0 == human player, but to keep our lives sane we don't change the index.

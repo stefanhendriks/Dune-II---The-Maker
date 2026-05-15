@@ -21,11 +21,11 @@ cCreditsState::cCreditsState(sGameServices* services) :
     m_interface(m_ctx->getGameInterface()),
     m_moveSpeed(0.15f)
 {
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_settings != nullptr);
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_interface != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    my_assert(gfxinter != nullptr);
+    d2tm_assert(gfxinter != nullptr);
 
     m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
     m_titleBmp = gfxinter->getTexture(BMP_D2TM);

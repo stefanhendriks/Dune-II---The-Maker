@@ -25,8 +25,8 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_sidebar(nullptr),
     m_sidebarColor(Color{214, 149, 20,255})
 {
-    my_assert(player!= nullptr);
-    my_assert(ctx != nullptr);
+    d2tm_assert(player!= nullptr);
+    d2tm_assert(ctx != nullptr);
 
     m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(
         m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);

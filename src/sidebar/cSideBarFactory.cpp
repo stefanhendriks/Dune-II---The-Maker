@@ -16,7 +16,7 @@ cSideBarFactory::~cSideBarFactory()
 // construct a cSideBar
 cSideBar *cSideBarFactory::createSideBar(cPlayer *thePlayer)
 {
-    my_assert(thePlayer!=nullptr);
+    d2tm_assert(thePlayer!=nullptr);
     cSideBar *sidebar = new cSideBar(thePlayer);
 
     for (const auto listType : AllListTypes) {

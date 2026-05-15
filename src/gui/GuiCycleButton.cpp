@@ -5,7 +5,7 @@
 GuiCycleButton::GuiCycleButton(SDLDrawer* drawer,const cRectangle& rect, const std::vector<int>& values) 
         : GuiObject(drawer, rect), m_values(values), m_currentIndex(0), m_textDrawer(nullptr)
 {
-    my_assert(drawer != nullptr);
+    d2tm_assert(drawer != nullptr);
 }
 
 void GuiCycleButton::onNotifyMouseEvent(const s_MouseEvent& event) 

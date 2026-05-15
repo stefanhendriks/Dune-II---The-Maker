@@ -10,7 +10,7 @@ cMouseState::cMouseState(cPlayer *player, cGameControlsContext *context, cMouse 
     m_mouse(mouse),
     m_mouseTile(MOUSE_NORMAL)
 {
-    my_assert(player!=nullptr);
-    my_assert(context!=nullptr);
-    my_assert(mouse!=nullptr); 
+    d2tm_assert(player!=nullptr);
+    d2tm_assert(context!=nullptr);
+    d2tm_assert(mouse!=nullptr); 
 }

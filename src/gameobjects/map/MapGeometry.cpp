@@ -25,14 +25,14 @@ void MapGeometry::resize(int _mapWidth, int _mapHeight)
 int MapGeometry::getCellX(int c) const
 {
     if (!isValidCell(c)) return -1;
-    my_assert(c > -1 && c < maxCells);
+    d2tm_assert(c > -1 && c < maxCells);
     return c % mapWidth;
 }
 
 int MapGeometry::getCellY(int c) const
 {
     if (!isValidCell(c)) return -1;
-    my_assert(c > -1 && c < maxCells);
+    d2tm_assert(c > -1 && c < maxCells);
     return c / mapWidth;
 }
 
@@ -143,16 +143,16 @@ int MapGeometry::makeCell(cPoint point) const {
 
 int MapGeometry::makeCell(int x, int y) const
 {
-    my_assert(x > -1 && "makeCell x must be > -1");
-    my_assert(x < mapWidth && "makeCell x must be < width"); // should never be higher!
-    my_assert(y > -1 && "makeCell y must be > -1");
-    my_assert(y < mapHeight && "makeCell y must be < height");
+    d2tm_assert(x > -1 && "makeCell x must be > -1");
+    d2tm_assert(x < mapWidth && "makeCell x must be < width"); // should never be higher!
+    d2tm_assert(y > -1 && "makeCell y must be > -1");
+    d2tm_assert(y < mapHeight && "makeCell y must be < height");
 
     // create cell
     int result = getCellWithMapDimensions(x, y);
 
-    my_assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
-    my_assert(result > -1); // may never be < 0
+    d2tm_assert(result < maxCells); // may never be => (will since MAX_CELLS-1 is max in array!)
+    d2tm_assert(result > -1); // may never be < 0
 
     return result;
 }

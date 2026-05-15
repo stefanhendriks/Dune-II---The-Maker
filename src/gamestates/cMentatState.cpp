@@ -26,11 +26,11 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, s_DataCampa
       m_mode(mode),
       m_house(dataCampaign->housePlayer)
 {
-    my_assert(services != nullptr);
-    my_assert(m_dataCampaign != nullptr);
-    my_assert(m_settings != nullptr);
-    my_assert(m_interface != nullptr);
-    my_assert(m_objets != nullptr);
+    d2tm_assert(services != nullptr);
+    d2tm_assert(m_dataCampaign != nullptr);
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_objets != nullptr);
     prepareMentat(m_house);
 }
 

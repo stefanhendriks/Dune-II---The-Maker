@@ -423,7 +423,7 @@ cBuildingListItem *cBuildingList::getFirstItemInSubList(int sublistId)
 
 void cBuildingList::setItemBuilder(cItemBuilder *value)
 {
-    my_assert(value && "cBuildingList::setItemBuilder - Expected to set to a non-null value");
+    d2tm_assert(value && "cBuildingList::setItemBuilder - Expected to set to a non-null value");
     m_itemBuilder = value;
 }
 
