@@ -5,7 +5,7 @@
 
 Graphics::Graphics(SDL_Renderer *_renderer,const std::string &filePackName): renderer(_renderer)
 {
-    my_assert(_renderer != nullptr);
+    d2tm_assert(_renderer != nullptr);
     dataPack = std::make_unique<DataPack>(filePackName);
 }
 

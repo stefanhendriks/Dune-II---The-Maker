@@ -63,20 +63,20 @@ cPlayer::cPlayer()
 
 void cPlayer::serviceInit(sGameServices* services)
 {
-    my_assert(services != nullptr);
+    d2tm_assert(services != nullptr);
     m_log = services->m_log;
-    my_assert(m_log != nullptr);
+    d2tm_assert(m_log != nullptr);
 
     m_settings = services->settings;
-    my_assert(m_settings != nullptr);
+    d2tm_assert(m_settings != nullptr);
     m_infos = services->info;
-    my_assert(m_infos != nullptr);
+    d2tm_assert(m_infos != nullptr);
     m_objects = services->objects;
-    my_assert(m_objects != nullptr);
+    d2tm_assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_interface != nullptr);
     m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
-    my_assert(m_gfxdata != nullptr);
+    d2tm_assert(m_gfxdata != nullptr);
     logbook(std::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
                         MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(SDL_Surface *)));
 }
@@ -163,7 +163,7 @@ void cPlayer::clearUnitTypeBitmaps()
 
 void cPlayer::setSideBar(cSideBar *theSideBar)
 {
-    my_assert(theSideBar);
+    d2tm_assert(theSideBar);
 
     // delete old reference
     if (sidebar) {
@@ -199,8 +199,8 @@ void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
         // no log(), as house still has to be set up
         logbook(std::format("Error initializing player, id {} is not valid.", id));
     }
-    my_assert(id >= HUMAN);
-    my_assert(id < MAX_PLAYERS);
+    d2tm_assert(id >= HUMAN);
+    d2tm_assert(id < MAX_PLAYERS);
     this->id = id;
     this->selected_structure = -1;
 
@@ -586,7 +586,7 @@ int cPlayer::getAmountOfUnitsForType(const std::vector<int> &unitTypes) const
 Texture *cPlayer::getStructureBitmap(int index)
 {
     if (index < 0 || index >= MAX_STRUCTURE_BMPS) {
-        my_assert(false && "getStructureBitmap called with invalid index");
+        d2tm_assert(false && "getStructureBitmap called with invalid index");
         return nullptr;
     }
 
@@ -606,7 +606,7 @@ Texture *cPlayer::getStructureBitmap(int index)
 Texture *cPlayer::getStructureBitmapFlash(int index)
 {
     if (index < 0 || index >= MAX_STRUCTURETYPES) {
-        my_assert(false && "getStructureBitmapFlash called with invalid structure type index");
+        d2tm_assert(false && "getStructureBitmapFlash called with invalid structure type index");
         return nullptr;
     }
 
@@ -632,7 +632,7 @@ Texture *cPlayer::getFlagSmallBitmap()
 Texture *cPlayer::getUnitBitmap(int index)
 {
     if (index < 0 || index >= MAX_UNITTYPES) {
-        my_assert(false && "getUnitBitmap called with invalid index");
+        d2tm_assert(false && "getUnitBitmap called with invalid index");
         return nullptr;
     }
 
@@ -652,7 +652,7 @@ Texture *cPlayer::getUnitBitmap(int index)
 Texture *cPlayer::getUnitTopBitmap(int index)
 {
     if (index < 0 || index >= MAX_UNITTYPES) {
-        my_assert(false && "getUnitTopBitmap called with invalid index");
+        d2tm_assert(false && "getUnitTopBitmap called with invalid index");
         return nullptr;
     }
 
@@ -666,7 +666,7 @@ Texture *cPlayer::getUnitTopBitmap(int index)
 Texture *cPlayer::getUnitShadowBitmap(int index)
 {
     if (index < 0 || index >= MAX_UNITTYPES) {
-        my_assert(false && "getUnitShadowBitmap called with invalid index");
+        d2tm_assert(false && "getUnitShadowBitmap called with invalid index");
         return nullptr;
     }
 
@@ -1094,7 +1094,7 @@ cBuildingListItem *cPlayer::isUpgradingList(eListType listType, int sublistId) c
     if (upgradesList == nullptr) {
         log(std::format("isUpgradingList for listType [{}] and sublistId [{}], could not find upgradesList!? - will return nullptr.",
                         listId, sublistId));
-        my_assert(false);
+        d2tm_assert(false);
         return nullptr;
     }
 
@@ -1508,8 +1508,8 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
 {
     log(std::format("canBuildStructure: Wanting to build iStructureType = [{}]", iStructureType));
 
-    my_assert(iStructureType > -1 && "Structure type must be > -1");
-    my_assert(iStructureType < MAX_STRUCTURETYPES && "Structure type must be < MAX_STRUCTURETYPES");
+    d2tm_assert(iStructureType > -1 && "Structure type must be > -1");
+    d2tm_assert(iStructureType < MAX_STRUCTURETYPES && "Structure type must be < MAX_STRUCTURETYPES");
 
     // Once known, a check will be made to see if the AI has a structure to produce that
     // unit type. If not, it will return false.
@@ -1848,8 +1848,8 @@ sSelectedUnitTypes cPlayer::getSelectedUnitTypes() const
 
 bool cPlayer::hasEnoughPowerFor(int structureType) const
 {
-    my_assert(structureType > -1 && "hasEnoughPowerFor called with structureType < 0!");
-    my_assert(structureType < MAX_STRUCTURETYPES && "hasEnoughPowerFor called with structureType >= MAX_STRUCTURETYPES!");
+    d2tm_assert(structureType > -1 && "hasEnoughPowerFor called with structureType < 0!");
+    d2tm_assert(structureType < MAX_STRUCTURETYPES && "hasEnoughPowerFor called with structureType >= MAX_STRUCTURETYPES!");
     int powerLeft = powerProduce_ - powerUsage_;
     return m_infos->getStructureInfo(structureType).power_drain <= powerLeft;
 }
@@ -2100,7 +2100,7 @@ bool cPlayer::startBuilding(eBuildType buildType, int buildId)
         case UPGRADE:
             return startUpgrading(buildId);
         default:
-            my_assert(false && "startBuilding: Unknown buildType !?");
+            d2tm_assert(false && "startBuilding: Unknown buildType !?");
     }
     return false;
 }

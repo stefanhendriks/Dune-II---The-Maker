@@ -19,7 +19,7 @@ cRespondToThreatAction::cRespondToThreatAction(cPlayer *player, cUnit *threat, c
     m_victim(victim),
     m_maxUnitsToOrder(maxUnitsToOrder)
 {
-    my_assert(player != nullptr);
+    d2tm_assert(player != nullptr);
 }
 
 void cRespondToThreatAction::execute()

@@ -10,21 +10,21 @@ cSeedMap::cSeedMap() : map(kMapWidth*kMapHeight, TERRAIN_SAND)
 
 void cSeedMap::setCellType(int x, int y, int type)
 {
-    my_assert(x > -1);
-    my_assert(x < kMapWidth);
-    my_assert(y > -1);
-    my_assert(y < kMapHeight);
-    my_assert(type > -1);
-    my_assert(type < TERRAIN_WALL);
+    d2tm_assert(x > -1);
+    d2tm_assert(x < kMapWidth);
+    d2tm_assert(y > -1);
+    d2tm_assert(y < kMapHeight);
+    d2tm_assert(type > -1);
+    d2tm_assert(type < TERRAIN_WALL);
     map[x + kMapWidth * y] = type;
 }
 
 int cSeedMap::getCellType(int x, int y)
 {
-    my_assert(x > -1);
-    my_assert(x < kMapWidth);
-    my_assert(y > -1);
-    my_assert(y < kMapHeight);
+    d2tm_assert(x > -1);
+    d2tm_assert(x < kMapWidth);
+    d2tm_assert(y > -1);
+    d2tm_assert(y < kMapHeight);
     return map[x + kMapWidth * y];
 }
 

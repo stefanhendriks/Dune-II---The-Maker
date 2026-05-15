@@ -101,19 +101,19 @@ void cPathFinder::resize(int newSize, int width, int height)
 
 void cPathFinder::serviceInit(sGameServices* services)
 {
-    my_assert(services != nullptr);
+    d2tm_assert(services != nullptr);
     m_log = services->m_log;
-    my_assert(m_log != nullptr);
+    d2tm_assert(m_log != nullptr);
     m_infos = services->info;
-    my_assert(m_infos != nullptr);
+    d2tm_assert(m_infos != nullptr);
     m_settings = services->settings;
-    my_assert(m_settings != nullptr);
+    d2tm_assert(m_settings != nullptr);
     m_objects = services->objects;
-    my_assert(m_objects != nullptr);
+    d2tm_assert(m_objects != nullptr);
     m_map = m_objects->getMap();
-    my_assert(m_map != nullptr);
+    d2tm_assert(m_map != nullptr);
     m_mapGeometry = m_objects->getMapGeometry();
-    my_assert(m_mapGeometry != nullptr);
+    d2tm_assert(m_mapGeometry != nullptr);
 }
 
 int cPathFinder::validateCreatePathInput(int unitId)

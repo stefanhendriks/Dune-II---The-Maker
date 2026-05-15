@@ -14,8 +14,8 @@ namespace brains {
 
 cPlayerBrainMissionKindExplore::cPlayerBrainMissionKindExplore(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
-    my_assert(player != nullptr);
-    my_assert(mission != nullptr);
+    d2tm_assert(player != nullptr);
+    d2tm_assert(mission != nullptr);
     targetCell = -1;
 }
 

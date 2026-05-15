@@ -28,7 +28,7 @@
 
 AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 {
-    my_assert(ctx != nullptr);
+    d2tm_assert(ctx != nullptr);
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
     m_renderDrawer = ctx->getSDLDrawer();

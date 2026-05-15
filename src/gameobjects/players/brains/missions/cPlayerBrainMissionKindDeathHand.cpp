@@ -20,8 +20,8 @@ namespace brains {
 
 cPlayerBrainMissionKindDeathHand::cPlayerBrainMissionKindDeathHand(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
-    my_assert(player != nullptr);
-    my_assert(mission != nullptr);
+    d2tm_assert(player != nullptr);
+    d2tm_assert(mission != nullptr);
     target = -1;
     itemToLaunch = nullptr;
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_SPECIAL_SELECT_TARGET; // ready for launch!
@@ -142,7 +142,7 @@ void cPlayerBrainMissionKindDeathHand::onNotify_SpecificStateSwitch(const Buildi
             itemToLaunch = event.buildingListItem;
         }
         else {
-            my_assert(false && "Expected to have a buildingListItem");
+            d2tm_assert(false && "Expected to have a buildingListItem");
         }
     }
 }

@@ -36,12 +36,12 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
-    my_assert(m_player!=nullptr);
-    my_assert(ctx != nullptr);
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_renderDrawer != nullptr);
-    my_assert(m_gfxdata != nullptr);
-    my_assert(m_gfxinter != nullptr);
+    d2tm_assert(m_player!=nullptr);
+    d2tm_assert(ctx != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_renderDrawer != nullptr);
+    d2tm_assert(m_gfxdata != nullptr);
+    d2tm_assert(m_gfxinter != nullptr);
     this->reset();
 }
 

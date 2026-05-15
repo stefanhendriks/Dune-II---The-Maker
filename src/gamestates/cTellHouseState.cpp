@@ -16,11 +16,11 @@ cTellHouseState::cTellHouseState(sGameServices* services, s_DataCampaign* dataCa
     m_house(dataCampaign->housePlayer),
     m_dataCampaign(dataCampaign)
 {
-    my_assert(services != nullptr);
-    my_assert(dataCampaign != nullptr);
+    d2tm_assert(services != nullptr);
+    d2tm_assert(dataCampaign != nullptr);
     auto interface = services->ctx->getGameInterface();
     m_mouse = interface->getMouse();
-    my_assert(m_mouse != nullptr);
+    d2tm_assert(m_mouse != nullptr);
     prepareMentat(m_house);
 }
 

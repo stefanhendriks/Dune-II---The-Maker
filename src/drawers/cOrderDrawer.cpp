@@ -19,8 +19,8 @@ cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
     m_renderDrawer(ctx->getSDLDrawer()),
     m_player(player)
 {
-    my_assert(player != nullptr);
-    my_assert(ctx != nullptr);
+    d2tm_assert(player != nullptr);
+    d2tm_assert(ctx != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = m_buttonBitmap->w / 2;
@@ -38,11 +38,11 @@ cOrderDrawer::~cOrderDrawer()
 
 void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
 {
-    my_assert(thePlayer);
+    d2tm_assert(thePlayer);
 
     cOrderProcesser *orderProcesser = thePlayer->getOrderProcesser();
 
-    my_assert(orderProcesser);
+    d2tm_assert(orderProcesser);
     m_renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
 
     bool canOrder = orderProcesser->canPlaceOrder();

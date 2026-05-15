@@ -19,8 +19,8 @@ namespace brains {
 
 cPlayerBrainMissionKindAttack::cPlayerBrainMissionKindAttack(cPlayer *player, cPlayerBrainMission *mission) :  cPlayerBrainMissionKind(player, mission)
 {
-    my_assert(player != nullptr);
-    my_assert(mission != nullptr);
+    d2tm_assert(player != nullptr);
+    d2tm_assert(mission != nullptr);
     targetStructureID = -1;
     targetUnitID = -1;
 }
@@ -93,7 +93,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
 {
     if (targetStructureID < 0 && targetUnitID < 0) {
         // this should not happen!
-        my_assert(false);
+        d2tm_assert(false);
     }
 
     if (targetStructureID > -1) {

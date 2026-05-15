@@ -21,12 +21,12 @@ public:
     }
 
     cAbstractStructure* &operator[](std::size_t index) {
-        my_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
         return m_values[index];
     }
 
     cAbstractStructure* const &operator[](std::size_t index) const {
-        my_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
         return m_values[index];
     }
 

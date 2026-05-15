@@ -129,7 +129,7 @@ inline const char *eBuildTypeString(const eBuildType &buildType)
         case eBuildType::UNKNOWN:
             return "UNKNOWN";
         default:
-            my_assert(false && "Undefined buildType?");
+            d2tm_assert(false && "Undefined buildType?");
             break;
     }
     return "";
@@ -152,7 +152,7 @@ inline const char *eBuildOrderStateString(const eBuildOrderState &state)
         case eBuildOrderState::BUILDING:
             return "BUILDING";
         default:
-            my_assert(false && "Unknown eBuildOrderState");
+            d2tm_assert(false && "Unknown eBuildOrderState");
             break;
     }
     return "";

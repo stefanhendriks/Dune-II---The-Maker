@@ -12,7 +12,7 @@ cTextDrawer::cTextDrawer(TTF_Font *theFont) :
     m_font(theFont),
     m_textCache(std::make_unique<cTextTextureCache>(theFont))
 {
-    my_assert(theFont != nullptr);
+    d2tm_assert(theFont != nullptr);
 }
 
 cTextDrawer::~cTextDrawer()

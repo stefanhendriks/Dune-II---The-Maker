@@ -22,8 +22,8 @@ CreatorState::CreatorState(sGameServices* services, s_DataCampaign* dataCampaign
     : m_services(services)
 {
     m_dataCampaign = dataCampaign;
-    my_assert(m_services != nullptr);
-    my_assert(m_dataCampaign != nullptr);
+    d2tm_assert(m_services != nullptr);
+    d2tm_assert(m_dataCampaign != nullptr);
     // all State should be recreate when needed to use
     needToRecreateState.fill(true);
     // this States should not be recreated when we need to use

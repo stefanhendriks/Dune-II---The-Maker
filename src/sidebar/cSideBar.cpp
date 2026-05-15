@@ -18,7 +18,7 @@
 
 cSideBar::cSideBar(cPlayer *thePlayer) : m_player(thePlayer)
 {
-    my_assert(thePlayer != nullptr && "Expected player to be not null!");
+    d2tm_assert(thePlayer != nullptr && "Expected player to be not null!");
     m_selectedListID = -1; // nothing is selected
     m_isMouseOverSidebarValue = false;
     memset(m_lists, 0, sizeof(m_lists));
@@ -244,7 +244,7 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
     else {
         cOrderProcesser *orderProcesser = m_player->getOrderProcesser();
 
-        my_assert(orderProcesser);
+        d2tm_assert(orderProcesser);
         if (!orderProcesser->isOrderPlaced()) {
             if (item->getTimesOrdered() > 0) {
                 item->decreaseTimesOrdered();

@@ -33,11 +33,11 @@ cStructureDrawer::cStructureDrawer(GameContext *ctx) :
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
 {
-    my_assert(ctx != nullptr);
-    my_assert(m_renderDrawer != nullptr);
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_gfxinter != nullptr);
-    my_assert(m_gfxdata != nullptr);
+    d2tm_assert(ctx != nullptr);
+    d2tm_assert(m_renderDrawer != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_gfxinter != nullptr);
+    d2tm_assert(m_gfxdata != nullptr);
 }
 
 
@@ -64,7 +64,7 @@ void cStructureDrawer::drawStructuresHealthBars()
 
 void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure, Color color)
 {
-    my_assert(theStructure);
+    d2tm_assert(theStructure);
     int drawX = theStructure->iDrawX();
     int drawY = theStructure->iDrawY();
     int width = game.m_infoContext->getStructureInfo(theStructure->getType()).bmp_width - 1;
@@ -103,7 +103,7 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
 
 int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *structure)
 {
-    my_assert(structure);
+    d2tm_assert(structure);
     int iBuildFase = structure->getBuildingFase();
     int height = structure->getHeight();
     int width = structure->getWidth();
@@ -138,8 +138,8 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *struct
 
 void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)
 {
-    my_assert(structure);
-    my_assert(structure->getType() == TURRET || structure->getType() == RTURRET);
+    d2tm_assert(structure);
+    d2tm_assert(structure->getType() == TURRET || structure->getType() == RTURRET);
 
     int iHeadFacing = -1;
     int facingAngles = 8;
@@ -153,7 +153,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
         iHeadFacing = rocketTurret->getHeadFacing();
         facingAngles = rocketTurret->getFacingAngles();
     }
-    my_assert(iHeadFacing > -1);
+    d2tm_assert(iHeadFacing > -1);
 
     // for now support these 2 facing angles amounts
     if (facingAngles == 16) {
@@ -211,15 +211,15 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
 
 void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure *structure)
 {
-    my_assert(structure);
-    my_assert(structure->getType() == REFINERY);
+    d2tm_assert(structure);
+    d2tm_assert(structure->getType() == REFINERY);
 
     drawStructureAnimation(structure);
 }
 
 void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int layer)
 {
-    my_assert(structure);
+    d2tm_assert(structure);
 
     // always select proper palette (of owner)
     // select_palette(players[structure->getOwner()].pal);
@@ -288,7 +288,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
 {
     cRepairFacility *repairFacility = dynamic_cast<cRepairFacility *>(structure);
-    my_assert(repairFacility);
+    d2tm_assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
     cUnit *pUnit = game.m_gameObjectsContext->getUnit(unitId);
     int iconId = pUnit->getUnitInfo().icon;

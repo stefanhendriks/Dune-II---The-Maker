@@ -28,11 +28,11 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     m_drawWithoutShroudTiles(false),
     m_drawGrid(false)
 {
-    my_assert(map!=nullptr);
-    my_assert(m_mapGeometry != nullptr);
-    my_assert(camera!=nullptr);
-    my_assert(player!=nullptr);
-    my_assert(ctx != nullptr);
+    d2tm_assert(map!=nullptr);
+    d2tm_assert(m_mapGeometry != nullptr);
+    d2tm_assert(camera!=nullptr);
+    d2tm_assert(player!=nullptr);
+    d2tm_assert(ctx != nullptr);
 }
 
 cMapDrawer::~cMapDrawer()

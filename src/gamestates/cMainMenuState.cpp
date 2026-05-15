@@ -23,9 +23,9 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_interface(m_ctx->getGameInterface())
 {
-    my_assert(m_settings != nullptr);
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_interface != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 

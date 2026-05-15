@@ -7,7 +7,7 @@
 cTextTextureCache::cTextTextureCache(TTF_Font *font)
     : m_font(font)
 {
-    my_assert(font != nullptr);
+    d2tm_assert(font != nullptr);
 }
 
 cTextTextureCache::~cTextTextureCache()

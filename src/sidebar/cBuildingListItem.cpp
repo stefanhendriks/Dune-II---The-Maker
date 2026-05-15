@@ -11,7 +11,7 @@
 
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable)
 {
-    my_assert(buildId >= 0);
+    d2tm_assert(buildId >= 0);
     m_icon = icon;
     m_buildId = buildId;
     m_type = type;

@@ -23,8 +23,8 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_renderDrawer(ctx->getSDLDrawer())
 {
-    my_assert(player!= nullptr);
-    my_assert(ctx != nullptr);
+    d2tm_assert(player!= nullptr);
+    d2tm_assert(ctx != nullptr);
 
     memset(m_offset_credit, 0, sizeof(m_offset_credit));
     memset(m_offset_direction, 0, sizeof(m_offset_direction));

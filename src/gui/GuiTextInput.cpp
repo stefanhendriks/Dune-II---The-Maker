@@ -6,8 +6,8 @@
 GuiTextInput::GuiTextInput(SDLDrawer* drawer,const cRectangle& rect, cTextDrawer* textDrawer)
     : GuiObject(drawer, rect), m_writer(textDrawer)
 {
-    my_assert(drawer != nullptr);
-    my_assert(textDrawer != nullptr);
+    d2tm_assert(drawer != nullptr);
+    d2tm_assert(textDrawer != nullptr);
 }
 
 void GuiTextInput::draw() const

@@ -18,9 +18,9 @@
 cMouseRepairState::cMouseRepairState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)
 {
-    my_assert(player!=nullptr);
-    my_assert(context!=nullptr);
-    my_assert(mouse!=nullptr);
+    d2tm_assert(player!=nullptr);
+    d2tm_assert(context!=nullptr);
+    d2tm_assert(mouse!=nullptr);
 }
 
 void cMouseRepairState::onNotifyMouseEvent(const s_MouseEvent &event)

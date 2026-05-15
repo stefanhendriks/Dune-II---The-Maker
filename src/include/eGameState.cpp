@@ -42,7 +42,7 @@ const char *stateToString(const int &state)
         case GAME_MISSIONSELECT:
             return "GAME_MISSIONSELECT";
         default:
-            my_assert(false);
+            d2tm_assert(false);
             break;
     }
     return "";

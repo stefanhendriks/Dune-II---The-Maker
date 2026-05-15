@@ -155,10 +155,10 @@ cStructureFactory* cGameObjectContext::getStructureFactory() const
 
 void cGameObjectContext::serviceInit(sGameServices* services)
 {
-    my_assert(m_Players != nullptr);
+    d2tm_assert(m_Players != nullptr);
     m_Players->serviceInit(services);
-    my_assert(m_map != nullptr);
+    d2tm_assert(m_map != nullptr);
     m_map->serviceInit(services);
-    my_assert(m_Units != nullptr);
+    d2tm_assert(m_Units != nullptr);
     m_Units->serviceInit(services);
 }

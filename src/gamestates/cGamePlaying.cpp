@@ -35,23 +35,23 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     m_objects(services->objects),
     m_settings(services->settings)
 {
-    my_assert(m_objects != nullptr);
-    my_assert(m_settings != nullptr);
+    d2tm_assert(m_objects != nullptr);
+    d2tm_assert(m_settings != nullptr);
     m_TIMER_evaluatePlayerStatus = 5;
 
     //fix others pointers
     m_interface = m_ctx->getGameInterface();
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
-    my_assert(m_mapCamera != nullptr);
+    d2tm_assert(m_mapCamera != nullptr);
     m_reinforcements = m_interface->getReinforcements();
-    my_assert(m_reinforcements != nullptr);
+    d2tm_assert(m_reinforcements != nullptr);
     m_structureFactory = services->objects->getStructureFactory();
-    my_assert(m_structureFactory != nullptr);
+    d2tm_assert(m_structureFactory != nullptr);
     m_drawManager = m_interface->getRenderDrawManager();
-    my_assert(m_drawManager != nullptr);
+    d2tm_assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
-    my_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
 
     m_controlledPlayer = m_objects->getPlayer(HUMAN);
     m_drawManager->setPlayerToDraw(m_controlledPlayer);

@@ -21,7 +21,7 @@ namespace brains {
 
 cPlayerBrainFremenSuperWeapon::cPlayerBrainFremenSuperWeapon(cPlayer *player) : cPlayerBrain(player)
 {
-    my_assert(player != nullptr);
+    d2tm_assert(player != nullptr);
 }
 
 void cPlayerBrainFremenSuperWeapon::think()

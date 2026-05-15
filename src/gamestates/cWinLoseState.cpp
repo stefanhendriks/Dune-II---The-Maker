@@ -14,14 +14,14 @@ cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) :
     m_settings(services->settings),
     m_statement(value)
 {
-    my_assert(services != nullptr);
-    my_assert(m_settings != nullptr);
+    d2tm_assert(services != nullptr);
+    d2tm_assert(m_settings != nullptr);
 
     auto ctx = services->ctx;
     m_interface = ctx->getGameInterface();
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_interface != nullptr);
     auto gfxinter = ctx->getGraphicsContext()->gfxinter;
-    my_assert(gfxinter != nullptr);
+    d2tm_assert(gfxinter != nullptr);
 
     if (m_interface->getScreenTexture() != nullptr)
         m_backgroundTexture = m_interface->getScreenTexture();

@@ -77,7 +77,7 @@ private:
             case eKeyEventType::PRESSED:
                 return "PRESSED";
             default:
-                my_assert(false);
+                d2tm_assert(false);
                 break;
         }
         return "";

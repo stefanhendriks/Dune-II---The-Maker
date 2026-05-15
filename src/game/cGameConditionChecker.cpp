@@ -16,7 +16,7 @@
 
 cGameConditionChecker::cGameConditionChecker(cGame* game) : m_game(game)
 {   
-    my_assert(game != nullptr); 
+    d2tm_assert(game != nullptr); 
     m_winFlags = 0;
     m_loseFlags = 0;
 }

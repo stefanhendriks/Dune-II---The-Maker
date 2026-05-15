@@ -24,9 +24,9 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services)
     m_guiWindow(nullptr),
     m_previewMap(services->objects->getPreviewMaps())
 {
-    my_assert(m_textDrawer != nullptr);
-    my_assert(m_settings != nullptr);
-    my_assert(m_interface != nullptr);
+    d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_interface != nullptr);
     constructWindow();
 }
 

@@ -12,7 +12,7 @@ GuiSlider::GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue, in
     , m_value(std::clamp(initialValue, minValue, maxValue))
     , m_dragging(false)
 {
-    my_assert(drawer != nullptr);
+    d2tm_assert(drawer != nullptr);
 }
 
 void GuiSlider::draw() const {

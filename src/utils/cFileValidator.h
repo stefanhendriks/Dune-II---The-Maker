@@ -39,7 +39,7 @@ inline constexpr std::string eGameDirFileNameString(const eGameDirFileName &valu
         case eGameDirFileName::GFXEDITOR:
             return "GFXEDITOR";
         default:
-            my_assert(false);
+            d2tm_assert(false);
             break;
     }
     return "";

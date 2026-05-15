@@ -41,9 +41,9 @@ cPlayers::cPlayers()
 
 void cPlayers::serviceInit(sGameServices* services)
 {
-    my_assert(services != nullptr);
+    d2tm_assert(services != nullptr);
     m_log = services->m_log;
-    my_assert(m_log != nullptr);
+    d2tm_assert(m_log != nullptr);
 
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
         m_players[i]->serviceInit(services);
@@ -58,17 +58,17 @@ cPlayers::~cPlayers() {
 }
 
 cPlayer* cPlayers::operator[](int index) {
-    my_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::operator[] out of bounds");
+    d2tm_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::operator[] out of bounds");
     return m_players[index];
 }
 
 const cPlayer* cPlayers::operator[](int index) const {
-    my_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::operator[] const out of bounds");
+    d2tm_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::operator[] const out of bounds");
     return m_players[index];
 }
 
 cPlayer* cPlayers::getPlayer(int index) {
-    my_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::getPlayer out of bounds");
+    d2tm_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::getPlayer out of bounds");
     if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
         return nullptr;
     }
@@ -76,7 +76,7 @@ cPlayer* cPlayers::getPlayer(int index) {
 }
 
 const cPlayer* cPlayers::getPlayer(int index) const {
-    my_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::getPlayer const out of bounds");
+    d2tm_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::getPlayer const out of bounds");
     if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
         return nullptr;
     }
@@ -93,7 +93,7 @@ const cPlayer* cPlayers::getHumanPlayer() const {
 
 void cPlayers::setupPlayers(cHousesInfo* housesInfo)
 {
-    my_assert(housesInfo != nullptr);
+    d2tm_assert(housesInfo != nullptr);
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
         m_players[i]->init(i, nullptr);
         m_players[i]->setHousesInfo(housesInfo);
@@ -102,8 +102,8 @@ void cPlayers::setupPlayers(cHousesInfo* housesInfo)
 
 void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMouse* mouse, int techLevel)
 {
-    my_assert(sideBarFactory != nullptr);
-    my_assert(mouse != nullptr);
+    d2tm_assert(sideBarFactory != nullptr);
+    d2tm_assert(mouse != nullptr);
 
     for (int i = HUMAN; i < MAX_PLAYERS_CAPACITY; i++) {
         cPlayer* player = m_players[i];

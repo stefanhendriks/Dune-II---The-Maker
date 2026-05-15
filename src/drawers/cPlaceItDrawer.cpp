@@ -20,8 +20,8 @@
 
 cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : m_player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
 {
-    my_assert(thePlayer != nullptr);
-    my_assert(ctx != nullptr);
+    d2tm_assert(thePlayer != nullptr);
+    d2tm_assert(ctx != nullptr);
     m_gfxdata = m_ctx->getGraphicsContext()->gfxdata.get();
 }
 
@@ -46,12 +46,12 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell)
 
 void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell)
 {
-    my_assert(itemToPlace);
+    d2tm_assert(itemToPlace);
     if (mouseCell < 0) return;
     Color itemToPlaceColor;
 
     int structureId = itemToPlace->getBuildId();
-    my_assert(structureId > -1);
+    d2tm_assert(structureId > -1);
 
     bool bWithinBuildDistance = false;
     int cellWidth = m_structureUtils.getWidthOfStructureTypeInCells(structureId);
@@ -159,7 +159,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
 {
-    my_assert(itemToPlace);
+    d2tm_assert(itemToPlace);
 
     int structureId = itemToPlace->getBuildId();
 

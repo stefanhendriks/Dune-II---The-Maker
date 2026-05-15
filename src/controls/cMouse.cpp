@@ -23,8 +23,8 @@ cMouse::cMouse(GameContext *ctx) :
     m_renderDrawer(ctx->getSDLDrawer()),
     m_coords(cPoint(0,0))
 {
-    my_assert(m_ctx!=nullptr);
-    my_assert(m_renderDrawer!=nullptr);
+    d2tm_assert(m_ctx!=nullptr);
+    d2tm_assert(m_renderDrawer!=nullptr);
     m_leftButtonPressed=false;
     m_rightButtonPressed=false;
     m_leftButtonReleased=false;
@@ -312,7 +312,7 @@ bool cMouse::isTile(int value)
 void cMouse::setMouseObserver(cInputObserver *mouseObserver)
 {
     m_mouseObserver = mouseObserver;
-    my_assert(m_mouseObserver != nullptr);
+    d2tm_assert(m_mouseObserver != nullptr);
 }
 
 

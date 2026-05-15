@@ -20,7 +20,7 @@ GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::strin
     , m_pressed(false)
     , m_enabled(true)   // by default always enabled
 {
-    my_assert(drawer != nullptr);
+    d2tm_assert(drawer != nullptr);
 }
 
 GuiButton::~GuiButton()

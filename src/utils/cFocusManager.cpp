@@ -5,7 +5,7 @@
 
 cFocusManager::cFocusManager(cTimeManager* timeManager)
 {
-    my_assert(timeManager != nullptr);
+    d2tm_assert(timeManager != nullptr);
     // Initialize focus manager with time manager if needed
     m_timeManager = timeManager;
 }

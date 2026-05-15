@@ -1211,7 +1211,7 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                     fremenIsHumanAlly = true;
                 }
 
-                my_assert(game.m_drawManager);
+                d2tm_assert(game.m_drawManager);
                 game.m_drawManager->missionInit();
 
                 if (quota > 0) {
@@ -1228,7 +1228,7 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
 
                 if (houseForPlayer == FREMEN) {
                     // seems like a non-standard Dune 2 mission, this will break
-                    my_assert(false && "No FREMEN supported in INI files yet");
+                    d2tm_assert(false && "No FREMEN supported in INI files yet");
                 }
 
                 game.m_gameObjectsContext->getPlayer(iCPUId)->setTeam(teamIndexAI);

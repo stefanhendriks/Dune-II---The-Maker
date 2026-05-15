@@ -5,7 +5,7 @@ namespace brains {
 
 cPlayerBrainEmpty::cPlayerBrainEmpty(cPlayer *player) : cPlayerBrain(player)
 {
-    my_assert(player != nullptr);
+    d2tm_assert(player != nullptr);
 }
 
 void cPlayerBrainEmpty::think()

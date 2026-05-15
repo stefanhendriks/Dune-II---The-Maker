@@ -40,9 +40,9 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
     m_iStaticFrame(STAT14),
     m_iTrans(0)
 {
-    my_assert(map!=nullptr);
-    my_assert(player!=nullptr);
-    my_assert(mapCamera!=nullptr);
+    d2tm_assert(map!=nullptr);
+    d2tm_assert(player!=nullptr);
+    d2tm_assert(mapCamera!=nullptr);
 
     float reportX = cSideBar::WidthOfMinimap*1.f / getMapWidthInPixels();
     float reportY = cSideBar::HeightOfMinimap*1.f / getMapHeightInPixels();

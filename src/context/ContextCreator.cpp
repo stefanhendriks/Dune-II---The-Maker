@@ -10,8 +10,8 @@
 
 ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsValidator)
 {
-    my_assert(renderer!=nullptr);
-    my_assert(settingsValidator!=nullptr);
+    d2tm_assert(renderer!=nullptr);
+    d2tm_assert(settingsValidator!=nullptr);
     // 
     // loading all datapacks
     //

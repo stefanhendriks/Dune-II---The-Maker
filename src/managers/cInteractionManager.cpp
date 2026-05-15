@@ -12,7 +12,7 @@
 
 cInteractionManager::cInteractionManager(cPlayer *thePlayer) : cInputObserver()
 {
-    my_assert(thePlayer!=nullptr);
+    d2tm_assert(thePlayer!=nullptr);
     // does not own these things!
     m_player = thePlayer;
     m_sidebar = thePlayer->getSideBar();

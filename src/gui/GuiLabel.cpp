@@ -13,7 +13,7 @@ GuiLabel::GuiLabel(SDLDrawer* drawer, const cRectangle &rect, const std::string 
     , m_focus(false)
     , m_enabled(true)
 {
-    my_assert(drawer != nullptr);
+    d2tm_assert(drawer != nullptr);
 }
 
 GuiLabel::~GuiLabel()

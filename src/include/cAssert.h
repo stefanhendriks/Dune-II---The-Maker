@@ -7,7 +7,7 @@
 #include <source_location>
 #include <cstdlib>
 
-inline void my_assert(
+inline void d2tm_assert(
     bool condition, 
     std::source_location location = std::source_location::current()) noexcept
 {

@@ -24,8 +24,8 @@ cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player
     m_player(player),
     m_renderListIds(false)
 {
-    my_assert(player != nullptr);
-    my_assert(ctx != nullptr);
+    d2tm_assert(player != nullptr);
+    d2tm_assert(ctx != nullptr);
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw)
@@ -50,7 +50,7 @@ void cBuildingListDrawer::drawListWithUnitsOrAbilities(cBuildingList *list)
 
 void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list)
 {
-    my_assert(list != nullptr);
+    d2tm_assert(list != nullptr);
 
     int x = list->getButtonDrawX();
     int y = list->getButtonDrawY();
@@ -67,7 +67,7 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list)
 
 void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 {
-    my_assert(list != nullptr);
+    d2tm_assert(list != nullptr);
 
     int x = list->getButtonDrawX();
     int y = list->getButtonDrawY();
@@ -165,7 +165,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         bool cannotPayIt = !m_player->hasEnoughCreditsFor(item->getBuildCost());
 
         // icon id must be set , assert it.
-        my_assert(item->getIconId() > -1);
+        d2tm_assert(item->getIconId() > -1);
 
         m_renderDrawer->renderSprite(m_gfxinter->getTexture(item->getIconId()), iDrawX, iDrawY);
 
@@ -372,7 +372,7 @@ bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX,
 
 cBuildingListItem *cBuildingListDrawer::isOverItemCoordinates(cBuildingList *list, int x, int y)
 {
-    my_assert(list != nullptr);
+    d2tm_assert(list != nullptr);
     // starting draw coordinates
     int iDrawX=getDrawX();
     int iDrawY=getDrawY();

@@ -11,7 +11,7 @@
 
 HarkonnenMentat::HarkonnenMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMentat(ctx, allowMissionSelect)
 {
-    my_assert(ctx != nullptr);
+    d2tm_assert(ctx != nullptr);
     iBackgroundFrame = MENTATH;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);

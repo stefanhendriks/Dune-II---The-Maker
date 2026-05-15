@@ -7,7 +7,7 @@
 GuiObject::GuiObject(SDLDrawer* drawer, const cRectangle &rect) : 
     m_rect(rect), m_renderDrawer(drawer)
 {
-    my_assert(drawer != nullptr);
+    d2tm_assert(drawer != nullptr);
 }
 
 

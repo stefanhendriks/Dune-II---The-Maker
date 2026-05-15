@@ -17,7 +17,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface())
 {
-    my_assert(services != nullptr);
+    d2tm_assert(services != nullptr);
     int margin = m_settings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;

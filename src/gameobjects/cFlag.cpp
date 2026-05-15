@@ -17,7 +17,7 @@ cFlag::cFlag(cPlayer *player, cPoint &absCoords, int frames, int animationDelay)
     , m_frames(frames)
     , m_frame(0)
 {
-    my_assert(player != nullptr);
+    d2tm_assert(player != nullptr);
 }
 
 void cFlag::draw()
