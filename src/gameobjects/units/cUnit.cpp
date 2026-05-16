@@ -3895,6 +3895,12 @@ void cUnit::setAction(eActionType action)
     m_action = action;
 }
 
+void cUnit::retreatToMapEdge()
+{
+    m_transferType = eTransferType::DIE;
+    setGoalCell(iFindCloseBorderCell(position.iCell));
+}
+
 void cUnit::retreatToNearbyBase()
 {
     const std::vector<sEntityForDistance> &result = getPlayer()->getAllMyStructuresOrderClosestToCell(position.iCell);

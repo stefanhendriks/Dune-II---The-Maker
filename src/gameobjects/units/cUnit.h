@@ -181,6 +181,7 @@ public:
     sRendering rendering;
 
     void retreatToNearbyBase();
+    void retreatToMapEdge();
     void deselect();
     [[nodiscard]] bool isSelected() const;
     void select();
