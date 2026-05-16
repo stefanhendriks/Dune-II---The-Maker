@@ -1307,11 +1307,12 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
             guiDrawFramePressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
         }
 
-        // selected map, always render as pressed
+        // selected map, always render as pressed with a bright border
         if (isRenderingSelectedMap) {
             textColor = bHover ? colorDarkerYellow : Color::Yellow;
             // RENDERS (AGAIN)!
             guiDrawFramePressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
+            m_renderDrawer->renderRectColor(iDrawX - 2, iDrawY - 2, mapItemButtonWidth + 4, mapItemButtonHeight + 4, Color::Yellow);
         }
 
         // In case invalid map, render as not-selectable
@@ -1405,6 +1406,33 @@ void cSetupSkirmishState::onMouseMovedTo(const s_MouseEvent &)
 {
 }
 
+void cSetupSkirmishState::moveCursor(int deltaX, int deltaY)
+{
+    int maxIndex = m_previewMaps->getMapCount();
+
+    if (iSkirmishMap == -1) {
+        iSkirmishMap = mapStartingIndexToDisplay;
+    } else {
+        int newIndex = iSkirmishMap + deltaX + deltaY * maxMapsInSelectAreaHorizontally;
+        iSkirmishMap = std::clamp(newIndex, 0, maxIndex);
+    }
+
+    mapStartingIndexToDisplay = (iSkirmishMap / maxMapsInSelectArea) * maxMapsInSelectArea;
+
+    if (iSkirmishMap == 0) return;
+
+    s_PreviewMap* map = m_previewMaps->getMap(iSkirmishMap);
+    if (!map->validMap) return;
+
+    iStartingPoints = 0;
+    for (int s : map->iStartCell) {
+        if (s > -1) iStartingPoints++;
+    }
+    for (int p = iStartingPoints; p < (AI_WORM - 1); p++) {
+        skirmishPlayer[p].bPlaying = false;
+    }
+}
+
 void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
@@ -1412,10 +1440,21 @@ void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_interface->setTransitionToWithFadingOut(GAME_MENU);
         }
         if (event.isAction(eKeyAction::SCROLL_LEFT)) {
-            previousFunction();
+            moveCursor(-1, 0);
         }
         if (event.isAction(eKeyAction::SCROLL_RIGHT)) {
-            nextFunction();
+            moveCursor(1, 0);
+        }
+        if (event.isAction(eKeyAction::SCROLL_UP)) {
+            moveCursor(0, -1);
+        }
+        if (event.isAction(eKeyAction::SCROLL_DOWN)) {
+            moveCursor(0, 1);
+        }
+        if (event.isAction(eKeyAction::MENU_CONFIRM)) {
+            if (iSkirmishMap > -1 && m_previewMaps->getMap(iSkirmishMap)->validMap) {
+                prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
+            }
         }
     }
 }

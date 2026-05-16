@@ -177,4 +177,6 @@ private:
 
     void onMouseLeftButtonClickedAtTechLevel();
     void onMouseRightButtonClickedAtTechLevel();
+
+    void moveCursor(int deltaX, int deltaY);
 };
