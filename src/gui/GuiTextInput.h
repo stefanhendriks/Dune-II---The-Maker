@@ -17,11 +17,15 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent& event) override;
 
     const std::string& getText() const { return m_text; }
-    void setText(const std::string& text) { m_text = text; }
+    void setText(const std::string& text);
     void setTextDrawer(cTextDrawer* drawer) { m_writer = drawer; }
     void setOnEnter(std::function<void(const std::string&)> callback) { m_onEnter = std::move(callback); }
 
 private:
+    int getMaxTextPixelWidth() const;
+    bool canAppendChar(char c) const;
+    std::string getFittedDisplayText() const;
+
     std::string m_text;
     cTextDrawer *m_writer;
     bool m_focused = false;
