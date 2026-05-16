@@ -85,4 +85,5 @@
 | ESCAPE | Choose House | Return to main menu |
 | ESCAPE | Setup Skirmish | Return to main menu |
 | ESCAPE | Select Conquest | Return to options |
-| LEFT / RIGHT | Setup Skirmish | Previous / next map page |
+| Arrow keys | Setup Skirmish | Move map cursor (wraps rows, changes page at edges) |
+| ENTER | Setup Skirmish | Start game with selected map |
