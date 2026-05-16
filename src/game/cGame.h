@@ -60,6 +60,7 @@ class cDrawManager;
 class cTimeManager;
 class cStructureUtils;
 class Texture;
+class cIni;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -292,6 +293,7 @@ private:
     std::unique_ptr<cScreenFader> m_cScreenFader;
 
     std::unique_ptr<sGameServices> m_services;
+    std::unique_ptr<cIni> m_cIni;
 
     cLog* m_log = nullptr;
 };

@@ -17,12 +17,13 @@
 
 #include "include/cAssert.h"
 
-cMentatState::cMentatState(sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign)
+cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini, s_DataCampaign* dataCampaign)
     : cGameState(services),
       m_dataCampaign(dataCampaign),
       m_settings(services->settings),
       m_interface(m_ctx->getGameInterface()),
       m_objets(services->objects),
+      m_cIni(cini),
       m_mode(mode),
       m_house(dataCampaign->housePlayer)
 {
@@ -31,6 +32,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, s_DataCampa
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_objets != nullptr);
+    d2tm_assert(m_cIni != nullptr);
     prepareMentat(m_house);
 }
 

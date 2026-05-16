@@ -1,5 +1,6 @@
 #include "gamestates/cCreatorState.h"
 #include "utils/cLog.h"
+#include "utils/ini.h"
 #include "gamestates/cGameState.h"
 
 #include "gamestates/cMainMenuState.h"
@@ -18,11 +19,13 @@
 #include "context/GameContext.hpp"
 #include "include/cAssert.h"
 
-CreatorState::CreatorState(sGameServices* services, s_DataCampaign* dataCampaign)
+CreatorState::CreatorState(sGameServices* services, cIni* ini, s_DataCampaign* dataCampaign)
     : m_services(services)
 {
     m_dataCampaign = dataCampaign;
     d2tm_assert(m_services != nullptr);
+    m_cIni = ini;
+    d2tm_assert(m_cIni != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     // all State should be recreate when needed to use
     needToRecreateState.fill(true);
@@ -91,19 +94,19 @@ void CreatorState::createStateFromScratch(eGameState gameState)
         break;
 
     case eGameState::BRIEFING:
-        m_states[eGameState::BRIEFING] = std::make_unique<cMentatState>(m_services, MentatMode::Briefing, m_dataCampaign);
+        m_states[eGameState::BRIEFING] = std::make_unique<cMentatState>(m_services, MentatMode::Briefing, m_cIni, m_dataCampaign);
         break;
 
     case eGameState::WINBRIEF:
-        m_states[eGameState::WINBRIEF] = std::make_unique<cMentatState>(m_services, MentatMode::WinBrief, m_dataCampaign);
+        m_states[eGameState::WINBRIEF] = std::make_unique<cMentatState>(m_services, MentatMode::WinBrief, m_cIni, m_dataCampaign);
         break;
 
     case eGameState::LOSEBRIEF:
-        m_states[eGameState::LOSEBRIEF] = std::make_unique<cMentatState>(m_services, MentatMode::LoseBrief, m_dataCampaign);
+        m_states[eGameState::LOSEBRIEF] = std::make_unique<cMentatState>(m_services, MentatMode::LoseBrief, m_cIni, m_dataCampaign);
         break;
 
     case eGameState::TELLHOUSE:
-        m_states[eGameState::TELLHOUSE] = std::make_unique<cTellHouseState>(m_services, m_dataCampaign);
+        m_states[eGameState::TELLHOUSE] = std::make_unique<cTellHouseState>(m_services, m_cIni, m_dataCampaign);
         break;
 
     case eGameState::SELECT_HOUSE:
@@ -111,7 +114,7 @@ void CreatorState::createStateFromScratch(eGameState gameState)
         break;
 
     case eGameState::REGION:
-        m_states[eGameState::REGION] = std::make_unique<cSelectYourNextConquestState>(m_services, m_dataCampaign);
+        m_states[eGameState::REGION] = std::make_unique<cSelectYourNextConquestState>(m_services, m_cIni, m_dataCampaign);
         break;
 
     case eGameState::PLAYING:

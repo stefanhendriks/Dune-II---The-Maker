@@ -7,10 +7,11 @@
 
 struct s_DataCampaign;
 class cMouse;
+class cIni;
 
 class cTellHouseState : public cGameState {
 public:
-    cTellHouseState(sGameServices* services, s_DataCampaign* dataCampaign);
+    cTellHouseState(sGameServices* services, cIni *ini, s_DataCampaign* dataCampaign);
     ~cTellHouseState() override;
 
     void thinkFast() override;
@@ -27,4 +28,5 @@ private:
     int m_house = -1;
     s_DataCampaign* m_dataCampaign = nullptr;
     cMouse* m_mouse = nullptr;
+    cIni* m_cIni = nullptr;
 };

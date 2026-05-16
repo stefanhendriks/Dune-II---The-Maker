@@ -164,6 +164,8 @@ cGame::cGame()
     m_services->info = m_infoContext.get();
     m_services->settings = m_gameSettings.get();
     m_services->m_log = nullptr;
+
+    m_cIni = std::make_unique<cIni>(m_services.get());
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
@@ -858,7 +860,7 @@ void cGame::setState(int newState)
             cGameState *newStatePtr = nullptr;
 
             if (newState == GAME_REGION) {
-                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(m_services.get(), m_dataCampaign.get());
+                cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(m_services.get(), m_cIni.get(), m_dataCampaign.get());
 
                 pState->calculateOffset();
                 logbook("Setup:  WORLD");
@@ -948,17 +950,17 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_TELLHOUSE) {
                 m_dataCampaign->housePlayer = m_gameObjectsContext->getPlayer(HUMAN)->getHouse();
-                newStatePtr = new cTellHouseState(m_services.get(), m_dataCampaign.get());
+                newStatePtr = new cTellHouseState(m_services.get(), m_cIni.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
             else if (newState == GAME_BRIEFING) {
-                newStatePtr = new cMentatState(m_services.get(), MentatMode::Briefing, m_dataCampaign.get());
+                newStatePtr = new cMentatState(m_services.get(), MentatMode::Briefing, m_cIni.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_WINBRIEF) {
-                newStatePtr = new cMentatState(m_services.get(), MentatMode::WinBrief, m_dataCampaign.get());
+                newStatePtr = new cMentatState(m_services.get(), MentatMode::WinBrief, m_cIni.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_LOSEBRIEF) {
-                newStatePtr = new cMentatState(m_services.get(), MentatMode::LoseBrief, m_dataCampaign.get());
+                newStatePtr = new cMentatState(m_services.get(), MentatMode::LoseBrief, m_cIni.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
 
@@ -1001,7 +1003,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
     m_gameObjectsContext->getPlayer(HUMAN)->setHouse(house);
     m_dataCampaign->housePlayer = house;
     if (!m_states[GAME_TELLHOUSE]) {
-        m_states[GAME_TELLHOUSE] = new cTellHouseState(m_services.get(), m_dataCampaign.get());
+        m_states[GAME_TELLHOUSE] = new cTellHouseState(m_services.get(), m_cIni.get(), m_dataCampaign.get());
         playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
 }
