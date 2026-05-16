@@ -106,8 +106,8 @@ void cNewMapEditorState::constructWindow()
     auto inputDescription = std::make_unique<GuiTextInput>( m_renderDrawer,
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*2-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
-    m_inputDescription = inputDescription.get();
     inputDescription->setTheme(cGuiThemeBuilder().light().build());
+    m_inputDescription = inputDescription.get();
     m_guiWindow->addGuiObject(std::move(inputDescription));
 
     // width
