@@ -2,11 +2,18 @@
 #include "drawers/cTextDrawer.h"
 #include "include/cAssert.h"
 
+#include <SDL2/SDL.h>
+
 #include <algorithm>
 
 namespace {
     constexpr int kHorizontalPadding = 4;
     constexpr int kSecurityPadding = 5;
+    constexpr Uint32 kCursorBlinkHalfPeriodMs = 500;
+
+    bool shouldRenderCursor() {
+        return ((SDL_GetTicks() / kCursorBlinkHalfPeriodMs) % 2u) == 0u;
+    }
 }
 
 GuiTextInput::GuiTextInput(SDLDrawer* drawer,const cRectangle& rect, cTextDrawer* textDrawer)
@@ -80,7 +87,7 @@ bool GuiTextInput::canAppendChar(char c) const
 std::string GuiTextInput::getFittedDisplayText() const
 {
     std::string display = m_text;
-    if (m_focused) {
+    if (m_focused && shouldRenderCursor()) {
         display.push_back('|');
     }
 
