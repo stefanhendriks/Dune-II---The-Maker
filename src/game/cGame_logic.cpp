@@ -259,7 +259,7 @@ void cGame::init()
 
     // Units & Structures are already initialized in map.init()
     // Load properties
-    cIni::installGame(m_gameFilename);
+    m_cIni->installGame(m_gameFilename);
 }
 
 // TODO: Bad smell (duplicate code)
@@ -685,7 +685,7 @@ bool cGame::setupGame()
 
     m_mapCamera = new cMapCamera(m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove);
 
-    cIni::installGame(m_gameFilename);
+    m_cIni->installGame(m_gameFilename);
     // Now we are ready for the menu state
     setState(GAME_MENU);
 
@@ -743,7 +743,7 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
         m_states[GAME_REGION] = nullptr;
     }
 
-    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(m_services.get(), m_dataCampaign.get());
+    cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(m_services.get(), m_cIni.get(), m_dataCampaign.get());
     m_states[GAME_REGION] = pState;
 
     pState->calculateOffset();

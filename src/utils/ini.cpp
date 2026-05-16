@@ -382,11 +382,11 @@ void cIni::INI_Load_seed(int seed)
     auto seedMap = seedGenerator.generateSeedMap();
     logbook("Seedmap generated");
 
-    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
+    auto mapEditor = cMapEditor(m_objects->getMap());
     for (int mapY = 0; mapY < 64; mapY++) {
         for (int mapX = 0; mapX < 64; mapX++) {
             int type = seedMap.getCellType(mapX, mapY);
-            int iCell = game.m_gameObjectsContext->getMapGeometry()->makeCell(mapX, mapY);
+            int iCell = m_objects->getMapGeometry()->makeCell(mapX, mapY);
             mapEditor.createCell(iCell, type, 0);
         }
     }
@@ -534,7 +534,7 @@ int getTechLevelByRegion(int iRegion)
 
 void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
-    game.m_gameSettings->setSkirmish(false);
+    m_settings->setSkirmish(false);
     game.missionInit();
     int iHouse = dataCampaign->housePlayer;
     int iRegion = dataCampaign->region;
@@ -569,7 +569,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
     memset(iPl_house, -1, sizeof(iPl_house));
     memset(iPl_quota, 0, sizeof(iPl_quota));
 
-    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
+    auto mapEditor = cMapEditor(m_objects->getMap());
         // char linefeed[MAX_LINE_LENGTH];
         char lineword[30];
         std::string linesection;
@@ -684,7 +684,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
     // }
 
     mapEditor.smoothMap();
-    game.m_gameObjectsContext->getMap()->setDesiredAmountOfWorms(game.m_gameObjectsContext->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM));
+    m_objects->getMap()->setDesiredAmountOfWorms(m_objects->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM));
 }
 
 void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& linefeed)
@@ -701,7 +701,7 @@ void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, con
     }
     else if (wordtype == WORD_FOCUS) {
         int focusCell = ToInt(linefeed);
-        game.m_gameObjectsContext->getPlayer(0)->setFocusCell(focusCell);
+        m_objects->getPlayer(0)->setFocusCell(focusCell);
         game.m_mapCamera->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
@@ -746,7 +746,7 @@ int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credi
 
 void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std::string& slinefeed)
 {
-    game.m_gameObjectsContext->getMap()->init(64, 64);
+    m_objects->getMap()->init(64, 64);
 
     // original dune 2 maps have 64x64 maps
     if (wordtype == WORD_MAPSEED) {
@@ -790,7 +790,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = game.m_gameObjectsContext->getMapGeometry()->makeCell(iCellX, iCellY);
+                d2tm_cell = m_objects->getMapGeometry()->makeCell(iCellX, iCellY);
                 blooms[iBloomID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -843,7 +843,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
                 int iCellY = (original_dune2_cell / 64);
 
                 // Now recalculate it
-                d2tm_cell = game.m_gameObjectsContext->getMapGeometry()->makeCell(iCellX, iCellY);
+                d2tm_cell = m_objects->getMapGeometry()->makeCell(iCellX, iCellY);
                 fields[iFieldID] = d2tm_cell;
                 memset(word, 0, sizeof(word)); // clear string
 
@@ -917,7 +917,7 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
                 if (iHouse > -1) {
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
-                        if (game.m_gameObjectsContext->getPlayer(i)->getHouse() == iHouse) {
+                        if (m_objects->getPlayer(i)->getHouse() == iHouse) {
                             playerId = i; // set controller here.. phew
                             break;
                         }
@@ -930,7 +930,7 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
             else if (iPart == 2) {
                 // Homebase is home of that house
                 if (strcmp(chunk, "Homebase") == 0) {
-                    targetCell = game.m_gameObjectsContext->getPlayer(playerId)->getFocusCell();
+                    targetCell = m_objects->getPlayer(playerId)->getFocusCell();
                 }
                 else {
                     // enemy base
@@ -938,21 +938,21 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
                     if (playerId == 0) {
                         // Find corresponding house and get controller
                         for (int i = 0; i < MAX_PLAYERS; i++)
-                            if (game.m_gameObjectsContext->getPlayer(i)->getHouse() == iHouse && i != playerId) {
-                                targetCell = game.m_gameObjectsContext->getPlayer(i)->getFocusCell();
+                            if (m_objects->getPlayer(i)->getHouse() == iHouse && i != playerId) {
+                                targetCell = m_objects->getPlayer(i)->getFocusCell();
                                 break;
                             }
                     }
                     else {
                         // computer player must find enemy = human
-                        targetCell = game.m_gameObjectsContext->getPlayer(0)->getFocusCell();
+                        targetCell = m_objects->getPlayer(0)->getFocusCell();
                     }
                 }
 
             }
             else if (iPart == 3) {
                 delayInMinutes = atoi(chunk);
-                bool repeat = game.m_gameSettings->isAllowRepeatingReinforcements() && plusDetected;
+                bool repeat = m_settings->isAllowRepeatingReinforcements() && plusDetected;
                 int reinforcementMultiplier = 20; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
                 // D2TM does not interpret the delay as minutes, as doing so takes a very long time for reinforcements
                 // to arrive. So I guess delay is not really 1 minute in game-time in Dune 2.
@@ -1036,13 +1036,13 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
                         //char msg[80];
                         //sprintf(msg, "i=%d, ihouse=%d, house=%d", i, iHouse, player[i].house);
                         //logbook(msg);
-                        if (game.m_gameObjectsContext->getPlayer(i)->getHouse() == iHouse) {
+                        if (m_objects->getPlayer(i)->getHouse() == iHouse) {
                             iController = i; // set controller here.. phew
                             break;
                         }
                     }
                     // Quickfix: fremen house in original dune 2, is house 6 (not detectable)
-                    // in this game.
+                    // in this game
                     //if (iHouse == FREMEN)
                     //	iController = 6;
 
@@ -1066,7 +1066,7 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
 
                     // Search for a player with this house
                     for (int i = 0; i < MAX_PLAYERS; i++) {
-                        if (game.m_gameObjectsContext->getPlayer(i)->getHouse() == iHouse) {
+                        if (m_objects->getPlayer(i)->getHouse() == iHouse) {
                             iController = i; // set controller here.. phew
                             break;
                         }
@@ -1092,7 +1092,7 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
     }
 
     if (iController > -1) {
-        game.m_gameObjectsContext->getPlayer(iController)->placeStructure(iCell, iType, 100);
+        m_objects->getPlayer(iController)->placeStructure(iCell, iType, 100);
     }
     else {
         logbook("WARNING: Identifying house/controller of structure (typo?)");
@@ -1153,7 +1153,7 @@ bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const in
                 // Search for a player with this house
                 for (int i = 0; i < MAX_PLAYERS; i++) {
                     // this is why we require setUpPlayers... because it matches by house type
-                    if (game.m_gameObjectsContext->getPlayer(i)->getHouse() == iHouse) {
+                    if (m_objects->getPlayer(i)->getHouse() == iHouse) {
                         iController = i; // set controller here.. phew
                         break;
                     }
@@ -1207,14 +1207,14 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
 
             if (playerIndex == iHumanID) {
                 logbook(std::format("INI: Setting up human player, credits to [{}], house [{}] and team [{}]", creditsPlayer, houseForPlayer, 0));
-                game.m_gameObjectsContext->getPlayer(HUMAN)->setCredits(creditsPlayer);
-                game.m_gameObjectsContext->getPlayer(HUMAN)->setHouse(houseForPlayer);
-                game.m_gameObjectsContext->getPlayer(HUMAN)->setTeam(0);
-                game.m_gameObjectsContext->getPlayer(HUMAN)->setAutoSlabStructures(false);
+                m_objects->getPlayer(HUMAN)->setCredits(creditsPlayer);
+                m_objects->getPlayer(HUMAN)->setHouse(houseForPlayer);
+                m_objects->getPlayer(HUMAN)->setTeam(0);
+                m_objects->getPlayer(HUMAN)->setAutoSlabStructures(false);
 
                 // Fremen are always the same CPU index, so check what house the human player is, and depending
                 // on that set up FREMEN player team
-                game.m_gameObjectsContext->getPlayer(AI_CPU5)->setHouse(FREMEN);
+                m_objects->getPlayer(AI_CPU5)->setHouse(FREMEN);
                 if (houseForPlayer == ATREIDES) {
                     fremenIsHumanAlly = true;
                 }
@@ -1223,15 +1223,15 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                 game.m_drawManager->missionInit();
 
                 if (quota > 0) {
-                    game.m_gameObjectsContext->getPlayer(HUMAN)->setQuota(quota);
+                    m_objects->getPlayer(HUMAN)->setQuota(quota);
                 }
 
             }
             else {
-                game.m_gameObjectsContext->getPlayer(iCPUId)->setAutoSlabStructures(true);
+                m_objects->getPlayer(iCPUId)->setAutoSlabStructures(true);
 
                 if (quota > 0) {
-                    game.m_gameObjectsContext->getPlayer(iCPUId)->setQuota(quota);
+                    m_objects->getPlayer(iCPUId)->setQuota(quota);
                 }
 
                 if (houseForPlayer == FREMEN) {
@@ -1239,13 +1239,13 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                     d2tm_assert(false && "No FREMEN supported in INI files yet");
                 }
 
-                game.m_gameObjectsContext->getPlayer(iCPUId)->setTeam(teamIndexAI);
+                m_objects->getPlayer(iCPUId)->setTeam(teamIndexAI);
 
                 logbook(std::format("INI: Setting up CPU player, credits to [{}], house to [{}] and team [{}]",
                                     creditsPlayer, houseForPlayer, teamIndexAI));
 
-                game.m_gameObjectsContext->getPlayer(iCPUId)->setCredits(creditsPlayer);
-                game.m_gameObjectsContext->getPlayer(iCPUId)->setHouse(houseForPlayer);
+                m_objects->getPlayer(iCPUId)->setCredits(creditsPlayer);
+                m_objects->getPlayer(iCPUId)->setHouse(houseForPlayer);
                 iCPUId++;
             }
         }
@@ -1256,14 +1256,14 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
 
     if (fremenIsHumanAlly) {
         // same team as human
-        game.m_gameObjectsContext->getPlayer(AI_CPU5)->setTeam(0);
+        m_objects->getPlayer(AI_CPU5)->setTeam(0);
     }
     else {
         // same team as enemy cpu's
-        game.m_gameObjectsContext->getPlayer(AI_CPU5)->setTeam(teamIndexAI);
+        m_objects->getPlayer(AI_CPU5)->setTeam(teamIndexAI);
     }
 
-    game.m_gameObjectsContext->getPlayer(AI_WORM)->setTeam(2); // the WORM player is nobody's ally, ever
+    m_objects->getPlayer(AI_WORM)->setTeam(2); // the WORM player is nobody's ally, ever
 }
 
 void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
@@ -1473,7 +1473,7 @@ void cIni::installGame(std::string filename)
                         }
 
                         id = cIniUtils::getBulletTypeFromString(name_bullet);
-                        const int bulletInfoCount = game.m_infoContext->getBulletInfos()->size();
+                        const int bulletInfoCount = m_infos->getBulletInfos()->size();
                         if (id >= 0 && id >= bulletInfoCount) {
                             id--;
                         }
@@ -1491,7 +1491,7 @@ void cIni::installGame(std::string filename)
                 // Valid ID
                 if (section == INI_UNITS && id > -1) {
                     // Unit properties
-                    s_UnitInfo &unitInfo = game.m_infoContext->getUnitInfo(id);
+                    s_UnitInfo &unitInfo = m_infos->getUnitInfo(id);
 
                     if (wordtype == WORD_HITPOINTS) unitInfo.hp = ToInt(word_right);
                     if (wordtype == WORD_APPETITE) unitInfo.appetite = ToInt(word_right);
@@ -1543,12 +1543,12 @@ void cIni::installGame(std::string filename)
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
 
-                if (wordtype == WORD_BLOOMTIMERDURATION) game.m_infoContext->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
-                if (wordtype == WORD_TERRAIN_MINSPICE) game.m_infoContext->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAIN_MAXSPICE) game.m_infoContext->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINHILL_MINSPICE) game.m_infoContext->getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINHILL_MAXSPICE) game.m_infoContext->getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINWALL_HP) game.m_infoContext->getTerrainInfo()->terrainWallHp = ToInt(word_right);
+                if (wordtype == WORD_BLOOMTIMERDURATION) m_infos->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
+                if (wordtype == WORD_TERRAIN_MINSPICE) m_infos->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAIN_MAXSPICE) m_infos->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINHILL_MINSPICE) m_infos->getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINHILL_MAXSPICE) m_infos->getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
+                if (wordtype == WORD_TERRAINWALL_HP) m_infos->getTerrainInfo()->terrainWallHp = ToInt(word_right);
             }
 
             // Structure w0h00
@@ -1556,19 +1556,19 @@ void cIni::installGame(std::string filename)
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 wordtype = INI_WordType(word_left, section);
                 if (wordtype == WORD_HITPOINTS) {
-                    game.m_infoContext->getStructureInfo(id).hp = ToInt(word_right);
+                    m_infos->getStructureInfo(id).hp = ToInt(word_right);
                 }
-                if (wordtype == WORD_FIXHP) game.m_infoContext->getStructureInfo(id).fixhp = ToInt(word_right);
-                if (wordtype == WORD_POWERDRAIN) game.m_infoContext->getStructureInfo(id).power_drain = ToInt(word_right);
-                if (wordtype == WORD_HAS_CONCRETE) game.m_infoContext->getStructureInfo(id).hasConcrete = ToBool(word_right);
-                if (wordtype == WORD_POWERGIVE) game.m_infoContext->getStructureInfo(id).power_give = ToInt(word_right);
-                if (wordtype == WORD_COST) game.m_infoContext->getStructureInfo(id).cost = ToInt(word_right);
-                if (wordtype == WORD_BUILDTIME) game.m_infoContext->getStructureInfo(id).buildTime = ToInt(word_right);
-                if (wordtype == WORD_CANATTACKAIRUNITS) game.m_infoContext->getStructureInfo(id).canAttackAirUnits = ToBool(word_right);
-                if (wordtype == WORD_CANATTACKUNITS) game.m_infoContext->getStructureInfo(id).canAttackGroundUnits = ToBool(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) game.m_infoContext->getStructureInfo(id).uponDestructionSpawnUnitAmountMin = ToInt(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) game.m_infoContext->getStructureInfo(id).uponDestructionSpawnUnitAmountMax = ToInt(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE) game.m_infoContext->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
+                if (wordtype == WORD_FIXHP) m_infos->getStructureInfo(id).fixhp = ToInt(word_right);
+                if (wordtype == WORD_POWERDRAIN) m_infos->getStructureInfo(id).power_drain = ToInt(word_right);
+                if (wordtype == WORD_HAS_CONCRETE) m_infos->getStructureInfo(id).hasConcrete = ToBool(word_right);
+                if (wordtype == WORD_POWERGIVE) m_infos->getStructureInfo(id).power_give = ToInt(word_right);
+                if (wordtype == WORD_COST) m_infos->getStructureInfo(id).cost = ToInt(word_right);
+                if (wordtype == WORD_BUILDTIME) m_infos->getStructureInfo(id).buildTime = ToInt(word_right);
+                if (wordtype == WORD_CANATTACKAIRUNITS) m_infos->getStructureInfo(id).canAttackAirUnits = ToBool(word_right);
+                if (wordtype == WORD_CANATTACKUNITS) m_infos->getStructureInfo(id).canAttackGroundUnits = ToBool(word_right);
+                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMin = ToInt(word_right);
+                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMax = ToInt(word_right);
+                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE) m_infos->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
             }
 
             if (section == INI_BULLETS && id > -1) {
@@ -1576,11 +1576,11 @@ void cIni::installGame(std::string filename)
                 wordtype = INI_WordType(word_left, section);
             
                 // Bullet properties
-                if (wordtype == WORD_DAMAGE_VEHICLE) game.m_infoContext->getBulletInfo(id).damage_vehicles = ToInt(word_right);
-                if (wordtype == WORD_DAMAGE_INFANTRY) game.m_infoContext->getBulletInfo(id).damage_infantry = ToInt(word_right);
-                if (wordtype == WORD_DEVIATE_PROBABILITY) game.m_infoContext->getBulletInfo(id).deviateProbability = ToInt(word_right);
-                if (wordtype == WORD_EXPLOSION_SIZE) game.m_infoContext->getBulletInfo(id).explosionSize = ToInt(word_right);
-                if (wordtype == WORD_GROUND_BULLET) game.m_infoContext->getBulletInfo(id).groundBullet = ToBool(word_right);
+                if (wordtype == WORD_DAMAGE_VEHICLE) m_infos->getBulletInfo(id).damage_vehicles = ToInt(word_right);
+                if (wordtype == WORD_DAMAGE_INFANTRY) m_infos->getBulletInfo(id).damage_infantry = ToInt(word_right);
+                if (wordtype == WORD_DEVIATE_PROBABILITY) m_infos->getBulletInfo(id).deviateProbability = ToInt(word_right);
+                if (wordtype == WORD_EXPLOSION_SIZE) m_infos->getBulletInfo(id).explosionSize = ToInt(word_right);
+                if (wordtype == WORD_GROUND_BULLET) m_infos->getBulletInfo(id).groundBullet = ToBool(word_right);
             }
 
         } // while

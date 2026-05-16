@@ -61,8 +61,8 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
             m_interface->missionInit();
             m_interface->setupPlayers();
-            cIni::loadScenario(m_mentat.get(), m_interface->getReinforcements(),m_dataCampaign);
-            cIni::loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat.get());
+            m_cIni->loadScenario(m_mentat.get(), m_interface->getReinforcements(),m_dataCampaign);
+            m_cIni->loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat.get());
             break;
         case MentatMode::WinBrief:
             if (house == ATREIDES)
@@ -78,7 +78,7 @@ void cMentatState::prepareMentat(int house)
                 m_mentat->loadScene("win01");
             else
                 m_mentat->loadScene("win02");
-            cIni::loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat.get());
+            m_cIni->loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat.get());
             break;
         case MentatMode::LoseBrief:
             if (house == ATREIDES) 
@@ -95,7 +95,7 @@ void cMentatState::prepareMentat(int house)
             else
                 m_mentat->loadScene("lose02");
             
-            cIni::loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat.get());
+            m_cIni->loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat.get());
             break;
     }
     m_mentat->speak();
@@ -125,10 +125,10 @@ void cMentatState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cMentatState::loadScenario(cReinforcements *reinforcements)
 {
-    cIni::loadScenario(m_mentat.get(), reinforcements, m_dataCampaign);
+    m_cIni->loadScenario(m_mentat.get(), reinforcements, m_dataCampaign);
 }
 
 void cMentatState::loadBriefing(int iScenarioFind, int iSectionFind)
 {
-    cIni::loadBriefing(m_dataCampaign->housePlayer, iScenarioFind, iSectionFind, m_mentat.get());
+    m_cIni->loadBriefing(m_dataCampaign->housePlayer, iScenarioFind, iSectionFind, m_mentat.get());
 }
