@@ -56,7 +56,7 @@ void cDrawManager::reset()
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx,m_player);
-    m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx);
+    m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx, m_player);
     m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(
         m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );
@@ -267,6 +267,7 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
     m_orderDrawer->setPlayer(playerToDraw);
     m_miniMapDrawer->setPlayer(playerToDraw);
     m_mapDrawer->setPlayer(playerToDraw);
+    m_structureDrawer->setPlayer(playerToDraw);
 }
 
 void cDrawManager::drawOptionBar()
