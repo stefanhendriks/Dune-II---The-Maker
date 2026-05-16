@@ -1687,6 +1687,10 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
             if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
                 if (commonEvent->player == this && commonEvent->entityType == eBuildType::STRUCTURE) {
                     buildingListUpdater->onStructureCreated(commonEvent->entitySpecificType);
+                    if (commonEvent->entitySpecificType == CONSTYARD && selected_structure < 0) {
+                        selected_structure = commonEvent->entityID;
+                        getSideBar()->setSelectedListId(eListType::LIST_CONSTYARD);
+                    }
                 }
             }
             break;
