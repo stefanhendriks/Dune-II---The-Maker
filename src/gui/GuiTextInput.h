@@ -54,8 +54,8 @@ public:
         return *this;
     }
 
-    GuiTextInputBuilder& onChanged(std::function<void(const std::string&)> callback) {
-        params.onChanged = std::move(callback);
+    GuiTextInputBuilder& onEnter(std::function<void(const std::string&)> callback) {
+        params.onEnter = std::move(callback);
         return *this;
     }
 
@@ -63,8 +63,8 @@ public:
         auto btn = std::make_unique<GuiTextInput>(params.renderer, params.rect, params.drawer);
         btn->setTextDrawer(params.drawer);
         btn->setTheme(params.theme);
-        if (params.onChanged) {
-            btn->setOnEnter(params.onChanged);
+        if (params.onEnter) {
+            btn->setOnEnter(params.onEnter);
         }
         return btn;
     }
@@ -75,6 +75,6 @@ private:
         cTextDrawer* drawer = nullptr;
         SDLDrawer* renderer = nullptr;
         GuiTheme theme = cGuiThemeBuilder().light().build();
-        std::function<void(const std::string&)> onChanged = nullptr;
+        std::function<void(const std::string&)> onEnter = nullptr;
     } params;
 };
