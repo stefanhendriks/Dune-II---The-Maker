@@ -68,6 +68,7 @@ void cNewMapEditorState::constructWindow()
     auto inputName = std::make_unique<GuiTextInput>( m_renderDrawer,
         m_guiWindow->getRelativeRect(labelX+200, labelY-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
+    inputName->setTheme(cGuiThemeBuilder().light().build()); 
     m_inputName = inputName.get();
     m_guiWindow->addGuiObject(std::move(inputName));
 
@@ -86,6 +87,7 @@ void cNewMapEditorState::constructWindow()
     auto inputAuthor = std::make_unique<GuiTextInput>(m_renderDrawer, 
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
+    inputAuthor->setTheme(cGuiThemeBuilder().light().build());
     m_inputAuthor = inputAuthor.get();
     m_guiWindow->addGuiObject(std::move(inputAuthor));
 
@@ -105,6 +107,7 @@ void cNewMapEditorState::constructWindow()
         m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*2-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
     m_inputDescription = inputDescription.get();
+    inputDescription->setTheme(cGuiThemeBuilder().light().build());
     m_guiWindow->addGuiObject(std::move(inputDescription));
 
     // width
