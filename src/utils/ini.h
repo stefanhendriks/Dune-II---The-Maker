@@ -28,7 +28,7 @@ struct sGameServices;
 // public stuff
 class cIni {
 public:
-    cIni(sGameServices* services);
+    explicit cIni(sGameServices* services);
     // Read game.ini file
     void installGame(std::string filename);
     // Load original scenario ini file
