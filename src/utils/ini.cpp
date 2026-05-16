@@ -36,6 +36,8 @@
 #include "gameobjects/units/cUnits.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "include/sGameServices.h"
+#include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include <format>
 #include <filesystem>
@@ -358,6 +360,12 @@ int GAME_INI_SectionType(const std::string& section, int last)
     return last;
 }
 
+cIni::cIni(sGameServices* services)
+{
+    m_settings = services->settings;
+    m_objects = services->objects;
+    m_infos = services->info;
+}
 
 /**
  * Create seed map.

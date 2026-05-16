@@ -11,12 +11,14 @@
 
 #include "include/cAssert.h"
 
-cTellHouseState::cTellHouseState(sGameServices* services, s_DataCampaign* dataCampaign)
+cTellHouseState::cTellHouseState(sGameServices* services, cIni *ini, s_DataCampaign* dataCampaign)
     : cGameState(services),
     m_house(dataCampaign->housePlayer),
-    m_dataCampaign(dataCampaign)
+    m_dataCampaign(dataCampaign),
+    m_cIni(ini)
 {
     d2tm_assert(services != nullptr);
+    d2tm_assert(m_cIni != nullptr);
     d2tm_assert(dataCampaign != nullptr);
     auto interface = services->ctx->getGameInterface();
     m_mouse = interface->getMouse();

@@ -11,10 +11,11 @@
 
 class GameContext;
 class cGameInterface;
+class cIni;
 
 class CreatorState {
 public:
-    explicit CreatorState(sGameServices* services, s_DataCampaign* dataCampaign);
+    explicit CreatorState(sGameServices* services, cIni* ini, s_DataCampaign* dataCampaign);
     ~CreatorState();
 
     cGameState *getState(eGameState gameState, bool forceRecreate = false);
@@ -26,4 +27,5 @@ private:
     sGameServices* m_services = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
     cGameInterface* m_interface = nullptr;
+    cIni* m_cIni = nullptr;
 };

@@ -8,6 +8,7 @@ struct s_DataCampaign;
 class cReinforcements;
 class cGameInterface;
 class cGameSettings;
+class cIni;
 
 enum class MentatMode {
     Briefing,
@@ -17,7 +18,7 @@ enum class MentatMode {
 
 class cMentatState : public cGameState {
 public:
-    cMentatState(sGameServices* services, MentatMode mode, s_DataCampaign* dataCampaign);
+    cMentatState(sGameServices* services, MentatMode mode, cIni* cini, s_DataCampaign* dataCampaign);
     ~cMentatState() override;
 
     void thinkFast() override;
@@ -36,6 +37,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cGameObjectContext* m_objets = nullptr;
+    cIni* m_cIni = nullptr;
     MentatMode m_mode;
     int m_house;
 };

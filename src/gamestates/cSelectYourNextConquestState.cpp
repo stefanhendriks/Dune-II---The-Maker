@@ -47,7 +47,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* services, s_DataCampaign* dataCompaign) :
+cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* services, cIni* ini, s_DataCampaign* dataCompaign) :
     cGameState(services),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
@@ -55,7 +55,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     m_objects(services->objects),
     m_dataCompaign(dataCompaign),
     m_gfxworld(m_ctx->getGraphicsContext()->gfxworld.get()),
-    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
+    m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
+    m_cIni(ini)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
@@ -63,6 +64,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     d2tm_assert(m_dataCompaign != nullptr);
     d2tm_assert(m_gfxworld != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
+    d2tm_assert(m_cIni != nullptr);
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
     m_mouse = m_interface->getMouse();

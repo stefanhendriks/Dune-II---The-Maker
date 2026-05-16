@@ -18,12 +18,17 @@ class cRegion;
 class cReinforcements;
 class AbstractMentat;
 class cSelectYourNextConquestState;
-
 struct s_DataCampaign;
+
+class cGameSettings;
+class cGameObjectContext;
+class cInfoContext;
+struct sGameServices;
 
 // public stuff
 class cIni {
 public:
+    cIni(sGameServices* services);
     // Read game.ini file
     static void installGame(std::string filename);
     // Load original scenario ini file
