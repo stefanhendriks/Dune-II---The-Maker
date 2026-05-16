@@ -370,11 +370,11 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
-        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer->getFocusCell());
+        m_mapCamera->centerAndJumpViewPortToCell(m_controlledPlayer->getFocusCell());
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
-        cAbstractStructure *selectedStructure = humanPlayer->getSelectedStructure();
+        cAbstractStructure *selectedStructure = m_controlledPlayer->getSelectedStructure();
         if (selectedStructure) {
             m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
@@ -451,11 +451,11 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_HOME)) {
-        m_mapCamera->centerAndJumpViewPortToCell(humanPlayer->getFocusCell());
+        m_mapCamera->centerAndJumpViewPortToCell(m_controlledPlayer->getFocusCell());
     }
 
     if (event.isAction(eKeyAction::CENTER_ON_STRUCTURE)) {
-        cAbstractStructure *selectedStructure = humanPlayer->getSelectedStructure();
+        cAbstractStructure *selectedStructure = m_controlledPlayer->getSelectedStructure();
         if (selectedStructure) {
             m_mapCamera->centerAndJumpViewPortToCell(selectedStructure->getCell());
         }
