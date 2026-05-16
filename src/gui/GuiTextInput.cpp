@@ -14,7 +14,7 @@ void GuiTextInput::draw() const
 {
     drawRectFillBorder(m_theme);
     // Affiche un curseur si focus
-    m_writer->drawText(m_rect.getX() + 4, m_rect.getY() + 4, m_text + (m_focused ? "|" : "")); 
+    m_writer->drawText(m_rect.getX() + 4, m_rect.getY() + 4, m_text + (m_focused ? "|" : ""));
 }
 
 void GuiTextInput::onNotifyKeyboardEvent(const cKeyboardEvent& event)
