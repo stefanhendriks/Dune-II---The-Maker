@@ -469,7 +469,7 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
 
     // Per mission assign:
     // Every house has a different campaign, so...
-    cIni::loadRegionfile(world, iHouse, iMission, this);
+    m_cIni->loadRegionfile(world, iHouse, iMission, this);
 
     selectNextConquestAlpha = 1;
 
