@@ -34,6 +34,9 @@ void GuiTextInput::onNotifyKeyboardEvent(const cKeyboardEvent& event)
 void GuiTextInput::onNotifyMouseEvent(const s_MouseEvent& event)
 {
     //std::cout << "GuiTextInput received mouse event: " << s_MouseEvent::toString(event) << std::endl;
+    if (event.eventType != eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
+        return;
+    }
     // Focus si clic dans la zone
     m_focused = m_rect.isPointWithin(event.coords);
 }
