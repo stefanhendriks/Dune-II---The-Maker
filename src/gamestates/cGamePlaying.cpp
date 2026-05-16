@@ -275,6 +275,32 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 }
 
 
+void cGamePlaying::onPlayerDefeated(cPlayer *player) {
+    const s_GameEvent event {
+        .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
+        .data = CommonEvent {
+            .entityType = eBuildType::SPECIAL,
+            .player = player
+        }
+    };
+    m_interface->onNotifyGameEvent(event);
+
+    // player is defeated, if it was the controlling player it is no longer valid to control it
+    if (player == m_controlledPlayer) {
+        m_controlledPlayer = m_objects->getPlayer(HUMAN);
+        m_drawManager->setPlayerToDraw(m_controlledPlayer);
+        m_interface->setPlayerToInteractFor(m_controlledPlayer);
+    }
+
+    player->setHouse(GENERALHOUSE);
+
+    for (int unitId : player->getAllMyUnits()) {
+        cUnit *pUnit = m_objects->getUnit(unitId);
+        if (!pUnit->isAirbornUnit()) continue;
+        pUnit->retreatToMapEdge();
+    }
+}
+
 void cGamePlaying::evaluatePlayerStatus()
 {
     if (m_TIMER_evaluatePlayerStatus > 0) {
@@ -287,24 +313,10 @@ void cGamePlaying::evaluatePlayerStatus()
             cPlayer* player = m_objects->getPlayer(i);
             bool isAlive = player->isAlive();
             // evaluate all players regardless if they are alive or not (who knows, they became alive?)
-            player->evaluateStillAlive();
+            bool isStillAlive = player->evaluateStillAlive();
 
-            if (isAlive && !player->isAlive()) {
-                const s_GameEvent event {
-                    .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
-                    .data = CommonEvent {
-                        .entityType = eBuildType::SPECIAL,
-                        .player = player
-                    }
-                };
-                m_interface->onNotifyGameEvent(event);
-
-                // player is defeated, if it was the controlling player it is no longer valid to control it
-                if (player == m_controlledPlayer) {
-                    m_controlledPlayer = m_objects->getPlayer(HUMAN);
-                    m_drawManager->setPlayerToDraw(m_controlledPlayer);
-                    m_interface->setPlayerToInteractFor(m_controlledPlayer);
-                }
+            if (isAlive && !isStillAlive) {
+                onPlayerDefeated(player);
             }
             // TODO: event : Player joined/became alive, etc?
         }
