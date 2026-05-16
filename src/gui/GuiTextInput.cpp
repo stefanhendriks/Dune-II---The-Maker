@@ -1,6 +1,5 @@
 #include "gui/GuiTextInput.h"
 #include "drawers/cTextDrawer.h"
-#include <iostream>
 #include "include/cAssert.h"
 
 GuiTextInput::GuiTextInput(SDLDrawer* drawer,const cRectangle& rect, cTextDrawer* textDrawer)
@@ -12,9 +11,13 @@ GuiTextInput::GuiTextInput(SDLDrawer* drawer,const cRectangle& rect, cTextDrawer
 
 void GuiTextInput::draw() const
 {
-    drawRectFillBorder(m_theme);
+    m_renderDrawer->renderRectFillColor(m_rect, m_theme.background);
+    if (m_focused) {
+        cRectangle focusRect(m_rect.getX() - 3, m_rect.getY() - 3, m_rect.getWidth() + 5, m_rect.getHeight() + 5);
+        m_renderDrawer->renderRectColor(focusRect, m_theme.textColorHover);
+    }
     // Affiche un curseur si focus
-    m_writer->drawText(m_rect.getX() + 4, m_rect.getY() + 4, m_text + (m_focused ? "|" : ""));
+    m_writer->drawText(m_rect.getX() + 4, m_rect.getY() + 4, m_theme.textColor, m_text + (m_focused ? "|" : ""));
 }
 
 void GuiTextInput::onNotifyKeyboardEvent(const cKeyboardEvent& event)
