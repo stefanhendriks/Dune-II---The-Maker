@@ -33,6 +33,8 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
+    void onPlayerDefeated(cPlayer *player);
+
     eGameStateType getType() override;
 
     void missionInit();
