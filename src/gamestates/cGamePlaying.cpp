@@ -298,6 +298,13 @@ void cGamePlaying::evaluatePlayerStatus()
                     }
                 };
                 m_interface->onNotifyGameEvent(event);
+
+                // player is defeated, if it was the controlling player it is no longer valid to control it
+                if (player == m_controlledPlayer) {
+                    m_controlledPlayer = m_objects->getPlayer(HUMAN);
+                    m_drawManager->setPlayerToDraw(m_controlledPlayer);
+                    m_interface->setPlayerToInteractFor(m_controlledPlayer);
+                }
             }
             // TODO: event : Player joined/became alive, etc?
         }
