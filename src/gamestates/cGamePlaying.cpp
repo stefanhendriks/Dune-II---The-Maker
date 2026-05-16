@@ -497,6 +497,8 @@ void cGamePlaying::tryDebugSwitchToPlayer(int playerIndex)
         m_interface->onNotifyGameEvent(newEvent);
         return;
     }
+    m_controlledPlayer->deselectAllUnits();
+    m_controlledPlayer->selected_structure = -1;
     m_controlledPlayer = targetPlayer;
     m_drawManager->setPlayerToDraw(m_controlledPlayer);
     m_interface->setPlayerToInteractFor(m_controlledPlayer);
