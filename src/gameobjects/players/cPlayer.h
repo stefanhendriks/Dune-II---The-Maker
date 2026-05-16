@@ -545,6 +545,9 @@ public:
     int getSwapColor() const;
 
 private:
+    bool hasAliveStructure();
+    bool hasAliveUnit();
+
     static int groupIdToIndex(int groupId);
 
     cBuildingListItem *isUpgradeAvailableToGrant(eBuildType providesType, int providesTypeId) const;

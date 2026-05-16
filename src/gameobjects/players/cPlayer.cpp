@@ -2443,32 +2443,34 @@ std::vector<int> cPlayer::getAttackingUnitsOnMap() const
     return ids;
 }
 
-bool cPlayer::evaluateStillAlive()
-{
-    alive = false;
+bool cPlayer::hasAliveStructure() {
     for (int i = 0; i < MAX_STRUCTURES; i++) {
         cAbstractStructure *abstractStructure = m_objects->getStructures()[i];
         if (!abstractStructure) continue;
         if (!abstractStructure->isValid()) continue;
         if (!abstractStructure->belongsTo(this)) continue;
-        alive = true;
-        break;
+        return true;
     }
+    return false;
+}
 
-    if (!alive) {
-        // check units now
-        for (int i = 0; i < m_objects->getUnitsSize(); i++) {
-            cUnit *pUnit = m_objects->getUnit(i);
-            if (!pUnit->isValid()) continue;
-            if (pUnit->isAirbornUnit()) continue; // do not count airborn units
-            if (pUnit->isDead()) continue; // in case we have some 'half-dead' units that got pass the isValid check...
-            // a better way for this would be to have such units in a separate collection.
-            if (!pUnit->belongsTo(this)) continue;
-            alive = true;
-            break;
-        }
+bool cPlayer::hasAliveUnit() {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit->isValid()) continue;
+        if (pUnit->isAirbornUnit()) continue; // do not count airborn units
+        if (pUnit->isDead()) continue; // in case we have some 'half-dead' units that got pass the isValid check...
+        // a better way for this would be to have such units in a separate collection.
+        if (!pUnit->belongsTo(this)) continue;
+        return true;
     }
-    return isAlive();
+    return false;
+}
+
+bool cPlayer::evaluateStillAlive()
+{
+    alive = hasAliveStructure() || hasAliveUnit();
+    return alive;
 }
 
 cAbstractStructure *cPlayer::getSelectedStructure() const
