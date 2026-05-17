@@ -1619,6 +1619,9 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
             if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
                 auto msg = std::format("Player {} ({}) has been defeated.", commonEvent->player->getId(),
                                        commonEvent->player->getHouseName());
+                if (commonEvent->player != this) {
+                    break;
+                }
                 // addNotification(msg, eNotificationType::BAD);
                 const s_GameEvent newEvent {
                     .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
