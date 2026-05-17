@@ -221,6 +221,11 @@ void cNewMapEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     m_guiWindow->onNotifyKeyboardEvent(event);
 }
 
+bool cNewMapEditorState::isKeyboardCapturedByUi() const
+{
+    return m_guiWindow && m_guiWindow->hasFocusedInput();
+}
+
 
 void cNewMapEditorState::constructEmptyMap()
 {

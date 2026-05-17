@@ -26,6 +26,7 @@ public:
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+    bool isKeyboardCapturedByUi() const override;
 
     eGameStateType getType() override;
 

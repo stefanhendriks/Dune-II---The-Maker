@@ -1313,6 +1313,10 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     // pass through any classes that are interested
     if (m_currentState) {
         m_currentState->onNotifyKeyboardEvent(event);
+
+        if (m_currentState->isKeyboardCapturedByUi()) {
+            return;
+        }
     }
 
     switch (event.getType()) {

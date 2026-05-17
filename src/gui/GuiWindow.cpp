@@ -56,3 +56,14 @@ void GuiWindow::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         }
     }
 }
+
+bool GuiWindow::hasFocusedInput() const
+{
+    for (const auto &guiObject : gui_objects) {
+        if (guiObject->hasKeyboardFocus()) {
+            return true;
+        }
+    }
+
+    return false;
+}

@@ -15,6 +15,7 @@ public:
     void draw() const override;
     void onNotifyKeyboardEvent(const cKeyboardEvent& event) override;
     void onNotifyMouseEvent(const s_MouseEvent& event) override;
+    bool hasKeyboardFocus() const override { return m_focused; }
 
     const std::string& getText() const { return m_text; }
     void setText(const std::string& text);
