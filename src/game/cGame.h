@@ -43,6 +43,7 @@ class cGameSettings;
 class cTextDrawer;
 
 class cNotificationArea;
+class GuiConsole;
 
 class cStructureFactory;
 class cSideBarFactory;
@@ -260,6 +261,7 @@ private:
 
     std::unique_ptr<cScreenShake> m_screenShake;
     std::unique_ptr<cNotificationArea> m_notificationArea;
+    std::unique_ptr<GuiConsole> m_guiConsole;
 
     void thinkFast_audio();
     void thinkFast_fading();

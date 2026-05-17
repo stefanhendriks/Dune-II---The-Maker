@@ -51,6 +51,8 @@
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cWinLoseState.h"
 
+#include "gui/GuiConsole.h"
+
 #include "include/sDataCampaign.h"
 #include "iniDefine.h"
 #include "managers/cDrawManager.h"
@@ -95,6 +97,12 @@
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
 #include "game/cNotificationArea.h"
+
+namespace {
+bool isConsoleToggleKey(const cKeyboardEvent &event) {
+    return event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_GRAVE);
+}
+}
 
 cGame::cGame()
 {
@@ -407,6 +415,7 @@ void cGame::drawState()
 
     m_currentState->draw();
     m_notificationArea->draw(m_textDrawer, 14, m_gameSettings->getScreenH() - 64);
+    m_guiConsole->draw();
 }
 
 /**
@@ -631,6 +640,13 @@ bool cGame::setupGame()
     global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
     // -----------------------------------
     m_notificationArea->setDrawer(m_renderDrawer);
+    m_guiConsole = std::make_unique<GuiConsole>(
+        m_renderDrawer,
+        m_textDrawer,
+        m_notificationArea.get(),
+        m_gameSettings->getScreenW(),
+        m_gameSettings->getScreenH());
+
     auto previewMaps = m_gameObjectsContext->getPreviewMaps();
     previewMaps->setRenderDrawer(m_renderDrawer); // inject render drawer into cPreviewMaps that is part of game objects context, so it can be used to create textures for map previews
     previewMaps->loadSkirmishMaps(); // load skirmish maps, so they are ready when we need them in the skirmish setup state
@@ -1301,6 +1317,10 @@ void cGame::setLoseFlags(int value)
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (m_guiConsole->isVisible()) {
+        m_guiConsole->onNotifyMouseEvent(event);
+    }
+
     // pass through any classes that are interested
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
@@ -1309,6 +1329,18 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
+    if (isConsoleToggleKey(event)) {
+        m_guiConsole->toggle();
+        return;
+    }
+
+    if (m_guiConsole->isVisible()) {
+        m_guiConsole->onNotifyKeyboardEvent(event);
+        if (m_guiConsole->isKeyboardCaptured()) {
+            return;
+        }
+    }
+
     // pass through any classes that are interested
     if (m_currentState) {
         m_currentState->onNotifyKeyboardEvent(event);
