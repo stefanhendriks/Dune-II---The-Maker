@@ -18,6 +18,8 @@ public:
 
     void draw() const override;
 
+    bool hasFocusedInput() const;
+
     void addGuiObject(std::unique_ptr<GuiObject> guiObject);
 
     cRectangle getRelativeRect(int x, int y, int width, int height);

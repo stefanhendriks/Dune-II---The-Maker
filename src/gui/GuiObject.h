@@ -24,6 +24,9 @@ class GuiObject : public cInputObserver {
 public:
     virtual ~GuiObject() = default;
     virtual void draw() const = 0;
+    virtual bool hasKeyboardFocus() const {
+        return false;
+    }
 
     void setTheme(const GuiTheme& theme);
     void setPosition(int x, int y);
