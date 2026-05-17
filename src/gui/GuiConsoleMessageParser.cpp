@@ -24,6 +24,14 @@ std::string trim(const std::string& text)
 
     return std::string(first, last);
 }
+
+std::string toLower(std::string text)
+{
+    std::transform(text.begin(), text.end(), text.begin(), [](unsigned char c) {
+        return static_cast<char>(std::tolower(c));
+    });
+    return text;
+}
 }
 
 GuiConsoleMessageParser::GuiConsoleMessageParser(cNotificationArea* notificationArea)
@@ -40,6 +48,11 @@ void GuiConsoleMessageParser::submit(const std::string& text) const
 {
     const std::string normalizedText = normalize(text);
     if (normalizedText.empty() || !m_notificationArea) {
+        return;
+    }
+
+    if (toLower(normalizedText) == "help") {
+        m_notificationArea->addNotification("You are the leader", eNotificationType::NEUTRAL);
         return;
     }
 
