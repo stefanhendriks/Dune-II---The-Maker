@@ -406,7 +406,7 @@ void cGame::drawState()
     }
 
     m_currentState->draw();
-    m_notificationArea->draw(m_textDrawer, 14, m_gameSettings->getScreenH() - 44);
+    m_notificationArea->draw(m_textDrawer, 14, m_gameSettings->getScreenH() - 64);
 }
 
 /**
