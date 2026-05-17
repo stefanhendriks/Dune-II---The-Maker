@@ -73,10 +73,10 @@ public:
         return m_progress;
     }
     bool isBuilding() {
-        return m_building;
+        return isState(eBuildingListItemState::BUILDING) || isState(eBuildingListItemState::PAUSED);
     }
     bool isPaused() {
-        return m_paused;
+        return isState(eBuildingListItemState::PAUSED);
     }
     bool isState(eBuildingListItemState value) {
         return m_state == value;
@@ -87,7 +87,7 @@ public:
      * @return
      */
     bool isAvailable() {
-        return isState(eBuildingListItemState::AVAILABLE);
+        return isState(eBuildingListItemState::AVAILABLE) || isState(eBuildingListItemState::BUILDING);
     }
 
     /**
@@ -144,16 +144,18 @@ public:
     void setBuildCost(int value) {
         m_cost = value;
     }
-    void setIsBuilding(bool value) {
-        m_building = value;
+    void pauseBuilding() {
+        m_state = eBuildingListItemState::PAUSED;
     }
-    void setPaused(bool value) {
-        m_paused = value;
+    void resumeBuilding() {
+        m_state = eBuildingListItemState::BUILDING;
     }
-    void stopBuilding() {
-        setIsBuilding(false);
-        setPaused(false);
+    void cancelBuilding() {
+        m_state = eBuildingListItemState::AVAILABLE;
         resetProgress();
+    }
+    void startBuilding() {
+        m_state = eBuildingListItemState::BUILDING;
     }
     void setStatusPendingUpgrade() {
         m_state = eBuildingListItemState::PENDING_UPGRADE;
@@ -273,8 +275,6 @@ private:
     int m_buildId;			// the ID to build .. (ie TRIKE, or CONSTYARD)
     eBuildType m_type;		// .. of this type of thing (ie, UNIT or STRUCTURE)
     int m_cost;				// price
-    bool m_building;			// building this item? (default = false)
-    bool m_paused;              // construction paused by player?
     eBuildingListItemState m_state;
     int m_progress;			// progress building this item
     int m_buildFrameToDraw;   // for the progress drawing

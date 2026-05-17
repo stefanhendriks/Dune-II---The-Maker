@@ -607,8 +607,7 @@ void cBuildingListUpdater::evaluateUpgrades()
                         // calculate the amount of money back:
                         m_player->giveCredits(item->getRefundAmount());
                     }
-                    item->setIsBuilding(false);
-                    item->resetProgress();
+                    item->cancelBuilding();
                     cItemBuilder *itemBuilder = m_player->getItemBuilder();
                     itemBuilder->removeItemFromList(item);
                 }

@@ -182,7 +182,7 @@ void cItemBuilder::thinkFast()
         // stop building this item when we are done
         if (item->getTimesToBuild() == 0) {	// no more items to build
             // stop building (set flags)
-            item->stopBuilding();
+            item->cancelBuilding();
 
             // remove this item from the build list (does not delete item, so pointer is still valid)
             removeItemFromList(item);
@@ -282,7 +282,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     if (special.providesType == UNIT) {
                         deployUnit(item, special.providesTypeId);
                     }
-                    item->stopBuilding();
+                    item->cancelBuilding();
                     removeItemFromList(item);
                 }
                 else if (special.deployFrom == AT_RANDOM_CELL) {
@@ -326,7 +326,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                             iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(x, y);
                         }
                     }
-                    item->stopBuilding();
+                    item->cancelBuilding();
                     removeItemFromList(item);
                 }
 
@@ -773,7 +773,7 @@ cBuildingListItem *cItemBuilder::getItem(int position)
 void cItemBuilder::startBuilding(cBuildingListItem *item)
 {
     if (item == nullptr) return;
-    item->setIsBuilding(true);
+    item->startBuilding();
     item->setTimerCap(getTimerCap(item));
     item->resetProgressFrameTimer();
     m_buildingListUpdater->onBuildItemStarted(item);

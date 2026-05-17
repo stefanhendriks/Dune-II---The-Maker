@@ -209,7 +209,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
             m_player->setContextMouseState(eMouseState::MOUSESTATE_DEPLOY);
         }
         else if (item->isPaused()) {
-            item->setPaused(false);
+            item->startBuilding();
         }
         else {
             startBuildingItemIfOk(item);
@@ -242,14 +242,15 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
 
     // anything but the starport can 'build' things
     if (list->getType() != eListType::LIST_STARPORT) {
-        if (item->isBuilding() && !item->isPaused()) {
-            item->setPaused(true);
+        if (!item->isPaused() &&
+            item->isBuilding() &&
+            !item->isTypeUpgrade()) { // cannot pause upgrades
+            item->pauseBuilding();
         }
         else {
             cancelBuildingListItem(item);
         }
-    }
-    else {
+    } else {
         cOrderProcesser *orderProcesser = m_player->getOrderProcesser();
 
         d2tm_assert(orderProcesser);
@@ -277,8 +278,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
                 m_player->giveCredits(item->getRefundAmount());
                 m_player->getBuildingListUpdater()->onBuildItemCancelled(item);
             }
-            item->setIsBuilding(false);
-            item->resetProgress();
+            item->cancelBuilding();
 
             // notify game that the item just has been cancelled, just before the actual removal
             const s_GameEvent event {

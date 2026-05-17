@@ -1253,8 +1253,7 @@ void cGame::onEventSpecialLaunch(const LaunchDeathHandEvent &event) const
 
     itemToDeploy->decreaseTimesToBuild();
     itemToDeploy->setDeployIt(false);
-    itemToDeploy->setIsBuilding(false);
-    itemToDeploy->resetProgress();
+    itemToDeploy->cancelBuilding();
     if (itemToDeploy->getTimesToBuild() < 1) {
         player->getItemBuilder()->removeItemFromList(itemToDeploy);
     }
