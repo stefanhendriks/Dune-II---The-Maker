@@ -322,7 +322,9 @@ void cPlayerBrainSkirmish::thinkState_Base()
 
     // structure placement is done in thinkState_ProcessBuildOrders() !
 
-    if (player->hasEnoughCreditsFor(500) && m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL) {
+    bool economyAllowsUpgrade = m_economyState == PLAYERBRAIN_ECONOMY_STATE_NORMAL
+                                || m_economyState == PLAYERBRAIN_ECONOMY_STATE_GOOD;
+    if (player->hasEnoughCreditsFor(500) && economyAllowsUpgrade) {
         // we have money to do a (unit) upgrade, structure sUpgradeInfo are done via the "thinkAboutNextStructure" thing
         // which will enforce an upgrade via that path
         if (player->startUpgradingForUnitIfPossible(QUAD)) {
