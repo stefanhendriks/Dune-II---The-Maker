@@ -137,13 +137,6 @@ public:
         return m_queuable;
     }
 
-    // setters
-    void setIconId(int value) {
-        m_icon = value;
-    }
-    void setBuildCost(int value) {
-        m_cost = value;
-    }
     void pauseBuilding() {
         m_state = eBuildingListItemState::PAUSED;
     }
@@ -157,6 +150,14 @@ public:
     void startBuilding() {
         m_state = eBuildingListItemState::BUILDING;
     }
+
+    // setters
+    void setIconId(int value) {
+        m_icon = value;
+    }
+    void setBuildCost(int value) {
+        m_cost = value;
+    }
     void setStatusPendingUpgrade() {
         m_state = eBuildingListItemState::PENDING_UPGRADE;
     }
@@ -165,15 +166,6 @@ public:
     }
     void setStatusPendingBuilding() {
         m_state = eBuildingListItemState::PENDING_BUILDING;
-    }
-    void setIsAvailable(bool value) {
-        value ? m_state = eBuildingListItemState::AVAILABLE : eBuildingListItemState::UNAVAILABLE;
-    }
-    void setTimesToBuild(int value) {
-        m_timesToBuild = value;
-    }
-    void setTimesOrdered(int value) {
-        m_timesOrdered = value;
     }
     void increaseTimesToBuild() {
         m_timesToBuild++;
@@ -186,7 +178,9 @@ public:
             m_timesToBuild = 1; // not queueable always means 1
         }
     }
-    void decreaseTimesToBuild();
+    void decreaseTimesToBuild() {
+        m_timesToBuild--;
+    }
     void increaseTimesOrdered() {
         m_timesOrdered++;
     }
