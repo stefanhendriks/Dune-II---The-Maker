@@ -352,6 +352,18 @@ void cPlayerBrainSkirmish::thinkState_Base()
         if (player->startUpgradingForUnitIfPossible(ORNITHOPTER)) {
             return;
         }
+
+        if (player->startUpgradingForUnitIfPossible(SONICTANK)) {
+            return;
+        }
+
+        if (player->startUpgradingForUnitIfPossible(DEVIATOR)) {
+            return;
+        }
+
+        if (player->startUpgradingForUnitIfPossible(DEVASTATOR)) {
+            return;
+        }
     }
 
     if (player->hasAtleastOneStructure(CONSTYARD)) {
