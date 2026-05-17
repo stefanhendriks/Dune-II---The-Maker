@@ -331,7 +331,9 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
         }
 
         if (techLevel >= 8) {
-            listConstYard->addStructureToList(PALACE, 0);
+			if (structureType == IX) {
+				listConstYard->addStructureToList(PALACE, 0);
+			}
         }
     }
 
