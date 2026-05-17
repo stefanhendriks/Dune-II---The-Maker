@@ -17,6 +17,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     m_type = type;
     m_cost = cost;
     m_building = false;
+    m_paused = false;
     m_state = AVAILABLE;
     m_progress = 0;
     m_buildFrameToDraw = 0;
