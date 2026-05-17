@@ -275,7 +275,8 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 }
 
 
-void cGamePlaying::onPlayerDefeated(cPlayer *player) {
+void cGamePlaying::onPlayerDefeated(cPlayer *player)
+{
     const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_PLAYER_DEFEATED,
         .data = CommonEvent {
