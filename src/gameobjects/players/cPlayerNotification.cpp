@@ -51,5 +51,7 @@ Color cPlayerNotification::getColor() const
             return badColor;
         case OTHER:
             return otherColor;
+        default:
+            return neutralColor;
     }
 }
