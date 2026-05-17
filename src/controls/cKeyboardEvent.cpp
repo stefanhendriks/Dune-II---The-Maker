@@ -69,5 +69,39 @@ char cKeyboardEvent::getChar() const
     if (!isPrintable()) return '\0';
     SDL_Scancode sc = *m_keys.begin();
     SDL_Keycode key = SDL_GetKeyFromScancode(sc);
-    return static_cast<char>(key);
+    char c = static_cast<char>(key);
+    
+    // If shift is pressed, handle uppercase and special characters
+    if (isShiftPressed()) {
+        // Uppercase letters
+        if (c >= 'a' && c <= 'z') {
+            return c - 32;  // Convert to uppercase
+        }
+        // Special characters with shift on US QWERTY keyboard
+        switch (c) {
+            case '1': return '!';
+            case '2': return '@';
+            case '3': return '#';
+            case '4': return '$';
+            case '5': return '%';
+            case '6': return '^';
+            case '7': return '&';
+            case '8': return '*';
+            case '9': return '(';
+            case '0': return ')';
+            case '-': return '_';
+            case '=': return '+';
+            case '[': return '{';
+            case ']': return '}';
+            case '\\': return '|';
+            case ';': return ':';
+            case '\'': return '"';
+            case ',': return '<';
+            case '.': return '>';
+            case '/': return '?';
+            case '`': return '~';
+        }
+    }
+    
+    return c;
 }
