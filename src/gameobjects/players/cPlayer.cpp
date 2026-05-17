@@ -1602,8 +1602,7 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
     buildingListUpdater->onBuildItemCompleted(itemToPlace);
     itemToPlace->decreaseTimesToBuild();
     itemToPlace->setPlaceIt(false);
-    itemToPlace->setIsBuilding(false);
-    itemToPlace->resetProgress();
+    itemToPlace->cancelBuilding();
     if (itemToPlace->getTimesToBuild() < 1) {
         itemBuilder->removeItemFromList(itemToPlace);
     }
