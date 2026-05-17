@@ -137,6 +137,8 @@ void cItemBuilder::thinkFast()
         }
 
         // ITEM is building
+        if (item->isPaused()) continue;
+
         m_timers[i]++;
 
         // determines how fast an item is built, this is the so called 'delay' before 1 'build time tick' has passed

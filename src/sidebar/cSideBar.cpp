@@ -208,6 +208,9 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
         else if (item->shouldDeployIt()) {
             m_player->setContextMouseState(eMouseState::MOUSESTATE_DEPLOY);
         }
+        else if (item->isPaused()) {
+            item->setPaused(false);
+        }
         else {
             startBuildingItemIfOk(item);
         }
@@ -239,7 +242,12 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
 
     // anything but the starport can 'build' things
     if (list->getType() != eListType::LIST_STARPORT) {
-        cancelBuildingListItem(item);
+        if (item->isBuilding() && !item->isPaused()) {
+            item->setPaused(true);
+        }
+        else {
+            cancelBuildingListItem(item);
+        }
     }
     else {
         cOrderProcesser *orderProcesser = m_player->getOrderProcesser();

@@ -181,6 +181,10 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 // draw the other progress stuff
                 m_renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
                 m_renderDrawer->renderSprite(m_gfxinter->getTexture(PROGRESS001+iFrame), iDrawX+2, iDrawY+2,128);
+
+                if (item->isPaused()) {
+                    m_smallTextDrawer->drawTextCenteredInBox("Paused", iDrawX, iDrawY, withOfIcon, heightOfIcon, Color::Yellow);
+                }
             }
             else {
                 if (item->shouldPlaceIt()) {
