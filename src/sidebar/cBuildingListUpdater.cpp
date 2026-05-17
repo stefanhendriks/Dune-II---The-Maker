@@ -329,11 +329,11 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
         if (techLevel >= 5) {
             listConstYard->addStructureToList(TURRET, 0);
         }
-
-        if (techLevel >= 8) {
-            listConstYard->addStructureToList(PALACE, 0);
-        }
     }
+
+	if (structureType == IX) { //already techlevel 8, but we want to add palace only when IX is built, not when techlevel is 8 (since the player might not have built IX yet)
+				listConstYard->addStructureToList(PALACE, 0);
+	}
 
     if (structureType == STARPORT) {
         // House of IX is available if Starport is built
