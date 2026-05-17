@@ -8,6 +8,7 @@ class cTextDrawer;
 class cNotificationArea;
 class GuiWindow;
 class GuiTextInput;
+class GuiConsoleMessageParser;
 class cKeyboardEvent;
 struct s_MouseEvent;
 
@@ -33,6 +34,6 @@ private:
 
     std::unique_ptr<GuiWindow> m_window;
     GuiTextInput* m_input = nullptr;
-    cNotificationArea* m_notificationArea = nullptr;
+    std::unique_ptr<GuiConsoleMessageParser> m_messageParser;
     bool m_visible = false;
 };

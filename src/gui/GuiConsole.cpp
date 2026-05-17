@@ -2,19 +2,17 @@
 
 #include "game/cNotificationArea.h"
 #include "drawers/cTextDrawer.h"
+#include "gui/GuiConsoleMessageParser.h"
 #include "gui/GuiTextInput.h"
 #include "gui/GuiWindow.h"
-#include "include/eNotificationType.h"
 
 #include <algorithm>
-#include <format>
 
 GuiConsole::GuiConsole(SDLDrawer* renderDrawer,
                        cTextDrawer* textDrawer,
                        cNotificationArea* notificationArea,
                        int screenWidth,
                        int screenHeight)
-    : m_notificationArea(notificationArea)
 {
     const int width = std::max(260, std::min(520, screenWidth - 16));
     const int inputHeight = textDrawer->getFontHeight() + 4;
@@ -23,6 +21,7 @@ GuiConsole::GuiConsole(SDLDrawer* renderDrawer,
     const int y = screenHeight - height - 10;
 
     m_window = std::make_unique<GuiWindow>(renderDrawer, cRectangle(x, y, width, height), textDrawer);
+    m_messageParser = std::make_unique<GuiConsoleMessageParser>(notificationArea);
 
     auto input = GuiTextInputBuilder()
         .withRect(m_window->getRelativeRect(8, 6, width - 16, inputHeight))
@@ -87,12 +86,8 @@ void GuiConsole::onNotifyMouseEvent(const s_MouseEvent& event)
 
 void GuiConsole::submit(const std::string& text)
 {
-    if (text.empty()) {
-        return;
-    }
-
-    if (m_notificationArea) {
-        m_notificationArea->addNotification(std::format("> {}", text), eNotificationType::NEUTRAL);
+    if (m_messageParser) {
+        m_messageParser->submit(text);
     }
 
     if (m_input) {
