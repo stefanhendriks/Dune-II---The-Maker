@@ -19,6 +19,7 @@ public:
 
     const std::string& getText() const { return m_text; }
     void setText(const std::string& text);
+    void setFocused(bool focused) { m_focused = focused; }
     void setTextDrawer(cTextDrawer* drawer) { m_writer = drawer; }
     void setOnEnter(std::function<void(const std::string&)> callback) { m_onEnter = std::move(callback); }
 
