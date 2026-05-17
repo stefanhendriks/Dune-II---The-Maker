@@ -1413,8 +1413,9 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::TOGGLE_CHEAT)) {
         m_gameSettings->m_cheatMode = !m_gameSettings->m_cheatMode;
-        cLogger::getInstance()->log(LOG_INFO, COMP_CHEATS, "Cheat mode enabled", "All cheats are now enabled. Have fun!");
-        m_notificationArea->addNotification("Cheat mode toggle !", eNotificationType::NEUTRAL);
+        auto message = std::format("Cheat mode {}", m_gameSettings->m_cheatMode ? "enabled" : "disabled");
+        cLogger::getInstance()->log(LOG_INFO, COMP_CHEATS, "Cheat mode", message);
+        m_notificationArea->addNotification(message, eNotificationType::OTHER);
     }
 }
 

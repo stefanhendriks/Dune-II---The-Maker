@@ -12,6 +12,8 @@ std::string eNotificationTypeString(const eNotificationType &type)
             return "PRIORITY";
         case eNotificationType::BAD:
             return "BAD";
+        case eNotificationType::OTHER:
+            return "OTHER";
         default:
             d2tm_assert(false && "Unknown eNotificationType?");
             break;
@@ -36,18 +38,18 @@ const std::string &cPlayerNotification::getMessage() const
 
 Color cPlayerNotification::getColor() const
 {
-    // @Mira regression on color
-    //bool justStarted = (m_initialDuration - m_TIMER) < 500;
-    static const Color neutralColor = Color::White; //Color{255, 255, 255,255}; // white
-    static const Color priorityColor = Color::Yellow; //Color{255, 207, 41,255}; // yellow
-    static const Color badColor = Color::Red; //{255, 0, 0,255}; // red
+    static const Color neutralColor = Color::White;
+    static const Color priorityColor = Color::Yellow;
+    static const Color badColor = Color::Red;
+    static const Color otherColor = Color::Green;
     switch (m_type) {
         case NEUTRAL:
-            return /*justStarted ? game.getColorFadeSelected(neutralColor) :*/ neutralColor;
+            return neutralColor;
         case PRIORITY:
-            return /*justStarted ? game.getColorFadeSelected(priorityColor) :*/ priorityColor;
+            return priorityColor;
         case BAD:
-            return /*justStarted ? game.getColorFadeSelected(badColor) :*/ badColor;
+            return badColor;
+        case OTHER:
+            return otherColor;
     }
-    return neutralColor;
 }
