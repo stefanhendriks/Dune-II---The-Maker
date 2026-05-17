@@ -320,7 +320,7 @@ void cGamePlaying::evaluatePlayerStatus()
             }
             // TODO: event : Player joined/became alive, etc?
         }
-        m_TIMER_evaluatePlayerStatus = 2;
+        m_TIMER_evaluatePlayerStatus = 5;
     }
 
     m_interface->checkMissionWinOrFail();
