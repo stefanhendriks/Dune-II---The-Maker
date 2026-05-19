@@ -24,6 +24,7 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bo
 {
     if (msg.empty()) return;
     auto cacheEntry = m_textCache->findOrCreate(color, msg);
+    if (!cacheEntry) return;
     cacheEntry->lifeCounter += 1;
     if (applyShadow) {
         global_renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
