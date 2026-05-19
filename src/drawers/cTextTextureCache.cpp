@@ -26,11 +26,27 @@ cTextTextureCache::~cTextTextureCache()
 std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color, const std::string &msg) const
 {
     auto newCacheEntry = std::make_unique<textCacheEntry>();
-    SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), Color::Black.toSDL());
+    SDL_Surface *textSurface = TTF_RenderUTF8_Blended(m_font, msg.c_str(), Color::Black.toSDL());
+    if (!textSurface) {
+        textSurface = TTF_RenderUTF8_Blended(m_font, "?", Color::Black.toSDL());
+        if (!textSurface) {
+            return nullptr;
+        }
+    }
     newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
     SDL_FreeSurface(textSurface);
 
-    textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), color.toSDL());
+    textSurface = TTF_RenderUTF8_Blended(m_font, msg.c_str(), color.toSDL());
+    if (!textSurface) {
+        textSurface = TTF_RenderUTF8_Blended(m_font, "?", color.toSDL());
+        if (!textSurface) {
+            if (newCacheEntry->shadowsTexture) {
+                SDL_DestroyTexture(newCacheEntry->shadowsTexture);
+                newCacheEntry->shadowsTexture = nullptr;
+            }
+            return nullptr;
+        }
+    }
     newCacheEntry->texture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
     newCacheEntry->width = textSurface->w;
     newCacheEntry->height = textSurface->h;
@@ -46,6 +62,9 @@ textCacheEntry* cTextTextureCache::findOrCreate(const Color color, const std::st
     const auto it = m_textCache.find(key);
     if (it == m_textCache.end()) {
         auto newCacheEntry = createCacheEntry(color, msg);
+        if (!newCacheEntry) {
+            return nullptr;
+        }
         auto result = m_textCache.emplace(key, std::move(newCacheEntry));
         return result.first->second.get();
     }
