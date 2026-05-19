@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <memory>
 #include <set>
+#include <vector>
 
 class cKeyBindings;
 class cSection;
@@ -31,5 +32,6 @@ private:
     std::unique_ptr<cKeyBindings> m_keyBindings;
     std::set<SDL_Scancode> m_keysPressed;
     std::set<SDL_Scancode> m_keysReleased;
+    std::vector<std::string> m_textInputs;
     s_KeysCombo m_currentCombo;
 };

@@ -24,6 +24,13 @@ void cKeyboard::loadKeyBindings(const cSection *section)
 
 void cKeyboard::handleEvent(const SDL_Event &event)
 {
+    if (event.type == SDL_TEXTINPUT) {
+        if (event.text.text[0] != '\0') {
+            m_textInputs.emplace_back(event.text.text);
+        }
+        return;
+    }
+
     SDL_Scancode scancode = event.key.keysym.scancode;
     if (event.type == SDL_KEYDOWN && !event.key.repeat) {
         m_keysPressed.insert(scancode);
@@ -40,6 +47,13 @@ void cKeyboard::handleEvent(const SDL_Event &event)
 
 void cKeyboard::updateState()
 {
+    static const std::set<SDL_Scancode> noKeys;
+
+    for (const auto &textInput : m_textInputs) {
+        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, noKeys, m_currentCombo, m_keyBindings.get(), textInput));
+    }
+    m_textInputs.clear();
+
     if (!m_keysPressed.empty()) {
         m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, m_keysPressed, m_currentCombo, m_keyBindings.get()));
     }

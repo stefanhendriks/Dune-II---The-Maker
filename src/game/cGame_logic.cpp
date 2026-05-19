@@ -104,6 +104,24 @@ bool isConsoleToggleKey(const cKeyboardEvent &event) {
 }
 }
 
+bool cGame::shouldCaptureTextInput() const
+{
+    if (m_guiConsole && m_guiConsole->isKeyboardCaptured()) {
+        return true;
+    }
+
+    return m_currentState && m_currentState->isKeyboardCapturedByUi();
+}
+
+void cGame::syncTextInputState() const
+{
+    if (shouldCaptureTextInput()) {
+        SDL_StartTextInput();
+    } else {
+        SDL_StopTextInput();
+    }
+}
+
 cGame::cGame()
 {
     memset(m_states, 0, sizeof(cGameState *));
@@ -440,6 +458,7 @@ void cGame::run()
                     break;
                 case SDL_KEYDOWN:
                 case SDL_KEYUP:
+                case SDL_TEXTINPUT:
                     m_keyboard->handleEvent(event);
                     break;
 
@@ -1325,18 +1344,22 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
     if (m_currentState) {
         m_currentState->onNotifyMouseEvent(event);
     }
+
+    syncTextInputState();
 }
 
 void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (isConsoleToggleKey(event)) {
         m_guiConsole->toggle();
+        syncTextInputState();
         return;
     }
 
     if (m_guiConsole->isVisible()) {
         m_guiConsole->onNotifyKeyboardEvent(event);
         if (m_guiConsole->isKeyboardCaptured()) {
+            syncTextInputState();
             return;
         }
     }
@@ -1346,9 +1369,12 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         m_currentState->onNotifyKeyboardEvent(event);
 
         if (m_currentState->isKeyboardCapturedByUi()) {
+            syncTextInputState();
             return;
         }
     }
+
+    syncTextInputState();
 
     switch (event.getType()) {
         case eKeyEventType::HOLD:

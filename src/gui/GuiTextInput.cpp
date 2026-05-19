@@ -14,6 +14,17 @@ namespace {
     bool shouldRenderCursor() {
         return ((SDL_GetTicks() / kCursorBlinkHalfPeriodMs) % 2u) == 0u;
     }
+
+    void eraseLastUtf8Codepoint(std::string& text) {
+        if (text.empty()) {
+            return;
+        }
+
+        text.pop_back();
+        while (!text.empty() && (static_cast<unsigned char>(text.back()) & 0xC0u) == 0x80u) {
+            text.pop_back();
+        }
+    }
 }
 
 GuiTextInput::GuiTextInput(SDLDrawer* drawer,const cRectangle& rect, cTextDrawer* textDrawer)
@@ -39,13 +50,13 @@ void GuiTextInput::onNotifyKeyboardEvent(const cKeyboardEvent& event)
     //std::cout << "GuiTextInput received keyboard event: " << event.toString() << std::endl;
     if (!m_focused) return;
     //std::cout << "GuiTextInput focused received keyboard event: " << event.toString() << std::endl;
-    if (event.isPrintable()) {
-        const char newChar = event.getChar();
-        if (canAppendChar(newChar)) {
-            m_text += newChar;
+    if (event.hasTextInput()) {
+        const auto& textInput = event.getTextInput();
+        if (canAppendText(textInput)) {
+            m_text += textInput;
         }
     } else if (event.isBackspace()) {
-        if (!m_text.empty()) m_text.pop_back();
+        eraseLastUtf8Codepoint(m_text);
     } else if (event.isEnter()) {
         if (m_onEnter) m_onEnter(m_text);
     }
@@ -69,14 +80,14 @@ int GuiTextInput::getMaxTextPixelWidth() const
     return std::max(0, m_rect.getWidth() - (kHorizontalPadding * 2)-kSecurityPadding);
 }
 
-bool GuiTextInput::canAppendChar(char c) const
+bool GuiTextInput::canAppendText(const std::string& text) const
 {
-    if (!m_writer) {
+    if (!m_writer || text.empty()) {
         return false;
     }
 
     std::string candidate = m_text;
-    candidate.push_back(c);
+    candidate += text;
     if (m_focused) {
         candidate.push_back('|');
     }
