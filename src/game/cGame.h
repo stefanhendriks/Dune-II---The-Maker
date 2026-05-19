@@ -276,6 +276,8 @@ private:
     void setState(int newState);
 
     void updateMouseAndKeyboardState();
+    bool shouldCaptureTextInput() const;
+    void syncTextInputState() const;
     void drawState();
 
     void shakeScreenAndBlitBuffer();

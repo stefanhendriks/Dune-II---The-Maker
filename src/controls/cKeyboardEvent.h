@@ -15,7 +15,7 @@ class cKeyboardEvent {
 
 public:
     cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo,
-                   const cKeyBindings *keyBindings);
+                const cKeyBindings *keyBindings, std::string textInput = "");
 
     inline const std::string toString() const {
         std::string str= std::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(m_eventType));
@@ -24,6 +24,9 @@ public:
             str.append(SDL_GetScancodeName(aKey));
         }
         str.append("]");
+        if (!m_textInput.empty()) {
+            str.append(std::format(", text: [{}]", m_textInput));
+        }
 
         return str;
     }
@@ -47,6 +50,8 @@ public:
     bool isShiftPressed() const;
     bool isAltPressed() const;
     bool isCtrlPressed() const;
+    bool hasTextInput() const;
+    const std::string &getTextInput() const;
     char getChar() const;
 
     /**
@@ -87,4 +92,5 @@ private:
     const std::set<SDL_Scancode> &m_keys;
     const s_KeysCombo &m_combo;
     const cKeyBindings *m_keyBindings;
+    std::string m_textInput;
 };

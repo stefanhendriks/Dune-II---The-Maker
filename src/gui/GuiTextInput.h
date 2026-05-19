@@ -25,7 +25,7 @@ public:
 
 private:
     int getMaxTextPixelWidth() const;
-    bool canAppendChar(char c) const;
+    bool canAppendText(const std::string& text) const;
     std::string getFittedDisplayText() const;
 
     std::string m_text;

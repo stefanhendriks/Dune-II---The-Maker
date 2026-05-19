@@ -2,11 +2,12 @@
 #include "controls/cKeyBindings.h"
 
 cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys,
-                               const s_KeysCombo &combo, const cKeyBindings *keyBindings) :
+                               const s_KeysCombo &combo, const cKeyBindings *keyBindings, std::string textInput) :
     m_eventType(eventType),
     m_keys(keys),
     m_combo(combo),
-    m_keyBindings(keyBindings)
+    m_keyBindings(keyBindings),
+    m_textInput(std::move(textInput))
 {
 }
 
@@ -46,7 +47,7 @@ bool cKeyboardEvent::isBackspace() const
 
 bool cKeyboardEvent::isEnter() const
 {
-    return hasKey(SDL_SCANCODE_RETURN);
+    return hasKey(SDL_SCANCODE_RETURN) || hasKey(SDL_SCANCODE_KP_ENTER);
 }
 
 bool cKeyboardEvent::isShiftPressed() const
@@ -62,6 +63,16 @@ bool cKeyboardEvent::isAltPressed() const
 bool cKeyboardEvent::isCtrlPressed() const
 {
     return m_combo.ctrlPressed;
+}
+
+bool cKeyboardEvent::hasTextInput() const
+{
+    return !m_textInput.empty();
+}
+
+const std::string &cKeyboardEvent::getTextInput() const
+{
+    return m_textInput;
 }
 
 char cKeyboardEvent::getChar() const
