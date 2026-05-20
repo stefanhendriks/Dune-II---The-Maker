@@ -1,4 +1,4 @@
-#include "gui/GuiConsoleMessageParser.h"
+#include "gui/GuiConsole/GuiConsoleMessageParser.h"
 
 #include "game/cNotificationArea.h"
 #include "include/eNotificationType.h"

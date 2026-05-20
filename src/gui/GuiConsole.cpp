@@ -2,7 +2,7 @@
 
 #include "game/cNotificationArea.h"
 #include "drawers/cTextDrawer.h"
-#include "gui/GuiConsoleMessageParser.h"
+#include "gui/GuiConsole/GuiConsoleMessageParser.h"
 #include "gui/GuiTextInput.h"
 #include "gui/GuiWindow.h"
 
