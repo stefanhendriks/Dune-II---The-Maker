@@ -2,6 +2,7 @@
 
 #include "game/cNotificationArea.h"
 #include "include/eNotificationType.h"
+#include "include/cAssert.h"
 
 #include <algorithm>
 #include <cctype>
@@ -37,6 +38,7 @@ std::string toLower(std::string text)
 GuiConsoleMessageParser::GuiConsoleMessageParser(cNotificationArea* notificationArea)
     : m_notificationArea(notificationArea)
 {
+    d2tm_assert(m_notificationArea != nullptr);
 }
 
 std::string GuiConsoleMessageParser::normalize(const std::string& text) const
@@ -47,7 +49,7 @@ std::string GuiConsoleMessageParser::normalize(const std::string& text) const
 void GuiConsoleMessageParser::submit(const std::string& text) const
 {
     const std::string normalizedText = normalize(text);
-    if (normalizedText.empty() || !m_notificationArea) {
+    if (normalizedText.empty()) {
         return;
     }
 
