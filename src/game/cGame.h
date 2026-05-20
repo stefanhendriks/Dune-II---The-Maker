@@ -62,6 +62,7 @@ class cTimeManager;
 class cStructureUtils;
 class Texture;
 class cIni;
+class cGameEventHandler;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -164,10 +165,6 @@ public:
     void onNotifyGameEvent(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-
-    void onEventSpecialLaunch(const LaunchDeathHandEvent &event) const;
-    void onEventEntityDestroyed(const CommonEvent & event);
-    void onEventCreateUnit(const DeployUnitEvent &deployEvent);
 
     void shakeScreen(int duration);
     void reduceShaking() const;
@@ -298,6 +295,7 @@ private:
 
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
+    std::unique_ptr<cGameEventHandler> m_gameEventHandler;
 
     cLog* m_log = nullptr;
 };
