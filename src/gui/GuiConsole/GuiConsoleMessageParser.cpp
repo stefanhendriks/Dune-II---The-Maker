@@ -43,20 +43,62 @@ GuiConsoleMessageParser::GuiConsoleMessageParser(cNotificationArea* notification
 
 std::string GuiConsoleMessageParser::normalize(const std::string& text) const
 {
-    return trim(text);
+    return toLower(trim(text));
 }
 
-void GuiConsoleMessageParser::submit(const std::string& text) const
+void GuiConsoleMessageParser::submit(const std::string& text)
 {
     const std::string normalizedText = normalize(text);
     if (normalizedText.empty()) {
         return;
     }
 
-    if (toLower(normalizedText) == "help") {
-        m_notificationArea->addNotification("You are the leader", eNotificationType::NEUTRAL);
+    if (!verifyOddWordCommand(normalizedText)) {
+        m_notificationArea->addNotification(std::format("Malformed command: {}", text), eNotificationType::BAD);
+        return;
+    }
+
+    parseCommand(normalizedText);
+
+    // if (m_command.empty()) {
+    //     m_notificationArea->addNotification(std::format("Unknown command: {}", text), eNotificationType::BAD);
+    //     return;
+    // }
+
+    if (m_command == "help") {
+        m_notificationArea->addNotification("Help mode.", eNotificationType::NEUTRAL);
         return;
     }
 
     m_notificationArea->addNotification(std::format("> {}", normalizedText), eNotificationType::NEUTRAL);
+}
+
+
+void GuiConsoleMessageParser::parseCommand(const std::string& text)
+{
+   	std::istringstream commandstr( text );
+
+    std::string key, value;
+	commandstr >> m_command;
+
+    while (commandstr >> key >> value ) {
+		m_arguments[key] = value;
+	}
+}
+
+bool GuiConsoleMessageParser::verifyOddWordCommand(const std::string& text) const
+{
+    int compteur = 0;
+    bool dansMot = false;
+
+    for (char c : text) {
+        if (c != ' ' && !dansMot) {
+            compteur++;
+            dansMot = true;
+        }
+        else if (c == ' ') {
+            dansMot = false;
+        }
+    }
+    return (compteur % 2) == 1;
 }
