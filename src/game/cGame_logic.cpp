@@ -198,19 +198,7 @@ cGame::cGame()
         m_gameObjectsContext.get(),
         m_infoContext.get(),
         m_structureUtils.get(),
-        [this](int sampleId) {
-            if (m_soundPlayer) {
-                m_soundPlayer->playSound(sampleId);
-            }
-        },
-        [this](const std::string &message, eNotificationType type) {
-            m_notificationArea->addNotification(message, type);
-        },
-        [this](const s_GameEvent &event) {
-            if (m_gameEventHandler) {
-                m_gameEventHandler->handleEvent(event);
-            }
-        }
+        ctx->getGameInterface()
     );
 
     m_services = std::make_unique<sGameServices>();
@@ -1269,6 +1257,11 @@ void cGame::saveBmpScreenToDisk()
     if (cScreenShotSaver::saveScreen(renderer, m_gameSettings->m_screenW, m_gameSettings->m_screenH)) {
         m_notificationArea->addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
+}
+
+void cGame::addNotification(const std::string &message, eNotificationType type)
+{
+    m_notificationArea->addNotification(message, type);
 }
 
 void cGame::onKeyDownGame(const cKeyboardEvent &)

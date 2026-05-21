@@ -1,6 +1,9 @@
 #pragma once
 
 #include "utils/Color.hpp"
+#include "include/eNotificationType.h"
+
+#include <string>
 
 class cGame;
 class cMouse;
@@ -33,6 +36,7 @@ public:
     void setupPlayers() const;
 
     void onNotifyGameEvent(const s_GameEvent &event) const;
+    void addNotification(const std::string &message, eNotificationType type) const;
 
     void prepareMentatToTellAboutHouse(int house) const;
     void prepareMentatForPlayer() const;

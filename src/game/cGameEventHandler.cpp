@@ -6,6 +6,7 @@
 #include "data/gfxaudio.h"
 #include "definitions.h"
 #include "controls/cGameControlsContext.h"
+#include "game/cGameInterface.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
@@ -25,15 +26,11 @@ cGameEventHandler::cGameEventHandler(
     cGameObjectContext *gameObjectsContext,
     cInfoContext *infoContext,
     cStructureUtils *structureUtils,
-    SoundPlayer playSound,
-    NotificationPusher pushNotification,
-    EventDispatcher dispatchEvent
+    cGameInterface *gameInterface
 ) : m_gameObjectsContext(gameObjectsContext),
     m_infoContext(infoContext),
     m_structureUtils(structureUtils),
-    m_playSound(std::move(playSound)),
-    m_pushNotification(std::move(pushNotification)),
-    m_dispatchEvent(std::move(dispatchEvent)) {
+    m_gameInterface(gameInterface) {
 }
 
 void cGameEventHandler::handleEvent(const s_GameEvent &event)
@@ -64,7 +61,7 @@ void cGameEventHandler::handleEvent(const s_GameEvent &event)
 
     if (event.eventType == eGameEventType::GAME_EVENT_NOTIFICATION) {
         if (const auto *notifEvent = std::get_if<NotificationEvent>(&event.data)) {
-            m_pushNotification(notifEvent->message, notifEvent->type);
+            m_gameInterface->addNotification(notifEvent->message, notifEvent->type);
         }
     }
 
@@ -169,7 +166,7 @@ void cGameEventHandler::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
             if (structureId > -1) {
                 cAbstractStructure *pStructure = m_gameObjectsContext->getStructures()[structureId];
                 if (pStructure && pStructure->isValid()) {
-                    m_playSound(SOUND_PLACE);
+                    m_gameInterface->playSound(SOUND_PLACE);
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
 
                     const s_GameEvent launchedEvent{
@@ -181,7 +178,7 @@ void cGameEventHandler::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
                             .buildingListItem = itemToDeploy
                         }
                     };
-                    m_dispatchEvent(launchedEvent);
+                    m_gameInterface->onNotifyGameEvent(launchedEvent);
                 }
             }
         }
@@ -206,5 +203,5 @@ void cGameEventHandler::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
             .entitySpecificType = itemToDeploy->getBuildId()
         }
     };
-    m_dispatchEvent(finishedEvent);
+    m_gameInterface->onNotifyGameEvent(finishedEvent);
 }
