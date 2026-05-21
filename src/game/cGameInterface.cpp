@@ -1,7 +1,6 @@
 #include "game/cGameInterface.h"
 #include "data/gfxaudio.h"
 #include "game/cGame.h"
-#include "game/cGameEventHandler.h"
 #include "utils/cLog.h"
 #include "include/Texture.hpp"
 #include "controls/cMouse.h"
@@ -14,11 +13,6 @@
 cGameInterface::cGameInterface(cGame* game)
     : m_game(game)
 {
-}
-
-void cGame::onNotifyGameEvent(const s_GameEvent &event)
-{
-    m_gameEventHandler->handleEvent(event);
 }
 
 cMouse* cGameInterface::getMouse() const
@@ -130,9 +124,14 @@ void cGameInterface::setupPlayers() const
     m_game->setupPlayers();
 }
 
+void cGameInterface::emitGameEvent(const s_GameEvent &event) const
+{
+    m_game->emitGameEvent(event);
+}
+
 void cGameInterface::onNotifyGameEvent(const s_GameEvent &event) const
 {
-    m_game->onNotifyGameEvent(event);
+    emitGameEvent(event);
 }
 
 void cGameInterface::addNotification(const std::string &message, eNotificationType type) const
