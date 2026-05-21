@@ -35,6 +35,7 @@ public:
     void missionInit() const;
     void setupPlayers() const;
 
+    void emitGameEvent(const s_GameEvent &event) const;
     void onNotifyGameEvent(const s_GameEvent &event) const;
     void addNotification(const std::string &message, eNotificationType type) const;
 

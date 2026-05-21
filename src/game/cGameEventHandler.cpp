@@ -178,7 +178,7 @@ void cGameEventHandler::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
                             .buildingListItem = itemToDeploy
                         }
                     };
-                    m_gameInterface->onNotifyGameEvent(launchedEvent);
+                    m_gameInterface->emitGameEvent(launchedEvent);
                 }
             }
         }
@@ -203,5 +203,5 @@ void cGameEventHandler::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
             .entitySpecificType = itemToDeploy->getBuildId()
         }
     };
-    m_gameInterface->onNotifyGameEvent(finishedEvent);
+    m_gameInterface->emitGameEvent(finishedEvent);
 }

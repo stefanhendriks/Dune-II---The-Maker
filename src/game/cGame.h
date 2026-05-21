@@ -63,6 +63,7 @@ class cStructureUtils;
 class Texture;
 class cIni;
 class cGameEventHandler;
+class cGameEventPublisher;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -163,6 +164,7 @@ public:
 
 
     // Event handling
+    void emitGameEvent(const s_GameEvent &event);
     void onNotifyGameEvent(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -296,6 +298,7 @@ private:
 
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
+    std::unique_ptr<cGameEventPublisher> m_gameEventPublisher;
     std::unique_ptr<cGameEventHandler> m_gameEventHandler;
 
     cLog* m_log = nullptr;
