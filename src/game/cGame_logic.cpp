@@ -195,19 +195,18 @@ cGame::cGame()
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
 
-    m_gameEventPublisher = std::make_unique<cGameEventPublisher>(
-        [this](const s_GameEvent &event) {
-            if (m_gameEventHandler) {
-                m_gameEventHandler->handleEvent(event);
-            }
-        }
-    );
-
     m_gameEventHandler = std::make_unique<cGameEventHandler>(
         m_gameObjectsContext.get(),
         m_infoContext.get(),
         m_structureUtils.get(),
         ctx->getGameInterface()
+    );
+
+    d2tm_assert(m_gameEventHandler != nullptr);
+    m_gameEventPublisher = std::make_unique<cGameEventPublisher>(
+        [this](const s_GameEvent &event) {
+            m_gameEventHandler->handleEvent(event);
+        }
     );
 
     m_services = std::make_unique<sGameServices>();
