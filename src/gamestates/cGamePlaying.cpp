@@ -18,25 +18,39 @@
 #include "gameobjects/players/cPlayers.h"
 #include "controls/cGameControlsContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/cInfoContext.h"
 #include "game/cGameInterface.h"
 #include "controls/eKeyAction.h"
+#include "data/gfxaudio.h"
 #include "gameobjects/map/cMapCamera.h"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/map/cMap.h"
+#include "gameobjects/structures/cStructureInfo.h"
 #include "drawers/cTextDrawer.h"
+#include "sidebar/cBuildingListItem.h"
 #include "utils/cExpandingRectangle.h"
+#include "utils/cLog.h"
+#include "utils/cStructureUtils.h"
+#include "utils/RNG.hpp"
+#include "utils/common.h"
 
 #include <algorithm>
 #include "include/cAssert.h"
 #include <cmath>
+#include <format>
 #include "sidebar/cSideBar.h"
 
 cGamePlaying::cGamePlaying(sGameServices* services) :
     cGameState(services),
     m_objects(services->objects),
-    m_settings(services->settings)
+    m_info(services->info),
+    m_settings(services->settings),
+    m_structureUtils(services->structureUtils)
 {
     d2tm_assert(m_objects != nullptr);
+    d2tm_assert(m_info != nullptr);
     d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_structureUtils != nullptr);
     m_TIMER_evaluatePlayerStatus = 5;
 
     //fix others pointers
@@ -268,6 +282,29 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             break;
         case eKeyEventType::PRESSED:
             onKeyPressedGamePlaying(event);
+            break;
+        default:
+            break;
+    }
+}
+
+void cGamePlaying::onNotifyGameEvent(const s_GameEvent &event)
+{
+    switch (event.eventType) {
+        case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
+            if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
+                onEventSpecialLaunch(*launchEvent);
+            }
+            break;
+        case eGameEventType::GAME_EVENT_DESTROYED:
+            if (const auto *destroyEvent = std::get_if<CommonEvent>(&event.data)) {
+                onEventEntityDestroyed(*destroyEvent);
+            }
+            break;
+        case eGameEventType::GAME_EVENT_CREATE_UNIT:
+            if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
+                onEventCreateUnit(*deployEvent);
+            }
             break;
         default:
             break;
@@ -629,6 +666,145 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
         int mc = humanPlayer->getGameControlsContext()->getMouseCell();
         cUnits::unitCreate(mc, SANDWORM, AI_WORM, false, false);
     }
+}
+
+void cGamePlaying::onEventEntityDestroyed(const CommonEvent &event)
+{
+    if (event.entityType != eBuildType::STRUCTURE) {
+        return;
+    }
+
+    const auto structureInfo = (*m_info->getStructureInfos())[event.entitySpecificType];
+    int unitTypeToSpawn = structureInfo.uponDestructionSpawnUnitType;
+    if (unitTypeToSpawn < 0) {
+        return;
+    }
+
+    int minAmountOfUnitsToSpawnPotentially = structureInfo.uponDestructionSpawnUnitAmountMin;
+    int maxAmountOfUnitsToSpawnPotentially = structureInfo.uponDestructionSpawnUnitAmountMax;
+
+    int amountOfUnitsToSpawn = RNG::genInt(minAmountOfUnitsToSpawnPotentially, maxAmountOfUnitsToSpawnPotentially);
+
+    int widthInCells = structureInfo.bmp_width / 32;
+    int heightInCells = structureInfo.bmp_height / 32;
+
+    int cellX = m_objects->getMapGeometry()->getCellX(event.atCell);
+    int cellY = m_objects->getMapGeometry()->getCellY(event.atCell);
+
+    for (int i = 0; i < amountOfUnitsToSpawn; i++) {
+        int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
+        int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
+        cUnits::unitCreate(
+            m_objects->getMapGeometry()->makeCell(randomX, randomY),
+            unitTypeToSpawn,
+            event.player->getId(),
+            false,
+            false,
+            RNG::genDouble(0.3, 0.8)
+        );
+    }
+}
+
+void cGamePlaying::onEventCreateUnit(const DeployUnitEvent &event)
+{
+    if (event.iCell < 0 || event.unitType < 0 || event.iPlayer < 0) {
+        return;
+    }
+
+    int id = cUnits::unitCreate(
+        event.iCell,
+        event.unitType,
+        event.iPlayer,
+        event.bOnStart,
+        event.isReinforcement,
+        event.hpPercentage
+    );
+
+    if (id < 0) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_GAME, "Deploy unit",
+                                    std::format("Failed to deploy unit of type {} at cell {} for player {}", event.unitType, event.iCell, event.iPlayer)
+        );
+    }
+    else {
+        cLogger::getInstance()->log(LOG_INFO, COMP_GAME, "Deploy unit",
+                                    std::format("Successfully deployed unit of type {} at cell {} for player {}, id={}", event.unitType, event.iCell, event.iPlayer, id)
+        );
+    }
+}
+
+void cGamePlaying::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
+{
+    cBuildingListItem *itemToDeploy = event.itemToLaunch;
+    int iMouseCell = event.targetCell;
+    cPlayer *player = event.player;
+
+    if (itemToDeploy->isTypeSpecial()) {
+        const s_SpecialInfo &special = itemToDeploy->getSpecialInfo();
+
+        int deployCell = -1;
+        if (special.deployTargetType == eDeployTargetType::TARGET_SPECIFIC_CELL) {
+            deployCell = iMouseCell;
+        }
+        else if (special.deployTargetType == eDeployTargetType::TARGET_INACCURATE_CELL) {
+            int precision = special.deployTargetPrecision;
+            int mouseCellX = m_objects->getMapGeometry()->getCellX(iMouseCell) - precision;
+            int mouseCellY = m_objects->getMapGeometry()->getCellY(iMouseCell) - precision;
+
+            int posX = mouseCellX + RNG::rnd((precision * 2) + 1);
+            int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
+            cPoint::split(posX, posY) = m_objects->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(posX, posY);
+
+            logbook(std::format(
+                "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
+                mouseCellY, mouseCellY, posX, posY, precision)
+            );
+
+            deployCell = m_objects->getMapGeometry()->makeCell(posX, posY);
+        }
+
+        if (special.providesType == eBuildType::BULLET) {
+            int structureId = m_structureUtils->findStructureBy(player->getId(), special.deployAtStructure, false);
+            if (structureId > -1) {
+                cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
+                if (pStructure && pStructure->isValid()) {
+                    m_interface->playSound(SOUND_PLACE);
+                    createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId);
+
+                    const s_GameEvent launchedEvent{
+                        .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED,
+                        .data = BuildingEvent{
+                            .entityType = itemToDeploy->getBuildType(),
+                            .player = pStructure->getPlayer(),
+                            .entitySpecificType = itemToDeploy->getBuildId(),
+                            .buildingListItem = itemToDeploy
+                        }
+                    };
+                    m_interface->emitGameEvent(launchedEvent);
+                }
+            }
+        }
+    }
+
+    itemToDeploy->decreaseTimesToBuild();
+    itemToDeploy->setDeployIt(false);
+    itemToDeploy->cancelBuilding();
+    if (itemToDeploy->getTimesToBuild() < 1) {
+        player->getItemBuilder()->removeItemFromList(itemToDeploy);
+    }
+
+    if (player) {
+        player->getGameControlsContext()->toPreviousState();
+    }
+
+    const s_GameEvent finishedEvent{
+        .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
+        .data = BuildingEvent{
+            .entityType = itemToDeploy->getBuildType(),
+            .player = player,
+            .entitySpecificType = itemToDeploy->getBuildId()
+        }
+    };
+    m_interface->emitGameEvent(finishedEvent);
 }
 
 void cGamePlaying::update()

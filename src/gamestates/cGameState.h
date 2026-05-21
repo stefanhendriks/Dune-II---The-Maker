@@ -4,6 +4,7 @@
 #include "observers/cInputObserver.h"
 #include "sMouseEvent.h"
 #include "include/eGameState.h"
+#include "include/sGameEvent.h"
 #include "include/sGameServices.h"
 
 class GameContext;
@@ -52,6 +53,8 @@ public:
 
     virtual void onNotifyMouseEvent(const s_MouseEvent &event) override = 0;
     virtual void onNotifyKeyboardEvent(const cKeyboardEvent &event) override = 0;
+    virtual void onNotifyGameEvent(const s_GameEvent &) {
+    }
     virtual bool isKeyboardCapturedByUi() const {
         return false;
     }

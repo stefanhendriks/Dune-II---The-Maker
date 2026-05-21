@@ -62,8 +62,6 @@ class cTimeManager;
 class cStructureUtils;
 class Texture;
 class cIni;
-class cGameEventHandler;
-class cGameEventPublisher;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -298,8 +296,6 @@ private:
 
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
-    std::unique_ptr<cGameEventPublisher> m_gameEventPublisher;
-    std::unique_ptr<cGameEventHandler> m_gameEventHandler;
 
     cLog* m_log = nullptr;
 };

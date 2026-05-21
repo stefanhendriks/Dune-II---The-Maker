@@ -18,6 +18,8 @@ class cStructureFactory;
 class cDrawManager;
 class cPlayer;
 class cTextDrawer;
+class cInfoContext;
+class cStructureUtils;
 
 class cGamePlaying : public cGameState {
 public:
@@ -32,6 +34,7 @@ public:
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
+    void onNotifyGameEvent(const s_GameEvent &event) override;
 
     void onPlayerDefeated(cPlayer *player);
 
@@ -40,7 +43,9 @@ public:
     void missionInit();
 private:
     cGameObjectContext* m_objects = nullptr;
+    cInfoContext *m_info = nullptr;
     cGameSettings* m_settings = nullptr;
+    cStructureUtils *m_structureUtils = nullptr;
     cReinforcements* m_reinforcements = nullptr;
     cGameInterface* m_interface = nullptr;
     cMapCamera* m_mapCamera = nullptr;
@@ -57,6 +62,9 @@ private:
     void onKeyPressedGamePlaying(const cKeyboardEvent &event);
     void onKeyDownDebugMode(const cKeyboardEvent &event);
     void tryDebugSwitchToPlayer(int playerIndex);
+    void onEventEntityDestroyed(const CommonEvent &event);
+    void onEventCreateUnit(const DeployUnitEvent &event);
+    void onEventSpecialLaunch(const LaunchDeathHandEvent &event);
 
     void centerCameraOnUnits(const std::vector<int>& unitIds);
     void drawTrackingOverlays() const;
