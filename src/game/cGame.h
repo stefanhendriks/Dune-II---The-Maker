@@ -62,6 +62,7 @@ class cTimeManager;
 class cStructureUtils;
 class Texture;
 class cIni;
+class cGameEventPublisher;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -281,6 +282,7 @@ private:
     void shakeScreenAndBlitBuffer();
 
     void saveBmpScreenToDisk();
+    void dispatchGameEvent(const s_GameEvent &event);
 
     void onKeyDownGame(const cKeyboardEvent &event);
     void onKeyPressedGame(const cKeyboardEvent &event);
@@ -296,6 +298,7 @@ private:
 
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
+    std::unique_ptr<cGameEventPublisher> m_gameEventPublisher;
 
     cLog* m_log = nullptr;
 };
