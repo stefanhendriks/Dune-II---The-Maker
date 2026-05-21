@@ -22,8 +22,6 @@
 #include "include/eGameState.h"
 
 #include "game/cGameConditionChecker.h"
-#include "game/cGameEventHandler.h"
-#include "game/cGameEventPublisher.h"
 #include "game/cPlatformLayerInit.h"
 #include "game/cScreenFader.h"
 #include "game/cScreenInit.h"
@@ -195,25 +193,12 @@ cGame::cGame()
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
 
-    m_gameEventHandler = std::make_unique<cGameEventHandler>(
-        m_gameObjectsContext.get(),
-        m_infoContext.get(),
-        m_structureUtils.get(),
-        ctx->getGameInterface()
-    );
-
-    d2tm_assert(m_gameEventHandler != nullptr);
-    m_gameEventPublisher = std::make_unique<cGameEventPublisher>(
-        [this](const s_GameEvent &event) {
-            m_gameEventHandler->handleEvent(event);
-        }
-    );
-
     m_services = std::make_unique<sGameServices>();
     m_services->ctx = ctx.get();
     m_services->objects = m_gameObjectsContext.get();
     m_services->info = m_infoContext.get();
     m_services->settings = m_gameSettings.get();
+    m_services->structureUtils = m_structureUtils.get();
     m_services->m_log = nullptr;
 
     m_cIni = std::make_unique<cIni>(m_services.get());
@@ -1160,9 +1145,19 @@ void cGame::setPlayerToInteractFor(cPlayer *pPlayer)
 
 void cGame::emitGameEvent(const s_GameEvent &event)
 {
-    if (m_gameEventPublisher) {
-        m_gameEventPublisher->emit(event);
+    m_gameObjectsContext->getMap()->onNotifyGameEvent(event);
+
+    if (m_currentState) {
+        m_currentState->onNotifyGameEvent(event);
     }
+
+    if (event.eventType == eGameEventType::GAME_EVENT_NOTIFICATION) {
+        if (const auto *notifEvent = std::get_if<NotificationEvent>(&event.data)) {
+            addNotification(notifEvent->message, notifEvent->type);
+        }
+    }
+
+    m_gameObjectsContext->getPlayers()->onNotifyGameEvent(event);
 }
 
 void cGame::onNotifyGameEvent(const s_GameEvent &event)
