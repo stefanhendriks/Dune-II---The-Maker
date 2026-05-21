@@ -203,8 +203,13 @@ cGame::cGame()
                 m_soundPlayer->playSound(sampleId);
             }
         },
+        [this](const std::string &message, eNotificationType type) {
+            m_notificationArea->addNotification(message, type);
+        },
         [this](const s_GameEvent &event) {
-            onNotifyGameEvent(event);
+            if (m_gameEventHandler) {
+                m_gameEventHandler->handleEvent(event);
+            }
         }
     );
 
@@ -1155,29 +1160,6 @@ void cGame::thinkFast()
 void cGame::setPlayerToInteractFor(cPlayer *pPlayer)
 {
     m_interactionManager->setPlayerToInteractFor(pPlayer);
-}
-
-void cGame::onNotifyGameEvent(const s_GameEvent &event)
-{
-    logbook(s_GameEvent::toString(event));
-
-    m_gameObjectsContext->getMap()->onNotifyGameEvent(event);
-
-    m_gameEventHandler->handleEvent(event);
-
-    // game itself handles events
-    switch (event.eventType) {
-        case eGameEventType::GAME_EVENT_NOTIFICATION:
-            if (const auto *notifEvent = std::get_if<NotificationEvent>(&event.data)) {
-                m_notificationArea->addNotification(notifEvent->message, notifEvent->type);
-            }
-            break;
-        default:
-            break;
-    }
-
-    // players handle events
-    m_players->onNotifyGameEvent(event);
 }
 
 void cGame::reduceShaking() const {

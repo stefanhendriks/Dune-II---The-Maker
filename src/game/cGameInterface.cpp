@@ -1,6 +1,7 @@
 #include "game/cGameInterface.h"
 #include "data/gfxaudio.h"
 #include "game/cGame.h"
+#include "game/cGameEventHandler.h"
 #include "utils/cLog.h"
 #include "include/Texture.hpp"
 #include "controls/cMouse.h"
@@ -13,6 +14,11 @@
 cGameInterface::cGameInterface(cGame* game)
     : m_game(game)
 {
+}
+
+void cGame::onNotifyGameEvent(const s_GameEvent &event)
+{
+    m_gameEventHandler->handleEvent(event);
 }
 
 cMouse* cGameInterface::getMouse() const

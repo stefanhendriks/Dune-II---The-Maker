@@ -9,6 +9,7 @@
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
+#include "gameobjects/players/cPlayers.h"
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnits.h"
@@ -25,16 +26,22 @@ cGameEventHandler::cGameEventHandler(
     cInfoContext *infoContext,
     cStructureUtils *structureUtils,
     SoundPlayer playSound,
+    NotificationPusher pushNotification,
     EventDispatcher dispatchEvent
 ) : m_gameObjectsContext(gameObjectsContext),
     m_infoContext(infoContext),
     m_structureUtils(structureUtils),
     m_playSound(std::move(playSound)),
+    m_pushNotification(std::move(pushNotification)),
     m_dispatchEvent(std::move(dispatchEvent)) {
 }
 
 void cGameEventHandler::handleEvent(const s_GameEvent &event)
 {
+    logbook(s_GameEvent::toString(event));
+
+    m_gameObjectsContext->getMap()->onNotifyGameEvent(event);
+
     switch (event.eventType) {
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
             if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
@@ -54,6 +61,14 @@ void cGameEventHandler::handleEvent(const s_GameEvent &event)
         default:
             break;
     }
+
+    if (event.eventType == eGameEventType::GAME_EVENT_NOTIFICATION) {
+        if (const auto *notifEvent = std::get_if<NotificationEvent>(&event.data)) {
+            m_pushNotification(notifEvent->message, notifEvent->type);
+        }
+    }
+
+    m_gameObjectsContext->getPlayers()->onNotifyGameEvent(event);
 }
 
 void cGameEventHandler::onEventEntityDestroyed(const CommonEvent &event)
