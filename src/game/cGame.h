@@ -147,6 +147,7 @@ public:
     void playVoice(int sampleId, int playerId);
     void playMusicByTypeForStateTransition(int iType);
     bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
+    void addNotification(const std::string &message, eNotificationType type);
 
     int getMaxVolume();
 

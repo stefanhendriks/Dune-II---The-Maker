@@ -135,6 +135,11 @@ void cGameInterface::onNotifyGameEvent(const s_GameEvent &event) const
     m_game->onNotifyGameEvent(event);
 }
 
+void cGameInterface::addNotification(const std::string &message, eNotificationType type) const
+{
+    m_game->addNotification(message, type);
+}
+
 void cGameInterface::checkMissionWinOrFail() const
 {
     m_game->checkMissionWinOrFail();
