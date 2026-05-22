@@ -1707,6 +1707,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                         .data = NotificationEvent {
                             .message = msg,
                             .type = eNotificationType::PRIORITY,
+                            .player = this,
                         }
                     };
                     m_interface->onNotifyGameEvent(newEvent);
