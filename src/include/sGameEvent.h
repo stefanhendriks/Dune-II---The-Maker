@@ -80,6 +80,7 @@ struct CommonEvent {
 struct NotificationEvent {
     std::string message;
     eNotificationType type = eNotificationType::NEUTRAL;
+    cPlayer *player = nullptr;
 };
 
 struct s_GameEvent {

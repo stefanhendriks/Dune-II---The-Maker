@@ -1148,6 +1148,7 @@ void cGame::thinkFast()
 
 void cGame::setPlayerToInteractFor(cPlayer *pPlayer)
 {
+    m_controlledPlayer = pPlayer;
     m_interactionManager->setPlayerToInteractFor(pPlayer);
 }
 

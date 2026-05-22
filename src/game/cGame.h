@@ -261,6 +261,7 @@ private:
     std::unique_ptr<cScreenShake> m_screenShake;
     std::unique_ptr<cNotificationArea> m_notificationArea;
     std::unique_ptr<GuiConsole> m_guiConsole;
+    cPlayer *m_controlledPlayer = nullptr;
 
     void thinkFast_audio();
     void thinkFast_fading();
