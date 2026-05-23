@@ -9,6 +9,7 @@
 #include <memory>
 #include <array>
 #include <string>
+#include <vector>
 
 class Texture;
 class Graphics;
@@ -55,6 +56,7 @@ private:
 
     void drawMap() const;
     void drawHoveredCellHighlight() const;
+    void drawSelectionRectangle() const;
     void drawStartCells() const;
     void drawGrid() const;
     void drawAxes() const;
@@ -64,6 +66,9 @@ private:
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
     void normalizeModifications();
+    bool tryGetTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const;
+    bool isEditableTile(int tileX, int tileY) const;
+    void updateSelectionFromTiles(int startTileX, int startTileY, int endTileX, int endTileY);
 
     void saveMap(bool backup = false) const;
     std::unique_ptr<GuiBar> m_selectBar;
@@ -90,6 +95,17 @@ private:
     bool m_displayGrid = false;
     bool m_displayAxes = false;
     bool m_hasChanged = false;
+
+    bool m_hasSelection = false;
+    bool m_isDraggingSelection = false;
+    int m_selectionStartTileX = 1;
+    int m_selectionStartTileY = 1;
+    int m_selectionEndTileX = 1;
+    int m_selectionEndTileY = 1;
+    int m_selectionAnchorTileX = 1;
+    int m_selectionAnchorTileY = 1;
+
+    std::vector<std::vector<int>> m_clipboardTiles;
 
     // startCell positions 
     std::array<cPoint,5> startCells;
