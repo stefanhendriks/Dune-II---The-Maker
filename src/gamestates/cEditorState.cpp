@@ -482,6 +482,10 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             //std::cout << "Action : Copy selection to clipboard" << std::endl;
             copySelectionToClipboard();
         }
+        if (event.isAction(eKeyAction::EDITOR_PASTE)) {
+            //std::cout << "Action : Paste selection to clipboard" << std::endl;
+            pasteClipboardAtMouseCursor();
+        }
     }
 
     if (event.isType(eKeyEventType::HOLD)) {
@@ -778,6 +782,50 @@ void cEditorState::copySelectionToClipboard()
     m_hasSelection = false;
 }
 
+void cEditorState::pasteClipboardAtMouseCursor()
+{
+    if (m_mapData == nullptr || m_clipboardTiles.empty() || m_clipboardTiles.front().empty()) {
+        return;
+    }
+
+    cMouse *mouse = m_interface->getMouse();
+    int anchorTileX = 0;
+    int anchorTileY = 0;
+    if (!tryGetTileFromMouseCoords(mouse->getMouseCoords(), anchorTileX, anchorTileY)) {
+        return;
+    }
+
+    bool hasRecordedGroup = false;
+    const int height = static_cast<int>(m_clipboardTiles.size());
+    const int width = static_cast<int>(m_clipboardTiles.front().size());
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            const int destTileX = anchorTileX + x;
+            const int destTileY = anchorTileY + y;
+            if (!isEditableTile(destTileX, destTileY)) {
+                continue;
+            }
+
+            const int newTileID = m_clipboardTiles[y][x];
+            const int oldTileID = (*m_mapData)[destTileY][destTileX];
+            if (oldTileID == newTileID) {
+                continue;
+            }
+
+            if (!hasRecordedGroup) {
+                m_undoRedo->beginRecordGroup();
+                hasRecordedGroup = true;
+            }
+
+            m_undoRedo->recordTileChange(destTileX, destTileY, oldTileID, newTileID);
+            (*m_mapData)[destTileY][destTileX] = newTileID;
+        }
+    }
+
+    if (hasRecordedGroup) {
+        m_hasChanged = true;
+    }
+}
 
 int cEditorState::getNormalizedCursorSize() const
 {
