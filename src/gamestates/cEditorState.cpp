@@ -483,11 +483,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             }
         }
         if (event.isAction(eKeyAction::EDITOR_COPY)) {
-            std::cout << "Action : Copy selection to clipboard" << std::endl;
+            //std::cout << "Action : Copy selection to clipboard" << std::endl;
             copySelectionToClipboard();
         }
         if (event.isAction(eKeyAction::EDITOR_PASTE)) {
-            std::cout << "Action : Paste selection to clipboard" << std::endl;
+            //std::cout << "Action : Paste selection to clipboard" << std::endl;
             pasteClipboardAtMouseCursor();
         }
         if (!event.isCtrlPressed()) {
