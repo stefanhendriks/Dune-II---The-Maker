@@ -33,6 +33,8 @@ const Color editorGridColor = Color{128, 128, 128, 180};
 const Color editorCenterLineColor = Color{32, 176, 32, 220};
 const Color editorHoveredCellFillColor = Color{255, 230, 64, 96};
 const Color editorHoveredCellBorderColor = Color{255, 230, 64, 220};
+const Color editorSelectionFillColor = Color{255, 255, 255, 40};
+const Color editorSelectionBorderColor = Color{255, 255, 255, 255};
 
 
 cEditorState::cEditorState(sGameServices* services) 
@@ -345,6 +347,7 @@ void cEditorState::draw() const
 {
     drawMap();
     drawHoveredCellHighlight();
+    drawSelectionRectangle();
     if (m_displayGrid)
         drawGrid();
     if (m_displayAxes)
@@ -361,6 +364,18 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
     if (m_mapData == nullptr) {
         return;
     }
+
+    if (event.eventType == MOUSE_RIGHT_BUTTON_CLICKED) {
+        if (m_hasSelection) {
+            const int selectionWidth = m_selectionEndTileX - m_selectionStartTileX + 1;
+            const int selectionHeight = m_selectionEndTileY - m_selectionStartTileY + 1;
+            if (selectionWidth * selectionHeight < 2) {
+                m_hasSelection = false;
+            }
+        }
+        m_isDraggingSelection = false;
+    }
+
     if (event.coords.isWithinRectangle(&mapSizeArea)) {
         // Zoom centered on the cursor
         int mouseX = event.coords.x;
@@ -371,6 +386,24 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         } else if (event.eventType == MOUSE_SCROLLED_UP) {
             m_editorCam->zoomAtMapPosition(mouseX, mouseY, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
+        } else if (event.eventType == MOUSE_RIGHT_BUTTON_PRESSED) {
+            int tileX = 0;
+            int tileY = 0;
+            if (tryGetTileFromMouseCoords(event.coords, tileX, tileY) && isEditableTile(tileX, tileY)) {
+                if (!m_isDraggingSelection) {
+                    m_selectionAnchorTileX = tileX;
+                    m_selectionAnchorTileY = tileY;
+                    m_isDraggingSelection = true;
+                    m_hasSelection = true;
+                }
+                updateSelectionFromTiles(m_selectionAnchorTileX, m_selectionAnchorTileY, tileX, tileY);
+            }
+        } else if (event.eventType == MOUSE_MOVED_TO && m_isDraggingSelection) {
+            int tileX = 0;
+            int tileY = 0;
+            if (tryGetTileFromMouseCoords(event.coords, tileX, tileY)) {
+                updateSelectionFromTiles(m_selectionAnchorTileX, m_selectionAnchorTileY, tileX, tileY);
+            }
         } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get()) {
             modifyTile(mouseX, mouseY, idTerrainToMapModif);
         }else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_startCellBar.get()) {
@@ -499,6 +532,8 @@ void cEditorState::loadMap(int mapIndex)
     m_displayGrid = false;
     m_displayAxes = false;
     m_hasChanged = false;
+    m_hasSelection = false;
+    m_isDraggingSelection = false;
     m_undoRedo->clear();
 }
 
@@ -652,6 +687,73 @@ void cEditorState::drawHoveredCellHighlight() const
     m_renderDrawer->renderRectFillColor(cellRect, editorHoveredCellFillColor, editorHoveredCellFillColor.a);
     m_renderDrawer->renderRectColor(cellRect, editorHoveredCellBorderColor, editorHoveredCellBorderColor.a);
 }
+
+void cEditorState::drawSelectionRectangle() const
+{
+    if (m_mapData == nullptr || !m_hasSelection) {
+        return;
+    }
+    const int cameraX = m_editorCam->getCameraX();
+    const int cameraY = m_editorCam->getCameraY();
+    const int tileLenSize = m_editorCam->getTileSize();
+
+    const int cellScreenX = m_selectionStartTileX * tileLenSize - cameraX;
+    const int cellScreenY = heightBarSize + m_selectionStartTileY * tileLenSize - cameraY;
+    const int highlightWidth = (m_selectionEndTileX - m_selectionStartTileX + 1) * tileLenSize;
+    const int highlightHeight = (m_selectionEndTileY - m_selectionStartTileY + 1) * tileLenSize;
+
+    cRectangle selectionRect(cellScreenX, cellScreenY, highlightWidth, highlightHeight);
+    m_renderDrawer->renderRectFillColor(selectionRect, editorSelectionFillColor, editorSelectionFillColor.a);
+    m_renderDrawer->renderRectColor(selectionRect, editorSelectionBorderColor, editorSelectionBorderColor.a);
+}
+
+bool cEditorState::tryGetTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const
+{
+    if (!coords.isWithinRectangle(&mapSizeArea)) {
+        return false;
+    }
+
+    tileX = m_editorCam->screenToTileX(coords.x);
+    tileY = m_editorCam->screenToTileY(coords.y - mapSizeArea.getY());
+    if (tileX < 0 || tileY < 0 || tileX >= static_cast<int>(m_mapData->getCols()) || tileY >= static_cast<int>(m_mapData->getRows())) {
+        return false;
+    }
+
+    return true;
+}
+
+bool cEditorState::isEditableTile(int tileX, int tileY) const
+{
+    if (m_mapData == nullptr) {
+        return false;
+    }
+
+    return tileX >= 1 && tileY >= 1 && tileX < static_cast<int>(m_mapData->getCols()) - 1 && tileY < static_cast<int>(m_mapData->getRows()) - 1;
+}
+
+void cEditorState::updateSelectionFromTiles(int startTileX, int startTileY, int endTileX, int endTileY)
+{
+    if (m_mapData == nullptr) {
+        return;
+    }
+
+    const int minX = 1;
+    const int minY = 1;
+    const int maxX = static_cast<int>(m_mapData->getCols()) - 2;
+    const int maxY = static_cast<int>(m_mapData->getRows()) - 2;
+
+    startTileX = std::clamp(startTileX, minX, maxX);
+    startTileY = std::clamp(startTileY, minY, maxY);
+    endTileX = std::clamp(endTileX, minX, maxX);
+    endTileY = std::clamp(endTileY, minY, maxY);
+
+    m_selectionStartTileX = std::min(startTileX, endTileX);
+    m_selectionStartTileY = std::min(startTileY, endTileY);
+    m_selectionEndTileX = std::max(startTileX, endTileX);
+    m_selectionEndTileY = std::max(startTileY, endTileY);
+    m_hasSelection = true;
+}
+
 
 int cEditorState::getNormalizedCursorSize() const
 {
