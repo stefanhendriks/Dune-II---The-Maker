@@ -478,6 +478,10 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
                 m_hasChanged = true;
             }
         }
+        if (event.isAction(eKeyAction::EDITOR_COPY)) {
+            //std::cout << "Action : Copy selection to clipboard" << std::endl;
+            copySelectionToClipboard();
+        }
     }
 
     if (event.isType(eKeyEventType::HOLD)) {
@@ -752,6 +756,26 @@ void cEditorState::updateSelectionFromTiles(int startTileX, int startTileY, int 
     m_selectionEndTileX = std::max(startTileX, endTileX);
     m_selectionEndTileY = std::max(startTileY, endTileY);
     m_hasSelection = true;
+}
+
+void cEditorState::copySelectionToClipboard()
+{
+    if (m_mapData == nullptr || !m_hasSelection) {
+        return;
+    }
+    const int width = m_selectionEndTileX - m_selectionStartTileX + 1;
+    const int height = m_selectionEndTileY - m_selectionStartTileY + 1;
+    if (width <= 0 || height <= 0 || (width * height) < 2) {
+        return;
+    }
+
+    m_clipboardTiles.assign(height, std::vector<int>(width, TERRAIN_SAND));
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            m_clipboardTiles[y][x] = (*m_mapData)[m_selectionStartTileY + y][m_selectionStartTileX + x];
+        }
+    }
+    m_hasSelection = false;
 }
 
 
