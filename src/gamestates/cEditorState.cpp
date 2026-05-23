@@ -35,6 +35,8 @@ const Color editorHoveredCellFillColor = Color{255, 230, 64, 96};
 const Color editorHoveredCellBorderColor = Color{255, 230, 64, 220};
 const Color editorSelectionFillColor = Color{255, 255, 255, 40};
 const Color editorSelectionBorderColor = Color{255, 255, 255, 255};
+const Color editorPasteGhostFillColor = Color{64, 208, 255, 60};
+const Color editorPasteGhostBorderColor = Color{64, 208, 255, 220};
 
 
 cEditorState::cEditorState(sGameServices* services) 
@@ -348,6 +350,8 @@ void cEditorState::draw() const
     drawMap();
     drawHoveredCellHighlight();
     drawSelectionRectangle();
+    if (m_displaySelection)
+        drawPastePreviewGhost();
     if (m_displayGrid)
         drawGrid();
     if (m_displayAxes)
@@ -479,12 +483,15 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             }
         }
         if (event.isAction(eKeyAction::EDITOR_COPY)) {
-            //std::cout << "Action : Copy selection to clipboard" << std::endl;
+            std::cout << "Action : Copy selection to clipboard" << std::endl;
             copySelectionToClipboard();
         }
         if (event.isAction(eKeyAction::EDITOR_PASTE)) {
-            //std::cout << "Action : Paste selection to clipboard" << std::endl;
+            std::cout << "Action : Paste selection to clipboard" << std::endl;
             pasteClipboardAtMouseCursor();
+        }
+        if (!event.isShiftPressed()) {
+            m_displaySelection = false;
         }
     }
 
@@ -508,10 +515,15 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_UP)) {
             m_editorCam->zoomAtMapPosition(mapSizeArea.getWidth()/2, mapSizeArea.getHeight()/2, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
+            return;
         }
         if (event.isShiftPressed() && event.isAction(eKeyAction::SCROLL_DOWN)) {
             m_editorCam->zoomAtMapPosition(mapSizeArea.getWidth()/2, mapSizeArea.getHeight()/2, cEditorCam::ZoomDirection::zoomOut, *m_mapData);
             m_editorCam->updateVisibleTiles(*m_mapData);
+            return;
+        }
+        if (event.isShiftPressed()) {
+            m_displaySelection = true;
         }
         //to test : updateVisibleTiles();
     }
@@ -539,6 +551,7 @@ void cEditorState::loadMap(int mapIndex)
     normalizeModifications();
     m_displayGrid = false;
     m_displayAxes = false;
+    m_displaySelection = false;
     m_hasChanged = false;
     m_hasSelection = false;
     m_isDraggingSelection = false;
@@ -713,6 +726,39 @@ void cEditorState::drawSelectionRectangle() const
     cRectangle selectionRect(cellScreenX, cellScreenY, highlightWidth, highlightHeight);
     m_renderDrawer->renderRectFillColor(selectionRect, editorSelectionFillColor, editorSelectionFillColor.a);
     m_renderDrawer->renderRectColor(selectionRect, editorSelectionBorderColor, editorSelectionBorderColor.a);
+}
+
+void cEditorState::drawPastePreviewGhost() const
+{
+    if (m_mapData == nullptr || m_clipboardTiles.empty() || m_clipboardTiles.front().empty()) {
+        return;
+    }
+
+    cMouse *mouse = m_interface->getMouse();
+    int anchorTileX = 0;
+    int anchorTileY = 0;
+    if (!tryGetTileFromMouseCoords(mouse->getMouseCoords(), anchorTileX, anchorTileY)) {
+        return;
+    }
+
+    const int widthInTiles = static_cast<int>(m_clipboardTiles.front().size());
+    const int heightInTiles = static_cast<int>(m_clipboardTiles.size());
+    if (widthInTiles <= 0 || heightInTiles <= 0) {
+        return;
+    }
+
+    const int cameraX = m_editorCam->getCameraX();
+    const int cameraY = m_editorCam->getCameraY();
+    const int tileLenSize = m_editorCam->getTileSize();
+
+    const int cellScreenX = anchorTileX * tileLenSize - cameraX;
+    const int cellScreenY = heightBarSize + anchorTileY * tileLenSize - cameraY;
+    const int ghostWidth = widthInTiles * tileLenSize;
+    const int ghostHeight = heightInTiles * tileLenSize;
+
+    cRectangle ghostRect(cellScreenX, cellScreenY, ghostWidth, ghostHeight);
+    m_renderDrawer->renderRectFillColor(ghostRect, editorPasteGhostFillColor, editorPasteGhostFillColor.a);
+    m_renderDrawer->renderRectColor(ghostRect, editorPasteGhostBorderColor, editorPasteGhostBorderColor.a);
 }
 
 bool cEditorState::tryGetTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const
