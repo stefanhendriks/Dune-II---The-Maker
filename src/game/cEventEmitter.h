@@ -14,9 +14,7 @@ public:
     }
 
     void emit(const s_GameEvent &event) const {
-        if (m_dispatchFn) {
-            m_dispatchFn(event);
-        }
+        m_dispatchFn(event);
     }
 
 private:
