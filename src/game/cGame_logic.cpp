@@ -102,6 +102,15 @@ namespace {
 bool isConsoleToggleKey(const cKeyboardEvent &event) {
     return event.isType(eKeyEventType::PRESSED) && event.hasKey(SDL_SCANCODE_GRAVE);
 }
+
+bool isConsoleToggleTextInput(const cKeyboardEvent &event) {
+    if (!event.hasTextInput()) {
+        return false;
+    }
+
+    const std::string &textInput = event.getTextInput();
+    return textInput == "`" || textInput == "~" || textInput == "²";
+}
 }
 
 bool cGame::shouldCaptureTextInput() const
@@ -1357,6 +1366,10 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
 
     if (m_guiConsole->isVisible()) {
+        if (m_guiConsole->isKeyboardCaptured() && isConsoleToggleTextInput(event)) {
+            return;
+        }
+
         m_guiConsole->onNotifyKeyboardEvent(event);
         if (m_guiConsole->isKeyboardCaptured()) {
             syncTextInputState();
