@@ -207,6 +207,7 @@ cGame::cGame()
     m_services->settings = m_gameSettings.get();
     m_services->structureUtils = m_structureUtils.get();
     m_services->m_log = nullptr;
+    m_services->gameEventEmitter = m_gameEventEmitter.get();
 
     m_cIni = std::make_unique<cIni>(m_services.get());
 }
