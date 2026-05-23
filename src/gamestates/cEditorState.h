@@ -70,6 +70,7 @@ private:
     bool isEditableTile(int tileX, int tileY) const;
     void updateSelectionFromTiles(int startTileX, int startTileY, int endTileX, int endTileY);
     void copySelectionToClipboard();
+    void pasteClipboardAtMouseCursor();
 
     void saveMap(bool backup = false) const;
     std::unique_ptr<GuiBar> m_selectBar;
