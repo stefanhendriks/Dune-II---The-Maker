@@ -5,11 +5,11 @@
 #include <functional>
 #include <utility>
 
-class cGameEventEmitter {
+class cEventEmitter {
 public:
     using DispatchFn = std::function<void(const s_GameEvent &)>;
 
-    explicit cGameEventEmitter(DispatchFn dispatchFn)
+    explicit cEventEmitter(DispatchFn dispatchFn)
         : m_dispatchFn(std::move(dispatchFn)) {
     }
 
