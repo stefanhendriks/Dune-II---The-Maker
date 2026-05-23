@@ -57,6 +57,7 @@ private:
     void drawMap() const;
     void drawHoveredCellHighlight() const;
     void drawSelectionRectangle() const;
+    void drawPastePreviewGhost() const;
     void drawStartCells() const;
     void drawGrid() const;
     void drawAxes() const;
@@ -97,6 +98,7 @@ private:
     bool m_displayGrid = false;
     bool m_displayAxes = false;
     bool m_hasChanged = false;
+    bool m_displaySelection = false;
 
     bool m_hasSelection = false;
     bool m_isDraggingSelection = false;
