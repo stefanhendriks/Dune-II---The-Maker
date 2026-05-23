@@ -350,7 +350,7 @@ void cEditorState::draw() const
     drawMap();
     drawHoveredCellHighlight();
     drawSelectionRectangle();
-    if (m_displaySelection)
+    if (m_displayPastPreview)
         drawPastePreviewGhost();
     if (m_displayGrid)
         drawGrid();
@@ -491,7 +491,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             pasteClipboardAtMouseCursor();
         }
         if (!event.isCtrlPressed()) {
-            m_displaySelection = false;
+            m_displayPastPreview = false;
         }
     }
 
@@ -523,7 +523,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             return;
         }
         if (event.isCtrlPressed()) {
-            m_displaySelection = true;
+            m_displayPastPreview = true;
         }
         //to test : updateVisibleTiles();
     }
@@ -551,7 +551,7 @@ void cEditorState::loadMap(int mapIndex)
     normalizeModifications();
     m_displayGrid = false;
     m_displayAxes = false;
-    m_displaySelection = false;
+    m_displayPastPreview = false;
     m_hasChanged = false;
     m_hasSelection = false;
     m_isDraggingSelection = false;

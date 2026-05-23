@@ -98,7 +98,7 @@ private:
     bool m_displayGrid = false;
     bool m_displayAxes = false;
     bool m_hasChanged = false;
-    bool m_displaySelection = false;
+    bool m_displayPastPreview = false;
 
     bool m_hasSelection = false;
     bool m_isDraggingSelection = false;
