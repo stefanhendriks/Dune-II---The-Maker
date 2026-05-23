@@ -490,7 +490,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             std::cout << "Action : Paste selection to clipboard" << std::endl;
             pasteClipboardAtMouseCursor();
         }
-        if (!event.isShiftPressed()) {
+        if (!event.isCtrlPressed()) {
             m_displaySelection = false;
         }
     }
@@ -522,7 +522,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_editorCam->updateVisibleTiles(*m_mapData);
             return;
         }
-        if (event.isShiftPressed()) {
+        if (event.isCtrlPressed()) {
             m_displaySelection = true;
         }
         //to test : updateVisibleTiles();
