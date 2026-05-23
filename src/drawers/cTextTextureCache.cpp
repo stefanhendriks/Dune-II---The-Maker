@@ -3,6 +3,7 @@
 #include "include/d2tmc.h"
 
 #include "include/cAssert.h"
+#include "utils/cLog.h"
 
 cTextTextureCache::cTextTextureCache(TTF_Font *font)
     : m_font(font)
@@ -28,24 +29,16 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
     auto newCacheEntry = std::make_unique<textCacheEntry>();
     SDL_Surface *textSurface = TTF_RenderUTF8_Blended(m_font, msg.c_str(), Color::Black.toSDL());
     if (!textSurface) {
-        textSurface = TTF_RenderUTF8_Blended(m_font, "?", Color::Black.toSDL());
-        if (!textSurface) {
-            return nullptr;
-        }
+        cLogger::getInstance()->log(LOG_ERROR, COMP_ALFONT, "cTextTextureCache", std::format("Failed to create shadow surface for text '{}': {}", msg, TTF_GetError()));
+        return nullptr;
     }
     newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
     SDL_FreeSurface(textSurface);
 
     textSurface = TTF_RenderUTF8_Blended(m_font, msg.c_str(), color.toSDL());
     if (!textSurface) {
-        textSurface = TTF_RenderUTF8_Blended(m_font, "?", color.toSDL());
-        if (!textSurface) {
-            if (newCacheEntry->shadowsTexture) {
-                SDL_DestroyTexture(newCacheEntry->shadowsTexture);
-                newCacheEntry->shadowsTexture = nullptr;
-            }
-            return nullptr;
-        }
+        cLogger::getInstance()->log(LOG_ERROR, COMP_ALFONT, "cTextTextureCache", std::format("Failed to create surface for text '{}': {}", msg, TTF_GetError()));
+        return nullptr;
     }
     newCacheEntry->texture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
     newCacheEntry->width = textSurface->w;
