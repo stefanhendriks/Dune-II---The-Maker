@@ -22,7 +22,7 @@
 #include "include/eGameState.h"
 
 #include "game/cGameConditionChecker.h"
-#include "game/cGameEventPublisher.h"
+#include "game/cGameEventEmitter.h"
 #include "game/cPlatformLayerInit.h"
 #include "game/cScreenFader.h"
 #include "game/cScreenInit.h"
@@ -194,7 +194,7 @@ cGame::cGame()
     m_sideBarFactory = std::make_unique<cSideBarFactory>();
     m_buildingListFactory = std::make_unique<cBuildingListFactory>();
 
-    m_gameEventPublisher = std::make_unique<cGameEventPublisher>(
+    m_gameEventEmitter = std::make_unique<cGameEventEmitter>(
         [this](const s_GameEvent &event) {
             dispatchGameEvent(event);
         }
@@ -1152,8 +1152,8 @@ void cGame::setPlayerToInteractFor(cPlayer *pPlayer)
 
 void cGame::emitGameEvent(const s_GameEvent &event)
 {
-    if (m_gameEventPublisher) {
-        m_gameEventPublisher->emit(event);
+    if (m_gameEventEmitter) {
+        m_gameEventEmitter->emit(event);
     }
 }
 
