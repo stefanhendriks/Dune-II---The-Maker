@@ -72,6 +72,8 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::EDITOR_DISPLAY_AXES, {SDL_SCANCODE_A});
     bind(eKeyAction::EDITOR_UNDO,     {SDL_SCANCODE_Z}, true, false, false);
     bind(eKeyAction::EDITOR_REDO,     {SDL_SCANCODE_Y}, true, false, false);
+    bind(eKeyAction::EDITOR_COPY,     {SDL_SCANCODE_C}, true, false, false);
+    bind(eKeyAction::EDITOR_PASTE,    {SDL_SCANCODE_V}, true, false, false);
 
     // UI / menus
     bind(eKeyAction::MENU_BACK,    {SDL_SCANCODE_ESCAPE});
@@ -150,6 +152,8 @@ const std::vector<std::pair<std::string, eKeyAction>>& cKeyBindings::getActionTa
         {"EDITOR_DISPLAY_AXES",       eKeyAction::EDITOR_DISPLAY_AXES},
         {"EDITOR_UNDO",               eKeyAction::EDITOR_UNDO},
         {"EDITOR_REDO",               eKeyAction::EDITOR_REDO},
+        {"EDITOR_COPY",               eKeyAction::EDITOR_COPY},
+        {"EDITOR_PASTE",              eKeyAction::EDITOR_PASTE},
         {"MENU_BACK",                 eKeyAction::MENU_BACK},
         {"MENU_CONFIRM",              eKeyAction::MENU_CONFIRM},
         {"MENU_CANCEL",               eKeyAction::MENU_CANCEL},
