@@ -6,7 +6,7 @@ class cInfoContext;
 class cGameSettings;
 class cLog;
 class cStructureUtils;
-class cGameEventEmitter;
+class cEventEmitter;
 
 struct sGameServices
 {
@@ -16,5 +16,5 @@ struct sGameServices
     cGameSettings *settings = nullptr;
     cStructureUtils *structureUtils = nullptr;
     cLog *m_log = nullptr;
-    cGameEventEmitter *gameEventEmitter = nullptr;
+    cEventEmitter *eventEmitter = nullptr;
 };
