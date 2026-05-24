@@ -737,7 +737,7 @@ void cEditorState::drawPastePreviewGhost() const
     cMouse *mouse = m_interface->getMouse();
     int anchorTileX = 0;
     int anchorTileY = 0;
-    if (!tryGetTileFromMouseCoords(mouse->getMouseCoords(), anchorTileX, anchorTileY)) {
+    if (!tryGetEditableTileFromMouseCoords(mouse->getMouseCoords(), anchorTileX, anchorTileY)) {
         return;
     }
 
@@ -773,6 +773,25 @@ bool cEditorState::tryGetTileFromMouseCoords(const cPoint &coords, int &tileX, i
         return false;
     }
 
+    return true;
+}
+
+bool cEditorState::tryGetEditableTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const
+{
+    if (m_mapData == nullptr || !tryGetTileFromMouseCoords(coords, tileX, tileY)) {
+        return false;
+    }
+
+    const int minX = 1;
+    const int minY = 1;
+    const int maxX = static_cast<int>(m_mapData->getCols()) - 2;
+    const int maxY = static_cast<int>(m_mapData->getRows()) - 2;
+    if (maxX < minX || maxY < minY) {
+        return false;
+    }
+
+    tileX = std::clamp(tileX, minX, maxX);
+    tileY = std::clamp(tileY, minY, maxY);
     return true;
 }
 
@@ -837,7 +856,7 @@ void cEditorState::pasteClipboardAtMouseCursor()
     cMouse *mouse = m_interface->getMouse();
     int anchorTileX = 0;
     int anchorTileY = 0;
-    if (!tryGetTileFromMouseCoords(mouse->getMouseCoords(), anchorTileX, anchorTileY)) {
+    if (!tryGetEditableTileFromMouseCoords(mouse->getMouseCoords(), anchorTileX, anchorTileY)) {
         return;
     }
 

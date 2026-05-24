@@ -68,6 +68,7 @@ private:
     void modifyStartCell(int posX, int posY, int startCellID);
     void normalizeModifications();
     bool tryGetTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const;
+    bool tryGetEditableTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const;
     bool isEditableTile(int tileX, int tileY) const;
     void updateSelectionFromTiles(int startTileX, int startTileY, int endTileX, int endTileY);
     void copySelectionToClipboard();
