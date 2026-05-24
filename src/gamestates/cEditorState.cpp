@@ -349,7 +349,7 @@ void cEditorState::populateSymmetricBar()
             })
             .build();
     guiButton->setGroup(m_symmetricGroup.get());
-    m_symmetricBar->addAutoGuiObject(std::move(guiButton));   
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton));
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
@@ -1184,7 +1184,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
 
         case Direction::topRight:
             if (m_mapData->getCols() != m_mapData->getRows()) {
-                //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
+                //std::cout << "topRight symmetry requires a square map, skipping." << std::endl;
                 break;
             }
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
@@ -1205,7 +1205,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
 
         case Direction::bottomLeft:
             if (m_mapData->getCols() != m_mapData->getRows()) {
-                //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
+                //std::cout << "bottomLeft symmetry requires a square map, skipping." << std::endl;
                 break;
             }
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
@@ -1226,7 +1226,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
 
         case Direction::bottomRight:
             if (m_mapData->getCols() != m_mapData->getRows()) {
-                //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
+                //std::cout << "bottomRight symmetry requires a square map, skipping." << std::endl;
                 break;
             }
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
