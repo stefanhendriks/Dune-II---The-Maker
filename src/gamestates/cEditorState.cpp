@@ -534,6 +534,10 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             //std::cout << "Action : Paste selection to clipboard" << std::endl;
             pasteClipboardAtMouseCursor();
         }
+        if (event.isAction(eKeyAction::EDITOR_CUT)) {
+            cutSelectionToClipboard();
+        }
+
         if (!event.isCtrlPressed()) {
             m_displayPastPreview = false;
         }
@@ -869,6 +873,28 @@ void cEditorState::updateSelectionFromTiles(int startTileX, int startTileY, int 
     m_selectionEndTileX = std::max(startTileX, endTileX);
     m_selectionEndTileY = std::max(startTileY, endTileY);
     m_hasSelection = true;
+}
+
+void cEditorState::cutSelectionToClipboard()
+{
+    if (m_mapData == nullptr || !m_hasSelection) {
+        return;
+    }
+    copySelectionToClipboard();
+    const int width = m_selectionEndTileX - m_selectionStartTileX + 1;
+    const int height = m_selectionEndTileY - m_selectionStartTileY + 1;
+    if (width <= 0 || height <= 0 || (width * height) < 2) {
+        return;
+    }
+    m_undoRedo->beginRecordGroup();
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            auto oldTileID = (*m_mapData)[m_selectionStartTileY + y][m_selectionStartTileX + x];
+            m_undoRedo->recordTileChange(m_selectionStartTileX + x, m_selectionStartTileY + y, oldTileID, TERRAIN_SAND);
+            (*m_mapData)[m_selectionStartTileY + y][m_selectionStartTileX + x] = TERRAIN_SAND;
+        }
+    }
+    m_hasChanged = true;
 }
 
 void cEditorState::copySelectionToClipboard()
