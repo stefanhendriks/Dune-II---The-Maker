@@ -1160,6 +1160,10 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
         case Direction::topLeft:
+            if (m_mapData->getCols() != m_mapData->getRows()) {
+                //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
+                break;
+            }
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
                 for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
                     if ((i + j) >= (m_mapData->getCols()-1)) {
@@ -1179,6 +1183,10 @@ void cEditorState::modifySymmetricArea(Direction dir)
             break;
 
         case Direction::topRight:
+            if (m_mapData->getCols() != m_mapData->getRows()) {
+                //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
+                break;
+            }
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
                 for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
                     if (i <= j) {
@@ -1196,6 +1204,10 @@ void cEditorState::modifySymmetricArea(Direction dir)
             break;
 
         case Direction::bottomLeft:
+            if (m_mapData->getCols() != m_mapData->getRows()) {
+                //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
+                break;
+            }
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
                 for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
                     if (j <= i) {
@@ -1213,6 +1225,10 @@ void cEditorState::modifySymmetricArea(Direction dir)
             break;
 
         case Direction::bottomRight:
+            if (m_mapData->getCols() != m_mapData->getRows()) {
+                //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
+                break;
+            }
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
                 for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
                     if ((i + j) <= (m_mapData->getCols()-1)) {
@@ -1229,7 +1245,6 @@ void cEditorState::modifySymmetricArea(Direction dir)
                     }
                 }
             }
-        
             break;
     }
     m_hasChanged = true;
