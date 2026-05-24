@@ -1160,15 +1160,76 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
         case Direction::topLeft:
+            for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
+                for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
+                    if ((i + j) >= (m_mapData->getCols()-1)) {
+                        continue;
+                    }
+
+                    size_t mirrorJ = (m_mapData->getRows()-1)-i;
+                    size_t mirrorI = (m_mapData->getCols()-1)-j;
+                    int oldVal = (*m_mapData)[j][i];
+                    int newVal = (*m_mapData)[mirrorJ][mirrorI];
+                    if (oldVal != newVal) {
+                        m_undoRedo->recordTileChange(i, j, oldVal, newVal);
+                        (*m_mapData)[j][i] = newVal;
+                    }
+                }
+            }
             break;
 
         case Direction::topRight:
+            for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
+                for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
+                    if (i <= j) {
+                        continue;
+                    }
+
+                    int oldVal = (*m_mapData)[j][i];
+                    int newVal = (*m_mapData)[i][j];
+                    if (oldVal != newVal) {
+                        m_undoRedo->recordTileChange(i, j, oldVal, newVal);
+                        (*m_mapData)[j][i] = newVal;
+                    }
+                }
+            }
             break;
 
         case Direction::bottomLeft:
+            for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
+                for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
+                    if (j <= i) {
+                        continue;
+                    }
+
+                    int oldVal = (*m_mapData)[j][i];
+                    int newVal = (*m_mapData)[i][j];
+                    if (oldVal != newVal) {
+                        m_undoRedo->recordTileChange(i, j, oldVal, newVal);
+                        (*m_mapData)[j][i] = newVal;
+                    }
+                }
+            }
             break;
 
         case Direction::bottomRight:
+            for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
+                for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
+                    if ((i + j) <= (m_mapData->getCols()-1)) {
+                        continue;
+                    }
+
+                    size_t mirrorJ = (m_mapData->getRows()-1)-i;
+                    size_t mirrorI = (m_mapData->getCols()-1)-j;
+                    int oldVal = (*m_mapData)[j][i];
+                    int newVal = (*m_mapData)[mirrorJ][mirrorI];
+                    if (oldVal != newVal) {
+                        m_undoRedo->recordTileChange(i, j, oldVal, newVal);
+                        (*m_mapData)[j][i] = newVal;
+                    }
+                }
+            }
+        
             break;
     }
     m_hasChanged = true;
