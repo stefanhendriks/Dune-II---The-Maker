@@ -72,6 +72,7 @@ private:
     bool isEditableTile(int tileX, int tileY) const;
     void updateSelectionFromTiles(int startTileX, int startTileY, int endTileX, int endTileY);
     void copySelectionToClipboard();
+    void cutSelectionToClipboard();
     void pasteClipboardAtMouseCursor();
 
     void saveMap(bool backup = false) const;
