@@ -339,6 +339,50 @@ void cEditorState::populateSymmetricBar()
             .build();
     guiButton->setGroup(m_symmetricGroup.get());
     m_symmetricBar->addAutoGuiObject(std::move(guiButton));
+
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPDIAGBL))
+            .withRenderer(m_renderDrawer)
+            .onClick([this]() {
+                modifySymmetricArea(Direction::bottomLeft);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton));   
+
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPDIAGBR))
+            .withRenderer(m_renderDrawer)
+            .onClick([this]() {
+                modifySymmetricArea(Direction::bottomRight);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton));
+
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPDIAGTL))
+            .withRenderer(m_renderDrawer)
+            .onClick([this]() {
+                modifySymmetricArea(Direction::topLeft);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton)); 
+
+    guiButton = GuiStateButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture(FLIPDIAGTR))
+            .withRenderer(m_renderDrawer)
+            .onClick([this]() {
+                modifySymmetricArea(Direction::topRight);
+            })
+            .build();
+    guiButton->setGroup(m_symmetricGroup.get());
+    m_symmetricBar->addAutoGuiObject(std::move(guiButton)); 
 }
 
 void cEditorState::thinkFast()
@@ -1114,6 +1158,17 @@ void cEditorState::modifySymmetricArea(Direction dir)
                     }
                 }
             }
+            break;
+        case Direction::topLeft:
+            break;
+
+        case Direction::topRight:
+            break;
+
+        case Direction::bottomLeft:
+            break;
+
+        case Direction::bottomRight:
             break;
     }
     m_hasChanged = true;

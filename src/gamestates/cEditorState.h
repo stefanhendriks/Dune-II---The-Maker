@@ -46,7 +46,7 @@ private:
     cTextDrawer *m_textDrawer = nullptr;
     cPreviewMaps* m_previewMaps = nullptr;
     std::string m_mapName, m_mapAuthor, m_mapDescription;
-    enum class Direction : char { top, bottom, left, right };
+    enum class Direction : char { top, bottom, left, right, topLeft, topRight, bottomLeft, bottomRight };
     void populateTopologyBar();
     void populateStartCellBar();
     void populateSelectBar();
