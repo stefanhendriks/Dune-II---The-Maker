@@ -1105,9 +1105,9 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
 void cEditorState::modifySymmetricArea(Direction dir)
 {
     //std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
-    m_undoRedo->beginRecordGroup();
     switch (dir) {
         case Direction::bottom:
+            m_undoRedo->beginRecordGroup();
             for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
                 for (size_t i = 1; i < m_mapData->getCols(); i++) {
                     size_t mirrorJ = (m_mapData->getRows()-1)-j;
@@ -1121,6 +1121,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
         case Direction::top:
+            m_undoRedo->beginRecordGroup();
             for (size_t j = 1; j < (m_mapData->getRows())/2; j++) {
                 for (size_t i = 1; i < m_mapData->getCols(); i++) {
                     size_t mirrorJ = (m_mapData->getRows()-1)-j;
@@ -1134,6 +1135,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
         case Direction::right:
+            m_undoRedo->beginRecordGroup();
             for (size_t j = 1; j < m_mapData->getRows(); j++) {
                 for (size_t i = 1; i < (m_mapData->getCols())/2; i++) {
                     size_t mirrorI = (m_mapData->getCols()-1)-i;
@@ -1147,6 +1149,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
         case Direction::left:
+            m_undoRedo->beginRecordGroup();
             for (size_t j = 1; j < m_mapData->getRows(); j++) {
                 for (size_t i = 1; i < (m_mapData->getCols())/2; i++) {
                     size_t mirrorI = (m_mapData->getCols()-1)-i;
@@ -1164,6 +1167,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
                 //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
                 break;
             }
+            m_undoRedo->beginRecordGroup();
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
                 for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
                     if ((i + j) >= (m_mapData->getCols()-1)) {
@@ -1187,6 +1191,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
                 //std::cout << "topRight symmetry requires a square map, skipping." << std::endl;
                 break;
             }
+            m_undoRedo->beginRecordGroup();
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
                 for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
                     if (i <= j) {
@@ -1208,6 +1213,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
                 //std::cout << "bottomLeft symmetry requires a square map, skipping." << std::endl;
                 break;
             }
+            m_undoRedo->beginRecordGroup();
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
                 for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
                     if (j <= i) {
@@ -1229,6 +1235,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
                 //std::cout << "bottomRight symmetry requires a square map, skipping." << std::endl;
                 break;
             }
+            m_undoRedo->beginRecordGroup();
             for (size_t j = 1; j < m_mapData->getRows()-1; j++) {
                 for (size_t i = 1; i < m_mapData->getCols()-1; i++) {
                     if ((i + j) <= (m_mapData->getCols()-1)) {
