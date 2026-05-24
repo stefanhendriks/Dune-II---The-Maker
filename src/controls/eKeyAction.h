@@ -61,6 +61,7 @@ enum class eKeyAction {
     EDITOR_REDO,
     EDITOR_COPY,
     EDITOR_PASTE,
+    EDITOR_CUT,
     // UI / menus
     MENU_BACK,
     MENU_CONFIRM,
