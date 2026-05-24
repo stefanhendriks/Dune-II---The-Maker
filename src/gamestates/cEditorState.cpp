@@ -1165,6 +1165,14 @@ void cEditorState::modifySymmetricArea(Direction dir)
         case Direction::topLeft:
             if (m_mapData->getCols() != m_mapData->getRows()) {
                 //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
+                const s_GameEvent newEvent {
+                    .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                    .data = NotificationEvent {
+                        .message = "topLeft symmetry requires a square map, skipping.",
+                        .type = eNotificationType::PRIORITY,
+                    }
+                };                
+                m_interface->onNotifyGameEvent(newEvent);
                 break;
             }
             m_undoRedo->beginRecordGroup();
@@ -1189,6 +1197,14 @@ void cEditorState::modifySymmetricArea(Direction dir)
         case Direction::topRight:
             if (m_mapData->getCols() != m_mapData->getRows()) {
                 //std::cout << "topRight symmetry requires a square map, skipping." << std::endl;
+                const s_GameEvent newEvent {
+                    .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                    .data = NotificationEvent {
+                        .message = "topRight symmetry requires a square map, skipping.",
+                        .type = eNotificationType::PRIORITY,
+                    }
+                };                
+                m_interface->onNotifyGameEvent(newEvent);
                 break;
             }
             m_undoRedo->beginRecordGroup();
@@ -1211,6 +1227,14 @@ void cEditorState::modifySymmetricArea(Direction dir)
         case Direction::bottomLeft:
             if (m_mapData->getCols() != m_mapData->getRows()) {
                 //std::cout << "bottomLeft symmetry requires a square map, skipping." << std::endl;
+                const s_GameEvent newEvent {
+                    .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                    .data = NotificationEvent {
+                        .message = "bottomLeft symmetry requires a square map, skipping.",
+                        .type = eNotificationType::PRIORITY,
+                    }
+                };                
+                m_interface->onNotifyGameEvent(newEvent);
                 break;
             }
             m_undoRedo->beginRecordGroup();
@@ -1233,6 +1257,14 @@ void cEditorState::modifySymmetricArea(Direction dir)
         case Direction::bottomRight:
             if (m_mapData->getCols() != m_mapData->getRows()) {
                 //std::cout << "bottomRight symmetry requires a square map, skipping." << std::endl;
+                const s_GameEvent newEvent {
+                    .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                    .data = NotificationEvent {
+                        .message = "bottomRight symmetry requires a square map, skipping.",
+                        .type = eNotificationType::PRIORITY,
+                    }
+                };                
+                m_interface->onNotifyGameEvent(newEvent);
                 break;
             }
             m_undoRedo->beginRecordGroup();
