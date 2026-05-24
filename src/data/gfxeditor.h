@@ -27,4 +27,8 @@
 #define FLIPHORZRL      26
 #define FLIPVERTBT      27
 #define FLIPVERTTB      28
-#define SAVEICON        29
+#define FLIPDIAGBL      29
+#define FLIPDIAGBR      30
+#define FLIPDIAGTL      31
+#define FLIPDIAGTR      32
+#define SAVEICON        33
