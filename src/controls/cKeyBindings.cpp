@@ -240,6 +240,18 @@ bool cKeyBindings::matches(const std::set<SDL_Scancode> &keys, const s_KeysCombo
     if (binding.requireAlt   && !combo.altPressed)   return false;
     if (binding.requireShift && !combo.shiftPressed)  return false;
 
+    // A binding that doesn't require a modifier must not fire when that modifier is active,
+    // unless the modifier key itself is one of the binding's keys (e.g. ATTACK_MODE uses LCTRL as its key).
+    auto keysContain = [&](SDL_Scancode sc1, SDL_Scancode sc2) {
+        for (SDL_Scancode sc : binding.keys) {
+            if (sc == sc1 || sc == sc2) return true;
+        }
+        return false;
+    };
+    if (!binding.requireCtrl  && combo.ctrlPressed  && !keysContain(SDL_SCANCODE_LCTRL,  SDL_SCANCODE_RCTRL))  return false;
+    if (!binding.requireAlt   && combo.altPressed   && !keysContain(SDL_SCANCODE_LALT,   SDL_SCANCODE_RALT))   return false;
+    if (!binding.requireShift && combo.shiftPressed && !keysContain(SDL_SCANCODE_LSHIFT, SDL_SCANCODE_RSHIFT)) return false;
+
     for (SDL_Scancode sc : binding.keys) {
         if (keys.count(sc) > 0) return true;
     }
