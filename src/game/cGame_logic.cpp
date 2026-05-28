@@ -1169,7 +1169,9 @@ void cGame::dispatchGameEvent(const s_GameEvent &event)
 
     if (event.eventType == eGameEventType::GAME_EVENT_NOTIFICATION) {
         if (const auto *notifEvent = std::get_if<NotificationEvent>(&event.data)) {
-            addNotification(notifEvent->message, notifEvent->type);
+            if (notifEvent->player == nullptr || notifEvent->player == m_controlledPlayer) {
+                m_notificationArea->addNotification(notifEvent->message, notifEvent->type);
+            }
         }
     }
 
