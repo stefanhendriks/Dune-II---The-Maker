@@ -91,20 +91,18 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE
     	${CMAKE_CURRENT_SOURCE_DIR}/src
     	${CMAKE_CURRENT_SOURCE_DIR}/src/include
-        /usr/include/SDL2
-        /usr/local/include/SDL2
-        /usr/local/include
 )
 
 if (APPLE)
 
     target_compile_definitions(${PROJECT_NAME} PRIVATE D2TM_CLANG=1)
 
-    set(ALL_SDL_LIBS ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
-    list(REMOVE_DUPLICATES ALL_SDL_LIBS)
     target_link_libraries(${PROJECT_NAME}
         PRIVATE
-            ${ALL_SDL_LIBS}
+            SDL2::SDL2
+            SDL2_ttf::SDL2_ttf
+            SDL2_image::SDL2_image
+            SDL2_mixer::SDL2_mixer
     )
     target_compile_options(${PROJECT_NAME}
             PRIVATE
@@ -130,11 +128,15 @@ elseif (UNIX)
         "-Wzero-as-null-pointer-constant"
         "-Wextra-semi"
         "-Werror"
-        #"-Wsuggest-override"
-        #"-Wmismatched-tags"
-        #"-Wdeprecated-declarations"
     )
-    target_link_libraries(cpp_stacktrace INTERFACE stdc++exp backtrace)
+    target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        SDL2::SDL2
+        SDL2_ttf::SDL2_ttf
+        SDL2_image::SDL2_image
+        SDL2_mixer::SDL2_mixer
+        cpp_stacktrace
+    )
 
 else()
     target_compile_options(${PROJECT_NAME}
