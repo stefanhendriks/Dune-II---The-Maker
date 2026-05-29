@@ -161,7 +161,7 @@ int cAbstractStructure::getSight()
 int cAbstractStructure::getRange()
 {
     int type = getType();
-    return game.m_infoContext->getStructureInfo(type).sight;
+    return game.m_infoContext->getStructureInfo(type).range;
 }
 
 

@@ -1639,6 +1639,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[TURRET].fadecol = -1;
     structureInfos[TURRET].icon = ICON_STR_TURRET;
     structureInfos[TURRET].sight = 7;
+    structureInfos[TURRET].range = 7;
     structureInfos[TURRET].configured = true;
     structureInfos[TURRET].canAttackGroundUnits = true;
     structureInfos[TURRET].fireRate = 275;
@@ -1653,6 +1654,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[RTURRET].fadecol = -1;
     structureInfos[RTURRET].icon = ICON_STR_RTURRET;
     structureInfos[RTURRET].sight = 10;
+    structureInfos[RTURRET].range = 7;
     structureInfos[RTURRET].configured = true;
     structureInfos[RTURRET].canAttackAirUnits = true;
     structureInfos[RTURRET].canAttackGroundUnits = true;

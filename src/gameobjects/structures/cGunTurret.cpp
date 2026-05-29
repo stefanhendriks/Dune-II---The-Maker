@@ -149,9 +149,8 @@ void cGunTurret::think_fire()
 
         int iDistance = game.m_gameObjectsContext->getMapGeometry()->distance(getCell(), unitTarget->getCell());
 
-        if (iDistance > getSight()) {
+        if (iDistance > getRange()) {
             iTargetID = -1;
-            // went out of sight, unfortunately
             return;
         }
 
@@ -231,9 +230,9 @@ void cGunTurret::think_guard()
 
         iTargetID=-1;       // no target
 
-        int distanceForAttacking = getSight();
+        int distanceForAttacking = getRange();
         if (lowPower && getType() == RTURRET) {
-            distanceForAttacking = game.m_infoContext->getStructureInfo(TURRET).sight; // HACK HACK: way to reduce distance for rturret on low power
+            distanceForAttacking = game.m_infoContext->getStructureInfo(TURRET).range;
         }
 
         // scan area for units

@@ -303,7 +303,10 @@ int INI_WordType(const std::string& word, int section)
         if (word.length() > 1) {
             if (cIniUtils::caseInsCompare(word, "PreBuild"))      return WORD_PREBUILD;
             if (cIniUtils::caseInsCompare(word, "Description"))   return WORD_DESCRIPTION;
-            if (cIniUtils::caseInsCompare(word, "Power"))         return WORD_POWER;        // What power it takes
+            if (cIniUtils::caseInsCompare(word, "Power"))         return WORD_POWER;
+            if (cIniUtils::caseInsCompare(word, "Sight"))         return WORD_SIGHT;
+            if (cIniUtils::caseInsCompare(word, "Range"))         return WORD_RANGE;
+            if (cIniUtils::caseInsCompare(word, "FireRate"))      return WORD_FIRERATE;
         }
         else
             return WORD_NONE;
@@ -1566,6 +1569,9 @@ void cIni::installGame(std::string filename)
                 if (wordtype == WORD_BUILDTIME) m_infos->getStructureInfo(id).buildTime = ToInt(word_right);
                 if (wordtype == WORD_CANATTACKAIRUNITS) m_infos->getStructureInfo(id).canAttackAirUnits = ToBool(word_right);
                 if (wordtype == WORD_CANATTACKUNITS) m_infos->getStructureInfo(id).canAttackGroundUnits = ToBool(word_right);
+                if (wordtype == WORD_SIGHT) m_infos->getStructureInfo(id).sight = ToInt(word_right);
+                if (wordtype == WORD_RANGE) m_infos->getStructureInfo(id).range = ToInt(word_right);
+                if (wordtype == WORD_FIRERATE) m_infos->getStructureInfo(id).fireRate = ToInt(word_right);
                 if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMin = ToInt(word_right);
                 if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMax = ToInt(word_right);
                 if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE) m_infos->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
