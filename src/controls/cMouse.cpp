@@ -14,7 +14,7 @@
 #include "context/GameContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <iostream>
 #include "include/cAssert.h"
 

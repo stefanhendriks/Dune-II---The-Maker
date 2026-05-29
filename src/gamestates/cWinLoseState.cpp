@@ -6,7 +6,7 @@
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "include/cAssert.h"
 
 cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) : 

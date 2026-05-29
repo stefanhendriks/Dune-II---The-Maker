@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <initializer_list>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "controls/eKeyAction.h"
 #include "controls/eKeyboardEnum.h"

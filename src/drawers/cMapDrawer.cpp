@@ -13,7 +13,7 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/MapGeometry.hpp"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <cmath>
 #include "include/cAssert.h"
 

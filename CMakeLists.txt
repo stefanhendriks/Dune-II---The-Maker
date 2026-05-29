@@ -91,6 +91,7 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE
     	${CMAKE_CURRENT_SOURCE_DIR}/src
     	${CMAKE_CURRENT_SOURCE_DIR}/src/include
+        /usr/include/SDL2
         /usr/local/include/SDL2
         /usr/local/include
 )

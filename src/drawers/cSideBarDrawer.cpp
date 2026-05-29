@@ -13,7 +13,7 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <algorithm>
 #include "include/cAssert.h"
 

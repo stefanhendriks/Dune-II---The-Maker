@@ -6,7 +6,7 @@
 #include "sMouseEvent.h"
 #include <optional>
 #include <vector>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class Texture;
 

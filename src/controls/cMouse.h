@@ -2,7 +2,7 @@
 
 #include "utils/cPoint.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <string>
 
 class cRectangle;

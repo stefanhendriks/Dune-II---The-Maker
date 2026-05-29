@@ -21,8 +21,8 @@
 #include "utils/Graphics.hpp"
 #include "drawers/cTextDrawer.h"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL.h>
+#include <SDL_ttf.h>
 #include <format>
 #include "include/cAssert.h"
 

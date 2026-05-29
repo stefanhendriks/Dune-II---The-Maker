@@ -13,7 +13,7 @@
 #include "utils/cSoundPlayer.h"
 #include "game/cGameInterface.h"
 
-#include <SDL2/SDL_scancode.h>
+#include <SDL_scancode.h>
 #include <format>
 #include "include/cAssert.h"
 

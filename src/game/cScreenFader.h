@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL.h>   //uint8
+#include <SDL.h>   //uint8
 
 class Color;
 

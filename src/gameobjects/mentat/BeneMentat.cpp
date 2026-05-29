@@ -10,7 +10,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "drawers/cTextDrawer.h"
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
 #include "context/cInfoContext.h"

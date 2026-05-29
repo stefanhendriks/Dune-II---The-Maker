@@ -24,7 +24,7 @@
 #include "gameobjects/map/cMap.h"
 #include "drawers/cSideBarDrawer.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "include/cAssert.h"
 
 cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :

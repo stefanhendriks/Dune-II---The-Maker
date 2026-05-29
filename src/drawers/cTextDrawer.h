@@ -2,7 +2,7 @@
 
 #include "utils/cRectangle.h"
 #include "utils/Color.hpp"
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 #include <string>
 #include <memory>
 

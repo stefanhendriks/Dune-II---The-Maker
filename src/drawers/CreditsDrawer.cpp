@@ -13,7 +13,7 @@
 #include "context/GraphicsContext.hpp"
 #include "data/gfxaudio.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "include/cAssert.h"
 
 CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :

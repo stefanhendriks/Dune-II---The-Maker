@@ -3,7 +3,7 @@
 #include "game/cPlatformLayerInit.h"
 
 #include <string>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 struct DisplayResolution {
     int width;

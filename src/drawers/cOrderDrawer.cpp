@@ -11,7 +11,7 @@
 #include "utils/texture_utils.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "include/cAssert.h"
 
 cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :

@@ -2,7 +2,7 @@
 #include "drawers/cTextDrawer.h"
 #include "include/cAssert.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <algorithm>
 

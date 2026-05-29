@@ -6,7 +6,7 @@
 
 #include "include/enums.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 class Texture;
 
 // UNITS stuff
