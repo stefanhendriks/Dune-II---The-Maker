@@ -46,6 +46,7 @@ struct s_StructureInfo {
     int power_give;        // the power that this building gives...
 
     int sight;
+    int range;
 
     int fadecol;         // Fading color (if needed), -1 is none, > -1 means starting color
     int fademax;         // Max fading color (assuming fadecol < fademax)
