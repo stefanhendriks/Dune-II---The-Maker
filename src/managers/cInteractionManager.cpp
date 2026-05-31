@@ -80,24 +80,6 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
             break;
     }
 
-    // TODO: call state instead (get rid of this interaction manager thing, so we don't need to do this)
-    if (game.isState(GAME_PLAYING)) {
-        // now call all its other interested listeners
-        cGameControlsContext *pContext = m_player->getGameControlsContext();
-        pContext->onNotifyMouseEvent(mouseEvent); // must be first because other classes rely on this context
-
-        m_sidebar->onNotifyMouseEvent(mouseEvent);
-        game.m_mapCamera->onNotifyMouseEvent(mouseEvent);
-
-        // do like this because drawManager gets deleted/recreated
-        game.m_drawManager->getMiniMapDrawer()->onNotifyMouseEvent(mouseEvent);
-        game.m_drawManager->getOrderDrawer()->onNotify(mouseEvent);
-        cItemBuilder *pBuilder = m_player->getItemBuilder();
-        if (pBuilder) {
-            pBuilder->onNotifyMouseEvent(mouseEvent);
-        }
-    }
-
     // do like this because drawManager gets deleted/recreated
     game.m_drawManager->getMouseDrawer()->onNotify(mouseEvent);
 
@@ -109,16 +91,5 @@ void cInteractionManager::onNotifyMouseEvent(const s_MouseEvent &mouseEvent)
 
 void cInteractionManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
-    if (game.isState(GAME_PLAYING)) {
-        cGameControlsContext *pContext = m_player->getGameControlsContext();
-        pContext->onNotifyKeyboardEvent(event);
-
-        game.m_mapCamera->onNotifyKeyboardEvent(event);
-        cItemBuilder *pBuilder = m_player->getItemBuilder();
-        if (pBuilder) {
-            pBuilder->onNotifyKeyboardEvent(event);
-        }
-    }
-
     game.onNotifyKeyboardEvent(event);
 }
