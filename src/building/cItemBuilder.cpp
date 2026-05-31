@@ -823,14 +823,14 @@ void cItemBuilder::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cItemBuilder::onKeyHold(const cKeyboardEvent &event)
 {
-    if (event.hasEitherKey(SDL_SCANCODE_LSHIFT, SDL_SCANCODE_RSHIFT)) {
+    if (event.isShiftPressed()) {
         m_buildItemMultiplierEnabled = true;
     }
 }
 
 void cItemBuilder::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (event.hasEitherKey(SDL_SCANCODE_LSHIFT, SDL_SCANCODE_RSHIFT)) {
+    if (event.isShiftPressed()) {
         m_buildItemMultiplierEnabled = false;
     }
 }
