@@ -29,7 +29,6 @@ class cGameControlsContext;
 class cGameObjectContext;
 class cInfoContext;
 class cGameState;
-class cInteractionManager;
 class cPlatformLayerInit;
 class cPlayer;
 class cPlayers;
@@ -230,7 +229,6 @@ private:
 
     std::unique_ptr<cPlatformLayerInit> m_PLInit;
     std::unique_ptr<cScreenInit> m_Screen;
-    std::unique_ptr<cInteractionManager> m_interactionManager;
     std::unique_ptr<cFocusManager> m_focusManager;
 
     cSoundPlayer* m_soundPlayer;
