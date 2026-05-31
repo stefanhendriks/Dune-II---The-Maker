@@ -28,21 +28,21 @@ int cKeyboardEvent::getGroupNumber() const
     return 0;
 }
 
-bool cKeyboardEvent::isPrintable() const
-{
-    const size_t keyCount = m_keys.count();
-    if (keyCount == 0 || keyCount > 2) return false;
+// bool cKeyboardEvent::isPrintable() const
+// {
+//     const size_t keyCount = m_keys.count();
+//     if (keyCount == 0 || keyCount > 2) return false;
 
-    for (int sc = 0; sc < SDL_NUM_SCANCODES; ++sc) {
-        if (!m_keys.test(static_cast<size_t>(sc))) continue;
+//     for (int sc = 0; sc < SDL_NUM_SCANCODES; ++sc) {
+//         if (!m_keys.test(static_cast<size_t>(sc))) continue;
 
-        if (sc != SDL_SCANCODE_LSHIFT && sc != SDL_SCANCODE_RSHIFT) {
-            SDL_Keycode key = SDL_GetKeyFromScancode(static_cast<SDL_Scancode>(sc));
-            if (key >= 32 && key <= 126) return true;
-        }
-    }
-    return false;
-}
+//         if (sc != SDL_SCANCODE_LSHIFT && sc != SDL_SCANCODE_RSHIFT) {
+//             SDL_Keycode key = SDL_GetKeyFromScancode(static_cast<SDL_Scancode>(sc));
+//             if (key >= 32 && key <= 126) return true;
+//         }
+//     }
+//     return false;
+// }
 
 bool cKeyboardEvent::isBackspace() const
 {
