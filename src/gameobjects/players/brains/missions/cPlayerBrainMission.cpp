@@ -13,6 +13,7 @@
 #include "gameobjects/map/cMap.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "utils/common.h"
 #include <format>
 #include "include/cAssert.h"
 #include <algorithm>

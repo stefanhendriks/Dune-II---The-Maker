@@ -19,6 +19,7 @@
 #include "context/GameContext.hpp"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
+#include "utils/common.h"
 #include "drawers/cTextDrawer.h"
 
 #include <SDL2/SDL.h>

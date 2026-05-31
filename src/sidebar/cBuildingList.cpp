@@ -4,6 +4,7 @@
 #include "building/cItemBuilder.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
+#include "utils/common.h"
 
 #include <vector>
 

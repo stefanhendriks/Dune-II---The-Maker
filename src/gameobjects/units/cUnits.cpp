@@ -16,6 +16,7 @@
 #include "context/cGameObjectContext.h"
 #include "gameobjects/map/cMap.h"
 #include "include/d2tmc.h"
+#include "utils/common.h"
 #include "game/cGame.h"
 #include "utils/cLog.h"
 #include "utils/RNG.hpp"

@@ -4,6 +4,7 @@
 #include "data/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
+#include "utils/common.h"
 #include "gui/GuiButton.h"
 #include <iostream>
 #include "include/cAssert.h"

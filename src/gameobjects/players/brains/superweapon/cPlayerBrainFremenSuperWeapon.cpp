@@ -11,6 +11,7 @@
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "utils/RNG.hpp"
+#include "utils/common.h"
 #include <format>
 
 #include <algorithm>

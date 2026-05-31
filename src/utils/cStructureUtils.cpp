@@ -2,6 +2,7 @@
 #include "game/cGameSettings.h"
 #include "game/cGame.h"
 #include "include/d2tmc.h"
+#include "utils/common.h"
 #include "utils/cLog.h"
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"

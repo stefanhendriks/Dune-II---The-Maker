@@ -3,6 +3,9 @@
 #include "definitions.h"
 #include "cGameState.h"
 
+#include <array>
+#include <memory>
+
 
 class GuiButton;
 struct SDL_Surface;
