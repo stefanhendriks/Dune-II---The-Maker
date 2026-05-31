@@ -2,7 +2,7 @@
 
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 
 #include <memory>
 #include <vector>

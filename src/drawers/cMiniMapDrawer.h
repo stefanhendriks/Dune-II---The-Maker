@@ -11,7 +11,7 @@
 // #include "gameobjects/map/cMapCamera.h"
 #include "utils/cRectangle.h"
 #include "utils/Color.hpp"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 
 
 class cMap;

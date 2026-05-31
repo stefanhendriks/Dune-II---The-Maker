@@ -3,7 +3,7 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "controls/eKeyAction.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 #include <optional>
 #include <vector>
 #include <SDL2/SDL.h>

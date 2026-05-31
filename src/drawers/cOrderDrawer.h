@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 #include "utils/cRectangle.h"
 
 class cPlayer;

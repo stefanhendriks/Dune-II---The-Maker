@@ -1,7 +1,7 @@
 #pragma once
 
 #include "controls/cKeyboardEvent.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 
 class cInputObserver {
 public:
