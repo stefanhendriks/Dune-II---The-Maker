@@ -260,6 +260,20 @@ void cGamePlaying::draw() const
 
 void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    cGameControlsContext *pContext = m_controlledPlayer->getGameControlsContext();
+    pContext->onNotifyMouseEvent(event); // must be first because other classes rely on this context
+
+    m_controlledPlayer->getSideBar()->onNotifyMouseEvent(event);
+    m_mapCamera->onNotifyMouseEvent(event);
+
+    m_drawManager->getMiniMapDrawer()->onNotifyMouseEvent(event);
+    m_drawManager->getOrderDrawer()->onNotify(event);
+
+    cItemBuilder *pBuilder = m_controlledPlayer->getItemBuilder();
+    if (pBuilder) {
+        pBuilder->onNotifyMouseEvent(event);
+    }
+
     if (event.eventType == eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED && m_interface->getMouse()->isMapScrolling()) {
         m_trackedUnitIds.clear();
     }
@@ -272,6 +286,15 @@ eGameStateType cGamePlaying::getType()
 
 void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
+    cGameControlsContext *pContext = m_controlledPlayer->getGameControlsContext();
+    pContext->onNotifyKeyboardEvent(event);
+
+    m_mapCamera->onNotifyKeyboardEvent(event);
+    cItemBuilder *pBuilder = m_controlledPlayer->getItemBuilder();
+    if (pBuilder) {
+        pBuilder->onNotifyKeyboardEvent(event);
+    }
+
     logbook(event.toString());
 
     m_drawManager->onNotifyKeyboardEvent(event);
