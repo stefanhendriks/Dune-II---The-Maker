@@ -3,6 +3,25 @@
 #include "cKeyboardEvent.h"
 #include "utils/cIniFile.h"
 
+namespace {
+
+bool isValidScancode(SDL_Scancode scancode)
+{
+    return scancode >= 0 && scancode < SDL_NUM_SCANCODES;
+}
+
+size_t toScancodeIndex(SDL_Scancode scancode)
+{
+    return static_cast<size_t>(scancode);
+}
+
+bool isPressed(const std::bitset<SDL_NUM_SCANCODES> &keys, SDL_Scancode scancode)
+{
+    return isValidScancode(scancode) && keys.test(toScancodeIndex(scancode));
+}
+
+}
+
 cKeyboard::cKeyboard() :
     m_keyboardObserver(nullptr),
     m_keyBindings(nullptr),
@@ -32,33 +51,37 @@ void cKeyboard::handleEvent(const SDL_Event &event)
     }
 
     SDL_Scancode scancode = event.key.keysym.scancode;
+    if (!isValidScancode(scancode)) return;
+
+    const size_t index = toScancodeIndex(scancode);
     if (event.type == SDL_KEYDOWN && !event.key.repeat) {
-        m_keysPressed.insert(scancode);
+        m_keysPressed.set(index);
+        m_keysReleased.reset(index);
     }
     else if (event.type == SDL_KEYUP) {
-        m_keysPressed.erase(scancode);
-        m_keysReleased.insert(scancode);
+        m_keysPressed.reset(index);
+        m_keysReleased.set(index);
     }
 
-    m_currentCombo.altPressed   = m_keysPressed.count(SDL_SCANCODE_LALT)   || m_keysPressed.count(SDL_SCANCODE_RALT);
-    m_currentCombo.ctrlPressed  = m_keysPressed.count(SDL_SCANCODE_LCTRL)  || m_keysPressed.count(SDL_SCANCODE_RCTRL);
-    m_currentCombo.shiftPressed = m_keysPressed.count(SDL_SCANCODE_LSHIFT) || m_keysPressed.count(SDL_SCANCODE_RSHIFT);
+    m_currentCombo.altPressed   = isPressed(m_keysPressed, SDL_SCANCODE_LALT)   || isPressed(m_keysPressed, SDL_SCANCODE_RALT);
+    m_currentCombo.ctrlPressed  = isPressed(m_keysPressed, SDL_SCANCODE_LCTRL)  || isPressed(m_keysPressed, SDL_SCANCODE_RCTRL);
+    m_currentCombo.shiftPressed = isPressed(m_keysPressed, SDL_SCANCODE_LSHIFT) || isPressed(m_keysPressed, SDL_SCANCODE_RSHIFT);
 }
 
 void cKeyboard::updateState()
 {
-    static const std::set<SDL_Scancode> noKeys;
+    static const std::bitset<SDL_NUM_SCANCODES> noKeys;
 
     for (const auto &textInput : m_textInputs) {
         m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, noKeys, m_currentCombo, m_keyBindings.get(), textInput));
     }
     m_textInputs.clear();
 
-    if (!m_keysPressed.empty()) {
+    if (m_keysPressed.any()) {
         m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, m_keysPressed, m_currentCombo, m_keyBindings.get()));
     }
-    if (!m_keysReleased.empty()) {
+    if (m_keysReleased.any()) {
         m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, m_keysReleased, m_currentCombo, m_keyBindings.get()));
-        m_keysReleased.clear();
+        m_keysReleased.reset();
     }
 }

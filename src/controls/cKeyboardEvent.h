@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <set>
+#include <bitset>
 #include <format>
 
 #include "utils/cPoint.h"
@@ -14,14 +14,15 @@ class cKeyBindings;
 class cKeyboardEvent {
 
 public:
-    cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo,
+    cKeyboardEvent(eKeyEventType eventType, const std::bitset<SDL_NUM_SCANCODES> &keys, const s_KeysCombo &combo,
                 const cKeyBindings *keyBindings, std::string textInput = "");
 
     inline const std::string toString() const {
         std::string str= std::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(m_eventType));
         str.append("[");
-        for (auto aKey : m_keys) {
-            str.append(SDL_GetScancodeName(aKey));
+        for (int sc = 0; sc < SDL_NUM_SCANCODES; ++sc) {
+            if (!m_keys.test(static_cast<size_t>(sc))) continue;
+            str.append(SDL_GetScancodeName(static_cast<SDL_Scancode>(sc)));
         }
         str.append("]");
         if (!m_textInput.empty()) {
@@ -61,7 +62,8 @@ public:
 
     // Raw key checks — kept public during migration to isAction(); will be removed once all callers are converted.
     bool hasKey(SDL_Scancode scanCode) const {
-        return m_keys.find(scanCode) != m_keys.end();
+        if (scanCode < 0 || scanCode >= SDL_NUM_SCANCODES) return false;
+        return m_keys.test(static_cast<size_t>(scanCode));
     }
 
     bool hasKeys(SDL_Scancode firstScanCode, SDL_Scancode secondScanCode) const {
@@ -89,7 +91,7 @@ private:
     }
 
     eKeyEventType m_eventType = eKeyEventType::NONE;
-    const std::set<SDL_Scancode> &m_keys;
+    const std::bitset<SDL_NUM_SCANCODES> &m_keys;
     const s_KeysCombo &m_combo;
     const cKeyBindings *m_keyBindings;
     std::string m_textInput;

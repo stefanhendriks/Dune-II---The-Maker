@@ -229,7 +229,7 @@ void cKeyBindings::checkForClashes() const
     }
 }
 
-bool cKeyBindings::matches(const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo, eKeyAction action) const
+bool cKeyBindings::matches(const std::bitset<SDL_NUM_SCANCODES> &keys, const s_KeysCombo &combo, eKeyAction action) const
 {
     auto it = m_bindings.find(action);
     if (it == m_bindings.end()) return false;
@@ -253,7 +253,9 @@ bool cKeyBindings::matches(const std::set<SDL_Scancode> &keys, const s_KeysCombo
     if (!binding.requireShift && combo.shiftPressed && !keysContain(SDL_SCANCODE_LSHIFT, SDL_SCANCODE_RSHIFT)) return false;
 
     for (SDL_Scancode sc : binding.keys) {
-        if (keys.count(sc) > 0) return true;
+        if (sc >= 0 && sc < SDL_NUM_SCANCODES && keys.test(static_cast<size_t>(sc))) {
+            return true;
+        }
     }
     return false;
 }
