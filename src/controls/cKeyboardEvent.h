@@ -45,7 +45,7 @@ public:
      */
     bool isAction(eKeyAction action) const;
 
-    bool isPrintable() const;
+    // bool isPrintable() const;
     bool isBackspace() const;
     bool isEnter() const;
     bool isShiftPressed() const;
