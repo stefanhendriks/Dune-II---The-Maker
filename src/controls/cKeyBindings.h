@@ -1,7 +1,7 @@
 #pragma once
 
+#include <bitset>
 #include <map>
-#include <set>
 #include <vector>
 #include <string>
 #include <initializer_list>
@@ -27,7 +27,7 @@ public:
      * Returns true when the given key set and modifier combo match the binding for the given action.
      * Called internally by cKeyboardEvent::isAction().
      */
-    bool matches(const std::set<SDL_Scancode> &keys, const s_KeysCombo &combo, eKeyAction action) const;
+    bool matches(const std::bitset<SDL_NUM_SCANCODES> &keys, const s_KeysCombo &combo, eKeyAction action) const;
 
 private:
     std::map<eKeyAction, s_KeyBinding> m_bindings;

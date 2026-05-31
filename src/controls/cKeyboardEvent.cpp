@@ -1,7 +1,7 @@
 #include "cKeyboardEvent.h"
 #include "controls/cKeyBindings.h"
 
-cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::set<SDL_Scancode> &keys,
+cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::bitset<SDL_NUM_SCANCODES> &keys,
                                const s_KeysCombo &combo, const cKeyBindings *keyBindings, std::string textInput) :
     m_eventType(eventType),
     m_keys(keys),
@@ -30,10 +30,14 @@ int cKeyboardEvent::getGroupNumber() const
 
 bool cKeyboardEvent::isPrintable() const
 {
-    if (m_keys.empty() || m_keys.size() > 2) return false;
-    for (auto sc : m_keys) {
+    const size_t keyCount = m_keys.count();
+    if (keyCount == 0 || keyCount > 2) return false;
+
+    for (int sc = 0; sc < SDL_NUM_SCANCODES; ++sc) {
+        if (!m_keys.test(static_cast<size_t>(sc))) continue;
+
         if (sc != SDL_SCANCODE_LSHIFT && sc != SDL_SCANCODE_RSHIFT) {
-            SDL_Keycode key = SDL_GetKeyFromScancode(sc);
+            SDL_Keycode key = SDL_GetKeyFromScancode(static_cast<SDL_Scancode>(sc));
             if (key >= 32 && key <= 126) return true;
         }
     }

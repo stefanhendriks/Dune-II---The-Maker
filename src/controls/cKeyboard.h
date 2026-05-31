@@ -3,8 +3,8 @@
 #include "controls/eKeyboardEnum.h"
 #include "observers/cInputObserver.h"
 #include <SDL2/SDL.h>
+#include <bitset>
 #include <memory>
-#include <set>
 #include <vector>
 
 class cKeyBindings;
@@ -30,8 +30,8 @@ public:
 private:
     cInputObserver *m_keyboardObserver;
     std::unique_ptr<cKeyBindings> m_keyBindings;
-    std::set<SDL_Scancode> m_keysPressed;
-    std::set<SDL_Scancode> m_keysReleased;
+    std::bitset<SDL_NUM_SCANCODES> m_keysPressed;
+    std::bitset<SDL_NUM_SCANCODES> m_keysReleased;
     std::vector<std::string> m_textInputs;
     s_KeysCombo m_currentCombo;
 };
