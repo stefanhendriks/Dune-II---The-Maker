@@ -5,7 +5,7 @@
 #include "cMouseState.h"
 #include "sGameEvent.h"
 #include "sidebar/cBuildingListItem.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 
 class cGameControlsContext;
 class cPlayer;

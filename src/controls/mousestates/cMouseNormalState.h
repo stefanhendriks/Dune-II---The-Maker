@@ -2,7 +2,7 @@
 
 #include "cMouseState.h"
 #include "controls/cMouse.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 #include "controls/cKeyboardEvent.h"
 
 class cPlayer;

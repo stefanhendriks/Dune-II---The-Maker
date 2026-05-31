@@ -3,7 +3,7 @@
 #include "cGameState.h"
 #include "utils/cMatrix.h"
 #include "controls/cKeyboardEvent.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 #include "utils/cRectangle.h"
 
 #include <memory>

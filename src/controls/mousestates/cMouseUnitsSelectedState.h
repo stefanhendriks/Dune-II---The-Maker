@@ -4,7 +4,7 @@
 #include "controls/cMouse.h"
 #include "cMouseState.h"
 #include "sGameEvent.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 
 #include <vector>
 

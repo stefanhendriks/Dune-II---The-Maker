@@ -2,7 +2,7 @@
 
 #include "controls/cKeyboardEvent.h"
 #include "observers/cInputObserver.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 #include "include/eGameState.h"
 #include "include/sGameEvent.h"
 #include "include/sGameServices.h"

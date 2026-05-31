@@ -16,7 +16,7 @@
 #include "cBuildingList.h"
 #include "cBuildingListItem.h"
 #include "sGameEvent.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 
 class cPlayer;
 

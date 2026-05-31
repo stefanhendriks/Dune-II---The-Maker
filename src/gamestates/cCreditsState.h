@@ -3,7 +3,7 @@
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "gui/GuiButton.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 #include "utils/cPoint.h"
 
 #include <string>

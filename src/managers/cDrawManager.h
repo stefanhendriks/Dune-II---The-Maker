@@ -14,7 +14,7 @@
 #include "drawers/cStructureDrawer.h"
 
 #include "observers/cInputObserver.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 
 #include <memory>
 

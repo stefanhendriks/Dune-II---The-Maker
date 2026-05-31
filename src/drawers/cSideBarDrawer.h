@@ -4,7 +4,7 @@
 #include "cTextDrawer.h"
 #include "controls/cKeyboardEvent.h"
 #include "observers/cInputObserver.h"
-#include "sMouseEvent.h"
+#include "controls/sMouseEvent.h"
 
 class Texture;
 class cPlayer;
