@@ -262,17 +262,6 @@ enum eBuildingListItemState {
     UNAVAILABLE
 };
 
-enum eMouseEventType {
-    MOUSE_NONE,                 
-    MOUSE_MOVED_TO,             // Mouse moved to a position on screen
-    MOUSE_RIGHT_BUTTON_CLICKED, // When mouse button has been pressed down, and released; it becomes a "click"
-    MOUSE_LEFT_BUTTON_CLICKED,  // When mouse button has been pressed down, and released; it becomes a "click"
-    MOUSE_RIGHT_BUTTON_PRESSED, // If a mouse button has been pressed (held down)
-    MOUSE_LEFT_BUTTON_PRESSED,  // If a mouse button has been pressed (held down)
-    MOUSE_SCROLLED_UP,          // Mouse scroll wheel moved up
-    MOUSE_SCROLLED_DOWN         // Mouse scroll wheel moved down
-};
-
 
 // // Fading action for transitioning between states
 // enum eFadeAction {
