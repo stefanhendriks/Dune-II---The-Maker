@@ -57,7 +57,6 @@
 #include "include/sDataCampaign.h"
 #include "iniDefine.h"
 #include "managers/cDrawManager.h"
-#include "managers/cInteractionManager.h"
 #include "gameobjects/map/cPreviewMaps.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/map/cMap.h"
@@ -751,15 +750,12 @@ bool cGame::setupGame()
 
     m_drawManager = new cDrawManager(ctx.get(), humanPlayer);
 
-    // Must be after drawManager, because the cInteractionManager constructor depends on drawManager
-    m_interactionManager = std::make_unique<cInteractionManager>(humanPlayer);
-
     setupPlayers();
 
     playMusicByTypeForStateTransition(MUSIC_MENU);
 
-    m_mouse->setMouseObserver(m_interactionManager.get());
-    m_keyboard->setKeyboardObserver(m_interactionManager.get());
+    m_mouse->setMouseObserver(this);
+    m_keyboard->setKeyboardObserver(this);
 
     // I need m_renderDrawer to create cPreviewMaps
     // m_PreviewMaps = std::make_shared<cPreviewMaps>();
@@ -1149,7 +1145,6 @@ void cGame::thinkFast()
 void cGame::setPlayerToInteractFor(cPlayer *pPlayer)
 {
     m_controlledPlayer = pPlayer;
-    m_interactionManager->setPlayerToInteractFor(pPlayer);
 }
 
 void cGame::emitGameEvent(const s_GameEvent &event)
@@ -1210,6 +1205,11 @@ void cGame::setLoseFlags(int value)
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (m_drawManager) {
+        // keep mouse drawer updates before state handling to preserve legacy ordering
+        m_drawManager->getMouseDrawer()->onNotify(event);
+    }
+
     if (m_guiConsole->isVisible()) {
         m_guiConsole->onNotifyMouseEvent(event);
     }
