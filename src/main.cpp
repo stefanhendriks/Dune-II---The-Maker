@@ -17,6 +17,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/cHandleArgument.h"
+#include "utils/common.h"
 
 
 #include <string>

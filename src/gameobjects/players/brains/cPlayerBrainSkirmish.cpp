@@ -13,6 +13,7 @@
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
+#include "utils/common.h"
 #include "utils/RNG.hpp"
 #include <format>
 #include "include/cAssert.h"

@@ -2,6 +2,7 @@
 
 #include "utils/cLog.h"
 #include "game/cGame.h"
+#include "utils/common.h"
 #include "include/d2tmc.h"
 #include "sidebar/cBuildingList.h"
 #include "context/cInfoContext.h"

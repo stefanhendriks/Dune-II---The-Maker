@@ -9,6 +9,7 @@
 #include "gameobjects/players/cPlayers.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
+#include "utils/common.h"
 #include "drawers/cTextDrawer.h"
 #include <SDL2/SDL_ttf.h>
 #include "gui/GuiButton.h"

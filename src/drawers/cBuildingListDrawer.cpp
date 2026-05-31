@@ -11,6 +11,7 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "utils/common.h"
 
 #include <SDL2/SDL.h>
 #include <format>
