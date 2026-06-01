@@ -31,13 +31,13 @@ Read [the wiki](https://github.com/stefanhendriks/Dune-II---The-Maker/wiki) for 
 
 ## Prerequisites
 - `CMake` version 3.21 or higher
-- `GCC` version 11 or higher
+- `GCC` version 14 or higher
 
 Make sure you can run `make` (or `ninja`) from command line.
 
 ## Windows (MinGW)
-It currently depends on MinGW32. Make sure you also have GCC 11 installed,
-which you can do via MSYS2 (using `pacman`). GCC 11 is not installed by
+It currently depends on MinGW32. Make sure you also have GCC 14 installed,
+which you can do via MSYS2 (using `pacman`). GCC 14 is not installed by
 default in MinGW32!
 
 - git clone this project
@@ -88,10 +88,9 @@ OR create a new one (and make sure CMake points to that one), with the following
 Then make sure to (re)load `CmakeLists.txt`
 
 # Running
-Easiest is to run the executable from the root. Shared libraries that are required are: libalfont.dll, alleg42.dll, libwinpthread-1.dll and mscvr70.dll.
-The required pre-built library (Allegro 4) is in the [dll folder](https://github.com/stefanhendriks/Dune-II---The-Maker/tree/master/dll/mingw32).
-The library that is built with the project (AlFont) is copied to the build directory.
-libwinpthread-1.dll Could be on your MinGW path. If it is not on the path, copy it from your mingw32 installation.
+Run the executable from the project root. On Windows, the required SDL2 DLLs (SDL2.dll, SDL2_image.dll, SDL2_mixer.dll, SDL2_ttf.dll, libwinpthread-1.dll, msvcr70.dll) are bundled via `create_release.bat` into the `bin/` directory.
+
+Run `create_release.bat` (Windows) or `./create_release.sh` (Linux/macOS) once after building to produce a complete runnable package in `bin/`.
 
 # Project status
 See the [Project Board](https://github.com/stefanhendriks/Dune-II---The-Maker/projects/1) what's going on.
