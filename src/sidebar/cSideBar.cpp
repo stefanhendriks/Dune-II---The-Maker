@@ -243,8 +243,7 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
     // anything but the starport can 'build' things
     if (list->getType() != eListType::LIST_STARPORT) {
         if (!item->isPaused() &&
-            item->isBuilding() &&
-            !item->isTypeUpgrade()) { // cannot pause upgrades
+            item->isBuilding()) {
             item->pauseBuilding();
         }
         else {
