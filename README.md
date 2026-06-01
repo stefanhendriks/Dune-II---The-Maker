@@ -88,9 +88,7 @@ OR create a new one (and make sure CMake points to that one), with the following
 Then make sure to (re)load `CmakeLists.txt`
 
 # Running
-Run the executable from the project root. On Windows, the required SDL2 DLLs (SDL2.dll, SDL2_image.dll, SDL2_mixer.dll, SDL2_ttf.dll, libwinpthread-1.dll, msvcr70.dll) are bundled via `create_release.bat` into the `bin/` directory.
-
-Run `create_release.bat` (Windows) or `./create_release.sh` (Linux/macOS) once after building to produce a complete runnable package in `bin/`.
+Run `create_release.bat` (Windows) or `./create_release.sh` (Linux/macOS) once after building to produce a complete runnable package in `bin/`, including all required dependencies. Then run the executable from `bin/`.
 
 # Project status
 See the [Project Board](https://github.com/stefanhendriks/Dune-II---The-Maker/projects/1) what's going on.
