@@ -32,14 +32,14 @@ CONFIGURE_FILE (
 add_library(cpp_stacktrace INTERFACE)
 
 if(APPLE)
-    message(STATUS "Using pkg-config to locate SDL2 libraries on macOS")
+    message(STATUS "Using pkg-config to locate SDL3 libraries on macOS")
 
     find_package(PkgConfig REQUIRED)
 
-    pkg_check_modules(SDL2 REQUIRED sdl2)
-    pkg_check_modules(SDL2_IMAGE REQUIRED SDL2_image)
-    pkg_check_modules(SDL2_TTF REQUIRED SDL2_ttf)
-    pkg_check_modules(SDL2_MIXER REQUIRED SDL2_mixer)
+    pkg_check_modules(SDL3 REQUIRED sdl3)
+    pkg_check_modules(SDL3_IMAGE REQUIRED SDL3_image)
+    pkg_check_modules(SDL3_TTF REQUIRED SDL3_ttf)
+    pkg_check_modules(SDL3_MIXER REQUIRED SDL3_mixer)
 
     if(EXISTS "/opt/homebrew/bin/brew")
         set(HOMEBREW_PREFIX "/opt/homebrew")
@@ -56,28 +56,28 @@ if(APPLE)
     )
 
     include_directories(
-      ${SDL2_INCLUDE_DIRS}
-      ${SDL2_IMAGE_INCLUDE_DIRS}
-      ${SDL2_TTF_INCLUDE_DIRS}
-      ${SDL2_MIXER_INCLUDE_DIRS}
+      ${SDL3_INCLUDE_DIRS}
+      ${SDL3_IMAGE_INCLUDE_DIRS}
+      ${SDL3_TTF_INCLUDE_DIRS}
+      ${SDL3_MIXER_INCLUDE_DIRS}
     )
 
     link_directories(
-      ${SDL2_LIBRARY_DIRS}
-      ${SDL2_IMAGE_LIBRARY_DIRS}
-      ${SDL2_TTF_LIBRARY_DIRS}
-      ${SDL2_MIXER_LIBRARY_DIRS}
+      ${SDL3_LIBRARY_DIRS}
+      ${SDL3_IMAGE_LIBRARY_DIRS}
+      ${SDL3_TTF_LIBRARY_DIRS}
+      ${SDL3_MIXER_LIBRARY_DIRS}
     )
 
 else()
-    message(STATUS "Using CMake's find_package to locate SDL2 libraries")
+    message(STATUS "Using CMake's find_package to locate SDL3 libraries")
 
-    find_package(SDL2 REQUIRED)
-    find_package(SDL2_ttf REQUIRED)
-    find_package(SDL2_image REQUIRED)
-    find_package(SDL2_mixer REQUIRED)
+    find_package(SDL3 REQUIRED)
+    find_package(SDL3_ttf REQUIRED)
+    find_package(SDL3_image REQUIRED)
+    find_package(SDL3_mixer REQUIRED)
 
-    link_libraries(SDL2 SDL2_ttf SDL2_mixer SDL2_image)
+    link_libraries(SDL3 SDL3_ttf SDL3_mixer SDL3_image)
 endif()
 
 add_subdirectory(src)
@@ -91,7 +91,6 @@ target_include_directories(${PROJECT_NAME}
 	PRIVATE
     	${CMAKE_CURRENT_SOURCE_DIR}/src
     	${CMAKE_CURRENT_SOURCE_DIR}/src/include
-        /usr/local/include/SDL2
         /usr/local/include
 )
 
@@ -99,7 +98,7 @@ if (APPLE)
 
     target_compile_definitions(${PROJECT_NAME} PRIVATE D2TM_CLANG=1)
 
-    set(ALL_SDL_LIBS ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
+    set(ALL_SDL_LIBS ${SDL3_LIBRARIES} ${SDL3_IMAGE_LIBRARIES} ${SDL3_TTF_LIBRARIES} ${SDL3_MIXER_LIBRARIES})
     list(REMOVE_DUPLICATES ALL_SDL_LIBS)
     target_link_libraries(${PROJECT_NAME}
         PRIVATE
@@ -155,8 +154,7 @@ else()
     -static-libgcc
     -static-libstdc++
     -lmingw32
-    -lSDL2main
-    -lSDL2
+    -lSDL3
     -mwindows
   )
     target_link_options(cpp_stacktrace INTERFACE $<$<CONFIG:Debug>:/DEBUG>)
