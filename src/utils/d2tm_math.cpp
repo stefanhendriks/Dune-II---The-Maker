@@ -16,6 +16,7 @@
   */
 #include "d2tm_math.h"
 
+#include <cmath>
 #include <format>
 
 #include "common.h"
