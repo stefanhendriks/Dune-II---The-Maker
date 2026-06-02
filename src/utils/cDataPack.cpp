@@ -12,7 +12,7 @@ DataPack::DataPack(const std::string &packName)
 DataPack::~DataPack()
 {
     for (auto& [_, texture] : surfaceCache) {
-        if (texture) SDL_FreeSurface(texture);
+        if (texture) SDL_DestroySurface(texture);
     }
     for (auto& [_, music] : musicCache) {
         if (music) Mix_FreeMusic(music);
@@ -48,8 +48,8 @@ SDL_Surface *DataPack::getSurface(int index)
     auto it = surfaceCache.find(index);
     if (it != surfaceCache.end())
         return it->second;
-    SDL_RWops *tmp = reader->getData(index);
-    SDL_Surface *out = IMG_Load_RW(tmp, SDL_TRUE);
+    SDL_IOStream *tmp = reader->getData(index);
+    SDL_Surface *out = IMG_Load_IO(tmp, SDL_TRUE);
     if (!out) {
         printf("Failed to load image %i : %s\n", index, SDL_GetError());
     }
@@ -72,8 +72,8 @@ Mix_Music *DataPack::getMusic(int index)
     auto it = musicCache.find(index);
     if (it != musicCache.end())
         return it->second;
-    SDL_RWops *tmp = reader->getData(index);
-    Mix_Music *out = Mix_LoadMUS_RW(tmp, SDL_TRUE);
+    SDL_IOStream *tmp = reader->getData(index);
+    Mix_Music *out = Mix_LoadMUS_IO(tmp, SDL_TRUE);
     if (!out) {
         printf("Failed to load music %i : %s\n", index, SDL_GetError());
     }
@@ -96,8 +96,8 @@ Mix_Chunk *DataPack::getSample(int index)
     auto it = sampleCache.find(index);
     if (it != sampleCache.end())
         return it->second;
-    SDL_RWops *tmp = reader->getData(index);
-    Mix_Chunk *out = Mix_LoadWAV_RW(tmp, SDL_TRUE);
+    SDL_IOStream *tmp = reader->getData(index);
+    Mix_Chunk *out = Mix_LoadWAV_IO(tmp, SDL_TRUE);
     if (!out) {
         printf("Failed to load sample %i : %s\n", index, SDL_GetError());
     }
