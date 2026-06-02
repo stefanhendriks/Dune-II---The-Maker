@@ -350,23 +350,26 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
 
     // copy palette
     SDL_Palette *refPalette = SDL_GetSurfacePalette(referenceSurface);
-    if (refPalette && refPalette->ncolors > 0) {
-        SDL_SetPaletteColors(SDL_GetSurfacePalette(modifiableSurface),
-                             refPalette->colors,
-                             0,
-                             refPalette->ncolors);
-    }
-    else {
+    if (!refPalette || refPalette->ncolors <= 0) {
         SDL_Log("No palette in the original image!");
         SDL_DestroySurface(modifiableSurface);
         return nullptr;
     }
 
+    // SDL3 does not guarantee an auto-created palette on surfaces made via
+    // SDL_CreateSurface on all platforms. Create one explicitly and attach it.
+    SDL_Palette *palette = SDL_CreatePalette(refPalette->ncolors);
+    if (!palette) {
+        SDL_Log("Failed to create palette: %s", SDL_GetError());
+        SDL_DestroySurface(modifiableSurface);
+        return nullptr;
+    }
+    SDL_SetPaletteColors(palette, refPalette->colors, 0, refPalette->ncolors);
+
     // Apply optional palette swap if requested (caller decides swap start)
     if (paletteSwapStart > -1) {
         int start = paletteSwapStart;
         int s = 144; // original position (harkonnen)
-        SDL_Palette *palette = SDL_GetSurfacePalette(modifiableSurface);
         for (int j = start; j < (start + 7) && s < palette->ncolors; j++) {
             palette->colors[s].r = palette->colors[j].r;
             palette->colors[s].g = palette->colors[j].g;
@@ -374,13 +377,10 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
             palette->colors[s].a = palette->colors[j].a;
             s++;
         }
-        const SDL_Color *colors = palette->colors;
-        if (!SDL_SetPaletteColors(SDL_GetSurfacePalette(modifiableSurface), colors, 0, palette->ncolors)) {
-            SDL_Log("Error setting palette colors : %s", SDL_GetError());
-            SDL_DestroySurface(modifiableSurface);
-            return nullptr;
-        }
     }
+
+    SDL_SetSurfacePalette(modifiableSurface, palette);
+    SDL_DestroyPalette(palette); // surface now holds the reference
 
     // Step 3: Set the transparency index
     if (!SDL_SetSurfaceColorKey(modifiableSurface, true, paletteIndexForTransparency)) {
