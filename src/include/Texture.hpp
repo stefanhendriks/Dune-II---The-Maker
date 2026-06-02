@@ -3,7 +3,12 @@
 #include <memory>
 
 struct SDLTextureDeleter {
-    void operator()(SDL_Texture* t) const { if (t) SDL_DestroyTexture(t); }
+    // SDL3 crashes if SDL_DestroyTexture is called after SDL_Quit() (e.g. when
+    // Graphics globals outlive the renderer). Guard with SDL_WasInit so the
+    // deleter is a no-op once the video subsystem has been torn down.
+    void operator()(SDL_Texture* t) const {
+        if (t && SDL_WasInit(SDL_INIT_VIDEO)) SDL_DestroyTexture(t);
+    }
 };
 
 class Texture {
