@@ -34,30 +34,25 @@ class ReaderPack;
 
 class DataPack {
 public:
-    // read pack packName and load it on memory
-    DataPack(const std::string &packName);
+    // read pack packName and load it on memory; mixer required for audio loading
+    DataPack(const std::string &packName, MIX_Mixer *mixer);
     ~DataPack();
     // return a surface from his index in pack
     SDL_Surface *getSurface(int index);
     // return a surface from his name
     SDL_Surface *getSurface(const std::string &name);
-    // return index of a surface
+    // return index of a surface or audio
     int getIndexFromName(const std::string &name);
-    // return a music from his index in pack
-    Mix_Music *getMusic(int index);
-    // return a music from his name
-    Mix_Music *getMusic(const std::string &name);
-    // return a sample from his index in pack
-    Mix_Chunk *getSample(int index);
-    // return a sample from his name
-    Mix_Chunk *getSample(const std::string &name);
+    // return audio from his index in pack (music or sfx)
+    MIX_Audio *getAudio(int index);
+    // return audio from his name
+    MIX_Audio *getAudio(const std::string &name);
     // for debug
     void displayPackFile();
-    int getNumberOfFile() const; //should take a extension parameters
+    int getNumberOfFile() const;
 private:
     std::unique_ptr<ReaderPack> reader;
-    // for memory management
+    MIX_Mixer *m_mixer = nullptr;
     std::unordered_map<int, SDL_Surface *> surfaceCache;
-    std::unordered_map<int, Mix_Music *> musicCache;
-    std::unordered_map<int, Mix_Chunk *> sampleCache;
+    std::unordered_map<int, MIX_Audio *> audioCache;
 };

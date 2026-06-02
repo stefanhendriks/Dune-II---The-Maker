@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <SDL3_mixer/SDL_mixer.h>
 
 class cSoundData;
 
@@ -41,12 +42,14 @@ public:
     void setSoundEnabled(bool sm);
     bool getSoundEnabled() const {
         return m_isSoundEnabled;
-    }    
+    }
 
 private:
     std::unique_ptr<cSoundData> soundData;
-    int m_musicVolume;
-    int m_soundVolume;
-    bool m_isMusicEnabled;
-    bool m_isSoundEnabled;
+    MIX_Mixer *m_mixer = nullptr;
+    MIX_Track *m_musicTrack = nullptr;
+    int m_musicVolume = 0;
+    int m_soundVolume = 0;
+    bool m_isMusicEnabled = false;
+    bool m_isSoundEnabled = false;
 };

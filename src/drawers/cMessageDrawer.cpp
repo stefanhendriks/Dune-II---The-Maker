@@ -161,7 +161,7 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
 
     m_bmpBar = SDL_CreateSurface(desiredWidth, 30, SDL_PIXELFORMAT_RGBA32);
     auto color = SDL_MapRGBA(SDL_GetPixelFormatDetails(m_bmpBar->format), SDL_GetSurfacePalette(m_bmpBar), 255, 0, 255, 255);
-    SDL_FillRect(m_bmpBar, nullptr, color);
+    SDL_FillSurfaceRect(m_bmpBar, nullptr, color);
     SDL_BlitSurface(m_gfxinter->getSurface(MESSAGE_LEFT), nullptr, m_bmpBar, nullptr);
 
     for (int drawX = 11; drawX < m_bmpBar->w; drawX+= 55) {

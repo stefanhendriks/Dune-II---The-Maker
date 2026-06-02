@@ -37,9 +37,9 @@ if(APPLE)
     find_package(PkgConfig REQUIRED)
 
     pkg_check_modules(SDL3 REQUIRED sdl3)
-    pkg_check_modules(SDL3_IMAGE REQUIRED SDL3_image)
-    pkg_check_modules(SDL3_TTF REQUIRED SDL3_ttf)
-    pkg_check_modules(SDL3_MIXER REQUIRED SDL3_mixer)
+    pkg_check_modules(SDL3_IMAGE REQUIRED sdl3-image)
+    pkg_check_modules(SDL3_TTF REQUIRED sdl3-ttf)
+    pkg_check_modules(SDL3_MIXER REQUIRED sdl3-mixer)
 
     if(EXISTS "/opt/homebrew/bin/brew")
         set(HOMEBREW_PREFIX "/opt/homebrew")

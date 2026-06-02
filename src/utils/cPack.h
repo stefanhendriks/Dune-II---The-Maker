@@ -7,7 +7,6 @@
 
 
 #include <SDL3/SDL.h>
-#include <SDL3_mixer/SDL_mixer.h>
 
 struct FileInPack {
     std::string name;
