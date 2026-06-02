@@ -28,7 +28,7 @@ public:
     ReaderPack(const std::string &filename);
     ~ReaderPack();
     //! get raw ressources from PackFile by this index in the archive
-    SDL_RWops *getData(unsigned int index);
+    SDL_IOStream *getData(unsigned int index);
     //! get index from ressource named fileId
     int getIndexFromName(const std::string &fileId) const;
     //! print all files in Pack
@@ -43,7 +43,7 @@ private:
     void readFileLines();
     void readDataIntoMemory();
     std::unique_ptr<char[]> fileInMemory = nullptr;
-    std::unique_ptr<SDL_RWops, decltype(&SDL_RWclose)> rfp{nullptr, SDL_RWclose};  //rfp as readFilePack
+    std::unique_ptr<SDL_IOStream, decltype(&SDL_CloseIO)> rfp{nullptr, SDL_CloseIO};  //rfp as readFilePack
     std::string fpName;
     int fileInPak = 0;
     uint64_t sizeInMemory =0;
@@ -64,7 +64,7 @@ private:
     void writeHeader();
     void writeFileLines();
     void copyFile();
-    std::unique_ptr<SDL_RWops, decltype(&SDL_RWclose)> wfp{nullptr, SDL_RWclose}; //wfp as writeFilePack
+    std::unique_ptr<SDL_IOStream, decltype(&SDL_CloseIO)> wfp{nullptr, SDL_CloseIO}; //wfp as writeFilePack
     std::vector<FileInPack> fileInPack;
 };
 

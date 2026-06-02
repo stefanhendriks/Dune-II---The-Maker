@@ -25,12 +25,11 @@ const int extensionSize = 4; // "WAV", "JPG", ...
 
 
 
-
 ReaderPack::ReaderPack(const std::string &filename)
 {
     fpName = filename;
     if (readHeader()) {
-        sizeInMemory = SDL_RWsize(rfp.get()) - titleSize - nbrFilesSize - (fileNameSize+offsetSize)*fileInPak;
+        sizeInMemory = SDL_GetIOSize(rfp.get()) - titleSize - nbrFilesSize - (fileNameSize+offsetSize)*fileInPak;
         fileInMemory = std::make_unique<char[]>(sizeInMemory);
         readFileLines();
     }
@@ -47,26 +46,26 @@ void ReaderPack::readFileLines()
     for(int i=0; i<fileInPak; i++ ) {
         // file name
         char fileID[fileNameSize] {'\0'};
-        if (SDL_RWread(rfp.get(), fileID, fileNameSize, 1) != 1) {
+        if (SDL_ReadIO(rfp.get(), fileID, fileNameSize) != fileNameSize) {
             std::cerr << "Failed to read file ID for file " << i << std::endl;
             return;
         }
         // file extension
         char rawExt[4] = {0};
-        if (SDL_RWread(rfp.get(), rawExt, extensionSize, 1) != 1) {
+        if (SDL_ReadIO(rfp.get(), rawExt, extensionSize) != extensionSize) {
             std::cerr << "Failed to read extension for file " << i << std::endl;
             return;
         }
 
         // index offset
         uint32_t offsetFile;
-        if (SDL_RWread(rfp.get(), reinterpret_cast<char *>(&offsetFile), sizeof(offsetFile), 1) != 1) {
+        if (SDL_ReadIO(rfp.get(), reinterpret_cast<char *>(&offsetFile), sizeof(offsetFile)) != sizeof(offsetFile)) {
             std::cerr << "Failed to read file offset for file " << i << std::endl;
             return;
         }
         // index size
         uint32_t sizeFile;
-        if (SDL_RWread(rfp.get(), reinterpret_cast<char *>(&sizeFile), sizeof(sizeFile), 1) != 1) {
+        if (SDL_ReadIO(rfp.get(), reinterpret_cast<char *>(&sizeFile), sizeof(sizeFile)) != sizeof(sizeFile)) {
             std::cerr << "Failed to read file size for file " << i << std::endl;
             return;
         }
@@ -83,20 +82,20 @@ void ReaderPack::readFileLines()
 
 bool ReaderPack::readHeader()
 {
-    rfp.reset(SDL_RWFromFile(fpName.c_str(), "rb"));
+    rfp.reset(SDL_IOFromFile(fpName.c_str(), "rb"));
     if (!rfp) {
         std::cerr << "Failed to open file: " << fpName << " - " << SDL_GetError() << std::endl;
         return false;
     }
     char title[4+1]= {'\0'};
-    if (SDL_RWread(rfp.get(), &title, 4, 1) != 1 || strcmp(title, "D2TM") != 0) {
+    if (SDL_ReadIO(rfp.get(), &title, 4) != 4 || strcmp(title, "D2TM") != 0) {
         std::cerr << "Invalid file format: " << fpName << std::endl;
         rfp.reset();
         return false;
     }
 
     uint16_t nbrFiles;
-    if (SDL_RWread(rfp.get(), reinterpret_cast<char *>(&nbrFiles), sizeof(nbrFiles), 1) !=1) {
+    if (SDL_ReadIO(rfp.get(), reinterpret_cast<char *>(&nbrFiles), sizeof(nbrFiles)) != sizeof(nbrFiles)) {
         std::cerr << "Failed to read number of files: " << fpName << std::endl;
         rfp.reset();
         return false;
@@ -117,13 +116,13 @@ int ReaderPack::getIndexFromName(const std::string &fileId) const
         return -1;
 }
 
-SDL_RWops *ReaderPack::getData(unsigned int index)
+SDL_IOStream *ReaderPack::getData(unsigned int index)
 {
     if (index >= fileInPack.size()) {
         std::cerr << "Invalid index: " << index << std::endl;
         return nullptr;
     }
-    return SDL_RWFromMem( &fileInMemory[fileInPack[index].fileOffset], fileInPack[index].fileSize );
+    return SDL_IOFromConstMem( &fileInMemory[fileInPack[index].fileOffset], fileInPack[index].fileSize );
 }
 
 void ReaderPack::displayPackFile()
@@ -141,8 +140,8 @@ void ReaderPack::displayPackFile()
 void ReaderPack::readDataIntoMemory()
 {
     uint16_t firstData = titleSize + nbrFilesSize + (fileNameSize+extensionSize+offsetSize) * fileInPak;
-    SDL_RWseek(rfp.get(), firstData, RW_SEEK_SET );
-    SDL_RWread(rfp.get(), fileInMemory.get(), sizeInMemory, 1);
+    SDL_SeekIO(rfp.get(), firstData, SDL_IO_SEEK_SET );
+    SDL_ReadIO(rfp.get(), fileInMemory.get(), sizeInMemory);
 }
 
 // **********************
@@ -154,7 +153,7 @@ void ReaderPack::readDataIntoMemory()
 
 WriterPack::WriterPack(const std::string &packName)
 {
-    wfp.reset(SDL_RWFromFile(packName.c_str(), "wb"));
+    wfp.reset(SDL_IOFromFile(packName.c_str(), "wb"));
 }
 
 WriterPack::~WriterPack()
@@ -164,7 +163,7 @@ WriterPack::~WriterPack()
 
 bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
 {
-    SDL_RWops *file = SDL_RWFromFile(fileName.c_str(),"rb");
+    SDL_IOStream *file = SDL_IOFromFile(fileName.c_str(),"rb");
     if (file!=nullptr) {
 
         FileInPack tmp;
@@ -173,11 +172,11 @@ bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
         std::string ext = fileName.substr(fileName.find_last_of('.') + 1);
         std::transform(ext.begin(), ext.end(), ext.begin(), ::toupper);
         tmp.extension = ext.substr(0, 3);
-        tmp.fileSize = SDL_RWsize(file);
+        tmp.fileSize = SDL_GetIOSize(file);
         tmp.fileOffset = 0;
         fileInPack.push_back(tmp);
 
-        SDL_RWclose(file);
+        SDL_CloseIO(file);
         return true;
     }
     else
@@ -188,11 +187,11 @@ void WriterPack::writeHeader()
 {
     const char *str = "D2TM";
     size_t len = SDL_strlen(str);
-    if (SDL_RWwrite(wfp.get(), str, 1, len) != len) {
+    if (SDL_WriteIO(wfp.get(), str, len) != len) {
         printf("Couldn't fully write string\n");
     }
     uint16_t nbFiles = fileInPack.size();
-    SDL_RWwrite(wfp.get(), reinterpret_cast<const char *>(&nbFiles), sizeof(uint16_t), 1);
+    SDL_WriteIO(wfp.get(), reinterpret_cast<const char *>(&nbFiles), sizeof(uint16_t));
 }
 
 
@@ -211,7 +210,7 @@ void WriterPack::writeFileLines()
         // Copy fileSize to buffer
         memcpy(buffer + fileNameSize + extensionSize + sizeof(uint32_t), &tmp.fileSize, sizeof(uint32_t));
         // Write the buffer in one operation
-        if (SDL_RWwrite(wfp.get(), buffer, 1, sizeof(buffer)) != sizeof(buffer)) {
+        if (SDL_WriteIO(wfp.get(), buffer, sizeof(buffer)) != sizeof(buffer)) {
             std::cerr << "Failed to write file line for: " << tmp.fileId << std::endl;
         }
         // Update the offset for the next file
@@ -234,25 +233,25 @@ void WriterPack::displayPackFile()
 void WriterPack::copyFile()
 {
     for (const auto &tmp : fileInPack) {
-        std::unique_ptr<SDL_RWops, decltype(&SDL_RWclose)> wf(SDL_RWFromFile(tmp.name.c_str(), "rb"), SDL_RWclose);
+        std::unique_ptr<SDL_IOStream, decltype(&SDL_CloseIO)> wf(SDL_IOFromFile(tmp.name.c_str(), "rb"), SDL_CloseIO);
         if (!wf) {
             std::cerr << "Failed to open file: " << tmp.name << " - " << SDL_GetError() << std::endl;
-            continue; // Passer au fichier suivant
+            continue;
         }
-        Sint64 res_size = SDL_RWsize(wf.get());
+        Sint64 res_size = SDL_GetIOSize(wf.get());
         if (res_size <= 0) {
             std::cerr << "Invalid file size for: " << tmp.name << std::endl;
             continue;
         }
 
         std::vector<char> buffer(res_size);
-        Sint64 nb_read = SDL_RWread(wf.get(), buffer.data(), 1, res_size);
+        Sint64 nb_read = SDL_ReadIO(wf.get(), buffer.data(), res_size);
         if (nb_read != res_size) {
             std::cerr << "Failed to read file: " << tmp.name << std::endl;
             continue;
         }
 
-        Sint64 nb_written = SDL_RWwrite(wfp.get(), buffer.data(), 1, res_size);
+        Sint64 nb_written = SDL_WriteIO(wfp.get(), buffer.data(), res_size);
         if (nb_written != res_size) {
             std::cerr << "Failed to write file: " << tmp.name << std::endl;
         }
