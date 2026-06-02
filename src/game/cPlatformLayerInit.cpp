@@ -22,16 +22,16 @@ cPlatformLayerInit::cPlatformLayerInit()
         logger->log(LOG_INFO, COMP_SDL2, "SDL init", "Initialized successfully", OUTC_SUCCESS);
     }
 
-    if (!Mix_OpenAudio(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr)) {
-        logger->log(LOG_FATAL, COMP_SDL2, "SDL mixer", Mix_GetError(), OUTC_FAILED);
-        throw std::runtime_error(Mix_GetError());
+    if (!MIX_Init()) {
+        logger->log(LOG_FATAL, COMP_SDL2, "SDL mixer", SDL_GetError(), OUTC_FAILED);
+        throw std::runtime_error(SDL_GetError());
     }
     else {
         logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer", "Initialized successfully", OUTC_SUCCESS);
     }
 
     if (!TTF_Init()) {
-        logger->log(LOG_FATAL, COMP_SDL2, "SDL ttf", TTF_GetError(), OUTC_FAILED);
+        logger->log(LOG_FATAL, COMP_SDL2, "SDL ttf", SDL_GetError(), OUTC_FAILED);
     }
     else {
         logger->log(LOG_INFO, COMP_SDL2, "SDL_ttf", "Initialized successfully", OUTC_SUCCESS);
@@ -43,7 +43,7 @@ cPlatformLayerInit::~cPlatformLayerInit()
     cLogger *logger = cLogger::getInstance();
     logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Shutting down...");
     TTF_Quit();
-    Mix_CloseAudio();
+    MIX_Quit();
     logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer shutdown", "Thanks for playing!", OUTC_SUCCESS);
     SDL_Quit();
     logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Thanks for playing!", OUTC_SUCCESS);

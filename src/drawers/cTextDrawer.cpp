@@ -51,7 +51,7 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int y, Color color) c
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
+    TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
     int half = w / 2;
     int xPos = (game.m_gameSettings->getScreenW() / 2) - half;
     drawText(xPos, y, color, msg);
@@ -61,7 +61,7 @@ void cTextDrawer::drawTextCenteredInBox(const std::string &msg, int x, int y, in
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
+    TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
     int lenghtInPixels = w;
     int heightInPixels = h;
 
@@ -86,7 +86,7 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int x, int width, int
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
+    TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
     int lenghtInPixels = w;
     int half = lenghtInPixels / 2;
     int xPos = x + ((width / 2) - half);
@@ -107,7 +107,7 @@ void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int m
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
+    TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
     int lenghtInPixels = w;
     int x = game.m_gameSettings->getScreenW() - lenghtInPixels-margin;
     int y = game.m_gameSettings->getScreenH() - getFontHeight()-20-margin;
@@ -116,14 +116,14 @@ void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int m
 
 int cTextDrawer::getFontHeight() const
 {
-    return TTF_FontHeight(m_font);
+    return TTF_GetFontHeight(m_font);
 }
 
 void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int margin) const
 {
     if (msg.empty()) return;
     int w,h;
-    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
+    TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
     int y = game.m_gameSettings->getScreenH() - h-20-margin;
     drawText(margin, y, color, msg);
 }
@@ -131,7 +131,7 @@ void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int ma
 int cTextDrawer::getTextLength(const std::string &msg) const
 {
     int w,h;
-    TTF_SizeUTF8(m_font, msg.c_str(), &w, &h);
+    TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
     return w;
 }
 

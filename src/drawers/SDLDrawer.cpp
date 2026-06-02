@@ -22,7 +22,7 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
     SDL_FRect tmp = {(float)x, (float)y, (float)src->w, (float)src->h};
     SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    if (SDL_SetTextureAlphaMod(src->tex.get(), opacity)<0) {
+    if (!SDL_SetTextureAlphaMod(src->tex.get(), opacity)) {
         std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
     }
     SDL_RenderTexture(renderer, src->tex.get(), NULL, &tmp);
@@ -34,7 +34,7 @@ void SDLDrawer::renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint
     SDL_FRect tmp = {(float)x, (float)y, (float)w, (float)h};
     SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    if (SDL_SetTextureAlphaMod(tex, opacity)<0) {
+    if (!SDL_SetTextureAlphaMod(tex, opacity)) {
         std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
     }
     SDL_RenderTexture(renderer, tex, NULL, &tmp);
@@ -44,7 +44,7 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 {
     SDL_FRect tmp = {(float)x, (float)y, (float)src->w, (float)src->h};
     transparentColorKey = SDL_MapRGB(SDL_GetPixelFormatDetails(src->format), SDL_GetSurfacePalette(src), 255, 0, 255);
-    SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
+    SDL_SetSurfaceColorKey(src, true, transparentColorKey);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
         std::cerr << "error drawSprite : " << SDL_GetError();
@@ -58,7 +58,7 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 
 void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, Uint8 opacity)
 {
-    if (SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND) < 0) {
+    if (!SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND)) {
         std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
     }
     SDL_SetTextureAlphaMod(src->tex.get(), opacity);
@@ -69,7 +69,7 @@ void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle 
 
 void SDLDrawer::renderStrechFullSprite(Texture *src, cRectangle dest_pos, Uint8 opacity)
 {
-    if (SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND) < 0) {
+    if (!SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND)) {
         std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
     }
     SDL_SetTextureAlphaMod(src->tex.get(), opacity);
@@ -256,8 +256,8 @@ void SDLDrawer::FillWithColor(SDL_Surface *src, Color color)
                                      color.g,
                                      color.b,
                                      color.a);
-    int result = SDL_FillRect(src, NULL, mappedColor);
-    if (result < 0) {
+    bool result = SDL_FillSurfaceRect(src, NULL, mappedColor);
+    if (!result) {
         SDL_Log("SDL_FillRect failed to clear surface: %s", SDL_GetError());
     }
 }
@@ -269,7 +269,7 @@ void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, Color color)
                                      SDL_GetSurfacePalette(bmp),
                                      color.r, color.g, color.b, color.a);
 
-    if (SDL_LockSurface(bmp) < 0) {
+    if (!SDL_LockSurface(bmp)) {
         fprintf(stderr, "Error locking surface: %s\n", SDL_GetError());
         return;
     }
@@ -305,7 +305,7 @@ void SDLDrawer::beginDrawingToTexture(Texture* targetTexture)
     SDL_Texture* currentTarget = SDL_GetRenderTarget(renderer);
     renderTargetStack.push(currentTarget);
 
-    if (SDL_SetRenderTarget(renderer, targetTexture->tex.get()) < 0) {
+    if (!SDL_SetRenderTarget(renderer, targetTexture->tex.get())) {
         renderTargetStack.pop();
         throw std::runtime_error("Error changing render target: " + std::string(SDL_GetError()));
     }
@@ -318,7 +318,7 @@ void SDLDrawer::endDrawingToTexture()
     }
     SDL_Texture* previousTarget = renderTargetStack.top();
     renderTargetStack.pop();
-    if (SDL_SetRenderTarget(renderer, previousTarget) < 0) {
+    if (!SDL_SetRenderTarget(renderer, previousTarget)) {
         throw std::runtime_error("Error restoring default render target: " + std::string(SDL_GetError()));
     }
 }
@@ -375,7 +375,7 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
             s++;
         }
         const SDL_Color *colors = palette->colors;
-        if (SDL_SetPaletteColors(SDL_GetSurfacePalette(modifiableSurface), colors, 0, palette->ncolors) != 0) {
+        if (!SDL_SetPaletteColors(SDL_GetSurfacePalette(modifiableSurface), colors, 0, palette->ncolors)) {
             SDL_Log("Error setting palette colors : %s", SDL_GetError());
             SDL_DestroySurface(modifiableSurface);
             return nullptr;
@@ -383,7 +383,7 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
     }
 
     // Step 3: Set the transparency index
-    if (SDL_SetColorKey(modifiableSurface, SDL_TRUE, paletteIndexForTransparency) != 0) {
+    if (!SDL_SetSurfaceColorKey(modifiableSurface, true, paletteIndexForTransparency)) {
         SDL_Log("SDL_SetColorKey error : %s", SDL_GetError());
         SDL_DestroySurface(modifiableSurface);
         return nullptr;
