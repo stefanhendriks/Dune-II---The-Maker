@@ -79,7 +79,7 @@ void cTimeManager::onWindowFocusLost()
 void cTimeManager::onWindowFocusGained()
 {
     if (m_focusLostTime > 0) {
-        int lostTime = SDL_GetTicks() - m_focusLostTime;
+        Uint64 lostTime = SDL_GetTicks() - m_focusLostTime;
         // std::cout << "Focus regained, lost time: " << lostTime << " ms" << std::endl;
         m_focusLostTime = 0;
 
@@ -179,7 +179,7 @@ void cTimeManager::handleTimerCache()
 */
 void cTimeManager::processTime()
 {
-    uint64_t now = SDL_GetTicks64();
+    Uint64 now = SDL_GetTicks();
 
     while (now - m_timerUnits.lastTick >= m_timerUnits.tickDuration) {
         m_timerUnits.count++;
