@@ -71,6 +71,10 @@ public:
     [[nodiscard]] SDL_Rect toSDL() const {
         return SDL_Rect{topLeft.x, topLeft.y, width, height};
     }
+
+    [[nodiscard]] SDL_FRect toSDLF() const {
+        return SDL_FRect{(float)topLeft.x, (float)topLeft.y, (float)width, (float)height};
+    }
 private:
     cPoint topLeft;
     int width;

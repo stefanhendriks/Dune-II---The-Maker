@@ -19,31 +19,31 @@ SDLDrawer::~SDLDrawer()
 void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
 {
     if (src == nullptr) return;
-    SDL_Rect tmp = {x,y, src->w, src->h };
+    SDL_FRect tmp = {(float)x, (float)y, (float)src->w, (float)src->h};
     SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     if (SDL_SetTextureAlphaMod(src->tex.get(), opacity)<0) {
         std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
     }
-    SDL_RenderCopy(renderer, src->tex.get(), NULL, &tmp);
+    SDL_RenderTexture(renderer, src->tex.get(), NULL, &tmp);
 }
 
 void SDLDrawer::renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint8 opacity)
 {
     if (tex == nullptr) return;
-    SDL_Rect tmp = SDL_Rect{x,y,w,h};
+    SDL_FRect tmp = {(float)x, (float)y, (float)w, (float)h};
     SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     if (SDL_SetTextureAlphaMod(tex, opacity)<0) {
         std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
     }
-    SDL_RenderCopy(renderer, tex, NULL, &tmp);
+    SDL_RenderTexture(renderer, tex, NULL, &tmp);
 }
 
 void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 {
-    SDL_Rect tmp = {x,y,src->w, src->h};
-    transparentColorKey = SDL_MapRGB(src->format, 255, 0, 255);
+    SDL_FRect tmp = {(float)x, (float)y, (float)src->w, (float)src->h};
+    transparentColorKey = SDL_MapRGB(SDL_GetPixelFormatDetails(src->format), SDL_GetSurfacePalette(src), 255, 0, 255);
     SDL_SetColorKey(src, SDL_TRUE, transparentColorKey);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
     if (!texture) {
@@ -52,7 +52,7 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
     }
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetTextureAlphaMod(texture, opacity);
-    SDL_RenderCopy(renderer, texture, NULL, &tmp);
+    SDL_RenderTexture(renderer, texture, NULL, &tmp);
     SDL_DestroyTexture(texture);
 }
 
@@ -62,9 +62,9 @@ void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle 
         std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
     }
     SDL_SetTextureAlphaMod(src->tex.get(), opacity);
-    SDL_Rect srcRect = src_pos.toSDL();
-    SDL_Rect destRect = dest_pos.toSDL();
-    SDL_RenderCopy(renderer, src->tex.get(), &srcRect, &destRect);
+    SDL_FRect srcRect = src_pos.toSDLF();
+    SDL_FRect destRect = dest_pos.toSDLF();
+    SDL_RenderTexture(renderer, src->tex.get(), &srcRect, &destRect);
 }
 
 void SDLDrawer::renderStrechFullSprite(Texture *src, cRectangle dest_pos, Uint8 opacity)
@@ -73,15 +73,15 @@ void SDLDrawer::renderStrechFullSprite(Texture *src, cRectangle dest_pos, Uint8 
         std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
     }
     SDL_SetTextureAlphaMod(src->tex.get(), opacity);
-    SDL_Rect destRect = dest_pos.toSDL();
-    SDL_RenderCopy(renderer, src->tex.get(), nullptr, &destRect);
+    SDL_FRect destRect = dest_pos.toSDLF();
+    SDL_RenderTexture(renderer, src->tex.get(), nullptr, &destRect);
 }
 
 void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r, Uint8 g, Uint8 b, Uint8 opacity)
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_Rect carre = {x, y, width, height};
+    SDL_FRect carre = {(float)x, (float)y, (float)width, (float)height};
     SDL_RenderFillRect(renderer, &carre);
 }
 
@@ -94,8 +94,8 @@ void SDLDrawer::renderRectColor(int x, int y, int width, int height, Uint8 r, Ui
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_Rect carre = {x, y, width, height};
-    SDL_RenderDrawRect(renderer, &carre);
+    SDL_FRect carre = {(float)x, (float)y, (float)width, (float)height};
+    SDL_RenderRect(renderer, &carre);
 }
 
 void SDLDrawer::renderRectFillColor(const cRectangle &rect, Color color, Uint8 opacity)
@@ -122,13 +122,13 @@ void SDLDrawer::renderRectColor(const cRectangle &rect, Color color, unsigned ch
 
 void SDLDrawer::resetClippingFor()
 {
-    SDL_RenderSetClipRect(renderer, nullptr);
+    SDL_SetRenderClipRect(renderer, nullptr);
 }
 
 void SDLDrawer::setClippingFor(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
 {
     auto tmp = SDL_Rect{topLeftX,topLeftY, bottomRightX-topLeftX, bottomRightY - topLeftY};
-    SDL_RenderSetClipRect(renderer, &tmp);
+    SDL_SetRenderClipRect(renderer, &tmp);
 }
 
 void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow, Color gui_colorBorderLight, Color gui_colorBorderDark)
@@ -137,11 +137,11 @@ void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow,
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
-    SDL_Rect tmp = {x1, y1, width, height};
+    SDL_FRect tmp = {(float)x1, (float)y1, (float)width, (float)height};
     renderChangeColor(gui_colorWindow);
     SDL_RenderFillRect(renderer, &tmp);
     renderChangeColor(gui_colorBorderLight);
-    SDL_RenderDrawRect(renderer, &tmp);
+    SDL_RenderRect(renderer, &tmp);
 
     // lines to darken the right sides
     renderChangeColor(gui_colorBorderDark);
@@ -150,9 +150,9 @@ void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow,
     int endX = (x1 + width) - 1;
     int endY = (y1 + height) - 1;
 
-    SDL_RenderDrawLine(renderer, endX, y1, endX, endY);
+    SDL_RenderLine(renderer, (float)endX, (float)y1, (float)endX, (float)endY);
     renderChangeColor(gui_colorBorderDark);
-    SDL_RenderDrawLine(renderer, x1, endY, endX, endY);
+    SDL_RenderLine(renderer, (float)x1, (float)endY, (float)endX, (float)endY);
 }
 
 void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorBorderLight, Color gui_colorBorderDark)
@@ -161,18 +161,18 @@ void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorB
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
-    SDL_Rect tmp = {x1,y1,width,height};
+    SDL_FRect tmp = {(float)x1, (float)y1, (float)width, (float)height};
     renderChangeColor(gui_colorBorderLight);
-    SDL_RenderDrawRect(renderer, &tmp);
+    SDL_RenderRect(renderer, &tmp);
     renderChangeColor(gui_colorBorderDark);
 
     // SDL Lines are drawn *including* end coordinate, so need to subtract 1 to make it match
     // with the SDL_RenderFillRect and DrawRect functions.
     int endX = (x1 + width) - 1;
     int endY = (y1 + height) - 1;
-    SDL_RenderDrawLine(renderer, endX, y1, endX, endY);
+    SDL_RenderLine(renderer, (float)endX, (float)y1, (float)endX, (float)endY);
     renderChangeColor(gui_colorBorderDark);
-    SDL_RenderDrawLine(renderer, x1, endY, endX, endY);
+    SDL_RenderLine(renderer, (float)x1, (float)endY, (float)endX, (float)endY);
 }
 
 void SDLDrawer::renderClearToColor(Color color)
@@ -184,7 +184,7 @@ void SDLDrawer::renderClearToColor(Color color)
 void SDLDrawer::renderLine(int x1, int y1, int x2, int y2, Color color)
 {
     renderChangeColor(color);
-    SDL_RenderDrawLine(renderer,x1, y1, x2, y2);
+    SDL_RenderLine(renderer, (float)x1, (float)y1, (float)x2, (float)y2);
 }
 
 void SDLDrawer::renderDot(int x, int y, Color color, int size)
@@ -192,7 +192,7 @@ void SDLDrawer::renderDot(int x, int y, Color color, int size)
     if (size < 1) return;
     renderChangeColor(color);
     if (size == 1) {
-        SDL_RenderDrawPoint(renderer,x, y);
+        SDL_RenderPoint(renderer, (float)x, (float)y);
         return;
     }
 
@@ -200,7 +200,7 @@ void SDLDrawer::renderDot(int x, int y, Color color, int size)
     int endY = y + size;
     for (int sx = x; sx < endX; sx++) {
         for (int sy = y; sy < endY; sy++) {
-            SDL_RenderDrawPoint(renderer,sx, sy);
+            SDL_RenderPoint(renderer, (float)sx, (float)sy);
         }
     }
 }
@@ -210,33 +210,27 @@ bool SDLDrawer::isSurface8BitPaletted(SDL_Surface *bmp)
     if (bmp == nullptr) {
         return false;
     }
-    return bmp->format->BitsPerPixel == 8 && bmp->format->palette != nullptr;
+    return SDL_BITSPERPIXEL(bmp->format) == 8 && SDL_GetSurfacePalette(bmp) != nullptr;
 }
 
-// Fonction utilitaire pour dessiner un pixel sur une SDL_Surface
-// Assurez-vous que la surface est verrouillée avant d'appeler cette fonction !
+// Utility to draw a pixel on a SDL_Surface — surface must be locked before calling!
 void SDLDrawer::set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color)
 {
     if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
-        return; // Hors des limites de la surface
+        return;
     }
 
-    int bpp = surface->format->BytesPerPixel;
-    // Pointeur vers le début de la ligne y
+    int bpp = SDL_BYTESPERPIXEL(surface->format);
     Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch;
 
-    // Déplacer le pointeur jusqu'au pixel x
-    // On convertit Uint32 en la taille appropriée (1, 2, 3 ou 4 octets)
     switch (bpp) {
-        case 1: // 8 bits par pixel
+        case 1:
             *((Uint8 *)p + x) = (Uint8)pixel_color;
             break;
-        case 2: // 16 bits par pixel
+        case 2:
             *((Uint16 *)p + x) = (Uint16)pixel_color;
             break;
-        case 3: // 24 bits par pixel
-            // C'est un peu plus complexe car 3 octets ne s'alignent pas directement avec les types C
-            // Il faut copier octet par octet
+        case 3:
             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
                 *((Uint8 *)p + x * bpp + 0) = (pixel_color >> 16) & 0xFF;
                 *((Uint8 *)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
@@ -248,7 +242,7 @@ void SDLDrawer::set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color
                 *((Uint8 *)p + x * bpp + 2) = (pixel_color >> 16) & 0xFF;
             }
             break;
-        case 4: // 32 bits par pixel
+        case 4:
             *((Uint32 *)p + x) = pixel_color;
             break;
     }
@@ -256,7 +250,8 @@ void SDLDrawer::set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color
 
 void SDLDrawer::FillWithColor(SDL_Surface *src, Color color)
 {
-    Uint32 mappedColor = SDL_MapRGBA(src->format,
+    Uint32 mappedColor = SDL_MapRGBA(SDL_GetPixelFormatDetails(src->format),
+                                     SDL_GetSurfacePalette(src),
                                      color.r,
                                      color.g,
                                      color.b,
@@ -270,10 +265,10 @@ void SDLDrawer::FillWithColor(SDL_Surface *src, Color color)
 
 void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, Color color)
 {
-    Uint32 mappedColor = SDL_MapRGBA(bmp->format,
+    Uint32 mappedColor = SDL_MapRGBA(SDL_GetPixelFormatDetails(bmp->format),
+                                     SDL_GetSurfacePalette(bmp),
                                      color.r, color.g, color.b, color.a);
 
-    // Vérrouiller la surface avant de modifier les pixels
     if (SDL_LockSurface(bmp) < 0) {
         fprintf(stderr, "Error locking surface: %s\n", SDL_GetError());
         return;
@@ -333,7 +328,7 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
     d2tm_assert(referenceSurface && "referenceSurface must be given");
 
     // Step 1: Create a copy of the surface (same INDEX8 format)
-    SDL_Surface *modifiableSurface = SDL_CreateRGBSurfaceWithFormat(0, referenceSurface->w, referenceSurface->h, 8, SDL_PIXELFORMAT_INDEX8);
+    SDL_Surface *modifiableSurface = SDL_CreateSurface(referenceSurface->w, referenceSurface->h, SDL_PIXELFORMAT_INDEX8);
     if (!modifiableSurface) {
         SDL_Log("Error copying surface : %s", SDL_GetError());
         return nullptr;
@@ -342,29 +337,28 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
     // Copy pixels
     SDL_LockSurface(referenceSurface);
     SDL_LockSurface(modifiableSurface);
-//    memcpy(modifiableSurface->pixels, referenceSurface->pixels, referenceSurface->h * referenceSurface->pitch);
     Uint8* src = (Uint8*)referenceSurface->pixels;
     Uint8* dst = (Uint8*)modifiableSurface->pixels;
 
     for (int y = 0; y < referenceSurface->h; y++) {
         memcpy(dst + y * modifiableSurface->pitch,
                src + y * referenceSurface->pitch,
-            referenceSurface->w); // 8 bits = 1 byte par pixel
+            referenceSurface->w); // 8 bits = 1 byte per pixel
     }
     SDL_UnlockSurface(referenceSurface);
     SDL_UnlockSurface(modifiableSurface);
 
     // copy palette
-    if (referenceSurface->format->palette &&
-        referenceSurface->format->palette->ncolors > 0) {
-        SDL_SetPaletteColors(modifiableSurface->format->palette,
-                             referenceSurface->format->palette->colors,
+    SDL_Palette *refPalette = SDL_GetSurfacePalette(referenceSurface);
+    if (refPalette && refPalette->ncolors > 0) {
+        SDL_SetPaletteColors(SDL_GetSurfacePalette(modifiableSurface),
+                             refPalette->colors,
                              0,
-                             referenceSurface->format->palette->ncolors);
+                             refPalette->ncolors);
     }
     else {
         SDL_Log("No palette in the original image!");
-        SDL_FreeSurface(modifiableSurface);
+        SDL_DestroySurface(modifiableSurface);
         return nullptr;
     }
 
@@ -372,7 +366,7 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
     if (paletteSwapStart > -1) {
         int start = paletteSwapStart;
         int s = 144; // original position (harkonnen)
-        SDL_Palette *palette = modifiableSurface->format->palette;
+        SDL_Palette *palette = SDL_GetSurfacePalette(modifiableSurface);
         for (int j = start; j < (start + 7) && s < palette->ncolors; j++) {
             palette->colors[s].r = palette->colors[j].r;
             palette->colors[s].g = palette->colors[j].g;
@@ -381,9 +375,9 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
             s++;
         }
         const SDL_Color *colors = palette->colors;
-        if (SDL_SetPaletteColors(modifiableSurface->format->palette, colors, 0, palette->ncolors) != 0) {
+        if (SDL_SetPaletteColors(SDL_GetSurfacePalette(modifiableSurface), colors, 0, palette->ncolors) != 0) {
             SDL_Log("Error setting palette colors : %s", SDL_GetError());
-            SDL_FreeSurface(modifiableSurface);
+            SDL_DestroySurface(modifiableSurface);
             return nullptr;
         }
     }
@@ -391,15 +385,15 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
     // Step 3: Set the transparency index
     if (SDL_SetColorKey(modifiableSurface, SDL_TRUE, paletteIndexForTransparency) != 0) {
         SDL_Log("SDL_SetColorKey error : %s", SDL_GetError());
-        SDL_FreeSurface(modifiableSurface);
+        SDL_DestroySurface(modifiableSurface);
         return nullptr;
     }
 
     // Step 4: Convert to RGBA8888 to create the texture with alpha
-    SDL_Surface *rgbaSurface = SDL_ConvertSurfaceFormat(modifiableSurface, SDL_PIXELFORMAT_RGBA8888, 0);
-    SDL_FreeSurface(modifiableSurface);
+    SDL_Surface *rgbaSurface = SDL_ConvertSurface(modifiableSurface, SDL_PIXELFORMAT_RGBA8888);
+    SDL_DestroySurface(modifiableSurface);
     if (!rgbaSurface) {
-        SDL_Log("SDL_ConvertSurfaceFormat error : %s", SDL_GetError());
+        SDL_Log("SDL_ConvertSurface error : %s", SDL_GetError());
         return nullptr;
     }
 
@@ -407,11 +401,11 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, rgbaSurface);
     if (!texture) {
         SDL_Log("SDL_CreateTextureFromSurface error : %s", SDL_GetError());
-        SDL_FreeSurface(rgbaSurface);
+        SDL_DestroySurface(rgbaSurface);
         return nullptr;
     }
 
     auto *newTexture = new Texture(texture, rgbaSurface->w, rgbaSurface->h);
-    SDL_FreeSurface(rgbaSurface);
+    SDL_DestroySurface(rgbaSurface);
     return newTexture;
 }
