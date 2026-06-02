@@ -14,27 +14,27 @@ cPlatformLayerInit::cPlatformLayerInit()
     cLogger *logger = cLogger::getInstance();
     logger->logHeader("SDL");
 
-    if (SDL_Init(SDL_INIT_EVERYTHING)< 0) {
-        logger->log(LOG_FATAL, COMP_SDL2, "SDL2 init", SDL_GetError(), OUTC_FAILED);
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS)) {
+        logger->log(LOG_FATAL, COMP_SDL2, "SDL init", SDL_GetError(), OUTC_FAILED);
         throw std::runtime_error(SDL_GetError());
     }
     else {
-        logger->log(LOG_INFO, COMP_SDL2, "SDL2 init", "Initialized successfully", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SDL2, "SDL init", "Initialized successfully", OUTC_SUCCESS);
     }
 
-    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) { //Initialisation de l'API Mixer
-        logger->log(LOG_FATAL, COMP_SDL2, "SDL2 mixer", Mix_GetError(), OUTC_FAILED);
+    if (!Mix_OpenAudio(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr)) {
+        logger->log(LOG_FATAL, COMP_SDL2, "SDL mixer", Mix_GetError(), OUTC_FAILED);
         throw std::runtime_error(Mix_GetError());
     }
     else {
-        logger->log(LOG_INFO, COMP_SDL2, "SDL2_mixer", "Initialized successfully", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer", "Initialized successfully", OUTC_SUCCESS);
     }
 
-    if (TTF_Init() < 0) {
-        logger->log(LOG_FATAL, COMP_SDL2, "SDL2 ttf", TTF_GetError(), OUTC_FAILED);
+    if (!TTF_Init()) {
+        logger->log(LOG_FATAL, COMP_SDL2, "SDL ttf", TTF_GetError(), OUTC_FAILED);
     }
     else {
-        logger->log(LOG_INFO, COMP_SDL2, "SDL2_ttf", "Initialized successfully", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SDL2, "SDL_ttf", "Initialized successfully", OUTC_SUCCESS);
     }
 }
 
@@ -44,7 +44,7 @@ cPlatformLayerInit::~cPlatformLayerInit()
     logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Shutting down...");
     TTF_Quit();
     Mix_CloseAudio();
-    logger->log(LOG_INFO, COMP_SDL2, "SDL2_mixer shutdown", "Thanks for playing!", OUTC_SUCCESS);
+    logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer shutdown", "Thanks for playing!", OUTC_SUCCESS);
     SDL_Quit();
-    logger->log(LOG_INFO, COMP_SDL2, "SDL2 shutdown", "Thanks for playing!", OUTC_SUCCESS);
+    logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Thanks for playing!", OUTC_SUCCESS);
 }
