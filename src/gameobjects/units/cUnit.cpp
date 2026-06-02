@@ -33,7 +33,7 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <format>
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/units/cPathFinder.h"

@@ -6,7 +6,7 @@
 #include <string>
 #include <array>
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 class Texture;
 

@@ -6,7 +6,7 @@
 
 #include <format>
 #include <chrono>
-#include <SDL2/SDL_timer.h>
+#include <SDL3/SDL.h>
 #include <algorithm>
 #include <platform.h>
 #include "include/cAssert.h"

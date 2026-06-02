@@ -19,7 +19,7 @@
 #include "game/cGameInterface.h"
 #include "drawers/cTextDrawer.h"
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <iostream>
 #include <format>
 #include "include/cAssert.h"

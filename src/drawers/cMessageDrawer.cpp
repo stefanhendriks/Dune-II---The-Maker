@@ -9,7 +9,7 @@
 #include "context/GraphicsContext.hpp"
 #include "game/cGameSettings.h"
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include "include/cAssert.h"
 
 // Game Playing State and SelectYourNextConquestState have their own version

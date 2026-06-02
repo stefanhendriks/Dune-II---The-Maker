@@ -16,7 +16,7 @@
 #include <string>
 #include <array>
 #include <memory>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 struct InitialGameSettings;
 
