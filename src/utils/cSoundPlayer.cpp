@@ -59,12 +59,12 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
 
     auto logger = cLogger::getInstance();
 
-    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
-        logger->log(LOG_ERROR, COMP_SOUND, "SDL2_mixer initialization", Mix_GetError(), OUTC_FAILED);
+    if (!Mix_OpenAudio(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr)) {
+        logger->log(LOG_ERROR, COMP_SOUND, "SDL_mixer initialization", Mix_GetError(), OUTC_FAILED);
         m_isMusicEnabled = false;
         m_isSoundEnabled = false;
     } else {
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL2_mixer succes", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL_mixer succes", OUTC_SUCCESS);
         m_isMusicEnabled = true;
         m_isSoundEnabled = true;
     }
