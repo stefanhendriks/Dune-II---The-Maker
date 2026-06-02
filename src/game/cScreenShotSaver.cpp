@@ -21,22 +21,15 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
     try {
         screenCount++;
         std::string filename = std::format("{}_{}x{}_{:0>4}.png", getBaseFileName(), width, height, screenCount);
-        int rw, rh;
-        SDL_GetRendererOutputSize(renderer, &rw, &rh);
-        SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, rw, rh, 32, SDL_PIXELFORMAT_RGBA32);
+        SDL_Surface* surface = SDL_RenderReadPixels(renderer, NULL);
         if (!surface) {
-            cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("Error creating surface: {}", SDL_GetError()), OUTC_FAILED);
-            return false;
-        }
-        if (SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_RGBA32, surface->pixels, surface->pitch) != 0) {
             cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("Error reading pixels: {}", SDL_GetError()), OUTC_FAILED);
-            SDL_FreeSurface(surface);
             return false;
         }
         if (IMG_SavePNG(surface, filename.c_str()) != 0) {
             cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("IMG_SavePNG error: {}", SDL_GetError()), OUTC_FAILED);
         }
-        SDL_FreeSurface(surface);
+        SDL_DestroySurface(surface);
         return true;
     }
     catch (const std::exception& e) {
