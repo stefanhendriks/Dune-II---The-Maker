@@ -287,7 +287,7 @@ void cPlayer::setHouse(int iHouse)
             // flash bitmaps are structure type index * 2
             if (structureType.flash) {
                 int j = MAX_STRUCTURETYPES + i;
-                SDL_Surface *bitmap = SDL_CreateRGBSurface(0, structureType.bmp->w, structureType.bmp->h,32,0,0,0,255);
+                SDL_Surface *bitmap = SDL_CreateSurface(structureType.bmp->w, structureType.bmp->h, SDL_PIXELFORMAT_RGBA32);
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }

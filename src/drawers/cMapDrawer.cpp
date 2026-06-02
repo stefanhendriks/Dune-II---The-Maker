@@ -109,8 +109,8 @@ void cMapDrawer::drawTerrain()
     int mouseCell = m_player->getGameControlsContext()->getMouseCell();
 
     // cache for invalid terran
-    auto invalidTile = SDL_CreateRGBSurfaceWithFormat(0, 32, 32, 32, SDL_PIXELFORMAT_ARGB8888);
-    Uint32 mappedColor = SDL_MapRGBA(invalidTile->format, 245, 245, 245, 255);
+    auto invalidTile = SDL_CreateSurface(32, 32, SDL_PIXELFORMAT_ARGB8888);
+    Uint32 mappedColor = SDL_MapRGBA(SDL_GetPixelFormatDetails(invalidTile->format), SDL_GetSurfacePalette(invalidTile), 245, 245, 245, 255);
     SDL_FillRect(invalidTile, nullptr, mappedColor);
 
     // draw vertical rows..

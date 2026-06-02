@@ -32,9 +32,9 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
         return 0;
     }
 
-    if (surface->format->format != SDL_PIXELFORMAT_INDEX8) {
+    if (surface->format != SDL_PIXELFORMAT_INDEX8) {
         std::cerr << "Error : no indexed 8 bits surface (format actuel : "
-                  << SDL_GetPixelFormatName(surface->format->format) << ")." << std::endl;
+                  << SDL_GetPixelFormatName(surface->format) << ")." << std::endl;
         return 0;
     }
 

@@ -1252,7 +1252,7 @@ void cSetupSkirmishState::generateRandomMap()
     randomMap->terrainType = std::vector<int>(maxCells, -1);
 
     if (randomMap->terrain == nullptr) {
-        randomMap->terrain = SDL_CreateRGBSurface(0, randomMapWidth, randomMapHeight,32,0,0,0,255);
+        randomMap->terrain = SDL_CreateSurface(randomMapWidth, randomMapHeight, SDL_PIXELFORMAT_RGBA32);
     }
 
     // delete any preview texture if it exists
