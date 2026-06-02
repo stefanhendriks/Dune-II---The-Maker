@@ -90,7 +90,7 @@ private:
     int m_fps = 0;			    // Frames per second
     int m_frameCount = 0;	    // Frame count for FPS calculation
     int m_waitingTime = 10;	    // Waiting time in ms, used to adapt FPS
-    int m_focusLostTime = 0;    // Time when focus was lost, used to calculate time to catch up when focus is regained
+    Uint64 m_focusLostTime = 0;  // Time when focus was lost, used to calculate time to catch up when focus is regained
 
     std::unique_ptr<cTimeCounter> m_timeCounter;
 };
