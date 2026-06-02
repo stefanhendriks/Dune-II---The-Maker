@@ -1,8 +1,8 @@
 #pragma once
 
 #include "utils/Color.hpp"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 #include <unordered_map>
 #include <memory>

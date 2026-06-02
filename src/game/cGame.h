@@ -22,8 +22,8 @@
 
 #include <memory>
 #include <string>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
+#include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 class cGameControlsContext;
 class cGameObjectContext;

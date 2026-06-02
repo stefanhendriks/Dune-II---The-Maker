@@ -22,8 +22,8 @@
 #include "utils/common.h"
 #include "drawers/cTextDrawer.h"
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <format>
 #include "include/cAssert.h"
 

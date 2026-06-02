@@ -11,7 +11,7 @@
 #include <memory>
 #include <stdexcept>
 
-#include <SDL2/SDL_mixer.h>
+#include <SDL3_mixer/SDL_mixer.h>
 #include <algorithm> // for std::clamp
 
 namespace {

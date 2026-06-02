@@ -31,7 +31,7 @@
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
 #include "utils/RNG.hpp"
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <format>
 
 #include "data/gfxaudio.h"

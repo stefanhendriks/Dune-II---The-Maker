@@ -12,7 +12,7 @@
 #include "context/GameContext.hpp"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include "managers/cDrawManager.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"

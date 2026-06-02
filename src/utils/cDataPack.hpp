@@ -1,9 +1,9 @@
 #pragma once
 
-#include <SDL2/SDL_mixer.h>
+#include <SDL3_mixer/SDL_mixer.h>
 #include <string>
 #include <memory>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <unordered_map>
 
 // **********************

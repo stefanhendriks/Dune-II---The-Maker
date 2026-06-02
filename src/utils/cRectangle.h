@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cPoint.h"
-#include <SDL2/SDL_rect.h>
+#include <SDL3/SDL.h>
 
 class cRectangle {
 public:

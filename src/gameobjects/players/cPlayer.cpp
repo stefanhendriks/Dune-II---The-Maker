@@ -25,7 +25,7 @@
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <format>
 #include <iostream>
 

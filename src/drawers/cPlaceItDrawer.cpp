@@ -14,7 +14,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 
 #include "include/cAssert.h"
 

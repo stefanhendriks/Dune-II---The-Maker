@@ -192,3 +192,17 @@ From comments in `cGame.h`:
 - produce small PR's (a very limited set of changes)
 - branch names are usually: `<prefix>/<ticket-githubnr here>/<short-description-of-feature>`
   - prefixes can be `feature` (new feature), `bugfix` or `improv` (for technical improvements usually)
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues (`stefanhendriks/Dune-II---The-Maker`). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default canonical label vocabulary (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout: `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

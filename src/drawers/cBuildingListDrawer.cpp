@@ -13,7 +13,7 @@
 #include "context/cGameObjectContext.h"
 #include "utils/common.h"
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <format>
 #include "include/cAssert.h"
 

@@ -5,7 +5,7 @@
 
 #include <map>
 #include <memory>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <stack>
 
 class Texture;

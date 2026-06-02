@@ -13,7 +13,7 @@
 #include "sidebar/cSideBar.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/Graphics.hpp"
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include "gameobjects/map/MapGeometry.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"

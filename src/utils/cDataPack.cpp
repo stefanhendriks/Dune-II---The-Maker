@@ -2,7 +2,7 @@
 #include "cPack.h"
 #include <iostream>
 #include <iomanip>
-#include <SDL2/SDL_image.h>
+#include <SDL3_image/SDL_image.h>
 
 DataPack::DataPack(const std::string &packName)
 {

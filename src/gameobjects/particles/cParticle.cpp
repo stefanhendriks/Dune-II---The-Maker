@@ -26,7 +26,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <iostream>
 
 std::map<std::pair<int, int>, Texture*> cParticle::particleTextureCache = {};

@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "utils/cIniFile.h"
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include "utils/Color.hpp"
 
 #define MAX_HOUSES        12      // 12 different type of houses

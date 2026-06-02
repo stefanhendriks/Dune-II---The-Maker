@@ -11,7 +11,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
 #include "drawers/cTextDrawer.h"
-#include <SDL2/SDL_ttf.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
 #include "context/cInfoContext.h"
