@@ -11,7 +11,8 @@ public:
 
     void setEnabled(bool value);
     [[nodiscard]] bool isEnabled() const;
-    void onWindowsFocus(const SDL_WindowEvent& event);
+    void onWindowFocusLost();
+    void onWindowFocusGained();
     [[nodiscard]] bool isGameWindowActive() const;
 private:
     bool m_enabled = false;

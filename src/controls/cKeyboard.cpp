@@ -43,22 +43,22 @@ void cKeyboard::loadKeyBindings(const cSection *section)
 
 void cKeyboard::handleEvent(const SDL_Event &event)
 {
-    if (event.type == SDL_TEXTINPUT) {
+    if (event.type == SDL_EVENT_TEXT_INPUT) {
         if (event.text.text[0] != '\0') {
             m_textInputs.emplace_back(event.text.text);
         }
         return;
     }
 
-    SDL_Scancode scancode = event.key.keysym.scancode;
+    SDL_Scancode scancode = event.key.scancode;
     if (!isValidScancode(scancode)) return;
 
     const size_t index = toScancodeIndex(scancode);
-    if (event.type == SDL_KEYDOWN && !event.key.repeat) {
+    if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat) {
         m_keysPressed.set(index);
         m_keysReleased.reset(index);
     }
-    else if (event.type == SDL_KEYUP) {
+    else if (event.type == SDL_EVENT_KEY_UP) {
         m_keysPressed.reset(index);
         m_keysReleased.set(index);
     }

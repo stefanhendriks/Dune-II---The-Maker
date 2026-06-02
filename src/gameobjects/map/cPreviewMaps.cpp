@@ -54,7 +54,7 @@ void cPreviewMaps::destroy()
             continue;
         }
         if (previewMap->terrain) {
-            SDL_FreeSurface(previewMap->terrain);
+            SDL_DestroySurface(previewMap->terrain);
             previewMap->terrain = nullptr;
         }
         if (previewMap->previewTex) {
@@ -125,7 +125,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     previewMap->terrainType = std::vector<int>(maxCells, -1);
 
     if (previewMap->terrain == nullptr) {
-        previewMap->terrain = SDL_CreateRGBSurface(0,previewMap->width, previewMap->height,32,0,0,0,255);
+        previewMap->terrain = SDL_CreateSurface(previewMap->width, previewMap->height, SDL_PIXELFORMAT_RGBA32);
     }
     m_renderDrawer->FillWithColor(previewMap->terrain, Color::Black);
 
@@ -247,7 +247,7 @@ void cPreviewMaps::initRandomMap()
 
     firstSkirmishMap->terrainType = std::vector<int>(1, -1);
     // if (firstSkirmishMap.terrain != nullptr) {
-    //     SDL_FreeSurface(firstSkirmishMap.terrain);
+    //     SDL_DestroySurface(firstSkirmishMap.terrain);
     // }
     firstSkirmishMap->terrain = nullptr;
     // if (firstSkirmishMap.previewTex != nullptr) {

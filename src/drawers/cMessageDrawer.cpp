@@ -99,7 +99,7 @@ void cMessageDrawer::destroy()
     m_alpha = -1;
     m_TIMER_message = 0;
     if (m_bmpBar != nullptr) {
-        SDL_FreeSurface(m_bmpBar);
+        SDL_DestroySurface(m_bmpBar);
     }
 }
 
@@ -156,11 +156,11 @@ void cMessageDrawer::setMessage(const std::string &msg, bool keepMessage)
 void cMessageDrawer::createMessageBarBmp(int desiredWidth)
 {
     if (m_bmpBar) {
-        SDL_FreeSurface(m_bmpBar);
+        SDL_DestroySurface(m_bmpBar);
     }
 
-    m_bmpBar = SDL_CreateRGBSurface(0,desiredWidth, 30,32,0,0,0,255);
-    auto color = SDL_MapRGBA(m_bmpBar->format,255,0,255,255);
+    m_bmpBar = SDL_CreateSurface(desiredWidth, 30, SDL_PIXELFORMAT_RGBA32);
+    auto color = SDL_MapRGBA(SDL_GetPixelFormatDetails(m_bmpBar->format), SDL_GetSurfacePalette(m_bmpBar), 255, 0, 255, 255);
     SDL_FillRect(m_bmpBar, nullptr, color);
     SDL_BlitSurface(m_gfxinter->getSurface(MESSAGE_LEFT), nullptr, m_bmpBar, nullptr);
 

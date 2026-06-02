@@ -33,7 +33,7 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
         return nullptr;
     }
     newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
-    SDL_FreeSurface(textSurface);
+    SDL_DestroySurface(textSurface);
 
     textSurface = TTF_RenderUTF8_Blended(m_font, msg.c_str(), color.toSDL());
     if (!textSurface) {
@@ -44,7 +44,7 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
     newCacheEntry->width = textSurface->w;
     newCacheEntry->height = textSurface->h;
     newCacheEntry->lifeCounter = 10;
-    SDL_FreeSurface(textSurface);
+    SDL_DestroySurface(textSurface);
 
     return newCacheEntry;
 }

@@ -60,44 +60,44 @@ void cMouse::init()
 void cMouse::handleEvent(const SDL_Event &event)
 {
     switch (event.type) {
-        case SDL_MOUSEBUTTONDOWN:
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
             if (event.button.button == SDL_BUTTON_LEFT) {
                 m_leftButtonPressed = true;
-                m_coordsOnClick.x = event.motion.x;
-                m_coordsOnClick.y = event.motion.y;
+                m_coordsOnClick.x = (int)event.button.x;
+                m_coordsOnClick.y = (int)event.button.y;
             }
             if (event.button.button == SDL_BUTTON_RIGHT) {
                 m_rightButtonPressed = true;
-                m_coordsOnClick.x = event.motion.x;
-                m_coordsOnClick.y = event.motion.y;
+                m_coordsOnClick.x = (int)event.button.x;
+                m_coordsOnClick.y = (int)event.button.y;
             }
             break;
-        case SDL_MOUSEBUTTONUP:
+        case SDL_EVENT_MOUSE_BUTTON_UP:
             if (event.button.button == SDL_BUTTON_LEFT) {
                 m_leftButtonPressed = false;
                 m_leftButtonReleased = true;
-                int dist = (m_coordsOnClick.x - event.motion.x)*(m_coordsOnClick.x - event.motion.x) + (m_coordsOnClick.y - event.motion.y)*(m_coordsOnClick.y - event.motion.y);
-                if (dist < 16) {
-                    // std::cout << "left click" << std::endl;
+                int dx = m_coordsOnClick.x - (int)event.button.x;
+                int dy = m_coordsOnClick.y - (int)event.button.y;
+                if (dx*dx + dy*dy < 16) {
                     m_leftButtonClicked = true;
                 }
             }
             if (event.button.button == SDL_BUTTON_RIGHT) {
                 m_rightButtonPressed = false;
                 m_rightButtonReleased = true;
-                int dist = (m_coordsOnClick.x - event.motion.x)*(m_coordsOnClick.x - event.motion.x) + (m_coordsOnClick.y - event.motion.y)*(m_coordsOnClick.y - event.motion.y);
-                if (dist < 16) {
-                    // std::cout << "right click" << std::endl;
+                int dx = m_coordsOnClick.x - (int)event.button.x;
+                int dy = m_coordsOnClick.y - (int)event.button.y;
+                if (dx*dx + dy*dy < 16) {
                     m_rightButtonClicked = true;
                 }
             }
             break;
-        case SDL_MOUSEMOTION:
-            m_coords.x = event.motion.x;
-            m_coords.y = event.motion.y;
+        case SDL_EVENT_MOUSE_MOTION:
+            m_coords.x = (int)event.motion.x;
+            m_coords.y = (int)event.motion.y;
             m_didMouseMove = true;
             break;
-        case SDL_MOUSEWHEEL:
+        case SDL_EVENT_MOUSE_WHEEL:
             if (event.wheel.y > 0) m_mouseScrolledUp = true;
             if (event.wheel.y < 0) m_mouseScrolledDown = true;
             break;

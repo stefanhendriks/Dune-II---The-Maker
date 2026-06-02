@@ -125,9 +125,9 @@ bool cGame::shouldCaptureTextInput() const
 void cGame::syncTextInputState() const
 {
     if (shouldCaptureTextInput()) {
-        SDL_StartTextInput();
+        SDL_StartTextInput(window);
     } else {
-        SDL_StopTextInput();
+        SDL_StopTextInput(window);
     }
 }
 
@@ -467,22 +467,27 @@ void cGame::run()
         }
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
-                case SDL_QUIT:
+                case SDL_EVENT_QUIT:
                     m_gameSettings->m_playing = false;
                     break;
-                case SDL_WINDOWEVENT:
-                    m_focusManager->onWindowsFocus(event.window);
+                case SDL_EVENT_WINDOW_FOCUS_LOST:
+                case SDL_EVENT_WINDOW_MINIMIZED:
+                    m_focusManager->onWindowFocusLost();
                     break;
-                case SDL_KEYDOWN:
-                case SDL_KEYUP:
-                case SDL_TEXTINPUT:
+                case SDL_EVENT_WINDOW_FOCUS_GAINED:
+                case SDL_EVENT_WINDOW_RESTORED:
+                    m_focusManager->onWindowFocusGained();
+                    break;
+                case SDL_EVENT_KEY_DOWN:
+                case SDL_EVENT_KEY_UP:
+                case SDL_EVENT_TEXT_INPUT:
                     m_keyboard->handleEvent(event);
                     break;
 
-                case SDL_MOUSEBUTTONDOWN:
-                case SDL_MOUSEBUTTONUP:
-                case SDL_MOUSEMOTION:
-                case SDL_MOUSEWHEEL:
+                case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                case SDL_EVENT_MOUSE_BUTTON_UP:
+                case SDL_EVENT_MOUSE_MOTION:
+                case SDL_EVENT_MOUSE_WHEEL:
                     m_mouse->handleEvent(event);
                 default:
                     break;
@@ -765,7 +770,7 @@ bool cGame::setupGame()
     m_gameObjectsContext->serviceInit(m_services.get());
 
     // all has installed well. Let's rock and roll.
-    SDL_ShowCursor(false);
+    SDL_HideCursor();
     return true;
 }
 
@@ -1600,14 +1605,14 @@ void cGame::initiateFadingOut()
     m_cScreenFader->startFadeOut();
 
     m_renderDrawer->beginDrawingToTexture(screenTexture);
-    SDL_RenderCopy(renderer, actualRenderer->tex.get(),nullptr, nullptr);
+    SDL_RenderTexture(renderer, actualRenderer->tex.get(), nullptr, nullptr);
     m_renderDrawer->endDrawingToTexture();
 }
 
 void cGame::takeBackGroundScreen()
 {
     m_renderDrawer->beginDrawingToTexture(screenTexture);
-    SDL_RenderCopy(renderer, actualRenderer->tex.get(),nullptr, nullptr);
+    SDL_RenderTexture(renderer, actualRenderer->tex.get(), nullptr, nullptr);
     m_renderDrawer->endDrawingToTexture();
 }
 
