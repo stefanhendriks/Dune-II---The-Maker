@@ -1,5 +1,6 @@
 #include "cSelectYourNextConquestState.h"
 
+#include <cmath>
 #include "controls/eKeyAction.h"
 #include "controls/cMouse.h"
 #include "data/gfxdata.h"
