@@ -419,11 +419,9 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
 {
     const cPlayer* humanPlayer = m_objects->getPlayer(HUMAN);
 
-    if (event.isAction(eKeyAction::ATTACK_MODE)) {
-        int iGroup = event.getGroupNumber();
-        if (iGroup > 0) {
-            humanPlayer->markUnitsForGroup(iGroup);
-        }
+    int iGroup = event.getAssignGroupNumber();
+    if (iGroup > 0) {
+        humanPlayer->markUnitsForGroup(iGroup);
     }
 
     if (m_settings->isDebugMode()) { // debug mode has additional keys
