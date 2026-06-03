@@ -11,18 +11,46 @@
 #include <span>
 #include <vector>
 
+void cScreenInit::applyFullscreenPresentation()
+{
+    int renderW, renderH;
+    SDL_GetCurrentRenderOutputSize(renderer, &renderW, &renderH);
+
+    // Always INTEGER_SCALE: every game pixel maps to the same-sized block on
+    // screen (1x, 2x, 3x ...). If the screen is larger than an exact multiple,
+    // the remainder appears as black borders. This avoids fractional scaling
+    // (LETTERBOX at e.g. 1.167x) which produces jagged, uneven pixels even
+    // with nearest-neighbour filtering. renderResolution is already capped to
+    // the logical screen size in adaptResolution, so the scale is always >= 1.
+    int intScale = std::min(renderW / renderResolution.width, renderH / renderResolution.height);
+
+    SDL_SetRenderLogicalPresentation(renderer, renderResolution.width, renderResolution.height, SDL_LOGICAL_PRESENTATION_INTEGER_SCALE);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+
+    cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "desktop", std::format("Renderer output size : {}x{}", renderW, renderH));
+    cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "desktop", std::format("Presentation mode : INTEGER_SCALE (integer scale = {})", intScale));
+    float scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
+    cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "DPI", std::format("Display content scale : {}", scale));
+}
+
 void cScreenInit::setFullScreenMode()
 {
     SDL_SetWindowFullscreen(window, true);
-    SDL_SetRenderLogicalPresentation(renderer, renderResolution.width, renderResolution.height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
+    // On macOS, SDL_SetWindowFullscreen is asynchronous — the Spaces animation
+    // plays out after the call returns. SDL_SyncWindow blocks until the window
+    // state (and renderer output size) is final, so applyFullscreenPresentation
+    // measures the correct output size.
+    SDL_SyncWindow(window);
     cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "desktop", "Fullscreen desktop");
-    int renderW, renderH;
-    SDL_GetCurrentRenderOutputSize(renderer, &renderW, &renderH);
-    cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "desktop", std::format("Renderer output size : {}x{}",renderW,renderH));
-    float scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
-    cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "DPI", std::format("Display content scale : {}", scale));
+    applyFullscreenPresentation();
+}
+
+void cScreenInit::onPixelSizeChanged()
+{
+    if (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) {
+        applyFullscreenPresentation();
+    }
 }
 
 void cScreenInit::setWindowMode()
@@ -64,6 +92,15 @@ void cScreenInit::adaptResolution(int desiredWidth, int desiredHeight)
         renderResolution.width = desiredWidth;
         renderResolution.height = windowResolution.height * desiredWidth / windowResolution.width;
     }
+
+    // Cap to the logical screen size so the game never requests a larger
+    // coordinate space than the display provides. Without this, fullscreen
+    // would have to scale DOWN (e.g. fit 1792x1120 into a 1536x960 logical
+    // screen), causing squishing. The cap ensures fullscreen can always show
+    // the game at 1:1 or larger integer multiples.
+    renderResolution.width = std::min(renderResolution.width, windowResolution.width);
+    renderResolution.height = std::min(renderResolution.height, windowResolution.height);
+
     cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "Resolution", std::format("Adopted : {}x{}",renderResolution.width,renderResolution.height));
 }
 
@@ -71,6 +108,13 @@ cScreenInit::cScreenInit(int desiredWidth, int desiredHeight, const std::string 
 {
     this->getWindowResolution();
     this->adaptResolution(desiredWidth, desiredHeight);
+
+    // Disable macOS Spaces fullscreen: SDL3 defaults to Spaces (animated
+    // Space transition), which changes the renderer output to logical pixels
+    // (1536x960 on a 1792x1120 physical display) and fires async size events.
+    // Non-Spaces fullscreen matches SDL2 behaviour: immediate, uses physical
+    // pixel dimensions, no transition surprises.
+    SDL_SetHint(SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES, "0");
 
     auto logger = cLogger::getInstance();
 
@@ -100,6 +144,15 @@ cScreenInit::cScreenInit(int desiredWidth, int desiredHeight, const std::string 
     }
 
     SDL_SetRenderVSync(renderer, 1);
+
+    // SDL_RENDER_SCALE_QUALITY was removed in SDL3. The correct way to control
+    // the logical presentation's internal texture scale is via the renderer's
+    // default texture scale mode. Setting it to NEAREST once here ensures
+    // every SDL_SetRenderLogicalPresentation call (now and later) creates its
+    // internal texture with nearest-neighbour filtering — critical for crisp
+    // pixel art at any scale factor.
+    SDL_SetDefaultTextureScaleMode(renderer, SDL_SCALEMODE_NEAREST);
+
     SDL_SetWindowFullscreen(window, false);
     SDL_SetWindowSize(window, renderResolution.width, renderResolution.height);
     SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);

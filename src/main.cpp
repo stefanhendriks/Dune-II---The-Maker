@@ -23,6 +23,7 @@
 #include <string>
 
 #include <iostream>
+#include <SDL3/SDL_main.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
 // the ultimate game variable(s)
