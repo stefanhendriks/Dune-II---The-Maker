@@ -59,16 +59,19 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
         logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL_mixer succes", OUTC_SUCCESS);
         m_isMusicEnabled = true;
         m_isSoundEnabled = true;
+        m_musicTrack = MIX_CreateTrack(m_mixer);
     }
-
-    m_musicTrack = MIX_CreateTrack(m_mixer);
 
     soundData = std::make_unique<cSoundData>(datafile, m_mixer);
 
     m_musicVolume = MaxVolume / 2;
     m_soundVolume = MaxVolume / 2;
-    MIX_SetMixerGain(m_mixer, m_soundVolume / (float)MaxVolume);
-    MIX_SetTrackGain(m_musicTrack, m_musicVolume / (float)MaxVolume);
+    if (m_mixer) {
+        MIX_SetMixerGain(m_mixer, m_soundVolume / (float)MaxVolume);
+    }
+    if (m_musicTrack) {
+        MIX_SetTrackGain(m_musicTrack, m_musicVolume / (float)MaxVolume);
+    }
 }
 
 cSoundPlayer::~cSoundPlayer()

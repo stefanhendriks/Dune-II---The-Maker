@@ -478,6 +478,9 @@ void cGame::run()
                 case SDL_EVENT_WINDOW_RESTORED:
                     m_focusManager->onWindowFocusGained();
                     break;
+                case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+                    m_Screen->onPixelSizeChanged();
+                    break;
                 case SDL_EVENT_KEY_DOWN:
                 case SDL_EVENT_KEY_UP:
                 case SDL_EVENT_TEXT_INPUT:
@@ -574,6 +577,14 @@ void cGame::shutdown()
 
     delete m_mouse;
     delete m_keyboard;
+
+    // Release all Graphics/Texture objects now, while the renderer is still valid.
+    // ~cPlatformLayerInit() calls SDL_Quit() later (when cGame itself is destroyed),
+    // but some Graphics shared_ptrs may still be alive at that point and their
+    // ~Graphics() would call SDL_DestroyTexture with an already-dead renderer.
+    ctx.reset();
+    context.reset();
+    gfxdata.reset();
 
     logbook("Allegro FONT library shut down.");
 }
@@ -1299,7 +1310,14 @@ void cGame::setNextStateToTransitionTo(int newState)
 
 void cGame::saveBmpScreenToDisk()
 {
-    if (cScreenShotSaver::saveScreen(renderer, m_gameSettings->m_screenW, m_gameSettings->m_screenH)) {
+    // Screenshot key fires during updateMouseAndKeyboardState(), before
+    // beginDrawingToTexture(actualRenderer). The default render target is
+    // SDL3's logical presentation texture which has been cleared to black.
+    // Read from actualRenderer directly — it holds the last complete frame.
+    SDL_SetRenderTarget(renderer, actualRenderer->tex.get());
+    bool saved = cScreenShotSaver::saveScreen(renderer, m_gameSettings->m_screenW, m_gameSettings->m_screenH);
+    SDL_SetRenderTarget(renderer, nullptr);
+    if (saved) {
         m_notificationArea->addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
 }

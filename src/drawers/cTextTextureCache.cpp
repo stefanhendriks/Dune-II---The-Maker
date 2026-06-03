@@ -27,7 +27,11 @@ cTextTextureCache::~cTextTextureCache()
 std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color, const std::string &msg) const
 {
     auto newCacheEntry = std::make_unique<textCacheEntry>();
-    SDL_Surface *textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), 0, Color::Black.toSDL());
+    // TTF_RenderText_Solid produces a crisp, non-anti-aliased 8-bit palette surface
+    // (fully transparent background, fully opaque foreground). This scales cleanly
+    // with nearest-neighbour upscaling, whereas Blended's partial-alpha edges produce
+    // a visible haze on light backgrounds and look inconsistent at non-integer scales.
+    SDL_Surface *textSurface = TTF_RenderText_Solid(m_font, msg.c_str(), 0, Color::Black.toSDL());
     if (!textSurface) {
         cLogger::getInstance()->log(LOG_ERROR, COMP_ALFONT, "cTextTextureCache", std::format("Failed to create shadow surface for text '{}': {}", msg, SDL_GetError()));
         return nullptr;
@@ -36,7 +40,7 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
     SDL_SetTextureScaleMode(newCacheEntry->shadowsTexture, SDL_SCALEMODE_NEAREST);
     SDL_DestroySurface(textSurface);
 
-    textSurface = TTF_RenderText_Blended(m_font, msg.c_str(), 0, color.toSDL());
+    textSurface = TTF_RenderText_Solid(m_font, msg.c_str(), 0, color.toSDL());
     if (!textSurface) {
         cLogger::getInstance()->log(LOG_ERROR, COMP_ALFONT, "cTextTextureCache", std::format("Failed to create surface for text '{}': {}", msg, SDL_GetError()));
         return nullptr;

@@ -19,6 +19,7 @@ public:
 
     void setFullScreenMode();
     void setWindowMode();
+    void onPixelSizeChanged();
 
     cScreenInit &operator=(const cScreenInit &) = delete;
     cScreenInit &operator=(cScreenInit &&) = delete;
@@ -43,6 +44,7 @@ public:
 private:
     void getWindowResolution();
     void adaptResolution(int desiredWidth, int desiredHeight);
+    void applyFullscreenPresentation();
     DisplayResolution renderResolution;
     DisplayResolution windowResolution; //display size of screen
     SDL_Window *window = nullptr;
