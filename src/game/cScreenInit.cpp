@@ -36,11 +36,15 @@ void cScreenInit::setWindowMode()
 
 void cScreenInit::getWindowResolution()
 {
-    const SDL_DisplayMode *mode = SDL_GetCurrentDisplayMode(SDL_GetPrimaryDisplay());
-    if (mode) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "desktop", std::format("Resolution screen : {}x{}",mode->w,mode->h));
-        windowResolution.width = mode->w;
-        windowResolution.height = mode->h;
+    // SDL_GetCurrentDisplayMode returns PHYSICAL pixels, but SDL_CreateWindow
+    // expects LOGICAL pixels (points). On Retina/HiDPI displays these differ
+    // (e.g. 2560x1600 physical vs 1280x800 logical on a 2x Retina Mac).
+    // Use SDL_GetDisplayBounds which returns screen coordinates (logical pixels).
+    SDL_Rect bounds = {};
+    if (SDL_GetDisplayBounds(SDL_GetPrimaryDisplay(), &bounds)) {
+        cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "desktop", std::format("Display bounds : {}x{}", bounds.w, bounds.h));
+        windowResolution.width = bounds.w;
+        windowResolution.height = bounds.h;
     }
 }
 

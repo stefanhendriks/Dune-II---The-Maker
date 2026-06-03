@@ -1271,6 +1271,7 @@ void cSetupSkirmishState::generateRandomMap()
         logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
         return;
     }
+    SDL_SetTextureScaleMode(out, SDL_SCALEMODE_NEAREST);
     randomMap->previewTex = new Texture(out, randomMap->terrain->w, randomMap->terrain->h);
 }
 
