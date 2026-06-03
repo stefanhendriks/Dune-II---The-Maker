@@ -1,6 +1,6 @@
 #include "cKeyboardEvent.h"
 #include "controls/cKeyBindings.h"
-#include "utils/common.h"
+#include "include/cAssert.h"
 
 #include <format>
 
@@ -15,9 +15,6 @@ const char *toStringKeyboardEventType(const eKeyEventType type)
             return "HOLD";
         case eKeyEventType::PRESSED:
             return "PRESSED";
-        default:
-            d2tm_assert(false);
-            break;
     }
     return "";
 }
@@ -93,22 +90,6 @@ bool cKeyboardEvent::hasEitherKey(SDL_Scancode firstScanCode, SDL_Scancode secon
     return hasKey(firstScanCode) || hasKey(secondScanCode);
 }
 
-// bool cKeyboardEvent::isPrintable() const
-// {
-//     const size_t keyCount = m_keys.count();
-//     if (keyCount == 0 || keyCount > 2) return false;
-
-//     for (int sc = 0; sc < SDL_NUM_SCANCODES; ++sc) {
-//         if (!m_keys.test(static_cast<size_t>(sc))) continue;
-
-//         if (sc != SDL_SCANCODE_LSHIFT && sc != SDL_SCANCODE_RSHIFT) {
-//             SDL_Keycode key = SDL_GetKeyFromScancode(static_cast<SDL_Scancode>(sc));
-//             if (key >= 32 && key <= 126) return true;
-//         }
-//     }
-//     return false;
-// }
-
 bool cKeyboardEvent::isBackspace() const
 {
     return hasKey(SDL_SCANCODE_BACKSPACE);
@@ -143,45 +124,3 @@ const std::string &cKeyboardEvent::getTextInput() const
 {
     return m_textInput;
 }
-
-// char cKeyboardEvent::getChar() const
-// {
-//     if (!isPrintable()) return '\0';
-//     SDL_Scancode sc = *m_keys.begin();
-//     SDL_Keycode key = SDL_GetKeyFromScancode(sc);
-//     char c = static_cast<char>(key);
-    
-//     // If shift is pressed, handle uppercase and special characters
-//     if (isShiftPressed()) {
-//         // Uppercase letters
-//         if (c >= 'a' && c <= 'z') {
-//             return c - 32;  // Convert to uppercase
-//         }
-//         // Special characters with shift on US QWERTY keyboard
-//         switch (c) {
-//             case '1': return '!';
-//             case '2': return '@';
-//             case '3': return '#';
-//             case '4': return '$';
-//             case '5': return '%';
-//             case '6': return '^';
-//             case '7': return '&';
-//             case '8': return '*';
-//             case '9': return '(';
-//             case '0': return ')';
-//             case '-': return '_';
-//             case '=': return '+';
-//             case '[': return '{';
-//             case ']': return '}';
-//             case '\\': return '|';
-//             case ';': return ':';
-//             case '\'': return '"';
-//             case ',': return '<';
-//             case '.': return '>';
-//             case '/': return '?';
-//             case '`': return '~';
-//         }
-//     }
-    
-//     return c;
-// }

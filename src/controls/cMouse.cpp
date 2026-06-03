@@ -6,8 +6,6 @@
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
-// #include "gameobjects/players/cPlayer.h"
-// #include "gameobjects/players/cPlayers.h"
 #include "sidebar/cSideBar.h"
 #include "utils/d2tm_math.h"
 #include "utils/Graphics.hpp"
