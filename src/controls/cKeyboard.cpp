@@ -7,7 +7,7 @@ namespace {
 
 bool isValidScancode(SDL_Scancode scancode)
 {
-    return scancode >= 0 && scancode < SDL_NUM_SCANCODES;
+    return scancode >= 0 && scancode < SDL_SCANCODE_COUNT;
 }
 
 size_t toScancodeIndex(SDL_Scancode scancode)
@@ -15,7 +15,7 @@ size_t toScancodeIndex(SDL_Scancode scancode)
     return static_cast<size_t>(scancode);
 }
 
-bool isPressed(const std::bitset<SDL_NUM_SCANCODES> &keys, SDL_Scancode scancode)
+bool isPressed(const std::bitset<SDL_SCANCODE_COUNT> &keys, SDL_Scancode scancode)
 {
     return isValidScancode(scancode) && keys.test(toScancodeIndex(scancode));
 }
@@ -70,7 +70,7 @@ void cKeyboard::handleEvent(const SDL_Event &event)
 
 void cKeyboard::updateState()
 {
-    static const std::bitset<SDL_NUM_SCANCODES> noKeys;
+    static const std::bitset<SDL_SCANCODE_COUNT> noKeys;
 
     for (const auto &textInput : m_textInputs) {
         m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, noKeys, m_currentCombo, m_keyBindings.get(), textInput));

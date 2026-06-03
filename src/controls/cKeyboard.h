@@ -30,8 +30,8 @@ public:
 private:
     cInputObserver *m_keyboardObserver;
     std::unique_ptr<cKeyBindings> m_keyBindings;
-    std::bitset<SDL_NUM_SCANCODES> m_keysPressed;
-    std::bitset<SDL_NUM_SCANCODES> m_keysReleased;
+    std::bitset<SDL_SCANCODE_COUNT> m_keysPressed;
+    std::bitset<SDL_SCANCODE_COUNT> m_keysReleased;
     std::vector<std::string> m_textInputs;
     s_KeysCombo m_currentCombo;
 };

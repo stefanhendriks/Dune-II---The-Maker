@@ -21,7 +21,7 @@ const char *toStringKeyboardEventType(const eKeyEventType type)
 
 }
 
-cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::bitset<SDL_NUM_SCANCODES> &keys,
+cKeyboardEvent::cKeyboardEvent(eKeyEventType eventType, const std::bitset<SDL_SCANCODE_COUNT> &keys,
                                const s_KeysCombo &combo, const cKeyBindings *keyBindings, std::string textInput) :
     m_eventType(eventType),
     m_keys(keys),
@@ -35,7 +35,7 @@ const std::string cKeyboardEvent::toString() const
 {
     std::string str = std::format("cKeyboardEvent [type={}], keys: ", toStringKeyboardEventType(m_eventType));
     str.append("[");
-    for (int sc = 0; sc < SDL_NUM_SCANCODES; ++sc) {
+    for (int sc = 0; sc < SDL_SCANCODE_COUNT; ++sc) {
         if (!m_keys.test(static_cast<size_t>(sc))) continue;
         str.append(SDL_GetScancodeName(static_cast<SDL_Scancode>(sc)));
     }
@@ -87,7 +87,7 @@ int cKeyboardEvent::getAssignGroupNumber() const
 
 bool cKeyboardEvent::hasKey(SDL_Scancode scanCode) const
 {
-    if (scanCode < 0 || scanCode >= SDL_NUM_SCANCODES) return false;
+    if (scanCode < 0 || scanCode >= SDL_SCANCODE_COUNT) return false;
     return m_keys.test(static_cast<size_t>(scanCode));
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <bitset>
 #include <string>
 
@@ -12,7 +12,7 @@ class cKeyBindings;
 class cKeyboardEvent {
 
 public:
-    cKeyboardEvent(eKeyEventType eventType, const std::bitset<SDL_NUM_SCANCODES> &keys, const s_KeysCombo &combo,
+    cKeyboardEvent(eKeyEventType eventType, const std::bitset<SDL_SCANCODE_COUNT> &keys, const s_KeysCombo &combo,
                 const cKeyBindings *keyBindings, std::string textInput = "");
 
     const std::string toString() const;
@@ -53,7 +53,7 @@ public:
 
 private:
     eKeyEventType m_eventType = eKeyEventType::NONE;
-    const std::bitset<SDL_NUM_SCANCODES> &m_keys;
+    const std::bitset<SDL_SCANCODE_COUNT> &m_keys;
     const s_KeysCombo &m_combo;
     const cKeyBindings *m_keyBindings;
     std::string m_textInput;
