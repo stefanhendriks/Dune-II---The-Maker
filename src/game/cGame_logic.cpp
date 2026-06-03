@@ -509,6 +509,7 @@ void cGame::run()
         shakeScreenAndBlitBuffer();
 
         m_renderDrawer->endDrawingToTexture();
+        m_renderDrawer->renderClearToColor();  // SDL3 persists its intermediate texture between frames; clear before composite
         m_renderDrawer->renderSprite(actualRenderer, m_screenShake->getX(), m_screenShake->getY());
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
@@ -831,12 +832,18 @@ void cGame::setState(int newState)
 
         if (newState == GAME_PLAYING) {
             // make sure to delete options menu now
+            if (m_currentState == m_states[GAME_OPTIONS]) {
+                m_currentState = nullptr;
+            }
             delete m_states[GAME_OPTIONS];
             m_states[GAME_OPTIONS] = nullptr;
         }
 
         if (newState == GAME_REGION) {
             // make sure to delete options menu now
+            if (m_currentState == m_states[GAME_OPTIONS]) {
+                m_currentState = nullptr;
+            }
             delete m_states[GAME_OPTIONS];
             m_states[GAME_OPTIONS] = nullptr;
         }

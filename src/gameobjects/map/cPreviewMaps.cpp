@@ -197,6 +197,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
             return;
         }
+        SDL_SetTextureScaleMode(out, SDL_SCALEMODE_NEAREST);
         previewMap->previewTex = new Texture(out, previewMap->terrain->w, previewMap->terrain->h);
     }
     logbook(std::format("Loaded skirmish map: {}, width: {}, height: {}",

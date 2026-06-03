@@ -44,6 +44,7 @@ Texture *Graphics::getTexture(int index)
         std::cerr << "Graphics: Failed to convert texture " << index << " : " <<SDL_GetError() << std::endl;
         return nullptr;
     }
+    SDL_SetTextureScaleMode(outTexture, SDL_SCALEMODE_NEAREST);
     texCache.emplace(index, std::make_unique<Texture>(outTexture, outSurface->w, outSurface->h));
     return texCache[index].get();
 }

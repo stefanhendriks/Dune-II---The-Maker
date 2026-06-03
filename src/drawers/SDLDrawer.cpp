@@ -50,6 +50,7 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
         std::cerr << "error drawSprite : " << SDL_GetError();
         return;
     }
+    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetTextureAlphaMod(texture, opacity);
     SDL_RenderTexture(renderer, texture, NULL, &tmp);
@@ -294,6 +295,7 @@ Texture* SDLDrawer::createRenderTargetTexture(int width, int height)
     if (!texture) {
         throw std::runtime_error("Error creating render texture: " + std::string(SDL_GetError()));
     }
+    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     return new Texture(texture, width, height, true);
 }
 
@@ -404,6 +406,7 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
         SDL_DestroySurface(rgbaSurface);
         return nullptr;
     }
+    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
 
     auto *newTexture = new Texture(texture, rgbaSurface->w, rgbaSurface->h);
     SDL_DestroySurface(rgbaSurface);
