@@ -26,7 +26,6 @@ public:
      */
     bool isAction(eKeyAction action) const;
 
-    // bool isPrintable() const;
     bool isBackspace() const;
     bool isEnter() const;
     bool isShiftPressed() const;
@@ -34,7 +33,6 @@ public:
     bool isCtrlPressed() const;
     bool hasTextInput() const;
     const std::string &getTextInput() const;
-    // char getChar() const;
 
     /**
      * Returns the group number (1–5) if a group key is pressed according to the configured bindings, 0 otherwise.

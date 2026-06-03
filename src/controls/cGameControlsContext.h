@@ -10,12 +10,6 @@
 //
 // a context belongs to a player
 
-
-// 01/01/2022 -> Move this into a `Combat` state object; or within player object as state.
-
-// #include "gameobjects/structures/cAbstractStructure.h"
-// #include "include/definitions.h"
-
 #include "controls/mousestates/eMouseStates.h"
 #include "controls/cMouse.h"
 #include "observers/cInputObserver.h"
