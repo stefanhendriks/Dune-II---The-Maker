@@ -51,6 +51,12 @@ enum class eKeyAction {
     GROUP_4,
     GROUP_5,
     GROUP_6,
+    GROUP_ASSIGN_1,
+    GROUP_ASSIGN_2,
+    GROUP_ASSIGN_3,
+    GROUP_ASSIGN_4,
+    GROUP_ASSIGN_5,
+    GROUP_ASSIGN_6,
     // Editor
     EDITOR_SAVE,
     EDITOR_ZOOM_IN,

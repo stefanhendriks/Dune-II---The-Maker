@@ -35,9 +35,14 @@ public:
     const std::string &getTextInput() const;
 
     /**
-     * Returns the group number (1–5) if a group key is pressed according to the configured bindings, 0 otherwise.
+     * Returns the group number (1–6) if a plain group key is pressed (no modifier), 0 otherwise.
      */
     int getGroupNumber() const;
+
+    /**
+     * Returns the group number (1–6) if CTRL+number is pressed (group assignment), 0 otherwise.
+     */
+    int getAssignGroupNumber() const;
 
     // Raw key checks — kept public during migration to isAction(); will be removed once all callers are converted.
     bool hasKey(SDL_Scancode scanCode) const;
