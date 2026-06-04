@@ -1,4 +1,4 @@
-#include "game/cScreenInit.h"
+#include "game/cSDLSystem.h"
 
 #include "utils/cLog.h"
 
@@ -14,7 +14,7 @@
 #include <span>
 #include <vector>
 
-void cScreenInit::applyFullscreenPresentation()
+void cSDLSystem::applyFullscreenPresentation()
 {
     int renderW, renderH;
     SDL_GetCurrentRenderOutputSize(renderer, &renderW, &renderH);
@@ -37,7 +37,7 @@ void cScreenInit::applyFullscreenPresentation()
     cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "DPI", std::format("Display content scale : {}", scale));
 }
 
-void cScreenInit::setFullScreenMode()
+void cSDLSystem::setFullScreenMode()
 {
     SDL_SetWindowFullscreen(window, true);
     // On macOS, SDL_SetWindowFullscreen is asynchronous — the Spaces animation
@@ -49,14 +49,14 @@ void cScreenInit::setFullScreenMode()
     applyFullscreenPresentation();
 }
 
-void cScreenInit::onPixelSizeChanged()
+void cSDLSystem::onPixelSizeChanged()
 {
     if (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) {
         applyFullscreenPresentation();
     }
 }
 
-void cScreenInit::setWindowMode()
+void cSDLSystem::setWindowMode()
 {
     SDL_SetWindowFullscreen(window, false);
     SDL_SetWindowSize(window, renderResolution.width, renderResolution.height);
@@ -65,7 +65,7 @@ void cScreenInit::setWindowMode()
     cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "desktop", "Windowed desktop");
 }
 
-void cScreenInit::getWindowResolution()
+void cSDLSystem::getWindowResolution()
 {
     // SDL_GetCurrentDisplayMode returns PHYSICAL pixels, but SDL_CreateWindow
     // expects LOGICAL pixels (points). On Retina/HiDPI displays these differ
@@ -79,7 +79,7 @@ void cScreenInit::getWindowResolution()
     }
 }
 
-void cScreenInit::adaptResolution(int desiredWidth, int desiredHeight)
+void cSDLSystem::adaptResolution(int desiredWidth, int desiredHeight)
 {
     cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "Resolution", std::format("Desired : {}x{}",desiredWidth,desiredHeight));
     if (desiredWidth<800)
@@ -107,7 +107,7 @@ void cScreenInit::adaptResolution(int desiredWidth, int desiredHeight)
     cLogger::getInstance()->log(LOG_INFO, COMP_SDL2, "Resolution", std::format("Adopted : {}x{}",renderResolution.width,renderResolution.height));
 }
 
-cScreenInit::~cScreenInit()
+cSDLSystem::~cSDLSystem()
 {
     cLogger *logger = cLogger::getInstance();
     logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Shutting down...");
@@ -123,7 +123,7 @@ cScreenInit::~cScreenInit()
     logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Thanks for playing!", OUTC_SUCCESS);
 }
 
-cScreenInit::cScreenInit(int desiredWidth, int desiredHeight, const std::string &title)
+cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title)
 {
     cLogger *logger = cLogger::getInstance();
     logger->logHeader("SDL");

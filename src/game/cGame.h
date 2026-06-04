@@ -32,7 +32,7 @@ class cGameState;
 class cPlayer;
 class cPlayers;
 class cSoundPlayer;
-class cScreenInit;
+class cSDLSystem;
 class cHousesInfo;
 class cReinforcements;
 class cPreviewMaps;
@@ -226,7 +226,7 @@ private:
 
     std::string m_gameFilename;
 
-    std::unique_ptr<cScreenInit> m_Screen;
+    std::unique_ptr<cSDLSystem> m_Screen;
     std::unique_ptr<cFocusManager> m_focusManager;
 
     cSoundPlayer* m_soundPlayer;

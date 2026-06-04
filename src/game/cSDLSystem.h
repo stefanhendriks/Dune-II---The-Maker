@@ -8,20 +8,20 @@ struct DisplayResolution {
     int height;
 };
 
-class cScreenInit {
+class cSDLSystem {
 public:
     // Initializes SDL, creates a window and renderer with the given resolution
-    cScreenInit(int desiredWidth, int desiredHeight, const std::string &title);
-    ~cScreenInit();
+    cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title);
+    ~cSDLSystem();
 
     void setFullScreenMode();
     void setWindowMode();
     void onPixelSizeChanged();
 
-    cScreenInit &operator=(const cScreenInit &) = delete;
-    cScreenInit &operator=(cScreenInit &&) = delete;
-    cScreenInit(const cScreenInit &) = delete;
-    cScreenInit(cScreenInit &&) = delete;
+    cSDLSystem &operator=(const cSDLSystem &) = delete;
+    cSDLSystem &operator=(cSDLSystem &&) = delete;
+    cSDLSystem(const cSDLSystem &) = delete;
+    cSDLSystem(cSDLSystem &&) = delete;
 
     int Width() const {
         return renderResolution.width;
