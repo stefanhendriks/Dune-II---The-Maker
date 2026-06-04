@@ -19,11 +19,13 @@
 
 class cMap;
 class MapGeometry;
+class cGameSettings;
+class cMouse;
 
 class cMapCamera : cInputObserver {
 
 public:
-    cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedKeys, bool cameraEdgeMove);
+    cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedKeys, bool cameraEdgeMove, cGameSettings* gameSettings, cMouse* mouse);
 
     ~cMapCamera();
 
@@ -214,6 +216,8 @@ private:
     // the map this camera is viewing
     cMap *m_pMap;
     MapGeometry *m_mapGeometry = nullptr;
+    cGameSettings *m_gameSettings;
+    cMouse *m_mouse;
 
     void adjustViewport(float screenX, float screenY);
 

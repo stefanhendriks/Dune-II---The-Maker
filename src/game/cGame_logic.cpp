@@ -747,7 +747,7 @@ bool cGame::setupGame()
     if (m_mapCamera != nullptr)
         delete m_mapCamera;
 
-    m_mapCamera = new cMapCamera(m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove);
+    m_mapCamera = new cMapCamera(m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove, m_gameSettings.get(), getMouse());
     m_services->mapCamera = m_mapCamera;
 
     m_cIni->installGame(m_gameFilename);
