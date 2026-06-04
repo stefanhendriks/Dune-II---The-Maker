@@ -807,9 +807,9 @@ void cParticle::addPosX(float d)
 {
     this->x += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = getBoundParticle();
-        if (otherParticle.isValid()) {
-            otherParticle.addPosX(d);
+        cParticle &boundParticle = getBoundParticle();
+        if (boundParticle.isValid()) {
+            boundParticle.addPosX(d);
         }
         else {
             boundParticleID = -1;
@@ -821,9 +821,9 @@ void cParticle::addPosY(float d)
 {
     this->y += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = getBoundParticle();
-        if (otherParticle.isValid()) {
-            otherParticle.addPosY(d);
+        cParticle &boundParticle = getBoundParticle();
+        if (boundParticle.isValid()) {
+            boundParticle.addPosY(d);
         }
         else {
             boundParticleID = -1;
@@ -836,9 +836,9 @@ void cParticle::die()
     bindToUnit(-1);
     bAlive = false;
     if (boundParticleID > -1) {
-        cParticle &pParticle = getBoundParticle();
-        if (pParticle.isValid()) {
-            pParticle.die();
+        cParticle &boundParticle = getBoundParticle();
+        if (boundParticle.isValid()) {
+            boundParticle.die();
         }
     }
     boundParticleID = -1;
