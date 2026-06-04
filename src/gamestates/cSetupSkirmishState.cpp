@@ -1260,7 +1260,6 @@ void cSetupSkirmishState::generateRandomMap()
 
     randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomMap);
 
-    // @mira do better than (game.m_gameObjectsContext->getMap()->getWidth() * game.m_gameObjectsContext->getMap()->getHeight() > 64 * 64)
     spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
 
     randomMap->validMap = true;
