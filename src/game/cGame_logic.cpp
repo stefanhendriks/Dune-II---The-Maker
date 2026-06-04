@@ -24,7 +24,7 @@
 #include "game/cGameConditionChecker.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenFader.h"
-#include "game/cScreenInit.h"
+#include "game/cSDLSystem.h"
 #include "game/cScreenShake.h"
 #include "game/cScreenShotSaver.h"
 #include "game/cTimeCounter.h"
@@ -578,7 +578,7 @@ void cGame::shutdown()
     delete m_keyboard;
 
     // Release all Graphics/Texture objects now, while the renderer is still valid.
-    // ~cScreenInit() calls SDL_Quit() later (when cGame itself is destroyed),
+    // ~cSDLSystem() calls SDL_Quit() later (when cGame itself is destroyed),
     // but some Graphics shared_ptrs may still be alive at that point and their
     // ~Graphics() would call SDL_DestroyTexture with an already-dead renderer.
     ctx.reset();
@@ -651,7 +651,7 @@ bool cGame::setupGame()
     }
     logger->log(LOG_INFO, COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section", OUTC_SUCCESS);
 
-    m_Screen = std::make_unique<cScreenInit>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title);
+    m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title);
     if (!m_windowed) {
         m_Screen->setFullScreenMode();
     }
