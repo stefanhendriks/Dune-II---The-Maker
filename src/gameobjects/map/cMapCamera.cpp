@@ -19,12 +19,11 @@ cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderO
     m_moveSpeedBorderOrKeys(moveSpeedBorderOrKeys),
     m_cameraEdgeMove(cameraEdgeMove),
     m_pMap(theMap),
-    m_mapGeometry(theMap ? theMap->getGeometry() : nullptr),
+    m_mapGeometry(theMap->getGeometry()),
     m_gameSettings(gameSettings),
     m_mouse(mouse)
 {
     d2tm_assert(theMap != nullptr);
-    d2tm_assert(m_mapGeometry != nullptr);
     d2tm_assert(gameSettings != nullptr);
     d2tm_assert(mouse != nullptr);
     m_viewportStartX = m_viewportStartY = 32;
@@ -293,13 +292,11 @@ void cMapCamera::onMouseRightButtonPressed(const s_MouseEvent &)
     m_moveX = 0.0f;
     m_moveY = 0.0f;
 
-    cMouse *pMouse = m_mouse;
-
     // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
-    if (pMouse->isMapScrolling()) {
+    if (m_mouse->isMapScrolling()) {
         // difference in pixels (- means up/left, + means down/right)
-        int diffX = pMouse->getMouseDragDeltaX();
-        int diffY = pMouse->getMouseDragDeltaY();
+        int diffX = m_mouse->getMouseDragDeltaX();
+        int diffY = m_mouse->getMouseDragDeltaY();
 
         // now calculate the speed in which we want to do this, the further
         // away (greater distance) the faster.
@@ -341,31 +338,29 @@ void cMapCamera::setMoveY(float y, float moveSpeed)
 
 void cMapCamera::onKeyHold(const cKeyboardEvent &event)
 {
-    cMouse *pMouse = m_mouse;
-
     // mouse is 'moving by pressing right mouse button', this supersedes reacting to keypress
-    if (!pMouse->isMapScrolling()) {
+    if (!m_mouse->isMapScrolling()) {
         if (event.isAction(eKeyAction::SCROLL_LEFT)) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            pMouse->setTile(MOUSE_LEFT);
+            m_mouse->setTile(MOUSE_LEFT);
             m_keyPressedLeft = true;
         }
 
         if (event.isAction(eKeyAction::SCROLL_UP)) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            pMouse->setTile(MOUSE_UP);
+            m_mouse->setTile(MOUSE_UP);
             m_keyPressedUp = true;
         }
 
         if (event.isAction(eKeyAction::SCROLL_RIGHT)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            pMouse->setTile(MOUSE_RIGHT);
+            m_mouse->setTile(MOUSE_RIGHT);
             m_keyPressedRight = true;
         }
 
         if (event.isAction(eKeyAction::SCROLL_DOWN)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            pMouse->setTile(MOUSE_DOWN);
+            m_mouse->setTile(MOUSE_DOWN);
             m_keyPressedDown = true;
         }
     }
