@@ -105,7 +105,7 @@ public:
     void setupPlayers(cHousesInfo* housesInfo);
 
     // Initialize per-player runtime helpers used during gameplay.
-    void setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMouse* mouse, int techLevel);
+    void setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMouse* mouse, int techLevel, sGameServices* services);
 
     void destroyAllegroBitmaps();
 
