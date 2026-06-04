@@ -100,16 +100,18 @@ void cPlayers::setupPlayers(cHousesInfo* housesInfo)
     }
 }
 
-void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMouse* mouse, int techLevel)
+void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMouse* mouse, int techLevel, sGameServices* services)
 {
     d2tm_assert(sideBarFactory != nullptr);
     d2tm_assert(mouse != nullptr);
+    d2tm_assert(services != nullptr);
 
     for (int i = HUMAN; i < MAX_PLAYERS_CAPACITY; i++) {
         cPlayer* player = m_players[i];
 
-       auto buildingListUpdater = std::make_unique<cBuildingListUpdater>(player);
+        auto buildingListUpdater = std::make_unique<cBuildingListUpdater>(player);
         auto itemBuilder = std::make_unique<cItemBuilder>(player, buildingListUpdater.get());
+        itemBuilder->serviceInit(services);
         player->setBuildingListUpdater(std::move(buildingListUpdater));
         player->setItemBuilder(std::move(itemBuilder));
 

@@ -11,12 +11,15 @@
 
 class cPlayer;
 class cBuildingListUpdater;
+struct sGameServices;
 
 class cItemBuilder : cInputObserver {
 
 public:
     cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingListUpdater);
     virtual ~cItemBuilder();
+
+    void serviceInit(sGameServices* services);
 
     // think about the progress being made, called every 5 ms
     void thinkFast();
@@ -54,6 +57,7 @@ public:
 private:
     cBuildingListItem *m_items[MAX_ITEMS];
 
+    sGameServices* m_services = nullptr;
     cPlayer *m_player;  // the player context for this builder
     cBuildingListUpdater *m_buildingListUpdater;
 

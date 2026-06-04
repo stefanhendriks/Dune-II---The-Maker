@@ -1,7 +1,8 @@
 #include "cItemBuilder.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "include/sGameServices.h"
+#include "context/GameContext.hpp"
+#include "game/cGameInterface.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/structures/cStructures.h"
@@ -44,6 +45,11 @@ cItemBuilder::~cItemBuilder()
     removeAllItems();
 }
 
+void cItemBuilder::serviceInit(sGameServices* services)
+{
+    m_services = services;
+}
+
 /**
  * Timer cap is the 'delay' to consider how much the timer must have passed before progressing one tick for
  * building things. Ie, consider something has a buildTime of 200, this means the game timer (5 ms) has to run 200 times
@@ -83,13 +89,13 @@ cItemBuilder::~cItemBuilder()
  */
 int cItemBuilder::getTimerCap(cBuildingListItem *item)
 {
-    int iTimerCap = game.m_gameSettings->isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    int iTimerCap = m_services->settings->isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
 
     // when player has low power, produce twice as slow
     if (item->getBuildType() == UNIT) {
         // the given unit will get out of a specific structure. This type
         // is within the units properties.
-        int structureTypeItLeavesFrom = game.m_infoContext->getUnitInfo(item->getBuildId()).structureTypeItLeavesFrom;
+        int structureTypeItLeavesFrom = m_services->info->getUnitInfo(item->getBuildId()).structureTypeItLeavesFrom;
         int structureCount = m_player->getAmountOfStructuresForType(structureTypeItLeavesFrom);
         if (structureCount > 1) {
             iTimerCap /= structureCount;
@@ -214,7 +220,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
         // play voice when placeIt is false`
         if (!item->shouldPlaceIt()) {
             if (m_player->isHuman()) {
-                game.playVoice(SOUND_VOICE_01_ATR, m_player->getId()); // "Construction Complete"
+                m_services->ctx->getGameInterface()->playVoice(SOUND_VOICE_01_ATR, m_player->getId()); // "Construction Complete"
             }
             item->setPlaceIt(true);
 
@@ -227,7 +233,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     .buildingListItem = item // mandatory for this event!
                 }
             };
-            game.onNotifyGameEvent(event);
+            m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
         }
     }
     else {
@@ -244,15 +250,15 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             }
             else {
                 // airborn unit
-                int structureToDeployUnit = game.m_structureUtils->findHiTechToDeployAirUnit(m_player);
+                int structureToDeployUnit = m_services->structureUtils->findHiTechToDeployAirUnit(m_player);
                 if (structureToDeployUnit > -1) {
-                    cAbstractStructure *pStructureToDeploy = game.m_gameObjectsContext->getStructures()[structureToDeployUnit];
+                    cAbstractStructure *pStructureToDeploy = m_services->objects->getStructures()[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
                     int unitId = cUnits::unitCreate(pStructureToDeploy->getCell(), buildId, m_player->getId(), false);
                     if (unitId > -1) {
                         int rallyPoint = pStructureToDeploy->getRallyPoint();
                         if (rallyPoint > -1) {
-                            game.m_gameObjectsContext->getUnit(unitId)->move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                            m_services->objects->getUnit(unitId)->move_to(rallyPoint, -1, -1, INTENT_MOVE);
                         }
                     }
                 }
@@ -269,7 +275,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     .entitySpecificType = buildId,
                 }
             };
-            game.onNotifyGameEvent(event);
+            m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
         }
         else if (eBuildType == SPECIAL) {
             m_buildingListUpdater->onBuildItemCompleted(item);
@@ -289,10 +295,10 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     // Case: Fremen is deployed at random cell on the map
                     if (special.providesType == UNIT) {
                         // determine cell
-                        int iCll = game.m_gameObjectsContext->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+                        int iCll = m_services->objects->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(4);
 
                         for (int j = 0; j < special.units; j++) {
-                            bool passable = game.m_gameObjectsContext->getMap()->isCellPassableForFootUnits(iCll);
+                            bool passable = m_services->objects->getMap()->isCellPassableForFootUnits(iCll);
 
                             if (passable) {
                                 cUnits::unitCreate(iCll, special.providesTypeId, FREMEN, false);
@@ -301,8 +307,8 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                 REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
                             }
 
-                            int x = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll);
-                            int y = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
+                            int x = m_services->objects->getMapGeometry()->getCellX(iCll);
+                            int y = m_services->objects->getMapGeometry()->getCellY(iCll);
                             int amount = RNG::rnd(2) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right
@@ -321,9 +327,9 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                     break;
                             }
                             // change cell
-                            cPoint::split(x, y) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(x, y);
+                            cPoint::split(x, y) = m_services->objects->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(x, y);
 
-                            iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(x, y);
+                            iCll = m_services->objects->getMapGeometry()->makeCell(x, y);
                         }
                     }
                     item->cancelBuilding();
@@ -339,7 +345,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                         .entitySpecificType = buildId,
                     }
                 };
-                game.onNotifyGameEvent(event);
+                m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
             }
             else if (special.providesType == BULLET) {
                 // Case: Deathhand, it is finished, and the player should select a target first.
@@ -357,7 +363,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                 .buildingListItem = item
                             }
                         };
-                        game.onNotifyGameEvent(event);
+                        m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
                     }
                 }
                 else {
@@ -380,7 +386,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     .buildingListItem = item
                 }
             };
-            game.onNotifyGameEvent(event);
+            m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
 
             // these destroy the data..
             m_buildingListUpdater->onUpgradeCompleted(item);
@@ -398,12 +404,12 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
  */
 void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
 {
-    int structureTypeByItem = game.m_structureUtils->findStructureTypeByTypeOfList(item);
+    int structureTypeByItem = m_services->structureUtils->findStructureTypeByTypeOfList(item);
     d2tm_assert(structureTypeByItem > -1);
-    int structureToDeployUnit = game.m_structureUtils->findStructureToDeployUnit(m_player, structureTypeByItem);
+    int structureToDeployUnit = m_services->structureUtils->findStructureToDeployUnit(m_player, structureTypeByItem);
     int buildIdToProduce = buildId;
     if (structureToDeployUnit > -1) {
-        cAbstractStructure *pStructureToDeploy = game.m_gameObjectsContext->getStructures()[structureToDeployUnit];
+        cAbstractStructure *pStructureToDeploy = m_services->objects->getStructures()[structureToDeployUnit];
         // TODO: Remove duplication, which also exists in AI::think_buildingplacement()
         int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
         if (cell > -1) {
@@ -412,7 +418,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
             if (unitId > -1) {
                 int rallyPoint = pStructureToDeploy->getRallyPoint();
                 if (rallyPoint > -1) {
-                    game.m_gameObjectsContext->getUnit(unitId)->move_to(rallyPoint, -1, -1, INTENT_MOVE);
+                    m_services->objects->getUnit(unitId)->move_to(rallyPoint, -1, -1, INTENT_MOVE);
                 }
             }
         }
@@ -425,7 +431,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
         if (structureToDeployUnit < 0) {
             // find any structure of type (regardless if we can deploy or not)
             for (int structureId = 0; structureId < MAX_STRUCTURES; structureId++) {
-                cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureId];
+                cAbstractStructure *pStructure = m_services->objects->getStructures()[structureId];
                 if (pStructure &&
                         pStructure->isValid() &&
                         pStructure->belongsTo(m_player->getId()) &&
@@ -436,9 +442,9 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
             }
         }
 
-        cAbstractStructure *pStructureToDeploy = game.m_gameObjectsContext->getStructures()[structureToDeployUnit];
+        cAbstractStructure *pStructureToDeploy = m_services->objects->getStructures()[structureToDeployUnit];
         if (pStructureToDeploy && pStructureToDeploy->isValid()) {
-            int cellToDeploy = game.m_gameObjectsContext->getStructures()[structureToDeployUnit]->getCell();
+            int cellToDeploy = m_services->objects->getStructures()[structureToDeployUnit]->getCell();
             if (pStructureToDeploy->getRallyPoint() > -1) {
                 cellToDeploy = pStructureToDeploy->getRallyPoint();
             }

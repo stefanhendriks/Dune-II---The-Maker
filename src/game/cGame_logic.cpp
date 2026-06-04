@@ -788,7 +788,7 @@ bool cGame::setupGame()
  */
 void cGame::setupPlayers()
 {
-    m_players->setupRuntimePlayerComponents(m_sideBarFactory.get(), m_mouse, m_dataCampaign->mission);
+    m_players->setupRuntimePlayerComponents(m_sideBarFactory.get(), m_mouse, m_dataCampaign->mission, m_services.get());
     setPlayerToInteractFor(m_gameObjectsContext->getPlayer(0));
 }
 
