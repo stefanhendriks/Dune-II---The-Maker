@@ -36,9 +36,8 @@ set(D2TM_SOURCES
     game/cGameConditionChecker.cpp
     game/cGameInterface.cpp
     game/cNotificationArea.cpp
-    game/cPlatformLayerInit.cpp
+    game/cSDLSystem.cpp
     game/cScreenFader.cpp
-    game/cScreenInit.cpp
     game/cScreenShake.cpp
     game/cScreenShotSaver.cpp
     game/cTimeCounter.cpp
