@@ -136,10 +136,10 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
                      );
 
         if (flag.big) {
-            str->addFlag(cFlag::createBigFlag(player, pos));
+            str->addFlag(cFlag::createBigFlag(player, pos, game.m_mapCamera, game.m_gameSettings.get()));
         }
         else {
-            str->addFlag(cFlag::createSmallFlag(player, pos));
+            str->addFlag(cFlag::createSmallFlag(player, pos, game.m_mapCamera, game.m_gameSettings.get()));
         }
     }
 

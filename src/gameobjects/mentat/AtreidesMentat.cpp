@@ -1,7 +1,6 @@
 #include "AtreidesMentat.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxmentat.h"
+#include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
@@ -32,9 +31,9 @@ AtreidesMentat::AtreidesMentat(GameContext* ctx, bool allowMissionSelect) : Abst
             .withTexture(gfxmentat->getTexture(BTN_YES))
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
-            .onClick([]() {
+            .onClick([this]() {
                 logbook("cYesButtonCommand::changeStateFromMentat()");
-                game.changeStateFromMentat();})
+                m_gameInterface->changeStateFromMentat();})
             .build();
 }
 

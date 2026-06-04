@@ -11,12 +11,13 @@
   */
 
 #include "AbstractMentat.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "definitions.h"
+#include "include/eGameState.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
+#include "game/cGameInterface.h"
+#include "game/cGameSettings.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
@@ -30,6 +31,7 @@
 AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
+    m_gameInterface = ctx->getGameInterface();
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
     m_renderDrawer = ctx->getSDLDrawer();
@@ -61,19 +63,19 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
     if (canMissionSelect) {
 
         int length = m_textDrawer->getTextLength("Mission select");
-        const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(game.m_gameSettings->getScreenW() - length,
-                                                game.m_gameSettings->getScreenH() - m_textDrawer->getFontHeight(),
+        const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_gameInterface->getGameSettings()->getScreenW() - length,
+                                                m_gameInterface->getGameSettings()->getScreenH() - m_textDrawer->getFontHeight(),
                                                 "Mission select");
-        
+
         auto gui_btn_toMissionSelect = GuiButtonBuilder()
-            .withRect(toMissionSelectRect)        
+            .withRect(toMissionSelectRect)
             .withLabel("Mission select")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)    
+            .withRenderer(m_renderDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([] {
-                game.setNextStateToTransitionTo(GAME_MISSIONSELECT);
+            .onClick([this] {
+                m_gameInterface->setNextStateToTransitionTo(GAME_MISSIONSELECT);
             })
             .build();
         m_guiBtnToMissionSelect = std::move(gui_btn_toMissionSelect);
@@ -84,9 +86,8 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 
     state = INIT;
 
-    // offsetX = 0 for screen resolution 640x480, ie, meaning > 640 we take the difference / 2
-    offsetX = (game.m_gameSettings->getScreenW() - 640) / 2;
-    offsetY = (game.m_gameSettings->getScreenH() - 480) / 2; // same goes for offsetY (but then for 480 height).
+    offsetX = (m_gameInterface->getGameSettings()->getScreenW() - 640) / 2;
+    offsetY = (m_gameInterface->getGameSettings()->getScreenH() - 480) / 2;
     movieTopleftX = offsetX + 256;
     movieTopleftY = offsetY + 120;
     memset(sentence, 0, sizeof(sentence));

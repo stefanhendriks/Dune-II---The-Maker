@@ -2,11 +2,10 @@
 
 #include "controls/eKeyAction.h"
 #include "data/gfxmentat.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "game/cGameInterface.h"
+#include "include/eGameState.h"
 #include "include/sDataCampaign.h"
 #include "gameobjects/players/cPlayer.h"
-#include "gameobjects/players/cPlayers.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
@@ -15,7 +14,6 @@
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
 #include "context/cInfoContext.h"
-#include "context/cGameObjectContext.h"
 #include <iostream>
 
 BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, false), m_dataCampaign(dataCampaign)
@@ -48,23 +46,22 @@ BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : Abstrac
 void BeneMentat::onYesButtonPressed()
 {
     logbook("cYesButtonCommand::execute()");
-    game.setNextStateToTransitionTo(GAME_BRIEFING);
+    m_gameInterface->setNextStateToTransitionTo(GAME_BRIEFING);
     m_dataCampaign->mission = 1; // first mission
     m_dataCampaign->region  = 1; // and the first "region" so to speak
-    game.missionInit();
-    game.m_gameObjectsContext->getPlayer(HUMAN)->setHouse(this->getHouse());
+    m_gameInterface->missionInit();
+    m_gameInterface->getPlayer(HUMAN)->setHouse(this->getHouse());
     m_dataCampaign->housePlayer = this->getHouse();
-    game.initiateFadingOut();
+    m_gameInterface->initiateFadingOut();
 }
 
 void BeneMentat::onNoButtonPressed()
 {
     logbook("cNoButtonCommand::execute()");
-    // head back to choose house
-    game.m_gameObjectsContext->getPlayer(HUMAN)->setHouse(GENERALHOUSE);
+    m_gameInterface->getPlayer(HUMAN)->setHouse(GENERALHOUSE);
     m_dataCampaign->housePlayer = GENERALHOUSE;
-    game.setNextStateToTransitionTo(GAME_SELECT_HOUSE);
-    game.initiateFadingOut();
+    m_gameInterface->setNextStateToTransitionTo(GAME_SELECT_HOUSE);
+    m_gameInterface->initiateFadingOut();
 }
 
 void BeneMentat::think()

@@ -1,4 +1,5 @@
 #include "game/cGameInterface.h"
+#include "context/cGameObjectContext.h"
 #include "data/gfxaudio.h"
 #include "game/cGame.h"
 #include "utils/cLog.h"
@@ -267,4 +268,19 @@ cDrawManager* cGameInterface::getRenderDrawManager() const
 int cGameInterface::getCurrentState() const
 {
     return m_game->getCurrentState();
+}
+
+void cGameInterface::changeStateFromMentat() const
+{
+    m_game->changeStateFromMentat();
+}
+
+cPlayer* cGameInterface::getPlayer(int id) const
+{
+    return m_game->m_gameObjectsContext->getPlayer(id);
+}
+
+cGameSettings* cGameInterface::getGameSettings() const
+{
+    return m_game->m_gameSettings.get();
 }
