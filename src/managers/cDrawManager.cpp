@@ -43,7 +43,6 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
 {
     d2tm_assert(m_player!=nullptr);
     d2tm_assert(ctx != nullptr);
-    d2tm_assert(services != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_renderDrawer != nullptr);
     d2tm_assert(m_gfxdata != nullptr);
