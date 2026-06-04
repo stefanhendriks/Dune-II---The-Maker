@@ -1,7 +1,6 @@
 #include "HarkonnenMentat.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxmentat.h"
+#include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
@@ -31,9 +30,9 @@ HarkonnenMentat::HarkonnenMentat(GameContext* ctx, bool allowMissionSelect) : Ab
             .withTexture(gfxmentat->getTexture(BTN_YES))
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
-            .onClick([]() {
+            .onClick([this]() {
                 logbook("cYesButtonCommand::changeStateFromMentat()");
-                game.changeStateFromMentat();})
+                m_gameInterface->changeStateFromMentat();})
             .build();
 }
 

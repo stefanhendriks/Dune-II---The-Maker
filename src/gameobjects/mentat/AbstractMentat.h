@@ -32,6 +32,7 @@ class GuiButton;
 struct SDL_Surface;
 class Texture;
 class GameContext;
+class cGameInterface;
 class SDLDrawer;
 class cTextDrawer;
 
@@ -123,4 +124,5 @@ protected:
 
     std::unique_ptr<GuiButton> m_guiBtnToMissionSelect;
     Graphics* gfxmentat;
+    cGameInterface* m_gameInterface = nullptr;
 };

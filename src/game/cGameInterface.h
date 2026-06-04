@@ -6,6 +6,7 @@
 #include <string>
 
 class cGame;
+class cGameSettings;
 class cMouse;
 class cPlayer;
 class cDrawManager;
@@ -75,6 +76,10 @@ public:
     int getTotalPowerOutForPlayer(cPlayer *pPlayer) const;
     int getTotalSpiceCapacityForPlayer(cPlayer *pPlayer) const;
     int getStructureTypeByUnitBuildId(int unitBuildId) const;
+
+    void changeStateFromMentat() const;
+    cPlayer* getPlayer(int id) const;
+    cGameSettings* getGameSettings() const;
 private:
     cGame* m_game = nullptr;
 };
