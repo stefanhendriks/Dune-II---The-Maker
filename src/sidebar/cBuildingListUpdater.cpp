@@ -1,14 +1,12 @@
 #include "cBuildingListUpdater.h"
 #include "building/cItemBuilder.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/cLog.h"
 #include "sidebar/cSideBar.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "context/cInfoContext.h"
-#include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
+#include "include/sGameServices.h"
 
 #include <format>
 #include "include/cAssert.h"
@@ -17,6 +15,12 @@ cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer)
 {
     d2tm_assert(thePlayer!=nullptr);
     m_player = thePlayer;
+}
+
+void cBuildingListUpdater::serviceInit(sGameServices* services)
+{
+    m_info = services->info;
+    m_settings = services->settings;
 }
 
 void cBuildingListUpdater::onStructureCreated(int structureType)
@@ -31,7 +35,7 @@ void cBuildingListUpdater::onStructureCreated(int structureType)
     else {
         // AI m_players...
 
-        if (game.m_gameSettings->isSkirmish()) {
+        if (m_settings->isSkirmish()) {
             // on skirmish mode use the 'strict' / no cheating mode (same as human m_players)
             onStructureCreatedSkirmishMode(structureType);
             evaluateUpgrades();
@@ -500,7 +504,7 @@ void cBuildingListUpdater::onStructureDestroyed(int structureType)
     else {
         // AI m_players...
 
-        if (game.m_gameSettings->isSkirmish()) {
+        if (m_settings->isSkirmish()) {
             // on skirmish mode use the 'strict' / no cheating mode (same as human m_players)
             onStructureDestroyedSkirmishMode();
             evaluateUpgrades();
@@ -524,7 +528,7 @@ void cBuildingListUpdater::evaluateUpgrades()
     cBuildingList *listUpgrades = sideBar->getList(eListType::LIST_UPGRADES);
 
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
-        s_UpgradeInfo &upgradeInfo = game.m_infoContext->getUpgradeInfo(i);
+        s_UpgradeInfo &upgradeInfo = m_info->getUpgradeInfo(i);
         if (!upgradeInfo.enabled) continue;
         // check techlevel (this is a non-changing value per mission, usually coupled with mission nr, ie
         // mission 1 = techlevel 1. Mission 9 = techlevel 9. Skirmish is usually techlevel 9.
@@ -543,7 +547,7 @@ void cBuildingListUpdater::evaluateUpgrades()
         if (!hasRequiredStructureType) {
             addToUpgradesList = false;
             m_player->log(std::format("Upgrade [{}] has not required structureType (upgradeInfo.structureType) #1 [{}].",
-                                    upgradeInfo.description, game.m_infoContext->getStructureInfo(upgradeInfo.structureType).name));
+                                    upgradeInfo.description, m_info->getStructureInfo(upgradeInfo.structureType).name));
         }
 
         // check if m_player has the additional structure (if required)
@@ -552,7 +556,7 @@ void cBuildingListUpdater::evaluateUpgrades()
             if (!hasRequiredStructureType) {
                 addToUpgradesList = false;
                 m_player->log(std::format("Upgrade [{}] has not required additional structureType (upgradeInfo.needsStructureType) [{}].",
-                                        upgradeInfo.description, game.m_infoContext->getStructureInfo(upgradeInfo.needsStructureType).name));
+                                        upgradeInfo.description, m_info->getStructureInfo(upgradeInfo.needsStructureType).name));
             }
         }
 

@@ -9,6 +9,10 @@
 #include "utils/Color.hpp"
 
 class cItemBuilder;
+class cInfoContext;
+class cGameInterface;
+class cGameSettings;
+struct sGameServices;
 
 /**
  *
@@ -141,6 +145,7 @@ public:
     void resetTimesOrderedForAllItems();
 
     void setItemBuilder(cItemBuilder *value);
+    void serviceInit(sGameServices* services);
 
     void startFlashing();
 
@@ -176,6 +181,9 @@ private:
     cBuildingListItem *m_items[MAX_ITEMS];
 
     cItemBuilder *m_itemBuilder;
+    cInfoContext* m_info = nullptr;
+    cGameInterface* m_gameInterface = nullptr;
+    cGameSettings* m_settings = nullptr;
 
     int getFreeSlot();
 

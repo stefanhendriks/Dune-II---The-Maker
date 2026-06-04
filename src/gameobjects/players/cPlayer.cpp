@@ -1712,7 +1712,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                     };
                     m_interface->onNotifyGameEvent(newEvent);
                 }
-                if (cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType)) {
+                if (cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType, m_infos)) {
                     startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
                 }
             }
@@ -1721,7 +1721,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
         case eGameEventType::GAME_EVENT_LIST_ITEM_ADDED:
         case eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED:
             if (const auto *buildEvent = std::get_if<BuildingEvent>(&event.data)) {
-                if (buildEvent->player == this && cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType)) {
+                if (buildEvent->player == this && cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType, m_infos)) {
                     startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
                 }
             }

@@ -1,15 +1,15 @@
 #include "cSideBar.h"
 #include "game/cGameSettings.h"
 #include "building/cItemBuilder.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/cLog.h"
-#include "utils/cSoundPlayer.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "data/gfxaudio.h"
+#include "game/cGameInterface.h"
+#include "context/GameContext.hpp"
+#include "include/sGameServices.h"
 
 #include <format>
 #include "include/cAssert.h"
@@ -55,9 +55,16 @@ void cSideBar::think()
     thinkProgressAnimation();
 }
 
+void cSideBar::serviceInit(sGameServices* services)
+{
+    m_gameInterface = services->ctx->getGameInterface();
+    m_drawManager = m_gameInterface->getDrawManager();
+    m_settings = services->settings;
+}
+
 void cSideBar::drawMessageBarWithItemInfo(cBuildingListItem *item) const
 {
-    game.m_drawManager->setMessage(item->getInfo());
+    m_drawManager->setMessage(item->getInfo());
 }
 
 bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const
@@ -137,14 +144,14 @@ void cSideBar::thinkProgressAnimation()
 
 void cSideBar::onMouseAt(const s_MouseEvent &event)
 {
-    m_isMouseOverSidebarValue = event.coords.x > (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth);
-    game.m_drawManager->setKeepMessage(m_isMouseOverSidebarValue);
+    m_isMouseOverSidebarValue = event.coords.x > (m_settings->getScreenW() - cSideBar::SidebarWidth);
+    m_drawManager->setKeepMessage(m_isMouseOverSidebarValue);
 
     if (m_selectedListID < 0) return;
 
     // when mouse is selecting a list, and over an item, then draw message bar...!?
     cBuildingList *list = getList(m_selectedListID);
-    cBuildingListDrawer *buildingListDrawer = game.m_drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = m_drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
@@ -168,7 +175,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
         if (list->isOverButton(event.coords.x, event.coords.y)) {
             // clicked on it. Set focus on this one
             setSelectedListId(eListTypeFromInt(i));
-            game.playSound(SOUND_BUTTON, 64); // click sound
+            m_gameInterface->playSound(SOUND_BUTTON); // click sound
             break;
         }
     }
@@ -186,14 +193,14 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
         return;
     }
 
-    cOrderDrawer *orderDrawer = game.m_drawManager->getOrderDrawer();
+    cOrderDrawer *orderDrawer = m_drawManager->getOrderDrawer();
 
     // allow clicking on the order button, send event through...
     if (list->getType() == eListType::LIST_STARPORT) {
         orderDrawer->onNotify(event);
     }
 
-    cBuildingListDrawer *buildingListDrawer = game.m_drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = m_drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
@@ -236,7 +243,7 @@ void cSideBar::onMouseClickedRight(const s_MouseEvent &event)
     // when mouse pressed, build item if over item
     cBuildingList *list = getList(m_selectedListID);
 
-    cBuildingListDrawer *buildingListDrawer = game.m_drawManager->getBuildingListDrawer();
+    cBuildingListDrawer *buildingListDrawer = m_drawManager->getBuildingListDrawer();
     cBuildingListItem *item = buildingListDrawer->isOverItemCoordinates(list, event.coords.x, event.coords.y);
     if (item == nullptr) return;
 
@@ -289,7 +296,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
                     .buildingListItem = item
                 }
             };
-            game.onNotifyGameEvent(event);
+            m_gameInterface->onNotifyGameEvent(event);
             // else, only the number is decreased (used for queueing)
 
             cItemBuilder *itemBuilder = m_player->getItemBuilder();

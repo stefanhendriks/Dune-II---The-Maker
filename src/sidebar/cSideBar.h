@@ -19,6 +19,10 @@
 #include "controls/sMouseEvent.h"
 
 class cPlayer;
+class cGameInterface;
+class cDrawManager;
+class cGameSettings;
+struct sGameServices;
 
 //// List ID's corresponding buttons
 //#define LIST_NONE        0
@@ -95,6 +99,8 @@ public:
     static const int TotalHeightBeforePowerBarStarts =
         TopBarHeight + HeightOfMinimap + HorizontalCandyBarHeight + PowerBarMarginHeight;
 
+    void serviceInit(sGameServices* services);
+
     void onNotifyMouseEvent(const s_MouseEvent &event);
 
     void cancelBuildingListItem(cBuildingListItem *item);
@@ -111,6 +117,9 @@ private:
     // the lists:
     cBuildingList *m_lists[LIST_MAX];
     cPlayer *m_player;
+    cGameInterface* m_gameInterface = nullptr;
+    cDrawManager* m_drawManager = nullptr;
+    cGameSettings* m_settings = nullptr;
 
     bool m_isMouseOverSidebarValue;
 

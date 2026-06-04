@@ -1,11 +1,10 @@
 #include "cBuildingListItem.h"
 
 #include "utils/cLog.h"
-#include "game/cGame.h"
 #include "utils/common.h"
-#include "include/d2tmc.h"
 #include "sidebar/cBuildingList.h"
 #include "context/cInfoContext.h"
+#include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include <format>
 #include "include/cAssert.h"
@@ -35,23 +34,30 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     m_TIMER_progressFrame = 0.0f;
     m_TIMER_flashing = 500;
 
-    m_timerCap = game.m_gameSettings->isCheatMode() ? cBuildingListItem::DebugTimerCap : cBuildingListItem::DefaultTimerCap;
+    m_timerCap = DefaultTimerCap;
 
     m_myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
 
-    int totalBuildTime = getTotalBuildTime();
-    if (m_cost > 0 && totalBuildTime > 0) {
-        m_creditsPerProgressTime = (float)m_cost / (float)totalBuildTime;
-    }
-
     cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "cBuildingListItem",
-        std::format("constructor [{}], cost = {}, totalBuildTime = {}, creditsPerProgressTime = {}",
-            getNameString().c_str(), m_cost, totalBuildTime, m_creditsPerProgressTime));
+        std::format("constructor [{}], cost = {}, creditsPerProgressTime = {}",
+            getNameString().c_str(), m_cost, m_creditsPerProgressTime));
 }
 
 cBuildingListItem::~cBuildingListItem()
 {
     m_myList = NULL;
+}
+
+void cBuildingListItem::serviceInit(cInfoContext* info, cGameSettings* settings, cGameInterface* gameInterface)
+{
+    m_info = info;
+    m_settings = settings;
+    m_gameInterface = gameInterface;
+    m_timerCap = m_settings->isCheatMode() ? DebugTimerCap : DefaultTimerCap;
+    int totalBuildTime = getTotalBuildTime();
+    if (m_cost > 0 && totalBuildTime > 0) {
+        m_creditsPerProgressTime = (float)m_cost / (float)totalBuildTime;
+    }
 }
 
 /**
@@ -148,16 +154,16 @@ void cBuildingListItem::increaseProgress(int byAmount)
 int cBuildingListItem::getTotalBuildTime() const
 {
     if (m_type == STRUCTURE) {
-        return game.m_infoContext->getStructureInfo(m_buildId).buildTime;
+        return m_info->getStructureInfo(m_buildId).buildTime;
     }
     if (m_type == UPGRADE) {
-        return game.m_infoContext->getUpgradeInfo(m_buildId).buildTime;
+        return m_info->getUpgradeInfo(m_buildId).buildTime;
     }
     if (m_type == SPECIAL) {
-        return game.m_infoContext->getSpecialInfo(m_buildId).buildTime;
+        return m_info->getSpecialInfo(m_buildId).buildTime;
     }
     // assumes units by default
-    return game.m_infoContext->getUnitInfo(m_buildId).buildTime;
+    return m_info->getUnitInfo(m_buildId).buildTime;
 }
 
 bool cBuildingListItem::isDoneBuilding()
@@ -197,7 +203,7 @@ s_UpgradeInfo &cBuildingListItem::getUpgradeInfo()
         logbook("ERROR!!! - calling getUpgradeInfo while type is not UPGRADE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return game.m_infoContext->getUpgradeInfo(buildId);
+    return m_info->getUpgradeInfo(buildId);
 }
 
 s_SpecialInfo &cBuildingListItem::getSpecialInfo()
@@ -207,7 +213,7 @@ s_SpecialInfo &cBuildingListItem::getSpecialInfo()
         logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return game.m_infoContext->getSpecialInfo(buildId);
+    return m_info->getSpecialInfo(buildId);
 }
 
 s_UnitInfo &cBuildingListItem::getUnitInfo()
@@ -217,7 +223,7 @@ s_UnitInfo &cBuildingListItem::getUnitInfo()
         logbook("ERROR!!! - calling getUnitInfo while type is not UNIT! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return game.m_infoContext->getUnitInfo(buildId);
+    return m_info->getUnitInfo(buildId);
 }
 
 s_StructureInfo &cBuildingListItem::getStructureInfo()
@@ -227,7 +233,7 @@ s_StructureInfo &cBuildingListItem::getStructureInfo()
         logbook("ERROR!!! - calling getStructureInfo while type is not STRUCTURE! - falling back to buildId 1 as safety");
         buildId = 1;
     }
-    return game.m_infoContext->getStructureInfo(buildId);
+    return m_info->getStructureInfo(buildId);
 }
 
 void cBuildingListItem::resetTimesOrdered()
@@ -314,21 +320,21 @@ int cBuildingListItem::getProgressBuildTimeInMs()
     return getInTicks(m_progress) * 5; // 5 = ms for every time we call the itemBuilder
 }
 
-int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId)
+int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId, cInfoContext* info)
 {
     int buildTime = 0;
     switch (type) {
         case UNIT:
-            buildTime = game.m_infoContext->getUnitInfo(buildId).buildTime;
+            buildTime = info->getUnitInfo(buildId).buildTime;
             break;
         case STRUCTURE:
-            buildTime = game.m_infoContext->getStructureInfo(buildId).buildTime;
+            buildTime = info->getStructureInfo(buildId).buildTime;
             break;
         case SPECIAL:
-            buildTime = game.m_infoContext->getSpecialInfo(buildId).buildTime;
+            buildTime = info->getSpecialInfo(buildId).buildTime;
             break;
         case UPGRADE:
-            buildTime = game.m_infoContext->getUpgradeInfo(buildId).buildTime;
+            buildTime = info->getUpgradeInfo(buildId).buildTime;
             break;
         case BULLET:
         default:
@@ -338,18 +344,18 @@ int cBuildingListItem::getTotalBuildTimeInTicks(eBuildType type, int buildId)
     return buildTime * 35;
 }
 
-int cBuildingListItem::getListId(eBuildType type, int buildId)
+int cBuildingListItem::getListId(eBuildType type, int buildId, cInfoContext* info)
 {
     switch (type) {
         case UNIT:
-            return eListTypeAsInt(game.m_infoContext->getUnitInfo(buildId).listType);
+            return eListTypeAsInt(info->getUnitInfo(buildId).listType);
         case STRUCTURE:
-            return game.m_infoContext->getStructureInfo(buildId).list;
+            return info->getStructureInfo(buildId).list;
         case SPECIAL:
-            return eListTypeAsInt(game.m_infoContext->getSpecialInfo(buildId).listType);
+            return eListTypeAsInt(info->getSpecialInfo(buildId).listType);
             break;
         case UPGRADE:
-//            return game.m_infoContext->getUpgradeInfo(buildId).;
+//            return info->getUpgradeInfo(buildId).;
             return eListTypeAsInt(eListType::LIST_UPGRADES);
             break;
         default:
@@ -357,11 +363,11 @@ int cBuildingListItem::getListId(eBuildType type, int buildId)
     }
 }
 
-bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId)
+bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId, cInfoContext* info)
 {
     switch (type) {
         case SPECIAL:
-            return game.m_infoContext->getSpecialInfo(buildId).autoBuild;
+            return info->getSpecialInfo(buildId).autoBuild;
         default:
             return false;
     }
@@ -369,7 +375,7 @@ bool cBuildingListItem::isAutoBuild(eBuildType type, int buildId)
 
 bool cBuildingListItem::isAutoBuild()
 {
-    return cBuildingListItem::isAutoBuild(m_type, m_buildId);
+    return cBuildingListItem::isAutoBuild(m_type, m_buildId, m_info);
 }
 
 std::string cBuildingListItem::getInfo()
@@ -391,7 +397,7 @@ std::string cBuildingListItem::getInfo()
             msg = std::format("${} | {} | {} Secs", getBuildCost(), unitType.name, seconds);
         }
         else {
-            msg = std::format("{} | {} Secs", game.m_infoContext->getUnitInfo(getBuildId()).name, seconds);
+            msg = std::format("{} | {} Secs", m_info->getUnitInfo(getBuildId()).name, seconds);
         }
     }
     else if (isTypeUpgrade()) {

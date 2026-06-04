@@ -189,9 +189,6 @@ cGame::cGame()
     m_players = m_gameObjectsContext->getPlayers();
     d2tm_assert(m_players != nullptr);
 
-    m_sideBarFactory = std::make_unique<cSideBarFactory>();
-    m_buildingListFactory = std::make_unique<cBuildingListFactory>();
-
     m_eventEmitter = std::make_unique<cEventEmitter>(
         [this](const s_GameEvent &event) {
             dispatchGameEvent(event);
@@ -206,6 +203,9 @@ cGame::cGame()
     m_services->structureUtils = m_structureUtils.get();
     m_services->m_log = nullptr;
     m_services->eventEmitter = m_eventEmitter.get();
+
+    m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
+    m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());
 
     m_cIni = std::make_unique<cIni>(m_services.get());
 }
