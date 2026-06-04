@@ -182,7 +182,7 @@ void cGunTurret::think_fire()
                     int iShootX = pos_x() + half;
                     int iShootY = pos_y() + half;
                     int bmp_head = convertAngleToDrawIndex(iHeadFacing);
-                    cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head);
+                    cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head, game.m_gameObjectsContext.get(), game.m_infoContext.get());
                 }
             }
 

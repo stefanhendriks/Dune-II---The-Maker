@@ -748,6 +748,7 @@ bool cGame::setupGame()
         delete m_mapCamera;
 
     m_mapCamera = new cMapCamera(m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove);
+    m_services->mapCamera = m_mapCamera;
 
     m_cIni->installGame(m_gameFilename);
     // Now we are ready for the menu state

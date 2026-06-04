@@ -21,15 +21,21 @@
 #include <tuple>
 
 class Texture;
+struct sGameServices;
+class cGameObjectContext;
+class cInfoContext;
 
 class cParticle {
 public:
     cParticle();
     ~cParticle();
 
+    void serviceInit(sGameServices* services);
+
     // Factory methods
-    static int create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID = -1);
-    static int findNewSlot();
+    static int create(long x, long y, int iType, int iHouse, int iFrame,
+                      cGameObjectContext* objects, cInfoContext* info, int iUnitID = -1);
+    static int findNewSlot(cGameObjectContext* objects);
     // resets the particle system (frees all particles textures colored for houses)
     static void reset();
 
@@ -96,6 +102,8 @@ private:
     int drawYBmpOffset;
 
     bool oldParticle;
+
+    sGameServices* m_services = nullptr;
 
     int boundUnitID;
     int boundParticleID; // when particles are 'tied together'

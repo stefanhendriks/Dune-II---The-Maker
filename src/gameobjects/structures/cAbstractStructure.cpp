@@ -212,21 +212,21 @@ void cAbstractStructure::die()
             int posX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCell(iCll);
             int posY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCell(iCll);
 
-            cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1);
+            cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
 
             for (int i=0; i < 3; i++) {
                 game.m_gameObjectsContext->getMap()->smudge_increase(SmudgeType::S_ROCK, iCll);
 
                 // create particle
                 int iType = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + RNG::rnd(2);
-                cParticle::create(posX + half, posY + half, iType, -1, -1);
+                cParticle::create(posX + half, posY + half, iType, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
 
                 // create smoke
                 if (RNG::rnd(100) < 15) {
                     int randomX = -8 + RNG::rnd(16);
                     int randomY = -8 + RNG::rnd(16);
 
-                    cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
+                    cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
                 }
 
                 // create fire
@@ -235,7 +235,7 @@ void cAbstractStructure::die()
                     int randomY = -8 + RNG::rnd(16);
 
                     cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_EXPLOSION_FIRE, -1,
-                                      -1);
+                                      -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
                 }
 
             }
@@ -510,7 +510,7 @@ void cAbstractStructure::damage(int hp, int originId)
         if (RNG::rnd(100) < iChance) {
             long x = getRandomPosX();
             long y = getRandomPosY();
-            int particleIndex = cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
+            int particleIndex = cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
             if (particleIndex > -1) {
                 TIMER_reduceSmoke = game.m_gameObjectsContext->getParticles()[particleIndex].getTimerDeadInTicks();
                 m_smokeParticlesCreated++;
