@@ -1,7 +1,5 @@
 #pragma once
 
-#include "game/cPlatformLayerInit.h"
-
 #include <string>
 #include <SDL3/SDL.h>
 
@@ -12,10 +10,9 @@ struct DisplayResolution {
 
 class cScreenInit {
 public:
-    // Creates a window or initializes full-screen with the given resolution at desktop color depth
+    // Initializes SDL, creates a window and renderer with the given resolution
     cScreenInit(int desiredWidth, int desiredHeight, const std::string &title);
-    // No cleanup required
-    ~cScreenInit() = default;
+    ~cScreenInit();
 
     void setFullScreenMode();
     void setWindowMode();
