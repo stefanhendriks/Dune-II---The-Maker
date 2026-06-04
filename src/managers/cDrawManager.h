@@ -26,6 +26,11 @@ class Graphics;
 class SDLDrawer;
 class cSideBarDrawer;
 class GameContext;
+class cGameInterface;
+class cGameObjectContext;
+class cMapCamera;
+class cGameSettings;
+struct sGameServices;
 
 /**
  * Candidate class for PlayingMissionState (draw function?), but also for SelectYourNextConquestState (drawing
@@ -34,7 +39,7 @@ class GameContext;
 class cDrawManager : cInputObserver {
 
 public:
-    explicit cDrawManager(GameContext *ctx, cPlayer *thePlayer);
+    explicit cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *services);
     ~cDrawManager();
 
     void drawCombatState();
@@ -128,6 +133,10 @@ private:
     Graphics* m_gfxinter = nullptr;
     Graphics* m_gfxdata = nullptr;
     cMouseDrawer* m_mouseDrawer = nullptr;
+    cGameInterface* m_gameInterface = nullptr;
+    cGameObjectContext* m_objects = nullptr;
+    cMapCamera* m_mapCamera = nullptr;
+    cGameSettings* m_gameSettings = nullptr;
 
     void onKeyDown(const cKeyboardEvent &event);
 

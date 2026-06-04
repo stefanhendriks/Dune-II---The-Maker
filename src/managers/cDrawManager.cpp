@@ -3,8 +3,9 @@
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "game/cGameInterface.h"
+#include "include/eGameState.h"
+#include "include/sGameServices.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
@@ -27,21 +28,30 @@
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
 
-cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer) :
+cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *services) :
     m_sidebarColor(Color{214, 149, 20,255}),
     m_player(thePlayer),
     m_ctx(ctx),
     m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
     m_renderDrawer(ctx->getSDLDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
-    m_gfxdata(ctx->getGraphicsContext()->gfxdata.get())
+    m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
+    m_gameInterface(ctx->getGameInterface()),
+    m_objects(services->objects),
+    m_mapCamera(services->mapCamera),
+    m_gameSettings(services->settings)
 {
     d2tm_assert(m_player!=nullptr);
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(services != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_renderDrawer != nullptr);
     d2tm_assert(m_gfxdata != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
+    d2tm_assert(m_gameInterface != nullptr);
+    d2tm_assert(m_objects != nullptr);
+    d2tm_assert(m_mapCamera != nullptr);
+    d2tm_assert(m_gameSettings != nullptr);
     this->reset();
 }
 
@@ -51,8 +61,8 @@ void cDrawManager::reset()
     m_sidebarDrawer = std::make_unique<cSideBarDrawer>(m_ctx, m_player);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(m_ctx, m_player);
     m_orderDrawer = std::make_unique<cOrderDrawer>(m_ctx, m_player);
-    m_mapDrawer = std::make_unique<cMapDrawer>(m_ctx, game.m_gameObjectsContext->getMap(), m_player, game.m_mapCamera);
-    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(m_ctx, game.m_gameObjectsContext->getMap(), m_player, game.m_mapCamera);
+    m_mapDrawer = std::make_unique<cMapDrawer>(m_ctx, m_objects->getMap(), m_player, m_mapCamera);
+    m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(m_ctx, m_objects->getMap(), m_player, m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx,m_player);
@@ -73,22 +83,22 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.m_mapCamera->getWindowWidth(), game.m_gameSettings->getScreenH());
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, m_mapCamera->getWindowWidth(), m_gameSettings->getScreenH());
     m_mapDrawer->drawTerrain();
 
     m_structureDrawer->drawStructuresFirstLayer();
 
     // draw layer 1 (beneath units, on top of terrain)
-    m_particleDrawer->determineParticlesToDraw(*game.m_mapViewport);
+    m_particleDrawer->determineParticlesToDraw(*m_gameInterface->getMapViewport());
     m_particleDrawer->drawLowerLayer();
 
-    game.m_gameObjectsContext->getMap()->draw_units();
+    m_objects->getMap()->draw_units();
 
-    game.m_gameObjectsContext->getMap()->draw_bullets();
+    m_objects->getMap()->draw_bullets();
 
     m_structureDrawer->drawStructuresSecondLayer();
 
-    game.m_gameObjectsContext->getMap()->draw_units_2nd();
+    m_objects->getMap()->draw_units_2nd();
 
     m_particleDrawer->drawTopLayer();
     m_structureDrawer->drawStructuresHealthBars();
@@ -104,7 +114,7 @@ void cDrawManager::drawCombatState()
 
     drawOptionBar();
 
-    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, game.m_mapCamera->getWindowWidth(), game.m_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
+    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, m_mapCamera->getWindowWidth(), m_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
     drawStructurePlacing();
     m_renderDrawer->resetClippingFor();
 
@@ -116,7 +126,7 @@ void cDrawManager::drawCombatState()
 
     m_renderDrawer->resetClippingFor();
 
-    if (game.m_gameSettings->isDrawUsages()) {
+    if (m_gameSettings->isDrawUsages()) {
         drawDebugInfoUsages();
         m_particleDrawer->drawDebugInfo(m_textDrawer);
     }
@@ -125,29 +135,29 @@ void cDrawManager::drawCombatState()
 void cDrawManager::drawDebugInfoUsages() const
 {
     int unitsUsed = 0;
-    for (int i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
-        if (game.m_gameObjectsContext->getUnit(i)->isValid()) {
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        if (m_objects->getUnit(i)->isValid()) {
             unitsUsed++;
         }
     }
 
     int structuresUsed = 0;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *pStructure = m_objects->getStructures()[i];
         if (pStructure) {
             structuresUsed++;
         }
     }
 
     int bulletsUsed = 0;
-    for (const auto& bullet : game.m_gameObjectsContext->getBullets()) {
+    for (const auto& bullet : m_objects->getBullets()) {
         if (bullet.bAlive) {
             bulletsUsed++;
         }
     }
 
     int particlesUsed = 0;
-    for (const auto& particle : game.m_gameObjectsContext->getParticles()) {
+    for (const auto& particle : m_objects->getParticles()) {
         if (particle.isValid()) {
             particlesUsed++;
         }
@@ -155,10 +165,10 @@ void cDrawManager::drawDebugInfoUsages() const
 
     int startY = 74;
     int height = 14;
-    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, game.m_gameObjectsContext->getUnitsSize()));
+    m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, m_objects->getUnitsSize()));
     m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
-    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, game.m_gameObjectsContext->getBullets().size()));
-    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, game.m_gameObjectsContext->getParticles().size()));
+    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, m_objects->getBullets().size()));
+    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, m_objects->getParticles().size()));
 }
 
 void cDrawManager::drawCredits()
@@ -168,39 +178,39 @@ void cDrawManager::drawCredits()
 
 void cDrawManager::drawRallyPoint()
 {
-    cPlayer* humanPlayer = game.m_gameObjectsContext->getPlayer(HUMAN);
+    cPlayer* humanPlayer = m_objects->getPlayer(HUMAN);
     if (humanPlayer->selected_structure < 0) return;
-    cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[humanPlayer->selected_structure];
+    cAbstractStructure *theStructure = m_objects->getStructures()[humanPlayer->selected_structure];
     if (!theStructure) return;
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;
 
-    int drawX = game.m_mapCamera->getWindowXPositionFromCell(rallyPointCell);
-    int drawY = game.m_mapCamera->getWindowYPositionFromCell(rallyPointCell);
+    int drawX = m_mapCamera->getWindowXPositionFromCell(rallyPointCell);
+    int drawY = m_mapCamera->getWindowYPositionFromCell(rallyPointCell);
 
     SDL_Surface *mouseMoveBitmap = m_gfxdata->getSurface(MOUSE_MOVE);
 
-    int rallyPointWidthScaled = game.m_mapCamera->factorZoomLevel(mouseMoveBitmap->w);
-    int rallyPointHeightScaled = game.m_mapCamera->factorZoomLevel(mouseMoveBitmap->h);
+    int rallyPointWidthScaled = m_mapCamera->factorZoomLevel(mouseMoveBitmap->w);
+    int rallyPointHeightScaled = m_mapCamera->factorZoomLevel(mouseMoveBitmap->h);
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
     m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
 
-    int startX = theStructure->iDrawX() + game.m_mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
-    int startY = theStructure->iDrawY() + game.m_mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
+    int startX = theStructure->iDrawX() + m_mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
+    int startY = theStructure->iDrawY() + m_mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
 
     int offset = (mouseMoveBitmap->w/2);
-    drawX = game.m_mapCamera->getWindowXPositionFromCellWithOffset(rallyPointCell, offset);
-    drawY = game.m_mapCamera->getWindowYPositionFromCellWithOffset(rallyPointCell, offset);
+    drawX = m_mapCamera->getWindowXPositionFromCellWithOffset(rallyPointCell, offset);
+    drawY = m_mapCamera->getWindowYPositionFromCellWithOffset(rallyPointCell, offset);
 
     int endX = drawX;
     int endY = drawY;
 
-    m_renderDrawer->renderLine( startX, startY, endX, endY, game.m_gameObjectsContext->getPlayer(HUMAN)->getMinimapColor());
+    m_renderDrawer->renderLine( startX, startY, endX, endY, m_objects->getPlayer(HUMAN)->getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()
 {
-    m_renderDrawer->setClippingFor(game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth, 0, game.m_gameSettings->getScreenW(), game.m_gameSettings->getScreenH());
+    m_renderDrawer->setClippingFor(m_gameSettings->getScreenW() - cSideBar::SidebarWidth, 0, m_gameSettings->getScreenW(), m_gameSettings->getScreenH());
     m_sidebarDrawer->draw();
     m_miniMapDrawer->draw();
     m_renderDrawer->resetClippingFor();
@@ -246,7 +256,7 @@ void cDrawManager::drawMouse()
 void cDrawManager::drawTopBarBackground()
 {
     Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
-    for (int x = 0; x < game.m_gameSettings->getScreenW(); x+= topbarPiece->w) {
+    for (int x = 0; x < m_gameSettings->getScreenW(); x+= topbarPiece->w) {
         m_renderDrawer->renderSprite(topbarPiece, x, 0);
     }
 
@@ -254,8 +264,8 @@ void cDrawManager::drawTopBarBackground()
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
-    if (game.getMouse()->isLeftButtonClicked() && game.getMouse()->isOverRectangle(&optionsRect)) {
-        game.setNextStateToTransitionTo(GAME_OPTIONS);
+    if (m_gameInterface->getMouse()->isLeftButtonClicked() && m_gameInterface->getMouse()->isOverRectangle(&optionsRect)) {
+        m_gameInterface->setNextStateToTransitionTo(GAME_OPTIONS);
     }
 }
 
@@ -273,10 +283,10 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    m_renderDrawer->renderRectFillColor(0, 0, game.m_gameSettings->getScreenW(), cSideBar::TopBarHeight, Color{0, 0, 0,255});
-    m_renderDrawer->renderRectFillColor(0,game.m_gameSettings->getScreenW(), 40,32, Color{214,149,20,255});
+    m_renderDrawer->renderRectFillColor(0, 0, m_gameSettings->getScreenW(), cSideBar::TopBarHeight, Color{0, 0, 0,255});
+    m_renderDrawer->renderRectFillColor(0,m_gameSettings->getScreenW(), 40,32, Color{214,149,20,255});
 
-    for (int w = 0; w < (game.m_gameSettings->getScreenW() + 800); w += 789) {
+    for (int w = 0; w < (m_gameSettings->getScreenW() + 800); w += 789) {
         m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }
@@ -314,7 +324,7 @@ void cDrawManager::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cDrawManager::onKeyDown(const cKeyboardEvent &event)
 {
-    if (game.m_gameSettings->isDebugMode()) {
+    if (m_gameSettings->isDebugMode()) {
         if (event.hasKeys(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
             m_mapDrawer->setDrawWithoutShroudTiles(true);
         }
@@ -329,7 +339,7 @@ void cDrawManager::onKeyDown(const cKeyboardEvent &event)
 
 void cDrawManager::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (game.m_gameSettings->isDebugMode()) {
+    if (m_gameSettings->isDebugMode()) {
         // one of these we're pressed, that's enough info to revert back as it breaks the
         // mandatory 'both keys must be pressed' state:
         if (event.hasEitherKey(SDL_SCANCODE_TAB, SDL_SCANCODE_D)) {
