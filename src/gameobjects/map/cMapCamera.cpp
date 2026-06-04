@@ -1,14 +1,11 @@
 #include "cMapCamera.h"
 
+#include "controls/cMouse.h"
 #include "controls/eKeyAction.h"
 #include "data/gfxdata.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "sidebar/cSideBar.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "game/cGameSettings.h"
-#include "context/cInfoContext.h"
-#include "context/cGameObjectContext.h"
 #include "gameobjects/map/cMap.h"
 #include <algorithm>
 #include "include/cAssert.h"
@@ -17,23 +14,27 @@ namespace {
 constexpr auto kMapBoundaryScrollSpeed = 5.0f;
 }
 
-cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderOrKeys, bool cameraEdgeMove) :
+cMapCamera::cMapCamera(cMap *theMap, float moveSpeedDrag, float moveSpeedBorderOrKeys, bool cameraEdgeMove, cGameSettings* gameSettings, cMouse* mouse) :
     m_moveSpeedDrag(moveSpeedDrag),
     m_moveSpeedBorderOrKeys(moveSpeedBorderOrKeys),
     m_cameraEdgeMove(cameraEdgeMove),
     m_pMap(theMap),
-    m_mapGeometry(theMap ? theMap->getGeometry() : nullptr)
+    m_mapGeometry(theMap ? theMap->getGeometry() : nullptr),
+    m_gameSettings(gameSettings),
+    m_mouse(mouse)
 {
     d2tm_assert(theMap != nullptr);
     d2tm_assert(m_mapGeometry != nullptr);
+    d2tm_assert(gameSettings != nullptr);
+    d2tm_assert(mouse != nullptr);
     m_viewportStartX = m_viewportStartY = 32;
     m_zoomLevel = 1.0f;
 
     int widthOfSidebar = cSideBar::SidebarWidth;
     m_heightOfTopBar = cSideBar::TopBarHeight;
 
-    m_windowWidth= game.m_gameSettings->getScreenW() - widthOfSidebar;
-    m_windowHeight= game.m_gameSettings->getScreenH() - m_heightOfTopBar;
+    m_windowWidth= m_gameSettings->getScreenW() - widthOfSidebar;
+    m_windowHeight= m_gameSettings->getScreenH() - m_heightOfTopBar;
 
     m_viewportWidth=m_windowWidth;
     m_viewportHeight=m_windowHeight;
@@ -84,7 +85,6 @@ void cMapCamera::zoomIn()
 {
     if (m_zoomLevel < 4.0) {
         m_zoomLevel += 0.1;
-        auto m_mouse = game.getMouse();
         adjustViewport(m_mouse->getX(), m_mouse->getY());
     }
 }
@@ -112,7 +112,6 @@ void cMapCamera::zoomOut()
 {
     if (m_zoomLevel > 0.25) {
         m_zoomLevel -= 0.1;
-        auto m_mouse = game.getMouse();
         adjustViewport(m_mouse->getX(), m_mouse->getY());
     }
 }
@@ -139,12 +138,12 @@ void cMapCamera::keepViewportWithinReasonableBounds()
         m_viewportStartY = -halfViewportHeight;
     }
 
-    int maxWidth = (game.m_gameObjectsContext->getMap()->getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
+    int maxWidth = (m_pMap->getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
     if (getViewportEndX() > maxWidth) {
         m_viewportStartX = maxWidth - m_viewportWidth;
     }
 
-    int maxHeight = (game.m_gameObjectsContext->getMap()->getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
+    int maxHeight = (m_pMap->getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
     if ((getViewportEndY()) > maxHeight) {
         m_viewportStartY = maxHeight - m_viewportHeight;
     }
@@ -154,7 +153,7 @@ void cMapCamera::centerAndJumpViewPortToCell(int cell)
 {
     // fix any boundaries
     if (cell < 0) cell = 0;
-    if (cell >= game.m_gameObjectsContext->getMap()->getMaxCells()) cell = (game.m_gameObjectsContext->getMap()->getMaxCells()-1);
+    if (cell >= m_pMap->getMaxCells()) cell = (m_pMap->getMaxCells()-1);
 
     int mapCellX = m_mapGeometry->getAbsoluteXPositionFromCell(cell);
     int mapCellY = m_mapGeometry->getAbsoluteYPositionFromCell(cell);
@@ -221,10 +220,10 @@ void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
             onMouseMovedTo(event);
             break;
         case eMouseEventType::MOUSE_SCROLLED_DOWN:
-            game.m_mapCamera->zoomOut();
+            zoomOut();
             break;
         case eMouseEventType::MOUSE_SCROLLED_UP:
-            game.m_mapCamera->zoomIn();
+            zoomIn();
             break;
         case eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED:
             onMouseRightButtonPressed(event);
@@ -239,21 +238,19 @@ void cMapCamera::onNotifyMouseEvent(const s_MouseEvent &event)
 
 void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
 {
-    cMouse *pMouse = game.getMouse();
-
     // mouse is 'moving by pressing right mouse button', this supersedes behavior with edges
-    if (!pMouse->isMapScrolling() && m_cameraEdgeMove) {
+    if (!m_mouse->isMapScrolling() && m_cameraEdgeMove) {
 
         int mouseX = event.coords.x;
         int mouseY = event.coords.y;
 
         if (mouseX <= 2) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            pMouse->setTile(MOUSE_LEFT);
+            m_mouse->setTile(MOUSE_LEFT);
         }
-        else if (mouseX >= (game.m_gameSettings->getScreenW() - 2)) {
+        else if (mouseX >= (m_gameSettings->getScreenW() - 2)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            pMouse->setTile(MOUSE_RIGHT);
+            m_mouse->setTile(MOUSE_RIGHT);
         }
         else {
             if (!m_keyPressedLeft && !m_keyPressedRight) {
@@ -263,11 +260,11 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
 
         if (mouseY <= 2) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            pMouse->setTile(MOUSE_UP);
+            m_mouse->setTile(MOUSE_UP);
         }
-        else if (mouseY >= (game.m_gameSettings->getScreenH() - 2)) {
+        else if (mouseY >= (m_gameSettings->getScreenH() - 2)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            pMouse->setTile(MOUSE_DOWN);
+            m_mouse->setTile(MOUSE_DOWN);
         }
         else {
             if (!m_keyPressedUp && !m_keyPressedDown) {
@@ -296,7 +293,7 @@ void cMapCamera::onMouseRightButtonPressed(const s_MouseEvent &)
     m_moveX = 0.0f;
     m_moveY = 0.0f;
 
-    cMouse *pMouse = game.getMouse();
+    cMouse *pMouse = m_mouse;
 
     // mouse is 'moving by pressing right mouse button', this supersedes behavior with borders
     if (pMouse->isMapScrolling()) {
@@ -344,7 +341,7 @@ void cMapCamera::setMoveY(float y, float moveSpeed)
 
 void cMapCamera::onKeyHold(const cKeyboardEvent &event)
 {
-    cMouse *pMouse = game.getMouse();
+    cMouse *pMouse = m_mouse;
 
     // mouse is 'moving by pressing right mouse button', this supersedes reacting to keypress
     if (!pMouse->isMapScrolling()) {

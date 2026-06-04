@@ -1258,7 +1258,7 @@ void cSetupSkirmishState::generateRandomMap()
     // delete any preview texture if it exists
     delete randomMap->previewTex;
 
-    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomMap);
+    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomMap, m_objects);
 
     spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
 
