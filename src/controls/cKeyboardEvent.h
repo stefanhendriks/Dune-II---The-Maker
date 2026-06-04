@@ -44,6 +44,11 @@ public:
      */
     int getAssignGroupNumber() const;
 
+    /**
+     * Returns the group number (1–6) if SHIFT+number is pressed (add group to selection), 0 otherwise.
+     */
+    int getAddToSelGroupNumber() const;
+
     // Raw key checks — kept public during migration to isAction(); will be removed once all callers are converted.
     bool hasKey(SDL_Scancode scanCode) const;
 

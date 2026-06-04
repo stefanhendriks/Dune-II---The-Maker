@@ -437,7 +437,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
             }
         }
 
-        int iGroup = event.getGroupNumber();
+        int iGroup = event.getAddToSelGroupNumber();
 
         // holding shift & group number, so add group to the selected units
         if (iGroup > 0) {

@@ -69,6 +69,12 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::GROUP_ASSIGN_4, {SDL_SCANCODE_4}, true, false, false);
     bind(eKeyAction::GROUP_ASSIGN_5, {SDL_SCANCODE_5}, true, false, false);
     bind(eKeyAction::GROUP_ASSIGN_6, {SDL_SCANCODE_6}, true, false, false);
+    bind(eKeyAction::GROUP_ADDTOSEL_1, {SDL_SCANCODE_1}, false, false, true);
+    bind(eKeyAction::GROUP_ADDTOSEL_2, {SDL_SCANCODE_2}, false, false, true);
+    bind(eKeyAction::GROUP_ADDTOSEL_3, {SDL_SCANCODE_3}, false, false, true);
+    bind(eKeyAction::GROUP_ADDTOSEL_4, {SDL_SCANCODE_4}, false, false, true);
+    bind(eKeyAction::GROUP_ADDTOSEL_5, {SDL_SCANCODE_5}, false, false, true);
+    bind(eKeyAction::GROUP_ADDTOSEL_6, {SDL_SCANCODE_6}, false, false, true);
 
     // Editor
     bind(eKeyAction::EDITOR_SAVE,     {SDL_SCANCODE_S}, true, false, false);

@@ -85,6 +85,17 @@ int cKeyboardEvent::getAssignGroupNumber() const
     return 0;
 }
 
+int cKeyboardEvent::getAddToSelGroupNumber() const
+{
+    if (isAction(eKeyAction::GROUP_ADDTOSEL_1)) return 1;
+    if (isAction(eKeyAction::GROUP_ADDTOSEL_2)) return 2;
+    if (isAction(eKeyAction::GROUP_ADDTOSEL_3)) return 3;
+    if (isAction(eKeyAction::GROUP_ADDTOSEL_4)) return 4;
+    if (isAction(eKeyAction::GROUP_ADDTOSEL_5)) return 5;
+    if (isAction(eKeyAction::GROUP_ADDTOSEL_6)) return 6;
+    return 0;
+}
+
 bool cKeyboardEvent::hasKey(SDL_Scancode scanCode) const
 {
     if (scanCode < 0 || scanCode >= SDL_SCANCODE_COUNT) return false;

@@ -38,6 +38,7 @@
 | P | Set structure as primary |
 | F (units selected) | Retreat selected units to base |
 | CTRL + 1–5 | Assign/select unit group 1–5 |
+| SHIFT + 1–6 (units selected) | Add group to current selection |
 | CTRL + Z (1 unit selected) | Select all of same unit type on screen |
 | CTRL (hold, units selected) | Switch mouse to attack mode |
 | SHIFT (hold, units selected) | Append to selection |
