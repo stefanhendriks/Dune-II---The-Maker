@@ -2,10 +2,12 @@
 
 #include "sidebar/cBuildingList.h"
 
+class cGameSettings;
+
 class cBuildingListFactory {
 
 public:
-    cBuildingListFactory();
+    explicit cBuildingListFactory(cGameSettings* settings);
     ~cBuildingListFactory() = default;
     void initializeList(cBuildingList *list, eListType listType);
     cBuildingList *createList(eListType listType);
@@ -13,4 +15,7 @@ public:
 protected:
     int getButtonDrawY();
     int getButtonDrawXStart();
+
+private:
+    cGameSettings* m_settings;
 };

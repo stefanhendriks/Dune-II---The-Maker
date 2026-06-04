@@ -3,10 +3,14 @@
 #include "cBuildingListItem.h"
 
 class cPlayer;
+class cInfoContext;
+class cGameSettings;
+struct sGameServices;
 
 class cBuildingListUpdater {
 public:
     explicit cBuildingListUpdater(cPlayer *thePlayer);
+    void serviceInit(sGameServices* services);
 
     // update methods are event based. Ie, when structure is created,
     // when structure is destroyed, etc
@@ -36,6 +40,8 @@ private:
     // this player will be used to read state from
     // in order to know what to update
     cPlayer *m_player;
+    cInfoContext* m_info = nullptr;
+    cGameSettings* m_settings = nullptr;
 
     void applyUpgrade(const s_UpgradeInfo &upgradeType);
 

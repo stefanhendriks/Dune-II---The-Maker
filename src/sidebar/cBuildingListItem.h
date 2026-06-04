@@ -11,6 +11,9 @@
 #include "include/enums.h"
 
 class cBuildingList;
+class cInfoContext;
+class cGameInterface;
+class cGameSettings;
 struct s_SpecialInfo;
 struct s_UpgradeInfo;
 struct s_UnitInfo;
@@ -30,6 +33,8 @@ public:
     cBuildingListItem(int theID, s_SpecialInfo entry, int subList);
     cBuildingListItem(int theID, s_UnitInfo entry, int subList);
     cBuildingListItem(int theID, s_UpgradeInfo entry);
+
+    void serviceInit(cInfoContext* info, cGameSettings* settings, cGameInterface* gameInterface);
 
     static const int DefaultTimerCap = 35;
     static const int DebugTimerCap = 2;
@@ -248,9 +253,9 @@ public:
 
     int getTotalBuildTimeInTicks() const;
 
-    static int getTotalBuildTimeInTicks(eBuildType type, int buildId);
-    static int getListId(eBuildType type, int buildId);
-    static bool isAutoBuild(eBuildType type, int buildId);
+    static int getTotalBuildTimeInTicks(eBuildType type, int buildId, cInfoContext* info);
+    static int getListId(eBuildType type, int buildId, cInfoContext* info);
+    static bool isAutoBuild(eBuildType type, int buildId, cInfoContext* info);
 
     bool isAutoBuild();
 
@@ -288,6 +293,9 @@ private:
     int m_timerCap;           // passed in by item builder (determined by power outage, etc)
 
     cBuildingList *m_myList;
+    cInfoContext* m_info = nullptr;
+    cGameSettings* m_settings = nullptr;
+    cGameInterface* m_gameInterface = nullptr;
 
     cBuildingListItem(int theID, s_StructureInfo entry, cBuildingList *list, int subList);
     cBuildingListItem(int theID, s_UnitInfo entry, cBuildingList *list, int subList);

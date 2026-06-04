@@ -1,9 +1,9 @@
 #include "cBuildingList.h"
 #include "context/cInfoContext.h"
-#include "context/cGameObjectContext.h"
 #include "building/cItemBuilder.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "context/GameContext.hpp"
+#include "game/cGameInterface.h"
+#include "include/sGameServices.h"
 #include "utils/common.h"
 
 #include <vector>
@@ -80,7 +80,7 @@ cBuildingListItem *cBuildingList::getItemByBuildId(int buildId)
 
 void cBuildingList::addUpgradeToList(int upgradeType)
 {
-    auto upgradeInfo = game.m_infoContext->getUpgradeInfo(upgradeType);
+    auto upgradeInfo = m_info->getUpgradeInfo(upgradeType);
     cBuildingListItem *item = new cBuildingListItem(
         upgradeType,
         upgradeInfo
@@ -93,7 +93,7 @@ void cBuildingList::addUpgradeToList(int upgradeType)
 
 void cBuildingList::addStructureToList(int structureType, int subList)
 {
-    cBuildingListItem *item = new cBuildingListItem(structureType, game.m_infoContext->getStructureInfo(structureType), subList);
+    cBuildingListItem *item = new cBuildingListItem(structureType, m_info->getStructureInfo(structureType), subList);
     if (!addItemToList(item)) {
         delete item;
     }
@@ -101,7 +101,7 @@ void cBuildingList::addStructureToList(int structureType, int subList)
 
 void cBuildingList::addUnitToList(int unitType, int subList)
 {
-    cBuildingListItem *item = new cBuildingListItem(unitType, game.m_infoContext->getUnitInfo(unitType), subList);
+    cBuildingListItem *item = new cBuildingListItem(unitType, m_info->getUnitInfo(unitType), subList);
     if (!addItemToList(item)) {
         delete item;
     }
@@ -109,7 +109,7 @@ void cBuildingList::addUnitToList(int unitType, int subList)
 
 void cBuildingList::addSpecialToList(int specialType, int subList)
 {
-    s_SpecialInfo &special = game.m_infoContext->getSpecialInfo(specialType);
+    s_SpecialInfo &special = m_info->getSpecialInfo(specialType);
     cBuildingListItem *item = new cBuildingListItem(specialType, special, subList);
     if (!addItemToList(item)) {
         delete item;
@@ -134,6 +134,7 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
     m_items[slotId] = item;
     item->setSlotId(slotId);
     item->setList(this);
+    item->serviceInit(m_info, m_settings, m_gameInterface);
     m_maxItems = slotId + 1;
 
     // notify game that the item just has been added!
@@ -149,7 +150,7 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
             .buildingListItem = item
         }
     };
-    game.onNotifyGameEvent(event);
+    m_gameInterface->onNotifyGameEvent(event);
 
     if (isAvailable() != beforeAddingAvailable) {
         // emit another event that this list became available! (so that sidebar can animate things)
@@ -163,7 +164,7 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
                 .buildingList = this
             }
         };
-        game.onNotifyGameEvent(event);
+        m_gameInterface->onNotifyGameEvent(event);
     }
 
     startFlashing();
@@ -232,7 +233,7 @@ bool cBuildingList::removeItemFromList(int position)
                 .buildingList = this
             }
         };
-        game.onNotifyGameEvent(event);
+        m_gameInterface->onNotifyGameEvent(event);
     }
     return true;
 }
@@ -428,9 +429,16 @@ void cBuildingList::setItemBuilder(cItemBuilder *value)
     m_itemBuilder = value;
 }
 
+void cBuildingList::serviceInit(sGameServices* services)
+{
+    m_info = services->info;
+    m_gameInterface = services->ctx->getGameInterface();
+    m_settings = services->settings;
+}
+
 Color cBuildingList::getFlashingColor()
 {
-    return game.getColorFadeSelected(255, 209, 64);
+    return m_gameInterface->getColorFadeSelected(255, 209, 64);
 }
 
 void cBuildingList::think()

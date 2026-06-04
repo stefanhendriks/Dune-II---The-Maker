@@ -17,6 +17,7 @@
 #include "controls/cMouse.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "sidebar/cBuildingListUpdater.h"
+#include "sidebar/cSideBar.h"
 #include "sidebar/cSideBarFactory.h"
 #include "utils/cLog.h"
 #include "brains/cPlayerBrainSkirmish.h"
@@ -110,12 +111,14 @@ void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMo
         cPlayer* player = m_players[i];
 
         auto buildingListUpdater = std::make_unique<cBuildingListUpdater>(player);
+        buildingListUpdater->serviceInit(services);
         auto itemBuilder = std::make_unique<cItemBuilder>(player, buildingListUpdater.get());
         itemBuilder->serviceInit(services);
         player->setBuildingListUpdater(std::move(buildingListUpdater));
         player->setItemBuilder(std::move(itemBuilder));
 
         auto sidebar = sideBarFactory->createSideBar(player);
+        sidebar->serviceInit(services);
         player->setSideBar(sidebar);
 
         auto orderProcesser = std::make_unique<cOrderProcesser>(player);
