@@ -23,7 +23,6 @@
 
 #include "game/cGameConditionChecker.h"
 #include "game/cEventEmitter.h"
-#include "game/cPlatformLayerInit.h"
 #include "game/cScreenFader.h"
 #include "game/cScreenInit.h"
 #include "game/cScreenShake.h"
@@ -579,7 +578,7 @@ void cGame::shutdown()
     delete m_keyboard;
 
     // Release all Graphics/Texture objects now, while the renderer is still valid.
-    // ~cPlatformLayerInit() calls SDL_Quit() later (when cGame itself is destroyed),
+    // ~cScreenInit() calls SDL_Quit() later (when cGame itself is destroyed),
     // but some Graphics shared_ptrs may still be alive at that point and their
     // ~Graphics() would call SDL_DestroyTexture with an already-dead renderer.
     ctx.reset();
@@ -640,10 +639,6 @@ bool cGame::setupGame()
 
     // INI
     const auto title = std::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
-
-    // FIXME: eventually, we will want to grab this object in the constructor. But then cGame cannot be a
-    // global anymore, because it needs to be destructed before main exits.
-    m_PLInit = std::make_unique<cPlatformLayerInit>();
 
     m_keyboard = new cKeyboard();
     logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()", OUTC_SUCCESS);
