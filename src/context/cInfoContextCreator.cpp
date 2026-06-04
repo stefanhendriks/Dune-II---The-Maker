@@ -10,7 +10,6 @@
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "data/gfxaudio.h"
-#include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
@@ -49,9 +48,9 @@ std::unique_ptr<cSpecialInfos> cInfoContextCreator::createSpecialInfos() {
     return specialInfos;
 }
 
-std::unique_ptr<cUpgradeInfos> cInfoContextCreator::createUpgradeInfos() {
+std::unique_ptr<cUpgradeInfos> cInfoContextCreator::createUpgradeInfos(const cInfoContext* infoContext, const cGameSettings* settings) {
     auto upgradeInfos = std::make_unique<cUpgradeInfos>();
-    initUpgrades(*upgradeInfos);
+    initUpgrades(*upgradeInfos, infoContext, settings);
     return upgradeInfos;
 }
 
@@ -1083,7 +1082,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[ROCKET_RTURRET].description, "ROCKET_RTURRET");
 }
 
-void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
+void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings)
 {
     logbook("Installing:  UPGRADES");
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
@@ -1141,7 +1140,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].icon = ICON_UNIT_QUAD;
-    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = game.m_infoContext->getStructureInfo(LIGHTFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].cost = infoContext->getStructureInfo(LIGHTFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].needsStructureType = LIGHTFACTORY;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].structureType = LIGHTFACTORY;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].atUpgradeLevel = 0;
@@ -1159,7 +1158,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].house = Atreides | Ordos | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].techLevel = 4;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].icon = ICON_UNIT_MCV;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = game.m_infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost = infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].atUpgradeLevel = 0;
@@ -1175,7 +1174,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].house = Atreides | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].techLevel = 5;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].icon = ICON_UNIT_LAUNCHER;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = game.m_infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].cost = infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].atUpgradeLevel = 1; // requires MCV upgrade first
@@ -1190,7 +1189,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].techLevel = 6;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].icon = ICON_UNIT_SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = game.m_infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].cost = infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].atUpgradeLevel = 2; // After upgrade to Rocket Launcher
@@ -1205,7 +1204,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].techLevel = 6;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].icon = ICON_UNIT_SIEGETANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = game.m_infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].cost = infoContext->getStructureInfo(HEAVYFACTORY).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].structureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].atUpgradeLevel = 1;
@@ -1221,7 +1220,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].techLevel = 8;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].icon = ICON_UNIT_ORNITHOPTER;
-    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].cost = game.m_infoContext->getStructureInfo(HIGHTECH).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].cost = infoContext->getStructureInfo(HIGHTECH).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].structureType = HIGHTECH;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesType = UNIT;
@@ -1236,14 +1235,14 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].house = Harkonnen | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].icon = ICON_UNIT_TROOPERS;
-    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].cost = game.m_infoContext->getStructureInfo(WOR).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].cost = infoContext->getStructureInfo(WOR).cost / 2;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].structureType = WOR;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesType = UNIT;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeId = TROOPERS;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeList = eListType::LIST_FOOT_UNITS;
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].providesTypeSubList = SUBLIST_TROOPERS;
-    if (!game.m_gameSettings->isCheatMode()) {
+    if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
     }
     strcpy(upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
@@ -1253,14 +1252,14 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].house = Atreides | Ordos | Sardaukar;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].icon = ICON_UNIT_INFANTRY;
-    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = game.m_infoContext->getStructureInfo(BARRACKS).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].cost = infoContext->getStructureInfo(BARRACKS).cost / 2;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].structureType = BARRACKS;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].atUpgradeLevel = 0;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesType = UNIT;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeId = INFANTRY;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeList = eListType::LIST_FOOT_UNITS;
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].providesTypeSubList = SUBLIST_INFANTRY;
-    if (!game.m_gameSettings->isCheatMode()) {
+    if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
     strcpy(upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
@@ -1270,7 +1269,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].house = Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].icon = ICON_UNIT_SONICTANK;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].cost = game.m_infoContext->getUnitInfo(SONICTANK).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].cost = infoContext->getUnitInfo(SONICTANK).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].structureType = IX;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].atUpgradeLevel = 0;
@@ -1279,7 +1278,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesTypeId = SONICTANK;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    if (!game.m_gameSettings->isCheatMode()) {
+    if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].buildTime = 150;
     }
     strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].description, "Build SonicTank at Heavy Factory");
@@ -1289,7 +1288,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].house = Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].icon = ICON_UNIT_DEVIATOR;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].cost = game.m_infoContext->getUnitInfo(DEVIATOR).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].cost = infoContext->getUnitInfo(DEVIATOR).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].structureType = IX;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].atUpgradeLevel = 0;
@@ -1298,7 +1297,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesTypeId = DEVIATOR;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    if (!game.m_gameSettings->isCheatMode()) {
+    if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].buildTime = 150;
     }
     strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].description, "Build Deviator at Heavy Factory");
@@ -1308,7 +1307,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].house = Sardaukar;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].techLevel = 3;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].icon = ICON_UNIT_DEVASTATOR;
-    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].cost = game.m_infoContext->getUnitInfo(DEVASTATOR).cost / 2;
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].cost = infoContext->getUnitInfo(DEVASTATOR).cost / 2;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].structureType = IX;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].needsStructureType = HEAVYFACTORY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].atUpgradeLevel = 0;
@@ -1317,7 +1316,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos)
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesTypeId = DEVASTATOR;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].providesTypeSubList = SUBLIST_HEAVYFCTRY;
-    if (!game.m_gameSettings->isCheatMode()) {
+    if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].buildTime = 150;
     }
     strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].description, "Build Devastator at Heavy Factory");

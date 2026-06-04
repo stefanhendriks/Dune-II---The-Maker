@@ -757,7 +757,7 @@ bool cGame::setupGame()
 
     // do install_upgrades after init, because init loads the INI file and then has the very latest
     // unit/structures catalog loaded - which the install_upgrades depends on.
-    m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos());
+    m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos(m_infoContext.get(), m_gameSettings.get()));
     cPlayer *humanPlayer = m_gameObjectsContext->getPlayer(HUMAN);
 
     m_drawManager = new cDrawManager(ctx.get(), humanPlayer);
