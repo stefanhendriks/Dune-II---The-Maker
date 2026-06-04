@@ -24,6 +24,7 @@ class Texture;
 struct sGameServices;
 class cGameObjectContext;
 class cInfoContext;
+class cParticles;
 
 class cParticle {
 public:
@@ -35,7 +36,7 @@ public:
     // Factory methods
     static int create(long x, long y, int iType, int iHouse, int iFrame,
                       cGameObjectContext* objects, cInfoContext* info, int iUnitID = -1);
-    static int findNewSlot(cGameObjectContext* objects);
+    static int findNewSlot(cParticles& particles);
     // resets the particle system (frees all particles textures colored for houses)
     static void reset();
 
@@ -119,6 +120,7 @@ private:
 
     void recreateDimensions();
     void recolorForHouseIfGiven();
+    cParticle& getBoundParticle();
 
     static std::map<std::pair<int, int>, Texture*> particleTextureCache;
 };

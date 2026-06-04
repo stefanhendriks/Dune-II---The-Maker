@@ -14,6 +14,7 @@
 #include "utils/texture_utils.h"
 #include "include/d2tmc.h"
 #include "include/sGameServices.h"
+#include "gameobjects/particles/cParticles.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/players/cPlayer.h"
@@ -594,7 +595,7 @@ void cParticle::thinkFast()
 int cParticle::create(long x, long y, int iType, int iHouse, int iFrame,
                       cGameObjectContext* objects, cInfoContext* info, int iUnitID)
 {
-    int iNewId = findNewSlot(objects);
+    int iNewId = findNewSlot(objects->getParticles());
 
     if (iNewId < 0) {
         return -1;
@@ -731,10 +732,10 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame,
     return iNewId;
 }
 
-int cParticle::findNewSlot(cGameObjectContext* objects)
+int cParticle::findNewSlot(cParticles& particles)
 {
     int i = 0;
-    for (auto &particle : objects->getParticles()) {
+    for (auto &particle : particles) {
         if (!particle.isValid()) {
             return i;
         }
@@ -742,6 +743,11 @@ int cParticle::findNewSlot(cGameObjectContext* objects)
     }
 
     return -1;
+}
+
+cParticle& cParticle::getBoundParticle()
+{
+    return m_services->objects->getParticles()[boundParticleID];
 }
 
 void cParticle::init(const s_ParticleInfo &particleInfo)
@@ -801,7 +807,7 @@ void cParticle::addPosX(float d)
 {
     this->x += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = m_services->objects->getParticles()[boundParticleID];
+        cParticle &otherParticle = getBoundParticle();
         if (otherParticle.isValid()) {
             otherParticle.addPosX(d);
         }
@@ -815,7 +821,7 @@ void cParticle::addPosY(float d)
 {
     this->y += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = m_services->objects->getParticles()[boundParticleID];
+        cParticle &otherParticle = getBoundParticle();
         if (otherParticle.isValid()) {
             otherParticle.addPosY(d);
         }
@@ -830,7 +836,7 @@ void cParticle::die()
     bindToUnit(-1);
     bAlive = false;
     if (boundParticleID > -1) {
-        cParticle &pParticle = m_services->objects->getParticles()[boundParticleID];
+        cParticle &pParticle = getBoundParticle();
         if (pParticle.isValid()) {
             pParticle.die();
         }
