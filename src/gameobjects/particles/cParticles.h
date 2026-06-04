@@ -5,6 +5,8 @@
 #include <stdexcept>
 #include "cParticle.h"
 
+struct sGameServices;
+
 class cParticles {
 public:
     cParticles()
@@ -34,6 +36,12 @@ public:
     // initialisation
     void reset() noexcept {
         cParticle::reset();
+    }
+
+    void serviceInit(sGameServices* services) {
+        for (auto &particle : m_particles) {
+            particle.serviceInit(services);
+        }
     }
 
     // itérateurs

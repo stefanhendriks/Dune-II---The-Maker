@@ -427,7 +427,7 @@ void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
             units->move_to(mouseCellOnMinimap);
 
             auto absPoint = m_map->getGeometry()->getAbsolutePositionFromCell(mouseCellOnMinimap);
-            cParticle::create(absPoint.x, absPoint.y, D2TM_PARTICLE_MOVE, -1, -1);
+            cParticle::create(absPoint.x, absPoint.y, D2TM_PARTICLE_MOVE, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
 
             sSelectedUnitTypes selectedUnitTypes = m_player->getSelectedUnitTypes();
             if (selectedUnitTypes.hasInfantry) {

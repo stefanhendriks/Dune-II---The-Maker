@@ -611,7 +611,7 @@ void cMouseUnitsSelectedState::spawnParticle(const int type)
 {
     int absoluteXCoordinate = game.m_mapCamera->getAbsMapMouseX(m_mouse->getX());
     int absoluteYCoordinate = game.m_mapCamera->getAbsMapMouseY(m_mouse->getY());
-    cParticle::create(absoluteXCoordinate, absoluteYCoordinate, type, -1, -1);
+    cParticle::create(absoluteXCoordinate, absoluteYCoordinate, type, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
 }
 
 void cMouseUnitsSelectedState::onFocus()

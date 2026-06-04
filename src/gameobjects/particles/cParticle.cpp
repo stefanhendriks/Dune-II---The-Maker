@@ -12,8 +12,8 @@
 #include "cParticle.h"
 #include "utils/RNG.hpp"
 #include "utils/texture_utils.h"
-#include "game/cGame.h"
 #include "include/d2tmc.h"
+#include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/players/cPlayer.h"
@@ -41,6 +41,11 @@ cParticle::~cParticle()
 {
     bmp = nullptr;
     dimensions.reset();
+}
+
+void cParticle::serviceInit(sGameServices* services)
+{
+    m_services = services;
 }
 
 void cParticle::reset()
@@ -85,11 +90,11 @@ bool cParticle::isValid() const {
 }
 
 int cParticle::draw_x() const {
-    return game.m_mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
+    return m_services->mapCamera->getWindowXPositionWithOffset(x, drawXBmpOffset);
 }
 
 int cParticle::draw_y() const {
-    return game.m_mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
+    return m_services->mapCamera->getWindowYPositionWithOffset(y, drawYBmpOffset);
 }
 
 /**
@@ -99,7 +104,7 @@ int cParticle::draw_y() const {
 void cParticle::think_position()
 {
     if (boundUnitID > -1) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(boundUnitID);
+        cUnit *pUnit = m_services->objects->getUnit(boundUnitID);
         if (!pUnit->isValid()) {
             bindToUnit(-1);
         }
@@ -107,9 +112,9 @@ void cParticle::think_position()
 
     // keep updating dimensions
     dimensions->move(draw_x(), draw_y());
-    if (game.m_mapCamera) {
-        dimensions->resize(game.m_mapCamera->factorZoomLevel(getFrameWidth()),
-                           game.m_mapCamera->factorZoomLevel(getFrameHeight()));
+    if (m_services->mapCamera) {
+        dimensions->resize(m_services->mapCamera->factorZoomLevel(getFrameWidth()),
+                           m_services->mapCamera->factorZoomLevel(getFrameHeight()));
     }
 }
 
@@ -126,8 +131,8 @@ void cParticle::draw()
     int frameHeight = getFrameHeight();
 
     // create proper sized bitmap
-    int bmp_width = game.m_mapCamera->factorZoomLevel(frameWidth);
-    int bmp_height = game.m_mapCamera->factorZoomLevel(frameHeight);
+    int bmp_width = m_services->mapCamera->factorZoomLevel(frameWidth);
+    int bmp_height = m_services->mapCamera->factorZoomLevel(frameHeight);
 
     int drawX = draw_x();
     int drawY = draw_y();
@@ -149,7 +154,7 @@ void cParticle::draw()
 }
 
 s_ParticleInfo &cParticle::getParticleInfo() const {
-    s_ParticleInfo &particleInfo = game.m_infoContext->getParticleInfo(iType);
+    s_ParticleInfo &particleInfo = m_services->info->getParticleInfo(iType);
     return particleInfo;
 }
 
@@ -586,18 +591,19 @@ void cParticle::thinkFast()
  * @param iFrame
  * @return
  */
-int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUnitID)
+int cParticle::create(long x, long y, int iType, int iHouse, int iFrame,
+                      cGameObjectContext* objects, cInfoContext* info, int iUnitID)
 {
-    int iNewId = findNewSlot();
+    int iNewId = findNewSlot(objects);
 
     if (iNewId < 0) {
         return -1;
     }
 
-    cParticle &pParticle = game.m_gameObjectsContext->getParticles()[iNewId];
-    const int particleInfoCount = game.m_infoContext->getParticleInfos()->size();
+    cParticle &pParticle = objects->getParticles()[iNewId];
+    const int particleInfoCount = info->getParticleInfos()->size();
     if (iType >= 0 && iType < particleInfoCount) {
-        s_ParticleInfo &sParticle = game.m_infoContext->getParticleInfo(iType);
+        s_ParticleInfo &sParticle = info->getParticleInfo(iType);
         pParticle.init(sParticle);
     }
     else {
@@ -625,7 +631,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE) {
         // TODO: Spawn additional particle property
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0, iUnitID);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0, objects, info, iUnitID);
     }
 
     if (iType == D2TM_PARTICLE_SMOKE) {
@@ -638,7 +644,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
 
     if (iType == D2TM_PARTICLE_SMOKE_WITH_SHADOW) {
         pParticle.TIMER_dead = 1500;
-        int shadowParticleId = create(x + 16, y + 38, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1, iUnitID);
+        int shadowParticleId = create(x + 16, y + 38, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1, objects, info, iUnitID);
 
         // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
         // offset is not in center). So we have to subtract half of the sprite's height
@@ -679,7 +685,7 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
             iType == D2TM_PARTICLE_EXPLOSION_GAS) {
 
         if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02) {
-            create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, iUnitID);
+            create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, objects, info, iUnitID);
         }
 
     }
@@ -704,9 +710,9 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
         pParticle.iAlpha = 255;
         pParticle.TIMER_frame = 500 + RNG::rnd(300);
 
-        create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1, iUnitID);
-        create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1, iUnitID);
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, iUnitID);
+        create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1, objects, info, iUnitID);
+        create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1, objects, info, iUnitID);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, objects, info, iUnitID);
     }
 
     if (iType == D2TM_PARTICLE_CARRYPUFF) {
@@ -718,17 +724,17 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame, int iUn
     if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET || iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
         pParticle.iAlpha = 255;
         // also create bloom
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0, iUnitID);
+        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0, objects, info, iUnitID);
     }
 
     pParticle.recolorForHouseIfGiven();
     return iNewId;
 }
 
-int cParticle::findNewSlot()
+int cParticle::findNewSlot(cGameObjectContext* objects)
 {
     int i = 0;
-    for (auto &particle : game.m_gameObjectsContext->getParticles()) {
+    for (auto &particle : objects->getParticles()) {
         if (!particle.isValid()) {
             return i;
         }
@@ -783,7 +789,7 @@ void cParticle::think_new()
 void cParticle::bindToUnit(int unitID)
 {
     if (boundUnitID > -1) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(boundUnitID);
+        cUnit *pUnit = m_services->objects->getUnit(boundUnitID);
         if (pUnit->isValid()) {
             pUnit->setBoundParticleId(-1);
         }
@@ -795,7 +801,7 @@ void cParticle::addPosX(float d)
 {
     this->x += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
+        cParticle &otherParticle = m_services->objects->getParticles()[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosX(d);
         }
@@ -809,7 +815,7 @@ void cParticle::addPosY(float d)
 {
     this->y += d;
     if (boundParticleID > -1) {
-        cParticle &otherParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
+        cParticle &otherParticle = m_services->objects->getParticles()[boundParticleID];
         if (otherParticle.isValid()) {
             otherParticle.addPosY(d);
         }
@@ -824,7 +830,7 @@ void cParticle::die()
     bindToUnit(-1);
     bAlive = false;
     if (boundParticleID > -1) {
-        cParticle &pParticle = game.m_gameObjectsContext->getParticles()[boundParticleID];
+        cParticle &pParticle = m_services->objects->getParticles()[boundParticleID];
         if (pParticle.isValid()) {
             pParticle.die();
         }
@@ -838,7 +844,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
 
-    int bmpIndex = game.m_infoContext->getParticleInfo(iType).bmpIndex;
+    int bmpIndex = m_services->info->getParticleInfo(iType).bmpIndex;
     if (global_renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
@@ -852,7 +858,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
     
-    cPlayer *player = game.m_gameObjectsContext->getPlayer(this->iHousePal);
+    cPlayer *player = m_services->objects->getPlayer(this->iHousePal);
     auto tex = gfxdata->getSurface(bmpIndex);
     auto recoloredBmp = createPlayerTextureFromIndexedSurfaceWithPalette(player, tex, TransparentColorIndex);
     if (recoloredBmp != nullptr) {

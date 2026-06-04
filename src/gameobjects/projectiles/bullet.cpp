@@ -173,7 +173,7 @@ void cBullet::thinkFast()
             if (smokeParticle > -1) {
                 long x = pos_x();
                 long y = pos_y();
-                cParticle::create(x, y, smokeParticle, -1, -1);
+                cParticle::create(x, y, smokeParticle, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
             }
 
             TIMER_frame = 0;
@@ -331,7 +331,7 @@ void cBullet::arrivedAtDestinationLogic()
             // create particle of explosion
             if (sBullet.deathParticle > -1) {
                 // depending on 'explosion size'
-                cParticle::create(posX, posY, sBullet.deathParticle, -1, -1);
+                cParticle::create(posX, posY, sBullet.deathParticle, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
             }
 
             if (iType == ROCKET_BIG) {
@@ -342,7 +342,7 @@ void cBullet::arrivedAtDestinationLogic()
                                                distanceBetweenCellAndCenterOfScreen(cellToDamage));
                 }
                 if (RNG::rnd(100) < 20) {
-                    cParticle::create(posX, posY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1);
+                    cParticle::create(posX, posY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
                 }
             }
 
