@@ -28,6 +28,11 @@
 #include <format>
 #include "include/cAssert.h"
 
+// The mentat screen artwork was designed for 640x480. On higher resolutions it
+// is centered, so the offset is half the extra pixels on each axis.
+static constexpr int MENTAT_SCREEN_W = 640;
+static constexpr int MENTAT_SCREEN_H = 480;
+
 AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
@@ -86,8 +91,8 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 
     state = INIT;
 
-    offsetX = (m_gameInterface->getGameSettings()->getScreenW() - 640) / 2;
-    offsetY = (m_gameInterface->getGameSettings()->getScreenH() - 480) / 2;
+    offsetX = (m_gameInterface->getGameSettings()->getScreenW() - MENTAT_SCREEN_W) / 2;
+    offsetY = (m_gameInterface->getGameSettings()->getScreenH() - MENTAT_SCREEN_H) / 2;
     movieTopleftX = offsetX + 256;
     movieTopleftY = offsetY + 120;
     memset(sentence, 0, sizeof(sentence));
@@ -266,7 +271,7 @@ void AbstractMentat::draw()
     draw_movie();
 
     Texture *tmp = getBackgroundBitmap();
-    cRectangle dest = {offsetX, offsetY,640, 480};
+    cRectangle dest = {offsetX, offsetY, MENTAT_SCREEN_W, MENTAT_SCREEN_H};
     m_renderDrawer->renderStrechFullSprite(tmp, dest);
 
     draw_eyes();
