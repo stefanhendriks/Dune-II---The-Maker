@@ -9,6 +9,7 @@ class cSpecialInfos;
 class cUpgradeInfos;
 class cUnitInfos;
 class cInfoContext;
+class cGameSettings;
 struct SDL_Renderer;
 struct s_TerrainInfo;
 
@@ -21,7 +22,7 @@ public:
     std::unique_ptr<cStructureInfos> createStructureInfos();
     std::unique_ptr<cBulletInfos> createBulletInfos();
     std::unique_ptr<cSpecialInfos> createSpecialInfos();
-    std::unique_ptr<cUpgradeInfos> createUpgradeInfos();
+    std::unique_ptr<cUpgradeInfos> createUpgradeInfos(const cInfoContext* infoContext, const cGameSettings* settings);
     std::unique_ptr<cUnitInfos> createUnitInfos();
     std::unique_ptr<s_TerrainInfo> createTerrainInfos();
 
@@ -34,5 +35,5 @@ private:
     void initBullets(cBulletInfos& bulletInfos);
     void initSpecials(cSpecialInfos& specialInfos);
     void initParticles(cParticleInfos& particleInfos);
-    void initUpgrades(cUpgradeInfos& upgradeInfos);
+    void initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings);
 };
