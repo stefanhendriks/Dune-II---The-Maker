@@ -57,7 +57,7 @@ cmake -S "$BUILD_DIR/SDL3_ttf" -B "$BUILD_DIR/SDL3_ttf/build" $CMAKE_FLAGS \
 sudo cmake --build "$BUILD_DIR/SDL3_ttf/build" --target install -j4
 
 # SDL3_mixer
-git clone --depth 1 --branch release-3.2.2 https://github.com/libsdl-org/SDL_mixer.git "$BUILD_DIR/SDL3_mixer"
+git clone --depth 1 --branch release-3.2.4 https://github.com/libsdl-org/SDL_mixer.git "$BUILD_DIR/SDL3_mixer"
 cmake -S "$BUILD_DIR/SDL3_mixer" -B "$BUILD_DIR/SDL3_mixer/build" $CMAKE_FLAGS \
   -DSDLMIXER_SAMPLES=OFF
 sudo cmake --build "$BUILD_DIR/SDL3_mixer/build" --target install -j4
