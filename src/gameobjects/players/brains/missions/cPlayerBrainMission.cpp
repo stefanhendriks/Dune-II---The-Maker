@@ -76,7 +76,7 @@ cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMiss
     log("Items to produce for mission:");
     for (auto &item : group) {
         log(std::format("Item buildType [{}], type/buildId[{}={}], amount required [{}]",
-                        eBuildTypeString(item.buildType), item.type, toStringBuildTypeSpecificType(item.buildType, item.type), item.required).c_str());
+                        eBuildTypeString(item.buildType), item.type, toStringBuildTypeSpecificType(item.buildType, item.type, player->getInfos()), item.required).c_str());
         d2tm_assert(item.type > -1 && "type/buildId must be > -1 !");
     }
 }
@@ -409,7 +409,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
         }
         else {
             log(std::format("Produced all required [{}] for type {}", thingIWant.produced,
-                            toStringBuildTypeSpecificType(thingIWant.buildType, thingIWant.type)).c_str());
+                            toStringBuildTypeSpecificType(thingIWant.buildType, thingIWant.type, player->getInfos())).c_str());
         }
     }
 
@@ -663,7 +663,7 @@ void cPlayerBrainMission::onEventCannotBuild(const CommonEvent &event)
                     // set to same value, so we don't want to produce it anymore.
                     thingIWant.produced = thingIWant.required;
                     log(std::format("Cannot build [{}, {}], found a match and removed it from things I want.",
-                                    event.entitySpecificType, toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType)).c_str());
+                                    event.entitySpecificType, toStringBuildTypeSpecificType(event.entityType, event.entitySpecificType, player->getInfos())).c_str());
                 }
             }
         }

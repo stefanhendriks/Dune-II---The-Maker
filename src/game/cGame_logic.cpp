@@ -76,6 +76,7 @@
 #include "utils/InitialGameSettings.hpp"
 #include "game/cGameSettings.h"
 #include "utils/Graphics.hpp"
+#include "utils/common.h"
 #include "utils/ini.h"
 #include "utils/RNG.hpp"
 
@@ -201,6 +202,7 @@ cGame::cGame()
     m_services->info = m_infoContext.get();
     m_services->settings = m_gameSettings.get();
     m_services->structureUtils = m_structureUtils.get();
+    initLogbook(m_gameSettings.get());
     m_services->m_log = nullptr;
     m_services->eventEmitter = m_eventEmitter.get();
 
@@ -750,6 +752,7 @@ bool cGame::setupGame()
 
     m_mapCamera = new cMapCamera(m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove, m_gameSettings.get(), m_mouse);
     m_services->mapCamera = m_mapCamera;
+    m_structureUtils->serviceInit(m_services.get());
 
     m_cIni->installGame(m_gameFilename);
     // Now we are ready for the menu state

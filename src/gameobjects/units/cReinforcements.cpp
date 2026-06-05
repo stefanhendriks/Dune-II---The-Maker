@@ -174,14 +174,14 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface*
     if (iStart < 0)
         iStart = iCll;
 
-    int iStartCell = iFindCloseBorderCell(iStart);
+    int iStartCell = iFindCloseBorderCell(iStart, objects);
 
     if (iStartCell < 0) {
         iStart += RNG::rnd(64);
         if (iStart >= objects->getMap()->getMaxCells())
             iStart -= 64;
 
-        iStartCell = iFindCloseBorderCell(iStart);
+        iStartCell = iFindCloseBorderCell(iStart, objects);
     }
 
     if (iStartCell < 0) {
