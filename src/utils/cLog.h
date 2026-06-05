@@ -37,7 +37,8 @@ enum eLogComponent {
     COMP_REGIONINI,		/** Used for regions **/
     COMP_PLAYER,			/** Player related **/
     COMP_GAMESTATE,			/** Used for game state changes **/
-    COMP_CHEATS            /** Used for cheat related logs **/
+    COMP_CHEATS,            /** Used for cheat related logs **/
+    COMP_BUILDER
 };
 
 enum eLogOutcome {
