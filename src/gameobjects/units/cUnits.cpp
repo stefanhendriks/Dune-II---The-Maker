@@ -113,7 +113,7 @@ int cUnits::getValidUnitsCount() const {
 
 static int unitNewID(cGameObjectContext *objects)
 {
-    for (int i = 0; i < (int)objects->getUnits()->size(); i++)
+    for (int i = 0; i < objects->getUnits()->size(); i++)
         if (!objects->getUnit(i)->isValid())
             return i;
 
