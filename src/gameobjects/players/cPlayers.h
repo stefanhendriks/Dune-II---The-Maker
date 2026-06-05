@@ -100,7 +100,7 @@ public:
      * @param gameSettings Game settings (for AI and difficulty configuration)
      * @param dataCampaign Campaign data (for campaign-specific AI brain initialization)
      */
-    void initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign);
+    void initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign, sGameServices* services);
 
     void setupPlayers(cHousesInfo* housesInfo);
 

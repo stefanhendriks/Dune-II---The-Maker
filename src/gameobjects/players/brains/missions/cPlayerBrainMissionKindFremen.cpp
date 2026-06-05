@@ -1,8 +1,5 @@
 #include "cPlayerBrainMission.h"
 #include "cPlayerBrainMissionKindFremen.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
-#include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "context/cInfoContext.h"
@@ -16,9 +13,9 @@ cPlayerBrainMissionKindFremen::cPlayerBrainMissionKindFremen(cPlayer *player, cP
     d2tm_assert(player != nullptr);
     d2tm_assert(mission != nullptr);
     specificEventTypeToGoToSelectTargetState = eGameEventType::GAME_EVENT_CREATED; // fremen created
-    specificBuildTypeToGoToSelectTargetState = game.m_infoContext->getSpecialInfo(SPECIAL_FREMEN).providesType;
-    specificBuildIdToGoToSelectTargetState = game.m_infoContext->getSpecialInfo(SPECIAL_FREMEN).providesTypeId;
-    specificPlayerForEventToGoToSelectTargetState = game.m_gameObjectsContext->getPlayer(AI_CPU5);
+    specificBuildTypeToGoToSelectTargetState = player->getInfos()->getSpecialInfo(SPECIAL_FREMEN).providesType;
+    specificBuildIdToGoToSelectTargetState = player->getInfos()->getSpecialInfo(SPECIAL_FREMEN).providesTypeId;
+    specificPlayerForEventToGoToSelectTargetState = player->getObjects()->getPlayer(AI_CPU5);
 }
 
 cPlayerBrainMissionKindFremen::~cPlayerBrainMissionKindFremen()

@@ -5,8 +5,6 @@
 #include "gameobjects/units/cUnits.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
 #include "definitions.h"
 #include "utils/d2tm_math.h"
@@ -53,12 +51,12 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 {
     int target = -1;
     for (int i = 0; i < MAX_STRUCTURES; i++) {
-        cAbstractStructure *theStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *theStructure = player->getObjects()->getStructures()[i];
         if (!theStructure) continue;
         if (!theStructure->isValid()) continue;
         if (theStructure->getPlayer() == player) continue; // skip self
         if (theStructure->getPlayer()->isSameTeamAs(player)) continue; // skip allies
-        if (!game.m_gameObjectsContext->getMap()->isStructureVisible(theStructure, player)) continue; // skip non-visible targets
+        if (!player->getObjects()->getMap()->isStructureVisible(theStructure, player)) continue; // skip non-visible targets
 
         // enemy structure
         target =  theStructure->getStructureId();
@@ -72,12 +70,12 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 int cPlayerBrainMissionKindAttack::findEnemyUnit() const
 {
     int target = -1;
-    for (int i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(i);
+    for (int i = 0; i < player->getObjects()->getUnitsSize(); i++) {
+        cUnit *pUnit = player->getObjects()->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->getPlayer() == player) continue; // skip self
         if (pUnit->getPlayer()->isSameTeamAs(player)) continue; // skip allies and self
-        if (!game.m_gameObjectsContext->getMap()->isVisible(pUnit->getCell(), player)) continue; // skip non visible targets
+        if (!player->getObjects()->getMap()->isVisible(pUnit->getCell(), player)) continue; // skip non visible targets
         if (pUnit->isSandworm() || pUnit->isAirbornUnit()) continue; // don't attack air units or sandworms
 
         // enemy unit
@@ -97,7 +95,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
     }
 
     if (targetStructureID > -1) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[targetStructureID];
+        cAbstractStructure *pStructure = player->getObjects()->getStructures()[targetStructureID];
         if (!pStructure || !pStructure->isValid()) {
             mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET);
             return;
@@ -105,7 +103,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
 
         const std::vector<int> &units = mission->getUnits();
         for (auto &myUnit : units) {
-            cUnit *aUnit = game.m_gameObjectsContext->getUnit(myUnit);
+            cUnit *aUnit = player->getObjects()->getUnit(myUnit);
             if (aUnit->isValid() && aUnit->isIdle()) {
                 log("cPlayerBrainMissionKindAttack::thinkState_Execute(): Ordering unit to attack!");
                 aUnit->attackStructure(targetStructureID);
@@ -115,7 +113,7 @@ void cPlayerBrainMissionKindAttack::think_Execute()
     else if (targetUnitID > -1) {
         const std::vector<int> &units = mission->getUnits();
         for (auto &myUnit : units) {
-            cUnit *aUnit = game.m_gameObjectsContext->getUnit(myUnit);
+            cUnit *aUnit = player->getObjects()->getUnit(myUnit);
             if (aUnit->isValid() && aUnit->isIdle()) {
                 log("cPlayerBrainMissionKindAttack::thinkState_Execute(): Ordering unit to attack!");
                 aUnit->attackUnit(targetUnitID);
@@ -149,7 +147,7 @@ void cPlayerBrainMissionKindAttack::onNotifyGameEvent(const s_GameEvent &event)
 void cPlayerBrainMissionKindAttack::onEventDeviated(const CommonEvent &event)
 {
     if (event.entityType == UNIT) {
-        cUnit *entityUnit = game.m_gameObjectsContext->getUnit(event.entityID);
+        cUnit *entityUnit = player->getObjects()->getUnit(event.entityID);
         if (entityUnit->getPlayer() == player) {
             // the unit is ours, if it was a target, then we can forget it.
             if (targetUnitID == event.entityID) {

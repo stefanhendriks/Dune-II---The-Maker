@@ -5,8 +5,6 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
@@ -31,7 +29,7 @@ void cPlayerBrainFremenSuperWeapon::think()
     bool foundIdleUnit = false;
     std::vector<int> ids = player->getAllMyUnits();
     for (auto &id : ids) {
-        cUnit *cUnit = game.m_gameObjectsContext->getUnit(id);
+        cUnit *cUnit = player->getObjects()->getUnit(id);
         if (cUnit->isIdle()) {
             foundIdleUnit = true;
             break;
@@ -51,7 +49,7 @@ void cPlayerBrainFremenSuperWeapon::think()
     std::mt19937 g(rd());
 
     for (int i = 0; i < MAX_PLAYERS; i++) {
-        cPlayer *pPlayer = game.m_gameObjectsContext->getPlayer(i);
+        cPlayer *pPlayer = player->getObjects()->getPlayer(i);
         if (pPlayer == nullptr) continue;
         if (pPlayer == player) continue; // skip self
         if (pPlayer->isSameTeamAs(player)) continue; // skip same team players
@@ -65,7 +63,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         std::vector<int> unitIds = pPlayer->getAllMyUnits();
         if (!unitIds.empty()) {
             std::shuffle(unitIds.begin(), unitIds.end(), g);
-            cellToAttack = game.m_gameObjectsContext->getUnit(unitIds.front())->getCell();
+            cellToAttack = player->getObjects()->getUnit(unitIds.front())->getCell();
             if (RNG::rnd(100) > 30) break;
         }
 
@@ -74,7 +72,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         if (!structureIds.empty()) {
             // pick structure to attack
             std::shuffle(structureIds.begin(), structureIds.end(), g);
-            cellToAttack = game.m_gameObjectsContext->getStructures()[structureIds.front()]->getCell();
+            cellToAttack = player->getObjects()->getStructures()[structureIds.front()]->getCell();
             if (RNG::rnd(100) > 30) break;
         }
     }
@@ -83,7 +81,7 @@ void cPlayerBrainFremenSuperWeapon::think()
 
     // order units to attack!
     for (auto &id : ids) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+        cUnit *pUnit = player->getObjects()->getUnit(id);
         if (!pUnit->isIdle()) continue;
         pUnit->attackAt(cellToAttack);
     }

@@ -282,7 +282,7 @@ void cGame::init()
 
     map->init(64, 64);
 
-    m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
+    m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get(), m_services.get());
 
     for (int i = 0; i < m_gameObjectsContext->getUnits()->size(); i++) {
         m_gameObjectsContext->getUnit(i)->init(i);
@@ -334,7 +334,7 @@ void cGame::missionInit()
         bullet.init();
     }
 
-    m_players->initPlayers(true, m_gameSettings.get(), m_dataCampaign.get());
+    m_players->initPlayers(true, m_gameSettings.get(), m_dataCampaign.get(), m_services.get());
 
     m_drawManager->missionInit();
 }
@@ -944,7 +944,7 @@ void cGame::setState(int newState)
                 newStatePtr = pState;
             }
             else if (newState == GAME_SETUPSKIRMISH) {
-                m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get());
+                m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get(), m_services.get());
                 auto previewMaps = m_gameObjectsContext->getPreviewMaps();
                 newStatePtr = new cSetupSkirmishState(m_services.get(), previewMaps, m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
