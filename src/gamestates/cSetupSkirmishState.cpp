@@ -45,6 +45,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
     m_objects(services->objects),
+    m_services(services),
     m_dataCampaign(dataCompaign),
     m_previewMaps(previewMaps),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get())
@@ -729,11 +730,15 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             pPlayer->init(p, nullptr);
         }
         else if (p == AI_CPU5) {
-            pPlayer->init(p, std::make_unique<brains::cPlayerBrainFremenSuperWeapon>(pPlayer));
+            auto brain = std::make_unique<brains::cPlayerBrainFremenSuperWeapon>(pPlayer);
+            brain->serviceInit(m_services);
+            pPlayer->init(p, std::move(brain));
         }
         else if (p == AI_CPU6) {
             if (!m_settings->isDisableWormAi()) {
-                pPlayer->init(p, std::make_unique<brains::cPlayerBrainSandworm>(pPlayer));
+                auto brain = std::make_unique<brains::cPlayerBrainSandworm>(pPlayer);
+                brain->serviceInit(m_services);
+                pPlayer->init(p, std::move(brain));
             }
             else {
                 pPlayer->init(p, nullptr);
@@ -741,7 +746,9 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         }
         else {
             if (maxThinkingAIs > 0) {
-                pPlayer->init(p, std::make_unique<brains::cPlayerBrainSkirmish>(pPlayer));
+                auto brain = std::make_unique<brains::cPlayerBrainSkirmish>(pPlayer);
+                brain->serviceInit(m_services);
+                pPlayer->init(p, std::move(brain));
                 maxThinkingAIs--;
             }
             else {
