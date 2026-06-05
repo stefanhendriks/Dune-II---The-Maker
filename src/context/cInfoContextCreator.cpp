@@ -13,7 +13,7 @@
 #include "include/d2tmc.h"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
-#include "utils/common.h"
+#include "utils/Log.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/sTerrainInfo.h"
 
@@ -61,17 +61,17 @@ std::unique_ptr<s_TerrainInfo> cInfoContextCreator::createTerrainInfos() {
 }
 
 void cInfoContextCreator::installInfos(cInfoContext& infoContext) {
-    logbook("Setup:  STRUCTURES");
+    Logger::info(COMP_SETUP, "Setup", "STRUCTURES");
     infoContext.setStructureInfos(createStructureInfos());
-    logbook("Setup:  PROJECTILES");
+    Logger::info(COMP_SETUP, "Setup", "PROJECTILES");
     infoContext.setBulletInfos(createBulletInfos());
-    logbook("Setup:  UNITS");
+    Logger::info(COMP_SETUP, "Setup", "UNITS");
     infoContext.setUnitInfos(createUnitInfos());
-    logbook("Setup:  SPECIALS");
+    Logger::info(COMP_SETUP, "Setup", "SPECIALS");
     infoContext.setSpecialInfos(createSpecialInfos());
-    logbook("Setup:  PARTICLES");
+    Logger::info(COMP_SETUP, "Setup", "PARTICLES");
     infoContext.setParticleInfos(createParticleInfos());
-    logbook("Setup:  TERRAINS");
+    Logger::info(COMP_SETUP, "Setup", "TERRAINS");
     infoContext.setTerrainInfo(createTerrainInfos());
 }
 
@@ -84,7 +84,7 @@ void cInfoContextCreator::installInfos(cInfoContext& infoContext) {
  *****************************/
 void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 {
-    logbook("Installing:  UNITS");
+    Logger::info(COMP_SETUP, "Installing", "UNITS");
     // Every unit thinks at 0.1 second. When the unit thinks, it is thinking about the path it
     // is taking, the enemies around him, etc. The speed of how a unit should move is depended on
     // time aswell. Every 0.01 second a unit 'can' move. The movespeed is like this:
@@ -859,7 +859,7 @@ void cInfoContextCreator::initSpecials(cSpecialInfos& specialInfos)
  ****************/
 void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
 {
-    logbook("Installing:  BULLET TYPES");
+    Logger::info(COMP_SETUP, "Installing", "BULLET TYPES");
 
     for (size_t i = 0; i < bulletInfos.size(); i++) {
         bulletInfos[i].bmp = nullptr; // in case an invalid bitmap; default is a small rocket
@@ -1084,7 +1084,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
 
 void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings)
 {
-    logbook("Installing:  UPGRADES");
+    Logger::info(COMP_SETUP, "Installing", "UPGRADES");
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
         upgradeInfos[i].enabled = false;
         upgradeInfos[i].techLevel = -1;
@@ -1327,8 +1327,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
  *****************************/
 void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
 {
-
-    logbook("Installing:  STRUCTURES");
+    Logger::info(COMP_SETUP, "Installing", "STRUCTURES");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         s_StructureInfo &structureInfo = structureInfos[i];
         structureInfo.bmp = gfxdata->getSurface(BUILD_WINDTRAP); // in case an invalid bitmap, we are a windtrap
