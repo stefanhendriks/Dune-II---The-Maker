@@ -5,6 +5,11 @@
 
 class cPlayer;
 class cAbstractStructure;
+class cGameObjectContext;
+class cInfoContext;
+class cGameSettings;
+class cGameInterface;
+struct sGameServices;
 
 namespace {
 
@@ -24,6 +29,8 @@ public:
 
     virtual ~cPlayerBrain() = default;
 
+    void serviceInit(sGameServices* services);
+
     /**
      * called, every 100 ms
      */
@@ -38,6 +45,10 @@ public:
 
 protected:
     cPlayer *player;
+    cGameObjectContext *m_objects = nullptr;
+    cInfoContext *m_info = nullptr;
+    cGameSettings *m_settings = nullptr;
+    cGameInterface *m_interface = nullptr;
 
 private:
 

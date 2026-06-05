@@ -166,6 +166,22 @@ public:
         return difficultySettings;
     }
 
+    cGameObjectContext *getObjects() const {
+        return m_objects;
+    }
+
+    cInfoContext *getInfos() const {
+        return m_infos;
+    }
+
+    cGameSettings *getSettings() const {
+        return m_settings;
+    }
+
+    cGameInterface *getInterface() const {
+        return m_interface;
+    }
+
     cItemBuilder *getItemBuilder() const {
         return itemBuilder.get();
     }

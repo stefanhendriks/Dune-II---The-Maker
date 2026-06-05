@@ -1,9 +1,5 @@
 #include "cPlayerBrainSandworm.h"
-#include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "include/cAssert.h"
@@ -31,7 +27,7 @@ void cPlayerBrainSandworm::think()
     // loop through all its worms and move them around
     const std::vector<int> &wormIds = player->getAllMyUnitsForType(SANDWORM);
     for (auto &i : wormIds) {
-        cUnit *pSandWorm = game.m_gameObjectsContext->getUnit(i);
+        cUnit *pSandWorm = m_objects->getUnit(i);
 
         // when on guard
         bool allowedToMove = pSandWorm->movewaitTimer.get() < 1;
@@ -44,7 +40,7 @@ void cPlayerBrainSandworm::think()
 
 void cPlayerBrainSandworm::findRandomValidLocationToMoveToAndGoThere(cUnit *pSandWorm) const
 {
-    int placeToMoveTo = game.m_gameObjectsContext->getMap()->findRandomCellToMoveToForSandworm();
+    int placeToMoveTo = m_objects->getMap()->findRandomCellToMoveToForSandworm();
 
     if (placeToMoveTo > -1) {
         pSandWorm->move_to(placeToMoveTo);

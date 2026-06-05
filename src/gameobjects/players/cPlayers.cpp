@@ -16,6 +16,7 @@
 #include "controls/cGameControlsContext.h"
 #include "controls/cMouse.h"
 #include "gameobjects/structures/cOrderProcesser.h"
+#include "brains/cPlayerBrain.h"
 #include "sidebar/cBuildingListUpdater.h"
 #include "sidebar/cSideBar.h"
 #include "sidebar/cSideBarFactory.h"
@@ -152,7 +153,7 @@ void cPlayers::destroyAllegroBitmaps()
     }
 }
 
-void cPlayers::initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign)
+void cPlayers::initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_DataCampaign* dataCampaign, sGameServices* services)
 {
     int maxThinkingAIs = MAX_PLAYERS_CAPACITY;
     if (gameSettings->isOneAi()) {
@@ -191,6 +192,9 @@ void cPlayers::initPlayers(bool rememberHouse, cGameSettings* gameSettings, s_Da
             }
         }
 
+        if (brain) {
+            brain->serviceInit(services);
+        }
         pPlayer->init(i, std::move(brain));
         pPlayer->setAutoSlabStructures(autoSlabStructures);
         if (rememberHouse) {

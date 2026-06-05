@@ -1,9 +1,8 @@
 #include "cPlayerBrainMission.h"
 #include "cPlayerBrainMissionKindExplore.h"
 #include "gameobjects/units/cUnits.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
+#include "gameobjects/players/cPlayer.h"
 #include "include/cAssert.h"
 #include <format>
 
@@ -26,7 +25,7 @@ cPlayerBrainMissionKindExplore::~cPlayerBrainMissionKindExplore()
 
 bool cPlayerBrainMissionKindExplore::think_SelectTarget()
 {
-    targetCell = game.m_gameObjectsContext->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+    targetCell = player->getObjects()->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(2);
     return true;
 }
 
@@ -34,10 +33,10 @@ void cPlayerBrainMissionKindExplore::think_Execute()
 {
     const std::vector<int> &units = mission->getUnits();
     for (auto &myUnit : units) {
-        cUnit *aUnit = game.m_gameObjectsContext->getUnit(myUnit);
+        cUnit *aUnit = player->getObjects()->getUnit(myUnit);
         if (aUnit->isValid()) {
             if (aUnit->isIdle()) {
-                if (game.m_gameObjectsContext->getMapGeometry()->distance(aUnit->getCell(), targetCell) < 4) {
+                if (player->getObjects()->getMapGeometry()->distance(aUnit->getCell(), targetCell) < 4) {
                     targetCell = -1;
                     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET); // select new target
                 }
@@ -46,7 +45,7 @@ void cPlayerBrainMissionKindExplore::think_Execute()
                 }
             }
             else {
-                if (game.m_gameObjectsContext->getMapGeometry()->distance(aUnit->getCell(), targetCell) < 2) {
+                if (player->getObjects()->getMapGeometry()->distance(aUnit->getCell(), targetCell) < 2) {
                     // almost there. Select new target.
                     targetCell = -1;
                     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET); // select new target

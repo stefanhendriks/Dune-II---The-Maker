@@ -1,8 +1,6 @@
 #include "cRespondToThreatAction.h"
 
 #include "gameobjects/players/cPlayer.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/units/cUnits.h"
 #include "context/cInfoContext.h"
@@ -53,7 +51,7 @@ void cRespondToThreatAction::execute()
             int unitsOrdered = 0;
             // find units that can counter-attack an air unit
             for (auto &ufd: units) {
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(ufd.entityId);
+                cUnit *pUnit = m_player->getObjects()->getUnit(ufd.entityId);
                 if (pUnit->iID == skipThisUnit) continue;
                 if (!pUnit->isIdle()) continue;
                 if (!pUnit->canAttackAirUnits()) continue;
@@ -73,7 +71,7 @@ void cRespondToThreatAction::execute()
     int unitsOrdered = 0;
 
     for (auto &ufd : units) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(ufd.entityId);
+        cUnit *pUnit = m_player->getObjects()->getUnit(ufd.entityId);
         if (pUnit->iID == skipThisUnit) continue;
         if (!pUnit->isIdle()) continue;
         if (!pUnit->isAttackingUnit()) continue; // is a unit that is used generally for attacking

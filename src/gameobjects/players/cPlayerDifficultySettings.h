@@ -7,6 +7,8 @@
 
 #pragma once
 
+class cInfoContext;
+
 /**
  * This class holds properties for a player which have overall influence on the
  * player performance. Typically, these are characterized as house properties. For instance:
@@ -27,6 +29,8 @@ public:
     cPlayerDifficultySettings(float moveSpeedFactor, float buildSpeedFactor, float harvestSpeedFactor, float dumpSpeedFactor, float inflictDamageFactor);
 
     ~cPlayerDifficultySettings();
+
+    void setInfoContext(cInfoContext* info) { m_info = info; }
 
     // get move speed of a unit
     float getMoveSpeed(int iUnitType, int slowDown);
@@ -53,6 +57,7 @@ public:
 protected:
 
 private:
+    cInfoContext* m_info = nullptr;
     float m_moveSpeedFactor;
     float m_buildSpeedFactor;
     float m_harvestSpeedFactor;

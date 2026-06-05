@@ -77,6 +77,9 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_interface != nullptr);
     m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
     d2tm_assert(m_gfxdata != nullptr);
+    if (difficultySettings) {
+        difficultySettings->setInfoContext(m_infos);
+    }
     logbook(std::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
                         MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(SDL_Surface *)));
 }
