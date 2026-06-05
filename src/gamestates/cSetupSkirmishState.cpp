@@ -827,7 +827,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                        maxRange,
                        iPlayerUnitType);
 
-            cUnits::unitCreate(cell, iPlayerUnitType, p, true);
+            cUnits::unitCreate(m_objects, m_services->info, m_interface, cell, iPlayerUnitType, p, true);
 
             cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units",
                                         std::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),

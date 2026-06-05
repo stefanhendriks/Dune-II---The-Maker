@@ -37,6 +37,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "include/sGameServices.h"
+#include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include <format>
@@ -368,6 +369,7 @@ cIni::cIni(sGameServices* services)
     m_settings = services->settings;
     m_objects = services->objects;
     m_infos = services->info;
+    m_interface = services->ctx->getGameInterface();
 }
 
 /**
@@ -1188,7 +1190,7 @@ bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const in
     }
 
     if (iController > -1) {
-        cUnits::unitCreate(iCell, iType, iController, true);
+        cUnits::unitCreate(m_objects, m_infos, m_interface, iCell, iType, iController, true);
     }
     return bSetUpPlayers;
 }

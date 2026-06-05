@@ -23,6 +23,7 @@ struct s_DataCampaign;
 class cGameSettings;
 class cGameObjectContext;
 class cInfoContext;
+class cGameInterface;
 struct sGameServices;
 
 // public stuff
@@ -64,6 +65,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
+    cGameInterface* m_interface = nullptr;
 };
 
 

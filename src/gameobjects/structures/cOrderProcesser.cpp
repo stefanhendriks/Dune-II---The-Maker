@@ -253,7 +253,7 @@ void cOrderProcesser::sendFrigate()
         }
         else {
             // STEP 2: create frigate
-            int unitId = cUnits::unitCreate(iStartCell, FRIGATE, m_player->getId(), true);
+            int unitId = cUnits::unitCreate(m_objects, m_info, m_interface, iStartCell, FRIGATE, m_player->getId(), true);
             if (unitId < 0) {
                 logbook("cOrderProcesser::sendFrigate : unable to spawn frigate");
                 return;

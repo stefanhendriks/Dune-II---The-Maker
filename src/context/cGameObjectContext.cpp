@@ -165,4 +165,6 @@ void cGameObjectContext::serviceInit(sGameServices* services)
     m_particles->serviceInit(services);
     d2tm_assert(m_structureFactory != nullptr);
     m_structureFactory->serviceInit(services);
+    d2tm_assert(m_Bullets != nullptr);
+    m_Bullets->serviceInit(services);
 }

@@ -477,9 +477,9 @@ public:
 
     bool canUnload();
 
-    static int findHarvestSpot(int id);
-    static int carryallTransfer(int iuID, int iGoal);
-    static int freeAroundMove(int iUnit);
+    static int findHarvestSpot(int id, cGameObjectContext* objects);
+    static int carryallTransfer(int iuID, int iGoal, cGameObjectContext* objects);
+    static int freeAroundMove(int iUnit, cGameObjectContext* objects);
 
 private:
     cGameSettings *m_settings = nullptr;
@@ -602,5 +602,5 @@ private:
     void setAction(eActionType action);
     void setGoalCell(int goalCell);
 
-    static int carryallFreeForTransfer(int iPlayer);
+    static int carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects);
 };

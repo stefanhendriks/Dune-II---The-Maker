@@ -6,6 +6,8 @@
 #include "definitions.h"
 #include "gameobjects/projectiles/bullet.h"
 
+struct sGameServices;
+
 /**
  * Container wrapper for the global g_Bullet array
  * Provides safe indexed access and standard container interface
@@ -13,6 +15,7 @@
 class cBullets {
 public:
     cBullets() = default;
+    void serviceInit(sGameServices *services);
 
     cBullet &operator[](std::size_t index) {
         d2tm_assert(index < MAX_BULLETS && "Index out of bounds for g_Bullet");

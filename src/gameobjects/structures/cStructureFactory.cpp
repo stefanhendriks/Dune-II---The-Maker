@@ -187,7 +187,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
 
     // additional forces: (UNITS)
     if (iStructureType == REFINERY) {
-        REINFORCE(iPlayer, HARVESTER, iCell, -1);
+        REINFORCE(m_objects, m_info, m_interface, iPlayer, HARVESTER, iCell, -1);
     }
 
     m_structureUtils->putStructureOnDimension(MAPID_STRUCTURES, str);

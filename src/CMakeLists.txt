@@ -76,6 +76,7 @@ set(D2TM_SOURCES
     gameobjects/players/cPlayers.cpp
     gameobjects/players/cPlayerStatistics.cpp
     gameobjects/projectiles/bullet.cpp
+    gameobjects/projectiles/cBullets.cpp
     gameobjects/structures/cAbstractStructure.cpp
     gameobjects/structures/cBarracks.cpp
     gameobjects/structures/cConstYard.cpp

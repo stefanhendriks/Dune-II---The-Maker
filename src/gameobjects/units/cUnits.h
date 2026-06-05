@@ -129,7 +129,7 @@ public:
      * @param isReinforement flag to set on event
      * @return
      */
-    static int unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage =1.0f);
+    static int unitCreate(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage = 1.0f);
 
 
 private:

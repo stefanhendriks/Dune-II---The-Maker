@@ -1,5 +1,3 @@
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
 #include "cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
@@ -8,8 +6,11 @@
 #include "gameobjects/players/cPlayers.h"
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
-#include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/cInfoContext.h"
+#include "context/GameContext.hpp"
+#include "game/cGameInterface.h"
+#include "include/sGameServices.h"
 #include <algorithm>
 #include <format>
 
@@ -69,10 +70,10 @@ bool cReinforcement::isReady() const
     return m_delayInSeconds < 0;
 }
 
-void cReinforcement::execute() const
+void cReinforcement::execute(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface) const
 {
-    int focusCell = game.m_gameObjectsContext->getPlayer(m_playerId)->getFocusCell();
-    REINFORCE(m_playerId, m_unitType, m_cell, focusCell, true);
+    int focusCell = objects->getPlayer(m_playerId)->getFocusCell();
+    REINFORCE(objects, infos, iface, m_playerId, m_unitType, m_cell, focusCell, true);
 }
 
 /// Reinforcements container class
@@ -86,6 +87,13 @@ cReinforcements::cReinforcements()
 void cReinforcements::init()
 {
     reinforcements.clear();
+}
+
+void cReinforcements::serviceInit(sGameServices* services)
+{
+    m_objects = services->objects;
+    m_infos = services->info;
+    m_interface = services->ctx->getGameInterface();
 }
 
 void cReinforcements::addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat)
@@ -109,7 +117,7 @@ void cReinforcements::thinkSlow()
     for (auto &reinforcement : reinforcements) {
         if (reinforcement.isReady()) {
             reinforcement.repeatOrMarkForDeletion();
-            REINFORCE(reinforcement);
+            REINFORCE(m_objects, m_infos, m_interface, reinforcement);
         }
     }
 
@@ -130,45 +138,37 @@ void cReinforcements::thinkSlow()
  * Assumes this is a 'real' reinforcement. (ie triggered by map)
  * create a new unit by sending it.
  *
+ * @param objects game object context
  * @param iPlr player index
  * @param iTpe unit type
  * @param iCll location where to bring it
  * @param iStart where to start from
 
  */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart)
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iPlr, int iTpe, int iCll, int iStart)
 {
-    REINFORCE(iPlr, iTpe, iCll, iStart, true);
+    REINFORCE(objects, infos, iface, iPlr, iTpe, iCll, iStart, true);
 }
 
 /**
  * Same as above REINFORCE function, but takes sReinforcement. if iCell is < 0 then it will do nothing.
- * @param reinforcement
  */
-void REINFORCE(const cReinforcement &reinforcement)
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, const cReinforcement &reinforcement)
 {
     if (!reinforcement.isValid()) return; // bail, invalid reinforcement given
-    reinforcement.execute();
+    reinforcement.execute(objects, infos, iface);
 }
 
 /**
- * Spawns a carryAll that brings a unit (part of a reinforcement) to the map. It has a flag 'reinforcement' so that
- * we can distinguish (for now) between "mission reinforcements" and "carry-all brings harvester by building refinery"
- * use-cases.
- *
- * @param iPlr
- * @param iTpe
- * @param iCll
- * @param iStart
- * @param isReinforcement
+ * Spawns a carryAll that brings a unit (part of a reinforcement) to the map.
  */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
 {
     // handle invalid arguments
     if (iPlr < 0 || iTpe < 0)
         return;
 
-    if (game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCll) == false)
+    if (objects->getMapGeometry()->isValidCell(iCll) == false)
         return;
 
     if (iStart < 0)
@@ -178,7 +178,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
 
     if (iStartCell < 0) {
         iStart += RNG::rnd(64);
-        if (iStart >= game.m_gameObjectsContext->getMap()->getMaxCells())
+        if (iStart >= objects->getMap()->getMaxCells())
             iStart -= 64;
 
         iStartCell = iFindCloseBorderCell(iStart);
@@ -193,7 +193,7 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
                         iTpe, iPlr, iStartCell, iCll));
 
     // STEP 2: create carryall
-    int iUnit = cUnits::unitCreate(iStartCell, CARRYALL, iPlr, true, isReinforcement);
+    int iUnit = cUnits::unitCreate(objects, infos, iface, iStartCell, CARRYALL, iPlr, true, isReinforcement);
     if (iUnit < 0) {
         // cannot create carry-all!
         logbook("ERROR (reinforce): Cannot create CARRYALL unit.");
@@ -201,15 +201,15 @@ void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
     }
 
     // STEP 3: assign order to carryall
-    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iStartCell);
-    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iStartCell);
-    int cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll);
-    int cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
+    int iCellX = objects->getMapGeometry()->getCellX(iStartCell);
+    int iCellY = objects->getMapGeometry()->getCellY(iStartCell);
+    int cx = objects->getMapGeometry()->getCellX(iCll);
+    int cy = objects->getMapGeometry()->getCellY(iCll);
 
     int d = fDegrees(iCellX, iCellY, cx, cy);
     Facing f = facingFromInt(faceAngle(d)); // get the angle
 
-    cUnit *carryall = game.m_gameObjectsContext->getUnit(iUnit);
+    cUnit *carryall = objects->getUnit(iUnit);
     carryall->rendering.iBodyShouldFace = f;
     carryall->rendering.iBodyFacing = f;
     carryall->rendering.iHeadShouldFace = f;

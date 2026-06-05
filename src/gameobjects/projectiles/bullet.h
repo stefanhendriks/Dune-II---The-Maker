@@ -4,14 +4,20 @@
 #include "gameobjects/players/cPlayerDifficultySettings.h"
 #include "gameobjects/projectiles/cBulletInfos.h"
 
-
 class cPlayer;
+class cGameObjectContext;
+class cInfoContext;
+class cMapCamera;
+class cGameInterface;
+class cGameSettings;
+struct sGameServices;
 
 class cBullet {
 
 public:
 
     void init();
+    void serviceInit(sGameServices *services);
 
     void draw();
 
@@ -104,4 +110,10 @@ private:
     cPlayerDifficultySettings *getDifficultySettings() const;
 
     bool canDamageGround() const;
+
+    cGameObjectContext *m_objects = nullptr;
+    cInfoContext *m_info = nullptr;
+    cMapCamera *m_mapCamera = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cGameSettings *m_settings = nullptr;
 };

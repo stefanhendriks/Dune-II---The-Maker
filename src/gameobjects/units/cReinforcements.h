@@ -2,6 +2,11 @@
 
 #include <vector>
 
+class cGameObjectContext;
+class cInfoContext;
+class cGameInterface;
+struct sGameServices;
+
 class cReinforcement {
 public:
     cReinforcement();
@@ -13,7 +18,7 @@ public:
     [[nodiscard]] bool isValid() const;
     [[nodiscard]] bool canBeRemoved() const;
     void repeatOrMarkForDeletion();
-    void execute() const;
+    void execute(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface) const;
 
 private:
     int m_delayInSeconds = -1;
@@ -30,6 +35,7 @@ public:
     explicit cReinforcements();
 
     void init();
+    void serviceInit(sGameServices* services);
 
     void addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat);
 
@@ -38,20 +44,18 @@ public:
 private:
     void substractSecondFromValidReinforcements();
 
+    cGameObjectContext* m_objects = nullptr;
+    cInfoContext* m_infos = nullptr;
+    cGameInterface* m_interface = nullptr;
     std::vector<cReinforcement> reinforcements;
 };
 
 
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart);
-void REINFORCE(const cReinforcement &reinforcement);
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iPlr, int iTpe, int iCll, int iStart);
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, const cReinforcement &reinforcement);
 
 /**
  * Allows overriding reinforcement flag, ie used when a unit is reinforced by construction or other way, rather
  * than a 'real' reinforcement.
- * @param iPlr
- * @param iTpe
- * @param iCll
- * @param iStart
- * @param isReinforcement
  */
-void REINFORCE(int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
