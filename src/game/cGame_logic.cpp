@@ -202,8 +202,6 @@ cGame::cGame()
     m_services->info = m_infoContext.get();
     m_services->settings = m_gameSettings.get();
     m_services->structureUtils = m_structureUtils.get();
-    initLogbook(m_gameSettings.get());
-    m_services->m_log = nullptr;
     m_services->eventEmitter = m_eventEmitter.get();
 
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
@@ -1695,10 +1693,3 @@ void cGame::loadMapFromEditor(int map)
 //     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
 //     pState->loadMap(map);
 // }
-
-void cGame::getLog(cLog *log)
-{
-    d2tm_assert(log != nullptr);
-    m_log = log;
-    m_services->m_log = m_log;
-}

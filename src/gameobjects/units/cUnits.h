@@ -137,7 +137,6 @@ private:
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
     cMap* m_map = nullptr;
-    cLog* m_log = nullptr;
     // Maximum number of units
     static constexpr int MAX_UNITS_CAPACITY = 300;
     std::array<cUnit, MAX_UNITS_CAPACITY> m_units;

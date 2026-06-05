@@ -40,8 +40,6 @@ void cUnits::serviceInit(sGameServices* services)
     d2tm_assert(m_interface != nullptr);
     m_map = m_objects->getMap();
     d2tm_assert(m_map != nullptr);
-    m_log = services->m_log;
-    d2tm_assert(m_log != nullptr);
 
     d2tm_assert(services != nullptr);
     for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
@@ -53,7 +51,7 @@ void cUnits::serviceInit(sGameServices* services)
 cUnit* cUnits::operator[](int index)
 {
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
-        m_log->fatal( eLogComponent::COMP_UNITS , "operator[]", "Unit index {} is out of range", index);
+        Logger::fatal( eLogComponent::COMP_UNITS , "operator[]", "Unit index {} is out of range", index);
     }
     d2tm_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
     return &m_units[index];
@@ -62,7 +60,7 @@ cUnit* cUnits::operator[](int index)
 const cUnit* cUnits::operator[](int index) const
 {
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
-        m_log->fatal( eLogComponent::COMP_UNITS , "operator[] const", "Unit index {} is out of range", index);
+        Logger::fatal( eLogComponent::COMP_UNITS , "operator[] const", "Unit index {} is out of range", index);
     }
     d2tm_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
     return &m_units[index];
@@ -71,7 +69,7 @@ const cUnit* cUnits::operator[](int index) const
 cUnit* cUnits::getUnit(int index)
 {
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
-        m_log->fatal( eLogComponent::COMP_UNITS , "getUnit", "Unit index {} is out of range", index);
+        Logger::fatal( eLogComponent::COMP_UNITS , "getUnit", "Unit index {} is out of range", index);
     }
     d2tm_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
@@ -82,7 +80,7 @@ cUnit* cUnits::getUnit(int index)
 
 const cUnit* cUnits::getUnit(int index) const {
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
-        m_log->fatal( eLogComponent::COMP_UNITS , "getUnit const", "Unit index {} is out of range", index);
+        Logger::fatal( eLogComponent::COMP_UNITS , "getUnit const", "Unit index {} is out of range", index);
     }
     d2tm_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
     if (index < 0 || index >= MAX_UNITS_CAPACITY) {
@@ -97,7 +95,7 @@ int cUnits::findAvailableSlot() const {
             return i;
         }
     }
-    m_log->warn( eLogComponent::COMP_UNITS , "findAvailableSlot", "No avariable slot");
+    Logger::warn( eLogComponent::COMP_UNITS , "findAvailableSlot", "No avariable slot");
     return -1; // No available slot
 }
 
