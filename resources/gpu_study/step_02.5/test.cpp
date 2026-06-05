@@ -1,6 +1,7 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 #include <string>
+#include <cmath> // Pour std::sin
 
 // Structure de Vertex standard (24 octets : position 2D + couleur RGBA)
 struct Vertex {
@@ -185,6 +186,13 @@ int main(int argc, char* argv[]) {
                 running = false;
             }
         }
+
+        // --- ANIMATION PAR SINUS ---
+        float time = SDL_GetTicks() / 1000.0f;
+        float pulse = (std::sin(time * 3.0f) + 1.0f) * 0.5f; 
+
+        triangleVertices[0].r = pulse;          
+        triangleVertices[1].g = 1.0f - pulse;   
 
         SDL_GPUCommandBuffer* cmdBuffer = SDL_AcquireGPUCommandBuffer(device);
         if (!cmdBuffer) continue;
