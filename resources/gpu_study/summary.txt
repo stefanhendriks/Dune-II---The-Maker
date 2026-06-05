@@ -4,3 +4,4 @@
 03  : exchange struct Fragment between CPU and GPU
 03.5: variation from 3
 04  : using and display texture 
+04  : using and display texture with int coords 
