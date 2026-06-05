@@ -54,6 +54,8 @@ int main(int argc, char **argv)
     }
 
     m_log->setDebug(settings->debugMode);
+    Logger::init(m_log.get());
+    
     game.applySettings(std::move(settings));
 
     try {
