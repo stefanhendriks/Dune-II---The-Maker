@@ -255,7 +255,7 @@ void cAbstractStructure::die()
     }
 
     // play sound
-    m_interface->playSoundWithDistance(SOUND_CRUMBLE01 + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
+    m_interface->playSoundWithDistance(SOUND_CRUMBLE01 + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell, m_objects, m_mapCamera));
 
     // remove from the playground
     m_objects->getMap()->remove_id(id, MAPID_STRUCTURES);

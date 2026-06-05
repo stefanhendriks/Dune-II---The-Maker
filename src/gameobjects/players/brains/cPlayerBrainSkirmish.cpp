@@ -883,7 +883,7 @@ void cPlayerBrainSkirmish::addMission(ePlayerBrainMissionKind kind, std::vector<
             if (!player->canBuildUnitBool(item.type)) {
                 item.required = 0; // set it to required 0, so it won't be built
                 log(std::format("addMission - cannot build unit [{}] so setting required to 0, for mission kind [{}].",
-                                toStringBuildTypeSpecificType(eBuildType::UNIT, item.type),
+                                toStringBuildTypeSpecificType(eBuildType::UNIT, item.type, m_info),
                                 ePlayerBrainMissionKindString(kind))
                    );
             }

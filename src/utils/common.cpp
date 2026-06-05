@@ -14,8 +14,7 @@
 
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "game/cGameInterface.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMap.h"
@@ -36,6 +35,8 @@
 #include <cmath>
 
 #include "data/gfxaudio.h"
+
+static cGameSettings* s_logbookSettings = nullptr;
 
 std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& filename)
 {
@@ -99,13 +100,14 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
 }
 
 
-/**
- * Default printing in logs. Only will be done if game.m_gameSettings->isDebugMode() is true.
- * @param txt
- */
+void initLogbook(cGameSettings* settings)
+{
+    s_logbookSettings = settings;
+}
+
 void logbook(const std::string &txt)
 {
-    if (game.m_gameSettings->isDebugMode()) {
+    if (s_logbookSettings && s_logbookSettings->isDebugMode()) {
         cLogger *logger = cLogger::getInstance();
         logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);
     }
@@ -157,20 +159,20 @@ float healthBar(float max_w, int i, int w)
 }
 
 // return a border cell, close to iCll
-int iFindCloseBorderCell(int iCll)
+int iFindCloseBorderCell(int iCll, cGameObjectContext* objects)
 {
-    return game.m_gameObjectsContext->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
+    return objects->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(iCll);
 }
 
 
-int distanceBetweenCellAndCenterOfScreen(int iCell)
+int distanceBetweenCellAndCenterOfScreen(int iCell, cGameObjectContext* objects, cMapCamera* mapCamera)
 {
-    if (game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCell)) {
-        int centerX = game.m_mapCamera->getViewportCenterX();
-        int centerY = game.m_mapCamera->getViewportCenterY();
+    if (objects->getMapGeometry()->isValidCell(iCell)) {
+        int centerX = mapCamera->getViewportCenterX();
+        int centerY = mapCamera->getViewportCenterY();
 
-        int cellX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCell(iCell);
-        int cellY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCell(iCell);
+        int cellX = objects->getMapGeometry()->getAbsoluteXPositionFromCell(iCell);
+        int cellY = objects->getMapGeometry()->getAbsoluteYPositionFromCell(iCell);
 
         return ABS_length(centerX, centerY, cellX, cellY);
     }
@@ -188,12 +190,12 @@ int distanceBetweenCellAndCenterOfScreen(int iCell)
  * @param structureWhichShoots
  * @return
  */
-int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots)
+int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots, cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, cMapCamera* mapCamera)
 {
     int new_id = -1;
 
     int i = 0;
-    for (auto &bullet : game.m_gameObjectsContext->getBullets()) {
+    for (auto &bullet : objects->getBullets()) {
         if (!bullet.bAlive) {
             new_id = i;
             break;
@@ -208,25 +210,25 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
         return -1; // failed
 
 
-    cBullet &newBullet = game.m_gameObjectsContext->getBullets()[new_id];
+    cBullet &newBullet = objects->getBullets()[new_id];
     newBullet.init();
 
     newBullet.iType = type;
-    newBullet.posX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCellCentered(fromCell);
-    newBullet.posY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCellCentered(fromCell);
+    newBullet.posX = objects->getMapGeometry()->getAbsoluteXPositionFromCellCentered(fromCell);
+    newBullet.posY = objects->getMapGeometry()->getAbsoluteYPositionFromCellCentered(fromCell);
     newBullet.iOwnerStructure = structureWhichShoots;
     newBullet.iOwnerUnit = unitWhichShoots;
 
-    newBullet.targetX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCellCentered(targetCell);
-    newBullet.targetY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCellCentered(targetCell);
+    newBullet.targetX = objects->getMapGeometry()->getAbsoluteXPositionFromCellCentered(targetCell);
+    newBullet.targetY = objects->getMapGeometry()->getAbsoluteYPositionFromCellCentered(targetCell);
 
     // if we start firing from a mountain, flag it so the bullet won't be blocked by mountains along
     // the way
-    newBullet.bStartedFromMountain = game.m_gameObjectsContext->getMap()->getCell(fromCell)->type == TERRAIN_MOUNTAIN;
+    newBullet.bStartedFromMountain = objects->getMap()->getCell(fromCell)->type == TERRAIN_MOUNTAIN;
 
-    int structureIdAtTargetCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(targetCell);
+    int structureIdAtTargetCell = objects->getMap()->getCellIdStructuresLayer(targetCell);
     if (structureIdAtTargetCell > -1) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureIdAtTargetCell];
+        cAbstractStructure *pStructure = objects->getStructures()[structureIdAtTargetCell];
         if (pStructure && pStructure->isValid()) {
             newBullet.targetX = pStructure->getRandomPosX();
             newBullet.targetY = pStructure->getRandomPosY();
@@ -239,30 +241,30 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     newBullet.iPlayer = -1;
 
     if (unitWhichShoots > -1 ) {
-        cUnit *cUnit = game.m_gameObjectsContext->getUnit(unitWhichShoots);
+        cUnit *cUnit = objects->getUnit(unitWhichShoots);
         newBullet.iPlayer = cUnit->iPlayer;
         // if an airborn unit shoots (ie Ornithopter), reveal on map for everyone
         if (cUnit->isAirbornUnit()) {
-            game.m_gameObjectsContext->getMap()->clearShroudForAllPlayers(fromCell, 2);
+            objects->getMap()->clearShroudForAllPlayers(fromCell, 2);
         }
     }
 
     if (structureWhichShoots > -1) {
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[structureWhichShoots];
+        cAbstractStructure *pStructure = objects->getStructures()[structureWhichShoots];
         newBullet.iPlayer = pStructure->getOwner();
 
-        int unitIdAtTargetCell = game.m_gameObjectsContext->getMap()->getCellIdUnitLayer(targetCell);
+        int unitIdAtTargetCell = objects->getMap()->getCellIdUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
-            cUnit *unitTarget = game.m_gameObjectsContext->getUnit(unitIdAtTargetCell);
+            cUnit *unitTarget = objects->getUnit(unitIdAtTargetCell);
             // reveal for player which is being attacked
-            game.m_gameObjectsContext->getMap()->clearShroud(fromCell, 2, unitTarget->iPlayer);
+            objects->getMap()->clearShroud(fromCell, 2, unitTarget->iPlayer);
         }
 
-        unitIdAtTargetCell = game.m_gameObjectsContext->getMap()->getCellIdAirUnitLayer(targetCell);
+        unitIdAtTargetCell = objects->getMap()->getCellIdAirUnitLayer(targetCell);
         if (unitIdAtTargetCell > -1) {
-            cUnit *unitTarget = game.m_gameObjectsContext->getUnit(unitIdAtTargetCell);
+            cUnit *unitTarget = objects->getUnit(unitIdAtTargetCell);
             // reveal for player which is being attacked
-            game.m_gameObjectsContext->getMap()->clearShroud(fromCell, 2, unitTarget->iPlayer);
+            objects->getMap()->clearShroud(fromCell, 2, unitTarget->iPlayer);
         }
     }
 
@@ -271,30 +273,30 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     }
 
     // play sound (when we have one)
-    s_BulletInfo &sBullet = game.m_infoContext->getBulletInfo(type);
+    s_BulletInfo &sBullet = infos->getBulletInfo(type);
     if (sBullet.sound > -1) {
-        game.playSoundWithDistance(sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell));
+        iface->playSoundWithDistance(sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell, objects, mapCamera));
     }
 
     return new_id;
 }
 
-const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId)
+const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId, cInfoContext* infos)
 {
     if (specificTypeId < 0) {
         return "Unknown";
     }
     switch (buildType) {
         case eBuildType::SPECIAL:
-            return game.m_infoContext->getSpecialInfo(specificTypeId).description;
+            return infos->getSpecialInfo(specificTypeId).description;
         case eBuildType::UNIT:
-            return game.m_infoContext->getUnitInfo(specificTypeId).name;
+            return infos->getUnitInfo(specificTypeId).name;
         case eBuildType::STRUCTURE:
-            return game.m_infoContext->getStructureInfo(specificTypeId).name;
+            return infos->getStructureInfo(specificTypeId).name;
         case eBuildType::BULLET:
-            return game.m_infoContext->getBulletInfo(specificTypeId).description;
+            return infos->getBulletInfo(specificTypeId).description;
         case eBuildType::UPGRADE:
-            return game.m_infoContext->getUpgradeInfo(specificTypeId).description;
+            return infos->getUpgradeInfo(specificTypeId).description;
         case eBuildType::UNKNOWN:
             return "Unknown";
         default:

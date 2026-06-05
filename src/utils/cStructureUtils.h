@@ -4,12 +4,19 @@
 #include "sidebar/cBuildingListItem.h"
 
 class cPlayer;
+struct sGameServices;
+class cGameObjectContext;
+class cInfoContext;
+class cMapCamera;
+class cGameSettings;
 
 class cStructureUtils {
 public:
     cStructureUtils();
 
     ~cStructureUtils();
+
+    void serviceInit(sGameServices* services);
 
     int findStructureToDeployUnit(cPlayer *pPlayer, int structureType);
 
@@ -38,4 +45,10 @@ public:
     int getTotalSpiceCapacityForPlayer(cPlayer *pPlayer);
 
     int getStructureTypeByUnitBuildId(int unitBuildId) const;
+
+private:
+    cGameObjectContext* m_objects = nullptr;
+    cInfoContext* m_infos = nullptr;
+    cMapCamera* m_mapCamera = nullptr;
+    cGameSettings* m_settings = nullptr;
 };

@@ -272,11 +272,11 @@ void cUnit::createSquishedParticle()
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
         int iType1 = D2TM_PARTICLE_SQUISH01 + RNG::rnd(2);
         cParticle::create(iDieX, iDieY, iType1, iPlayer, rendering.iFrame, m_objects, m_infos);
-        m_interface->playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(position.iCell));
+        m_interface->playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
     }
     else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iPlayer, rendering.iFrame, m_objects, m_infos);
-        m_interface->playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(position.iCell));
+        m_interface->playSoundWithDistance(SOUND_SQUISH, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
     }
 }
 
@@ -290,7 +290,7 @@ void cUnit::createExplosionParticle()
     if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
         // play quick 'boom' sound and show animation
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TRIKE, -1, -1, m_objects, m_infos);
-        m_interface->playSoundWithDistance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(position.iCell));
+        m_interface->playSoundWithDistance(SOUND_TRIKEDIE, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
 
         if (RNG::rnd(100) < 30) {
             cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, m_objects, m_infos);
@@ -309,11 +309,11 @@ void cUnit::createExplosionParticle()
         // play quick 'boom' sound and show animation
         if (RNG::rnd(100) < 50) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1, m_objects, m_infos);
-            m_interface->playSoundWithDistance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(position.iCell));
+            m_interface->playSoundWithDistance(SOUND_TANKDIE2, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
         }
         else {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_TWO, -1, -1, m_objects, m_infos);
-            m_interface->playSoundWithDistance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(position.iCell));
+            m_interface->playSoundWithDistance(SOUND_TANKDIE, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
         }
 
         if (RNG::rnd(100) < 30) {
@@ -356,7 +356,7 @@ void cUnit::createExplosionParticle()
                 }
 
                 if (RNG::rnd(100) < 35)
-                    m_interface->playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(position.iCell));
+                    m_interface->playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
 
                 // calculate cell and damage stuff around this
                 int cll = m_objects->getMapGeometry()->getCellWithMapBorders((position.iCellX - 1) + cx, (position.iCellY - 1) + cy);
@@ -457,7 +457,7 @@ void cUnit::createExplosionParticle()
 
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF02, iPlayer, -1, m_objects, m_infos);
 
-        m_interface->playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(position.iCell));
+        m_interface->playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
     }
 
     if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
@@ -465,7 +465,7 @@ void cUnit::createExplosionParticle()
 
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1, m_objects, m_infos);
 
-        m_interface->playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(position.iCell));
+        m_interface->playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5), distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
     }
 }
 
@@ -1659,7 +1659,7 @@ void cUnit::thinkFast_move_airUnit()
                 int iStrucId = m_map->getCellIdStructuresLayer(position.iCell);
 
                 if (iStrucId > -1) {
-                    setGoalCell(iFindCloseBorderCell(position.iCell));
+                    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
                     m_transferType = eTransferType::DIE;
 
                     m_objects->getStructure(iStrucId)->setFrame(4); // show package on this structure
@@ -1718,7 +1718,7 @@ void cUnit::thinkFast_move_airUnit()
                     m_transferType = eTransferType::DIE;
 
                     // find a new border cell close to us... to die
-                    setGoalCell(iFindCloseBorderCell(position.iCell));
+                    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
                     return;
                 }
                 else if (m_transferType == eTransferType::NEW_STAY) {
@@ -2010,7 +2010,7 @@ void cUnit::shoot(int iTargetCell)
 
     if (bulletType < 0) return; // no bullet type to spawn
 
-    int iBull = createBullet(bulletType, position.iCell, iTargetCell, iID, -1);
+    int iBull = createBullet(bulletType, position.iCell, iTargetCell, iID, -1, m_objects, m_infos, m_interface, m_mapCamera);
 
     cUnit *attackUnit = nullptr;
     if (combat.iAttackUnit > -1) {
@@ -2196,7 +2196,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
                 cParticle::create(iDieX, iDieY, D2TM_PARTICLE_DEADINF01, iPlayer, -1, m_objects, m_infos);
 
                 m_interface->playSoundWithDistance(SOUND_DIE01 + RNG::rnd(5),
-                                           distanceBetweenCellAndCenterOfScreen(position.iCell));
+                                           distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
 
             }
         }
@@ -2382,7 +2382,7 @@ void cUnit::think_attack_sandworm()
         long x = pos_x_centered();
         long y = pos_y_centered();
         cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1, m_objects, m_infos);
-        m_interface->playSoundWithDistance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(position.iCell));
+        m_interface->playSoundWithDistance(SOUND_WORM, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
         actionGuard();
         movewaitTimer.reset((1000/5) * 4); // wait for 4 seconds before moving again
         guardTimer.reset((1000/5) * 4); // timer guard works other way around..
@@ -3900,7 +3900,7 @@ void cUnit::setAction(eActionType action)
 void cUnit::retreatToMapEdge()
 {
     m_transferType = eTransferType::DIE;
-    setGoalCell(iFindCloseBorderCell(position.iCell));
+    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
 }
 
 void cUnit::retreatToNearbyBase()
