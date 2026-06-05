@@ -4,30 +4,43 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'resources/bin/**'
-      - 'resources/dll/**'
-      - 'resources/game.ini'
-      - 'resources/game.ini.org'
-      - 'CMakeLists.txt'
-      - 'create_release.bat'
-      - 'create_release.sh'
-      - 'install_dependencies_macosx.sh'
-      - 'install_dependencies_ubuntu.sh'
-      - 'rebuildmacos.sh'
-      - 'rebuildwin.bat'
-      - 'rebuildwinrelease.bat'
-      - '.github/workflows/**'
 
 concurrency:
   group: master-builds
   cancel-in-progress: false   # wait until the current run finishes
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - 'src/**'
+              - 'tests/**'
+              - 'resources/bin/**'
+              - 'resources/dll/**'
+              - 'resources/game.ini'
+              - 'resources/game.ini.org'
+              - 'CMakeLists.txt'
+              - 'create_release.bat'
+              - 'create_release.sh'
+              - 'install_dependencies_macosx.sh'
+              - 'install_dependencies_ubuntu.sh'
+              - 'rebuildmacos.sh'
+              - 'rebuildwin.bat'
+              - 'rebuildwinrelease.bat'
+              - '.github/workflows/**'
+
   MSYS2:
     name: Windows-msys2-mingw64
+    needs: [changes]
+    if: needs.changes.outputs.relevant == 'true'
     runs-on: [ windows-latest ]
     defaults:
       run:
