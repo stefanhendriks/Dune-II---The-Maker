@@ -39,8 +39,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
     m_myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
 
     cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "cBuildingListItem",
-        std::format("constructor [{}], cost = {}, creditsPerProgressTime = {}",
-            getNameString().c_str(), m_cost, m_creditsPerProgressTime));
+        std::format("constructor [type={}, id={}], cost = {}", eBuildTypeString(m_type), m_buildId, m_cost));
 }
 
 cBuildingListItem::~cBuildingListItem()
