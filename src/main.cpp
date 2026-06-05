@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    game.getLog(m_log.get());
+    m_log->setDebug(settings->debugMode);
     game.applySettings(std::move(settings));
 
     try {
