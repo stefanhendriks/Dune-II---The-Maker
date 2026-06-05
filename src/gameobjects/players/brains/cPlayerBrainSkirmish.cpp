@@ -3,6 +3,7 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
+#include "include/sGameServices.h"
 #include "actions/cRespondToThreatAction.h"
 //#include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
@@ -31,9 +32,6 @@ cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
 //         10*60 -> 1 minute. * 4 -> 4 minutes
 //        m_TIMER_rest = (10 * 60) * 4;
     m_TIMER_rest = RNG::rnd(25); // todo: based on difficulty?
-    if (m_settings->isNoAiRest()) {
-        m_TIMER_rest = 10;
-    }
     m_TIMER_produceMissionCooldown = 0;
     m_TIMER_ai = 0; // increased every 100 ms with 1. (ie 10 ticks is 1 second)
 
@@ -55,6 +53,14 @@ cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
     m_economyState = ePlayerBrainSkirmishEconomyState::PLAYERBRAIN_ECONOMY_STATE_NORMAL;
     m_economyScore = 50;
     m_centerOfBaseCell = 0;
+}
+
+void cPlayerBrainSkirmish::serviceInit(sGameServices* services)
+{
+    cPlayerBrain::serviceInit(services);
+    if (m_settings->isNoAiRest()) {
+        m_TIMER_rest = 10;
+    }
 }
 
 cPlayerBrainSkirmish::~cPlayerBrainSkirmish()

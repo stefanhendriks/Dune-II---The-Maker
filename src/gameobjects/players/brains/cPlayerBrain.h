@@ -29,7 +29,7 @@ public:
 
     virtual ~cPlayerBrain() = default;
 
-    void serviceInit(sGameServices* services);
+    virtual void serviceInit(sGameServices* services);
 
     /**
      * called, every 100 ms
