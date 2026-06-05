@@ -1,0 +1,2 @@
+01 : display hardcoded triangle
+02 : exchange struct Vertex between CPU and GPU 
