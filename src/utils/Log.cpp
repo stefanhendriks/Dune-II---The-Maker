@@ -85,8 +85,9 @@ std::string_view getLogHouseString(int houseId)
 
 
 cLog::cLog(std::string_view filename)
+    : m_startTime(std::chrono::steady_clock::now())
 {
-    m_file.open(std::string(filename), std::ofstream::out | std::ofstream::app);
+    m_file.open(std::string(filename), std::ofstream::out);
     if (!m_file.is_open()) {
         throw std::system_error(errno, std::generic_category());
     }
@@ -159,5 +160,26 @@ void cLog::doLog(eLogLevel level, eLogComponent comp, std::string_view event, st
 
     if (level == LOG_ERROR || level == LOG_FATAL) {
         flushPendingLine(true);
+    }
+}
+
+void cLog::print(eLogLevel level, eLogComponent component, std::string_view event, std::string_view message)
+{
+    std::cout << std::format("{}|{}|{}|{}",
+        getLogLevelString(level),
+        getLogComponentString(component),
+        event,
+        message
+    ) << std::endl;
+}
+
+// ============================================================================
+// INTERFACE LOGGER INITIALISATION GLOBAL MECANIQUE 
+// ============================================================================
+namespace Logger {
+    cLog* g_loggerInstance = nullptr;
+
+    void init(cLog* instance) {
+        g_loggerInstance = instance;
     }
 }
