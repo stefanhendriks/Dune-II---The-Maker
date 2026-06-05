@@ -1,0 +1,33 @@
+On Linux tested...
+
+How to compile :
+
+Code: ==> SDL3 no requirement
+
+Shader : ==> compile SDL ShaderCross
+https://github.com/libsdl-org/SDL_shadercross
+
+with dependancies:
+1_libspirv-cross-c-shared
+sudo apt-get install libspirv-cross-c-shared-dev
+
+2_dxc
+https://github.com/microsoft/DirectXShaderCompiler/releases
+
+Decompress the archive to have 3 repertory
+# 1. copy file in right place on linux system
+sudo cp bin/* /usr/local/bin/
+sudo cp -r include/* /usr/local/include/
+sudo cp lib/* /usr/local/lib/
+
+# 2. update .so cache
+sudo ldconfig
+
+
+# The installation of SDL ShaderCross
+mkdir build
+cd build
+cmake ..
+make -j2
+sudo make install
+sudo ldconfig
