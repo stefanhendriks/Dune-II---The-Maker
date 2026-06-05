@@ -1,11 +1,8 @@
 #include "cRepairFacility.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "definitions.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/players/cPlayer.h"
-#include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 
 cRepairFacility::cRepairFacility()
@@ -35,7 +32,7 @@ void cRepairFacility::thinkFast()
 void cRepairFacility::think_repairUnit()  // must repair...
 {
     int iUnitID = getUnitIdWithin();
-    cUnit *unitToRepair = game.m_gameObjectsContext->getUnit(iUnitID);
+    cUnit *unitToRepair = m_objects->getUnit(iUnitID);
 //    int maxHpForUnitType = game.m_infoContext->getUnitInfo(unitToRepair->iType).hp;
 
     if (unitToRepair->requiresRepairing()) {

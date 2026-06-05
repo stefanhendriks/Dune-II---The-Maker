@@ -33,6 +33,18 @@ public:
     bool isNoAiRest() const {
         return m_noAiRest;
     }
+    bool isTurretsDownOnLowPower() const {
+        return m_turretsDownOnLowPower;
+    }
+    void setTurretsDownOnLowPower(bool value) {
+        m_turretsDownOnLowPower = value;
+    }
+    bool isRocketTurretsDownOnLowPower() const {
+        return m_rocketTurretsDownOnLowPower;
+    }
+    void setRocketTurretsDownOnLowPower(bool value) {
+        m_rocketTurretsDownOnLowPower = value;
+    }
     bool isPlayMusic() const {
         return m_playMusic;
     }
@@ -95,8 +107,10 @@ private:
     bool m_disableReinforcements;
     bool m_drawUsages;           
     bool m_drawUnitDebug;        
-    bool m_noAiRest;             
-    bool m_playMusic;            
+    bool m_noAiRest;
+    bool m_turretsDownOnLowPower = false;
+    bool m_rocketTurretsDownOnLowPower = false;
+    bool m_playMusic;
 
     bool m_playing;
     bool m_skirmish;

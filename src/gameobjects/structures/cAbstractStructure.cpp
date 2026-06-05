@@ -12,18 +12,21 @@
 
 #include "cAbstractStructure.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "utils/cLog.h"
+#include "game/cGameInterface.h"
+#include "game/cGameSettings.h"
+#include "include/sGameServices.h"
+#include "context/GameContext.hpp"
+#include "context/cGameObjectContext.h"
+#include "context/cInfoContext.h"
+#include "gameobjects/map/cMapCamera.h"
 #include "data/gfxdata.h"
+#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
-#include "context/cInfoContext.h"
-#include "context/cGameObjectContext.h"
 #include "gameobjects/units/cUnits.h"
-#include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/players/cPlayer.h"
@@ -99,6 +102,15 @@ cAbstractStructure::~cAbstractStructure()
     posY = -1;
 }
 
+void cAbstractStructure::serviceInit(sGameServices *services)
+{
+    m_objects = services->objects;
+    m_info = services->info;
+    m_mapCamera = services->mapCamera;
+    m_settings = services->settings;
+    m_interface = services->ctx->getGameInterface();
+}
+
 int cAbstractStructure::pos_x()
 {
     return posX;
@@ -112,13 +124,13 @@ int cAbstractStructure::pos_y()
 // X drawing position
 int cAbstractStructure::iDrawX()
 {
-    return game.m_mapCamera->getWindowXPosition(pos_x());
+    return m_mapCamera->getWindowXPosition(pos_x());
 }
 
 // Y drawing position
 int cAbstractStructure::iDrawY()
 {
-    return game.m_mapCamera->getWindowYPosition(pos_y());
+    return m_mapCamera->getWindowYPosition(pos_y());
 }
 
 Texture *cAbstractStructure::getBitmap()
@@ -136,32 +148,32 @@ cPlayer *cAbstractStructure::getPlayer()
 {
     d2tm_assert(iPlayer >= HUMAN);
     d2tm_assert(iPlayer < MAX_PLAYERS);
-    return game.m_gameObjectsContext->getPlayer(iPlayer);
+    return m_objects->getPlayer(iPlayer);
 }
 
 int cAbstractStructure::getMaxHP()
 {
     int type = getType();
-    return game.m_infoContext->getStructureInfo(type).hp;
+    return m_info->getStructureInfo(type).hp;
 }
 
 int cAbstractStructure::getCaptureHP()
 {
     int type = getType();
     // TODO: Capture hp threshold (property in structure)
-    return ((float)game.m_infoContext->getStructureInfo(type).hp) * 0.30f;
+    return ((float)m_info->getStructureInfo(type).hp) * 0.30f;
 }
 
 int cAbstractStructure::getSight()
 {
     int type = getType();
-    return game.m_infoContext->getStructureInfo(type).sight;
+    return m_info->getStructureInfo(type).sight;
 }
 
 int cAbstractStructure::getRange()
 {
     int type = getType();
-    return game.m_infoContext->getStructureInfo(type).range;
+    return m_info->getStructureInfo(type).range;
 }
 
 
@@ -176,57 +188,57 @@ void cAbstractStructure::die()
     }
 
     // remove from array
-    game.m_gameObjectsContext->getStructures()[id] = nullptr;
+    m_objects->getStructures()[id] = nullptr;
 
     // Destroy structure, take stuff in effect for the player
     pPlayer->decreaseStructureAmount(getType()); // remove from player building indexes
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitIDWithinStructure > -1) {
-        game.m_gameObjectsContext->getUnit(iUnitIDWithinStructure)->init(iUnitIDWithinStructure); // die here... softly
+        m_objects->getUnit(iUnitIDWithinStructure)->init(iUnitIDWithinStructure); // die here... softly
     }
 
     if (iUnitIDEnteringStructure > -1) {
-        game.m_gameObjectsContext->getUnit(iUnitIDEnteringStructure)->die(true, false);
+        m_objects->getUnit(iUnitIDEnteringStructure)->die(true, false);
     }
 
     if (iUnitIDHeadingForStructure > -1) {
         // reset structure ID
-        game.m_gameObjectsContext->getUnit(iUnitIDHeadingForStructure)->iStructureID = -1;
+        m_objects->getUnit(iUnitIDHeadingForStructure)->iStructureID = -1;
         iUnitIDHeadingForStructure = -1;
     }
 
     int iCll=iCell;
-    int iCX= game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll);
-    int iCY= game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
+    int iCX= m_objects->getMapGeometry()->getCellX(iCll);
+    int iCY= m_objects->getMapGeometry()->getCellY(iCll);
 
     // create destroy particles
     for (int w = 0; w < iWidth; w++) {
         for (int h = 0; h < iHeight; h++) {
-            iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(iCX + w, iCY + h);
+            iCll = m_objects->getMapGeometry()->makeCell(iCX + w, iCY + h);
 
-            game.m_gameObjectsContext->getMap()->cellChangeType(iCll, TERRAIN_ROCK);
-            cMapEditor(game.m_gameObjectsContext->getMap()).smoothAroundCell(iCll);
+            m_objects->getMap()->cellChangeType(iCll, TERRAIN_ROCK);
+            cMapEditor(m_objects->getMap()).smoothAroundCell(iCll);
 
             int half = 16;
-            int posX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCell(iCll);
-            int posY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCell(iCll);
+            int posX = m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(iCll);
+            int posY = m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(iCll);
 
-            cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
+            cParticle::create(posX + half, posY + half, D2TM_PARTICLE_OBJECT_BOOM01, -1, -1, m_objects, m_info);
 
             for (int i=0; i < 3; i++) {
-                game.m_gameObjectsContext->getMap()->smudge_increase(SmudgeType::S_ROCK, iCll);
+                m_objects->getMap()->smudge_increase(SmudgeType::S_ROCK, iCll);
 
                 // create particle
                 int iType = D2TM_PARTICLE_EXPLOSION_STRUCTURE01 + RNG::rnd(2);
-                cParticle::create(posX + half, posY + half, iType, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
+                cParticle::create(posX + half, posY + half, iType, -1, -1, m_objects, m_info);
 
                 // create smoke
                 if (RNG::rnd(100) < 15) {
                     int randomX = -8 + RNG::rnd(16);
                     int randomY = -8 + RNG::rnd(16);
 
-                    cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
+                    cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, m_objects, m_info);
                 }
 
                 // create fire
@@ -235,7 +247,7 @@ void cAbstractStructure::die()
                     int randomY = -8 + RNG::rnd(16);
 
                     cParticle::create(posX + half + randomX, posY + half + randomY, D2TM_PARTICLE_EXPLOSION_FIRE, -1,
-                                      -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
+                                      -1, m_objects, m_info);
                 }
 
             }
@@ -243,13 +255,13 @@ void cAbstractStructure::die()
     }
 
     // play sound
-    game.playSoundWithDistance(SOUND_CRUMBLE01 + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
+    m_interface->playSoundWithDistance(SOUND_CRUMBLE01 + RNG::rnd(2), distanceBetweenCellAndCenterOfScreen(iCell));
 
     // remove from the playground
-    game.m_gameObjectsContext->getMap()->remove_id(id, MAPID_STRUCTURES);
+    m_objects->getMap()->remove_id(id, MAPID_STRUCTURES);
 
     // screen shaking
-    game.shakeScreen((iWidth * iHeight) * 20);
+    m_interface->shakeScreen((iWidth * iHeight) * 20);
 
     // eligible for cleanup
     dead = true;
@@ -264,7 +276,7 @@ void cAbstractStructure::die()
             .atCell = iCell
         }
     };
-    game.onNotifyGameEvent(event);
+    m_interface->onNotifyGameEvent(event);
 }
 
 
@@ -283,8 +295,8 @@ void cAbstractStructure::think_prebuild()
 
 std::vector<int> cAbstractStructure::getCellsAroundStructure()
 {
-    int iStartX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
-    int iStartY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
+    int iStartX = m_objects->getMapGeometry()->getCellX(iCell);
+    int iStartY = m_objects->getMapGeometry()->getCellY(iCell);
 
     int iEndX = (iStartX + iWidth) + 1;
     int iEndY = (iStartY + iHeight) + 1;
@@ -296,7 +308,7 @@ std::vector<int> cAbstractStructure::getCellsAroundStructure()
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cell = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(x, y);
+            int cell = m_objects->getMapGeometry()->getCellWithMapBorders(x, y);
             if (cell > -1) {
                 cells.push_back(cell);
             }
@@ -312,8 +324,8 @@ std::vector<int> cAbstractStructure::getCellsAroundStructure()
  */
 std::vector<int> cAbstractStructure::getCellsOfStructure()
 {
-    int iStartX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
-    int iStartY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
+    int iStartX = m_objects->getMapGeometry()->getCellX(iCell);
+    int iStartY = m_objects->getMapGeometry()->getCellY(iCell);
 
     int iEndX = (iStartX + iWidth);
     int iEndY = (iStartY + iHeight);
@@ -322,7 +334,7 @@ std::vector<int> cAbstractStructure::getCellsOfStructure()
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cell = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(x, y);
+            int cell = m_objects->getMapGeometry()->getCellWithMapBorders(x, y);
             if (cell > -1) {
                 cells.push_back(cell);
             }
@@ -342,7 +354,7 @@ int cAbstractStructure::getNonOccupiedCellAroundStructure()
     const std::vector<int> &cells = getCellsAroundStructure();
 
     for (auto &cll : cells) {
-        if (!game.m_gameObjectsContext->getMap()->occupied(cll)) {
+        if (!m_objects->getMap()->occupied(cll)) {
             return cll;
         }
     }
@@ -432,7 +444,7 @@ void cAbstractStructure::setHeight(int height)
 void cAbstractStructure::setRallyPoint(int cell)
 {
     d2tm_assert(cell > -2); // -1 is allowed (means disable);
-    d2tm_assert(cell < game.m_gameObjectsContext->getMap()->getMaxCells());
+    d2tm_assert(cell < m_objects->getMap()->getMaxCells());
     iRallyPoint = cell;
 }
 
@@ -474,7 +486,7 @@ void cAbstractStructure::decay(int hp)
             .entitySpecificType = getType()
         }
     };
-    game.onNotifyGameEvent(event);
+    m_interface->onNotifyGameEvent(event);
 }
 
 
@@ -510,9 +522,9 @@ void cAbstractStructure::damage(int hp, int originId)
         if (RNG::rnd(100) < iChance) {
             long x = getRandomPosX();
             long y = getRandomPosY();
-            int particleIndex = cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
+            int particleIndex = cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, m_objects, m_info);
             if (particleIndex > -1) {
-                TIMER_reduceSmoke = game.m_gameObjectsContext->getParticles()[particleIndex].getTimerDeadInTicks();
+                TIMER_reduceSmoke = m_objects->getParticles()[particleIndex].getTimerDeadInTicks();
                 m_smokeParticlesCreated++;
             }
         }
@@ -528,7 +540,7 @@ void cAbstractStructure::damage(int hp, int originId)
                 .originType = eBuildType::UNIT // TODO: What if another structure damaged me!?
             }
         };
-        game.onNotifyGameEvent(event);
+        m_interface->onNotifyGameEvent(event);
     }
 }
 
@@ -538,7 +550,7 @@ void cAbstractStructure::damage(int hp, int originId)
 void cAbstractStructure::setHitPoints(int hp)
 {
     iHitPoints = hp;
-    int maxHp = game.m_infoContext->getStructureInfo(getType()).hp;
+    int maxHp = m_info->getStructureInfo(getType()).hp;
 
     if (iHitPoints > maxHp) {
         logbook(std::format("setHitpoints({}) while max is {}; capped at max.", hp, maxHp));
@@ -554,8 +566,8 @@ void cAbstractStructure::setHitPoints(int hp)
 void cAbstractStructure::setCell(int cell)
 {
     iCell = cell;
-    posX = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteXPositionFromCell(iCell);
-    posY = game.m_gameObjectsContext->getMapGeometry()->getAbsoluteYPositionFromCell(iCell);
+    posX = m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(iCell);
+    posY = m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(iCell);
 }
 
 void cAbstractStructure::setOwner(int player)
@@ -593,9 +605,9 @@ void cAbstractStructure::think_repair()
 {
     // REPAIRING (from think_fast, so called every 5 ms).
     if (bRepair) {
-        cPlayer *player = game.m_gameObjectsContext->getPlayer(iPlayer);
+        cPlayer *player = m_objects->getPlayer(iPlayer);
         float costToRepair = 1.0f;
-        s_StructureInfo &structureInfo = game.m_infoContext->getStructureInfo(getType());
+        s_StructureInfo &structureInfo = m_info->getStructureInfo(getType());
         if (player->hasEnoughCreditsFor(costToRepair)) {
             TIMER_repair++;
 
@@ -618,7 +630,7 @@ void cAbstractStructure::think_repair()
 
 s_StructureInfo cAbstractStructure::getStructureInfo() const
 {
-    return game.m_infoContext->getStructureInfo(getType());
+    return m_info->getStructureInfo(getType());
 }
 
 int cAbstractStructure::getPercentageNotPaved()
@@ -644,7 +656,7 @@ bool cAbstractStructure::isValid()
     if (dead) // flagged for deletion, so no longer 'valid'
         return false;
 
-    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCell))
+    if (!m_objects->getMapGeometry()->isValidCell(iCell))
         return false;
 
     return true;
@@ -770,18 +782,18 @@ void cAbstractStructure::enterStructure(int unitId)
     setAnimating(false);
     setFrame(0);
 
-    cUnit *pUnit = game.m_gameObjectsContext->getUnit(unitId);
+    cUnit *pUnit = m_objects->getUnit(unitId);
 
     pUnit->hideUnit();
     pUnit->setCell(getCell());
     pUnit->updateCellXAndY();
 
-    game.m_gameObjectsContext->getMap()->remove_id(unitId, MAPID_UNITS);
+    m_objects->getMap()->remove_id(unitId, MAPID_UNITS);
 }
 
 void cAbstractStructure::unitLeavesStructure()
 {
-    cUnit *unitToLeave = game.m_gameObjectsContext->getUnit(iUnitIDWithinStructure);
+    cUnit *unitToLeave = m_objects->getUnit(iUnitIDWithinStructure);
     int iNewCell = getNonOccupiedCellAroundStructure();
 
     if (iNewCell > -1) {
@@ -809,7 +821,7 @@ void cAbstractStructure::unitLeavesStructure()
         unitToLeave->move_to(getRallyPoint(), -1, -1);
     }
 
-    game.m_gameObjectsContext->getMap()->cellSetIdForLayer(unitToLeave->getCell(), MAPID_UNITS, iUnitIDWithinStructure);
+    m_objects->getMap()->cellSetIdForLayer(unitToLeave->getCell(), MAPID_UNITS, iUnitIDWithinStructure);
 
     setUnitIdWithin(-1);
     setUnitIdHeadingTowards(-1);
@@ -830,7 +842,7 @@ void cAbstractStructure::unitHeadsTowardsStructure(int unitId)
 
 int cAbstractStructure::getRandomStructureCell()
 {
-    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * game.m_gameObjectsContext->getMap()->getWidth());
+    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * m_objects->getMap()->getWidth());
 }
 
 /**
@@ -903,8 +915,8 @@ void cAbstractStructure::drawWithShadow()
     int drawX = iDrawX();
     int drawY = iDrawY();
 
-    int scaledWidth = game.m_mapCamera->factorZoomLevel(pixelWidth);
-    int scaledHeight = game.m_mapCamera->factorZoomLevel(pixelHeight);
+    int scaledWidth = m_mapCamera->factorZoomLevel(pixelWidth);
+    int scaledHeight = m_mapCamera->factorZoomLevel(pixelHeight);
 
     Texture *bitmapToDraw = getBitmap();
 

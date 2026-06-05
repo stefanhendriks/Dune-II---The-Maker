@@ -6,11 +6,8 @@
  */
 #include "cOrderProcesser.h"
 #include "utils/RNG.hpp"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
 #include "gameobjects/players/cPlayer.h"
-#include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnits.h"
@@ -18,6 +15,10 @@
 #include <format>
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/GameContext.hpp"
+#include "include/sGameServices.h"
+#include "game/cGameInterface.h"
+#include "utils/cStructureUtils.h"
 #include "data/gfxaudio.h"
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)
@@ -38,6 +39,14 @@ cOrderProcesser::~cOrderProcesser()
 {
     removeAllItems();
     m_player = nullptr;
+}
+
+void cOrderProcesser::serviceInit(sGameServices *services)
+{
+    m_objects = services->objects;
+    m_info = services->info;
+    m_structureUtils = services->structureUtils;
+    m_interface = services->ctx->getGameInterface();
 }
 
 cBuildingListItem *cOrderProcesser::getItemToDeploy()
@@ -103,7 +112,7 @@ void cOrderProcesser::playTMinusSound(int seconds)
     }
 
     if (soundIdToPlay > -1) {
-        game.playSound(soundIdToPlay);
+        m_interface->playSound(soundIdToPlay);
     }
 }
 
@@ -121,10 +130,10 @@ void cOrderProcesser::think()
 
         if (m_secondsUntilArrival == 0) {
             sendFrigate();
-            game.m_drawManager->setMessage("Frigate is arriving...");
+            m_interface->getDrawManager()->setMessage("Frigate is arriving...");
         }
         else {
-            game.m_drawManager->setMessage(msg);
+            m_interface->getDrawManager()->setMessage(msg);
         }
     }
 
@@ -145,7 +154,7 @@ void cOrderProcesser::updatePricesForStarport()
         cBuildingListItem *item = list->getItem(i);
         if (item) {
             int id = item->getBuildId();
-            int originalPrice = game.m_infoContext->getUnitInfo(id).cost;
+            int originalPrice = m_info->getUnitInfo(id).cost;
             int slice = originalPrice / 2;
             int newPrice = (originalPrice - slice) + (RNG::rnd(slice * 2));
             item->setBuildCost(newPrice);
@@ -229,14 +238,14 @@ void cOrderProcesser::sendFrigate()
 {
     // iCll = structure start cell (up left), since we must go to the center
     // of the cell:
-    int structureId = game.m_structureUtils->findStarportToDeployUnit(m_player);
+    int structureId = m_structureUtils->findStarportToDeployUnit(m_player);
 
     if (structureId > -1) {
         // found structure
-        game.m_gameObjectsContext->getStructures()[structureId]->setAnimating(true);
-        int destinationCell = game.m_gameObjectsContext->getStructures()[structureId]->getCell();
+        m_objects->getStructures()[structureId]->setAnimating(true);
+        int destinationCell = m_objects->getStructures()[structureId]->getCell();
 
-        int iStartCell = game.m_gameObjectsContext->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
+        int iStartCell = m_objects->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 
         if (iStartCell < 0) {
             logbook("cOrderProcesser::sendFrigate : unable to find start cell to spawn frigate");
@@ -251,21 +260,21 @@ void cOrderProcesser::sendFrigate()
             }
 
             // STEP 2b: make sure its facing the starport directly
-            int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iStartCell);
-            int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iStartCell);
-            int cx = game.m_gameObjectsContext->getMapGeometry()->getCellX(destinationCell);
-            int cy = game.m_gameObjectsContext->getMapGeometry()->getCellY(destinationCell);
+            int iCellX = m_objects->getMapGeometry()->getCellX(iStartCell);
+            int iCellY = m_objects->getMapGeometry()->getCellY(iStartCell);
+            int cx = m_objects->getMapGeometry()->getCellX(destinationCell);
+            int cy = m_objects->getMapGeometry()->getCellY(destinationCell);
 
             int d = fDegrees(iCellX, iCellY, cx, cy);
             Facing f = facingFromInt(faceAngle(d)); // get the angle
 
-            game.m_gameObjectsContext->getUnit(unitId)->rendering.iBodyShouldFace = f;
-            game.m_gameObjectsContext->getUnit(unitId)->rendering.iBodyFacing = f;
-            game.m_gameObjectsContext->getUnit(unitId)->rendering.iHeadShouldFace = f;
-            game.m_gameObjectsContext->getUnit(unitId)->rendering.iHeadFacing = f;
+            m_objects->getUnit(unitId)->rendering.iBodyShouldFace = f;
+            m_objects->getUnit(unitId)->rendering.iBodyFacing = f;
+            m_objects->getUnit(unitId)->rendering.iHeadShouldFace = f;
+            m_objects->getUnit(unitId)->rendering.iHeadFacing = f;
 
             // STEP 3: assign order to frigate (use carryall order function)
-            game.m_gameObjectsContext->getUnit(unitId)->carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
+            m_objects->getUnit(unitId)->carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
             m_unitIdOfFrigateSent = unitId;
             m_frigateSent = true;
         }

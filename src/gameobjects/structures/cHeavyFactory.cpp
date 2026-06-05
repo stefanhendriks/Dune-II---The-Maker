@@ -1,8 +1,7 @@
 #include "cHeavyFactory.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "definitions.h"
+#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/players/cPlayer.h"
@@ -89,8 +88,8 @@ void cHeavyFactory::draw()
         int drawX = iDrawX();
         int drawY = iDrawY();
 
-        int scaledWidth = game.m_mapCamera->factorZoomLevel(pixelWidth);
-        int scaledHeight = game.m_mapCamera->factorZoomLevel(pixelHeight);
+        int scaledWidth = m_mapCamera->factorZoomLevel(pixelWidth);
+        int scaledHeight = m_mapCamera->factorZoomLevel(pixelHeight);
 
         Texture *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         cRectangle src = { 0, iSourceY, pixelWidth, pixelHeight};

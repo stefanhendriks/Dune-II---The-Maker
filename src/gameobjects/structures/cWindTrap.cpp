@@ -1,13 +1,10 @@
 #include "cWindTrap.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "utils/cLog.h"
 #include "definitions.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
 #include "context/cInfoContext.h"
-#include "context/cGameObjectContext.h"
 #include <format>
 
 // Constructor
@@ -70,7 +67,7 @@ void cWindTrap::think_guard()
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cWindTrap::getPowerOut() const
 {
-    float percentage = ((float) getHitPoints() / (float) game.m_infoContext->getStructureInfo(getType()).hp);
+    float percentage = ((float) getHitPoints() / (float) m_info->getStructureInfo(getType()).hp);
     return getMaxPowerOut() * percentage;
 }
 

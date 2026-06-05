@@ -123,6 +123,7 @@ void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMo
         player->setSideBar(sidebar);
 
         auto orderProcesser = std::make_unique<cOrderProcesser>(player);
+        orderProcesser->serviceInit(services);
         player->setOrderProcesser(std::move(orderProcesser));
 
         auto gameControlsContext = std::make_unique<cGameControlsContext>(player, mouse);

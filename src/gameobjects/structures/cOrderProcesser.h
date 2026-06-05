@@ -3,6 +3,12 @@
 #include "sidebar/cBuildingListItem.h"
 
 class cPlayer;
+class cGameObjectContext;
+class cInfoContext;
+class cGameInterface;
+class cStructureUtils;
+class cDrawManager;
+struct sGameServices;
 
 class cOrderProcesser {
 private:
@@ -12,6 +18,8 @@ public:
     explicit cOrderProcesser(cPlayer *thePlayer);
 
     ~cOrderProcesser();
+
+    void serviceInit(sGameServices *services);
 
     void think();    // time based (per second)
     void updatePricesForStarport();
@@ -74,6 +82,10 @@ private:
     int m_pricePaidForItem[kMaxItemsToOrder];
 
     cPlayer *m_player;
+    cGameObjectContext *m_objects = nullptr;
+    cInfoContext *m_info = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cStructureUtils *m_structureUtils = nullptr;
 
     bool m_orderPlaced;
 

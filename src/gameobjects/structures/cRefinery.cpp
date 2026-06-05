@@ -1,15 +1,13 @@
 #include "cRefinery.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "definitions.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/players/cPlayer.h"
-#include "utils/cSoundPlayer.h"
 #include "gameobjects/players/cPlayerDifficultySettings.h"
-#include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/cInfoContext.h"
+#include "game/cGameInterface.h"
 
 cRefinery::cRefinery()
 {
@@ -35,7 +33,7 @@ void cRefinery::thinkFast()
 void cRefinery::think_unit_occupation()
 {
     int iUnitID = getUnitIdWithin();
-    cUnit *cUnit = game.m_gameObjectsContext->getUnit(iUnitID);
+    cUnit *cUnit = m_objects->getUnit(iUnitID);
 
     // the unit id is filled in, that means the unit is IN this structure
     // the TIMER_harvest of the unit will be used to dump the harvest in the
@@ -54,7 +52,7 @@ void cRefinery::think_unit_occupation()
         int iAmount = 5;
 
         // cap at max
-        s_UnitInfo &unitType = game.m_infoContext->getUnitInfo(cUnit->iType);
+        s_UnitInfo &unitType = m_info->getUnitInfo(cUnit->iType);
 
         if (cUnit->iCredits > unitType.credit_capacity) {
             cUnit->iCredits = unitType.credit_capacity;
@@ -78,7 +76,7 @@ void cRefinery::think_unit_occupation()
 
     // let player know...
     if (pPlayer->isHuman()) {
-        game.playVoice(SOUND_VOICE_02_ATR, pPlayer->getId());
+        m_interface->playVoice(SOUND_VOICE_02_ATR, pPlayer->getId());
     }
 
     // perhaps we can find a carryall to help us out
@@ -140,6 +138,6 @@ void cRefinery::think_guard()
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cRefinery::getSpiceSiloCapacity()
 {
-    float percentage = ((float) getHitPoints() / (float) game.m_infoContext->getStructureInfo(getType()).hp);
+    float percentage = ((float) getHitPoints() / (float) m_info->getStructureInfo(getType()).hp);
     return 1000 * percentage;
 }
