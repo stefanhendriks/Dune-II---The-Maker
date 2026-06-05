@@ -19,6 +19,8 @@ public:
     cLog &operator=(const cLog &) = delete;
     cLog &operator=(cLog &&) = delete;
 
+    void setDebug(bool debug);
+
     void log(eLogLevel level, eLogComponent component, std::string_view event, std::string_view message, int playerId = -1, int houseId = -1);
 
     void print(eLogLevel level, eLogComponent component, std::string_view event, std::string_view message);
