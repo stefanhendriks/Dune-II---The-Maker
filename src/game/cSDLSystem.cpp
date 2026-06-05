@@ -117,7 +117,7 @@ cSDLSystem::~cSDLSystem()
     // On Linux, SDL3 registers its own atexit() handler that calls SDL_Quit() before
     // C++ global destructors run. Calling it again here causes a double-free crash.
     // Guard so we only call SDL_Quit() if SDL is still initialised.
-    if (SDL_WasInit(0)) {
+    if (SDL_WasInit(0)==0) {
         SDL_Quit();
     }
     logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Thanks for playing!", OUTC_SUCCESS);
