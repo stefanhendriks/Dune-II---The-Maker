@@ -610,6 +610,7 @@ bool cGame::setupGame()
     std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename);
 
     m_reinforcements = std::make_unique<cReinforcements>();
+    m_reinforcements->serviceInit(m_services.get());
     m_gameObjectsContext->getMap()->setReinforcements(m_reinforcements.get());
 
     init(); // Must be first! (loads ini file at the end, which is required before going on...)

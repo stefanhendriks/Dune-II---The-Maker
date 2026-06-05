@@ -2621,7 +2621,7 @@ void cUnit::thinkFast_move()
                             iStructureID = -1;
 
                             // random move around
-                            int iF = freeAroundMove(iID);
+                            int iF = cUnit::freeAroundMove(iID, m_objects);
 
                             if (iF > -1) {
                                 move_to(iF);
@@ -3454,7 +3454,7 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
 bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell)
 {
-    int r = carryallFreeForTransfer(iPlayer);
+    int r = cUnit::carryallFreeForTransfer(iPlayer, m_objects);
     if (r < 0) {
         return false;
     }
@@ -3828,7 +3828,7 @@ void cUnit::think_harvester()
             // not on spice, find a new location
             if (iCredits < getUnitInfo().credit_capacity) {
                 // find harvest cell
-                move_to(findHarvestSpot(iID), -1, -1);
+                move_to(cUnit::findHarvestSpot(iID, m_objects), -1, -1);
             }
             else {
                 rendering.iFrame = 0;
@@ -3866,7 +3866,7 @@ void cUnit::think_harvester()
                         m_map->cellChangeTile(position.iCell, 0);
                     }
 
-                    move_to(findHarvestSpot(iID), -1, -1);
+                    move_to(cUnit::findHarvestSpot(iID, m_objects), -1, -1);
 
                     cMapEditor(m_map).smoothAroundCell(position.iCell);
                 }
@@ -3982,40 +3982,40 @@ bool cUnit::canUnload()
     return iCredits > 0;
 }
 
-int cUnit::findHarvestSpot(int id)
+int cUnit::findHarvestSpot(int id, cGameObjectContext* objects)
 {
     // finds the closest harvest spot
-    cUnit *cUnit = game.m_gameObjectsContext->getUnit(id);
+    cUnit *cUnit = objects->getUnit(id);
     cUnit->updateCellXAndY();
 
     // First attempt: only look around remembered harvest cell (max radius 2),
     // then fall back to the old global search.
     int rememberedHarvestCell = cUnit->iHarvestCellMemory;
     if (rememberedHarvestCell > -1 &&
-            game.m_gameObjectsContext->getMapGeometry()->isValidCell(rememberedHarvestCell)) {
+            objects->getMapGeometry()->isValidCell(rememberedHarvestCell)) {
 
         auto canUseHarvestCell = [&](int candidateCell) {
             if (candidateCell < 0) return false;
-            if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(candidateCell)) return false;
-            if (game.m_gameObjectsContext->getMap()->getCellCredits(candidateCell) <= 0) return false;
+            if (!objects->getMapGeometry()->isValidCell(candidateCell)) return false;
+            if (objects->getMap()->getCellCredits(candidateCell) <= 0) return false;
 
-            int cellType = game.m_gameObjectsContext->getMap()->getCellType(candidateCell);
+            int cellType = objects->getMap()->getCellType(candidateCell);
             if (cellType != TERRAIN_SPICE && cellType != TERRAIN_SPICEHILL) return false;
 
-            int candidateDx = game.m_gameObjectsContext->getMapGeometry()->getCellX(candidateCell);
-            int candidateDy = game.m_gameObjectsContext->getMapGeometry()->getCellY(candidateCell);
-            if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(candidateDx, candidateDy)) return false;
+            int candidateDx = objects->getMapGeometry()->getCellX(candidateCell);
+            int candidateDy = objects->getMapGeometry()->getCellY(candidateCell);
+            if (!objects->getMapGeometry()->isWithinBoundaries(candidateDx, candidateDy)) return false;
 
             if (candidateCell != cUnit->getCell()) {
-                int idOfUnitAtCandidateCell = game.m_gameObjectsContext->getMap()->getCellIdUnitLayer(candidateCell);
-                if (idOfUnitAtCandidateCell > -1 || game.m_gameObjectsContext->getMap()->occupied(candidateCell, id)) return false;
+                int idOfUnitAtCandidateCell = objects->getMap()->getCellIdUnitLayer(candidateCell);
+                if (idOfUnitAtCandidateCell > -1 || objects->getMap()->occupied(candidateCell, id)) return false;
             }
 
             return true;
         };
 
-        int rememberedDx = game.m_gameObjectsContext->getMapGeometry()->getCellX(rememberedHarvestCell);
-        int rememberedDy = game.m_gameObjectsContext->getMapGeometry()->getCellY(rememberedHarvestCell);
+        int rememberedDx = objects->getMapGeometry()->getCellX(rememberedHarvestCell);
+        int rememberedDy = objects->getMapGeometry()->getCellY(rememberedHarvestCell);
 
         // Radius 0 checks remembered cell first, then ring 1 and ring 2.
         for (int searchRadius = 0; searchRadius <= 2; searchRadius++) {
@@ -4026,9 +4026,9 @@ int cUnit::findHarvestSpot(int id)
                     int candidateDx = rememberedDx + dx;
                     int candidateDy = rememberedDy + dy;
 
-                    if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(candidateDx, candidateDy)) continue;
+                    if (!objects->getMapGeometry()->isWithinBoundaries(candidateDx, candidateDy)) continue;
 
-                    int candidateCell = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(candidateDx, candidateDy);
+                    int candidateCell = objects->getMapGeometry()->getCellWithMapDimensions(candidateDx, candidateDy);
                     if (!canUseHarvestCell(candidateCell)) continue;
 
                     cUnit->iHarvestCellMemory = candidateCell;
@@ -4049,14 +4049,14 @@ int cUnit::findHarvestSpot(int id)
     int TargetSpiceDistance = 40;
     int TargetSpiceHillDistance = 40;
 
-    for (int i = 0; i < game.m_gameObjectsContext->getMap()->getMaxCells(); i++)
-        if (game.m_gameObjectsContext->getMap()->getCellCredits(i) > 0 && i != cUnit->getCell()) {
+    for (int i = 0; i < objects->getMap()->getMaxCells(); i++)
+        if (objects->getMap()->getCellCredits(i) > 0 && i != cUnit->getCell()) {
             // check if its not out of reach
-            int dx = game.m_gameObjectsContext->getMapGeometry()->getCellX(i);
-            int dy = game.m_gameObjectsContext->getMapGeometry()->getCellY(i);
+            int dx = objects->getMapGeometry()->getCellX(i);
+            int dy = objects->getMapGeometry()->getCellY(i);
 
             // skip bordered ones
-            if (game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(dx, dy) == false)
+            if (objects->getMapGeometry()->isWithinBoundaries(dx, dy) == false)
                 continue;
 
             /*
@@ -4069,16 +4069,16 @@ int cUnit::findHarvestSpot(int id)
             if (dy >= (game.map_height-1))
               continue;*/
 
-            int idOfUnitAtCell = game.m_gameObjectsContext->getMap()->getCellIdUnitLayer(i);
+            int idOfUnitAtCell = objects->getMap()->getCellIdUnitLayer(i);
             if (idOfUnitAtCell > -1)
                 continue;
 
-            if (game.m_gameObjectsContext->getMap()->occupied(i, id))
+            if (objects->getMap()->occupied(i, id))
                 continue; // occupied
 
-            int d = ABS_length(cx, cy, game.m_gameObjectsContext->getMapGeometry()->getCellX(i), game.m_gameObjectsContext->getMapGeometry()->getCellY(i));
+            int d = ABS_length(cx, cy, objects->getMapGeometry()->getCellX(i), objects->getMapGeometry()->getCellY(i));
 
-            int cellType = game.m_gameObjectsContext->getMap()->getCellType(i);
+            int cellType = objects->getMap()->getCellType(i);
             if (cellType == TERRAIN_SPICE) {
                 if (d < TargetSpiceDistance) {
                     TargetSpice = i;
@@ -4113,11 +4113,11 @@ int cUnit::findHarvestSpot(int id)
     return chosenCell;
 }
 
-int cUnit::carryallFreeForTransfer(int iPlayer)
+int cUnit::carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects)
 {
     // find a free carry all
-    for (int i = 0; i < game.m_gameObjectsContext->getUnitsSize(); i++) {
-        cUnit *cUnit = game.m_gameObjectsContext->getUnit(i);
+    for (int i = 0; i < objects->getUnitsSize(); i++) {
+        cUnit *cUnit = objects->getUnit(i);
         if (!cUnit->isValid()) continue;
         if (cUnit->iPlayer != iPlayer) continue;
         if (cUnit->iType != CARRYALL) continue; // skip non-carry-all units
@@ -4135,24 +4135,24 @@ int cUnit::carryallFreeForTransfer(int iPlayer)
  * @param iGoal
  * @return
  */
-int cUnit::carryallTransfer(int iuID, int iGoal)
+int cUnit::carryallTransfer(int iuID, int iGoal, cGameObjectContext* objects)
 {
-    int carryAllUnitId = carryallFreeForTransfer(game.m_gameObjectsContext->getUnit(iuID)->iPlayer);
+    int carryAllUnitId = carryallFreeForTransfer(objects->getUnit(iuID)->iPlayer, objects);
     if (carryAllUnitId > -1) {
-        cUnit *cUnit = game.m_gameObjectsContext->getUnit(carryAllUnitId);
+        cUnit *cUnit = objects->getUnit(carryAllUnitId);
         cUnit->carryall_order(iuID, eTransferType::PICKUP, iGoal, -1);
     }
     return carryAllUnitId;
 }
 
-int cUnit::freeAroundMove(int iUnit)
+int cUnit::freeAroundMove(int iUnit, cGameObjectContext* objects)
 {
     if (iUnit < 0) {
         logbook("Invalid unit");
         return -1;
     }
 
-    cUnit *cUnit = game.m_gameObjectsContext->getUnit(iUnit);
+    cUnit *cUnit = objects->getUnit(iUnit);
 
     cUnit->updateCellXAndY();
     int iStartX = cUnit->getCellX();
@@ -4175,9 +4175,9 @@ int cUnit::freeAroundMove(int iUnit)
 
     for (int x = iStartX; x < iEndX; x++) {
         for (int y = iStartY; y < iEndY; y++) {
-            int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(x, y);
+            int cll = objects->getMapGeometry()->getCellWithMapBorders(x, y);
 
-            if (cll > -1 && !game.m_gameObjectsContext->getMap()->occupied(cll)) {
+            if (cll > -1 && !objects->getMap()->occupied(cll)) {
                 iClls[foundCoordinates] = cll;
                 foundCoordinates++;
             }

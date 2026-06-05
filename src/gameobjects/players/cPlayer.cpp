@@ -2265,7 +2265,7 @@ void cPlayer::reinforceHarvesterIfNeeded(int cell)
 
             // found a refinery, deliver harvester to that
             if (refinery) {
-                REINFORCE(id, HARVESTER, refinery->getCell(), -1);
+                REINFORCE(m_objects, m_infos, m_interface, id, HARVESTER, refinery->getCell(), -1);
             }
         }
     }

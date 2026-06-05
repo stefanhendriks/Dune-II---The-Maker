@@ -254,7 +254,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                 if (structureToDeployUnit > -1) {
                     cAbstractStructure *pStructureToDeploy = m_services->objects->getStructures()[structureToDeployUnit];
                     pStructureToDeploy->setAnimating(true); // animate
-                    int unitId = cUnits::unitCreate(pStructureToDeploy->getCell(), buildId, m_player->getId(), false);
+                    int unitId = cUnits::unitCreate(m_services->objects, m_services->info, m_services->ctx->getGameInterface(), pStructureToDeploy->getCell(), buildId, m_player->getId(), false);
                     if (unitId > -1) {
                         int rallyPoint = pStructureToDeploy->getRallyPoint();
                         if (rallyPoint > -1) {
@@ -301,10 +301,10 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                             bool passable = m_services->objects->getMap()->isCellPassableForFootUnits(iCll);
 
                             if (passable) {
-                                cUnits::unitCreate(iCll, special.providesTypeId, FREMEN, false);
+                                cUnits::unitCreate(m_services->objects, m_services->info, m_services->ctx->getGameInterface(), iCll, special.providesTypeId, FREMEN, false);
                             }
                             else {
-                                REINFORCE(FREMEN, special.providesTypeId, iCll, -1);
+                                REINFORCE(m_services->objects, m_services->info, m_services->ctx->getGameInterface(), FREMEN, special.providesTypeId, iCll, -1);
                             }
 
                             int x = m_services->objects->getMapGeometry()->getCellX(iCll);
@@ -414,7 +414,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
         int cell = pStructureToDeploy->getNonOccupiedCellAroundStructure();
         if (cell > -1) {
             pStructureToDeploy->setAnimating(true); // animate
-            int unitId = cUnits::unitCreate(cell, buildIdToProduce, m_player->getId(), false);
+            int unitId = cUnits::unitCreate(m_services->objects, m_services->info, m_services->ctx->getGameInterface(), cell, buildIdToProduce, m_player->getId(), false);
             if (unitId > -1) {
                 int rallyPoint = pStructureToDeploy->getRallyPoint();
                 if (rallyPoint > -1) {
@@ -448,7 +448,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
             if (pStructureToDeploy->getRallyPoint() > -1) {
                 cellToDeploy = pStructureToDeploy->getRallyPoint();
             }
-            REINFORCE(m_player->getId(), buildIdToProduce, cellToDeploy, -1, false);
+            REINFORCE(m_services->objects, m_services->info, m_services->ctx->getGameInterface(), m_player->getId(), buildIdToProduce, cellToDeploy, -1, false);
         }
     }
 }

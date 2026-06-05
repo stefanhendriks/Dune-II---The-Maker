@@ -15,10 +15,9 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "gameobjects/map/cMap.h"
-#include "include/d2tmc.h"
 #include "utils/common.h"
-#include "game/cGame.h"
-#include "utils/cLog.h"
+#include "game/cGameInterface.h"
+#include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
@@ -112,11 +111,10 @@ int cUnits::getValidUnitsCount() const {
     return count;
 }
 
-// return new valid ID
-static int unitNewID()
+static int unitNewID(cGameObjectContext *objects)
 {
-    for (int i = 0; i < game.m_gameObjectsContext->getUnits()->size(); i++)
-        if (!game.m_gameObjectsContext->getUnit(i)->isValid())
+    for (int i = 0; i < (int)objects->getUnits()->size(); i++)
+        if (!objects->getUnit(i)->isValid())
             return i;
 
     return -1; // NONE
@@ -127,16 +125,16 @@ static int unitNewID()
 //     return unitCreate(iCll, unitType, iPlayer, bOnStart, false);
 // }
 
-int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
-    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCll)) {
+int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
+    if (!objects->getMapGeometry()->isValidCell(iCll)) {
         logbook("UNIT_CREATE: Invalid cell as param");
         return -1;
     }
 
-    s_UnitInfo &sUnitType = game.m_infoContext->getUnitInfo(unitType);
+    s_UnitInfo &sUnitType = infos->getUnitInfo(unitType);
 
     // check if unit already exists on location
-    if (!sUnitType.airborn && game.m_gameObjectsContext->getMap()->cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
+    if (!sUnitType.airborn && objects->getMap()->cellGetIdFromLayer(iCll, MAPID_STRUCTURES) > -1) {
         return -1; // cannot place unit, structure exists at location
     }
 
@@ -149,30 +147,30 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
     }
 
     // check if unit already exists on location
-    if (game.m_gameObjectsContext->getMap()->cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
+    if (objects->getMap()->cellGetIdFromLayer(iCll, mapIdIndex) > -1) {
         return -1; // cannot place unit
     }
 
     // check if placed on invalid terrain type
     if (unitType == SANDWORM) {
-        if (!game.m_gameObjectsContext->getMap()->isCellPassableForWorm(iCll)) {
+        if (!objects->getMap()->isCellPassableForWorm(iCll)) {
             return -1;
         }
     }
 
-    bool validCell = game.m_gameObjectsContext->getMap()->canDeployUnitTypeAtCell(iCll, unitType);
+    bool validCell = objects->getMap()->canDeployUnitTypeAtCell(iCll, unitType);
     if (!validCell) {
         return -1;
     }
 
-    int iNewId = unitNewID();
+    int iNewId = unitNewID(objects);
 
     if (iNewId < 0) {
         logbook("UNIT_CREATE:Could not find new unit index");
         return -1;
     }
 
-    cUnit *newUnit = game.m_gameObjectsContext->getUnit(iNewId);
+    cUnit *newUnit = objects->getUnit(iNewId);
     newUnit->init(iNewId);
 
     newUnit->setCell(iCll);
@@ -191,7 +189,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 
     // newUnit->TIMER_bored = RNG::rnd(3000);
     newUnit->boredTimer.reset(RNG::rnd(3000));
-    
+
     // newUnit->TIMER_guard = 20 + RNG::rnd(70);
     newUnit->guardTimer.reset(20 + RNG::rnd(70));
     newUnit->recreateDimensions();
@@ -206,20 +204,20 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
 
     // AI player immediately moves unit away
     if (iPlayer > 0 && iPlayer < AI_WORM && !sUnitType.airborn && !bOnStart) {
-        int iF = cUnit::freeAroundMove(iNewId);
+        int iF = cUnit::freeAroundMove(iNewId, objects);
 
         if (iF > -1) {
             newUnit->log("Order move #2");
-            game.m_gameObjectsContext->getUnit(iNewId)->move_to(iF);
+            objects->getUnit(iNewId)->move_to(iF);
         }
     }
 
     // Put on map too!:
-    game.m_gameObjectsContext->getMap()->cellSetIdForLayer(iCll, mapIdIndex, iNewId);
+    objects->getMap()->cellSetIdForLayer(iCll, mapIdIndex, iNewId);
 
     newUnit->updateCellXAndY();
 
-    game.m_gameObjectsContext->getMap()->clearShroud(iCll, sUnitType.sight, iPlayer);
+    objects->getMap()->clearShroud(iCll, sUnitType.sight, iPlayer);
 
     const s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_CREATED,
@@ -231,7 +229,7 @@ int cUnits::unitCreate(int iCll, int unitType, int iPlayer, bool bOnStart, bool 
             .isReinforce = isReinforcement
         }
     };
-    game.onNotifyGameEvent(event);
+    iface->onNotifyGameEvent(event);
 
     return iNewId;
 }

@@ -680,12 +680,12 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::DEBUG_SPAWN_ORNITHOPTER)) {
         int mc = m_controlledPlayer->getGameControlsContext()->getMouseCell();
-        cUnits::unitCreate(mc, ORNITHOPTER, m_controlledPlayer->getId(), false, false);
+        cUnits::unitCreate(m_objects, m_info, m_interface, mc, ORNITHOPTER, m_controlledPlayer->getId(), false, false);
     }
 
     if (event.isAction(eKeyAction::DEBUG_SPAWN_WORM)) {
         int mc = humanPlayer->getGameControlsContext()->getMouseCell();
-        cUnits::unitCreate(mc, SANDWORM, AI_WORM, false, false);
+        cUnits::unitCreate(m_objects, m_info, m_interface, mc, SANDWORM, AI_WORM, false, false);
     }
 }
 
@@ -716,6 +716,7 @@ void cGamePlaying::onEventEntityDestroyed(const CommonEvent &event)
         int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
         cUnits::unitCreate(
+            m_objects, m_info, m_interface,
             m_objects->getMapGeometry()->makeCell(randomX, randomY),
             unitTypeToSpawn,
             event.player->getId(),
@@ -733,6 +734,7 @@ void cGamePlaying::onEventCreateUnit(const DeployUnitEvent &event)
     }
 
     int id = cUnits::unitCreate(
+        m_objects, m_info, m_interface,
         event.iCell,
         event.unitType,
         event.iPlayer,

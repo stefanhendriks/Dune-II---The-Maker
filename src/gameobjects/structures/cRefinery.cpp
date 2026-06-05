@@ -80,10 +80,10 @@ void cRefinery::think_unit_occupation()
     }
 
     // perhaps we can find a carryall to help us out
-    int iHarvestCell = cUnit::findHarvestSpot(iUnitID);
+    int iHarvestCell = cUnit::findHarvestSpot(iUnitID, m_objects);
 
     if (iHarvestCell > -1) {
-        int iCarry = cUnit::carryallTransfer(iUnitID, iHarvestCell);
+        int iCarry = cUnit::carryallTransfer(iUnitID, iHarvestCell, m_objects);
 
         if (iCarry > -1) {
             cUnit->movewaitTimer.reset(500);

@@ -84,7 +84,7 @@ void cStarPort::think_deploy()
                 int rallyPoint = getRallyPoint();
 
                 if (cellToDeployTo >= 0) {
-                    int id = cUnits::unitCreate(cellToDeployTo, item->getBuildId(), iPlayer, true);
+                    int id = cUnits::unitCreate(m_objects, m_info, m_interface, cellToDeployTo, item->getBuildId(), iPlayer, true);
                     if (rallyPoint > -1) {
                         m_objects->getUnit(id)->move_to(rallyPoint, -1, -1);
                     }
@@ -102,7 +102,7 @@ void cStarPort::think_deploy()
                         cellToDeployTo = getCell();
                     }
                     int cellAtBorderOfMap = m_objects->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
-                    REINFORCE(iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
+                    REINFORCE(m_objects, m_info, m_interface, iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
                 }
             }
             else {
