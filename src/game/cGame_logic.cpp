@@ -222,8 +222,8 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_windowed = gs->windowed;
 
     m_gameSettings->m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
-    m_turretsDownOnLowPower = gs->turretsDownOnLowPower;
-    m_rocketTurretsDownOnLowPower = gs->rocketTurretsDownOnLowPower;
+    m_gameSettings->setTurretsDownOnLowPower(gs->turretsDownOnLowPower);
+    m_gameSettings->setRocketTurretsDownOnLowPower(gs->rocketTurretsDownOnLowPower);
 
     m_gameSettings->m_playMusic = gs->playMusic;
 

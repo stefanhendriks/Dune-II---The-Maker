@@ -20,6 +20,12 @@
 
 class cPlayer;
 class Texture;
+class cGameObjectContext;
+class cInfoContext;
+class cMapCamera;
+class cGameInterface;
+class cGameSettings;
+struct sGameServices;
 
 class cAbstractStructure : public cScenarioObserver {
 
@@ -45,6 +51,12 @@ private:
     int iUnitIDHeadingForStructure;    // >-1 means ID to unit that heads for this structure
 
 protected:
+    cGameObjectContext *m_objects = nullptr;
+    cInfoContext *m_info = nullptr;
+    cMapCamera *m_mapCamera = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cGameSettings *m_settings = nullptr;
+
     bool shouldAnimateWhenUnitHeadsTowardsStructure;
     int id;				// the id within the structure[] array
 
@@ -74,6 +86,8 @@ public:
     cAbstractStructure(); // default constructor
 
     virtual ~cAbstractStructure();
+
+    void serviceInit(sGameServices *services);
 
     float fConcrete;     // how much concrete is *not* beneath this building (percentage)?
     // meaning, when 0% , it is all concrete. But if 10%, it means 10% of the building

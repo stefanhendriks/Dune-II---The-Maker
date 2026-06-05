@@ -4,6 +4,12 @@
 #include "gameobjects/structures/cStructures.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/GameContext.hpp"
+#include "include/sGameServices.h"
+#include "game/cGameInterface.h"
+#include "game/cGameSettings.h"
+#include "utils/cStructureUtils.h"
+#include "gameobjects/map/cMapCamera.h"
 
 #include "cBarracks.h"
 #include "cConstYard.h"
@@ -21,12 +27,9 @@
 #include "cStarPort.h"
 #include "cWindTrap.h"
 #include "cWor.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
-#include "utils/cStructureUtils.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "utils/cLog.h"
@@ -35,6 +38,17 @@
 
 cStructureFactory::cStructureFactory()
 {
+}
+
+void cStructureFactory::serviceInit(sGameServices *services)
+{
+    m_services = services;
+    m_objects = services->objects;
+    m_info = services->info;
+    m_mapCamera = services->mapCamera;
+    m_settings = services->settings;
+    m_structureUtils = services->structureUtils;
+    m_interface = services->ctx->getGameInterface();
 }
 
 cStructureFactory::~cStructureFactory()
@@ -68,7 +82,7 @@ cAbstractStructure *cStructureFactory::createStructureInstance(int type)
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure)
 {
     // delete memory acquired
-    game.m_gameObjectsContext->getStructures()[pStructure->getStructureId()] = nullptr;
+    m_objects->getStructures()[pStructure->getStructureId()] = nullptr;
     delete pStructure;
 }
 
@@ -104,7 +118,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
 
     float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
 
-    s_StructureInfo &structureInfo = game.m_infoContext->getStructureInfo(iStructureType);
+    s_StructureInfo &structureInfo = m_info->getStructureInfo(iStructureType);
     int hp = structureInfo.hp;
     if (hp < 0) {
         cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
@@ -126,8 +140,8 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
         return nullptr; // fail
     }
 
-    cPoint absTopLeft = game.m_gameObjectsContext->getMapGeometry()->getAbsolutePositionFromCell(iCell);
-    cPlayer *player = game.m_gameObjectsContext->getPlayer(iPlayer);
+    cPoint absTopLeft = m_objects->getMapGeometry()->getAbsolutePositionFromCell(iCell);
+    cPlayer *player = m_objects->getPlayer(iPlayer);
 
     for (auto flag : structureInfo.flags) {
         cPoint pos = cPoint(
@@ -136,10 +150,10 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
                      );
 
         if (flag.big) {
-            str->addFlag(cFlag::createBigFlag(player, pos, game.m_mapCamera, game.m_gameSettings.get()));
+            str->addFlag(cFlag::createBigFlag(player, pos, m_mapCamera, m_settings));
         }
         else {
-            str->addFlag(cFlag::createSmallFlag(player, pos, game.m_mapCamera, game.m_gameSettings.get()));
+            str->addFlag(cFlag::createSmallFlag(player, pos, m_mapCamera, m_settings));
         }
     }
 
@@ -152,7 +166,8 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     int structureSize = structureInfo.bmp_width * structureInfo.bmp_height;
 
     // assign to array
-    game.m_gameObjectsContext->getStructures()[iNewId] = str;
+    str->serviceInit(m_services);
+    m_objects->getStructures()[iNewId] = str;
 
     // Now set it up for location & player
     str->setCell(iCell);
@@ -175,7 +190,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
         REINFORCE(iPlayer, HARVESTER, iCell, -1);
     }
 
-    game.m_structureUtils->putStructureOnDimension(MAPID_STRUCTURES, str);
+    m_structureUtils->putStructureOnDimension(MAPID_STRUCTURES, str);
 
     // handle update
     const s_GameEvent event {
@@ -187,7 +202,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
             .entitySpecificType = iStructureType
         }
     };
-    game.onNotifyGameEvent(event);
+    m_interface->onNotifyGameEvent(event);
 
     return str;
 }
@@ -200,10 +215,10 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
 void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(int iCell, int iStructureType, int iPlayer)
 {
     // add this structure to the array of the player (for some score management)
-    cPlayer *cPlayer = game.m_gameObjectsContext->getPlayer(iPlayer);
+    cPlayer *cPlayer = m_objects->getPlayer(iPlayer);
     cPlayer->increaseStructureAmount(iStructureType);
 
-    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
+    auto mapEditor = cMapEditor(m_objects->getMap());
 
     if (iStructureType == SLAB1) {
         mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
@@ -211,29 +226,29 @@ void cStructureFactory::updatePlayerCatalogAndPlaceNonStructureTypeIfApplicable(
     }
 
     if (iStructureType == SLAB4) {
-        if (game.m_gameObjectsContext->getMap()->occupiedByUnit(iCell) == false) {
-            if (game.m_gameObjectsContext->getMap()->getCellType(iCell) == TERRAIN_ROCK) {
+        if (m_objects->getMap()->occupiedByUnit(iCell) == false) {
+            if (m_objects->getMap()->getCellType(iCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(iCell, TERRAIN_SLAB, 0);
             }
         }
 
-        int cellRight = game.m_gameObjectsContext->getMapGeometry()->getCellRight(iCell);
-        if (game.m_gameObjectsContext->getMap()->occupiedByUnit(cellRight) == false) {
-            if (game.m_gameObjectsContext->getMap()->getCellType(cellRight) == TERRAIN_ROCK) {
+        int cellRight = m_objects->getMapGeometry()->getCellRight(iCell);
+        if (m_objects->getMap()->occupiedByUnit(cellRight) == false) {
+            if (m_objects->getMap()->getCellType(cellRight) == TERRAIN_ROCK) {
                 mapEditor.createCell(cellRight, TERRAIN_SLAB, 0);
             }
         }
 
-        int oneRowBelowCell = game.m_gameObjectsContext->getMapGeometry()->getCellBelow(iCell);
-        if (game.m_gameObjectsContext->getMap()->occupiedByUnit(oneRowBelowCell) == false) {
-            if (game.m_gameObjectsContext->getMap()->getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
+        int oneRowBelowCell = m_objects->getMapGeometry()->getCellBelow(iCell);
+        if (m_objects->getMap()->occupiedByUnit(oneRowBelowCell) == false) {
+            if (m_objects->getMap()->getCellType(oneRowBelowCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(oneRowBelowCell, TERRAIN_SLAB, 0);
             }
         }
 
-        int rightToRowBelowCell = game.m_gameObjectsContext->getMapGeometry()->getCellRight(oneRowBelowCell);
-        if (game.m_gameObjectsContext->getMap()->occupiedByUnit(rightToRowBelowCell) == false) {
-            if (game.m_gameObjectsContext->getMap()->getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
+        int rightToRowBelowCell = m_objects->getMapGeometry()->getCellRight(oneRowBelowCell);
+        if (m_objects->getMap()->occupiedByUnit(rightToRowBelowCell) == false) {
+            if (m_objects->getMap()->getCellType(rightToRowBelowCell) == TERRAIN_ROCK) {
                 mapEditor.createCell(rightToRowBelowCell, TERRAIN_SLAB, 0);
             }
         }
@@ -260,7 +275,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, cAbstractStructure *
         return;
     }
 
-    clearFogForStructureType(iCell, str->getType(), game.m_infoContext->getStructureInfo(str->getType()).sight, str->getOwner());
+    clearFogForStructureType(iCell, str->getType(), m_info->getStructureInfo(str->getType()).sight, str->getOwner());
 }
 
 /**
@@ -269,17 +284,17 @@ void cStructureFactory::clearFogForStructureType(int iCell, cAbstractStructure *
 **/
 void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, int iSight, int iPlayer)
 {
-    int iWidth = game.m_infoContext->getStructureInfo(iStructureType).bmp_width / 32;;
-    int iHeight = game.m_infoContext->getStructureInfo(iStructureType).bmp_height / 32;
+    int iWidth = m_info->getStructureInfo(iStructureType).bmp_width / 32;;
+    int iHeight = m_info->getStructureInfo(iStructureType).bmp_height / 32;
 
-    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
-    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
+    int iCellX = m_objects->getMapGeometry()->getCellX(iCell);
+    int iCellY = m_objects->getMapGeometry()->getCellY(iCell);
     int iCellXMax = iCellX + iWidth;
     int iCellYMax = iCellY + iHeight;
 
     for (int x = iCellX; x < iCellXMax; x++) {
         for (int y = iCellY; y < iCellYMax; y++) {
-            game.m_gameObjectsContext->getMap()->clearShroud(game.m_gameObjectsContext->getMapGeometry()->makeCell(x, y), iSight, iPlayer);
+            m_objects->getMap()->clearShroud(m_objects->getMapGeometry()->makeCell(x, y), iSight, iPlayer);
         }
     }
 }
@@ -290,7 +305,7 @@ void cStructureFactory::clearFogForStructureType(int iCell, int iStructureType, 
 int cStructureFactory::getFreeSlot()
 {
     for (int i=0; i < MAX_STRUCTURES; i++) {
-        if (game.m_gameObjectsContext->getStructures()[i] == nullptr) {
+        if (m_objects->getStructures()[i] == nullptr) {
             return i;
         }
     }
@@ -313,27 +328,27 @@ int cStructureFactory::getFreeSlot()
 **/
 int cStructureFactory::getSlabStatus(int iCell, int iStructureType)
 {
-    if (!game.m_gameObjectsContext->getMapGeometry()->isValidCell(iCell)) return 0;
+    if (!m_objects->getMapGeometry()->isValidCell(iCell)) return 0;
 
     // checks if this structure can be placed on this cell
-    int w = game.m_infoContext->getStructureInfo(iStructureType).bmp_width / TILESIZE_WIDTH_PIXELS;
-    int h = game.m_infoContext->getStructureInfo(iStructureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
+    int w = m_info->getStructureInfo(iStructureType).bmp_width / TILESIZE_WIDTH_PIXELS;
+    int h = m_info->getStructureInfo(iStructureType).bmp_height / TILESIZE_HEIGHT_PIXELS;
 
     int slabs = 0;
 
-    int x = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
-    int y = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
+    int x = m_objects->getMapGeometry()->getCellX(iCell);
+    int y = m_objects->getMapGeometry()->getCellY(iCell);
 
     for (int cx = 0; cx < w; cx++) {
         for (int cy = 0; cy < h; cy++) {
-            int cll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(cx + x, cy + y);
+            int cll = m_objects->getMapGeometry()->getCellWithMapBorders(cx + x, cy + y);
 
             if (cll < 0) {
                 continue;
             }
 
             // If the 'terrain' type is 'slab' increase value of found slabs.
-            if (game.m_gameObjectsContext->getMap()->getCellType(cll) == TERRAIN_SLAB) {
+            if (m_objects->getMap()->getCellType(cll) == TERRAIN_SLAB) {
                 slabs++;
             }
         }
@@ -347,18 +362,18 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
     // DUPLICATED BY slabStructure?
     d2tm_assert(iCell > -1);
 
-    int height = game.m_infoContext->getStructureInfo(iStructureType).bmp_height / 32;
-    int width = game.m_infoContext->getStructureInfo(iStructureType).bmp_width / 32;
+    int height = m_info->getStructureInfo(iStructureType).bmp_height / 32;
+    int width = m_info->getStructureInfo(iStructureType).bmp_width / 32;
 
-    int cellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCell);
-    int cellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCell);
+    int cellX = m_objects->getMapGeometry()->getCellX(iCell);
+    int cellY = m_objects->getMapGeometry()->getCellY(iCell);
 
     int endCellX = cellX + width;
     int endCellY = cellY + height;
-    auto mapEditor = cMapEditor(game.m_gameObjectsContext->getMap());
+    auto mapEditor = cMapEditor(m_objects->getMap());
     for (int y = cellY; y < endCellY; y++) {
         for (int x = cellX; x < endCellX; x++) {
-            int cell = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(x, y);
+            int cell = m_objects->getMapGeometry()->getCellWithMapDimensions(x, y);
             mapEditor.createCell(cell, TERRAIN_SLAB, 0);
         }
     }
@@ -366,35 +381,35 @@ void cStructureFactory::createSlabForStructureType(int iCell, int iStructureType
 
 void cStructureFactory::deleteAllExistingStructures()
 {
-    if (game.m_gameObjectsContext == nullptr)
+    if (m_objects == nullptr)
         return;
     for (int i=0; i < MAX_STRUCTURES; i++) {
         // clear out all structures
-        cAbstractStructure *pStructure = game.m_gameObjectsContext->getStructures()[i];
+        cAbstractStructure *pStructure = m_objects->getStructures()[i];
         if (pStructure) {
             delete pStructure;
         }
         // clear pointer
-        game.m_gameObjectsContext->getStructures()[i] = nullptr;
+        m_objects->getStructures()[i] = nullptr;
     }
 }
 
 void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer)
 {
-    const s_StructureInfo &sStructures = game.m_infoContext->getStructureInfo(iStructureType);
+    const s_StructureInfo &sStructures = m_info->getStructureInfo(iStructureType);
 
     int width = sStructures.bmp_width / TILESIZE_WIDTH_PIXELS;
     int height = sStructures.bmp_height / TILESIZE_HEIGHT_PIXELS;
 
-    int x = game.m_gameObjectsContext->getMapGeometry()->getCellX(iCll);
-    int y = game.m_gameObjectsContext->getMapGeometry()->getCellY(iCll);
+    int x = m_objects->getMapGeometry()->getCellX(iCll);
+    int y = m_objects->getMapGeometry()->getCellY(iCll);
 
     int endX = x + width;
     int endY = y + height;
 
     for (int sx = x; sx < endX; sx++) {
         for (int sy = y; sy < endY; sy++) {
-            createStructure(game.m_gameObjectsContext->getMapGeometry()->getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
+            createStructure(m_objects->getMapGeometry()->getCellWithMapBorders(sx, sy), SLAB1, iPlayer);
         }
     }
 }

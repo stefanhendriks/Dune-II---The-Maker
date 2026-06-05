@@ -14,11 +14,21 @@
 
 #include "cAbstractStructure.h"
 
+class cGameObjectContext;
+class cInfoContext;
+class cMapCamera;
+class cGameInterface;
+class cGameSettings;
+class cStructureUtils;
+struct sGameServices;
+
 class cStructureFactory {
 public:
     cStructureFactory();
 
     ~cStructureFactory();
+
+    void serviceInit(sGameServices *services);
 
     void deleteStructureInstance(cAbstractStructure *pStructure);
 
@@ -43,5 +53,13 @@ public:
     void slabStructure(int iCll, int iStructureType, int iPlayer);
 
 private:
+    cGameObjectContext *m_objects = nullptr;
+    cInfoContext *m_info = nullptr;
+    cMapCamera *m_mapCamera = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cGameSettings *m_settings = nullptr;
+    cStructureUtils *m_structureUtils = nullptr;
+    sGameServices *m_services = nullptr;
+
     cAbstractStructure *createStructureInstance(int type);
 };

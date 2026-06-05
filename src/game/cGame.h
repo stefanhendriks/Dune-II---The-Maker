@@ -182,14 +182,6 @@ public:
     void thinkSlow();
     void thinkCache();
 
-    bool isTurretsDownOnLowPower() {
-        return m_turretsDownOnLowPower;
-    }
-
-    bool isRocketTurretsDownOnLowPower() {
-        return m_rocketTurretsDownOnLowPower;
-    }
-
     void applySettings(std::unique_ptr<InitialGameSettings> gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
@@ -218,11 +210,6 @@ private:
     float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
     bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
     int m_musicVolume;                      // volume of the music
-
-    // if true, then turrets won't do anything on low power (both gun and rocket turrets)
-    bool m_turretsDownOnLowPower;
-    // if true, rocket turrets will not fire rockets when low power
-    bool m_rocketTurretsDownOnLowPower;
 
     std::string m_gameFilename;
 

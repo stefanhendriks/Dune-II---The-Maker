@@ -1,7 +1,5 @@
 #include "cGunTurret.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
 #include "definitions.h"
 #include "gameobjects/particles/cParticle.h"
@@ -14,6 +12,8 @@
 #include "utils/RNG.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameSettings.h"
+#include "game/cGameInterface.h"
 
 namespace {
 constexpr auto kTurretFacings = 8;
@@ -40,7 +40,7 @@ int cGunTurret::getType() const
 void cGunTurret::thinkFast()
 {
     bool lowPower = !getPlayer()->bEnoughPower();
-    if (lowPower && game.isTurretsDownOnLowPower()) {
+    if (lowPower && m_settings->isTurretsDownOnLowPower()) {
         // don't do anything when low power and this flag is set
         return;
     }
@@ -66,15 +66,15 @@ void cGunTurret::think_animation()
 
 void cGunTurret::think_attack()
 {
-    cUnit *unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
+    cUnit *unitTarget = m_objects->getUnit(iTargetID);
     if (unitTarget->isValid() && !unitTarget->isDead()) {
-        int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(getCell());
-        int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(getCell());
+        int iCellX = m_objects->getMapGeometry()->getCellX(getCell());
+        int iCellY = m_objects->getMapGeometry()->getCellY(getCell());
 
         int unitCell = unitTarget->getCell();
 
-        int iTargetX = game.m_gameObjectsContext->getMapGeometry()->getCellX(unitCell);
-        int iTargetY = game.m_gameObjectsContext->getMapGeometry()->getCellY(unitCell);
+        int iTargetX = m_objects->getMapGeometry()->getCellX(unitCell);
+        int iTargetY = m_objects->getMapGeometry()->getCellY(unitCell);
 
         int d = fDegrees(iCellX, iCellY, iTargetX, iTargetY);
         int facingAngle = faceAngle(d, kTurretFacings); // get the angle
@@ -143,11 +143,11 @@ void cGunTurret::think_fire()
 {
     bool lowPower = !getPlayer()->bEnoughPower();
 
-    cUnit *unitTarget = game.m_gameObjectsContext->getUnit(iTargetID);
+    cUnit *unitTarget = m_objects->getUnit(iTargetID);
     if (unitTarget->isValid() && !unitTarget->isDead()) {
         TIMER_fire++;
 
-        int iDistance = game.m_gameObjectsContext->getMapGeometry()->distance(getCell(), unitTarget->getCell());
+        int iDistance = m_objects->getMapGeometry()->distance(getCell(), unitTarget->getCell());
 
         if (iDistance > getRange()) {
             iTargetID = -1;
@@ -182,7 +182,7 @@ void cGunTurret::think_fire()
                     int iShootX = pos_x() + half;
                     int iShootY = pos_y() + half;
                     int bmp_head = convertAngleToDrawIndex(iHeadFacing);
-                    cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head, game.m_gameObjectsContext.get(), game.m_infoContext.get());
+                    cParticle::create(iShootX, iShootY, D2TM_PARTICLE_TANKSHOOT, -1, bmp_head, m_objects, m_info);
                 }
             }
 
@@ -192,9 +192,9 @@ void cGunTurret::think_fire()
             if (unitTarget->isAirbornUnit()) {
                 if (iBull > -1 && bulletType == ROCKET_RTURRET) {
                     // it is a homing missile!
-                    game.m_gameObjectsContext->getBullets()[iBull].iHoming = iTargetID;
+                    m_objects->getBullets()[iBull].iHoming = iTargetID;
                     // TODO: property for homing?
-                    game.m_gameObjectsContext->getBullets()[iBull].TIMER_homing = 200;
+                    m_objects->getBullets()[iBull].TIMER_homing = 200;
                 }
             }
 
@@ -206,7 +206,7 @@ void cGunTurret::think_fire()
 void cGunTurret::think_guard()
 {
     bool lowPower = !getPlayer()->bEnoughPower();
-    if (lowPower && game.isTurretsDownOnLowPower()) {
+    if (lowPower && m_settings->isTurretsDownOnLowPower()) {
         // don't do anything when low power and this flag is set
         return;
     }
@@ -217,8 +217,8 @@ void cGunTurret::think_guard()
         TIMER_guard=0-RNG::rnd(20);
 
         int c = getCell();
-        int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(c);
-        int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(c);
+        int iCellX = m_objects->getMapGeometry()->getCellX(c);
+        int iCellY = m_objects->getMapGeometry()->getCellY(c);
 
         int iDistance=9999; // closest distance
 
@@ -232,17 +232,17 @@ void cGunTurret::think_guard()
 
         int distanceForAttacking = getRange();
         if (lowPower && getType() == RTURRET) {
-            distanceForAttacking = game.m_infoContext->getStructureInfo(TURRET).range;
+            distanceForAttacking = m_info->getStructureInfo(TURRET).range;
         }
 
         // scan area for units
-        for (int i = 0; i < game.m_gameObjectsContext->getUnits()->size(); i++) {
+        for (int i = 0; i < m_objects->getUnits()->size(); i++) {
             // is valid
-            cUnit *cUnit = game.m_gameObjectsContext->getUnit(i);
+            cUnit *cUnit = m_objects->getUnit(i);
             if (!cUnit->isValid()) continue;
             if (cUnit->iPlayer == getOwner()) continue; // skip own units
             if (cUnit->getPlayer()->isSameTeamAs(getPlayer())) continue; // skip allied units
-            if (!game.m_gameObjectsContext->getMap()->isVisible(cUnit->getCell(), getPlayer())) continue; // skip not visible
+            if (!m_objects->getMap()->isVisible(cUnit->getCell(), getPlayer())) continue; // skip not visible
 
             if (!canAttackAirUnits()) {
                 if (cUnit->isAirbornUnit()) {
@@ -251,7 +251,7 @@ void cGunTurret::think_guard()
             }
             else {
                 // we can attack air units, but we are low on power, hence we don't attack them
-                if (lowPower && game.isRocketTurretsDownOnLowPower()) {
+                if (lowPower && m_settings->isRocketTurretsDownOnLowPower()) {
                     // do not aim for air units when low power
                     if (cUnit->isAirbornUnit()) {
                         continue; // it was airborn, and this turret is down on power, so don't fire air units
@@ -260,7 +260,7 @@ void cGunTurret::think_guard()
             }
 
             int c1 = cUnit->getCell();
-            int distance = ABS_length(iCellX, iCellY, game.m_gameObjectsContext->getMapGeometry()->getCellX(c1), game.m_gameObjectsContext->getMapGeometry()->getCellY(c1));
+            int distance = ABS_length(iCellX, iCellY, m_objects->getMapGeometry()->getCellX(c1), m_objects->getMapGeometry()->getCellY(c1));
 
             if (distance <= distanceForAttacking) {
                 if (cUnit->isAttackableAirUnit()) {
@@ -290,7 +290,7 @@ void cGunTurret::think_guard()
 
         // discovered a new target
         if (iTargetID > -1 && iTargetID != prevTarget) {
-            cUnit *unitToAttack = game.m_gameObjectsContext->getUnit(iTargetID);
+            cUnit *unitToAttack = m_objects->getUnit(iTargetID);
             if (unitToAttack->isValid()) {
                 const s_GameEvent event {
                     .eventType = eGameEventType::GAME_EVENT_DISCOVERED,
@@ -302,7 +302,7 @@ void cGunTurret::think_guard()
                         .atCell = unitToAttack->getCell()
                     }
                 };
-                game.onNotifyGameEvent(event);
+                m_interface->onNotifyGameEvent(event);
             }
         }
     }

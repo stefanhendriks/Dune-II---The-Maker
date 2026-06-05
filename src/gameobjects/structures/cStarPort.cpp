@@ -1,18 +1,15 @@
 #include "cStarPort.h"
 
 #include "cOrderProcesser.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "gameobjects/map/cMap.h"
 #include "definitions.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
-#include "utils/cSoundPlayer.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
-#include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameInterface.h"
 
 cStarPort::cStarPort()
 {
@@ -78,7 +75,7 @@ void cStarPort::think_deploy()
         if (TIMER_deploy < 0) {
             TIMER_deploy = 1;
             // deploy unit
-            cOrderProcesser *orderProcesser = game.m_gameObjectsContext->getPlayer(iPlayer)->getOrderProcesser();
+            cOrderProcesser *orderProcesser = m_objects->getPlayer(iPlayer)->getOrderProcesser();
             cBuildingListItem *item = orderProcesser->getItemToDeploy();
             if (item) {
                 int cellToDeployTo = getNonOccupiedCellAroundStructure();
@@ -89,9 +86,9 @@ void cStarPort::think_deploy()
                 if (cellToDeployTo >= 0) {
                     int id = cUnits::unitCreate(cellToDeployTo, item->getBuildId(), iPlayer, true);
                     if (rallyPoint > -1) {
-                        game.m_gameObjectsContext->getUnit(id)->move_to(rallyPoint, -1, -1);
+                        m_objects->getUnit(id)->move_to(rallyPoint, -1, -1);
                     }
-                    game.playVoice(SOUND_VOICE_05_ATR, iPlayer); // unit deployed
+                    m_interface->playVoice(SOUND_VOICE_05_ATR, iPlayer); // unit deployed
                 }
                 else {
                     // could not find cell to deploy to, reinforce it
@@ -104,7 +101,7 @@ void cStarPort::think_deploy()
                         // assume that the cell to drop is the location of the structure itself
                         cellToDeployTo = getCell();
                     }
-                    int cellAtBorderOfMap = game.m_gameObjectsContext->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
+                    int cellAtBorderOfMap = m_objects->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
                     REINFORCE(iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
                 }
             }
