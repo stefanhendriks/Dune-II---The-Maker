@@ -1,7 +1,7 @@
 #include "cMapEditor.h"
 #include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
-#include "utils/common.h"
+#include "utils/Log.h"
 #include "utils/d2tm_math.h"
 #include "utils/RNG.hpp"
 #include "gameobjects/map/MapGeometry.hpp"
@@ -386,7 +386,7 @@ void cMapEditor::smoothCell(int cell)
         tile = 0; // always the same
     }
     else {
-        logbook(std::format("Unknown terrain type [{}] .", terrainType));
+        Logger::error(COMP_MAP, "cMapEditor::smoothCell", "Unknown terrain type [{}] .", terrainType);
         m_map->cellChangeType(cell, TERRAIN_SAND);
         m_map->cellChangeTile(cell, 0);
         return;
