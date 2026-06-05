@@ -1,27 +1,40 @@
 name: Build PR's
 
 on:
-  pull_request:
-    paths:
-      - 'src/**'
-      - 'tests/**'
-      - 'resources/bin/**'
-      - 'resources/dll/**'
-      - 'resources/game.ini'
-      - 'resources/game.ini.org'
-      - 'CMakeLists.txt'
-      - 'create_release.bat'
-      - 'create_release.sh'
-      - 'install_dependencies_macosx.sh'
-      - 'install_dependencies_ubuntu.sh'
-      - 'rebuildmacos.sh'
-      - 'rebuildwin.bat'
-      - 'rebuildwinrelease.bat'
-      - '.github/workflows/**'
+  pull_request: {}
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            relevant:
+              - 'src/**'
+              - 'tests/**'
+              - 'resources/bin/**'
+              - 'resources/dll/**'
+              - 'resources/game.ini'
+              - 'resources/game.ini.org'
+              - 'CMakeLists.txt'
+              - 'create_release.bat'
+              - 'create_release.sh'
+              - 'install_dependencies_macosx.sh'
+              - 'install_dependencies_ubuntu.sh'
+              - 'rebuildmacos.sh'
+              - 'rebuildwin.bat'
+              - 'rebuildwinrelease.bat'
+              - '.github/workflows/**'
+
   MSYS2:
     name: Windows-msys2-mingw64
+    needs: [changes]
+    if: needs.changes.outputs.relevant == 'true'
     runs-on: [windows-latest]
     defaults:
       run:
@@ -59,6 +72,8 @@ jobs:
           ctest --output-on-failure
   Ubuntu:
     name: Ubuntu (x86)
+    needs: [changes]
+    if: needs.changes.outputs.relevant == 'true'
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Set up GCC
@@ -92,6 +107,8 @@ jobs:
           ctest --output-on-failure
   MACOSX:
     name: Mac OS X (Arm64)
+    needs: [changes]
+    if: needs.changes.outputs.relevant == 'true'
     runs-on: [ macos-15 ]
     steps:
       - name: Checkout
@@ -117,6 +134,8 @@ jobs:
           ctest --output-on-failure
   MACOSX_INTEL:
     name: Mac OS X (Intel)
+    needs: [changes]
+    if: needs.changes.outputs.relevant == 'true'
     runs-on: [ macos-15-intel ]
     steps:
       - name: Checkout
