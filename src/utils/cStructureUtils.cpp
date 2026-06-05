@@ -2,7 +2,7 @@
 #include "game/cGameSettings.h"
 #include "include/sGameServices.h"
 #include "utils/common.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"
 #include "gameobjects/structures/cWindTrap.h"
@@ -122,10 +122,9 @@ int cStructureUtils::findStructureToDeployUnit(cPlayer *pPlayer, int structureTy
 
     int playerId = pPlayer->getId();
 
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES,"Primary building",
-        std::format("Looking for (type {}, name {}, pPlayer {})", structureType, 
-            m_infos->getStructureInfo(structureType).name, playerId));
-
+    Logger::debug(COMP_STRUCTURES,"Primary building",
+        "Looking for (type {}, name {}, pPlayer {})", 
+        structureType, m_infos->getStructureInfo(structureType).name, playerId);
 
     // check primary building first if set
     int primaryBuildingOfStructureType = pPlayer->getPrimaryStructureForStructureType(structureType);
