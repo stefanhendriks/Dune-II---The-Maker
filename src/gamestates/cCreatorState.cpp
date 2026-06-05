@@ -1,5 +1,5 @@
 #include "gamestates/cCreatorState.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "utils/ini.h"
 #include "gamestates/cGameState.h"
 
@@ -127,8 +127,7 @@ void CreatorState::createStateFromScratch(eGameState gameState)
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
     default:
-        cLogger::getInstance()->log(LOG_ERROR, COMP_SETUP, "CreatorState",
-                                     std::format("Forget gameState {}",gameStateToString(gameState)));
+        Logger::error(COMP_SETUP, "CreatorState", "Forget gameState {}",gameStateToString(gameState));
         break;
     }
 }
