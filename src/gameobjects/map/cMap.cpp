@@ -81,8 +81,6 @@ void cMap::serviceInit(sGameServices* services)
     d2tm_assert(services != nullptr);
     m_ctx = services->ctx;
     d2tm_assert(m_ctx != nullptr);
-    m_log = services->m_log;
-    d2tm_assert(m_log != nullptr);
 
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
     d2tm_assert(m_textDrawer != nullptr);

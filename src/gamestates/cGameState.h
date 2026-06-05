@@ -66,7 +66,6 @@ public:
 protected:
     GameContext* m_ctx=nullptr;
     SDLDrawer* m_renderDrawer=nullptr;
-    cLog* m_log = nullptr;
 private:
 
 };
