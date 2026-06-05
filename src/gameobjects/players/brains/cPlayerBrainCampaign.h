@@ -25,6 +25,8 @@ public:
 
     ~cPlayerBrainCampaign();
 
+    void serviceInit(sGameServices* services) override;
+
     void think() override;
 
     void thinkFast() override;

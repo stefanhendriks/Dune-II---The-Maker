@@ -5,6 +5,7 @@
 #include "gameobjects/structures/cStructures.h"
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
+#include "include/sGameServices.h"
 #include "gameobjects/map/cMap.h"
 #include "enums.h"
 #include "gameobjects/players/cPlayer.h"
@@ -30,13 +31,18 @@ cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player, s_DataCampaign* data
     // timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
     // 10*60 -> 1 minute. * 4 -> 4 minutes
     m_TIMER_rest = (10 * 60) * 4;
-    if (m_settings->isNoAiRest()) {
-        m_TIMER_rest = 10;
-    }
     m_myBase = std::vector<s_structurePosition>();
     m_buildOrders = std::vector<s_buildOrder>();
     m_discoveredEnemyAtCell = std::set<int>();
     m_centerOfBaseCell = 0;
+}
+
+void cPlayerBrainCampaign::serviceInit(sGameServices* services)
+{
+    cPlayerBrain::serviceInit(services);
+    if (m_settings->isNoAiRest()) {
+        m_TIMER_rest = 10;
+    }
 }
 
 cPlayerBrainCampaign::~cPlayerBrainCampaign()
