@@ -3,7 +3,7 @@
 #include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
-#include "utils/common.h"
+#include "utils/Log.h"
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
 #include "include/cAssert.h"
@@ -30,7 +30,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMe
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
-                logbook("cYesButtonCommand::changeStateFromMentat()");
+                Logger::info(COMP_GAME, "OrdosMentat", "changing state from mentat"); 
                 m_gameInterface->changeStateFromMentat();})
             .build();
 }

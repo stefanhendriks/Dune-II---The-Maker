@@ -8,7 +8,7 @@
 #include "gameobjects/players/cPlayer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
-#include "utils/common.h"
+#include "utils/Log.h"
 #include "drawers/cTextDrawer.h"
 #include <SDL3_ttf/SDL_ttf.h>
 #include "gui/GuiButton.h"
@@ -45,7 +45,7 @@ BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : Abstrac
 
 void BeneMentat::onYesButtonPressed()
 {
-    logbook("cYesButtonCommand::execute()");
+    Logger::info(COMP_GAME, "BeneMentat::onYesButtonPressed", "Player chose to join house [{}]", cPlayer::getHouseNameForId(this->getHouse()));
     m_gameInterface->setNextStateToTransitionTo(GAME_BRIEFING);
     m_dataCampaign->mission = 1; // first mission
     m_dataCampaign->region  = 1; // and the first "region" so to speak
@@ -57,7 +57,7 @@ void BeneMentat::onYesButtonPressed()
 
 void BeneMentat::onNoButtonPressed()
 {
-    logbook("cNoButtonCommand::execute()");
+    Logger::info(COMP_GAME, "BeneMentat::onNoButtonPressed", "Player chose NOT to join house [{}]", cPlayer::getHouseNameForId(this->getHouse()));
     m_gameInterface->getPlayer(HUMAN)->setHouse(GENERALHOUSE);
     m_dataCampaign->housePlayer = GENERALHOUSE;
     m_gameInterface->setNextStateToTransitionTo(GAME_SELECT_HOUSE);
