@@ -225,6 +225,9 @@ void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
 
     if (difficultySettings) delete difficultySettings;
     difficultySettings = new cPlayerDifficultySettings();
+    if (m_infos) {
+        difficultySettings->setInfoContext(m_infos);
+    }
 
     // Reset structures amount
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
@@ -264,6 +267,9 @@ void cPlayer::setHouse(int iHouse)
     }
 
     difficultySettings = cPlayerDifficultySettings::createFromHouse(iHouse);
+    if (m_infos) {
+        difficultySettings->setInfoContext(m_infos);
+    }
 
     if (currentHouse != iHouse) {
         logbook(std::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
