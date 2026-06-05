@@ -1,7 +1,23 @@
 name: Build PR's
 
 on:
-  pull_request: {}
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'resources/bin/**'
+      - 'resources/dll/**'
+      - 'resources/game.ini'
+      - 'resources/game.ini.org'
+      - 'CMakeLists.txt'
+      - 'create_release.bat'
+      - 'create_release.sh'
+      - 'install_dependencies_macosx.sh'
+      - 'install_dependencies_ubuntu.sh'
+      - 'rebuildmacos.sh'
+      - 'rebuildwin.bat'
+      - 'rebuildwinrelease.bat'
+      - '.github/workflows/**'
 
 jobs:
   MSYS2:
