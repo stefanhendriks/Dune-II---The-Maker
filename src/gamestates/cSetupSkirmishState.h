@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cGameState.h"
+struct sGameServices;
 #include "controls/cKeyboardEvent.h"
 #include "definitions.h"
 #include "controls/sMouseEvent.h"
@@ -51,6 +52,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cGameObjectContext* m_objects = nullptr;
+    sGameServices* m_services = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
     cPreviewMaps* m_previewMaps = nullptr;
     Graphics* m_gfxinter = nullptr;
