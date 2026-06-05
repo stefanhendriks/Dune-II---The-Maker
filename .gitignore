@@ -24,3 +24,5 @@ Release/
 /bin
 config.h
 .cache
+*.spirv
+test
