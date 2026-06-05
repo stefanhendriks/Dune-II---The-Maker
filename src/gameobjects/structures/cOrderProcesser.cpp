@@ -31,7 +31,6 @@ cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)
     m_secondsUntilNewPricesWillBeCalculated = 1; // initially randomize prices immediately
     memset(m_pricePaidForItem, -1, sizeof(m_pricePaidForItem));
     removeAllItems();
-    updatePricesForStarport();
     m_unitIdOfFrigateSent = -1;
 }
 
@@ -47,6 +46,7 @@ void cOrderProcesser::serviceInit(sGameServices *services)
     m_info = services->info;
     m_structureUtils = services->structureUtils;
     m_interface = services->ctx->getGameInterface();
+    updatePricesForStarport();
 }
 
 cBuildingListItem *cOrderProcesser::getItemToDeploy()
