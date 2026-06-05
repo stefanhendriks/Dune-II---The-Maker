@@ -38,6 +38,9 @@ public:
     void fatal(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args);
 
     template <typename... Args>
+    void debug(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args);
+
+    template <typename... Args>
     void info(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args);
 
     template <typename... Args>
@@ -70,6 +73,8 @@ namespace Logger {
     void info(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args);
     template <typename... Args>
     void trace(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args);
+    template <typename... Args>
+    void debug(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args);
     template <typename... Args>
     void warn(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args);
     template <typename... Args>
@@ -112,6 +117,11 @@ void cLog::info(eLogComponent comp, std::string_view event, std::format_string<A
     doLog(LOG_INFO, comp, event, std::format(fmt, std::forward<Args>(args)...));
 }
 
+template <typename... Args>
+void cLog::debug(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args) {
+    doLog(LOG_DEBUG, comp, event, std::format(fmt, std::forward<Args>(args)...));
+}
+
 // --- Globales fonctions from Namespace Logger ---
 namespace Logger {
     // On indique au header que cette variable existe dans le .cpp
@@ -129,6 +139,10 @@ namespace Logger {
     template <typename... Args>
     void trace(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args) {
         if (g_loggerInstance) g_loggerInstance->trace(comp, event, fmt, std::forward<Args>(args)...);
+    }
+    template <typename... Args>
+    void debug(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args) {
+        if (g_loggerInstance) g_loggerInstance->debug(comp, event, fmt, std::forward<Args>(args)...);
     }
     template <typename... Args>
     void warn(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args) {
