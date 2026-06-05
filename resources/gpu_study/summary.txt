@@ -1,5 +1,6 @@
 01  : display hardcoded triangle
 02  : exchange struct Vertex between CPU and GPU 
+02.5 : Modify vertex to change color
 03  : exchange struct Fragment between CPU and GPU
 03.5: variation from 3
 04  : using and display texture 
