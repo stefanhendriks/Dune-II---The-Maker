@@ -24,3 +24,8 @@ Release/
 /bin
 config.h
 .cache
+
+# Vulkan
+*.spirv
+test
+*.bmp
