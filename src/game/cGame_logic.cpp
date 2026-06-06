@@ -409,9 +409,9 @@ void cGame::updateMouseAndKeyboardState()
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
 }
 
-void cGame::initSkirmish() const
+void cGame::initSkirmish()
 {
-    game.missionInit();
+    missionInit();
 }
 
 // void cGame::loadSkirmishMaps() const

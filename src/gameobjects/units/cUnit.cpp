@@ -4059,16 +4059,6 @@ int cUnit::findHarvestSpot(int id, cGameObjectContext* objects)
             if (objects->getMapGeometry()->isWithinBoundaries(dx, dy) == false)
                 continue;
 
-            /*
-            if (dx <= 1) continue;
-            if (dy <= 1) continue;
-
-            if (dx >= (game.map_width-1))
-              continue;
-
-            if (dy >= (game.map_height-1))
-              continue;*/
-
             int idOfUnitAtCell = objects->getMap()->getCellIdUnitLayer(i);
             if (idOfUnitAtCell > -1)
                 continue;

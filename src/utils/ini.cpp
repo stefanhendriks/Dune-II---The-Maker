@@ -707,7 +707,7 @@ void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, con
     else if (wordtype == WORD_FOCUS) {
         int focusCell = ToInt(linefeed);
         m_objects->getPlayer(0)->setFocusCell(focusCell);
-        game.m_mapCamera->centerAndJumpViewPortToCell(focusCell);
+        m_interface->getMapCamera()->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
         game.setWinFlags(ToInt(linefeed));
@@ -1224,8 +1224,8 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                     fremenIsHumanAlly = true;
                 }
 
-                d2tm_assert(game.m_drawManager);
-                game.m_drawManager->missionInit();
+                d2tm_assert(m_interface->getDrawManager());
+                m_interface->getDrawManager()->missionInit();
 
                 if (quota > 0) {
                     m_objects->getPlayer(HUMAN)->setQuota(quota);
