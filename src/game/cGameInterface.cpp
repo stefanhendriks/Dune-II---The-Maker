@@ -284,3 +284,23 @@ cGameSettings* cGameInterface::getGameSettings() const
 {
     return m_game->m_gameSettings.get();
 }
+
+void cGameInterface::thinkFast() const
+{
+    m_game->thinkFast();
+}
+
+void cGameInterface::thinkNormal() const
+{
+    m_game->thinkNormal();
+}
+
+void cGameInterface::thinkSlow() const
+{
+    m_game->thinkSlow();
+}
+
+void cGameInterface::thinkCache() const
+{
+    m_game->thinkCache();
+}

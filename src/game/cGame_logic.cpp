@@ -160,7 +160,7 @@ cGame::cGame()
     // create GameContext
     ctx = std::make_unique<GameContext>();
     // create TimeManager
-    std::unique_ptr<cTimeManager> timeManager = std::make_unique<cTimeManager>(this);
+    std::unique_ptr<cTimeManager> timeManager = std::make_unique<cTimeManager>(gameInterface.get());
     // local usage
     m_timeManager = timeManager.get();
     // send to GameContext
@@ -175,7 +175,7 @@ cGame::cGame()
 
     m_dataCampaign = std::make_unique<s_DataCampaign>();
 
-    m_gameConditionChecker = std::make_unique<cGameConditionChecker>(this);
+    m_gameConditionChecker = std::make_unique<cGameConditionChecker>(m_gameObjectsContext.get());
 
     m_cScreenFader = std::make_unique<cScreenFader>();
 

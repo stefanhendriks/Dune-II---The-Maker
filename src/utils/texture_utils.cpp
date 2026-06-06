@@ -1,7 +1,6 @@
 #include "texture_utils.h"
 #include "gameobjects/players/cPlayer.h"
 #include "drawers/SDLDrawer.hpp"
-#include "game/cGame.h"
 #include "include/d2tmc.h"
 
 Texture* createPlayerTextureFromIndexedSurfaceWithPalette(cPlayer* player, SDL_Surface* referenceSurface, int paletteIndexForTransparency) {

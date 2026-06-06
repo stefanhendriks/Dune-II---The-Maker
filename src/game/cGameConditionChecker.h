@@ -2,12 +2,12 @@
 
 #include <cstdint>
 
-class cGame;
+class cGameObjectContext;
 class cPlayer;
 
 class cGameConditionChecker {
 public:
-    cGameConditionChecker(cGame* game);
+    cGameConditionChecker(cGameObjectContext* objects);
     bool isMissionWon() const;
     bool isMissionFailed() const;
     void missionInit();
@@ -27,7 +27,7 @@ private:
 
     [[nodiscard]] bool hasGameOverConditionAIHasNoBuildings() const;
     
-    cGame* m_game;
+    cGameObjectContext* m_objects;
     // win/lose flags
     int8_t m_winFlags, m_loseFlags;
 };

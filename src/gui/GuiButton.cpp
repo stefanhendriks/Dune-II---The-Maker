@@ -1,7 +1,5 @@
 #include "GuiButton.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/cGameSettings.h"
