@@ -36,6 +36,11 @@ public:
     void missionInit() const;
     void setupPlayers() const;
 
+    void thinkFast() const;
+    void thinkNormal() const;
+    void thinkSlow() const;
+    void thinkCache() const;
+
     void emitGameEvent(const s_GameEvent &event) const;
     void onNotifyGameEvent(const s_GameEvent &event) const;
     void addNotification(const std::string &message, eNotificationType type) const;

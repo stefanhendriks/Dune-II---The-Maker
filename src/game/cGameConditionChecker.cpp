@@ -1,10 +1,7 @@
 #include "game/cGameConditionChecker.h"
-#include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "game/cGame.h"
 #include "utils/cLog.h"
 #include "gameobjects/players/cPlayer.h"
-#include "gameobjects/players/cPlayers.h"
 
 #include "include/cAssert.h"
 
@@ -13,9 +10,9 @@
 #define WINLOSEFLAGS_QUOTA                  0x04
 #define WINLOSEFLAGS_TIMEOUT                0x08
 
-cGameConditionChecker::cGameConditionChecker(cGame* game) : m_game(game)
-{   
-    d2tm_assert(game != nullptr); 
+cGameConditionChecker::cGameConditionChecker(cGameObjectContext* objects) : m_objects(objects)
+{
+    d2tm_assert(objects != nullptr);
     m_winFlags = 0;
     m_loseFlags = 0;
 }
@@ -42,7 +39,7 @@ void cGameConditionChecker::setLoseFlags(int value)
 
 bool cGameConditionChecker::isMissionWon() const
 {
-    cPlayer *humanPlayer = m_game->m_gameObjectsContext->getPlayer(HUMAN);
+    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     if (hasGameOverConditionHarvestForSpiceQuota()) {
         if (humanPlayer->hasMetQuota()) {
             return true;
@@ -77,7 +74,7 @@ bool cGameConditionChecker::isMissionFailed() const
     if (hasGameOverConditionHarvestForSpiceQuota()) {
         // check for non-human players if they have met spice quota, if so, they win (and thus human player loses)
         for (int i = 1; i < MAX_PLAYERS; i++) {
-            cPlayer *player = m_game->m_gameObjectsContext->getPlayer(i);
+            cPlayer *player = m_objects->getPlayer(i);
             if (player->isAlive() && player->hasMetQuota()) {
                 return true;
             }
@@ -85,7 +82,7 @@ bool cGameConditionChecker::isMissionFailed() const
     }
 
     if (hasGameOverConditionPlayerHasNoBuildings()) {
-        cPlayer *humanPlayer = m_game->m_gameObjectsContext->getPlayer(HUMAN);
+        cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
         if (!humanPlayer->isAlive()) {
             /**
              * If any of the bits in “LoseFlags” is set and the corresponding condition holds true
@@ -112,10 +109,10 @@ bool cGameConditionChecker::isMissionFailed() const
 
 bool cGameConditionChecker::allEnemyAIPlayersAreDestroyed() const
 {
-    cPlayer *humanPlayer = m_game->m_gameObjectsContext->getPlayer(HUMAN);
+    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     for (int i = 0; i < MAX_PLAYERS; i++) {
         if (i == HUMAN || i == AI_WORM || i == AI_CPU5) continue; // do not evaluate these players
-        cPlayer *player = m_game->m_gameObjectsContext->getPlayer(i);
+        cPlayer *player = m_objects->getPlayer(i);
         if (!player->isAlive()) continue;
         if (humanPlayer->isSameTeamAs(player)) continue; // skip allied AI players
         return false;

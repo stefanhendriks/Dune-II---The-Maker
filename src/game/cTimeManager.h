@@ -15,8 +15,9 @@
 #include <stdint.h>
 #include <string>
 #include <memory>
+#include <SDL3/SDL.h>
 
-class cGame;
+class cGameInterface;
 class cTimeCounter;
 
 /**
@@ -24,7 +25,7 @@ class cTimeCounter;
 */
 class cTimeManager {
 public:
-    explicit cTimeManager(cGame *game);
+    explicit cTimeManager(cGameInterface *gameInterface);
     void processTime();
 
     // returns the current FPS
@@ -73,7 +74,7 @@ private:
     // reset or set the tick duration based on the global speed
     void initTimers(int baseSpeed);
 
-    cGame *m_game;
+    cGameInterface *m_game;
 
     struct Timer {
         int count = 0;                  // number of cycles to process
