@@ -59,6 +59,7 @@
 #include "gamestates/cSetupSkirmishState.h"
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cWinLoseState.h"
+#include "gamestates/cVideoState.h"
 
 #include "gui/GuiConsole.h"
 
@@ -1063,6 +1064,9 @@ void cGame::setState(int newState)
             else if (newState == GAME_EDITOR) {
                 newStatePtr = m_creatorState->getState(eGameState::EDITOR);
             }
+            else if (newState == GAME_VIDEO) {
+                newStatePtr = new cVideoState(m_services.get());
+            }
             else if (newState == GAME_MENU) {
                 m_gameSettings->m_cheatMode = false;
                 newStatePtr = m_creatorState->getState(eGameState::MENU);
@@ -1136,7 +1140,9 @@ void cGame::setState(int newState)
                 newStatePtr = m_creatorState->getState(eGameState::LOSEBRIEF);
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
-
+            else if (newState == GAME_VIDEO) {
+                newStatePtr = m_creatorState->getState(eGameState::VIDEO);
+            }
             m_currentState = newStatePtr;
         }
     }
