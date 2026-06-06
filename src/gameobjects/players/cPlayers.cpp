@@ -127,6 +127,7 @@ void cPlayers::setupRuntimePlayerComponents(cSideBarFactory* sideBarFactory, cMo
         player->setOrderProcesser(std::move(orderProcesser));
 
         auto gameControlsContext = std::make_unique<cGameControlsContext>(player, mouse);
+        gameControlsContext->serviceInit(services);
         player->setGameControlsContext(std::move(gameControlsContext));
 
         player->setTechLevel(techLevel);

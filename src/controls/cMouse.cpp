@@ -2,8 +2,6 @@
 #include "game/cGameSettings.h"
 #include "controls/cGameControlsContext.h"
 #include "observers/cInputObserver.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "sidebar/cSideBar.h"
@@ -260,8 +258,8 @@ void cMouse::boxSelectLogic(int mouseCell)
         if (abs(m_coords.x - m_mouseCoX1) > 4 && abs(m_coords.y - m_mouseCoY1) > 4) {
             // assign 2nd coordinates
             m_mouseCoX2 = m_coords.x;
-            if (m_coords.x > game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth) {
-                m_mouseCoX2 = game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth - 1;
+            if (m_coords.x > m_settings->getScreenW() - cSideBar::SidebarWidth) {
+                m_mouseCoX2 = m_settings->getScreenW() - cSideBar::SidebarWidth - 1;
             }
 
             m_mouseCoY2 = m_coords.y;

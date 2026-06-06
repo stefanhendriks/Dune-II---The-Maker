@@ -1,11 +1,10 @@
 #include "cMouseUnitsSelectedState.h"
 
 #include "controls/eKeyAction.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
 #include "context/cInfoContext.h"
+#include "game/cGameInterface.h"
 #include "context/cGameObjectContext.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/units/cUnits.h"
@@ -151,7 +150,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
                  m_state == SELECTED_STATE_MOVE) {
 
             for (auto id: m_selectedUnits) {
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+                cUnit *pUnit = m_context->getObjects()->getUnit(id);
                 if (m_state == SELECTED_STATE_REPAIR) {
                     // only send units that are eligible for repair to facility
                     if (pUnit->isEligibleForRepair()) {
@@ -178,7 +177,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
         }
         else if (m_state == SELECTED_STATE_ATTACK || m_state == SELECTED_STATE_FORCE_ATTACK) {
             for (auto id: m_selectedUnits) {
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+                cUnit *pUnit = m_context->getObjects()->getUnit(id);
                 if (pUnit->isHarvester()) {
                     continue;
                 }
@@ -196,7 +195,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
         else if (m_state == SELECTED_STATE_ADD_TO_SELECTION) {
             const int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
             if (hoverUnitId > -1) {
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+                cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
                 if (pUnit->getPlayer() == m_player) {
                     auto ids = m_player->getSelectedUnits();
                     auto position = std::find(ids.begin(), ids.end(), hoverUnitId);
@@ -213,11 +212,11 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
         }
 
         if (infantryAcknowledged) {
-            game.playSound(SOUND_MOVINGOUT + RNG::rnd(2));
+            m_context->getInterface()->playSound(SOUND_MOVINGOUT + RNG::rnd(2));
         }
 
         if (unitAcknowledged) {
-            game.playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
+            m_context->getInterface()->playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
         }
     }
 
@@ -312,7 +311,7 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
     if (unitsWhichCanAttackSelected) {
         int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
         if (hoverUnitId > -1) {
-            cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+            cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
             if (pUnit->isValid()) {
                 if (!pUnit->getPlayer()->isSameTeamAs(m_player)) {
                     m_mouseTile = MOUSE_ATTACK;
@@ -345,7 +344,7 @@ void cMouseUnitsSelectedState::updateSelectedUnitsState()
     m_infantrySelected = false;
     m_repairableUnitsSelected = false;
     for (auto id: m_selectedUnits) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+        cUnit *pUnit = m_context->getObjects()->getUnit(id);
         if (pUnit->isHarvester()) {
             m_harvestersSelected = true;
             m_repairableUnitsSelected = true;
@@ -373,9 +372,9 @@ void cMouseUnitsSelectedState::evaluateSelectedUnits()
             m_selectedUnits.begin(),
             m_selectedUnits.end(),
     [this](int id) {
-        return !game.m_gameObjectsContext->getUnit(id)->isValid() || // no (longer) valid
-               !game.m_gameObjectsContext->getUnit(id)->belongsTo(m_player) || // no longer belongs to player
-               game.m_gameObjectsContext->getUnit(id)->isHidden(); // hidden (entered structure, etc). Forget it then.
+        return !m_context->getObjects()->getUnit(id)->isValid() || // no (longer) valid
+               !m_context->getObjects()->getUnit(id)->belongsTo(m_player) || // no longer belongs to player
+               m_context->getObjects()->getUnit(id)->isHidden(); // hidden (entered structure, etc). Forget it then.
     }),
     m_selectedUnits.end()
     );
@@ -428,7 +427,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
         if (!m_mouse->isBoxSelecting()) {
             int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
             if (hoverUnitId > -1) {
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+                cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
                 if (pUnit->getPlayer() == m_player) {
                     m_mouseTile = MOUSE_PICK;
                 }
@@ -468,14 +467,14 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::SELECT_SAME_TYPE_ON_SCREEN)) {
         if (m_selectedUnits.size() == 1) {
-            cUnit *pUnit = game.m_gameObjectsContext->getUnit(m_selectedUnits[0]);
+            cUnit *pUnit = m_context->getObjects()->getUnit(m_selectedUnits[0]);
             selectSameUnitsOnScreen(pUnit->iType);
         }
     }
 
     if (event.isAction(eKeyAction::SELECT_SAME_TYPE_ON_MAP)) {
         if (m_selectedUnits.size() == 1) {
-            cUnit *pUnit = game.m_gameObjectsContext->getUnit(m_selectedUnits[0]);
+            cUnit *pUnit = m_context->getObjects()->getUnit(m_selectedUnits[0]);
             selectSameUnitsOnMap(pUnit->iType);
         }
     }
@@ -487,7 +486,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_SCREEN)) {
-        const auto infantryUnits = m_player->getInfantryUnitsOnViewport(*game.m_mapViewport);
+        const auto infantryUnits = m_player->getInfantryUnitsOnViewport(*m_context->getMapViewport());
         m_player->selectUnits(infantryUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
@@ -499,7 +498,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_WHEELS_ON_SCREEN)) {
-        const auto wheelUnits = m_player->getWheelUnitsOnViewport(*game.m_mapViewport);
+        const auto wheelUnits = m_player->getWheelUnitsOnViewport(*m_context->getMapViewport());
         m_player->selectUnits(wheelUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
@@ -511,7 +510,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_TANKS_ON_SCREEN)) {
-        const auto tankUnits = m_player->getTankUnitsOnViewport(*game.m_mapViewport);
+        const auto tankUnits = m_player->getTankUnitsOnViewport(*m_context->getMapViewport());
         m_player->selectUnits(tankUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
@@ -523,7 +522,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN)) {
-        const auto launcherUnits = m_player->getLauncherUnitsOnViewport(*game.m_mapViewport);
+        const auto launcherUnits = m_player->getLauncherUnitsOnViewport(*m_context->getMapViewport());
         m_player->selectUnits(launcherUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
@@ -535,7 +534,7 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_HARVESTERS_ON_SCREEN)) {
-        const auto harvesterUnits = m_player->getHarvesterUnitsOnViewport(*game.m_mapViewport);
+        const auto harvesterUnits = m_player->getHarvesterUnitsOnViewport(*m_context->getMapViewport());
         m_player->selectUnits(harvesterUnits);
         m_selectedUnits = m_player->getSelectedUnits();
     }
@@ -565,14 +564,14 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
             m_context->setMouseState(MOUSESTATE_REPAIR);
         } else {
             for (auto id: m_selectedUnits) {
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+                cUnit *pUnit = m_context->getObjects()->getUnit(id);
                 if (pUnit->isEligibleForRepair()) {
                     pUnit->findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
                     pUnit->deselect();
                 }
             }
             std::erase_if(m_selectedUnits, [&](auto id) {
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+                cUnit *pUnit = m_context->getObjects()->getUnit(id);
                 return pUnit->isEligibleForRepair(); // remove from selection
             });
         }
@@ -582,7 +581,7 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::SEND_TO_REFINERY)) {
         const std::vector<int> &selectedUnits = m_player->getSelectedUnits();
         for (auto &id : selectedUnits) {
-            cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+            cUnit *pUnit = m_context->getObjects()->getUnit(id);
             if (pUnit->isHarvester() && pUnit->canUnload()) {
                 pUnit->findBestStructureCandidateAndHeadTowardsItOrWait(REFINERY, true, INTENT_UNLOAD_SPICE);
             }
@@ -594,7 +593,7 @@ void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::RETURN_TO_BASE)) {
         for (auto id: m_selectedUnits) {
-            cUnit *pUnit = game.m_gameObjectsContext->getUnit(id);
+            cUnit *pUnit = m_context->getObjects()->getUnit(id);
             pUnit->retreatToNearbyBase();
             pUnit->deselect();
         }
@@ -609,9 +608,9 @@ void cMouseUnitsSelectedState::toPreviousState()
 
 void cMouseUnitsSelectedState::spawnParticle(const int type)
 {
-    int absoluteXCoordinate = game.m_mapCamera->getAbsMapMouseX(m_mouse->getX());
-    int absoluteYCoordinate = game.m_mapCamera->getAbsMapMouseY(m_mouse->getY());
-    cParticle::create(absoluteXCoordinate, absoluteYCoordinate, type, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
+    int absoluteXCoordinate = m_context->getMapCamera()->getAbsMapMouseX(m_mouse->getX());
+    int absoluteYCoordinate = m_context->getMapCamera()->getAbsMapMouseY(m_mouse->getY());
+    cParticle::create(absoluteXCoordinate, absoluteYCoordinate, type, -1, -1, m_context->getObjects(), m_context->getInfos());
 }
 
 void cMouseUnitsSelectedState::onFocus()
@@ -627,10 +626,10 @@ void cMouseUnitsSelectedState::onBlur()
 
 void cMouseUnitsSelectedState::selectSameUnitsOnScreen(int unitType)
 {
-    const std::vector<int> &ids = m_player->getAllMyUnitsWithinViewportRect(*game.m_mapViewport);
+    const std::vector<int> &ids = m_player->getAllMyUnitsWithinViewportRect(*m_context->getMapViewport());
     std::vector<int> sameUnits =std::vector<int>();
     for (int i : ids) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(i);
+        cUnit *pUnit = m_context->getObjects()->getUnit(i);
         if (pUnit->iType == unitType) {
             sameUnits.push_back(i);
         }
@@ -644,7 +643,7 @@ void cMouseUnitsSelectedState::selectSameUnitsOnMap(int unitType)
     const std::vector<int> &ids = m_player->getAllMyUnits();
     std::vector<int> sameUnits =std::vector<int>();
     for (int i : ids) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(i);
+        cUnit *pUnit = m_context->getObjects()->getUnit(i);
         if (pUnit->iType == unitType) {
             sameUnits.push_back(i);
         }

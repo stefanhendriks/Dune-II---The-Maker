@@ -1,8 +1,6 @@
 #include "cMouseRepairState.h"
 
 #include "controls/eKeyAction.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "gameobjects/map/cMap.h"
 #include "controls/cGameControlsContext.h"
@@ -53,7 +51,7 @@ void cMouseRepairState::onMouseLeftButtonClicked()
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+        cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
         if (pUnit->isValid() && pUnit->belongsTo(m_player) && pUnit->isEligibleForRepair()) {
             pUnit->findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
         }
@@ -104,7 +102,7 @@ int cMouseRepairState::getMouseTileForRepairState()
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+        cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
         if (pUnit->isValid() && pUnit->belongsTo(m_player) && pUnit->isEligibleForRepair()) {
             return MOUSE_REPAIR;
         }

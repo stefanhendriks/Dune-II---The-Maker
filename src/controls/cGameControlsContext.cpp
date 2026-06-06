@@ -5,12 +5,14 @@
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "managers/cDrawManager.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "include/sGameServices.h"
+#include "game/cGameInterface.h"
+#include "utils/cStructureUtils.h"
+#include "context/GameContext.hpp"
 
 #include "controls/mousestates/cMouseNormalState.h"
 #include "controls/mousestates/cMouseUnitsSelectedState.h"
@@ -51,6 +53,18 @@ cGameControlsContext::~cGameControlsContext()
     // smart pointers handle cleanup
 }
 
+void cGameControlsContext::serviceInit(sGameServices *services)
+{
+    m_objects = services->objects;
+    m_mapCamera = services->mapCamera;
+    m_settings = services->settings;
+    m_drawManager = services->drawManager;
+    m_interface = services->ctx->getGameInterface();
+    m_structureUtils = services->structureUtils;
+    m_infos = services->info;
+    m_mapViewport = services->mapViewport;
+}
+
 void cGameControlsContext::updateMouseCell(const cPoint &coords)
 {
     if (coords.y < cSideBar::TopBarHeight) {
@@ -59,13 +73,13 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords)
         return;
     }
 
-    if (game.m_drawManager->getMiniMapDrawer()->isMouseOver()) {
+    if (m_drawManager->getMiniMapDrawer()->isMouseOver()) {
         m_mouseCell = MOUSE_CELL_HOVER_MINIMAP; // on minimap
         m_mouseOnBattleField = false;
         return;
     }
 
-    if (coords.x > (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth)) {
+    if (coords.x > (m_settings->getScreenW() - cSideBar::SidebarWidth)) {
         m_mouseCell = MOUSE_CELL_HOVER_SIDEBAR; // on sidebar
         m_mouseOnBattleField = false;
         return;
@@ -79,50 +93,50 @@ void cGameControlsContext::updateMouseCell(const cPoint &coords)
 
 int cGameControlsContext::getMouseCellFromScreen(int mouseX, int mouseY) const
 {
-    int absMapX = game.m_mapCamera->getAbsMapMouseX(mouseX);
-    int absMapY = game.m_mapCamera->getAbsMapMouseY(mouseY);
-    return game.m_mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
+    int absMapX = m_mapCamera->getAbsMapMouseX(mouseX);
+    int absMapY = m_mapCamera->getAbsMapMouseY(mouseY);
+    return m_mapCamera->getCellFromAbsolutePosition(absMapX, absMapY);
 }
 
 int cGameControlsContext::getMouseCellFromScreenClamped(int mouseX, int mouseY) const
 {
-    int absMapX = game.m_mapCamera->getAbsMapMouseX(mouseX);
-    int absMapY = game.m_mapCamera->getAbsMapMouseY(mouseY);
-    return game.m_mapCamera->getCellFromAbsolutePositionClamped(absMapX, absMapY);
+    int absMapX = m_mapCamera->getAbsMapMouseX(mouseX);
+    int absMapY = m_mapCamera->getAbsMapMouseY(mouseY);
+    return m_mapCamera->getCellFromAbsolutePositionClamped(absMapX, absMapY);
 }
 
 void cGameControlsContext::determineHoveringOverStructureId()
 {
     m_mouseHoveringOverStructureId = -1;
 
-    if (!game.m_gameObjectsContext->getMap()->isVisible(m_mouseCell, this->m_player)) {
+    if (!m_objects->getMap()->isVisible(m_mouseCell, this->m_player)) {
         return; // cell not visible
     }
 
-    m_mouseHoveringOverStructureId = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(m_mouseCell);
+    m_mouseHoveringOverStructureId = m_objects->getMap()->getCellIdStructuresLayer(m_mouseCell);
 }
 
 void cGameControlsContext::determineHoveringOverUnitId()
 {
     if (m_mouseHoveringOverUnitId > -1) {
-        cUnit *aUnit = game.m_gameObjectsContext->getUnit(m_mouseHoveringOverUnitId);
+        cUnit *aUnit = m_objects->getUnit(m_mouseHoveringOverUnitId);
         if (aUnit->isValid()) {
             aUnit->rendering.bHovered = false;
         }
     }
     m_mouseHoveringOverUnitId = -1;
     int mc = getMouseCell();
-    tCell *cellOfMouse = game.m_gameObjectsContext->getMap()->getCell(mc);
+    tCell *cellOfMouse = m_objects->getMap()->getCell(mc);
     if (cellOfMouse == nullptr) return; // mouse is not on battlefield
 
-    if (!game.m_gameObjectsContext->getMap()->isVisible(mc, this->m_player)) {
+    if (!m_objects->getMap()->isVisible(mc, this->m_player)) {
         return; // cell not visible
     }
 
     if (cellOfMouse->id[MAPID_UNITS] > -1) {
         int iUnitId = cellOfMouse->id[MAPID_UNITS];
 
-        if (!game.m_gameObjectsContext->getUnit(iUnitId)->isHidden()) {
+        if (!m_objects->getUnit(iUnitId)->isHidden()) {
             m_mouseHoveringOverUnitId = iUnitId;
         }
 
@@ -133,7 +147,7 @@ void cGameControlsContext::determineHoveringOverUnitId()
     }
 
     if (m_mouseHoveringOverUnitId > -1) {
-        cUnit *aUnit = game.m_gameObjectsContext->getUnit(m_mouseHoveringOverUnitId);
+        cUnit *aUnit = m_objects->getUnit(m_mouseHoveringOverUnitId);
         if (aUnit->isValid()) {
             aUnit->rendering.bHovered = true;
         }
@@ -145,7 +159,7 @@ cAbstractStructure *cGameControlsContext::getStructurePointerWhereMouseHovers() 
     if (m_mouseHoveringOverStructureId < 0) {
         return nullptr;
     }
-    return game.m_gameObjectsContext->getStructures()[m_mouseHoveringOverStructureId];
+    return m_objects->getStructures()[m_mouseHoveringOverStructureId];
 }
 
 void cGameControlsContext::onMouseMovedTo(const s_MouseEvent &event)
