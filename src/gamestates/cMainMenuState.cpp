@@ -38,7 +38,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     logoY = (logoHeight/10);
 
     mainMenuWidth = 130;
-    mainMenuHeight = 183;
+    mainMenuHeight = 213;
 
     sdl2power = cRectangle{centerOfScreen+logoWidth/4, logoY+logoHeight+75,0,0};
 
@@ -188,8 +188,22 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Hof));
 
+    // INTRODUCTION
+    int introY = hofY+heightBetweenButton;
+    const cRectangle &intro = cRectangle(buttonsX, introY, buttonWidth, buttonHeight);
+    auto gui_btn_Intro = GuiButtonBuilder()
+            .withRect(intro)        
+            .withLabel("Introduction")
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_renderDrawer)
+            .withTheme(cGuiThemeBuilder().light().build())
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .onClick([this](){m_interface->setNextStateToTransitionTo(GAME_VIDEO);})
+            .build();
+    gui_window->addGuiObject(std::move(gui_btn_Intro));
+
     // EXIT
-    int exitY = hofY+heightBetweenButton;
+    int exitY = introY+heightBetweenButton;
     const cRectangle &exit = cRectangle(buttonsX, exitY, buttonWidth, buttonHeight);
     auto gui_btn_Exit = GuiButtonBuilder()
             .withRect(exit)        
