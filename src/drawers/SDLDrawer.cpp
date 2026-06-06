@@ -18,7 +18,7 @@ SDLDrawer::~SDLDrawer()
 
 void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
 {
-    if (src == nullptr) return;
+    if (src == nullptr || src->tex.get() == nullptr) return;
     SDL_FRect tmp = {(float)x, (float)y, (float)src->w, (float)src->h};
     SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -59,9 +59,8 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 
 void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle dest_pos, Uint8 opacity)
 {
-    if (!SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND)) {
-        std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
-    }
+    if (src == nullptr || src->tex.get() == nullptr) return;
+    SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND);
     SDL_SetTextureAlphaMod(src->tex.get(), opacity);
     SDL_FRect srcRect = src_pos.toSDLF();
     SDL_FRect destRect = dest_pos.toSDLF();
@@ -70,9 +69,8 @@ void SDLDrawer::renderStrechSprite(Texture *src, cRectangle src_pos, cRectangle 
 
 void SDLDrawer::renderStrechFullSprite(Texture *src, cRectangle dest_pos, Uint8 opacity)
 {
-    if (!SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND)) {
-        std::cerr << "Error SDL_SetTextureBlendMode : " << SDL_GetError() << std::endl;
-    }
+    if (src == nullptr || src->tex.get() == nullptr) return;
+    SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND);
     SDL_SetTextureAlphaMod(src->tex.get(), opacity);
     SDL_FRect destRect = dest_pos.toSDLF();
     SDL_RenderTexture(renderer, src->tex.get(), nullptr, &destRect);
