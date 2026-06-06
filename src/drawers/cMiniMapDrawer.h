@@ -21,6 +21,9 @@ class Texture;
 class GameContext;
 class Graphics;
 class SDLDrawer;
+class cGameObjectContext;
+class cInfoContext;
+struct sGameServices;
 
 // the BuildingListItemState
 enum eMinimapStatus {
@@ -52,6 +55,8 @@ public:
 
     void onNotifyMouseEvent(const s_MouseEvent &event);
 
+    void serviceInit(sGameServices* services);
+
 protected:
 
     void drawTerrain();
@@ -78,6 +83,9 @@ private:
     cMap *m_map;	// the minimap drawer reads data from here
     cPlayer *m_player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
     cMapCamera *m_mapCamera;
+    GameContext* m_ctx = nullptr;
+    cGameObjectContext* m_objects = nullptr;
+    cInfoContext* m_infos = nullptr;
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
     Texture *m_mipMapTex;

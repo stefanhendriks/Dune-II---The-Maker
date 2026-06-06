@@ -1,7 +1,6 @@
 #include "CreditsDrawer.h"
-#include "game/cGameSettings.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "include/sGameServices.h"
+#include "game/cGameInterface.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "gameobjects/players/cPlayer.h"
@@ -38,8 +37,13 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
 
     // center credits bar within sidebar
     int widthCreditsBar = (m_gfxinter->getSurface(CREDITS_BAR))->w;
-    m_drawX = game.m_gameSettings->getScreenW() - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
+    m_drawX = ctx->getGameInterface()->getGameSettings()->getScreenW() - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
     m_drawY = 0;
+}
+
+void CreditsDrawer::serviceInit(sGameServices* services)
+{
+    m_interface = services->ctx->getGameInterface();
 }
 
 CreditsDrawer::~CreditsDrawer()
@@ -167,7 +171,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
             //m_offset_credit[i] = 18.1F; // so we do not keep matching our IF :)
             m_offset_credit[i] = 0.0F; // so we do not keep matching our IF :)
             if (m_soundsMade < 7) {
-                game.playSound(m_soundType, 32);
+                m_interface->playSoundWithDistance(m_soundType, 32);
                 m_soundsMade++;
             }
             // it is fully 'moved'. Now update the array.

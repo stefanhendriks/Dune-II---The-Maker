@@ -2,9 +2,8 @@
 
 #include "controls/cGameControlsContext.h"
 #include "data/gfxdata.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "context/GameContext.hpp"
+#include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/players/cPlayer.h"
@@ -44,8 +43,8 @@ cMapDrawer::~cMapDrawer()
 
 void cMapDrawer::drawShroud()
 {
-    float tileWidth = game.m_mapCamera->getZoomedTileWidth();
-    float tileHeight = game.m_mapCamera->getZoomedTileHeight();
+    float tileWidth = m_camera->getZoomedTileWidth();
+    float tileHeight = m_camera->getZoomedTileHeight();
 
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
@@ -55,15 +54,15 @@ void cMapDrawer::drawShroud()
 
         // new row
         for (int viewportY = m_camera->getViewportStartY(); viewportY < m_camera->getViewportEndY() + 32; viewportY += 32) {
-            int iCell = game.m_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
+            int iCell = m_camera->getCellFromAbsolutePosition(viewportX, viewportY);
 
             if (iCell < 0) continue;
 
             int absoluteXCoordinateOnMap = m_mapGeometry->getAbsoluteXPositionFromCell(iCell);
-            float fDrawX = game.m_mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
+            float fDrawX = m_camera->getWindowXPosition(absoluteXCoordinateOnMap);
 
             int absoluteYCoordinateOnMap = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
-            float fDrawY = game.m_mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
+            float fDrawY = m_camera->getWindowYPosition(absoluteYCoordinateOnMap);
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
             if (m_drawWithoutShroudTiles) {
@@ -99,8 +98,8 @@ void cMapDrawer::drawShroud()
 
 void cMapDrawer::drawTerrain()
 {
-    float tileWidth = game.m_mapCamera->getZoomedTileWidth();
-    float tileHeight = game.m_mapCamera->getZoomedTileHeight();
+    float tileWidth = m_camera->getZoomedTileWidth();
+    float tileHeight = m_camera->getZoomedTileHeight();
 
     int iTileHeight = (tileHeight + 1);
     int iTileWidth = (tileWidth + 1);
@@ -118,7 +117,7 @@ void cMapDrawer::drawTerrain()
 
         // new row
         for (int viewportY = m_camera->getViewportStartY(); viewportY < m_camera->getViewportEndY() + 32; viewportY += 32) {
-            int iCell = game.m_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
+            int iCell = m_camera->getCellFromAbsolutePosition(viewportX, viewportY);
             if (iCell < 0) continue;
 
             // not visible for player, so do not draw
@@ -138,10 +137,10 @@ void cMapDrawer::drawTerrain()
             }
 
             int absoluteXCoordinateOnMap = m_mapGeometry->getAbsoluteXPositionFromCell(iCell);
-            float fDrawX = game.m_mapCamera->getWindowXPosition(absoluteXCoordinateOnMap);
+            float fDrawX = m_camera->getWindowXPosition(absoluteXCoordinateOnMap);
 
             int absoluteYCoordinateOnMap = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
-            float fDrawY = game.m_mapCamera->getWindowYPosition(absoluteYCoordinateOnMap);
+            float fDrawY = m_camera->getWindowYPosition(absoluteYCoordinateOnMap);
 
             int iDrawX = round(fDrawX);
             int iDrawY = round(fDrawY);
@@ -169,7 +168,7 @@ void cMapDrawer::drawTerrain()
             }
 
             // Draw debugging information
-            if (game.m_gameSettings->isDebugMode()) {
+            if (m_ctx->getGameInterface()->getGameSettings()->isDebugMode()) {
                 if (mouseCell > -1) {
                     int cellX = (viewportX / 32);
                     int cellY = (viewportY / 32);
@@ -193,7 +192,7 @@ void cMapDrawer::drawTerrain()
         }
     }
 
-    if (game.m_gameSettings->isDebugMode()) {
+    if (m_ctx->getGameInterface()->getGameSettings()->isDebugMode()) {
 //        int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
 //        int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);

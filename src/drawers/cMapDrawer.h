@@ -11,6 +11,7 @@ class SDLDrawer;
 class cMap;
 class cMapCamera;
 class MapGeometry;
+struct sGameServices;
 
 class cMapDrawer {
 public:
@@ -18,6 +19,8 @@ public:
     ~cMapDrawer();
 
     void setPlayer(cPlayer *thePlayer);
+
+    void serviceInit(sGameServices*) {}
 
     void drawTerrain();
     void drawShroud();

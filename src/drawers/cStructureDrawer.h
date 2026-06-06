@@ -5,6 +5,10 @@ class Graphics;
 class SDLDrawer;
 class cTextDrawer;
 class cPlayer;
+class cGameObjectContext;
+class cInfoContext;
+class cMapCamera;
+struct sGameServices;
 
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "utils/cStructureUtils.h"
@@ -15,6 +19,7 @@ public:
     explicit cStructureDrawer(GameContext *ctx, cPlayer *player, cStructureUtils *structureUtils);
     ~cStructureDrawer() = default;
     void setPlayer(cPlayer *pPlayer) { m_player = pPlayer; }
+    void serviceInit(sGameServices* services);
     void drawStructuresFirstLayer();
     void drawStructuresSecondLayer();
     void drawStructuresHealthBars();
@@ -38,6 +43,10 @@ private:
     Graphics *m_gfxdata;
     cStructureUtils* m_structureUtils = nullptr;
     cPlayer *m_player;
+    GameContext* m_ctx = nullptr;
+    cGameObjectContext* m_objects = nullptr;
+    cInfoContext* m_infos = nullptr;
+    cMapCamera* m_mapCamera = nullptr;
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;
     void renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const;

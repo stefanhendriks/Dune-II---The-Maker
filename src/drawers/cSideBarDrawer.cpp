@@ -1,7 +1,5 @@
 #include "cSideBarDrawer.h"
-#include "game/cGameSettings.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "include/sGameServices.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cOrderDrawer.h"
@@ -13,6 +11,8 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 #include <SDL3/SDL.h>
 #include <algorithm>
 #include "include/cAssert.h"
@@ -21,6 +21,7 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_player(player),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_renderDrawer(ctx->getSDLDrawer()),
+    m_ctx(ctx),
     m_buildingListDrawer(ctx, player),
     m_sidebar(nullptr),
     m_sidebarColor(Color{214, 149, 20,255})
@@ -35,7 +36,7 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_candyHorizonBar = createPlayerTextureFromIndexedSurfaceWithPalette(
         m_player, m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
 
-    m_candiBarRenderer = m_renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, game.m_gameSettings->getScreenH()-40);
+    m_candiBarRenderer = m_renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH()-40);
     m_renderDrawer->beginDrawingToTexture(m_candiBarRenderer);
     createCandyBar();
     m_renderDrawer->endDrawingToTexture();
@@ -48,6 +49,12 @@ cSideBarDrawer::~cSideBarDrawer()
     // delete m_candyBarPiece; --- IGNORE ---
     // delete m_candyHorizonBar; --- IGNORE ---
     // delete m_candiBarRenderer; --- IGNORE ---
+}
+
+void cSideBarDrawer::serviceInit(sGameServices* services)
+{
+    m_infos = services->info;
+    m_buildingListDrawer.serviceInit(services);
 }
 
 void cSideBarDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -64,7 +71,7 @@ void cSideBarDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cSideBarDrawer::draw()
 {
     // black out sidebar
-    m_renderDrawer->renderRectFillColor((game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, game.m_gameSettings->getScreenH(), Color{0, 0, 0,255});
+    m_renderDrawer->renderRectFillColor((m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH(), Color{0, 0, 0,255});
 
     drawCandybar();
 
@@ -100,13 +107,13 @@ void cSideBarDrawer::drawBuildingLists()
     // draw background of buildlist
     Texture *backgroundSprite = m_gfxinter->getTexture(BMP_GERALD_ICONLIST_BACKGROUND);
 
-    int drawX = game.m_gameSettings->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar + 1;
+    int drawX = m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar + 1;
 
     int startY = cSideBar::TopBarHeight + cSideBar::HeightOfMinimap + cSideBar::HorizontalCandyBarHeight +
                  cSideBar::HeightOfListButton;
 
-    for (; drawX < game.m_gameSettings->getScreenW(); drawX += backgroundSprite->w) {
-        for (int drawY=startY; drawY < game.m_gameSettings->getScreenH(); drawY += backgroundSprite->h) {
+    for (; drawX < m_ctx->getGameInterface()->getGameSettings()->getScreenW(); drawX += backgroundSprite->w) {
+        for (int drawY=startY; drawY < m_ctx->getGameInterface()->getGameSettings()->getScreenH(); drawY += backgroundSprite->h) {
             m_renderDrawer->renderSprite(backgroundSprite, drawX, drawY);
         }
     }
@@ -125,11 +132,11 @@ void cSideBarDrawer::drawBuildingLists()
         selectedList = m_sidebar->getList(selectedListId);
     }
 
-    int endY = game.m_gameSettings->getScreenH();
+    int endY = m_ctx->getGameInterface()->getGameSettings()->getScreenH();
     int rows = 6;
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
         rows = 5;
-        endY = game.m_gameSettings->getScreenH() - 50;
+        endY = m_ctx->getGameInterface()->getGameSettings()->getScreenH() - 50;
     }
 
     for (int i = 1; i < 3; i++) {
@@ -142,19 +149,19 @@ void cSideBarDrawer::drawBuildingLists()
         // horizontal lines
         for (int j = 1; j < rows; j++) {
             int barY = iDrawY - 1 + (j * 50);
-            m_renderDrawer->renderLine( iDrawX, barY-1, game.m_gameSettings->getScreenW(), barY - 1, darker);
-            m_renderDrawer->renderLine( iDrawX, barY, game.m_gameSettings->getScreenW(), barY, veryDark);
+            m_renderDrawer->renderLine( iDrawX, barY-1, m_ctx->getGameInterface()->getGameSettings()->getScreenW(), barY - 1, darker);
+            m_renderDrawer->renderLine( iDrawX, barY, m_ctx->getGameInterface()->getGameSettings()->getScreenW(), barY, veryDark);
         }
     }
 
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
-        m_renderDrawer->renderRectFillColor(iDrawX, endY, game.m_gameSettings->getScreenW()-iDrawX, game.m_gameSettings->getScreenH()-endY, m_sidebarColor);
+        m_renderDrawer->renderRectFillColor(iDrawX, endY, m_ctx->getGameInterface()->getGameSettings()->getScreenW()-iDrawX, m_ctx->getGameInterface()->getGameSettings()->getScreenH()-endY, m_sidebarColor);
         m_renderDrawer->renderSprite(horBar, iDrawX-1, endY); // just below the last icons
     }
 
     // vertical lines at the side
-    m_renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, game.m_gameSettings->getScreenH(), Color{255, 211, 125,255}); // left
-    m_renderDrawer->renderLine( game.m_gameSettings->getScreenW() - 1, iDrawY - 38, game.m_gameSettings->getScreenW() - 1, endY, Color{209, 150, 28,255}); // right
+    m_renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, m_ctx->getGameInterface()->getGameSettings()->getScreenH(), Color{255, 211, 125,255}); // left
+    m_renderDrawer->renderLine( m_ctx->getGameInterface()->getGameSettings()->getScreenW() - 1, iDrawY - 38, m_ctx->getGameInterface()->getGameSettings()->getScreenW() - 1, endY, Color{209, 150, 28,255}); // right
 
     // END drawing icons grid
 
@@ -170,13 +177,13 @@ void cSideBarDrawer::drawBuildingLists()
         if (list->isAvailable() == false) continue; // not available, so no interaction possible
 
         // render hover over border
-        auto m_mouse = game.getMouse();
+        auto m_mouse = m_ctx->getGameInterface()->getMouse();
         if (list->isOverButton(m_mouse->getX(), m_mouse->getX())) {
             m_buildingListDrawer.drawButtonHoverRectangle(list);
         }
     }
 
-    cOrderDrawer *orderDrawer = game.m_drawManager->getOrderDrawer();
+    cOrderDrawer *orderDrawer = m_ctx->getGameInterface()->getDrawManager()->getOrderDrawer();
 
     // allow clicking on the order button
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
@@ -192,13 +199,13 @@ void cSideBarDrawer::drawCapacities()
 
 void cSideBarDrawer::drawCandybar()
 {
-    m_renderDrawer->renderSprite(m_candiBarRenderer,game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth,40);
+    m_renderDrawer->renderSprite(m_candiBarRenderer,m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth,40);
 }
 
 void cSideBarDrawer::drawMinimap()
 {
     Texture *sprite = m_candyHorizonBar;
-    int drawX = (game.m_gameSettings->getScreenW() - sprite->w) + 1;
+    int drawX = (m_ctx->getGameInterface()->getGameSettings()->getScreenW() - sprite->w) + 1;
     // 128 pixels (each pixel is a cell) + 8 margin
     int heightMinimap = cSideBar::HeightOfMinimap;
     int drawY = cSideBar::TopBarHeight + heightMinimap;
@@ -216,7 +223,7 @@ void cSideBarDrawer::drawMinimap()
     }
 
     // else, we render the house emblem
-    m_renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,game.m_gameSettings->getScreenW()-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1),
+    m_renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,m_ctx->getGameInterface()->getGameSettings()->getScreenW()-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1),
                                       m_player->getEmblemBackgroundColor());
 
     if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS) || m_player->isHouse(SARDAUKAR)) {
@@ -259,7 +266,7 @@ void cSideBarDrawer::drawMinimap()
 
 void cSideBarDrawer::createCandyBar()
 {
-    int heightInPixels = (game.m_gameSettings->getScreenH() - cSideBar::TopBarHeight);
+    int heightInPixels = (m_ctx->getGameInterface()->getGameSettings()->getScreenH() - cSideBar::TopBarHeight);
     // ball first
     m_renderDrawer->renderSprite(m_candyBarBall, 0,0); // height of ball = 25
     m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
@@ -294,15 +301,15 @@ void cSideBarDrawer::createCandyBar()
 void cSideBarDrawer::drawPowerUsage() const
 {
     int arbitraryMargin = 6;
-    int barTotalHeight = game.m_gameSettings->getScreenH() - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMarginHeight);
-    int barX = (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
+    int barTotalHeight = m_ctx->getGameInterface()->getGameSettings()->getScreenH() - (cSideBar::TotalHeightBeforePowerBarStarts + cSideBar::PowerBarMarginHeight);
+    int barX = (m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
     int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     //cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
     m_renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::Black); //renderDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
-    int maxPowerOutageOfWindtrap = game.m_infoContext->getStructureInfo(WINDTRAP).power_give;
+    int maxPowerOutageOfWindtrap = m_infos->getStructureInfo(WINDTRAP).power_give;
     float totalPowerOutput = (1 + (m_player->getAmountOfStructuresForType(WINDTRAP))) * maxPowerOutageOfWindtrap;
     float powerIn = (float)m_player->getPowerProduced() / totalPowerOutput;
     float powerUse = (float)m_player->getPowerUsage() / totalPowerOutput;
@@ -350,7 +357,7 @@ void cSideBarDrawer::drawPowerUsage() const
 void cSideBarDrawer::drawCreditsUsage()
 {
     int barTotalHeight = (cSideBar::HeightOfMinimap - 76);
-    int barX = (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
+    int barX = (m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth) + (cSideBar::VerticalCandyBarWidth / 3);
     int barY = cSideBar::TopBarHeight + 48;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     // cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);

@@ -1,8 +1,6 @@
 #include "cBuildingListDrawer.h"
-#include "game/cGameSettings.h"
+#include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxinter.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "gameobjects/players/cPlayer.h"
@@ -11,6 +9,8 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 #include "utils/common.h"
 
 #include <SDL3/SDL.h>
@@ -27,6 +27,12 @@ cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player
 {
     d2tm_assert(player != nullptr);
     d2tm_assert(ctx != nullptr);
+}
+
+void cBuildingListDrawer::serviceInit(sGameServices* services)
+{
+    m_infos = services->info;
+    m_interface = services->ctx->getGameInterface();
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw)
@@ -120,7 +126,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 
 int cBuildingListDrawer::getDrawX()
 {
-    return (game.m_gameSettings->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar) + 2;
+    return (m_interface->getGameSettings()->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar) + 2;
 }
 
 int cBuildingListDrawer::getDrawY()
@@ -299,7 +305,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             m_gameTextDrawer->drawText(textX, textY, std::format("{}",amountToShow));
         }
 
-        if (game.m_gameSettings->isDebugMode()) {
+        if (m_interface->getGameSettings()->isDebugMode()) {
             if (m_renderListIds) {
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
@@ -309,7 +315,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         }
 
         // draw rectangle when mouse hovers over icon
-        auto m_mouse = game.getMouse();
+        auto m_mouse = m_interface->getMouse();
         if (isOverItemCoordinates_Boolean(m_mouse->getX(), m_mouse->getY(), iDrawX, iDrawY)) {
             m_renderDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
             m_renderDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);
@@ -346,8 +352,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
 void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
 {
     // figure out size
-    int iW= game.m_infoContext->getStructureInfo(structureId).bmp_width / 32;
-    int iH= game.m_infoContext->getStructureInfo(structureId).bmp_height / 32;
+    int iW= m_infos->getStructureInfo(structureId).bmp_width / 32;
+    int iH= m_infos->getStructureInfo(structureId).bmp_height / 32;
     int iTile = GRID_1X1;
 
     if (iW == 2 && iH == 2) {

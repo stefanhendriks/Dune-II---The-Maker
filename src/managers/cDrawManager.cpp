@@ -40,7 +40,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     m_objects(services->objects),
     m_mapCamera(services->mapCamera),
     m_gameSettings(services->settings),
-    m_structureUtils(services->structureUtils)
+    m_structureUtils(services->structureUtils),
+    m_services(services)
 {
     d2tm_assert(m_player!=nullptr);
     d2tm_assert(ctx != nullptr);
@@ -70,7 +71,19 @@ void cDrawManager::reset()
     m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(
         m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );
+    delete m_mouseDrawer;
     m_mouseDrawer = new cMouseDrawer(m_player, m_ctx->getTextContext()->getSmallTextDrawer());
+
+    m_sidebarDrawer->serviceInit(m_services);
+    m_creditsDrawer->serviceInit(m_services);
+    m_orderDrawer->serviceInit(m_services);
+    m_mapDrawer->serviceInit(m_services);
+    m_miniMapDrawer->serviceInit(m_services);
+    m_particleDrawer->serviceInit(m_services);
+    m_messageDrawer->serviceInit(m_services);
+    m_placeitDrawer->serviceInit(m_services);
+    m_structureDrawer->serviceInit(m_services);
+    m_mouseDrawer->serviceInit(m_services);
 }
 
 cDrawManager::~cDrawManager()

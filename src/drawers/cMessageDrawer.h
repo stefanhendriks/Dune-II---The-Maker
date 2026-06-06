@@ -8,6 +8,7 @@ struct SDL_Surface;
 class GameContext;
 class Graphics;
 class SDLDrawer;
+struct sGameServices;
 
 namespace messages {
 enum eMessageDrawerState {
@@ -25,6 +26,8 @@ class cMessageDrawer {
 public:
     explicit cMessageDrawer(GameContext* ctx);
     ~cMessageDrawer();
+
+    void serviceInit(sGameServices*) {}
 
     void draw();
 

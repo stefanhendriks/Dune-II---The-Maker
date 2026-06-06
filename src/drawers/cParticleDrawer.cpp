@@ -1,7 +1,6 @@
 #include "cParticleDrawer.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "include/sGameServices.h"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/particles/cParticles.h"
@@ -9,11 +8,16 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 
+void cParticleDrawer::serviceInit(sGameServices* s)
+{
+    m_objects = s->objects;
+}
+
 void cParticleDrawer::determineParticlesToDraw(const cRectangle &viewport)
 {
     m_particlesLowerLayer.clear();
     m_particlesTopLayer.clear();
-    for (auto &pParticle : game.m_gameObjectsContext->getParticles()) {
+    for (auto &pParticle : m_objects->getParticles()) {
         if (!pParticle.isValid()) continue;
         if (!pParticle.isWithinViewport(viewport)) continue;
 
