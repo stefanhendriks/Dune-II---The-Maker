@@ -8,3 +8,8 @@
 04.1: using and display texture with int coords 
 04.7: using and display multiple draw with one texture  
 05  : render on texture
+11  : step_01 adapted with GPURenderer toolbox
+12  : step_02 adapted with GPURenderer toolbox (vertex buffer rendered to window)
+12.5: step_02.5 adapted with GPURenderer toolbox (animated color triangle)
+14  : step_04 adapted with GPURenderer (textured quad rendered to window)
+15  : GPURenderer class wrapper (OpenGL-like API) + offscreen capture
