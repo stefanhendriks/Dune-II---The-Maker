@@ -1,11 +1,11 @@
 #include "cMiniMapDrawer.h"
-#include "game/cGameSettings.h"
+#include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/map/cMapCamera.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "gameobjects/players/cPlayer.h"
@@ -34,6 +34,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
     m_map(map),
     m_player(player),
     m_mapCamera(mapCamera),
+    m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_renderDrawer(ctx->getSDLDrawer()),
     m_status(eMinimapStatus::NOTAVAILABLE),
@@ -51,7 +52,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
-    int topLeftX = game.m_gameSettings->getScreenW() - cSideBar::WidthOfMinimap;
+    int topLeftX = ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::WidthOfMinimap;
     m_drawX = topLeftX + (halfWidthOfMinimap - m_factorZoom*halfWidthOfMap);
 
     int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;
@@ -75,6 +76,12 @@ cMiniMapDrawer::~cMiniMapDrawer()
     m_mapCamera = nullptr;
     m_iStaticFrame = STAT14;
     m_status = eMinimapStatus::NOTAVAILABLE;
+}
+
+void cMiniMapDrawer::serviceInit(sGameServices* services)
+{
+    m_objects = services->objects;
+    m_infos = services->info;
 }
 
 void cMiniMapDrawer::draw()
@@ -159,7 +166,7 @@ void cMiniMapDrawer::think()
             // go to state power down (not enough power)
             m_status = eMinimapStatus::POWERDOWN;
             // "Radar de-activated""
-            game.playVoice(SOUND_VOICE_04_ATR, m_player->getId());
+            m_ctx->getGameInterface()->playVoice(SOUND_VOICE_04_ATR, m_player->getId());
         }
     }
 
@@ -168,9 +175,9 @@ void cMiniMapDrawer::think()
         if (hasRadarAndEnoughPower) {
             // go to state power up (enough power)
             m_status = eMinimapStatus::POWERUP;
-            game.playSound(SOUND_RADAR);
+            m_ctx->getGameInterface()->playSound(SOUND_RADAR);
             // "Radar activated"
-            game.playVoice(SOUND_VOICE_03_ATR, m_player->getId());
+            m_ctx->getGameInterface()->playVoice(SOUND_VOICE_03_ATR, m_player->getId());
         }
     }
 
@@ -316,29 +323,29 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfStructureAtCell = m_map->getCellIdStructuresLayer(iCll);
             if (idOfStructureAtCell > -1) {
-                int iPlr = game.m_gameObjectsContext->getStructures()[idOfStructureAtCell]->getOwner();
+                int iPlr = m_objects->getStructures()[idOfStructureAtCell]->getOwner();
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.m_gameObjectsContext->getPlayer(iPlr)->getMinimapColor();
+                iColor = m_objects->getPlayer(iPlr)->getMinimapColor();
             }
 
             int idOfUnitAtCell = m_map->getCellIdUnitLayer(iCll);
             if (idOfUnitAtCell > -1) {
-                int iPlr = game.m_gameObjectsContext->getUnit(idOfUnitAtCell)->iPlayer;
+                int iPlr = m_objects->getUnit(idOfUnitAtCell)->iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.m_gameObjectsContext->getPlayer(iPlr)->getMinimapColor();
+                iColor = m_objects->getPlayer(iPlr)->getMinimapColor();
             }
 
             int idOfAirUnitAtCell = m_map->getCellIdAirUnitLayer(iCll);
             if (idOfAirUnitAtCell > -1) {
-                int iPlr = game.m_gameObjectsContext->getUnit(idOfAirUnitAtCell)->iPlayer;
+                int iPlr = m_objects->getUnit(idOfAirUnitAtCell)->iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
-                iColor = game.m_gameObjectsContext->getPlayer(iPlr)->getMinimapColor();
+                iColor = m_objects->getPlayer(iPlr)->getMinimapColor();
             }
 
             int idOfWormAtCell = m_map->getCellIdWormsLayer(iCll);
@@ -407,34 +414,34 @@ void cMiniMapDrawer::updateMouseCursor()
     if (m_isMouseOver &&
         m_status != NOTAVAILABLE) {
         if (m_player->hasAnyUnitSelected()) {
-            game.getMouse()->setTile(MOUSE_MOVE);
+            m_ctx->getGameInterface()->getMouse()->setTile(MOUSE_MOVE);
         } else {
-            game.getMouse()->setTile(MOUSE_NORMAL);
+            m_ctx->getGameInterface()->getMouse()->setTile(MOUSE_NORMAL);
         }
     }
 }
 
 void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
     if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
-        !game.getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
+        !m_ctx->getGameInterface()->getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
         this->m_status != NOTAVAILABLE // only allow action when not drawing logo
     ) {
         // left mouse *click* will move any units if selected
         if (m_player->hasAnyUnitSelected()) {
-            auto m_mouse = game.getMouse();
+            auto m_mouse = m_ctx->getGameInterface()->getMouse();
             int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
-            cUnits *units = game.m_gameObjectsContext->getUnits();
+            cUnits *units = m_objects->getUnits();
             units->move_to(mouseCellOnMinimap);
 
             auto absPoint = m_map->getGeometry()->getAbsolutePositionFromCell(mouseCellOnMinimap);
-            cParticle::create(absPoint.x, absPoint.y, D2TM_PARTICLE_MOVE, -1, -1, game.m_gameObjectsContext.get(), game.m_infoContext.get());
+            cParticle::create(absPoint.x, absPoint.y, D2TM_PARTICLE_MOVE, -1, -1, m_objects, m_infos);
 
             sSelectedUnitTypes selectedUnitTypes = m_player->getSelectedUnitTypes();
             if (selectedUnitTypes.hasInfantry) {
-                game.playSound(SOUND_MOVINGOUT + RNG::rnd(2));
+                m_ctx->getGameInterface()->playSound(SOUND_MOVINGOUT + RNG::rnd(2));
             }
             if (selectedUnitTypes.hasVehicles) {
-                game.playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
+                m_ctx->getGameInterface()->playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
             }
         }
     }
@@ -443,12 +450,12 @@ void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
 void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
 {
     if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
-        !game.getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
+        !m_ctx->getGameInterface()->getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
         this->m_status != NOTAVAILABLE // only allow action when not drawing logo
     ) {
         // left-mouse button press only moves viewport if no units are selected
         if (!m_player->hasAnyUnitSelected()) {
-            auto m_mouse = game.getMouse();
+            auto m_mouse = m_ctx->getGameInterface()->getMouse();
             int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
             m_mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
         }
@@ -458,11 +465,11 @@ void cMiniMapDrawer::onMousePressedLeft(const s_MouseEvent &event)
 void cMiniMapDrawer::onMousePressedRight(const s_MouseEvent &event)
 {
     if (m_RectFullMinimap.isPointWithin(event.coords.x, event.coords.y) && // on minimap space
-        !game.getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
+        !m_ctx->getGameInterface()->getMouse()->isBoxSelecting() && // pressed the mouse and not boxing anything..
         this->m_status != NOTAVAILABLE // only allow action when not drawing logo
     ) {
         // right-mouse button press will always move viewport
-        auto m_mouse = game.getMouse();
+        auto m_mouse = m_ctx->getGameInterface()->getMouse();
         int mouseCellOnMinimap = getMouseCell(m_mouse->getX(), m_mouse->getY());
         m_mapCamera->centerAndJumpViewPortToCell(mouseCellOnMinimap);
     }

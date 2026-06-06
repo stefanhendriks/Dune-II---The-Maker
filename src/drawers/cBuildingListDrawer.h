@@ -8,11 +8,16 @@ class cPlayer;
 class GameContext;
 class Graphics;
 class SDLDrawer;
+class cInfoContext;
+class cGameInterface;
+struct sGameServices;
 
 class cBuildingListDrawer : cInputObserver {
 
 public:
     explicit cBuildingListDrawer(const GameContext *ctx, cPlayer *player);
+
+    void serviceInit(sGameServices* services);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -38,6 +43,8 @@ private:
     SDLDrawer* m_renderDrawer;
 
     cPlayer *m_player;
+    cInfoContext* m_infos = nullptr;
+    cGameInterface* m_interface = nullptr;
 
     bool m_renderListIds;
 

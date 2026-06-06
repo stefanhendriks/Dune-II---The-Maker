@@ -1,18 +1,19 @@
 #include "cTextDrawer.h"
 #include "drawers/cTextTextureCache.h"
 #include "game/cGameSettings.h"
-#include "game/cGame.h"
 #include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Color.hpp"
 #include <iostream>
 #include "include/cAssert.h"
 
-cTextDrawer::cTextDrawer(TTF_Font *theFont) :
+cTextDrawer::cTextDrawer(TTF_Font *theFont, cGameSettings *settings) :
     m_font(theFont),
-    m_textCache(std::make_unique<cTextTextureCache>(theFont))
+    m_textCache(std::make_unique<cTextTextureCache>(theFont)),
+    m_settings(settings)
 {
     d2tm_assert(theFont != nullptr);
+    d2tm_assert(settings != nullptr);
 }
 
 cTextDrawer::~cTextDrawer()
@@ -53,7 +54,7 @@ void cTextDrawer::drawTextCentered(const std::string &msg, int y, Color color) c
     int w,h;
     TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
     int half = w / 2;
-    int xPos = (game.m_gameSettings->getScreenW() / 2) - half;
+    int xPos = (m_settings->getScreenW() / 2) - half;
     drawText(xPos, y, color, msg);
 }
 
@@ -109,8 +110,8 @@ void cTextDrawer::drawTextBottomRight(Color color, const std::string &msg, int m
     int w,h;
     TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
     int lenghtInPixels = w;
-    int x = game.m_gameSettings->getScreenW() - lenghtInPixels-margin;
-    int y = game.m_gameSettings->getScreenH() - getFontHeight()-20-margin;
+    int x = m_settings->getScreenW() - lenghtInPixels-margin;
+    int y = m_settings->getScreenH() - getFontHeight()-20-margin;
     drawText(x, y, color, msg);
 }
 
@@ -124,7 +125,7 @@ void cTextDrawer::drawTextBottomLeft(Color color, const std::string &msg, int ma
     if (msg.empty()) return;
     int w,h;
     TTF_GetStringSize(m_font, msg.c_str(), 0, &w, &h);
-    int y = game.m_gameSettings->getScreenH() - h-20-margin;
+    int y = m_settings->getScreenH() - h-20-margin;
     drawText(margin, y, color, msg);
 }
 

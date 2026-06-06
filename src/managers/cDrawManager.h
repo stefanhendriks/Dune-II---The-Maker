@@ -139,6 +139,7 @@ private:
     cMapCamera* m_mapCamera = nullptr;
     cGameSettings* m_gameSettings = nullptr;
     cStructureUtils* m_structureUtils = nullptr;
+    sGameServices* m_services = nullptr;
 
     void onKeyDown(const cKeyboardEvent &event);
 

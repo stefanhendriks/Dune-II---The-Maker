@@ -11,11 +11,15 @@ class cPlayer;
 class GameContext;
 class Graphics;
 class SDLDrawer;
+class cInfoContext;
+struct sGameServices;
 
 class cSideBarDrawer : cInputObserver {
 public:
     explicit cSideBarDrawer(GameContext *ctx, cPlayer *player);
     ~cSideBarDrawer() override;
+
+    void serviceInit(sGameServices* services);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
@@ -40,6 +44,8 @@ private:
     cPlayer *m_player;
     Graphics *m_gfxinter;
     SDLDrawer* m_renderDrawer;
+    GameContext* m_ctx = nullptr;
+    cInfoContext* m_infos = nullptr;
     cBuildingListDrawer m_buildingListDrawer;
     cSideBar *m_sidebar;
     Color m_sidebarColor;

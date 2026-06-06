@@ -1,8 +1,9 @@
 #include "cMouseDrawer.h"
-#include "game/cGameSettings.h"
-#include "controls/cGameControlsContext.h"
-#include "game/cGame.h"
+#include "include/sGameServices.h"
 #include "include/d2tmc.h"
+#include "controls/cGameControlsContext.h"
+#include "context/GameContext.hpp"
+#include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"
@@ -14,6 +15,11 @@
 #include <algorithm>
 #include "include/cAssert.h"
 
+void cMouseDrawer::serviceInit(sGameServices* services)
+{
+    m_interface = services->ctx->getGameInterface();
+}
+
 cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_player(thePlayer)
 {
     d2tm_assert(thePlayer != nullptr);
@@ -24,7 +30,7 @@ cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_play
 
 void cMouseDrawer::draw()
 {
-    game.getMouse()->draw();
+    m_interface->getMouse()->draw();
 }
 
 int cMouseDrawer::getDrawXToolTip(int width)
@@ -32,7 +38,7 @@ int cMouseDrawer::getDrawXToolTip(int width)
     int x = m_mouseX + 32;
 
     // correct drawing position so it does not fall off screen.
-    int diffX = (x + width) - game.m_gameSettings->getScreenW();
+    int diffX = (x + width) - m_interface->getGameSettings()->getScreenW();
     if (diffX > 0) {
         x-= diffX;
     }
@@ -44,7 +50,7 @@ int cMouseDrawer::getDrawYToolTip(int height)
     int y = m_mouseY + 32;
 
     // correct drawing position so it does not fall off screen.
-    int diffY = (y + height) - game.m_gameSettings->getScreenH();
+    int diffY = (y + height) - m_interface->getGameSettings()->getScreenH();
     if (diffY > 0) {
         y -= diffY;
     }

@@ -669,7 +669,7 @@ bool cGame::setupGame()
     // share Graphics to all class what use ctx !
     ctx->setGraphicsContext(context->createGraphicsContext());
     // share Text to all class what use ctx !
-    ctx->setTextContext(context->createTextContext());
+    ctx->setTextContext(context->createTextContext(m_gameSettings.get()));
     //m_gameObjectsContext->getMap()->setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();

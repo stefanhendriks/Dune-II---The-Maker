@@ -8,6 +8,7 @@ struct SDL_Surface;
 class Texture;
 class GameContext;
 class SDLDrawer;
+struct sGameServices;
 
 class cOrderDrawer {
 public:
@@ -18,6 +19,8 @@ public:
     void drawOrderButton(cPlayer *thePlayer);
 
     void onNotify(const s_MouseEvent &event);
+
+    void serviceInit(sGameServices*) {}
 
     void setPlayer(cPlayer *pPlayer);
 

@@ -12,6 +12,8 @@ class Graphics;
 class cPlayer;
 struct SDL_Surface;
 class SDLDrawer;
+class cGameInterface;
+struct sGameServices;
 
 // the credits drawer takes state of a player, and draws the credits accordingly
 
@@ -19,6 +21,8 @@ class CreditsDrawer {
 public:
     explicit CreditsDrawer(GameContext* ctx, cPlayer *player);
     virtual ~CreditsDrawer();
+
+    void serviceInit(sGameServices* services);
 
     void thinkFast(); // set animation counters and such, time based. Also make sound when needed.
 
@@ -30,6 +34,7 @@ public:
 private:
     cPlayer *m_player;  //
     GameContext* m_ctx;
+    cGameInterface* m_interface = nullptr;
     Graphics* m_gfxinter;
     Graphics* m_gfxdata;
     SDLDrawer* m_renderDrawer = nullptr;

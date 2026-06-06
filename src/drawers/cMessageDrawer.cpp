@@ -1,13 +1,12 @@
 #include "cMessageDrawer.h"
 #include "data/gfxinter.h"
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "game/cGameSettings.h"
+#include "game/cGameInterface.h"
 
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
@@ -131,7 +130,7 @@ void cMessageDrawer::initCombatPosition()
 
     int margin = 4;
     int widthOfOptionsButton = 160 + margin;
-    int desiredWidth = game.m_gameSettings->getScreenW() - (cSideBar::SidebarWidth + widthOfOptionsButton);
+    int desiredWidth = m_ctx->getGameInterface()->getGameSettings()->getScreenW() - (cSideBar::SidebarWidth + widthOfOptionsButton);
     createMessageBarBmp(desiredWidth);
     // default positions in-game (battle mode)
     m_position.x = widthOfOptionsButton;

@@ -1,9 +1,9 @@
 #include "cPlaceItDrawer.h"
 #include "utils/cStructureUtils.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+#include "include/sGameServices.h"
 #include "context/GameContext.hpp"
+#include "game/cGameInterface.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
@@ -29,6 +29,12 @@ cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer, cStructureU
 cPlaceItDrawer::~cPlaceItDrawer()
 {
     m_player = nullptr;
+}
+
+void cPlaceItDrawer::serviceInit(sGameServices* services)
+{
+    m_objects = services->objects;
+    m_infos = services->info;
 }
 
 void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell)
@@ -60,8 +66,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
 
 #define SCANWIDTH	1
 
-    int iCellX = game.m_gameObjectsContext->getMapGeometry()->getCellX(mouseCell);
-    int iCellY = game.m_gameObjectsContext->getMapGeometry()->getCellY(mouseCell);
+    int iCellX = m_objects->getMapGeometry()->getCellX(mouseCell);
+    int iCellY = m_objects->getMapGeometry()->getCellY(mouseCell);
 
     // check
     int iStartX = iCellX-SCANWIDTH;
@@ -71,20 +77,20 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     int iEndY = iCellY + SCANWIDTH + cellHeight;
 
     // Fix up the boundaries
-    cPoint::split(iStartX, iStartY) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinMap(iStartX, iStartY);
-    cPoint::split(iEndX, iEndY) = game.m_gameObjectsContext->getMapGeometry()->fixCoordinatesToBeWithinMap(iEndX, iEndY);
+    cPoint::split(iStartX, iStartY) = m_objects->getMapGeometry()->fixCoordinatesToBeWithinMap(iStartX, iStartY);
+    cPoint::split(iEndX, iEndY) = m_objects->getMapGeometry()->fixCoordinatesToBeWithinMap(iEndX, iEndY);
 
     // Determine if structure to be placed is within build distance
     for (int iX=iStartX; iX < iEndX; iX++) {
         for (int iY=iStartY; iY < iEndY; iY++) {
-            int iCll = game.m_gameObjectsContext->getMapGeometry()->getCellWithMapDimensions(iX, iY);
+            int iCll = m_objects->getMapGeometry()->getCellWithMapDimensions(iX, iY);
 
             if (iCll > -1) {
-                int idOfStructureAtCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(iCll);
+                int idOfStructureAtCell = m_objects->getMap()->getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     int iID = idOfStructureAtCell;
 
-                    if (game.m_gameObjectsContext->getStructures()[iID]->getOwner() == HUMAN) {
+                    if (m_objects->getStructures()[iID]->getOwner() == HUMAN) {
                         bWithinBuildDistance = true; // connection!
                         break;
                     }
@@ -92,8 +98,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     // TODO: Allow placement nearby allies?
                 }
 
-                if (game.m_gameObjectsContext->getMap()->getCellType(iCll) == TERRAIN_WALL ||
-                        game.m_gameObjectsContext->getMap()->getCellType(iCll) == TERRAIN_SLAB) {
+                if (m_objects->getMap()->getCellType(iCll) == TERRAIN_WALL ||
+                        m_objects->getMap()->getCellType(iCll) == TERRAIN_SLAB) {
                     bWithinBuildDistance=true;
                     // TODO: here we should actually find out if the slab is ours or not??
                     break;
@@ -102,8 +108,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
         }
     }
 
-    int iDrawX = game.m_gameObjectsContext->getMap()->mouse_draw_x();
-    int iDrawY = game.m_gameObjectsContext->getMap()->mouse_draw_y();
+    int iDrawX = m_objects->getMap()->mouse_draw_x();
+    int iDrawY = m_objects->getMap()->mouse_draw_y();
 
     if (!bWithinBuildDistance) {
         itemToPlaceColor = Color::PlaceNeutral;
@@ -117,38 +123,38 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 int cellX = iCellX + iX;
                 int cellY = iCellY + iY;
 
-                if (!game.m_gameObjectsContext->getMapGeometry()->isWithinBoundaries(cellX, cellY)) {
+                if (!m_objects->getMapGeometry()->isWithinBoundaries(cellX, cellY)) {
                     continue;
                 }
 
-                int iCll = game.m_gameObjectsContext->getMapGeometry()->makeCell(cellX, cellY);
+                int iCll = m_objects->getMapGeometry()->makeCell(cellX, cellY);
 
-                if (!game.m_gameObjectsContext->getMap()->isCellPassable(iCll) || game.m_gameObjectsContext->getMap()->getCellType(iCll) != TERRAIN_ROCK) {
+                if (!m_objects->getMap()->isCellPassable(iCll) || m_objects->getMap()->getCellType(iCll) != TERRAIN_ROCK) {
                     itemToPlaceColor = Color::PlaceBad;
                 }
 
-                if (game.m_gameObjectsContext->getMap()->getCellType(iCll) == TERRAIN_SLAB) {
+                if (m_objects->getMap()->getCellType(iCll) == TERRAIN_SLAB) {
                     itemToPlaceColor = Color::PlaceGood;
                 }
 
                 // occupied by units or structures
-                int idOfStructureAtCell = game.m_gameObjectsContext->getMap()->getCellIdStructuresLayer(iCll);
+                int idOfStructureAtCell = m_objects->getMap()->getCellIdStructuresLayer(iCll);
                 if (idOfStructureAtCell > -1) {
                     itemToPlaceColor = Color::PlaceBad;
                 }
 
-                int unitIdOnMap = game.m_gameObjectsContext->getMap()->getCellIdUnitLayer(iCll);
+                int unitIdOnMap = m_objects->getMap()->getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
-                    if (!game.m_gameObjectsContext->getUnit(unitIdOnMap)->isDead()) {
+                    if (!m_objects->getUnit(unitIdOnMap)->isDead()) {
                         itemToPlaceColor = Color::PlaceBad;
                     }
                     // TODO: Allow placement, let units move aside when clicking before placement?
                 }
 
                 // Draw bad gfx on spot
-                float desiredWidth = game.m_mapCamera->getZoomedTileWidth();
-                float desiredHeight = game.m_mapCamera->getZoomedTileHeight();
+                float desiredWidth = m_ctx->getGameInterface()->getMapCamera()->getZoomedTileWidth();
+                float desiredHeight = m_ctx->getGameInterface()->getMapCamera()->getZoomedTileHeight();
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
@@ -164,14 +170,14 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
 
     int structureId = itemToPlace->getBuildId();
 
-    int iDrawX = game.m_gameObjectsContext->getMap()->mouse_draw_x();
-    int iDrawY = game.m_gameObjectsContext->getMap()->mouse_draw_y();
+    int iDrawX = m_objects->getMap()->mouse_draw_x();
+    int iDrawY = m_objects->getMap()->mouse_draw_y();
 
-    int width = game.m_infoContext->getStructureInfo(structureId).bmp_width;
-    int height = game.m_infoContext->getStructureInfo(structureId).bmp_height;
+    int width = m_infos->getStructureInfo(structureId).bmp_width;
+    int height = m_infos->getStructureInfo(structureId).bmp_height;
 
-    int scaledWidth = game.m_mapCamera->factorZoomLevel(width);
-    int scaledHeight = game.m_mapCamera->factorZoomLevel(height);
+    int scaledWidth = m_ctx->getGameInterface()->getMapCamera()->factorZoomLevel(width);
+    int scaledHeight = m_ctx->getGameInterface()->getMapCamera()->factorZoomLevel(height);
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {

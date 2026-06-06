@@ -6,6 +6,8 @@
 
 class cPlayer;
 class cWindTrap;
+class cGameInterface;
+struct sGameServices;
 
 class cMouseDrawer {
 public:
@@ -16,6 +18,8 @@ public:
     void drawToolTip();
 
     void onNotify(const s_MouseEvent &event);
+
+    void serviceInit(sGameServices* services);
 
 protected:
     void drawToolTipBackground();
@@ -35,5 +39,6 @@ private:
     cPlayer *m_player;
     int m_mouseX, m_mouseY;
     cTextWriter* m_textWriter = nullptr;
+    cGameInterface* m_interface = nullptr;
 };
 

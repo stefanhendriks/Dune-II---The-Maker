@@ -7,11 +7,12 @@
 #include <memory>
 
 class cTextTextureCache;
+class cGameSettings;
 
 class cTextDrawer {
 public:
-    // Constructor, initializes the drawer with a TTF font
-    explicit cTextDrawer(TTF_Font *theFont);
+    // Constructor, initializes the drawer with a TTF font and game settings
+    cTextDrawer(TTF_Font *theFont, cGameSettings *settings);
     ~cTextDrawer();
 
     // Draws text at (x, y) in white, with optional shadow
@@ -55,9 +56,11 @@ public:
     [[nodiscard]] cRectangle getRect(int x, int y, const std::string &msg) const;
     // Returns a pointer to a rectangle bounding the text at (x, y)
     [[nodiscard]] cRectangle *getAsRectangle(int x, int y, const std::string &msg) const;
+
 protected:
 
 private:
     TTF_Font *m_font;
     std::unique_ptr<cTextTextureCache> m_textCache;
+    cGameSettings* m_settings = nullptr;
 };
