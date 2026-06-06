@@ -14,8 +14,6 @@
 #include "iniDefine.h"
 #include "utils/cIniUtils.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "definitions.h"
 #include "include/sDataCampaign.h"
@@ -540,7 +538,7 @@ int getTechLevelByRegion(int iRegion)
 void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
     m_settings->setSkirmish(false);
-    game.missionInit();
+    m_interface->missionInit();
     int iHouse = dataCampaign->housePlayer;
     int iRegion = dataCampaign->region;
 
@@ -710,10 +708,10 @@ void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, con
         m_interface->getMapCamera()->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
-        game.setWinFlags(ToInt(linefeed));
+        m_interface->setWinFlags(ToInt(linefeed));
     }
     else if (wordtype == WORD_LOSEFLAGS) {
-        game.setLoseFlags(ToInt(linefeed));
+        m_interface->setLoseFlags(ToInt(linefeed));
     }
 }
 
