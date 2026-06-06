@@ -118,6 +118,7 @@ set(D2TM_SOURCES
     gamestates/cSetupSkirmishState.cpp
     gamestates/cTellHouseState.cpp
     gamestates/cWinLoseState.cpp
+    gamestates/cVideoState.cpp
     gui/cTextWriter.cpp
     gui/GuiBar.cpp
     gui/GuiButton.cpp

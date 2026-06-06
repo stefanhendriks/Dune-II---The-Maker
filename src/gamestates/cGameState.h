@@ -28,6 +28,7 @@ enum eGameStateType {
     GAMESTATE_TELLHOUSE,                    // #define GAME_TELLHOUSE	10		// tell about the house
     GAMESTATE_WINLOSE,                      // #define GAME_LOSING      14      // when losing, do something cool
                                             // #define GAME_WINBRIEF    12      // mentat chatter when won the mission
+    GAMESTATE_VIDEO                         // playing a video
 };
 
 const char *gameStateTypeToString(eGameStateType state);
