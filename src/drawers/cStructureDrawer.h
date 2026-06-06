@@ -12,7 +12,7 @@ class cPlayer;
 
 class cStructureDrawer {
 public:
-    explicit cStructureDrawer(GameContext *ctx, cPlayer *player);
+    explicit cStructureDrawer(GameContext *ctx, cPlayer *player, cStructureUtils *structureUtils);
     ~cStructureDrawer() = default;
     void setPlayer(cPlayer *pPlayer) { m_player = pPlayer; }
     void drawStructuresFirstLayer();
@@ -36,7 +36,7 @@ private:
     cTextDrawer* m_textDrawer;
     Graphics *m_gfxinter;
     Graphics *m_gfxdata;
-    cStructureUtils m_structureUtils;
+    cStructureUtils* m_structureUtils = nullptr;
     cPlayer *m_player;
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;

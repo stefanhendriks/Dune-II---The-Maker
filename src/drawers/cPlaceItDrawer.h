@@ -1,16 +1,16 @@
 #pragma once
 
 #include "sidebar/cBuildingListItem.h"
-#include "utils/cStructureUtils.h"
 
 class GameContext;
 class cPlayer;
 class Graphics;
 class SDLDrawer;
+class cStructureUtils;
 
 class cPlaceItDrawer {
 public:
-    explicit cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer);
+    explicit cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer, cStructureUtils *structureUtils);
 
     ~cPlaceItDrawer();
 
@@ -22,7 +22,7 @@ protected:
     void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
 
 private:
-    cStructureUtils m_structureUtils;
+    cStructureUtils* m_structureUtils = nullptr;
     cPlayer *m_player;
     GameContext *m_ctx;
     SDLDrawer *m_renderDrawer;

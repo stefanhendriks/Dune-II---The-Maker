@@ -39,7 +39,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     m_gameInterface(ctx->getGameInterface()),
     m_objects(services->objects),
     m_mapCamera(services->mapCamera),
-    m_gameSettings(services->settings)
+    m_gameSettings(services->settings),
+    m_structureUtils(services->structureUtils)
 {
     d2tm_assert(m_player!=nullptr);
     d2tm_assert(ctx != nullptr);
@@ -64,8 +65,8 @@ void cDrawManager::reset()
     m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(m_ctx, m_objects->getMap(), m_player, m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
     m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx);
-    m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx,m_player);
-    m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx, m_player);
+    m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx, m_player, m_structureUtils);
+    m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx, m_player, m_structureUtils);
     m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(
         m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
     );

@@ -30,6 +30,7 @@ class cGameInterface;
 class cGameObjectContext;
 class cMapCamera;
 class cGameSettings;
+class cStructureUtils;
 struct sGameServices;
 
 /**
@@ -137,6 +138,7 @@ private:
     cGameObjectContext* m_objects = nullptr;
     cMapCamera* m_mapCamera = nullptr;
     cGameSettings* m_gameSettings = nullptr;
+    cStructureUtils* m_structureUtils = nullptr;
 
     void onKeyDown(const cKeyboardEvent &event);
 
