@@ -8,6 +8,8 @@ class cLog;
 class cMapCamera;
 class cStructureUtils;
 class cEventEmitter;
+class cDrawManager;
+class cRectangle;
 
 struct sGameServices
 {
@@ -19,4 +21,6 @@ struct sGameServices
     cStructureUtils *structureUtils = nullptr;
     cLog *m_log = nullptr;
     cEventEmitter *eventEmitter = nullptr;
+    cDrawManager *drawManager = nullptr;
+    cRectangle *mapViewport = nullptr;
 };

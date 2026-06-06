@@ -6,12 +6,12 @@
 #include "utils/cRectangle.h"
 #include "utils/cSoundPlayer.h"
 #include "managers/cDrawManager.h"
+#include "game/cGameInterface.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/players/cPlayer.h"
 
-#include "game/cGame.h"
-#include "include/d2tmc.h"
+
 
 #include "utils/cLog.h"
 #include "data/gfxdata.h"
@@ -78,11 +78,11 @@ void cMouseNormalState::onMouseLeftButtonClicked()
 
         if (!ids.empty()) {
             if (ids.size() > 1) {
-                game.m_drawManager->setMessage(std::format("{} units selected", ids.size()));
+                m_context->getDrawManager()->setMessage(std::format("{} units selected", ids.size()));
             }
             else {
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(ids[0]);
-                game.m_drawManager->setMessage(pUnit->getUnitStatusForMessageBar());
+                cUnit *pUnit = m_context->getObjects()->getUnit(ids[0]);
+                m_context->getDrawManager()->setMessage(pUnit->getUnitStatusForMessageBar());
             }
         }
     }
@@ -96,7 +96,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
             if (hoverUnitId > -1) {
                 m_player->deselectAllUnits();
 
-                cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+                cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
                 if (pUnit->isValid() && pUnit->belongsTo(m_player) && !pUnit->isSelected()) {
                     pUnit->select();
                     if (pUnit->isInfantryUnit()) {
@@ -105,7 +105,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                     else {
                         unitSelected = true;
                     }
-                    game.m_drawManager->setMessage(pUnit->getUnitStatusForMessageBar());
+                    m_context->getDrawManager()->setMessage(pUnit->getUnitStatusForMessageBar());
                 }
             }
 
@@ -124,7 +124,7 @@ void cMouseNormalState::onMouseLeftButtonClicked()
                 }
 
                 if (pStructure && pStructure->isValid()) {
-                    game.m_drawManager->setMessage(pStructure->getStatusForMessageBar());
+                    m_context->getDrawManager()->setMessage(pStructure->getStatusForMessageBar());
                 }
             }
         }
@@ -137,11 +137,11 @@ void cMouseNormalState::onMouseLeftButtonClicked()
         }
 
         if (unitSelected) {
-            game.playSound(SOUND_REPORTING);
+            m_context->getInterface()->playSound(SOUND_REPORTING);
         }
 
         if (infantrySelected) {
-            game.playSound(SOUND_YESSIR);
+            m_context->getInterface()->playSound(SOUND_YESSIR);
         }
 
         selectedUnits = unitSelected || infantrySelected;
@@ -178,7 +178,7 @@ int cMouseNormalState::getMouseTileForNormalState() const
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
-        cUnit *pUnit = game.m_gameObjectsContext->getUnit(hoverUnitId);
+        cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
         if (pUnit->isValid() && pUnit->belongsTo(m_player)) {
             // only show this for units
             return MOUSE_PICK;
@@ -234,7 +234,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_SCREEN)) {
-        const auto infantryUnits = m_player->getInfantryUnitsOnViewport(*game.m_mapViewport);
+        const auto infantryUnits = m_player->getInfantryUnitsOnViewport(*m_context->getMapViewport());
         bool hasUnit = m_player->selectUnits(infantryUnits);
         if (hasUnit) {
             m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
@@ -251,7 +251,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_WHEELS_ON_SCREEN)) {
-        const auto wheelUnits = m_player->getWheelUnitsOnViewport(*game.m_mapViewport);
+        const auto wheelUnits = m_player->getWheelUnitsOnViewport(*m_context->getMapViewport());
         bool hasUnit = m_player->selectUnits(wheelUnits);
         if (hasUnit) {
             m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
@@ -267,7 +267,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::SELECT_TANKS_ON_SCREEN)) {
-        const auto tankUnits = m_player->getTankUnitsOnViewport(*game.m_mapViewport);
+        const auto tankUnits = m_player->getTankUnitsOnViewport(*m_context->getMapViewport());
         bool hasUnit = m_player->selectUnits(tankUnits);
         if (hasUnit) {
             m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
@@ -284,7 +284,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
 
 
     if (event.isAction(eKeyAction::SELECT_LAUNCHERS_ON_SCREEN)) {
-        const auto launcherUnits = m_player->getLauncherUnitsOnViewport(*game.m_mapViewport);
+        const auto launcherUnits = m_player->getLauncherUnitsOnViewport(*m_context->getMapViewport());
         bool hasUnit = m_player->selectUnits(launcherUnits);
         if (hasUnit) {
             m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);
@@ -302,7 +302,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
 
 
     if (event.isAction(eKeyAction::SELECT_HARVESTERS_ON_SCREEN)) {
-        const auto harvesterUnits = m_player->getHarvesterUnitsOnViewport(*game.m_mapViewport);
+        const auto harvesterUnits = m_player->getHarvesterUnitsOnViewport(*m_context->getMapViewport());
         bool hasUnit = m_player->selectUnits(harvesterUnits);
         if (hasUnit) {
             m_context->setMouseState(MOUSESTATE_UNITS_SELECTED);

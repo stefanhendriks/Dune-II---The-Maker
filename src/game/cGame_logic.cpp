@@ -706,6 +706,7 @@ bool cGame::setupGame()
 
     // do it here, because it depends on fonts to be loaded
     m_mouse = new cMouse(ctx.get());
+    m_mouse->setSettings(m_gameSettings.get());
 
     /***
      * Viewport(s)
@@ -766,6 +767,8 @@ bool cGame::setupGame()
     cPlayer *humanPlayer = m_gameObjectsContext->getPlayer(HUMAN);
 
     m_drawManager = new cDrawManager(ctx.get(), humanPlayer, m_services.get());
+    m_services->drawManager = m_drawManager;
+    m_services->mapViewport = m_mapViewport;
 
     setupPlayers();
 

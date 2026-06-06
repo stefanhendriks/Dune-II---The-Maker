@@ -23,11 +23,31 @@ class cMousePlaceState;
 class cMouseDeployState;
 
 class cAbstractStructure;
+class cGameObjectContext;
+class cMapCamera;
+class cGameSettings;
+class cDrawManager;
+class cRectangle;
+class cGameInterface;
+class cStructureUtils;
+class cInfoContext;
+struct sGameServices;
 
 class cGameControlsContext : public cInputObserver, cScenarioObserver {
 public:
     explicit cGameControlsContext(cPlayer *player, cMouse *mouse);
     ~cGameControlsContext() override;
+
+    void serviceInit(sGameServices *services);
+
+    cGameObjectContext *getObjects() const { return m_objects; }
+    cMapCamera *getMapCamera() const { return m_mapCamera; }
+    cGameSettings *getSettings() const { return m_settings; }
+    cDrawManager *getDrawManager() const { return m_drawManager; }
+    cGameInterface *getInterface() const { return m_interface; }
+    cStructureUtils *getStructureUtils() const { return m_structureUtils; }
+    cInfoContext *getInfos() const { return m_infos; }
+    cRectangle *getMapViewport() const { return m_mapViewport; }
 
     int getIdOfStructureWhereMouseHovers() const {
         return m_mouseHoveringOverStructureId;
@@ -109,6 +129,15 @@ private:
     // in conjunction
 
     cMouse *m_mouse;
+
+    cGameObjectContext *m_objects = nullptr;
+    cMapCamera *m_mapCamera = nullptr;
+    cGameSettings *m_settings = nullptr;
+    cDrawManager *m_drawManager = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cStructureUtils *m_structureUtils = nullptr;
+    cInfoContext *m_infos = nullptr;
+    cRectangle *m_mapViewport = nullptr;
 
     // the states, initialized once to save a lot of construct/destructs (and make it possible
     // to switch between states without needing to restore 'state' within the state object)

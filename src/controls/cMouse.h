@@ -9,6 +9,7 @@ class cRectangle;
 class GameContext;
 class SDLDrawer;
 class cInputObserver;
+class cGameSettings;
 
 class cMouse {
 
@@ -24,6 +25,8 @@ public:
     void setMouseObserver(cInputObserver *mouseObserver);
 
     void init();
+
+    void setSettings(cGameSettings *settings) { m_settings = settings; }
 
     // these functions return true when the mouse button is being hold down
     bool isLeftButtonPressed() {
@@ -94,6 +97,7 @@ private:
     cInputObserver *m_mouseObserver = nullptr;
     GameContext* m_ctx = nullptr;
     SDLDrawer* m_renderDrawer = nullptr;
+    cGameSettings* m_settings = nullptr;
 
     bool m_leftButtonPressed;
     bool m_rightButtonPressed;
