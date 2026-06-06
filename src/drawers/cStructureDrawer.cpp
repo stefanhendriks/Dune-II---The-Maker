@@ -27,11 +27,12 @@
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
 
-cStructureDrawer::cStructureDrawer(GameContext *ctx, cPlayer *player) :
+cStructureDrawer::cStructureDrawer(GameContext *ctx, cPlayer *player, cStructureUtils *structureUtils) :
     m_renderDrawer(ctx->getSDLDrawer()),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
+    m_structureUtils(structureUtils),
     m_player(player)
 {
     d2tm_assert(ctx != nullptr);
@@ -338,7 +339,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
 
         if (!theStructure) continue;
 
-        if (m_structureUtils.isStructureVisibleOnScreen(theStructure)) {
+        if (m_structureUtils->isStructureVisibleOnScreen(theStructure)) {
             // draw
             drawStructureForLayer(theStructure, layer);
 

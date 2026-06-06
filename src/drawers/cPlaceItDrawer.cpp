@@ -1,4 +1,5 @@
 #include "cPlaceItDrawer.h"
+#include "utils/cStructureUtils.h"
 
 #include "game/cGame.h"
 #include "include/d2tmc.h"
@@ -18,7 +19,7 @@
 
 #include "include/cAssert.h"
 
-cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer) : m_player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
+cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer, cStructureUtils *structureUtils) : m_structureUtils(structureUtils), m_player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
 {
     d2tm_assert(thePlayer != nullptr);
     d2tm_assert(ctx != nullptr);
@@ -54,8 +55,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     d2tm_assert(structureId > -1);
 
     bool bWithinBuildDistance = false;
-    int cellWidth = m_structureUtils.getWidthOfStructureTypeInCells(structureId);
-    int cellHeight = m_structureUtils.getHeightOfStructureTypeInCells(structureId);
+    int cellWidth = m_structureUtils->getWidthOfStructureTypeInCells(structureId);
+    int cellHeight = m_structureUtils->getHeightOfStructureTypeInCells(structureId);
 
 #define SCANWIDTH	1
 
