@@ -1,11 +1,14 @@
 #pragma once
 
 #include "cGameState.h"
+#include <memory>
 
 class cGameSettings;
 class cGameInterface;
 class cGameObjectContext;
 class cMouse;
+class Graphics;
+class Texture;
 
 class cVideoState : public cGameState {
 public:
@@ -13,7 +16,7 @@ public:
     ~cVideoState() override;
 
     void thinkFast() override;
-    void thinkSlow() override;
+    void thinkNormal() override;
     void draw() const override;
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -26,5 +29,11 @@ private:
     cGameInterface* m_interface = nullptr;
     cGameObjectContext* m_objets = nullptr;
     cMouse* m_mouse = nullptr;
+    std::unique_ptr<Graphics> gfxmovie;
+    int m_movieFrame = 0;
+    int m_timerFrame = 0;
+    int offsetX;
+    int offsetY;
+    Texture* m_currentFrame = nullptr;
 };
 
