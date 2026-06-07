@@ -160,7 +160,7 @@ cGame::cGame()
     // create GameContext
     ctx = std::make_unique<GameContext>();
     // create TimeManager
-    std::unique_ptr<cTimeManager> timeManager = std::make_unique<cTimeManager>(gameInterface.get());
+    std::unique_ptr<cTimeManager> timeManager = std::make_unique<cTimeManager>(this);
     // local usage
     m_timeManager = timeManager.get();
     // send to GameContext
