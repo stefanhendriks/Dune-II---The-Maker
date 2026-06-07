@@ -41,14 +41,6 @@ enum eLogComponent {
     COMP_BUILDER
 };
 
-enum eLogOutcome {
-    OUTC_SUCCESS,
-    OUTC_FAILED,
-    OUTC_NONE,
-    OUTC_UNKNOWN,
-    OUTC_IGNOREME /** will not be printed **/
-};
-
 class cLogger {
 public:
     static cLogger *getInstance();
@@ -58,8 +50,7 @@ public:
     }
 
     void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message);
-    void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, eLogOutcome outcome, int playerId, int houseId);
-    void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, eLogOutcome outcome);
+    void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, int playerId, int houseId);
 
     void logCommentLine(const std::string &txt);
 

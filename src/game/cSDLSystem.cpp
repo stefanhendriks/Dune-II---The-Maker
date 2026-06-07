@@ -113,14 +113,14 @@ cSDLSystem::~cSDLSystem()
     logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Shutting down...");
     TTF_Quit();
     MIX_Quit();
-    logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer shutdown", "Thanks for playing!", OUTC_SUCCESS);
+    logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer shutdown", "Thanks for playing!");
     // On Linux, SDL3 registers its own atexit() handler that calls SDL_Quit() before
     // C++ global destructors run. Calling it again here causes a double-free crash.
     // Guard so we only call SDL_Quit() if SDL is still initialised.
     if (SDL_WasInit(0)==0) {
         SDL_Quit();
     }
-    logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Thanks for playing!", OUTC_SUCCESS);
+    logger->log(LOG_INFO, COMP_SDL2, "SDL shutdown", "Thanks for playing!");
 }
 
 cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title)
@@ -129,29 +129,29 @@ cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &t
     logger->logHeader("SDL");
 
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS)) {
-        logger->log(LOG_FATAL, COMP_SDL2, "SDL init", SDL_GetError(), OUTC_FAILED);
+        logger->log(LOG_FATAL, COMP_SDL2, "SDL init", SDL_GetError());
         throw std::runtime_error(SDL_GetError());
     }
     else {
-        logger->log(LOG_INFO, COMP_SDL2, "SDL init", "Initialized successfully", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SDL2, "SDL init", "Initialized successfully");
     }
 
     if (!MIX_Init()) {
-        logger->log(LOG_FATAL, COMP_SDL2, "SDL mixer", SDL_GetError(), OUTC_FAILED);
+        logger->log(LOG_FATAL, COMP_SDL2, "SDL mixer", SDL_GetError());
         throw std::runtime_error(SDL_GetError());
     }
     else {
-        logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer", "Initialized successfully", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer", "Initialized successfully");
         for (auto i =0; i < MIX_GetNumAudioDecoders();i++) {
             logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer", std::format("Audio decoder {} : {}", i, MIX_GetAudioDecoder(i)));
         }
     }
 
     if (!TTF_Init()) {
-        logger->log(LOG_FATAL, COMP_SDL2, "SDL ttf", SDL_GetError(), OUTC_FAILED);
+        logger->log(LOG_FATAL, COMP_SDL2, "SDL ttf", SDL_GetError());
     }
     else {
-        logger->log(LOG_INFO, COMP_SDL2, "SDL_ttf", "Initialized successfully", OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SDL2, "SDL_ttf", "Initialized successfully");
     }
 
     this->getWindowResolution();
@@ -167,26 +167,26 @@ cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &t
     window = SDL_CreateWindow(title.c_str(), renderResolution.width, renderResolution.height, 0);
     if (window == nullptr) {
         const auto msg = std::format("Failed initialized screen with resolution {}x{}", renderResolution.width, renderResolution.height);
-        logger->log(LOG_ERROR, COMP_SDL2, "Screen init", msg, OUTC_FAILED);
+        logger->log(LOG_ERROR, COMP_SDL2, "Screen init", msg);
         SDL_Quit();
         return;
     }
     else {
         const auto msg = std::format("Successfully initialized screen with resolution {}x{}.", renderResolution.width, renderResolution.height);
-        logger->log(LOG_INFO, COMP_SDL2, "Screen init", msg, OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SDL2, "Screen init", msg);
     }
 
     renderer = SDL_CreateRenderer(window, nullptr);
     if (renderer == nullptr) {
         const auto msg = std::format("Failed initialized renderer with resolution {}x{}", renderResolution.width, renderResolution.height);
-        logger->log(LOG_ERROR, COMP_SDL2, "Renderer init", msg, OUTC_FAILED);
+        logger->log(LOG_ERROR, COMP_SDL2, "Renderer init", msg);
         SDL_DestroyWindow(window);
         SDL_Quit();
         return;
     }
     else {
         const auto msg = std::format("Successfully initialized renderer");
-        logger->log(LOG_INFO, COMP_SDL2, "Renderer init", msg, OUTC_SUCCESS);
+        logger->log(LOG_INFO, COMP_SDL2, "Renderer init", msg);
     }
 
     SDL_SetRenderVSync(renderer, 1);

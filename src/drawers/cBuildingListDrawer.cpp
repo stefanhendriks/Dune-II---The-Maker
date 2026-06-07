@@ -12,6 +12,7 @@
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 #include "utils/common.h"
+#include "utils/Log.h"
 
 #include <SDL3/SDL.h>
 #include <format>
