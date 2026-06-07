@@ -28,6 +28,7 @@ cMouse::cMouse(GameContext *ctx) :
     m_rightButtonReleased=false;
     m_mouseScrolledUp=false;
     m_mouseScrolledDown=false;
+    m_leftButtonDoubleClicked = false;
     m_leftButtonClickedInPreviousFrame = false;
     m_rightButtonClickedInPreviousFrame = false;
     m_mouseObserver = nullptr; // set later
@@ -63,7 +64,7 @@ void cMouse::handleEvent(const SDL_Event &event)
             float px, py;
             SDL_RenderCoordinatesFromWindow(renderer, event.button.x, event.button.y, &px, &py);
             if (event.button.button == SDL_BUTTON_LEFT) {
-                m_leftButtonPressed = true;
+                m_leftButtonPressed = (event.button.clicks == 1);
                 m_coordsOnClick.x = (int)px;
                 m_coordsOnClick.y = (int)py;
             }
@@ -83,7 +84,11 @@ void cMouse::handleEvent(const SDL_Event &event)
                 int dx = m_coordsOnClick.x - (int)px;
                 int dy = m_coordsOnClick.y - (int)py;
                 if (dx*dx + dy*dy < 16) {
-                    m_leftButtonClicked = true;
+                    if (event.button.clicks == 2) {
+                        m_leftButtonDoubleClicked = true;
+                    } else {
+                        m_leftButtonClicked = true;
+                    }
                 }
             }
             if (event.button.button == SDL_BUTTON_RIGHT) {
@@ -144,7 +149,10 @@ void cMouse::updateState()
             // std::cout << "emit left pressed" << std::endl;
         }
 
-        if (m_leftButtonReleased) {
+        if (m_leftButtonDoubleClicked) {
+            event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_DOUBLE_CLICKED;
+            m_mouseObserver->onNotifyMouseEvent(event);
+        } else if (m_leftButtonReleased) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED;
             m_mouseObserver->onNotifyMouseEvent(event);
             // std::cout << "emit left released" << std::endl;
@@ -173,6 +181,7 @@ void cMouse::updateState()
     }
     m_didMouseMove = false;
     m_leftButtonReleased = false;
+    m_leftButtonDoubleClicked = false;
     m_rightButtonReleased = false;
     m_mouseScrolledDown = false;
     m_mouseScrolledUp = false;
