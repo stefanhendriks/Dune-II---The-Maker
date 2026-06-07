@@ -142,6 +142,9 @@ cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &t
     }
     else {
         logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer", "Initialized successfully", OUTC_SUCCESS);
+        for (auto i =0; i < MIX_GetNumAudioDecoders();i++) {
+            logger->log(LOG_INFO, COMP_SDL2, "SDL_mixer", std::format("Audio decoder {} : {}", i, MIX_GetAudioDecoder(i)));
+        }
     }
 
     if (!TTF_Init()) {
