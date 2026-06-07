@@ -66,6 +66,8 @@ private:
 
     void onMouseLeftButtonClicked();
 
+    void onMouseLeftButtonDoubleClicked();
+
     void onMouseRightButtonPressed();
 
     void onMouseRightButtonClicked();

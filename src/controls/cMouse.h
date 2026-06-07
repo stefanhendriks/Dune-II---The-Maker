@@ -107,6 +107,7 @@ private:
 
     bool m_leftButtonClicked;
     bool m_rightButtonClicked;
+    bool m_leftButtonDoubleClicked;
 
     bool m_leftButtonClickedInPreviousFrame;
     bool m_rightButtonClickedInPreviousFrame;

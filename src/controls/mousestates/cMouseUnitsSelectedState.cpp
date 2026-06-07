@@ -76,6 +76,9 @@ void cMouseUnitsSelectedState::onNotifyMouseEvent(const s_MouseEvent &event)
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked();
             break;
+        case MOUSE_LEFT_BUTTON_DOUBLE_CLICKED:
+            onMouseLeftButtonDoubleClicked();
+            break;
         case MOUSE_RIGHT_BUTTON_PRESSED:
             onMouseRightButtonPressed();
             break;
@@ -622,6 +625,20 @@ void cMouseUnitsSelectedState::onBlur()
 {
     m_mouse->resetBoxSelect();
     m_mouse->resetDragViewportInteraction();
+}
+
+void cMouseUnitsSelectedState::onMouseLeftButtonDoubleClicked()
+{
+    int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
+    if (hoverUnitId > -1) {
+        cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
+        if (pUnit->getPlayer() == m_player) {
+            selectSameUnitsOnScreen(pUnit->iType);
+        }
+    } else if (m_selectedUnits.size() == 1) {
+        cUnit *pUnit = m_context->getObjects()->getUnit(m_selectedUnits[0]);
+        selectSameUnitsOnScreen(pUnit->iType);
+    }
 }
 
 void cMouseUnitsSelectedState::selectSameUnitsOnScreen(int unitType)
