@@ -175,8 +175,6 @@ cGame::cGame()
 
     m_dataCampaign = std::make_unique<s_DataCampaign>();
 
-    m_gameConditionChecker = std::make_unique<cGameConditionChecker>(m_gameObjectsContext.get());
-
     m_cScreenFader = std::make_unique<cScreenFader>();
 
     m_gameSettings = std::make_unique<cGameSettings>();
@@ -189,6 +187,8 @@ cGame::cGame()
     m_gameObjectsContext = cGameObjectsContextCreator::create();
     m_players = m_gameObjectsContext->getPlayers();
     d2tm_assert(m_players != nullptr);
+
+    m_gameConditionChecker = std::make_unique<cGameConditionChecker>(m_gameObjectsContext.get());
 
     m_eventEmitter = std::make_unique<cEventEmitter>(
         [this](const s_GameEvent &event) {
