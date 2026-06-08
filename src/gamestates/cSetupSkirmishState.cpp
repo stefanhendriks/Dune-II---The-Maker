@@ -14,8 +14,7 @@
 #include "gameobjects/players/brains/cPlayerBrainSkirmish.h"
 #include "gameobjects/players/brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
 #include "gameobjects/players/cPlayer.h"
-// #include "utils/cLog.h"
-#include "utils/Log.h"
+#include "utils/cLog.h"
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
@@ -830,9 +829,9 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
             cUnits::unitCreate(m_objects, m_services->info, m_interface, cell, iPlayerUnitType, p, true);
 
-            Logger::trace(COMP_SKIRMISHSETUP, "Creating units",
-                    "{} wants {} amount of units; amount created {}", 
-                    pPlayer->getHouse(), pSkirmishPlayer.startingUnits, u);
+            cLogger::getInstance()->log(LOG_TRACE, COMP_SKIRMISHSETUP, "Creating units",
+                                        std::format("Wants {} amount of units; amount created {}", pSkirmishPlayer.startingUnits, u),
+                                        OUTC_NONE, p, pPlayer->getHouse());
         }
 
         u++;
