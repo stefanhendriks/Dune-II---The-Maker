@@ -43,12 +43,12 @@ int main(int argc, char **argv)
     try {
         int parseResult = handleArg.handleArguments(argc, argv, settings.get());
         if (parseResult < 0) {
-            m_log->error(COMP_GAMERULES, "HandleArgument", "Incorrect arguments");
+            cLogger::getInstance()->log(LOG_ERROR, COMP_GAMERULES, "HandleArgument", "Incorrect arguments");
             return 1;
         }
     }
     catch (std::runtime_error &e) {
-        m_log->error(eLogComponent::COMP_GAMERULES, "HandleArgument", "Runtime_error on parsing : {}", e.what());
+        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_GAMERULES, "HandleArgument", std::format("Runtime_error on parsing : {}", e.what()));
         std::cerr << std::format("Error: {}\n\n", e.what());
         return 1;
     }
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
         game.shutdown();
     }
     catch (std::runtime_error &e) {
-        m_log->error(eLogComponent::COMP_NONE, "Unknown", "Error: {}", e.what());
+        cLogger::getInstance()->log(LOG_ERROR, eLogComponent::COMP_NONE, "Unknown", std::format("Error: {}", e.what()));
         std::cerr << std::format("Error: {}\n\n", e.what());
     }
 
