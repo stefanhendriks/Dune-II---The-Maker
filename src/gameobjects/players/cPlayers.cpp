@@ -44,6 +44,8 @@ cPlayers::cPlayers()
 void cPlayers::serviceInit(sGameServices* services)
 {
     d2tm_assert(services != nullptr);
+    m_log = services->m_log;
+    d2tm_assert(m_log != nullptr);
 
     for (int i = 0; i < MAX_PLAYERS_CAPACITY; i++) {
         m_players[i]->serviceInit(services);

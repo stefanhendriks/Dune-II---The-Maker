@@ -64,6 +64,8 @@ cPlayer::cPlayer()
 void cPlayer::serviceInit(sGameServices* services)
 {
     d2tm_assert(services != nullptr);
+    m_log = services->m_log;
+    d2tm_assert(m_log != nullptr);
 
     m_settings = services->settings;
     d2tm_assert(m_settings != nullptr);

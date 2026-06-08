@@ -102,6 +102,8 @@ void cPathFinder::resize(int newSize, int width, int height)
 void cPathFinder::serviceInit(sGameServices* services)
 {
     d2tm_assert(services != nullptr);
+    m_log = services->m_log;
+    d2tm_assert(m_log != nullptr);
     m_infos = services->info;
     d2tm_assert(m_infos != nullptr);
     m_settings = services->settings;

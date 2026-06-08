@@ -19,6 +19,7 @@ struct sGameServices
     cGameSettings *settings = nullptr;
     cMapCamera *mapCamera = nullptr;
     cStructureUtils *structureUtils = nullptr;
+    cLog *m_log = nullptr;
     cEventEmitter *eventEmitter = nullptr;
     cDrawManager *drawManager = nullptr;
     cRectangle *mapViewport = nullptr;

@@ -88,6 +88,7 @@ public:
         m_gameFilename = filename;
     }
 
+    void getLog(cLog *log);
     cRectangle *m_mapViewport;
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
@@ -282,4 +283,6 @@ private:
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
     std::unique_ptr<cEventEmitter> m_eventEmitter;
+
+    cLog* m_log = nullptr;
 };
