@@ -98,11 +98,6 @@ cLog::~cLog()
     flushPendingLine(true);
 }
 
-void cLog::setDebug(bool debug)
-{
-    m_debugMode = debug;
-}
-
 void cLog::log(eLogLevel level, eLogComponent component, std::string_view event, std::string_view message, int playerId, int houseId)
 {
     doLog(level, component, event, message, playerId, houseId);
