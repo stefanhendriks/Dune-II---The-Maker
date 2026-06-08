@@ -63,6 +63,8 @@ std::string getLogComponentString(eLogComponent component)
             return "SETUP";
         case COMP_INIT:
             return "INIT";
+        // case COMP_ALLEGRO:
+        //     return "ALLEGRO";
         case COMP_SDL2:
             return "SDL2";
         case COMP_VERSION:
@@ -81,8 +83,6 @@ std::string getLogComponentString(eLogComponent component)
             return "GAMESTATE";
         case COMP_CHEATS:
             return "CHEATS";
-        case COMP_BUILDER:
-            return "BUILDER";
     }
     return "UNIDENTIFIED";
 }

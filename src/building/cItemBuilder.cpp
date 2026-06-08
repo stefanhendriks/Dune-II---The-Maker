@@ -15,7 +15,8 @@
 #include "sGameEvent.h"
 #include "sidebar/cBuildingList.h"
 
-#include "utils/Log.h"
+#include "utils/cLog.h"
+#include "utils/common.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
 #include "utils/RNG.hpp"
@@ -422,7 +423,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
             }
         }
         else {
-            Logger::warn(COMP_BUILDER ,"cItemBuilder", "huh? I was promised that this structure would have some place to deploy unit at!?");
+            logbook("cItemBuilder: huh? I was promised that this structure would have some place to deploy unit at!?");
         }
     }
     else {
@@ -491,7 +492,7 @@ void cItemBuilder::addItemToList(cBuildingListItem *item)
     d2tm_assert(item != NULL);
     int slot = getFreeSlot();
     if (slot < 0) {
-        Logger::error(COMP_BUILDER ,"cItemBuilder", "Unable to add item to list because no slots are free!");
+        logbook("ERROR: Unable to add item to list because no slots are free!");
         return;
     }
 
