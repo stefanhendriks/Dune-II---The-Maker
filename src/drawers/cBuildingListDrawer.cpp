@@ -86,7 +86,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 
     if (id < 0) {
         // this is not good
-        Logger::error(COMP_GAME, "cBuildingListDrawer::drawButton","unable to draw list because id is not valid!? id={}", id);
+        logbook("ERROR UNABLE TO DRAW LIST BECAUSE ID IS NOT VALID!?");
         return;
     }
 
