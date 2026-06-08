@@ -3,7 +3,7 @@
 #include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
-#include "utils/Log.h"
+#include "utils/common.h"
 #include "gui/GuiButton.h"
 #include <iostream>
 #include "include/cAssert.h"
@@ -32,7 +32,7 @@ AtreidesMentat::AtreidesMentat(GameContext* ctx, bool allowMissionSelect) : Abst
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
-                Logger::info(COMP_GAME, "AtreidesMentat", "changing state from mentat");
+                logbook("cYesButtonCommand::changeStateFromMentat()");
                 m_gameInterface->changeStateFromMentat();})
             .build();
 }

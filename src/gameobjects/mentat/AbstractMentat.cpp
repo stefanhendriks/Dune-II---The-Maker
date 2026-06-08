@@ -20,8 +20,7 @@
 #include "game/cGameSettings.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
-// #include "utils/common.h"
-#include "utils/Log.h"
+#include "utils/common.h"
 #include "drawers/cTextDrawer.h"
 
 #include <SDL3/SDL.h>
@@ -97,7 +96,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
     movieTopleftX = offsetX + 256;
     movieTopleftY = offsetY + 120;
     memset(sentence, 0, sizeof(sentence));
-    Logger::info(COMP_GAME, "AbstractMentat::AbstractMentat", "Initialized AbstractMentat with mission select button: {}", canMissionSelect);
+    logbook("cAbstractMentat::cAbstractMentat()");
 }
 
 AbstractMentat::~AbstractMentat()
@@ -105,7 +104,8 @@ AbstractMentat::~AbstractMentat()
     leftButtonBmp = nullptr;
     rightButtonBmp = nullptr;
     // m_guiBtnToMissionSelect will be a unique_ptr, auto-cleaned
-    Logger::info(COMP_GAME, "AbstractMentat::~AbstractMentat", "Destroying AbstractMentat");
+
+    logbook("cAbstractMentat::~cAbstractMentat()");
 }
 
 void AbstractMentat::think()
@@ -328,7 +328,7 @@ void AbstractMentat::initSentences()
 void AbstractMentat::setSentence(int i, const char *text)
 {
     snprintf(sentence[i], sizeof(sentence[i]), "%s", text);
-    Logger::info(COMP_GAME, "AbstractMentat::setSentence", "Sentence[{}]={}", i, text);
+    logbook(std::format("Sentence[{}]={}", i, text));
 }
 
 void AbstractMentat::loadScene(const std::string &scene)
@@ -344,12 +344,12 @@ void AbstractMentat::loadScene(const std::string &scene)
     iMovieFrame=0;
 
     if (gfxmovie != nullptr) {
-        Logger::info(COMP_GAME, "AbstractMentat", "Successful loaded scene [{}]", filename);
+        logbook(std::format("Successful loaded scene [{}]", filename));
         return;
     }
 
     gfxmovie=nullptr;
-    Logger::error(COMP_GAME, "AbstractMentat", "Failed to load scene [{}]", filename);
+    logbook(std::format("Failed to load scene [{}]", filename));
 }
 
 void AbstractMentat::speak()
