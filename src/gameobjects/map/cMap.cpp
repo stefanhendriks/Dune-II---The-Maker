@@ -15,7 +15,7 @@
 #include "cMapCamera.h"
 #include "cMapEditor.h"
 #include "game/cGameInterface.h"
-#include "utils/Log.h"
+#include "utils/cLog.h"
 #include "data/gfxdata.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
@@ -36,6 +36,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "gameobjects/units/cUnit.h"
+// #include "gameobjects/units/cUnits.h"
 #include "drawers/cTextDrawer.h"
 #include "include/sGameServices.h"
 
@@ -389,7 +390,7 @@ void cMap::thinkAboutRespawningWorms()
                 failures++;
                 continue;
             }
-            Logger::error(COMP_MAP, "cMap::thinkAboutRespawningWorms","Spawning sandworm at cell [{}]", cell);
+            logbook(std::format("cMap::thinkAboutRespawningWorms : Spawning sandworm at {}", cell));
             //cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
              const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
