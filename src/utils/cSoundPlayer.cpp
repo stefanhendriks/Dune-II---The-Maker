@@ -27,12 +27,12 @@ public:
         gfxaudio = std::make_unique<DataPack>(audiofile, mixer);
         if (gfxaudio == nullptr) {
             auto msg = std::format("Could not hook/load datafile: {}", audiofile);
-            logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg);
+            logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg, OUTC_FAILED);
             throw std::runtime_error(msg);
         }
         else {
             auto msg = std::format("Hooked audiofile: {}", audiofile);
-            logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg );
+            logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg , OUTC_SUCCESS);
         }
     }
 
@@ -51,12 +51,12 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
 
     m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
     if (!m_mixer) {
-        logger->log(LOG_ERROR, COMP_SOUND, "SDL_mixer initialization", SDL_GetError());
+        logger->log(LOG_ERROR, COMP_SOUND, "SDL_mixer initialization", SDL_GetError(), OUTC_FAILED);
         m_isMusicEnabled = false;
         m_isSoundEnabled = false;
     }
     else {
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL_mixer succes");
+        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL_mixer succes", OUTC_SUCCESS);
         m_isMusicEnabled = true;
         m_isSoundEnabled = true;
         m_musicTrack = MIX_CreateTrack(m_mixer);

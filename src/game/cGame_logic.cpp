@@ -633,7 +633,7 @@ bool cGame::setupGame()
     }
 
     if (!settingsValidator->fileExists()) {
-        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed");
+        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed", OUTC_FAILED);
         std::cerr << "One or more validations failed with resources defined in settings.ini" << std::endl;
         return false;
     }
@@ -642,7 +642,7 @@ bool cGame::setupGame()
     const auto title = std::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
 
     m_keyboard = new cKeyboard();
-    logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()");
+    logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()", OUTC_SUCCESS);
 
     if (settings->hasSection("KEYS")) {
         const cSection keysSection = settings->getSection("KEYS");
@@ -650,7 +650,7 @@ bool cGame::setupGame()
     } else {
         m_keyboard->loadKeyBindings();
     }
-    logger->log(LOG_INFO, COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section");
+    logger->log(LOG_INFO, COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section", OUTC_SUCCESS);
 
     m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title);
     if (!m_windowed) {
@@ -722,11 +722,11 @@ bool cGame::setupGame()
     // load datafiles
     gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
     if (gfxdata == nullptr) {
-        logger->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        logger->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_FAILED);
         return false;
     }
     else {
-        logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA), OUTC_SUCCESS);
     }
 
     // randomize timer

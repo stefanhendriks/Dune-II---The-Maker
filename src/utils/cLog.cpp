@@ -87,6 +87,23 @@ std::string getLogComponentString(eLogComponent component)
     return "UNIDENTIFIED";
 }
 
+std::string getLogOutcomeString(eLogOutcome outcome)
+{
+    switch (outcome) {
+        case OUTC_SUCCESS:
+            return "SUCCESS";
+        case OUTC_FAILED:
+            return "FAILED";
+        case OUTC_NONE:
+            return "NONE";
+        case OUTC_UNKNOWN:
+            return "UNKNOWN";
+        case OUTC_IGNOREME:
+            return "IGNOREME";
+    }
+    return "UNIDENTIFIED";
+}
+
 std::string getLogHouseString(int houseId)
 {
     switch (houseId) {
@@ -119,11 +136,16 @@ cLogger *cLogger::getInstance()
 
 void cLogger::log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message)
 {
-    log(level, component, event, message.c_str(), -1, -1);
+    log(level, component, event, message.c_str(), OUTC_IGNOREME, -1, -1);
+}
+
+void cLogger::log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, eLogOutcome outcome)
+{
+    log(level, component, event, message.c_str(), outcome, -1, -1);
 }
 
 //	Timestamp | Level | Component | House (if component requires) | ID (if component requires) | Message | Outcome | Event | Event fields...
-void cLogger::log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, int playerId, int houseId)
+void cLogger::log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, eLogOutcome outcome, int playerId, int houseId)
 {
     if (level == LOG_TRACE && !m_debugMode) {
         // trace level is only in debug mode
@@ -159,6 +181,11 @@ void cLogger::log(eLogLevel level, eLogComponent component, const std::string &e
 
     logline += message;
     logline += "|";
+
+    if (outcome != OUTC_IGNOREME) {
+        logline += getLogOutcomeString(outcome);
+        logline += "|";
+    }
 
     logline += event;
 
