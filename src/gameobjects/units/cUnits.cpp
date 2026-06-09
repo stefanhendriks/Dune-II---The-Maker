@@ -125,7 +125,7 @@ static int unitNewID(cGameObjectContext *objects)
 
 int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
     if (!objects->getMapGeometry()->isValidCell(iCll)) {
-        logbook("UNIT_CREATE: Invalid cell as param");
+        Logger::warn(COMP_UNITS, "cUnits::unitCreate", "Invalid cell as param");
         return -1;
     }
 
@@ -164,7 +164,7 @@ int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cGameIn
     int iNewId = unitNewID(objects);
 
     if (iNewId < 0) {
-        logbook("UNIT_CREATE:Could not find new unit index");
+        Logger::warn(COMP_UNITS, "cUnits::unitCreate", "Could not find new unit index");
         return -1;
     }
 

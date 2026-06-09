@@ -4134,7 +4134,7 @@ int cUnit::carryallTransfer(int iuID, int iGoal, cGameObjectContext* objects)
 int cUnit::freeAroundMove(int iUnit, cGameObjectContext* objects)
 {
     if (iUnit < 0) {
-        logbook("Invalid unit");
+        Logger::warn(COMP_UNITS, "cUnit::freeAroundMove", "Invalid unit");
         return -1;
     }
 
