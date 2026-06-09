@@ -5,6 +5,7 @@
  *      Author: Stefan
  */
 #include "cOrderProcesser.h"
+#include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include "managers/cDrawManager.h"
 #include "gameobjects/players/cPlayer.h"
@@ -254,14 +255,14 @@ void cOrderProcesser::sendFrigate()
         int iStartCell = m_objects->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
 
         if (iStartCell < 0) {
-            logbook("cOrderProcesser::sendFrigate : unable to find start cell to spawn frigate");
+            Logger::warn(COMP_STRUCTURES, "cOrderProcesser::sendFrigate", "unable to find start cell to spawn frigate");
             setOrderHasBeenProcessed();
         }
         else {
             // STEP 2: create frigate
             int unitId = cUnits::unitCreate(m_objects, m_info, m_interface, iStartCell, FRIGATE, m_player->getId(), true);
             if (unitId < 0) {
-                logbook("cOrderProcesser::sendFrigate : unable to spawn frigate");
+                Logger::warn(COMP_STRUCTURES, "cOrderProcesser::sendFrigate", "unable to spawn frigate");
                 return;
             }
 

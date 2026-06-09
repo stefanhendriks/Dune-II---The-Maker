@@ -468,7 +468,7 @@ void cAbstractStructure::decay(int hp)
 {
     int damage = hp;
     if (damage < 0) {
-        logbook("cAbstractStructure::decay() got negative parameter, wrapped");
+        Logger::warn(COMP_STRUCTURES, "cAbstractStructure::decay", "got negative parameter, wrapped");
         damage *= -1; // - * - = +
     }
 
@@ -502,12 +502,12 @@ void cAbstractStructure::damage(int hp, int originId)
 {
     int damage = hp;
     if (damage < 0) {
-        logbook("cAbstractStructure::damage() got negative parameter, wrapped");
+        Logger::warn(COMP_STRUCTURES, "cAbstractStructure::damage", "got negative parameter, wrapped");
         damage *= -1; // - * - = +
     }
 
     iHitPoints -= damage; // do damage
-    logbook(std::format("cAbstractStructure::damage() - Structure [{}] received [{}] damage from originId [{}], HP is now [{}]", id, damage, originId, iHitPoints));
+    Logger::info(COMP_STRUCTURES, "cAbstractStructure::damage", "Structure [{}] received [{}] damage from originId [{}], HP is now [{}]", id, damage, originId, iHitPoints);
 
     if (iHitPoints < 1) {
         // TODO: update statistics? (structure lost)
@@ -551,7 +551,7 @@ void cAbstractStructure::setHitPoints(int hp)
     int maxHp = m_info->getStructureInfo(getType()).hp;
 
     if (iHitPoints > maxHp) {
-        logbook(std::format("setHitpoints({}) while max is {}; capped at max.", hp, maxHp));
+        Logger::warn(COMP_STRUCTURES, "cAbstractStructure::setHitpoints", "setHitpoints({}) while max is {}; capped at max.", hp, maxHp);
 
         // will fail (uncomment to let it be capped)
         d2tm_assert(iHitPoints <= maxHp); // may never be more than the maximum of that structure
@@ -798,7 +798,7 @@ void cAbstractStructure::unitLeavesStructure()
         unitToLeave->setCell(iNewCell);
     }
     else {
-        logbook("Could not find space for this unit");
+        Logger::warn(COMP_STRUCTURES, "cAbstractStructure", "Could not find space for this unit");
         // TODO: Pick up by carry-all!?
     }
 
