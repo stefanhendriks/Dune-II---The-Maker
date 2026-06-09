@@ -4,6 +4,7 @@
 #include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
 #include "utils/common.h"
+#include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "utils/d2tm_math.h"
@@ -118,19 +119,19 @@ int cPathFinder::validateCreatePathInput(int unitId)
 {
     // Input guardrails: only run path creation for a valid unit,
     // aligned on a cell, and within an acceptable pathfinding load window.
-    logbook("CREATE_PATH -- START");
+    Logger::info(COMP_UNITS, "cPathFinder", "CREATE_PATH -- START");
     if (unitId < 0) {
-        logbook("CREATE_PATH -- END (unitId < 0)");
+        Logger::info(COMP_UNITS, "cPathFinder", "CREATE_PATH -- END (unitId < 0)");
         return -99;
     }
 
     m_activeUnit = m_objects->getUnit(unitId);
     if (m_activeUnit == nullptr) {
-        logbook("CREATE_PATH -- END (no unit "+ std::to_string(unitId) + " found)");
+        Logger::info(COMP_UNITS, "cPathFinder", "CREATE_PATH -- END (no unit {} found)", unitId);
         return -99;
     }
     if (!m_activeUnit->isValid() || m_activeUnit->isDead()) {
-        logbook("CREATE_PATH -- END (unitId "+ std::to_string(unitId) + " isDead or not Valid)");
+        Logger::info(COMP_UNITS, "cPathFinder", "CREATE_PATH -- END (unitId {} isDead or not Valid)", unitId);
         return -99;
     }
 

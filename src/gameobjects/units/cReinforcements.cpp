@@ -2,6 +2,7 @@
 #include "cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
 #include "utils/common.h"
+#include "utils/Log.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "utils/RNG.hpp"
@@ -98,7 +99,7 @@ void cReinforcements::serviceInit(sGameServices* services)
 
 void cReinforcements::addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat)
 {
-    logbook(std::format("Add reinforcement: PlayerId = {}, DelayInSeconds {}, UnitType = {}, Repeat = {}", playerId, delayInSeconds, unitType, repeat));
+    Logger::info(COMP_UNITS, "cReinforcements", "Add reinforcement: PlayerId = {}, DelayInSeconds {}, UnitType = {}, Repeat = {}", playerId, delayInSeconds, unitType, repeat);
 
     cReinforcement reinforcement(delayInSeconds, unitType, playerId, targetCell, repeat);
     reinforcements.push_back(reinforcement);
@@ -185,18 +186,17 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface*
     }
 
     if (iStartCell < 0) {
-        logbook("ERROR (reinforce): Could not figure a startcell");
+        Logger::error(COMP_UNITS, "cReinforcements", "Could not figure a startcell");
         return;
     }
 
-    logbook(std::format("REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}",
-                        iTpe, iPlr, iStartCell, iCll));
+    Logger::info(COMP_UNITS, "cReinforcements", "REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}", iTpe, iPlr, iStartCell, iCll);
 
     // STEP 2: create carryall
     int iUnit = cUnits::unitCreate(objects, infos, iface, iStartCell, CARRYALL, iPlr, true, isReinforcement);
     if (iUnit < 0) {
         // cannot create carry-all!
-        logbook("ERROR (reinforce): Cannot create CARRYALL unit.");
+        Logger::error(COMP_UNITS, "cReinforcements", "Cannot create CARRYALL unit");
         return;
     }
 
