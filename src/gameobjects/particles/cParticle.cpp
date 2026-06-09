@@ -10,6 +10,7 @@
 */
 
 #include "cParticle.h"
+#include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include "utils/texture_utils.h"
 #include "include/d2tmc.h"
@@ -123,7 +124,7 @@ void cParticle::think_position()
 void cParticle::draw()
 {
     if (bmp == nullptr) {
-        logbook(std::format("cParticle::draw() - bmp is null for particle type [{}], iHousePal [{}], iAlpha [{}]", iType, iHousePal, iAlpha));
+        Logger::warn(COMP_PARTICLE, "cParticle::draw", "bmp is null for particle type [{}], iHousePal [{}], iAlpha [{}]", iType, iHousePal, iAlpha);
         return;
     }
 
