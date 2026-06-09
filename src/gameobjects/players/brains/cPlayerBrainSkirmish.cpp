@@ -587,10 +587,8 @@ void cPlayerBrainSkirmish::produceEconomyImprovingMissions()
         }
     }
 
-    // TODO: make this even smarter (ie don't build when also building harvester, etc)
     if (player->hasAtleastOneStructure(HIGHTECH)) {
-        int idealAmountOfCarryAlls = (amountOfHarvesters/2)+1;
-        if (player->getAmountOfUnitsForType(CARRYALL) < idealAmountOfCarryAlls) {
+        if (player->getAmountOfUnitsForType(CARRYALL) < m_idealCarryallCount) {
             if (!hasMission(MISSION_IMPROVE_ECONOMY_BUILD_ADDITIONAL_CARRYALL)) {
                 std::vector<s_groupKind> group = std::vector<s_groupKind>();
                 group.push_back(s_groupKind{
