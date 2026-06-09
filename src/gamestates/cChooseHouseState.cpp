@@ -39,16 +39,18 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     bmp_HouseAtreides = m_gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
     bmp_HouseOrdos = m_gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
     bmp_HouseHarkonnen = m_gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
+    bmp_HouseSardaukar = m_gfxinter->getTexture(BMP_SELECT_HOUSE_SARDAUKAR);
 
     int selectYourHouseY = settings->getScreenH() * 0.25f;
 
-    int columnWidth = settings->getScreenW() / 7; // empty, atr, empty, har, empty, ord, empty (7 columns)
+    int columnWidth = settings->getScreenW() / 9; // empty, atr, empty, har, empty, ord, empty, sar, empty (9 columns)
 
     int offset = (columnWidth / 2) - (bmp_HouseAtreides->w / 2);
 
     houseAtreides = cRectangle((columnWidth * 1) + offset, selectYourHouseY, 90, 98);
     houseOrdos = cRectangle((columnWidth * 3) + offset, selectYourHouseY, 90, 98);
     houseHarkonnen = cRectangle((columnWidth * 5) + offset, selectYourHouseY, 90, 98);
+    houseSardaukar = cRectangle((columnWidth * 7) + offset, selectYourHouseY, 90, 98);
 
     hoversOverBackButton = false;
 }
@@ -63,6 +65,7 @@ cChooseHouseState::~cChooseHouseState()
     bmp_HouseAtreides = nullptr;
     bmp_HouseOrdos = nullptr;
     bmp_HouseHarkonnen = nullptr;
+    bmp_HouseSardaukar = nullptr;
 }
 
 void cChooseHouseState::thinkFast()
@@ -80,6 +83,7 @@ void cChooseHouseState::draw() const
     m_renderDrawer->renderSprite(bmp_HouseAtreides, houseAtreides.getX(), houseAtreides.getY());
     m_renderDrawer->renderSprite(bmp_HouseOrdos, houseOrdos.getX(), houseOrdos.getY());
     m_renderDrawer->renderSprite(bmp_HouseHarkonnen, houseHarkonnen.getX(),houseOrdos.getY());
+    m_renderDrawer->renderSprite(bmp_HouseSardaukar, houseSardaukar.getX(), houseSardaukar.getY());
 
     // BACK (bottom right
     // TODO: Use actual cGuiButton
@@ -120,6 +124,9 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
     }
     else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
         m_interface->prepareMentatToTellAboutHouse(HARKONNEN);
+    }
+    else if (event.coords.isWithinRectangle(&houseSardaukar)) {
+        m_interface->prepareMentatToTellAboutHouse(SARDAUKAR);
     }
     else if (event.coords.isWithinRectangle(backButtonRect)) {
         m_interface->setTransitionToWithFadingOut(GAME_MENU);

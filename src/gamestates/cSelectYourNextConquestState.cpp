@@ -304,7 +304,10 @@ void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
     if (iHouse == HARKONNEN)
         iLogo = BMP_NCHAR;
 
-    // Draw 4 times the logo (in each corner)
+    if (iHouse == SARDAUKAR)
+        iLogo = BMP_NCHAR;
+
+        // Draw 4 times the logo (in each corner)
     if (iLogo > -1) {
         m_renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY);
         m_renderDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY);

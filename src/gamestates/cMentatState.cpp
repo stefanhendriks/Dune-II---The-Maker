@@ -3,6 +3,7 @@
 #include "gameobjects/mentat/HarkonnenMentat.h"
 #include "gameobjects/mentat/OrdosMentat.h"
 #include "gameobjects/mentat/BeneMentat.h"
+#include "gameobjects/mentat/SardaukarMentat.h"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
@@ -57,6 +58,8 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, allowMissionSelect);
             else if (house == ORDOS)
                 m_mentat = std::make_unique<OrdosMentat>(m_ctx, allowMissionSelect);
+            else if (house == SARDAUKAR)
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, allowMissionSelect);
             else 
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
             m_interface->missionInit();
@@ -71,6 +74,8 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, allowMissionSelect);
             else if (house == ORDOS) 
                 m_mentat = std::make_unique<OrdosMentat>(m_ctx, allowMissionSelect);
+            else if (house == SARDAUKAR)
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, allowMissionSelect);
             else 
                 m_mentat = std::make_unique<BeneMentat>(m_ctx,m_dataCampaign);
             
@@ -87,6 +92,8 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, allowMissionSelect);
             else if (house == ORDOS)
                 m_mentat = std::make_unique<OrdosMentat>(m_ctx, allowMissionSelect);
+            else if (house == SARDAUKAR)
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, allowMissionSelect);
             else 
                 m_mentat = std::make_unique<BeneMentat>(m_ctx,m_dataCampaign);
             

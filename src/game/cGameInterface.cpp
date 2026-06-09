@@ -36,6 +36,10 @@ void cGameInterface::prepareMentatToTellAboutHouse(int house) const
             m_game->prepareMentatToTellAboutHouse(ORDOS);
             m_game->playSound(SOUND_ORDOS);
             break;
+    case SARDAUKAR:
+            m_game->prepareMentatToTellAboutHouse(SARDAUKAR);
+            //m_game->playSound(SOUND_SARDAUKAR);
+            break;
     default:
         cLogger::getInstance()->log(LOG_WARN,COMP_GAMERULES, "House", std::format("cGameInterface::prepareMentatToTellAboutHouse() was called with an invalid house value: {}", house));
         break;
