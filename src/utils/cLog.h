@@ -1,6 +1,4 @@
 #pragma once
-#include <string>
-#include <fstream>
 
 enum eLogLevel {
     LOG_INFO,
@@ -39,37 +37,4 @@ enum eLogComponent {
     COMP_GAMESTATE,			/** Used for game state changes **/
     COMP_CHEATS,            /** Used for cheat related logs **/
     COMP_BUILDER
-};
-
-class cLogger {
-public:
-    static cLogger *getInstance();
-
-    void setDebugMode(bool value) {
-        m_debugMode = value;
-    }
-
-    void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message);
-    void log(eLogLevel level, eLogComponent component, const std::string &event, const std::string &message, int playerId, int houseId);
-
-    void logCommentLine(const std::string &txt);
-
-    void logHeader(const std::string &txt);
-
-private:
-    cLogger();
-    ~cLogger();
-
-    cLogger &operator=(const cLogger &) = delete;
-    cLogger &operator=(cLogger &&) = delete;
-    cLogger(const cLogger &) = delete;
-    cLogger(cLogger &&) = delete;
-
-    std::ofstream m_file;
-
-    long m_startTime; // start time of logging in miliseconds
-
-    bool m_debugMode;
-
-    long getTimeInMilisDifference() const;
 };

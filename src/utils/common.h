@@ -23,9 +23,6 @@ class cGameObjectContext;
 class cMapCamera;
 class cInfoContext;
 class cGameInterface;
-class cGameSettings;
-
-
 /**
  * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)
  * @param desiredMs
@@ -40,9 +37,6 @@ int slowThinkMsToTicks(int desiredMs);
  */
 int fastThinkMsToTicks(int desiredMs);
 int fastThinkTicksToMs(int ticks);
-
-void initLogbook(cGameSettings* settings);
-void logbook(const std::string &txt);
 
 // Color makeColFromString(std::string colorStr);
 

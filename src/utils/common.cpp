@@ -31,12 +31,8 @@
 #include "utils/d2tm_math.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "game/cGameSettings.h"
-#include <cmath>
 
 #include "data/gfxaudio.h"
-
-static cGameSettings* s_logbookSettings = nullptr;
 
 std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& filename)
 {
@@ -99,18 +95,6 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
     return gameSettings;
 }
 
-
-void initLogbook(cGameSettings* settings)
-{
-    s_logbookSettings = settings;
-}
-
-void logbook(const std::string &txt)
-{
-    if (s_logbookSettings && s_logbookSettings->isDebugMode()) {
-        Logger::warn(COMP_NONE, "logbook", "{}", txt);
-    }
-}
 
 int slowThinkMsToTicks(int desiredMs)
 {
