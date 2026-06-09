@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#ifdef __cpp_lib_stacktrace
+#if defined(__cpp_lib_stacktrace) && !defined(DISABLE_D2TM_STACKTRACE)
 #include <stacktrace>
 #endif
 #include <source_location>
@@ -25,7 +25,7 @@ inline void d2tm_assert(
     report << "Function: " << location.function_name() << "\n";
     report << "----------------------------------------\n";
     report << "Call Stack:\n";
-#ifdef __cpp_lib_stacktrace
+#if defined(__cpp_lib_stacktrace) && !defined(DISABLE_D2TM_STACKTRACE)
     auto trace = std::stacktrace::current();
     for (size_t i = 1; i < trace.size(); ++i) {
         const auto& entry = trace[i];
