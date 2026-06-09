@@ -160,7 +160,7 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
             }
 
             // non slab 'structures' can be blocked by units
-            if (structureIdToPlace != SLAB4 && structureIdToPlace != SLAB1) {
+            if (structureIdToPlace != SLAB4) {
                 int unitIdOnMap = m_context->getObjects()->getMap()->getCellIdUnitLayer(iCll);
                 if (unitIdOnMap > -1) {
                     // temporarily dead units do not block, but alive units (non-dead) do block placement
