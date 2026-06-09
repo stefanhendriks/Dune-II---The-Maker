@@ -54,6 +54,7 @@
 #define ORD_MOUTH03                      48       /* BMP  */
 #define ORD_MOUTH04                      49       /* BMP  */
 #define ORD_MOUTH05                      50       /* BMP  */
+#define MENTATS                          51
 
 
 
