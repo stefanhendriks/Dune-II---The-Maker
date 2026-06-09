@@ -1,0 +1,61 @@
+#include "SardaukarMentat.h"
+#include "data/gfxmentat.h"
+#include "game/cGameInterface.h"
+#include "drawers/SDLDrawer.hpp"
+#include "utils/Graphics.hpp"
+#include "utils/common.h"
+#include "gui/GuiButton.h"
+#include "context/GameContext.hpp"
+#include "include/cAssert.h"
+
+SardaukarMentat::SardaukarMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMentat(ctx, allowMissionSelect)
+{
+    d2tm_assert(ctx != nullptr);
+    iBackgroundFrame = MENTATS;
+    buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
+    buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
+    leftGuiButton = GuiButtonBuilder()
+            .withRect(*leftButton)        
+            .withLabel("Repeat")
+            .withTexture(gfxmentat->getTexture(BTN_REPEAT))
+            .withRenderer(m_renderDrawer)
+            .withKind(GuiRenderKind::WITH_TEXTURE)
+            .onClick([this]() {this->resetSpeak();})
+            .build();
+
+    rightGuiButton = GuiButtonBuilder()
+            .withRect(*rightButton)        
+            .withLabel("Yes")
+            .withTexture(gfxmentat->getTexture(BTN_YES))
+            .withRenderer(m_renderDrawer)
+            .withKind(GuiRenderKind::WITH_TEXTURE)
+            .onClick([this]() {
+                logbook("cYesButtonCommand::changeStateFromMentat()");
+                m_gameInterface->changeStateFromMentat();})
+            .build();
+}
+
+void SardaukarMentat::think()
+{
+    // think like base class
+    AbstractMentat::think();
+}
+
+void SardaukarMentat::draw()
+{
+    AbstractMentat::draw();
+}
+
+void SardaukarMentat::draw_other()
+{
+}
+
+void SardaukarMentat::draw_eyes()
+{
+    //m_renderDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
+}
+
+void SardaukarMentat::draw_mouth()
+{
+    //m_renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
+}
