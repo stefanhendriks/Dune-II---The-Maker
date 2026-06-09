@@ -11,6 +11,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "utils/common.h"
+#include "utils/Log.h"
 #include <SDL3/SDL.h>
 #include <iostream>
 #include "include/cAssert.h"
@@ -409,8 +410,8 @@ cPoint cMouse::getDragLineEndPoint()
 void cMouse::setTile(int value)
 {
     if (value != m_mouseTile) {
-        logbook(std::format("cMouse::setTile(): Changing mouse tile from {} ({}) to {} ({})", m_mouseTile,
-                            mouseTileName(m_mouseTile).c_str(), value, mouseTileName(value).c_str()));
+        Logger::info(COMP_NONE, "cMouse::setTile", "Changing mouse tile from {} ({}) to {} ({})", m_mouseTile,
+                     mouseTileName(m_mouseTile).c_str(), value, mouseTileName(value).c_str());
         m_mouseTile = value;
     }
 }
