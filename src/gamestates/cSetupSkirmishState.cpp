@@ -613,6 +613,43 @@ void cSetupSkirmishState::drawTechLevel(const cRectangle &techLevelRect) const
                         std::format("TechLevel : {}", techLevel));
 }
 
+std::vector<int> cSetupSkirmishState::getEligibleStartingUnitTypes(int forTechLevel) const
+{
+    // Minimum tech level required for each starting-unit type, matching the
+    // structure prerequisites (cBuildingListUpdater) and unit upgrade tech
+    // levels (cInfoContextCreator) that gate building these units in skirmish
+    // mode. The random starting-unit draw uses unit types 0..11; keep in sync.
+    static const struct { int unitType; int minTechLevel; } eligibility[] = {
+        { SOLDIER,    2 },  // base infantry: BARRACKS (techLevel >= 2)
+        { TROOPER,    2 },  // base infantry: WOR (techLevel >= 2)
+        { INFANTRY,   3 },  // UPGRADE_TYPE_BARRACKS_INFANTRY (techLevel 3)
+        { TROOPERS,   3 },  // UPGRADE_TYPE_WOR_TROOPERS (techLevel 3)
+        { TRIKE,      3 },  // LIGHTFACTORY (techLevel >= 3)
+        { RAIDER,     3 },  // LIGHTFACTORY (techLevel >= 3)
+        { QUAD,       3 },  // UPGRADE_TYPE_LIGHTFCTRY_QUAD (techLevel 3)
+        { TANK,       4 },  // HEAVYFACTORY (techLevel >= 4)
+        { LAUNCHER,   5 },  // UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER (techLevel 5)
+        { SIEGETANK,  6 },  // UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK (techLevel 6)
+        { DEVASTATOR, 7 },  // special heavy units (techLevel >= 7)
+        { DEVIATOR,   7 },  // special heavy units (techLevel >= 7)
+    };
+
+    std::vector<int> eligible;
+    for (const auto &entry : eligibility) {
+        if (forTechLevel >= entry.minTechLevel) {
+            eligible.push_back(entry.unitType);
+        }
+    }
+
+    // Always guarantee at least one selectable type so the spawn loop can
+    // terminate even at the lowest tech level.
+    if (eligible.empty()) {
+        eligible.push_back(SOLDIER);
+    }
+
+    return eligible;
+}
+
 void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap)
 {
     s_PreviewMap *selectedMap = m_previewMaps->getMap(iSkirmishMap);
@@ -805,9 +842,14 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
 
     // create units
+    // restrict the random starting-unit pool to the selected tech level, so we
+    // never spawn units the player could not have built at that tech level
+    // (e.g. Devastators at tech level 3). See issue #1281.
+    std::vector<int> eligibleUnitTypes = getEligibleStartingUnitTypes(techLevel);
+
     while (u < maxAmountOfStartingUnits) {
-        // pick a random unit type
-        int iType = RNG::rnd(12);
+        // pick a random unit type from the tech-level-eligible pool
+        int iType = eligibleUnitTypes[RNG::rnd(eligibleUnitTypes.size())];
 
         for (int p = 0; p < MAX_PLAYERS; p++) {
             cPlayer* pPlayer = m_objects->getPlayer(p);

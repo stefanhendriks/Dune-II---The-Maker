@@ -9,6 +9,7 @@ struct sGameServices;
 #include "utils/Color.hpp"
 #include <memory>
 #include <functional>
+#include <vector>
 
 struct SDL_Surface;
 
@@ -128,6 +129,10 @@ private:
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
+
+    // Returns the starting-unit types that are allowed at the given tech level.
+    std::vector<int> getEligibleStartingUnitTypes(int forTechLevel) const;
+
     void surpriseMe();
 
     void onMouseLeftButtonClicked(const s_MouseEvent &event);
