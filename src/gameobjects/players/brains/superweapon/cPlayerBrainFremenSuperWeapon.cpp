@@ -10,6 +10,7 @@
 #include "gameobjects/players/cPlayers.h"
 #include "utils/RNG.hpp"
 #include "utils/common.h"
+#include "utils/Log.h"
 #include <format>
 
 #include <algorithm>
@@ -40,8 +41,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         return;
     }
 
-    logbook(std::format("cPlayerBrainFremenSuperWeapon::think() AI[{}] - found {} idle unit(s) to attack with.",
-                        player->getId(), ids.size()));
+    Logger::info(COMP_AI, "cPlayerBrainFremenSuperWeapon::think", "AI[{}] - found {} idle unit(s) to attack with.", player->getId(), ids.size());
 
     // attack things!
     int cellToAttack = -1;

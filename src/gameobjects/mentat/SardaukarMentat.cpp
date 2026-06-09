@@ -4,6 +4,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
+#include "utils/Log.h"
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
 #include "include/cAssert.h"
@@ -30,7 +31,7 @@ SardaukarMentat::SardaukarMentat(GameContext* ctx, bool allowMissionSelect) : Ab
             .withRenderer(m_renderDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
-                logbook("cYesButtonCommand::changeStateFromMentat()");
+                Logger::info(COMP_NONE, "cYesButtonCommand::changeStateFromMentat", "called");
                 m_gameInterface->changeStateFromMentat();})
             .build();
 }

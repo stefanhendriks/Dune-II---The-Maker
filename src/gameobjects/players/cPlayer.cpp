@@ -8,6 +8,7 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/structures/cStructures.h"
 #include "utils/common.h"
+#include "utils/Log.h"
 #include "utils/texture_utils.h"
 #include "gameobjects/players/cHousesInfo.h"
 #include "utils/Graphics.hpp"
@@ -78,8 +79,8 @@ void cPlayer::serviceInit(sGameServices* services)
     if (difficultySettings) {
         difficultySettings->setInfoContext(m_infos);
     }
-    logbook(std::format("MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
-                        MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(SDL_Surface *)));
+    Logger::info(COMP_PLAYER, "cPlayer", "MAX_STRUCTURE_BMPS=[{}], sizeof bmp_structure={}, sizeof(SDL_Surface *)={}",
+                 MAX_STRUCTURE_BMPS, sizeof(bmp_structure), sizeof(SDL_Surface *));
 }
 
 cPlayer::~cPlayer()
@@ -197,8 +198,7 @@ void cPlayer::setGameControlsContext(std::unique_ptr<cGameControlsContext> theGa
 void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
 {
     if (id < 0 || id >= MAX_PLAYERS) {
-        // no log(), as house still has to be set up
-        logbook(std::format("Error initializing player, id {} is not valid.", id));
+        Logger::error(COMP_PLAYER, "cPlayer", "Error initializing player, id {} is not valid.", id);
     }
     d2tm_assert(id >= HUMAN);
     d2tm_assert(id < MAX_PLAYERS);
@@ -255,9 +255,8 @@ void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
 void cPlayer::setHouse(int iHouse)
 {
     int currentHouse = house;
-    // not yet set up house properly.. so use logbook instead of log()
-    logbook(std::format("cPlayer[{}]::setHouse - Current house is [{}/{}], setting house to [{}/{}]",
-                        this->id, currentHouse, getHouseNameForId(currentHouse), iHouse, getHouseNameForId(iHouse)));
+    Logger::info(COMP_PLAYER, "cPlayer::setHouse", "Current house is [{}/{}], setting house to [{}/{}]",
+                 currentHouse, getHouseNameForId(currentHouse), iHouse, getHouseNameForId(iHouse));
     house = iHouse; // use rules of this house
 
     if (difficultySettings) {
@@ -270,7 +269,7 @@ void cPlayer::setHouse(int iHouse)
     }
 
     if (currentHouse != iHouse) {
-        logbook(std::format("cPlayer[{}]::setHouse - Current house differs from iHouse, preparing palette.", this->id));
+        Logger::info(COMP_PLAYER, "cPlayer::setHouse", "Current house differs from iHouse, preparing palette.");
 
         // now set the different colors based upon house
         minimapColor = m_HousesInfo->getMinimapColor(house);
@@ -2005,7 +2004,7 @@ s_PlaceResult cPlayer::canPlaceStructureAt(int iCell, int iStructureType, int iU
 void cPlayer::log(const std::string &txt) const
 {
     if (m_settings->isDebugMode()) {
-        logbook(std::format("PLAYER [{}(={})] : {}", getId(), getHouseName(), txt));
+        Logger::info(COMP_PLAYER, "cPlayer", "PLAYER [{}(={})] : {}", getId(), getHouseName(), txt);
     }
 }
 
