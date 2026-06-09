@@ -27,6 +27,7 @@
 #include "utils/cSoundPlayer.h"
 #include "include/Texture.hpp"
 #include "include/sGameServices.h"
+#include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
 #include <format>
@@ -322,9 +323,8 @@ void cBullet::arrivedAtDestinationLogic()
             int posX = m_objects->getMapGeometry()->getAbsoluteXPositionFromCellCentered(cellToDamage) + randomX;
             int posY = m_objects->getMapGeometry()->getAbsoluteYPositionFromCellCentered(cellToDamage) + randomY;
 
-            logbook(std::format(
-                        "iCell {} : cellToDamage : {} : ExplosionSize is {}, maxDistanceFromCenter is {} , actualDistance = {}, x={}, y={} and factor = {}",
-                        iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor));
+            Logger::info(COMP_BULLET, "bullet", "iCell {} : cellToDamage : {} : ExplosionSize is {}, maxDistanceFromCenter is {} , actualDistance = {}, x={}, y={} and factor = {}",
+                         iCell, cellToDamage, sBullet.explosionSize, maxDistanceFromCenter, actualDistance, sx, sy, factor);
 
             // when air layer is hit, it won't damage ground things
             if (!damageAirUnit(cellToDamage)) {                // inflict damage on air unit (if rocket)
