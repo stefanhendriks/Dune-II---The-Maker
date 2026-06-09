@@ -12,6 +12,7 @@
 #include "sidebar/cSideBar.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/players/cPlayer.h"
+#include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include <format>
 
@@ -386,8 +387,8 @@ void cMouseUnitsSelectedState::evaluateSelectedUnits()
 void cMouseUnitsSelectedState::setState(eMouseUnitsSelectedState newState)
 {
     if (newState != m_state) {
-        logbook(std::format("cMouseUnitsSelectedState: Changed state from [{}] to [{}]", mouseUnitsSelectedStateString(m_state),
-                            mouseUnitsSelectedStateString(newState)));
+        Logger::info(COMP_NONE, "cMouseUnitsSelectedState::setState", "Changed state from [{}] to [{}]", mouseUnitsSelectedStateString(m_state),
+                     mouseUnitsSelectedStateString(newState));
         this->m_prevState = this->m_state;
         this->m_state = newState;
     }

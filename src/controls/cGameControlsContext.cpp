@@ -12,6 +12,7 @@
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
 #include "utils/cStructureUtils.h"
+#include "utils/Log.h"
 #include "context/GameContext.hpp"
 
 #include "controls/mousestates/cMouseNormalState.h"
@@ -273,7 +274,7 @@ void cGameControlsContext::setMouseState(eMouseState newState)
             m_prevState = m_prevStateBeforeRepair;
         }
 
-        logbook(std::format("setMouseState() : changing state from [{}] to [{}] (prevState=[{}], prevStateBeforeRepair=[{}])", mouseStateString(m_state), mouseStateString(newState), mouseStateString(m_prevState), mouseStateString(m_prevStateBeforeRepair)));
+        Logger::info(COMP_NONE, "cGameControlsContext::setMouseState", "changing state from [{}] to [{}] (prevState=[{}], prevStateBeforeRepair=[{}])", mouseStateString(m_state), mouseStateString(newState), mouseStateString(m_prevState), mouseStateString(m_prevStateBeforeRepair));
         m_state = newState;
         switch (m_state) {
             case MOUSESTATE_SELECT:
