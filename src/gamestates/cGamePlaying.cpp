@@ -295,7 +295,7 @@ void cGamePlaying::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         pBuilder->onNotifyKeyboardEvent(event);
     }
 
-    logbook(event.toString());
+    Logger::info(COMP_GAME, "cGamePlaying", "{}", event.toString());
 
     m_drawManager->onNotifyKeyboardEvent(event);
 
@@ -773,10 +773,8 @@ void cGamePlaying::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
             int posY = mouseCellY + RNG::rnd((precision * 2) + 1);
             cPoint::split(posX, posY) = m_objects->getMapGeometry()->fixCoordinatesToBeWithinPlayableMap(posX, posY);
 
-            logbook(std::format(
-                "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
-                mouseCellY, mouseCellY, posX, posY, precision)
-            );
+            Logger::info(COMP_GAME, "cGamePlaying", "eDeployTargetType::TARGET_INACCURATE_CELL, mouse cell X,Y = {},{} - target pos ={},{} - precision {}",
+                         mouseCellY, mouseCellY, posX, posY, precision);
 
             deployCell = m_objects->getMapGeometry()->makeCell(posX, posY);
         }

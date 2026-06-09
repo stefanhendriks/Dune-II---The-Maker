@@ -585,7 +585,7 @@ void cGame::shutdown()
     context.reset();
     gfxdata.reset();
 
-    logbook("Allegro FONT library shut down.");
+    Logger::info(COMP_NONE, "cGame::shutdown", "Allegro FONT library shut down.");
 }
 
 
@@ -707,9 +707,9 @@ bool cGame::setupGame()
      */
     m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, m_gameSettings->getScreenW() - cSideBar::SidebarWidth, m_gameSettings->getScreenH() - cSideBar::TopBarHeight);
 
-    logbook("Color conversion method set");
+    Logger::info(COMP_INIT, "cGame::setupGame", "Color conversion method set");
 
-    logbook("MOUSE: Mouse speed set");
+    Logger::info(COMP_INIT, "cGame::setupGame", "MOUSE: Mouse speed set");
 
     Logger::info(COMP_INIT, "cGame::setupGame", "=== GAME ===");
 
@@ -727,17 +727,17 @@ bool cGame::setupGame()
 
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
-    logbook(std::format("Seed is {}", t));
+    Logger::info(COMP_INIT, "cGame::setupGame", "Seed is {}", t);
     srand(t);
 
     m_gameSettings->m_playing = true;
     m_state = GAME_INITIALIZE;
 
-    logbook("Setup:  HOUSES");
+    Logger::info(COMP_INIT, "cGame::setupGame", "Setup:  HOUSES");
     m_Houses = std::make_unique<cHousesInfo>();
     m_Houses->installHouses(gamesCfg);
     // A few messages for the player
-    logbook("Initializing:  PLAYERS");
+    Logger::info(COMP_INIT, "cGame::setupGame", "Initializing:  PLAYERS");
     m_players->setupPlayers(m_Houses.get());
     cInfoContextCreator infoCreator;
     infoCreator.installInfos(*m_infoContext);
@@ -830,7 +830,7 @@ void cGame::setState(int newState)
         return;
     }
 
-    logbook(std::format("Setting state from {}(={}) to {}(={})", m_state, stateToString(m_state), newState, stateToString(newState)));
+    Logger::info(COMP_GAME, "cGame::setState", "Setting state from {}(={}) to {}(={})", m_state, stateToString(m_state), newState, stateToString(newState));
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
@@ -932,7 +932,7 @@ void cGame::setState(int newState)
                 cSelectYourNextConquestState *pState = new cSelectYourNextConquestState(m_services.get(), m_cIni.get(), m_dataCampaign.get());
 
                 pState->calculateOffset();
-                logbook("Setup:  WORLD");
+                Logger::info(COMP_INIT, "cGame::loadScenario", "Setup:  WORLD");
                 pState->installWorld();
                 if (m_dataCampaign->mission > 1) {
                     pState->conquerRegions();
@@ -1114,7 +1114,7 @@ void cGame::changeStateFromMentat()
             initiateFadingOut();
         }
         else {
-            logbook("cProceedButtonCommand pressed, in skirmish mode and state is not WINBRIEF nor LOSEBRIEF!?");
+            Logger::warn(COMP_GAME, "cProceedButtonCommand", "pressed in skirmish mode but state is not WINBRIEF nor LOSEBRIEF");
         }
         return;
     }
@@ -1441,17 +1441,17 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
         return false;
     }
 
-    logbook(std::format("cGame::playMusicByType - iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice));
+    Logger::info(COMP_SOUND, "cGame::playMusicByType", "iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice);
 
     if (triggerWithVoice) {
         if (iType == m_gameSettings->m_musicType) {
-            logbook(std::format("m_musicType = {}, iType is {}, so bailing", m_gameSettings->m_musicType, iType));
+            Logger::info(COMP_SOUND, "cGame::playMusicByType", "m_musicType = {}, iType is {}, so bailing", m_gameSettings->m_musicType, iType);
             return false;
         }
     }
 
     m_gameSettings->m_musicType = iType;
-    logbook(std::format("m_musicType = {}", m_gameSettings->m_musicType));
+    Logger::info(COMP_SOUND, "cGame::playMusicByType", "m_musicType = {}", m_gameSettings->m_musicType);
 
     if (!m_gameSettings->m_playMusic) {
         return false; // todo: have a 'no-sound soundplayer' instead of doing this :/

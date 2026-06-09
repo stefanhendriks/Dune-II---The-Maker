@@ -683,19 +683,19 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     mapEditor.smoothMap();
 
     if (m_settings->isDebugMode()) {
-        logbook("Starting positions before shuffling:");
+        Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
-            logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
+            Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "iStartPositions[{}] = [{}]", i, iStartPositions[i]);
         }
     }
 
-    logbook("Shuffling starting positions");
+    Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Shuffling starting positions");
     std::shuffle(iStartPositions.begin(), iStartPositions.end(), RNG::getGenerator());
 
     if (m_settings->isDebugMode()) {
-        logbook("Starting positions after shuffling:");
+        Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Starting positions after shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
-            logbook(std::format("iStartPositions[{}] = [{}]", i, iStartPositions[i]));
+            Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "iStartPositions[{}] = [{}]", i, iStartPositions[i]);
         }
     }
 
@@ -924,7 +924,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         int maxDistance = worms * 32; // 128 / 4
         int wormCell = m_objects->getMapGeometry()->getRandomCell();
         int failures = 0;
-        logbook(std::format("Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance));
+        Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Skirmish game with {} sandworms, minDistance {}, maxDistance {}", worms, minDistance, maxDistance);
         while (worms > 0) {
             int cell = m_objects->getMap()->getRandomCellFromWithRandomDistanceValidForUnitType(wormCell, minDistance, maxDistance,
                        SANDWORM);
@@ -933,12 +933,12 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 failures++;
                 if (failures > 10) {
                     // too many failed attempts, just stop
-                    logbook("Failed too many times to find spot for sandworm, aborting!");
+                    Logger::warn(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Failed too many times to find spot for sandworm, aborting!");
                     break;
                 }
                 continue;
             }
-            logbook(std::format("Spawning sandworm at {}", cell));
+            Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Spawning sandworm at {}", cell);
             // cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
             const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
@@ -956,7 +956,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         }
     }
     else {
-        logbook("Skirmish game without sandworms");
+        Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Skirmish game without sandworms");
     }
 
     auto drawManager = m_interface->getDrawManager();
@@ -1317,7 +1317,7 @@ void cSetupSkirmishState::generateRandomMap()
 
     SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), randomMap->terrain);
     if (out == nullptr) {
-        logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
+        Logger::error(COMP_SDL2, "cSetupSkirmishState", "Error creating texture from surface: {}", SDL_GetError());
         return;
     }
     SDL_SetTextureScaleMode(out, SDL_SCALEMODE_NEAREST);
