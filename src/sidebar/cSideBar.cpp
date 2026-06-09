@@ -322,6 +322,7 @@ void cSideBar::onNotifyMouseEvent(const s_MouseEvent &event)
             onMouseAt(event);
             return;
         case eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED:
+        case eMouseEventType::MOUSE_LEFT_BUTTON_DOUBLE_CLICKED:
             onMouseClickedLeft(event);
             return;
         case eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED:
