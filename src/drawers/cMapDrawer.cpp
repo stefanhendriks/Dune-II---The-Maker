@@ -46,8 +46,8 @@ void cMapDrawer::drawShroud()
     float tileWidth = m_camera->getZoomedTileWidth();
     float tileHeight = m_camera->getZoomedTileHeight();
 
-    int iTileHeight = (tileHeight + 1);
-    int iTileWidth = (tileWidth + 1);
+    int iTileHeight = (int)round(tileHeight);
+    int iTileWidth = (int)round(tileWidth);
     int iPl = m_player->getId();
 
     for (int viewportX = m_camera->getViewportStartX(); viewportX < m_camera->getViewportEndX() + 32; viewportX += 32) {
@@ -101,8 +101,8 @@ void cMapDrawer::drawTerrain()
     float tileWidth = m_camera->getZoomedTileWidth();
     float tileHeight = m_camera->getZoomedTileHeight();
 
-    int iTileHeight = (tileHeight + 1);
-    int iTileWidth = (tileWidth + 1);
+    int iTileHeight = (int)round(tileHeight);
+    int iTileWidth = (int)round(tileWidth);
 
     int iPl = m_player->getId();
     int mouseCell = m_player->getGameControlsContext()->getMouseCell();
