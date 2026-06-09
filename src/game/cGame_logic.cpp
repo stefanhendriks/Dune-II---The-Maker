@@ -1499,6 +1499,9 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
         else if (houseIndex == ORDOS) {
             sampleId = MIDI_MENTAT_ORD;
         }
+        else if (houseIndex == SARDAUKAR) {
+            sampleId = MIDI_MENTAT_HAR; // no @SARDAUKAR srd music, so use harkonnen one
+        }
         else {
             d2tm_assert(false && "Undefined house.");
         }
