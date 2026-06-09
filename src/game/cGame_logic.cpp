@@ -1062,6 +1062,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 void cGame::loadScenario()
 {
     auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
+    if (!pState) return; // state not yet created; prepareMentat() in the constructor will load the scenario
     pState->loadScenario(m_reinforcements.get());
 }
 
