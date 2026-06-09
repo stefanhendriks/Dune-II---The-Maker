@@ -1,6 +1,6 @@
 #include "game/cGameConditionChecker.h"
 #include "context/cGameObjectContext.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "gameobjects/players/cPlayer.h"
 
 #include "include/cAssert.h"
@@ -25,15 +25,13 @@ void cGameConditionChecker::missionInit()
 
 void cGameConditionChecker::setWinFlags(int value)
 {
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_GAMESTATE, "Setting win flags", 
-                std::format("Changing m_winFlags from {} to {}", m_winFlags, value));
+    Logger::debug(COMP_GAMESTATE, "cGameConditionChecker::setWinFlags", "Changing m_winFlags from {} to {}", m_winFlags, value);
     m_winFlags = value;
 }
 
 void cGameConditionChecker::setLoseFlags(int value)
 {
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_GAMESTATE, "Setting win flags", 
-                std::format("Changing m_loseFlags from {} to {}", m_winFlags, value));
+    Logger::debug(COMP_GAMESTATE, "cGameConditionChecker::setLoseFlags", "Changing m_loseFlags from {} to {}", m_winFlags, value);
     m_loseFlags = value;
 }
 

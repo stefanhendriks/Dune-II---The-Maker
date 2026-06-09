@@ -1,6 +1,6 @@
 #include "cBuildingListItem.h"
 
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "utils/common.h"
 #include "sidebar/cBuildingList.h"
 #include "context/cInfoContext.h"
@@ -38,8 +38,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
 
     m_myList = list; // this can be nullptr! (it will be set from the outside by cBuildingList convenience methods)
 
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "cBuildingListItem",
-        std::format("constructor [type={}, id={}], cost = {}", eBuildTypeString(m_type), m_buildId, m_cost));
+    Logger::debug(COMP_STRUCTURES, "cBuildingListItem", "constructor [type={}, id={}], cost = {}", eBuildTypeString(m_type), m_buildId, m_cost);
 }
 
 cBuildingListItem::~cBuildingListItem()

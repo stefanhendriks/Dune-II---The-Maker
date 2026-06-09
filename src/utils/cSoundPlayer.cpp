@@ -1,7 +1,7 @@
 #include "cSoundPlayer.h"
 
 #include "definitions.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 
 #include "utils/cDataPack.hpp"
 #include <format>
@@ -22,17 +22,14 @@ class cSoundData {
 public:
     cSoundData(const std::string &audiofile, MIX_Mixer *mixer)
     {
-        auto logger = cLogger::getInstance();
-
         gfxaudio = std::make_unique<DataPack>(audiofile, mixer);
         if (gfxaudio == nullptr) {
             auto msg = std::format("Could not hook/load datafile: {}", audiofile);
-            logger->log(LOG_ERROR, COMP_SOUND, "Initialization", msg);
+            Logger::error(COMP_SOUND, "Initialization", "{}", msg);
             throw std::runtime_error(msg);
         }
         else {
-            auto msg = std::format("Hooked audiofile: {}", audiofile);
-            logger->log(LOG_INFO, COMP_SOUND, "Initialization", msg );
+            Logger::info(COMP_SOUND, "Initialization", "Hooked audiofile: {}", audiofile);
         }
     }
 
@@ -47,16 +44,14 @@ private:
 
 cSoundPlayer::cSoundPlayer(const std::string &datafile)
 {
-    auto logger = cLogger::getInstance();
-
     m_mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
     if (!m_mixer) {
-        logger->log(LOG_ERROR, COMP_SOUND, "SDL_mixer initialization", SDL_GetError());
+        Logger::error(COMP_SOUND, "cSoundPlayer", "SDL_mixer initialization: {}", SDL_GetError());
         m_isMusicEnabled = false;
         m_isSoundEnabled = false;
     }
     else {
-        logger->log(LOG_INFO, COMP_SOUND, "Initialization", "SDL_mixer succes");
+        Logger::info(COMP_SOUND, "cSoundPlayer", "SDL_mixer succes");
         m_isMusicEnabled = true;
         m_isSoundEnabled = true;
         m_musicTrack = MIX_CreateTrack(m_mixer);

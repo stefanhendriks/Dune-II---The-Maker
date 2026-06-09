@@ -32,7 +32,7 @@
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include <format>
 
@@ -121,7 +121,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     s_StructureInfo &structureInfo = m_info->getStructureInfo(iStructureType);
     int hp = structureInfo.hp;
     if (hp < 0) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
+        Logger::info(COMP_STRUCTURES, "create structure", "Structure to create has no hp, aborting creation.");
         return nullptr;
     }
 
@@ -129,14 +129,14 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
 
     // fail
     if (iNewId < 0) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "No free slot available, returning nullptr");
+        Logger::info(COMP_STRUCTURES, "create structure", "No free slot available, returning nullptr");
         return nullptr;
     }
 
     cAbstractStructure *str = createStructureInstance(iStructureType);
 
     if (str == nullptr) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned nullptr");
+        Logger::info(COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned nullptr");
         return nullptr; // fail
     }
 
@@ -160,8 +160,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     // calculate actual health
     float fHealth = hp * fPercent;
 
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting win flags", 
-            std::format("Structure with id [{}] has [{}] hp , fhealth is [{}]", iStructureType, hp, fHealth));
+    Logger::debug(COMP_STRUCTURES, "cStructureFactory", "Structure with id [{}] has [{}] hp , fhealth is [{}]", iStructureType, hp, fHealth);
 
     int structureSize = structureInfo.bmp_width * structureInfo.bmp_height;
 

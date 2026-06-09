@@ -2,7 +2,7 @@
 #include "context/cGameObjectContext.h"
 #include "data/gfxaudio.h"
 #include "game/cGame.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "include/Texture.hpp"
 #include "controls/cMouse.h"
 #include "gameobjects/units/cReinforcements.h"
@@ -41,7 +41,7 @@ void cGameInterface::prepareMentatToTellAboutHouse(int house) const
             //m_game->playSound(SOUND_SARDAUKAR);
             break;
     default:
-        cLogger::getInstance()->log(LOG_WARN,COMP_GAMERULES, "House", std::format("cGameInterface::prepareMentatToTellAboutHouse() was called with an invalid house value: {}", house));
+        Logger::warn(COMP_GAMERULES, "cGameInterface::prepareMentatToTellAboutHouse", "called with an invalid house value: {}", house);
         break;
     }
     m_game->setNextStateToTransitionTo(GAME_TELLHOUSE);

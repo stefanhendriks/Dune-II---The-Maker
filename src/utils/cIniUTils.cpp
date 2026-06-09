@@ -3,7 +3,7 @@
 #include "utils/common.h"
 
 #include "utils/cIniUtils.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 
 #include <format>
 
@@ -240,12 +240,12 @@ int cIniUtils::getSectionType(const std::string& section, int last)
     for (const auto& [key, value] : sectionTypeMap) {
         if (cIniUtils::caseInsCompare(section, key)) {
             if (key == "STRUCTURES") {
-                cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Structure Section found", section);
+                Logger::error(COMP_INIT, "cIniUtils::getSectionType", "Structure Section found: {}", section);
             }
             return value;
         }
     }
-    cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "getSectionType: no SECTION id found.", section);
+    Logger::error(COMP_INIT, "cIniUtils::getSectionType", "no SECTION id found: {}", section);
     return last;
 }
 

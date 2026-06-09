@@ -511,12 +511,12 @@ void cItemBuilder::addItemToList(cBuildingListItem *item)
     }
 
     if (!isItemInList(item)) {
-        cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is not in list, adding.");
+        Logger::trace(COMP_SIDEBAR, "Add item to item builder", "item is not in list, adding.");
         // add to list
         m_items[slot] = item;
     }
     else {
-        cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Add item to item builder", "item is in list already. Only times to build is updated.");
+        Logger::trace(COMP_SIDEBAR, "Add item to item builder", "item is in list already. Only times to build is updated.");
     }
 }
 

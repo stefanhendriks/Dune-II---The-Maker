@@ -1,6 +1,6 @@
 #include "cWindTrap.h"
 
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "definitions.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
@@ -10,8 +10,7 @@
 // Constructor
 cWindTrap::cWindTrap()
 {
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting cWindTrap", 
-                std::format("(cWindTrap)(ID {}) Constructor", this->id));
+    Logger::debug(COMP_STRUCTURES, "cWindTrap", "(cWindTrap)(ID {}) Constructor", this->id);
 
     m_flagDir = true;
     iFrame = RNG::rnd(6); // start with random frame, so not all windtraps are in sync
@@ -24,8 +23,7 @@ int cWindTrap::getType() const
 
 cWindTrap::~cWindTrap()
 {
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Destroying structure", 
-            std::format("(cWindTrap)(ID {}) Destructor", this->id));
+    Logger::debug(COMP_STRUCTURES, "cWindTrap", "(cWindTrap)(ID {}) Destructor", this->id);
 }
 
 void cWindTrap::thinkFast()

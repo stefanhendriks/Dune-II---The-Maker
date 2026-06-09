@@ -1,6 +1,6 @@
 #include "context/ContextCreator.hpp"
 #include "utils/Graphics.hpp"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "utils/cFileValidator.h"
 #include "context/GraphicsContext.hpp"
 #include "context/TextContext.hpp"
@@ -13,47 +13,47 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
 {
     d2tm_assert(renderer!=nullptr);
     d2tm_assert(settingsValidator!=nullptr);
-    // 
+    //
     // loading all datapacks
     //
     gfxmentat = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXMENTAT));
     if (gfxmentat == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXMENTAT));
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXMENTAT));
+        Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXMENTAT));
     }
 
     gfxworld = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXWORLD));
     if (gfxworld == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXWORLD));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXWORLD));
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXWORLD));
+        Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXWORLD));
     }
 
     gfxinter = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXINTER));
     if (gfxinter == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXINTER));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXINTER));
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXINTER));
+        Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXINTER));
     }
 
     gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
     if (gfxdata == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
     }
 
     gfxeditor = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXEDITOR));
     if (gfxeditor == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXEDITOR));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXEDITOR));
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXEDITOR));
+        Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXEDITOR));
     }
 
     //
@@ -61,27 +61,27 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
     //
     game_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::ARRAKEEN).c_str(),12);
     if (game_font == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load font:" + settingsValidator->getName(eGameDirFileName::ARRAKEEN));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load font: {}", settingsValidator->getName(eGameDirFileName::ARRAKEEN));
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked font: " + settingsValidator->getName(eGameDirFileName::ARRAKEEN));
-    }  
+        Logger::info(COMP_INIT, "Load data", "Hooked font: {}", settingsValidator->getName(eGameDirFileName::ARRAKEEN));
+    }
 
     bene_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::BENEGESS).c_str(),12);
     if (bene_font == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load font:" + settingsValidator->getName(eGameDirFileName::BENEGESS));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load font: {}", settingsValidator->getName(eGameDirFileName::BENEGESS));
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked font: " + settingsValidator->getName(eGameDirFileName::BENEGESS));
-    }  
+        Logger::info(COMP_INIT, "Load data", "Hooked font: {}", settingsValidator->getName(eGameDirFileName::BENEGESS));
+    }
 
     small_font = TTF_OpenFont(settingsValidator->getFullName(eGameDirFileName::SMALL).c_str(),12);
     if (small_font == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load font:" + settingsValidator->getName(eGameDirFileName::SMALL));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load font: {}", settingsValidator->getName(eGameDirFileName::SMALL));
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "Load data", "Hooked font: " + settingsValidator->getName(eGameDirFileName::SMALL));
-    }  
+        Logger::info(COMP_INIT, "Load data", "Hooked font: {}", settingsValidator->getName(eGameDirFileName::SMALL));
+    }
 }
 
 ContextCreator::~ContextCreator()

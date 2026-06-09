@@ -3,7 +3,7 @@
 #include "building/cItemBuilder.h"
 #include "managers/cDrawManager.h"
 #include "gameobjects/players/cPlayer.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "data/gfxaudio.h"
@@ -277,7 +277,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
         item->setDeployIt(false);
 
         if (item->getTimesToBuild() == 0) {
-            cLogger::getInstance()->log(LOG_TRACE, COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
+            Logger::trace(COMP_SIDEBAR, "Cancel construction", "Item is last item in queue, will give money back.");
             // only give money back for item that is being built
             if (item->isBuilding()) {
                 // calculate the amount of money back:

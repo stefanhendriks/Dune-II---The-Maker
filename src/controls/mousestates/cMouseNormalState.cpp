@@ -13,7 +13,7 @@
 
 
 
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "data/gfxdata.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
@@ -347,8 +347,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
 
 void cMouseNormalState::setState(eMouseNormalState newState)
 {
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_GAMESTATE, "Setting state", 
-                std::format("from {} to {}", mouseNormalStateString(m_state), mouseNormalStateString(newState)));
+    Logger::debug(COMP_GAMESTATE, "cMouseNormalState::setState", "from {} to {}", mouseNormalStateString(m_state), mouseNormalStateString(newState));
     m_state = newState;
 }
 

@@ -6,7 +6,7 @@
 #include <filesystem>
 
 #include "game/cScreenShotSaver.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 
 namespace fs = std::filesystem;
 
@@ -15,7 +15,7 @@ unsigned int cScreenShotSaver::screenCount = 0;
 bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
 {
     if (renderer == nullptr) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", "renderer is null, cannot take screenshot");
+        Logger::error(COMP_SDL2, "saveScreen", "renderer is null, cannot take screenshot");
         return false;
     }
     try {
@@ -23,17 +23,17 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
         std::string filename = std::format("{}_{}x{}_{:0>4}.png", getBaseFileName(), width, height, screenCount);
         SDL_Surface* surface = SDL_RenderReadPixels(renderer, NULL);
         if (!surface) {
-            cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("Error reading pixels: {}", SDL_GetError()));
+            Logger::error(COMP_SDL2, "saveScreen", "Error reading pixels: {}", SDL_GetError());
             return false;
         }
         if (IMG_SavePNG(surface, filename.c_str()) != 0) {
-            cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("IMG_SavePNG error: {}", SDL_GetError()));
+            Logger::error(COMP_SDL2, "saveScreen", "IMG_SavePNG error: {}", SDL_GetError());
         }
         SDL_DestroySurface(surface);
         return true;
     }
     catch (const std::exception& e) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "saveScreen", std::format("Unexpected exception: {}", e.what()));
+        Logger::error(COMP_SDL2, "saveScreen", "Unexpected exception: {}", e.what());
         return false;
     }
 }
@@ -52,12 +52,12 @@ std::string cScreenShotSaver::getBaseFileName()
             fs::create_directory(folder);
         }
         catch (const fs::filesystem_error& e) {
-            cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "cScreenShotSaver", std::format("error creating folder: {}",e.what()));
+            Logger::error(COMP_SDL2, "cScreenShotSaver", "error creating folder: {}", e.what());
             return baseName;
         }
     }
     else if (!fs::is_directory(folder)) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_SDL2, "cScreenShotSaver", std::format("{} exist but it's not a folder !", folderName));
+        Logger::error(COMP_SDL2, "cScreenShotSaver", "{} exist but it's not a folder !", folderName);
         return baseName;
     }
     return folderName+"/"+baseName;
