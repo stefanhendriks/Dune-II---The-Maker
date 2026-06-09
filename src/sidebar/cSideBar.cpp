@@ -40,7 +40,7 @@ void cSideBar::setList(eListType listType, cBuildingList *list)
 {
     int listId = eListTypeAsInt(listType);
     if (m_lists[listId]) {
-        logbook("WARNING: Setting list, while list already set. Deleting old entry before assigning new.");
+        Logger::warn(COMP_SIDEBAR, "cSideBar::setList", "Setting list while list already set. Deleting old entry before assigning new.");
         delete m_lists[listId];
     }
 
@@ -74,7 +74,7 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const
     }
 
     if (item->shouldPlaceIt()) {
-        logbook("Attempting to build an item that is in the \"Place it\" mode - which should not happen - ignoring!");
+        Logger::warn(COMP_SIDEBAR, "cSideBar::startBuildingItemIfOk", "Attempting to build an item that is in Place it mode - which should not happen - ignoring!");
         return false;
     }
 
@@ -114,8 +114,8 @@ bool cSideBar::startBuildingItemIfOk(eListType listType, int buildId) const
         return startBuildingItemIfOk(pItem);
     }
     else {
-        logbook(std::format("ERROR: startBuildingItemIfOk with listType[{}] and buildId[{}] did not find an item to build!",
-                            eListTypeAsInt(listType), buildId ));
+        Logger::error(COMP_SIDEBAR, "cSideBar::startBuildingItemIfOk", "listType[{}] and buildId[{}] did not find an item to build!",
+                      eListTypeAsInt(listType), buildId);
     }
     return false;
 }
@@ -394,7 +394,7 @@ cBuildingList *cSideBar::getSelectedList() const
 
 void cSideBar::findFirstActiveListAndSelectIt()
 {
-    logbook(std::format("cSideBar::findFirstActiveListAndSelectIt - current m_selectedListID is [{}]", m_selectedListID));
+    Logger::info(COMP_SIDEBAR, "cSideBar::findFirstActiveListAndSelectIt", "current m_selectedListID is [{}]", m_selectedListID);
     for (int i = 0; i < LIST_MAX; i++) {
         cBuildingList *pList = m_lists[i];
         if (pList && pList->isAvailable()) {
@@ -402,13 +402,13 @@ void cSideBar::findFirstActiveListAndSelectIt()
             break;
         }
     }
-    logbook(std::format("cSideBar::findFirstActiveListAndSelectIt - new m_selectedListID is [{}]", m_selectedListID));
+    Logger::info(COMP_SIDEBAR, "cSideBar::findFirstActiveListAndSelectIt", "new m_selectedListID is [{}]", m_selectedListID);
 }
 
 void cSideBar::setSelectedListId(eListType value)
 {
-    logbook(std::format("cSideBar::setSelectedListId -  m_PlayerId = [{}] - old value [{}], new [{}]",
-                        m_player->getId(), m_selectedListID, eListTypeAsInt(value)));
+    Logger::info(COMP_SIDEBAR, "cSideBar::setSelectedListId", "m_PlayerId = [{}] - old value [{}], new [{}]",
+                 m_player->getId(), m_selectedListID, eListTypeAsInt(value));
 
     int oldListId = m_selectedListID;
     m_selectedListID = eListTypeAsInt(value);

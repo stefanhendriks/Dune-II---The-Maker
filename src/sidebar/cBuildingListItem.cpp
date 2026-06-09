@@ -198,7 +198,7 @@ s_UpgradeInfo &cBuildingListItem::getUpgradeInfo()
 {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::UPGRADE) {
-        logbook("ERROR!!! - calling getUpgradeInfo while type is not UPGRADE! - falling back to buildId 1 as safety");
+        Logger::error(COMP_STRUCTURES, "cBuildingListItem::getUpgradeInfo", "type is not UPGRADE - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return m_info->getUpgradeInfo(buildId);
@@ -208,7 +208,7 @@ s_SpecialInfo &cBuildingListItem::getSpecialInfo()
 {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::SPECIAL) {
-        logbook("ERROR!!! - calling gets_Special while type is not SPECIAL! - falling back to buildId 1 as safety");
+        Logger::error(COMP_STRUCTURES, "cBuildingListItem::getSpecialInfo", "type is not SPECIAL - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return m_info->getSpecialInfo(buildId);
@@ -218,7 +218,7 @@ s_UnitInfo &cBuildingListItem::getUnitInfo()
 {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::UNIT) {
-        logbook("ERROR!!! - calling getUnitInfo while type is not UNIT! - falling back to buildId 1 as safety");
+        Logger::error(COMP_STRUCTURES, "cBuildingListItem::getUnitInfo", "type is not UNIT - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return m_info->getUnitInfo(buildId);
@@ -228,7 +228,7 @@ s_StructureInfo &cBuildingListItem::getStructureInfo()
 {
     int buildId = getBuildId();
     if (getBuildType() != eBuildType::STRUCTURE) {
-        logbook("ERROR!!! - calling getStructureInfo while type is not STRUCTURE! - falling back to buildId 1 as safety");
+        Logger::error(COMP_STRUCTURES, "cBuildingListItem::getStructureInfo", "type is not STRUCTURE - falling back to buildId 1 as safety");
         buildId = 1;
     }
     return m_info->getStructureInfo(buildId);

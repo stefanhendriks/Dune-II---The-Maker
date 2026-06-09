@@ -5,6 +5,7 @@
 #include "game/cGameInterface.h"
 #include "include/sGameServices.h"
 #include "utils/common.h"
+#include "utils/Log.h"
 
 #include <vector>
 
@@ -124,7 +125,7 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
 
     int slotId = getFreeSlot();
     if (slotId < 0 ) {
-        logbook("Failed to add icon to cBuildingList, no free slot left in list");
+        Logger::warn(COMP_SIDEBAR, "cBuildingList", "Failed to add icon to cBuildingList, no free slot left in list");
         return false;
     }
 
