@@ -177,7 +177,7 @@ std::string cIniUtils::getSceneFileToScene(const std::string& scenefile)
             return value;
         }
     }
-    logbook(std::format("getSceneFileToScene: failed to map dune 2 scenefile [{}] to a d2tm scene file.", scenefile));
+    Logger::warn(COMP_INIT, "cIniUtils::getSceneFileToScene", "failed to map dune 2 scenefile [{}] to a d2tm scene file.", scenefile);
     return "unknown";
 }
 
@@ -188,7 +188,7 @@ int cIniUtils::getStructureType(const std::string& structureName)
             return value;
         }
     }
-    logbook(std::format("getStructureType: could not find structure type for [{}]", structureName));
+    Logger::warn(COMP_INIT, "cIniUtils::getStructureType", "could not find structure type for [{}]", structureName);
     return 0; // just in case some miracle happened, we need to go on and not crash everything.
 }
 
@@ -200,8 +200,7 @@ int cIniUtils::getUnitTypeFromString(const std::string& chunk)
             return value;
         }
     }
-    logbook(std::format(
-                "getUnitTypeFromString could not determine what unit type '{}' is. Returning -1.", chunk));
+    Logger::warn(COMP_INIT, "cIniUtils::getUnitTypeFromString", "could not determine what unit type '{}' is. Returning -1.", chunk);
     return -1;
 }
 
@@ -212,8 +211,7 @@ int cIniUtils::getHouseFromString(const std::string& chunk)
             return value;
         }
     }
-    logbook(std::format(
-        "getHouseFromString could not determine what house type '{}' is. Returning -1.", chunk));
+    Logger::warn(COMP_INIT, "cIniUtils::getHouseFromString", "could not determine what house type '{}' is. Returning -1.", chunk);
     return -1;
 }
 
@@ -257,7 +255,7 @@ int cIniUtils::getStructureTypeFromString(const std::string& structureStr)
             return value;
         }
     }
-    logbook(std::format("getStructureTypeFromString: could not find structure: {}", structureStr));
+    Logger::warn(COMP_INIT, "cIniUtils::getStructureTypeFromString", "could not find structure: {}", structureStr);
     return CONSTYARD;
 }
 
@@ -270,7 +268,7 @@ int cIniUtils::getBulletTypeFromString(const std::string& chunk)
             return value;
         }
     }
-    logbook(std::format("getBulletTypeFromString: could not find bullet: {}", chunk));
+    Logger::warn(COMP_INIT, "cIniUtils::getBulletTypeFromString", "could not find bullet: {}", chunk);
     return -1;
 }
 
