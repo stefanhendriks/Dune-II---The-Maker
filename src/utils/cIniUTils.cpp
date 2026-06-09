@@ -126,7 +126,7 @@ const std::unordered_map<std::string, int> cIniUtils::unitNameMap = {
     {"Ornithopter", ORNITHOPTER},
     {"Sandworm", SANDWORM},
     {"Saboteur", SABOTEUR},
-    {"ONEFREMEN", UNIT_FREMEN_ONE},
+    {"FREMEN", UNIT_FREMEN_ONE},
     {"THREEFREMEN", UNIT_FREMEN_THREE}
 };
 
