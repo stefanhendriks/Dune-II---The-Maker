@@ -978,7 +978,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
 
 void cUnit::attackAt(int cell)
 {
-    if (!isAttackingUnit()) {
+    if (!isAttackingUnit() && !isSaboteur()) {
         return;
     }
 
