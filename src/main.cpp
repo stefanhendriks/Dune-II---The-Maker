@@ -12,7 +12,6 @@
 
 #include "game/cGame.h"
 
-#include "utils/cLog.h"
 #include "utils/Log.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"

@@ -20,7 +20,6 @@
 #include "sidebar/cBuildingListUpdater.h"
 #include "sidebar/cSideBar.h"
 #include "sidebar/cSideBarFactory.h"
-#include "utils/cLog.h"
 #include "brains/cPlayerBrainSkirmish.h"
 #include "brains/cPlayerBrainCampaign.h"
 #include "brains/superweapon/cPlayerBrainFremenSuperWeapon.h"
