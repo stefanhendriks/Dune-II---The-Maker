@@ -1500,7 +1500,8 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
             sampleId = MIDI_MENTAT_ORD;
         }
         else {
-            d2tm_assert(false && "Undefined house.");
+            logbook(std::format("playMusicByType: MUSIC_BRIEFING requested for unrecognized house {}, falling back to menu music", houseIndex));
+            sampleId = MIDI_MENU;
         }
     }
     else {
