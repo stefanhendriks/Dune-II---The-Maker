@@ -12,7 +12,7 @@
 
 #include "cAbstractStructure.h"
 
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include "include/sGameServices.h"
@@ -87,15 +87,13 @@ cAbstractStructure::cAbstractStructure() //:
 
     dead = false;
 
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting win flags", 
-                std::format("(cAbstractStructure)(ID {}) Constructor", this->id));
+    Logger::debug(COMP_STRUCTURES, "cAbstractStructure", "(cAbstractStructure)(ID {}) Constructor", this->id);
 }
 
 cAbstractStructure::~cAbstractStructure()
 {
     // destructor
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_STRUCTURES, "Setting win flags", 
-                std::format("(cAbstractStructure)(ID {}) Destructor", this->id));
+    Logger::debug(COMP_STRUCTURES, "cAbstractStructure", "(cAbstractStructure)(ID {}) Destructor", this->id);
     iHitPoints = -1;
     iCell = -1;
     posX = -1;

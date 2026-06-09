@@ -1,5 +1,5 @@
 #include "cKeyBindings.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 
 #include <algorithm>
 #include <sstream>
@@ -200,8 +200,7 @@ void cKeyBindings::loadFromSection(const cSection &section)
             if (!parsed.keys.empty()) {
                 m_bindings[action] = parsed;
             } else {
-                cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
-                    std::format("No valid key found for action '{}' (value: '{}'), keeping default", name, value));
+                Logger::warn(COMP_INIT, "[KEYS]", "No valid key found for action '{}' (value: '{}'), keeping default", name, value);
             }
         }
     }
@@ -236,8 +235,7 @@ void cKeyBindings::checkForClashes() const
             if (i > 0) nameList += ", ";
             nameList += names[i];
         }
-        cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
-            std::format("Key clash: {}{} is bound to multiple actions: {}", modifiers, SDL_GetScancodeName(sc), nameList));
+        Logger::warn(COMP_INIT, "[KEYS]", "Key clash: {}{} is bound to multiple actions: {}", modifiers, SDL_GetScancodeName(sc), nameList);
     }
 }
 
@@ -301,8 +299,7 @@ s_KeyBinding cKeyBindings::parseBinding(const std::string &value)
             if (sc != SDL_SCANCODE_UNKNOWN) {
                 binding.keys.push_back(sc);
             } else {
-                cLogger::getInstance()->log(LOG_WARN, COMP_INIT, "[KEYS]",
-                    std::format("Unknown SDL scancode name: '{}'", token));
+                Logger::warn(COMP_INIT, "[KEYS]", "Unknown SDL scancode name: '{}'", token);
             }
         }
     }

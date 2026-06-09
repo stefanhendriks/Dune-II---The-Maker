@@ -19,7 +19,7 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMap.h"
 #include "sidebar/cSideBar.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/cIniFile.h"
 #include "utils/Graphics.hpp"
@@ -44,7 +44,7 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
     std::unique_ptr<InitialGameSettings> gameSettings = std::make_unique<InitialGameSettings>();
 
     if (!file->hasSection("SETTINGS")) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_GAMERULES, filename, "Expected to find [SETTINGS] in file.ini file");
+        Logger::error(COMP_GAMERULES, "loadSettingsFromIni", "Expected to find [SETTINGS] in {}", filename);
         return gameSettings;
     }
 
@@ -108,8 +108,7 @@ void initLogbook(cGameSettings* settings)
 void logbook(const std::string &txt)
 {
     if (s_logbookSettings && s_logbookSettings->isDebugMode()) {
-        cLogger *logger = cLogger::getInstance();
-        logger->log(LOG_WARN, COMP_NONE, "(logbook)", txt);
+        Logger::warn(COMP_NONE, "logbook", "{}", txt);
     }
 }
 

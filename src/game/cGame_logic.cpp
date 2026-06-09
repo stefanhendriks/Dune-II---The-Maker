@@ -69,7 +69,7 @@
 #include "utils/cFileValidator.h"
 #include "utils/cFocusManager.h"
 #include "utils/cIniFile.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "utils/Color.hpp"
 #include "utils/cSoundPlayer.h"
 #include "utils/d2tm_math.h"
@@ -530,8 +530,7 @@ void cGame::shakeScreen(int duration)
 void cGame::shutdown()
 {
     m_gameObjectsContext->getParticles().reset();
-    cLogger *logger = cLogger::getInstance();
-    logger->logHeader("SHUTDOWN");
+    Logger::info(COMP_NONE, "cGame::shutdown", "=== SHUTDOWN ===");
 
     for (int i = 0; i < GAME_MAX_STATES; i++) {
         cGameState *pState = m_states[i];
@@ -597,14 +596,10 @@ void cGame::shutdown()
 */
 bool cGame::setupGame()
 {
-    cLogger *logger = cLogger::getInstance();
-    logger->setDebugMode(m_gameSettings->m_debugMode);
-    logger->logHeader("Dune II - The Maker");
-    logger->logCommentLine(""); // whitespace
-
-    logger->logHeader("Version information");
-    logger->log(LOG_INFO, COMP_VERSION, "Initializing",
-                std::format("Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__));
+    Logger::g_loggerInstance->setDebug(m_gameSettings->m_debugMode);
+    Logger::info(COMP_NONE, "cGame::setupGame", "=== Dune II - The Maker ===");
+    Logger::info(COMP_VERSION, "cGame::setupGame", "=== Version information ===");
+    Logger::info(COMP_VERSION, "Initializing", "Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__);
 
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
@@ -634,7 +629,7 @@ bool cGame::setupGame()
     }
 
     if (!settingsValidator->fileExists()) {
-        logger->log(LOG_INFO, COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed");
+        Logger::info(COMP_INIT, "Loading settings.ini", "Validation of files within settings.ini failed");
         std::cerr << "One or more validations failed with resources defined in settings.ini" << std::endl;
         return false;
     }
@@ -643,7 +638,7 @@ bool cGame::setupGame()
     const auto title = std::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
 
     m_keyboard = new cKeyboard();
-    logger->log(LOG_INFO, COMP_INIT, "Initializing Keyboard", "install_keyboard()");
+    Logger::info(COMP_INIT, "Initializing Keyboard", "install_keyboard()");
 
     if (settings->hasSection("KEYS")) {
         const cSection keysSection = settings->getSection("KEYS");
@@ -651,7 +646,7 @@ bool cGame::setupGame()
     } else {
         m_keyboard->loadKeyBindings();
     }
-    logger->log(LOG_INFO, COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section");
+    Logger::info(COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section");
 
     m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title);
     if (!m_windowed) {
@@ -716,18 +711,18 @@ bool cGame::setupGame()
 
     logbook("MOUSE: Mouse speed set");
 
-    logger->logHeader("GAME");
+    Logger::info(COMP_INIT, "cGame::setupGame", "=== GAME ===");
 
     /*** Data files ***/
 
     // load datafiles
     gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
     if (gfxdata == nullptr) {
-        logger->log(LOG_ERROR, COMP_INIT, "Load data", "Could not hook/load datafile:" + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
         return false;
     }
     else {
-        logger->log(LOG_INFO, COMP_INIT, "Load data", "Hooked datafile: " + settingsValidator->getName(eGameDirFileName::GFXDATA));
+        Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
     }
 
     // randomize timer
@@ -1386,7 +1381,7 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::TOGGLE_CHEAT)) {
         m_gameSettings->m_cheatMode = !m_gameSettings->m_cheatMode;
         auto message = std::format("Cheat mode {}", m_gameSettings->m_cheatMode ? "enabled" : "disabled");
-        cLogger::getInstance()->log(LOG_INFO, COMP_CHEATS, "Cheat mode", message);
+        Logger::info(COMP_CHEATS, "Cheat mode", "{}", message);
         m_notificationArea->addNotification(message, eNotificationType::OTHER);
     }
 }
@@ -1419,9 +1414,8 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
     float volumeFactor = m_mapCamera->factorZoomLevel(0.7f);
     int iVolFactored = volumeFactor * volume;
 
-    cLogger::getInstance()->log(LOG_DEBUG, COMP_SOUND, "Play sound with distance",
-        std::format("iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
-            iDistance, distanceNormalized, maxDistance, m_mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored));
+    Logger::debug(COMP_SOUND, "cGame::playSoundWithDistance", "iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
+        iDistance, distanceNormalized, maxDistance, m_mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored);
 
     playSound(sampleId, iVolFactored);
 }

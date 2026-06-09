@@ -25,7 +25,7 @@
 #include "gameobjects/mentat/AbstractMentat.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "utils/common.h"
 #include "utils/cSeedMapGenerator.h"
 #include "gameobjects/units/cReinforcements.h"
@@ -438,7 +438,7 @@ std::string INI_GetHouseDirectoryName(int iHouse)
 void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
 {
     auto filename = std::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
-    cLogger::getInstance()->log(LOG_INFO, COMP_REGIONINI, "Opening mission file", filename);
+    Logger::info(COMP_REGIONINI, "cIni::loadRegionfile", "Opening mission file: {}", filename);
 
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -667,8 +667,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
             if (blooms[iB] > -1) {
                 //   map.cell[blooms[iB]].tile = BLOOM;
 
-                cLogger::getInstance()->log(LOG_DEBUG, COMP_SCENARIOINI, "[SCENARIO]", 
-                    std::format("Placing spice BLOOM at cell : {}", blooms[iB]));
+                Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice BLOOM at cell : {}", blooms[iB]);
                 mapEditor.createCell(blooms[iB], TERRAIN_BLOOM, 0);
             }
         }
@@ -677,8 +676,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
         for (int iB = 0; iB < 30; iB++) {
             // when
             if (fields[iB] > -1) {
-                cLogger::getInstance()->log(LOG_DEBUG, COMP_SCENARIOINI, "[SCENARIO]", 
-                    std::format("Placing spice FIELD at cell : {}", fields[iB]));
+                Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice FIELD at cell : {}", fields[iB]);
                 mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (RNG::rnd(50)));
             }
         }

@@ -1,7 +1,7 @@
 #include "game/cGame.h"
 #include "game/cTimeManager.h"
 #include "utils/cSoundPlayer.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "game/cTimeCounter.h"
 
 #include <format>
@@ -102,21 +102,19 @@ void cTimeManager::onWindowFocusGained()
 **/
 void cTimeManager::capTimers()
 {
-    auto logger = cLogger::getInstance();
-
     if (m_timerUnits.count > 10) {
-        logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high unit timer ({}); capped at 10", m_timerUnits.count));
+        Logger::warn(COMP_NONE, "cTimeManager::capTimers", "Exeptional high unit timer ({}); capped at 10", m_timerUnits.count);
         m_timerUnits.count = 10;
     }
 
     if (m_timerGameTime.count > 40) {
-        logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high global timer ({}); capped at 40", m_timerGameTime.count));
+        Logger::warn(COMP_NONE, "cTimeManager::capTimers", "Exeptional high global timer ({}); capped at 40", m_timerGameTime.count);
         m_timerGameTime.count = 40;
     }
 
     /* Taking 10 seconds to render a frame? i hope not **/
     if (m_timerSecond.count > 10) {
-        logger->log(LOG_WARN, COMP_NONE, "Timer", std::format("WARNING: Exeptional high timer second ({}); capped at 10", m_timerSecond.count));
+        Logger::warn(COMP_NONE, "cTimeManager::capTimers", "Exeptional high timer second ({}); capped at 10", m_timerSecond.count);
         m_timerSecond.count = 10;
     }
 }

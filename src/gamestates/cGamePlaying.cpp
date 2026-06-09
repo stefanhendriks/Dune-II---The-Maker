@@ -29,7 +29,7 @@
 #include "drawers/cTextDrawer.h"
 #include "sidebar/cBuildingListItem.h"
 #include "utils/cExpandingRectangle.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "utils/cStructureUtils.h"
 #include "utils/RNG.hpp"
 #include "utils/common.h"
@@ -744,14 +744,10 @@ void cGamePlaying::onEventCreateUnit(const DeployUnitEvent &event)
     );
 
     if (id < 0) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_GAME, "Deploy unit",
-                                    std::format("Failed to deploy unit of type {} at cell {} for player {}", event.unitType, event.iCell, event.iPlayer)
-        );
+        Logger::error(COMP_GAME, "Deploy unit", "Failed to deploy unit of type {} at cell {} for player {}", event.unitType, event.iCell, event.iPlayer);
     }
     else {
-        cLogger::getInstance()->log(LOG_INFO, COMP_GAME, "Deploy unit",
-                                    std::format("Successfully deployed unit of type {} at cell {} for player {}, id={}", event.unitType, event.iCell, event.iPlayer, id)
-        );
+        Logger::info(COMP_GAME, "Deploy unit", "Successfully deployed unit of type {} at cell {} for player {}, id={}", event.unitType, event.iCell, event.iPlayer, id);
     }
 }
 

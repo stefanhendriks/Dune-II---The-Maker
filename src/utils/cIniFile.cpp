@@ -1,5 +1,5 @@
 #include "cIniFile.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -34,8 +34,7 @@ bool cSection::addValue(const std::string &key, const std::string &value)
 {
     if (m_sectionConf.find(key) != m_sectionConf.end()) {
         // disable multiple values in ini files (to many bug with it)
-        cLogger::getInstance()->log(LOG_INFO, COMP_GAMERULES, "(cSection)",
-                    std::format("Key {} already exist on section {}", key, m_sectionName));
+        Logger::info(COMP_GAMERULES, "cSection::addValue", "Key {} already exist on section {}", key, m_sectionName);
     }
     m_sectionConf[key] = value;
     return true;
@@ -69,8 +68,7 @@ std::string cSection::getStringValue(const std::string &key) const
         return m_sectionConf.at(key);
     }
     else {
-        cLogger::getInstance()->log(LOG_WARN, COMP_GAMERULES, "(cSection)",
-                        std::format("Key {} didn't exist on section {}", key, m_sectionName));
+        Logger::warn(COMP_GAMERULES, "cSection::getStringValue", "Key {} didn't exist on section {}", key, m_sectionName);
         return std::string();
     }
 }
@@ -130,9 +128,8 @@ cIniFile::~cIniFile() {}
 
 bool cIniFile::load(const std::string &config)
 {
-    cLogger *logger = cLogger::getInstance();
     m_fileName = config;
-    logger->log(LOG_INFO, COMP_GAMERULES, "(cIniFile)", std::format("Load file {}", m_fileName));
+    Logger::info(COMP_GAMERULES, "cIniFile::load", "Load file {}", m_fileName);
     std::ifstream in(m_fileName.c_str());
     if (!in) {
         // throw and catch so we can dump more information about why it failed
@@ -142,7 +139,7 @@ bool cIniFile::load(const std::string &config)
         }
         catch (std::runtime_error &e) {
             std::cerr << e.what() << std::endl;
-            logger->log(LOG_ERROR, COMP_GAMERULES, "(cIniFile)", e.what());
+            Logger::error(COMP_GAMERULES, "cIniFile::load", "{}", e.what());
         }
         return false;
     }
@@ -160,8 +157,7 @@ bool cIniFile::load(const std::string &config)
         if (isSectionName(line) && !m_actualSection.empty()) {
             // test if already exist
             if (m_mapConfig.find(m_actualSection) != m_mapConfig.end()) {
-                logger->log(LOG_WARN, COMP_GAMERULES, "(cIniFile)",
-                                std::format("section {} already exist", m_actualSection));
+                Logger::warn(COMP_GAMERULES, "cIniFile::load", "section {} already exist", m_actualSection);
                 continue;
             }
             m_mapConfig[m_actualSection] = cSection(m_actualSection);
@@ -178,7 +174,7 @@ bool cIniFile::load(const std::string &config)
             m_mapConfig[m_actualSection].addData(line);
             continue;
         }
-        logger->log(LOG_WARN, COMP_GAMERULES, "(cIniFile)", std::format("Error {} or no section found", line));
+        Logger::warn(COMP_GAMERULES, "cIniFile::load", "Error {} or no section found", line);
     }
     return true;
 }
@@ -240,9 +236,7 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
     }
     else {
         //std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
-        cLogger *logger = cLogger::getInstance();
-        logger->log(LOG_ERROR, COMP_GAMERULES, "(cIniFile)",
-                    std::format(" getStringValue section {} didn't exist", section));
+        Logger::error(COMP_GAMERULES, "cIniFile::getStringValue", "section {} didn't exist", section);
         return std::string();
     }
 }

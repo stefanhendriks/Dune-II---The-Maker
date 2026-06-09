@@ -1,7 +1,7 @@
 #include "cBuildingListUpdater.h"
 #include "building/cItemBuilder.h"
 #include "gameobjects/players/cPlayer.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "sidebar/cSideBar.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "context/cInfoContext.h"
@@ -72,8 +72,7 @@ void cBuildingListUpdater::onStructureCreatedCampaignMode(int structureType) con
     int house = m_player->getHouse();
     int techLevel = m_player->getTechLevel();
 
-    cLogger::getInstance()->log(LOG_TRACE, COMP_STRUCTURES, "onStructureCreatedCampaignMode",
-                                std::format("For m_player [{}], structureType [{}], techlevel [{}], house [{}]", m_player->getId(), structureType, techLevel, house));
+    Logger::trace(COMP_STRUCTURES, "cBuildingListUpdater::onStructureCreatedCampaignMode", "For m_player [{}], structureType [{}], techlevel [{}], house [{}]", m_player->getId(), structureType, techLevel, house);
 
     d2tm_assert(listConstYard);
     d2tm_assert(listFootUnits);
@@ -605,7 +604,7 @@ void cBuildingListUpdater::evaluateUpgrades()
             if (item) {
                 if (item->isBuilding() && !item->isDoneBuilding()) {
                     // DUPLICATION OF cSidebar::thinkInteraction, line ~ 195!
-                    cLogger::getInstance()->log(LOG_INFO, COMP_BUILDING_LIST_UPDATER, "Cancel upgrading", "Upgrade no longer available, aborted mid-way upgrading so refunding.");
+                    Logger::info(COMP_BUILDING_LIST_UPDATER, "Cancel upgrading", "Upgrade no longer available, aborted mid-way upgrading so refunding.");
                     // only give money back for item that is being built
                     if (item->isBuilding()) {
                         // calculate the amount of money back:

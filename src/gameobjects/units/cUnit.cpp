@@ -15,7 +15,7 @@
 
 
 #include "include/d2tmc.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
@@ -1462,8 +1462,7 @@ void cUnit::thinkFast_move_airUnit()
         die(true, false);
 
         // KILL UNITS WHO SOMEHOW GET INVALID
-        cLogger::getInstance()->log(LOG_DEBUG, COMP_UNITS, "Air unit got out of bounds",
-                         std::format("Air unit [{}] got invalid cell [{}], and thus got killed.", iID, position.iCell) );
+        Logger::debug(COMP_UNITS, "cUnit::thinkFast_moveAirUnit", "Air unit [{}] got invalid cell [{}], and thus got killed.", iID, position.iCell);
         return;
     }
 
@@ -2395,9 +2394,7 @@ void cUnit::think_attack_sandworm()
             guardTimer.reset((1000/5) * ((5*unitsEaten) + RNG::rnd((20*unitsEaten))));
         }
 
-        cLogger::getInstance()->log(LOG_DEBUG, COMP_UNITS, "think_attack_sandworm() -> eaten unit", 
-                std::format("think_attack_sandworm() -> eaten unit. Units eaten {}, TIMER_guard {}",
-                unitsEaten, guardTimer.get()));
+        Logger::debug(COMP_UNITS, "cUnit::think_attack_sandworm", "eaten unit. Units eaten {}, TIMER_guard {}", unitsEaten, guardTimer.get());
         return;
     }
 

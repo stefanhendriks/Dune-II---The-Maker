@@ -3,7 +3,7 @@
 #include "include/d2tmc.h"
 
 #include "include/cAssert.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 
 cTextTextureCache::cTextTextureCache(TTF_Font *font)
     : m_font(font)
@@ -33,7 +33,7 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
     // a visible haze on light backgrounds and look inconsistent at non-integer scales.
     SDL_Surface *textSurface = TTF_RenderText_Solid(m_font, msg.c_str(), 0, Color::Black.toSDL());
     if (!textSurface) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_ALFONT, "cTextTextureCache", std::format("Failed to create shadow surface for text '{}': {}", msg, SDL_GetError()));
+        Logger::error(COMP_ALFONT, "cTextTextureCache", "Failed to create shadow surface for text '{}': {}", msg, SDL_GetError());
         return nullptr;
     }
     newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
@@ -42,7 +42,7 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
 
     textSurface = TTF_RenderText_Solid(m_font, msg.c_str(), 0, color.toSDL());
     if (!textSurface) {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_ALFONT, "cTextTextureCache", std::format("Failed to create surface for text '{}': {}", msg, SDL_GetError()));
+        Logger::error(COMP_ALFONT, "cTextTextureCache", "Failed to create surface for text '{}': {}", msg, SDL_GetError());
         return nullptr;
     }
     newCacheEntry->texture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
