@@ -1499,9 +1499,16 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
         else if (houseIndex == ORDOS) {
             sampleId = MIDI_MENTAT_ORD;
         }
-        else {
-            logbook(std::format("playMusicByType: MUSIC_BRIEFING requested for unrecognized house {}, falling back to menu music", houseIndex));
+        else if (houseIndex == SARDAUKAR) {
+            // No dedicated Sardaukar mentat track yet; use menu music as placeholder
             sampleId = MIDI_MENU;
+        }
+        else if (houseIndex == GENERALHOUSE) {
+            // BeneMentat has no dedicated track; house selection is still in progress
+            sampleId = MIDI_MENU;
+        }
+        else {
+            d2tm_assert(false && "Undefined house for MUSIC_BRIEFING.");
         }
     }
     else {
