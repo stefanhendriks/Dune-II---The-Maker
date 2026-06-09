@@ -589,6 +589,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SABOTEUR].infantry = true; // infantry unit, so it can be squished
     unitInfos[SABOTEUR].listType = eListType::LIST_PALACE;
     unitInfos[SABOTEUR].subListId = 0;
+    unitInfos[SABOTEUR].canAttackUnits = true;
     unitInfos[SABOTEUR].canEnterAndDamageStructure = true;
     unitInfos[SABOTEUR].attackIsEnterStructure = true;
     unitInfos[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
