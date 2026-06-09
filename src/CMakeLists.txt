@@ -54,6 +54,7 @@ set(D2TM_SOURCES
     gameobjects/mentat/BeneMentat.cpp
     gameobjects/mentat/HarkonnenMentat.cpp
     gameobjects/mentat/OrdosMentat.cpp
+    gameobjects/mentat/SardaukarMentat.cpp
     gameobjects/particles/cParticle.cpp
     gameobjects/players/brains/actions/cRespondToThreatAction.cpp
     gameobjects/players/brains/cPlayerBrain.cpp
