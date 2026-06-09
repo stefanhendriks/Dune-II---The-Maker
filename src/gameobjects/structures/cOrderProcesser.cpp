@@ -95,6 +95,9 @@ void cOrderProcesser::playTMinusSound(int seconds)
         else if (m_player->getHouse() == HARKONNEN) {
             soundIdToPlay = SOUND_VOICE_06_HAR;
         }
+        else if (m_player->getHouse() == SARDAUKAR) {
+            soundIdToPlay = SOUND_VOICE_06_HAR;    // no @SARDAUKAR srd voice yet, so use harkonnen one
+        }
         else if (m_player->getHouse() == ORDOS) {
             soundIdToPlay = SOUND_VOICE_06_ORD;
         }
@@ -108,6 +111,9 @@ void cOrderProcesser::playTMinusSound(int seconds)
         }
         else if (m_player->getHouse() == ORDOS) {
             soundIdToPlay = (SOUND_ORD_S1 + (seconds - 1));
+        }
+        else if (m_player->getHouse() == SARDAUKAR) {
+            soundIdToPlay = (SOUND_HAR_S1 + (seconds - 1));    // no @SARDAUKAR srd voice yet, so use harkonnen one
         }
     }
 
