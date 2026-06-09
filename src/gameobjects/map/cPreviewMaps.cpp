@@ -5,6 +5,7 @@
 #include "include/d2tmc.h"
 #include "include/Texture.hpp"
 #include "utils/common.h"
+#include "utils/Log.h"
 #include "utils/cIniFile.h"
 #include <filesystem>
 
@@ -68,7 +69,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
 {
     cIniFile conf = cIniFile(filename);
     if (!conf.isLoadSuccess()) {
-        logbook(std::format("Could not load file : {} ", filename));
+        Logger::error(COMP_MAP, "cPreviewMaps", "Could not load file : {}", filename);
         return; // skip this map loading
     }
 
@@ -95,9 +96,9 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         try {
             numbers.push_back(std::stoi(segment));
         } catch (const std::invalid_argument& e) {
-            logbook(std::format("Could not convert (invalid argument): {}",segment));
+            Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert (invalid argument): {}", segment);
         } catch (const std::out_of_range& e) {
-            logbook(std::format("Could not convert (out of bounds): {}",segment));
+            Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert (out of bounds): {}", segment);
         }
     }
 
@@ -106,7 +107,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             int startCell = numbers[i];
             if (startCell < 0 || startCell >= maxCells) {
                 previewMap->validMap = false;
-                logbook(std::format("StartCell [{}] invalid. (value must be between range [0-{}]), Map {}- is invalid" , startCell , maxCells, filename));
+                Logger::warn(COMP_MAP, "cPreviewMaps", "StartCell [{}] invalid. (value must be between range [0-{}]), Map {} - is invalid", startCell, maxCells, filename);
             }
             else {
                 previewMap->iStartCell[i] = startCell;
@@ -114,7 +115,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
         catch (std::invalid_argument const &e) {
             // could not perform conversion
-            logbook(std::format("Could not convert startCell [{}] to an int. Reason: {}", numbers[i], e.what()));
+            Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert startCell [{}] to an int. Reason: {}", numbers[i], e.what());
         }
     }
 
@@ -170,9 +171,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             }
 
             if (terrainType < 0) {
-                logbook(std::format(
-                            "iniLoader::skirmish() - Could not determine terrain type for char \"{}\", falling back to SAND",
-                            letter));
+                Logger::error(COMP_MAP, "cPreviewMaps", "Could not determine terrain type for char \"{}\", falling back to SAND", letter);
                 terrainType = TERRAIN_SAND;
                 iColor = Color{160, 32, 240, 255}; // show as purple to indicate wrong char
             }
@@ -194,14 +193,13 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (previewMap->terrain!= nullptr){
         SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), previewMap->terrain);
         if (out == nullptr) {
-            logbook(std::format("Error creating texture from surface: {}", SDL_GetError()));
+            Logger::error(COMP_SDL2, "cPreviewMaps", "Error creating texture from surface: {}", SDL_GetError());
             return;
         }
         SDL_SetTextureScaleMode(out, SDL_SCALEMODE_NEAREST);
         previewMap->previewTex = new Texture(out, previewMap->terrain->w, previewMap->terrain->h);
     }
-    logbook(std::format("Loaded skirmish map: {}, width: {}, height: {}",
-                        previewMap->name, previewMap->width, previewMap->height));
+    Logger::info(COMP_MAP, "cPreviewMaps", "Loaded skirmish map: {}, width: {}, height: {}", previewMap->name, previewMap->width, previewMap->height);
     m_PreviewMap.push_back(std::move(previewMap));
 }
 
@@ -223,7 +221,7 @@ void cPreviewMaps::loadSkirmishMaps()
         // std::cout << "Found file: " << fullname << std::endl;
         if (file.path().extension() == ".ini") {
             loadSkirmish(fullname);
-            logbook(std::format("Loading skirmish map: {}", fullname));
+            Logger::info(COMP_MAP, "cPreviewMaps", "Loading skirmish map: {}", fullname);
         }
     }
 }
