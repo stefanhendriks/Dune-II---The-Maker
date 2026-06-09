@@ -48,6 +48,9 @@ void cTellHouseState::prepareMentat(int house)
     } else if (house == ORDOS) {
         m_cIni->loadBriefing(ORDOS, 0, INI_DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plord");
+    } else if (house == SARDAUKAR) {
+        m_cIni->loadBriefing(SARDAUKAR, 0, INI_DESCRIPTION, m_mentat.get());
+        //m_mentat->loadScene("plsar");   
     } else {
         m_mentat->setSentence(0, "Looks like you choose an unknown house");
     }

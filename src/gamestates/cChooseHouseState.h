@@ -38,11 +38,13 @@ private:
     Texture *bmp_HouseAtreides;
     Texture *bmp_HouseOrdos;
     Texture *bmp_HouseHarkonnen;
+    Texture *bmp_HouseSardaukar;
 
     // Click areas of house emblems
     cRectangle houseAtreides;
     cRectangle houseOrdos;
     cRectangle houseHarkonnen;
+    cRectangle houseSardaukar;
 
     int selectYourHouseXCentered;
     cPoint coords_Dune;
