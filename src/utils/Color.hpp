@@ -26,6 +26,7 @@ public:
     static const Color Black;
     static const Color White;
     static const Color Yellow;
+    static const Color Purple;
 
     static const Color PlaceNeutral;
     static const Color PlaceBad;
@@ -42,3 +43,4 @@ inline constexpr Color Color::Yellow{255, 207, 41, 255};
 inline constexpr Color Color::PlaceNeutral{242, 174, 36, 64};
 inline constexpr Color Color::PlaceBad{160, 0, 0, 64};
 inline constexpr Color Color::PlaceGood{64, 255, 64, 64};
+inline constexpr Color Color::Purple{255, 0, 255, 255};

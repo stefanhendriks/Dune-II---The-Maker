@@ -741,6 +741,9 @@ Color cPlayer::getHouseFadingColor() const
     if (house == ORDOS) {
         color = Color::Green; //Color{0, 255, 0,255};
     }
+    if (house == SARDAUKAR) {
+        color = Color::Purple; //Color{255, 0, 255,255};
+    }
 
     // TODO other m_houseInfo (Sardaukar, etc)
     return color;
