@@ -220,7 +220,7 @@ int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const
         case CARRYALL:
             return HIGHTECH;
         default:
-            logbook(std::format("Item buildId is [{}], which is not mapped", unitBuildId));
+            Logger::warn(COMP_STRUCTURES, "cStructureUtils", "Item buildId is [{}], which is not mapped", unitBuildId);
             d2tm_assert(false);
             return -1;
     }
@@ -229,7 +229,7 @@ int cStructureUtils::getStructureTypeByUnitBuildId(int unitBuildId) const
 void cStructureUtils::putStructureOnDimension(int dimensionId, cAbstractStructure *theStructure)
 {
     if (!theStructure) {
-        logbook("!theStruture");
+        Logger::warn(COMP_STRUCTURES, "cStructureUtils::putStructureOnDimension", "theStructure is null");
         // bail
         return;
     }
