@@ -61,14 +61,14 @@ static int ToInt(const std::string& str)
         if (idx == str.size()) {
             return value;
         } else {
-            logbook(std::format("ToInt: Extra characters in '{}', 0 returned.", str));
+            Logger::warn(COMP_NONE, "ToInt", "Extra characters in '{}', 0 returned.", str);
             return 0;
         }
     } catch (const std::invalid_argument&) {
-        logbook(std::format("ToInt: Failed to convert '{}' to int, 0 returned.", str));
+        Logger::warn(COMP_NONE, "ToInt", "Failed to convert '{}' to int, 0 returned.", str);
         return 0;
     } catch (const std::out_of_range&) {
-        logbook(std::format("ToInt: Value out of range in '{}', 0 returned.", str));
+        Logger::warn(COMP_NONE, "ToInt", "Value out of range in '{}', 0 returned.", str);
         return 0;
     }
 #else
@@ -77,7 +77,7 @@ static int ToInt(const std::string& str)
     if (result.ec == std::errc() && result.ptr == str.data() + str.size()) {
         return value;
     } else {
-        logbook(std::format("ToInt: Failed to convert '{}' to int, 0 returned.", str));
+        Logger::warn(COMP_NONE, "ToInt", "Failed to convert '{}' to int, 0 returned.", str);
         return 0;
     }
 #endif
@@ -93,14 +93,14 @@ static float ToFloat(const std::string& str)
         if (idx == str.size()) {
             return value;
         } else {
-            logbook(std::format("ToFloat: Extra characters in '{}', 0.0f returned.", str));
+            Logger::warn(COMP_NONE, "ToFloat", "Extra characters in '{}', 0.0f returned.", str);
             return 0.0f;
         }
     } catch (const std::invalid_argument&) {
-        logbook(std::format("ToFloat: Failed to convert '{}' to float, 0.0f returned.", str));
+        Logger::warn(COMP_NONE, "ToFloat", "Failed to convert '{}' to float, 0.0f returned.", str);
         return 0.0f;
     } catch (const std::out_of_range&) {
-        logbook(std::format("ToFloat: Value out of range in '{}', 0.0f returned.", str));
+        Logger::warn(COMP_NONE, "ToFloat", "Value out of range in '{}', 0.0f returned.", str);
         return 0.0f;
     }
 #else
@@ -109,7 +109,7 @@ static float ToFloat(const std::string& str)
     if (result.ec == std::errc() && result.ptr == str.data() + str.size()) {
         return value;
     } else {
-        logbook(std::format("ToFloat: Failed to convert '{}' to float, 0.0f returned.", str));
+        Logger::warn(COMP_NONE, "ToFloat", "Failed to convert '{}' to float, 0.0f returned.", str);
         return 0.0f;
     }
 #endif
@@ -326,7 +326,7 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "DumpSpeed"))         return WORD_DUMPSPEED;
     }
 
-    logbook(std::format("Could not find word-type for [{}]", word));
+    Logger::warn(COMP_NONE, "SCEN_INI_WordType", "Could not find word-type for [{}]", word);
     return WORD_NONE;
 }
 
@@ -346,7 +346,7 @@ int SCEN_INI_SectionType(const std::string& section)
     if (cIniUtils::caseInsCompare(section, "Sardaukar"))      return INI_HOUSESARDAUKAR;
     if (cIniUtils::caseInsCompare(section, "Fremen"))         return INI_HOUSEFREMEN;
     if (cIniUtils::caseInsCompare(section, "Mercenary"))      return INI_HOUSEMERCENARY;
-    logbook(std::format("SCEN_INI_SectionType: Could not find section type for [{}]", section));
+    Logger::warn(COMP_NONE, "SCEN_INI_SectionType", "Could not find section type for [{}]", section);
     return -1;
 }
 
@@ -378,12 +378,12 @@ cIni::cIni(sGameServices* services)
 void cIni::INI_Load_seed(int seed)
 {
 
-    logbook(std::format("Generating seed map with seed {}.", seed));
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Generating seed map with seed {}.", seed);
 
     auto seedGenerator = cSeedMapGenerator(seed);
 
     auto seedMap = seedGenerator.generateSeedMap();
-    logbook("Seedmap generated");
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Seedmap generated");
 
     auto mapEditor = cMapEditor(m_objects->getMap());
     for (int mapY = 0; mapY < 64; mapY++) {
@@ -394,7 +394,7 @@ void cIni::INI_Load_seed(int seed)
         }
     }
 
-    logbook("Seedmap converted into D2TM map.");
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Seedmap converted into D2TM map.");
 }
 
 
@@ -442,7 +442,7 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
 
     std::ifstream file(filename);
     if (!file.is_open()) {
-        logbook("[CAMPAIGN] Error, could not open file");
+        Logger::error(COMP_REGIONINI, "cIni::loadRegionfile", "[CAMPAIGN] Error, could not open file");
         return;
     }
 
@@ -460,7 +460,7 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
 
         auto [word_left, word_right] = INI_SplitWord(line);
         if (word_left.empty() || word_right.empty()) {
-            logbook(std::format("Skipping invalid line: '{}'", line));
+            Logger::warn(COMP_REGIONINI, "cIni::loadRegionfile", "Skipping invalid line: '{}'", line);
             continue;
         }
 
@@ -481,7 +481,7 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
 
         if (iRegionIndex > -1 || iRegionNumber > -1) {
             if (wordtype == WORD_REGIONHOUSE) {
-                logbook("Region house");
+                Logger::info(COMP_REGIONINI, "cIni::loadRegionfile", "Region house");
                 int iH = cIniUtils::getHouseFromString(word_right);
                 if (iRegionNumber > -1) {
                     world[iRegionNumber].iHouse = iH;
@@ -506,7 +506,7 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
         }
     }
     file.close();
-    logbook("[CAMPAIGN] Done");
+    Logger::info(COMP_REGIONINI, "cIni::loadRegionfile", "[CAMPAIGN] Done");
 }
 
 /**
@@ -546,8 +546,8 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
 
     dataCampaign->mission = getTechLevelByRegion(iRegion);
 
-    logbook(std::format("[SCENARIO] '{}' (Mission {})", filename, dataCampaign->mission));
-    logbook("[SCENARIO] Opening file");
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] '{}' (Mission {})", filename, dataCampaign->mission);
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Opening file");
 
     // declare some temp fields while reading the scenario file.
     int blooms[30], fields[30];
@@ -556,7 +556,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
 
     std::ifstream file(filename);
     if (!file.is_open()) {
-        logbook("[SCENARIO] Error, could not open file");
+        Logger::error(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Error, could not open file");
         return;
     }
     int section = INI_NONE;
@@ -598,7 +598,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
                     // found a section
                     section = sectionType;
 
-                    logbook(std::format("[SCENARIO] found section '{}', resulting in section id [{}]", linesection, section));
+                    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] found section '{}', resulting in section id [{}]", linesection, section);
 
                     if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
                         iPlayerID++;
@@ -617,7 +617,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
 
                         iPl_house[iPlayerID] = house;
 
-                        logbook(std::format("[SCENARIO] Setting house to [{}] for playerId [{}]", iPl_house[iPlayerID], iPlayerID));
+                        Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Setting house to [{}] for playerId [{}]", iPl_house[iPlayerID], iPlayerID);
                     }
                 }
                 continue; // next line
@@ -681,7 +681,7 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
             }
         }
 
-        logbook("[SCENARIO] Done reading");
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Done reading");
     // }
 
     mapEditor.smoothMap();
@@ -716,25 +716,24 @@ void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, con
 int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, const std::string& linefeed)
 {
     int iHumanID = -1;
-    logbook(std::format("Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]",
-                        iPlayerID, wordtype));
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, wordtype);
     // link house (found, because > -1)
     if (iPlayerID > -1) {
         if (wordtype == WORD_BRAIN) {
-            logbook(std::format("Brain is [{}]", linefeed));
+            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", linefeed);
 
             // We know the human brain now, this should be player 0 in our game (!?)...
             if (linefeed == "Human") {
-                logbook(std::format("Found human player for id [{}]", iPlayerID));
+                Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
                 iHumanID = iPlayerID;
             }
             else {
-                logbook("This brain is not human...");
+                Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "This brain is not human...");
             }
         }
         else if (wordtype == WORD_CREDITS) {
             int credits = ToInt(linefeed) - 1;
-            logbook(std::format("Set credits for player id [{}] to [{}]", iPlayerID, credits));
+            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Set credits for player id [{}] to [{}]", iPlayerID, credits);
 
             iPl_credits[iPlayerID] = credits;
         }
@@ -751,7 +750,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
 
     // original dune 2 maps have 64x64 maps
     if (wordtype == WORD_MAPSEED) {
-        logbook("[SCENARIO] -> [MAP] Seed=");
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
         auto [word, seek] = INI_SplitWord(slinefeed);
         INI_Load_seed(ToInt(seek));
     }
@@ -761,7 +760,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
         // This should put spice blooms in our array
         // Logic: read till next "," , then use that number to determine
         // where the bloom will be (as cell nr)
-        logbook("[SCENARIO] -> [MAP] Bloom=");
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Bloom=");
 
         int iBloomID = 0;
         unsigned int iStringID = 6;    // B L O O M = <6>
@@ -815,7 +814,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
         // Logic: read till next "," , then use that number to determine
         // where the bloom will be (as cell nr)
 
-        logbook("[SCENARIO] -> [MAP] Field=");
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Field=");
         int iFieldID = 0;
         unsigned int iStringID = 6;    // F I E L D = <6>
         int iWordID = 0;
@@ -866,7 +865,7 @@ void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, cons
 
 void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& slinefeed, cReinforcements *reinforcements)
 {
-    logbook("[SCENARIO] -> REINFORCEMENTS");
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Reinforcements", "[SCENARIO] -> REINFORCEMENTS");
     int iPart = -1; /*
                 0 = Controller
                 1 = Type
@@ -1048,8 +1047,7 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
                     //	iController = 6;
 
                     if (iController < 0) {
-                        logbook("WARNING: Identifying house/controller of structure (typo?)");
-                        logbook(chunk);
+                        Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Structures", "WARNING: Identifying house/controller of structure (typo?): {}", chunk);
                     }
                 }
                 else if (iPart == 1) {
@@ -1096,7 +1094,7 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
         m_objects->getPlayer(iController)->placeStructure(iCell, iType, 100);
     }
     else {
-        logbook("WARNING: Identifying house/controller of structure (typo?)");
+        Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Structures", "WARNING: Identifying house/controller of structure (typo?)");
     }
     return bSetUpPlayers;
 }
@@ -1161,7 +1159,7 @@ bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const in
                 }
 
                 if (iController < 0) {
-                    logbook(std::format("WARNING: Cannot identify house/controller -> STRING '{}'", chunk));
+                    Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Units", "WARNING: Cannot identify house/controller -> STRING '{}'", chunk);
                 }
 
             }
@@ -1193,7 +1191,7 @@ bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const in
 
 void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota)
 {
-    logbook("INI: Going to setup players");
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_SetupPlayers", "INI: Going to setup players");
     int iCPUId = 1; // index for CPU's, starts at 1 because ID 0 is HUMAN player
 
     int teamIndexAI = 1;
@@ -1201,13 +1199,13 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
 
     for (int playerIndex = 0; playerIndex < MAX_PLAYERS; playerIndex++) { // till 6 , since player 6 itself is sandworm
         int houseForPlayer = iPl_house[playerIndex];
-        logbook(std::format("House for id [{}] is [{}] - human id is [{}]", playerIndex, houseForPlayer, iHumanID));
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_SetupPlayers", "House for id [{}] is [{}] - human id is [{}]", playerIndex, houseForPlayer, iHumanID);
         if (houseForPlayer > -1) {
             int creditsPlayer = iPl_credits[playerIndex];
             int quota = iPl_quota[playerIndex];
 
             if (playerIndex == iHumanID) {
-                logbook(std::format("INI: Setting up human player, credits to [{}], house [{}] and team [{}]", creditsPlayer, houseForPlayer, 0));
+                Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_SetupPlayers", "INI: Setting up human player, credits to [{}], house [{}] and team [{}]", creditsPlayer, houseForPlayer, 0);
                 m_objects->getPlayer(HUMAN)->setCredits(creditsPlayer);
                 m_objects->getPlayer(HUMAN)->setHouse(houseForPlayer);
                 m_objects->getPlayer(HUMAN)->setTeam(0);
@@ -1242,8 +1240,7 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
 
                 m_objects->getPlayer(iCPUId)->setTeam(teamIndexAI);
 
-                logbook(std::format("INI: Setting up CPU player, credits to [{}], house to [{}] and team [{}]",
-                                    creditsPlayer, houseForPlayer, teamIndexAI));
+                Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_SetupPlayers", "INI: Setting up CPU player, credits to [{}], house to [{}] and team [{}]", creditsPlayer, houseForPlayer, teamIndexAI);
 
                 m_objects->getPlayer(iCPUId)->setCredits(creditsPlayer);
                 m_objects->getPlayer(iCPUId)->setHouse(houseForPlayer);
@@ -1269,7 +1266,7 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
 
 void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
 {
-    logbook("[BRIEFING] Opening file");
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] Opening file");
 
     std::string filename;
     if (iHouse == ATREIDES) filename = "mentata.ini";
@@ -1281,8 +1278,8 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
     pMentat->initSentences();
     auto path = std::string("campaign/briefings/") + filename;
 
-    logbook(path);
-    logbook(std::format("Going to find SCEN ID #{} and SectionID {}", iScenarioFind, iSectionFind));
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "{}", path);
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "Going to find SCEN ID #{} and SectionID {}", iScenarioFind, iSectionFind);
 
     int iScenario = 0;
     int iSection = 0;
@@ -1290,7 +1287,7 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
 
     std::ifstream file(path);
     if (!file.is_open()) {
-        logbook("[BRIEFING] Error, could not open file");
+        Logger::error(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] Error, could not open file");
         return;
     }
 
@@ -1335,24 +1332,24 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
             }
         }
         file.close();
-    logbook("[BRIEFING] File opened");
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] File opened");
 }
 
 
 // Game.ini loader
 void cIni::installGame(std::string filename)
 {
-    logbook("[GameRules] Opening file");
+    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
     int section = INI_GAME;
     int wordtype = WORD_NONE;
     int id = -1;
 
-    logbook(std::format("Opening game settings from : {}", filename));
+    Logger::info(COMP_GAMERULES, "cIni::installGame", "Opening game settings from : {}", filename);
 
     std::ifstream file(filename);
     if (!file.is_open()) {
-        logbook("[BRIEFING] Error, could not open file");
+        Logger::error(COMP_GAMERULES, "cIni::installGame", "[GameRules] Error, could not open file");
         return;
     }
         std::string linesection;
@@ -1385,9 +1382,9 @@ void cIni::installGame(std::string filename)
                     id = -1;
 
                     // Show in log file we entered a new section
-                    if (section == INI_UNITS) logbook("[GAME.INI] -> [UNITS]");
-                    if (section == INI_STRUCTURES) logbook("[GAME.INI] -> [STRUCTURES]");
-                    if (section == INI_BULLETS) logbook("[GAME.INI] -> [BULLETS]");
+                    if (section == INI_UNITS) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [UNITS]");
+                    if (section == INI_STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [STRUCTURES]");
+                    if (section == INI_BULLETS) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [BULLETS]");
                 }
 
                 // New unit type
@@ -1591,5 +1588,5 @@ void cIni::installGame(std::string filename)
         } // while
         file.close();
 
-    logbook("[GAME.INI] Done");
+    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] Done");
 }

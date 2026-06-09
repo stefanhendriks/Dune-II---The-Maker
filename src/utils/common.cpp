@@ -268,7 +268,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     }
 
     if (newBullet.iPlayer < 0) {
-        logbook("New bullet produced without any player!?");
+        Logger::warn(COMP_BULLET, "createBullet", "New bullet produced without any player!?");
     }
 
     // play sound (when we have one)
