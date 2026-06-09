@@ -150,7 +150,6 @@ set(D2TM_SOURCES
     utils/cHandleArgument.cpp
     utils/cIniFile.cpp
     utils/cIniUTils.cpp
-    utils/cLog.cpp
     utils/common.cpp
     utils/cPack.cpp
     utils/cPoint.cpp
