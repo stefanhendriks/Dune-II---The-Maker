@@ -1277,6 +1277,7 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
     if (iHouse == ATREIDES) filename = "mentata.ini";
     if (iHouse == ORDOS) filename = "mentato.ini";
     if (iHouse == HARKONNEN) filename = "mentath.ini";
+    if (iHouse == SARDAUKAR) filename = "mentats.ini";
 
     // clear mentat
     pMentat->initSentences();
