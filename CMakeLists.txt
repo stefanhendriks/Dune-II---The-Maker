@@ -137,7 +137,12 @@ elseif(UNIX)
             -Wredundant-tags
     )
 
-    target_link_libraries(cpp_stacktrace INTERFACE stdc++exp backtrace)
+    find_library(LIBSTDCXXEXP stdc++exp)
+    if(LIBSTDCXXEXP)
+        target_link_libraries(cpp_stacktrace INTERFACE ${LIBSTDCXXEXP})
+    else()
+        target_compile_definitions(cpp_stacktrace INTERFACE DISABLE_D2TM_STACKTRACE)
+    endif()
 
 else()
     target_compile_options(${PROJECT_NAME}
