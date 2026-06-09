@@ -128,6 +128,9 @@ void cSoundPlayer::playMusic(int sampleId)
     }
     MIX_Audio *audio = soundData->getAudio(sampleId);
     if (!audio) {
+        cLogger::getInstance()->log(LOG_ERROR, COMP_SOUND, "playMusic",
+            std::format("Audio sample [{}] not found, disabling music.", sampleId));
+        m_isMusicEnabled = false;
         return;
     }
     MIX_StopTrack(m_musicTrack, 0);

@@ -391,6 +391,7 @@ void cGame::thinkFast_audio()
     }
 
     if (m_newMusicCountdown < 0) {
+        if (!m_soundPlayer->getMusicEnabled()) return;
         if (!m_soundPlayer->isMusicPlaying()) {
             int desiredMusicType = m_gameSettings->m_musicType;
             if (m_gameSettings->m_musicType == MUSIC_ATTACK) {
