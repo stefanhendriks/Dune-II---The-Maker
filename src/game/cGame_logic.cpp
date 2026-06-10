@@ -133,7 +133,7 @@ void cGame::syncTextInputState() const
 
 cGame::cGame()
 {
-    memset(m_states, 0, sizeof(cGameState *));
+    std::fill(std::begin(m_states), std::end(m_states), nullptr);
 
     m_nextState = -1;
     m_currentState = nullptr;

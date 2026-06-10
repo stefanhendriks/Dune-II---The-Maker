@@ -27,7 +27,7 @@ struct SDL_Surface;
 
 
 // game
-extern cGame		  game;
+// extern cGame		  game;
 
 extern SDLDrawer      *global_renderDrawer;
 extern std::shared_ptr<Graphics> gfxdata;

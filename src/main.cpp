@@ -26,13 +26,14 @@
 #include <SDL3_ttf/SDL_ttf.h>
 
 // the ultimate game variable(s)
-cGame          				game;
+
 SDLDrawer                   *global_renderDrawer = nullptr;
 std::shared_ptr<Graphics>   gfxdata;
 
 
 int main(int argc, char **argv)
 {
+    cGame game;
     std::unique_ptr<cLog> m_log = std::make_unique<cLog>("nlog.txt");
 
     std::unique_ptr<InitialGameSettings> settings = loadSettingsFromIni("settings.ini");
