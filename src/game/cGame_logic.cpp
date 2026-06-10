@@ -939,6 +939,7 @@ void cGame::setState(int newState)
                 newStatePtr = new cEditorState(m_services.get());
             }
             else if (newState == GAME_MENU) {
+                m_gameSettings->m_cheatMode = false;
                 newStatePtr = new cMainMenuState(m_services.get());
                 playMusicByTypeForStateTransition(MUSIC_MENU);
             }
