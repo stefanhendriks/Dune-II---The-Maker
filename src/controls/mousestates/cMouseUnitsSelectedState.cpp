@@ -244,6 +244,7 @@ void cMouseUnitsSelectedState::onMouseRightButtonClicked()
     // if we were dragging the viewport, keep the units and this state.
     if (!m_mouse->isMapScrolling()) {
         m_player->deselectAllUnits();
+        m_player->deselectStructure();
         // back to "select" state
         m_context->setMouseState(MOUSESTATE_SELECT);
     }
