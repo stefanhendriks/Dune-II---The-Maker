@@ -13,7 +13,6 @@
 #include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include "utils/texture_utils.h"
-#include "include/d2tmc.h"
 #include "include/sGameServices.h"
 #include "gameobjects/particles/cParticles.h"
 #include "drawers/SDLDrawer.hpp"
@@ -52,6 +51,8 @@ void cParticle::serviceInit(sGameServices* services)
     d2tm_assert(m_services != nullptr);
     m_renderer = m_services->ctx->getSDLDrawer();
     d2tm_assert(m_renderer != nullptr);
+    m_gfxdata = m_services->ctx->getGraphicsContext()->gfxdata.get();
+    d2tm_assert(m_gfxdata != nullptr);
 }
 
 void cParticle::reset()
@@ -758,9 +759,8 @@ cParticle& cParticle::getBoundParticle()
 void cParticle::init(const s_ParticleInfo &particleInfo)
 {
     init();
-
     if (particleInfo.bmpIndex > -1) {
-        bmp = g_gfxdata->getTexture(particleInfo.bmpIndex);
+        bmp = m_gfxdata->getTexture(particleInfo.bmpIndex);
     }
 
     if (particleInfo.startAlpha > -1 && particleInfo.startAlpha < 256) {
@@ -856,7 +856,7 @@ void cParticle::recolorForHouseIfGiven() {
     }
 
     int bmpIndex = m_services->info->getParticleInfo(iType).bmpIndex;
-    if (m_renderer->isSurface8BitPaletted(g_gfxdata->getSurface(bmpIndex)) == false) {
+    if (m_renderer->isSurface8BitPaletted(m_gfxdata->getSurface(bmpIndex)) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
     }
@@ -870,14 +870,14 @@ void cParticle::recolorForHouseIfGiven() {
     }
     
     cPlayer *player = m_services->objects->getPlayer(this->iHousePal);
-    auto tex = g_gfxdata->getSurface(bmpIndex);
+    auto tex = m_gfxdata->getSurface(bmpIndex);
     auto recoloredBmp = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, player, tex, TransparentColorIndex);
     if (recoloredBmp != nullptr) {
         // but why did createTextureFromIndexedSurfaceWithPalette give an error ?
         bmp = recoloredBmp;
         particleTextureCache[cacheKey] = recoloredBmp;
     } else {
-        Texture* fallback = g_gfxdata->getTexture(bmpIndex);
+        Texture* fallback = m_gfxdata->getTexture(bmpIndex);
         if (fallback != nullptr) {
             bmp = fallback;
         }
