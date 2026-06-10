@@ -37,7 +37,7 @@ ORDOS_MINIMAPCOLOR = 0,255,0
 MERCENARY_SWAPCOLOR = 192
 MERCENARY_MINIMAPCOLOR = 214,121,16
 SARDAUKAR_SWAPCOLOR = 208
-SARDAUKAR_MINIMAPCOLOR = 255,0,255
+SARDAUKAR_MINIMAPCOLOR = 101, 12, 101
 # Fremen is colored as "sand" on the minimap
 FREMEN_SWAPCOLOR = 224
 FREMEN_MINIMAPCOLOR = 194,125,60
@@ -298,9 +298,9 @@ HitPoints=40
 MoveSpeed=5
 TurnSpeed=1
 FireTwice=false
-AttackFrequency=10
+AttackFrequency=6
 Sight=2
-Range=1
+Range=2
 
 ; Build properties + Sidebar
 BuildTime=12
@@ -313,11 +313,11 @@ Cost=60
 ; -----------------
 [UNIT: INFANTRY]
 ; Unit properties
-HitPoints=80
+HitPoints=120
 MoveSpeed=5
 TurnSpeed=1
 FireTwice=true
-AttackFrequency=13
+AttackFrequency=6
 Sight=3
 Range=2
 
@@ -336,7 +336,7 @@ TurnSpeed=1
 FireTwice=false
 AttackFrequency=15
 Sight=3
-Range=3
+Range=5
 
 ; Build properties + Sidebar
 BuildTime=28
@@ -347,13 +347,13 @@ Cost=80
 ; -----------------
 [UNIT: TROOPERS]
 ; Unit properties
-HitPoints=100
+HitPoints=180
 MoveSpeed=6
 TurnSpeed=1
 FireTwice=true
-AttackFrequency=18
+AttackFrequency=15
 Sight=4
-Range=4
+Range=5
 
 ; Build properties + Sidebar
 BuildTime=38
@@ -390,9 +390,9 @@ BuildTime=100
 HitPoints=120
 MoveSpeed=4
 TurnSpeed=2
-AttackFrequency=16
+AttackFrequency=14
 Sight=6
-Range=5
+Range=6
 
 ; changing build time or cost here will not do anything
 ; this is stored in a separate entry, a so called "Special". These are not yet
@@ -407,13 +407,13 @@ Cost=0
 ; -----------------
 [UNIT: THREEFREMEN]
 ; Unit properties
-HitPoints=250
+HitPoints=450
 MoveSpeed=4
 TurnSpeed=2
 FireTwice=true
-AttackFrequency=16
+AttackFrequency=14
 Sight=6
-Range=5
+Range=6
 
 ; changing build time or cost here will not do anything
 ; this is stored in a separate entry, a so called "Special". These are not yet
@@ -659,6 +659,9 @@ FixPoints=2
 BuildTime=54
 PowerDrain=10
 PowerGive=0
+Sight=7
+Range=7
+FireRate=275
 
 ; ---------------------
 ; Structure: Rocket Turret
@@ -670,6 +673,9 @@ FixPoints=3
 BuildTime=96
 PowerDrain=20
 PowerGive=0
+Sight=10
+Range=7
+FireRate=350
 
 
 ; ==================================================
