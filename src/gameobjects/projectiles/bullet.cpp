@@ -73,6 +73,7 @@ void cBullet::serviceInit(sGameServices *services)
     m_settings = services->settings;
     m_interface = services->ctx->getGameInterface();
     m_mapCamera = m_interface->getMapCamera();
+    m_renderer = services->ctx->getSDLDrawer();
 }
 
 int cBullet::pos_x() const
@@ -152,7 +153,7 @@ void cBullet::draw()
     if (m_info->getBulletInfo(iType).bmp != nullptr) {
         cRectangle src = {sx,sy, bmp_width, bmp_width};
         cRectangle dest = {x,y, static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width)))};
-        global_renderDrawer->renderStrechSprite(m_info->getBulletInfo(iType).bmp, src, dest);
+        m_renderer->renderStrechSprite(m_info->getBulletInfo(iType).bmp, src, dest);
     }
 }
 
