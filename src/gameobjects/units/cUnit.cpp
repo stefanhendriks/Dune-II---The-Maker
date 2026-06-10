@@ -3058,7 +3058,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
                 if (potentialDeadUnit->position.iCell != position.iCell) continue; // not on my cell
                 if (!potentialDeadUnit->canBeSquished()) continue;
 
-                if (potentialDeadUnit->canAttackOnEnterStructure()) {
+                if (potentialDeadUnit->isSaboteur()) {
                     takeDamage(potentialDeadUnit->getUnitInfo().damageOnEnterStructure);
                 }
 
