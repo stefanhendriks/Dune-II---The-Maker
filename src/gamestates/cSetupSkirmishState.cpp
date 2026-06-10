@@ -26,9 +26,10 @@
 #include "include/Texture.hpp"
 #include "gui/GuiButton.h"
 
-#include <format>
 #include <algorithm>
+#include <format>
 #include <utility>
+#include <vector>
 #include "include/cAssert.h"
 
 #include "config.h"
@@ -726,29 +727,21 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
             // house = 0 means pick random house
             if (iHouse == 0) {
-                bool bOk = false;
-
-                while (bOk == false) {
-                    iHouse = RNG::rnd(4) + 1; // hark = 1, atr = 2, ord = 3, sar = 4
-
-                    bool houseInUse = false;
-                    for (int pl = 0; pl < AI_WORM; pl++) {
-                        // already in use by other skirmish set-up players
-                        if (skirmishPlayer[pl].iHouse > 0 &&
-                                skirmishPlayer[pl].iHouse == iHouse) {
-                            houseInUse = true;
-                        }
-
-                        if (m_objects->getPlayer(pl)->getHouse() == iHouse) {
-                            // already in use by a already-setup player
-                            houseInUse = true;
-                        }
-                    }
-
-                    if (!houseInUse) {
-                        bOk = true;
-                    }
+                std::vector<int> available = {HARKONNEN, ATREIDES, ORDOS, SARDAUKAR};
+                for (int pl = 0; pl < AI_WORM; pl++) {
+                    int usedHouse = (skirmishPlayer[pl].iHouse > 0)
+                        ? skirmishPlayer[pl].iHouse
+                        : m_objects->getPlayer(pl)->getHouse();
+                    available.erase(
+                        std::remove(available.begin(), available.end(), usedHouse),
+                        available.end());
                 }
+                if (available.empty()) {
+                    cPlayer* pSkipPlayer = m_objects->getPlayer(p);
+                    pSkipPlayer->init(p, nullptr);
+                    continue;
+                }
+                iHouse = available[RNG::rnd(available.size())];
             }
         }
         else {
