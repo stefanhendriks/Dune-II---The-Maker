@@ -161,6 +161,10 @@ void cMouseNormalState::onMouseRightButtonPressed()
 
 void cMouseNormalState::onMouseRightButtonClicked()
 {
+    if (!m_mouse->isMapScrolling()) {
+        m_player->deselectAllUnits();
+        m_player->deselectStructure();
+    }
     m_mouse->resetDragViewportInteraction();
 }
 
