@@ -76,6 +76,8 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_interface != nullptr);
     m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
     d2tm_assert(m_gfxdata != nullptr);
+    m_renderer = services->ctx->getSDLDrawer();
+    d2tm_assert(m_renderer != nullptr);
     if (difficultySettings) {
         difficultySettings->setInfoContext(m_infos);
     }
@@ -267,7 +269,6 @@ void cPlayer::setHouse(int iHouse)
     if (m_infos) {
         difficultySettings->setInfoContext(m_infos);
     }
-
     if (currentHouse != iHouse) {
         Logger::info(COMP_PLAYER, "cPlayer::setHouse", "Current house differs from iHouse, preparing palette.");
 
@@ -276,8 +277,8 @@ void cPlayer::setHouse(int iHouse)
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
-        bmp_flag = createPlayerTextureFromIndexedSurfaceWithPalette(this, m_gfxdata->getSurface(BUILDING_FLAG_LARGE),TransparentColorIndex);
-        bmp_flag_small = createPlayerTextureFromIndexedSurfaceWithPalette(this, m_gfxdata->getSurface(BUILDING_FLAG_SMALL),TransparentColorIndex);
+        bmp_flag = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(BUILDING_FLAG_LARGE),TransparentColorIndex);
+        bmp_flag_small = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(BUILDING_FLAG_SMALL),TransparentColorIndex);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
@@ -285,7 +286,7 @@ void cPlayer::setHouse(int iHouse)
 
             if (!structureType.configured) continue;
 
-            bmp_structure[i] = createPlayerTextureFromIndexedSurfaceWithPalette(this, structureType.bmp, TransparentColorIndex);
+            bmp_structure[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, structureType.bmp, TransparentColorIndex);
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
@@ -297,7 +298,7 @@ void cPlayer::setHouse(int iHouse)
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
-                bmp_structure[j] = createPlayerTextureFromIndexedSurfaceWithPalette(this, structureType.flash, TransparentColorIndex);
+                bmp_structure[j] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, structureType.flash, TransparentColorIndex);
             }
 
         }
@@ -307,13 +308,13 @@ void cPlayer::setHouse(int iHouse)
         for (int i = 0; i < MAX_UNITTYPES; i++) {
             s_UnitInfo &unitType = m_infos->getUnitInfo(i);
 
-            bmp_unit[i] = createPlayerTextureFromIndexedSurfaceWithPalette(this, unitType.bmp, TransparentColorIndex);
+            bmp_unit[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitType.bmp, TransparentColorIndex);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
             if (unitType.top) {
 
-                bmp_unit_top[i] = createPlayerTextureFromIndexedSurfaceWithPalette(this, unitType.top, TransparentColorIndex);
+                bmp_unit_top[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitType.top, TransparentColorIndex);
             }
         }
     }

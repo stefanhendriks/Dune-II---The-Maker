@@ -501,7 +501,7 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
         cPlayer* temp = m_objects->getPlayer(regionPiece.iHouse);
         // select_palette(temp.pal);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(temp, regionPiece.bmp, TransparentColorIndex);
+            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), temp, regionPiece.bmp, TransparentColorIndex);
             regionPiece.oldHouse=regionPiece.iHouse;
         }
         drawRegion(regionPiece);
@@ -512,7 +512,7 @@ void cSelectYourNextConquestState::regionDraw(cRegion &regionPiece) const
         int iHouse = m_objects->getPlayer(HUMAN)->getHouse();
         cPlayer* temp = m_objects->getPlayer(iHouse);
         if (regionPiece.iHouse!=regionPiece.oldHouse) {
-            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(temp, regionPiece.bmp, TransparentColorIndex);
+            regionPiece.bmpColor = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), temp, regionPiece.bmp, TransparentColorIndex);
         }
         drawRegion(regionPiece);
     }

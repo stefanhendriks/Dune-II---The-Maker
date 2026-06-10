@@ -45,6 +45,7 @@ class cPlayerDifficultySettings;
 class cOrderProcesser;
 class cGameControlsContext;
 class Graphics;
+class SDLDrawer;
 
 
 struct sEntityForDistance {
@@ -615,6 +616,7 @@ private:
     cGameInterface *m_interface = nullptr;
     cLog *m_log = nullptr;
     Graphics *m_gfxdata = nullptr;
+    SDLDrawer *m_renderer = nullptr;
 
     Texture *bmp_structure[MAX_STRUCTURE_BMPS];
     Texture *bmp_flag;
