@@ -19,7 +19,7 @@
 
 #include <memory>
 
-class SDLDrawer;
+// class SDLDrawer;
 class Graphics;
 class cGame;
 
@@ -29,5 +29,5 @@ struct SDL_Surface;
 // game
 // extern cGame		  game;
 
-extern SDLDrawer      *global_renderDrawer;
+// extern SDLDrawer      *global_renderDrawer;
 extern std::shared_ptr<Graphics> gfxdata;

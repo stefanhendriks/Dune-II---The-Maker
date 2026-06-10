@@ -665,8 +665,6 @@ bool cGame::setupGame()
     // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
     std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
     m_renderDrawer = renderDrawer.get();
-    // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
-    global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
     ctx->setSDLDrawer(std::move(renderDrawer));
     // share Text to all class what use ctx !
     ctx->setTextContext(context->createTextContext(m_gameSettings.get(), m_renderDrawer));

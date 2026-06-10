@@ -26,10 +26,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 
 // the ultimate game variable(s)
-
-SDLDrawer                   *global_renderDrawer = nullptr;
 std::shared_ptr<Graphics>   gfxdata;
-
 
 int main(int argc, char **argv)
 {
