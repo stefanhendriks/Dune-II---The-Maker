@@ -2586,6 +2586,15 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
     return unitSelected || infantrySelected;
 }
 
+void cPlayer::selectAdditionalUnits(const std::vector<int> &ids) const
+{
+    for (auto id : ids) {
+        cUnit *pUnit = m_objects->getUnit(id);
+        if (pUnit->isAirbornUnit()) continue;
+        pUnit->select();
+    }
+}
+
 void cPlayer::setContextMouseState(eMouseState newState)
 {
     gameControlsContext->setMouseState(newState);
