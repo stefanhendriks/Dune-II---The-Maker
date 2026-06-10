@@ -10,12 +10,14 @@ class cUpgradeInfos;
 class cUnitInfos;
 class cInfoContext;
 class cGameSettings;
+class Graphics;
+class GraphicsContext;
 struct SDL_Renderer;
 struct s_TerrainInfo;
 
 class cInfoContextCreator {
 public:
-    cInfoContextCreator() = default;
+    explicit cInfoContextCreator(GraphicsContext* graphicsContext);
     ~cInfoContextCreator() = default;
 
     std::unique_ptr<cParticleInfos> createParticleInfos();
@@ -36,4 +38,6 @@ private:
     void initSpecials(cSpecialInfos& specialInfos);
     void initParticles(cParticleInfos& particleInfos);
     void initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings);
+
+    Graphics* m_gfxdata = nullptr;
 };
