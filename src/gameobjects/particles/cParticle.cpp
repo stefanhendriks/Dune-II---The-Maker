@@ -520,7 +520,8 @@ void cParticle::thinkFast()
     }
 
     if (iType == D2TM_PARTICLE_SQUISH01 || iType == D2TM_PARTICLE_SQUISH02 ||
-            iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
+            iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI ||
+            iType == D2TM_PARTICLE_EXPLOSION_CARRYALL) {
         TIMER_frame--;
         if (TIMER_frame < 0) {
             if (iAlpha > 5) {
@@ -708,7 +709,8 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame,
     }
 
     if (iType == D2TM_PARTICLE_SQUISH01 || iType == D2TM_PARTICLE_SQUISH02 ||
-        iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI) {
+        iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI ||
+        iType == D2TM_PARTICLE_EXPLOSION_CARRYALL) {
         pParticle.frameIndex = 0;
         pParticle.TIMER_frame = 50;
     }
