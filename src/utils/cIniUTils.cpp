@@ -157,16 +157,12 @@ const std::unordered_map<std::string, int> cIniUtils::bulletNameMap = {
     {"ROCKET_SMALL_FREMEN", ROCKET_SMALL_FREMEN }
 };
 
-bool cIniUtils::caseInsCompare(const std::string& s1, const std::string& s2)
+bool cIniUtils::caseInsCompare(const std::string& lhs, const std::string& rhs)
 {
-    if (s1.size() != s2.size()) return false;
-    return std::equal(
-        s1.begin(), s1.end(),
-        s2.begin(),
-        [](char a, char b) {
-            return std::toupper(static_cast<unsigned char>(a)) == std::toupper(static_cast<unsigned char>(b));
-        }
-    );
+    return lhs.size() == rhs.size() &&
+        std::ranges::equal( lhs, rhs, [](unsigned char a, unsigned char b)
+           { return std::tolower(a) == std::tolower(b);}
+        );
 }
 
 std::string cIniUtils::getSceneFileToScene(const std::string& scenefile)
