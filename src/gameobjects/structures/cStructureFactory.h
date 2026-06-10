@@ -20,6 +20,7 @@ class cMapCamera;
 class cGameInterface;
 class cGameSettings;
 class cStructureUtils;
+class SDLDrawer;
 struct sGameServices;
 
 class cStructureFactory {
@@ -60,6 +61,7 @@ private:
     cGameSettings *m_settings = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     sGameServices *m_services = nullptr;
+    SDLDrawer *m_renderer = nullptr;
 
     cAbstractStructure *createStructureInstance(int type);
 };
