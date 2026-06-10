@@ -8,6 +8,7 @@ class cPlayer;
 class cWindTrap;
 class cGameInterface;
 struct sGameServices;
+class SDLDrawer;
 
 class cMouseDrawer {
 public:
@@ -40,5 +41,6 @@ private:
     int m_mouseX, m_mouseY;
     cTextWriter* m_textWriter = nullptr;
     cGameInterface* m_interface = nullptr;
+    SDLDrawer* m_renderer = nullptr;
 };
 
