@@ -4,6 +4,7 @@
 
 #include <array>
 #include <chrono>
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <string_view>
@@ -87,6 +88,10 @@ std::string_view getLogHouseString(int houseId)
 cLog::cLog(std::string_view filename)
     : m_startTime(std::chrono::steady_clock::now())
 {
+    std::filesystem::path logPath(filename);
+    if (std::filesystem::exists(logPath)) {
+        std::filesystem::rename(logPath, std::string(filename) + ".backup");
+    }
     m_file.open(std::string(filename), std::ofstream::out);
     if (!m_file.is_open()) {
         throw std::system_error(errno, std::generic_category());
