@@ -871,7 +871,7 @@ void cParticle::recolorForHouseIfGiven() {
     
     cPlayer *player = m_services->objects->getPlayer(this->iHousePal);
     auto tex = gfxdata->getSurface(bmpIndex);
-    auto recoloredBmp = createPlayerTextureFromIndexedSurfaceWithPalette(player, tex, TransparentColorIndex);
+    auto recoloredBmp = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, player, tex, TransparentColorIndex);
     if (recoloredBmp != nullptr) {
         // but why did createTextureFromIndexedSurfaceWithPalette give an error ?
         bmp = recoloredBmp;

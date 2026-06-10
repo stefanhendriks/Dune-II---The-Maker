@@ -20,7 +20,7 @@ cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
     d2tm_assert(player != nullptr);
     d2tm_assert(ctx != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
+    m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderDrawer, player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = m_buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
