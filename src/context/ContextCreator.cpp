@@ -5,6 +5,7 @@
 #include "context/GraphicsContext.hpp"
 #include "context/TextContext.hpp"
 #include "drawers/cTextDrawer.h"
+#include "drawers/SDLDrawer.hpp"
 #include "game/cGameSettings.h"
 
 #include "include/cAssert.h"
@@ -102,10 +103,10 @@ std::unique_ptr<GraphicsContext> ContextCreator::createGraphicsContext()
     return gtx;
 }
 
-std::unique_ptr<TextContext> ContextCreator::createTextContext(cGameSettings *settings) {
+std::unique_ptr<TextContext> ContextCreator::createTextContext(cGameSettings *settings, SDLDrawer *renderer) {
     return std::make_unique<TextContext>(
-        std::make_unique<cTextDrawer>(small_font, settings),
-        std::make_unique<cTextDrawer>(bene_font, settings),
-        std::make_unique<cTextDrawer>(game_font, settings)
+        std::make_unique<cTextDrawer>(small_font, settings, renderer),
+        std::make_unique<cTextDrawer>(bene_font, settings, renderer),
+        std::make_unique<cTextDrawer>(game_font, settings, renderer)
     );
 }

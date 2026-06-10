@@ -8,11 +8,12 @@
 
 class cTextTextureCache;
 class cGameSettings;
+class SDLDrawer;
 
 class cTextDrawer {
 public:
     // Constructor, initializes the drawer with a TTF font and game settings
-    cTextDrawer(TTF_Font *theFont, cGameSettings *settings);
+    cTextDrawer(TTF_Font *theFont, cGameSettings *settings, SDLDrawer *renderer);
     ~cTextDrawer();
 
     // Draws text at (x, y) in white, with optional shadow
@@ -63,4 +64,5 @@ private:
     TTF_Font *m_font;
     std::unique_ptr<cTextTextureCache> m_textCache;
     cGameSettings* m_settings = nullptr;
+    SDLDrawer *m_renderer = nullptr;
 };

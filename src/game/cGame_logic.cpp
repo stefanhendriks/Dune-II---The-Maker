@@ -662,8 +662,14 @@ bool cGame::setupGame()
     context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
     // share Graphics to all class what use ctx !
     ctx->setGraphicsContext(context->createGraphicsContext());
+    // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
+    std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
+    m_renderDrawer = renderDrawer.get();
+    // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
+    global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
+    ctx->setSDLDrawer(std::move(renderDrawer));
     // share Text to all class what use ctx !
-    ctx->setTextContext(context->createTextContext(m_gameSettings.get()));
+    ctx->setTextContext(context->createTextContext(m_gameSettings.get(), m_renderDrawer));
     //m_gameObjectsContext->getMap()->setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
@@ -678,12 +684,6 @@ bool cGame::setupGame()
         m_soundPlayer->setMusicEnabled(false);
     }
 
-    // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
-    std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
-    m_renderDrawer = renderDrawer.get();
-    // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
-    global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
-    // -----------------------------------
     m_notificationArea->setDrawer(m_renderDrawer);
     m_guiConsole = std::make_unique<GuiConsole>(
         m_renderDrawer,
@@ -695,8 +695,6 @@ bool cGame::setupGame()
     auto previewMaps = m_gameObjectsContext->getPreviewMaps();
     previewMaps->setRenderDrawer(m_renderDrawer); // inject render drawer into cPreviewMaps that is part of game objects context, so it can be used to create textures for map previews
     previewMaps->loadSkirmishMaps(); // load skirmish maps, so they are ready when we need them in the skirmish setup state
-
-    ctx->setSDLDrawer(std::move(renderDrawer));
 
     // do it here, because it depends on fonts to be loaded
     m_mouse = new cMouse(ctx.get());
