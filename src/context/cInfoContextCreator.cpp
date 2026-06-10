@@ -99,7 +99,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     // some things for ALL unit types; initialization
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         s_UnitInfo &unitInfo = unitInfos[i];
-        unitInfo.bmp = gfxdata->getSurface(UNIT_QUAD); // default bitmap is a quad!
+        unitInfo.bmp = g_gfxdata->getSurface(UNIT_QUAD); // default bitmap is a quad!
         unitInfo.top = nullptr;  // no top
         unitInfo.shadow = nullptr;  // no shadow (deliverd with picture itself)
         unitInfo.bmp_width = 0;
@@ -156,8 +156,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : CarryAll
     // Description : CarryAll, the flying pickuptruck
-    unitInfos[CARRYALL].bmp = gfxdata->getSurface(UNIT_CARRYALL);      // pointer to the original 8bit bitmap
-    unitInfos[CARRYALL].shadow = gfxdata->getTexture(UNIT_CARRYALL_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[CARRYALL].bmp = g_gfxdata->getSurface(UNIT_CARRYALL);      // pointer to the original 8bit bitmap
+    unitInfos[CARRYALL].shadow = g_gfxdata->getTexture(UNIT_CARRYALL_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[CARRYALL].bmp_width = 24 * 2;
     unitInfos[CARRYALL].bmp_height = 24 * 2;
     unitInfos[CARRYALL].bmp_startpixel = 0;
@@ -171,8 +171,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Ornithopter
     // Description : Pesty little aircraft shooting bastard
-    unitInfos[ORNITHOPTER].bmp = gfxdata->getSurface(UNIT_ORNITHOPTER);      // pointer to the original 8bit bitmap
-    unitInfos[ORNITHOPTER].shadow = gfxdata->getTexture(UNIT_ORNITHOPTER_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[ORNITHOPTER].bmp = g_gfxdata->getSurface(UNIT_ORNITHOPTER);      // pointer to the original 8bit bitmap
+    unitInfos[ORNITHOPTER].shadow = g_gfxdata->getTexture(UNIT_ORNITHOPTER_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[ORNITHOPTER].bmp_width = 24 * 2;
     unitInfos[ORNITHOPTER].bmp_height = 24 * 2;
     unitInfos[ORNITHOPTER].bmp_startpixel = 0;
@@ -190,8 +190,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Devastator
     // Description : Devastator
-    unitInfos[DEVASTATOR].bmp = gfxdata->getSurface(UNIT_DEVASTATOR);      // pointer to the original 8bit bitmap
-    unitInfos[DEVASTATOR].shadow = gfxdata->getTexture(UNIT_DEVASTATOR_SHADOW);      // pointer to the original bitmap shadow
+    unitInfos[DEVASTATOR].bmp = g_gfxdata->getSurface(UNIT_DEVASTATOR);      // pointer to the original 8bit bitmap
+    unitInfos[DEVASTATOR].shadow = g_gfxdata->getTexture(UNIT_DEVASTATOR_SHADOW);      // pointer to the original bitmap shadow
     unitInfos[DEVASTATOR].bmp_width = 19 * 2;
     unitInfos[DEVASTATOR].bmp_startpixel = 0;
     unitInfos[DEVASTATOR].bmp_height = 23 * 2;
@@ -209,8 +209,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Harvester
     // Description : Harvester
-    unitInfos[HARVESTER].bmp = gfxdata->getSurface(UNIT_HARVESTER);      // pointer to the original 8bit bitmap
-    unitInfos[HARVESTER].shadow = gfxdata->getTexture(UNIT_HARVESTER_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[HARVESTER].bmp = g_gfxdata->getSurface(UNIT_HARVESTER);      // pointer to the original 8bit bitmap
+    unitInfos[HARVESTER].shadow = g_gfxdata->getTexture(UNIT_HARVESTER_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[HARVESTER].bmp_width = 40 * 2;
     unitInfos[HARVESTER].bmp_startpixel = 24;
     unitInfos[HARVESTER].bmp_height = 26 * 2;
@@ -226,9 +226,9 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Combattank
     // Description : Combattank
-    unitInfos[TANK].bmp = gfxdata->getSurface(UNIT_TANKBASE);      // pointer to the original 8bit bitmap
-    unitInfos[TANK].shadow = gfxdata->getTexture(UNIT_TANKBASE_SHADOW);      // pointer to the original 8bit bitmap
-    unitInfos[TANK].top = gfxdata->getSurface(UNIT_TANKTOP);      // pointer to the original 8bit bitmap
+    unitInfos[TANK].bmp = g_gfxdata->getSurface(UNIT_TANKBASE);      // pointer to the original 8bit bitmap
+    unitInfos[TANK].shadow = g_gfxdata->getTexture(UNIT_TANKBASE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[TANK].top = g_gfxdata->getSurface(UNIT_TANKTOP);      // pointer to the original 8bit bitmap
     unitInfos[TANK].bmp_width = 16 * 2;
     unitInfos[TANK].bmp_startpixel = 0;
     unitInfos[TANK].bmp_height = 16 * 2;
@@ -246,9 +246,9 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Siege Tank
     // Description : Siege tank
-    unitInfos[SIEGETANK].bmp = gfxdata->getSurface(UNIT_SIEGEBASE);      // pointer to the original 8bit bitmap
-    unitInfos[SIEGETANK].shadow = gfxdata->getTexture(UNIT_SIEGEBASE_SHADOW);      // pointer to the original 8bit bitmap
-    unitInfos[SIEGETANK].top = gfxdata->getSurface(UNIT_SIEGETOP);      // pointer to the original 8bit bitmap
+    unitInfos[SIEGETANK].bmp = g_gfxdata->getSurface(UNIT_SIEGEBASE);      // pointer to the original 8bit bitmap
+    unitInfos[SIEGETANK].shadow = g_gfxdata->getTexture(UNIT_SIEGEBASE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[SIEGETANK].top = g_gfxdata->getSurface(UNIT_SIEGETOP);      // pointer to the original 8bit bitmap
     unitInfos[SIEGETANK].bmp_width = 18 * 2;
     unitInfos[SIEGETANK].bmp_startpixel = 1;
     unitInfos[SIEGETANK].bmp_height = 18 * 2;
@@ -266,8 +266,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : MCV
     // Description : Movable Construction Vehicle
-    unitInfos[MCV].bmp = gfxdata->getSurface(UNIT_MCV);      // pointer to the original 8bit bitmap
-    unitInfos[MCV].shadow = gfxdata->getTexture(UNIT_MCV_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[MCV].bmp = g_gfxdata->getSurface(UNIT_MCV);      // pointer to the original 8bit bitmap
+    unitInfos[MCV].shadow = g_gfxdata->getTexture(UNIT_MCV_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[MCV].bmp_width = 24 * 2;
     unitInfos[MCV].bmp_startpixel = 0;
     unitInfos[MCV].bmp_height = 25 * 2;
@@ -282,7 +282,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Deviator
     // Description : Deviator
-    unitInfos[DEVIATOR].bmp = gfxdata->getSurface(UNIT_DEVIATOR);      // pointer to the original 8bit bitmap
+    unitInfos[DEVIATOR].bmp = g_gfxdata->getSurface(UNIT_DEVIATOR);      // pointer to the original 8bit bitmap
     unitInfos[DEVIATOR].bmp_width = 16 * 2;
     unitInfos[DEVIATOR].bmp_height = 16 * 2;
     unitInfos[DEVIATOR].bmp_startpixel = 0;
@@ -299,8 +299,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Launcher
     // Description : Rocket Launcher
-    unitInfos[LAUNCHER].bmp = gfxdata->getSurface(UNIT_LAUNCHER);      // pointer to the original 8bit bitmap
-    unitInfos[LAUNCHER].shadow = gfxdata->getTexture(UNIT_LAUNCHER_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[LAUNCHER].bmp = g_gfxdata->getSurface(UNIT_LAUNCHER);      // pointer to the original 8bit bitmap
+    unitInfos[LAUNCHER].shadow = g_gfxdata->getTexture(UNIT_LAUNCHER_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[LAUNCHER].bmp_width = 16 * 2;
     unitInfos[LAUNCHER].bmp_height = 16 * 2;
     unitInfos[LAUNCHER].bmp_startpixel = 0;
@@ -320,8 +320,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Quad
     // Description : Quad, 4 wheeled (double gunned)
-    unitInfos[QUAD].bmp = gfxdata->getSurface(UNIT_QUAD);      // pointer to the original 8bit bitmap
-    unitInfos[QUAD].shadow = gfxdata->getTexture(UNIT_QUAD_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[QUAD].bmp = g_gfxdata->getSurface(UNIT_QUAD);      // pointer to the original 8bit bitmap
+    unitInfos[QUAD].shadow = g_gfxdata->getTexture(UNIT_QUAD_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[QUAD].bmp_width = 16 * 2;
     unitInfos[QUAD].bmp_height = 16 * 2;
     unitInfos[QUAD].bmp_startpixel = 0;
@@ -341,8 +341,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Trike (normal trike)
     // Description : Trike, 3 wheeled (single gunned)
-    unitInfos[TRIKE].bmp = gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
-    unitInfos[TRIKE].shadow = gfxdata->getTexture(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[TRIKE].bmp = g_gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
+    unitInfos[TRIKE].shadow = g_gfxdata->getTexture(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[TRIKE].bmp_width = 28;
     unitInfos[TRIKE].bmp_height = 26;
     unitInfos[TRIKE].bmp_startpixel = 0;
@@ -360,8 +360,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Raider Trike (Ordos trike)
     // Description : Raider Trike, 3 wheeled (single gunned), weaker, but faster
-    unitInfos[RAIDER].bmp = gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
-    unitInfos[RAIDER].shadow = gfxdata->getTexture(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[RAIDER].bmp = g_gfxdata->getSurface(UNIT_TRIKE);      // pointer to the original 8bit bitmap
+    unitInfos[RAIDER].shadow = g_gfxdata->getTexture(UNIT_TRIKE_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[RAIDER].bmp_width = 14 * 2;
     unitInfos[RAIDER].bmp_height = 14 * 2;
     unitInfos[RAIDER].bmp_startpixel = 0;
@@ -379,8 +379,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Frigate
     // Description : Frigate
-    unitInfos[FRIGATE].bmp = gfxdata->getSurface(UNIT_FRIGATE);      // pointer to the original 8bit bitmap
-    unitInfos[FRIGATE].shadow = gfxdata->getTexture(UNIT_FRIGATE_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[FRIGATE].bmp = g_gfxdata->getSurface(UNIT_FRIGATE);      // pointer to the original 8bit bitmap
+    unitInfos[FRIGATE].shadow = g_gfxdata->getTexture(UNIT_FRIGATE_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[FRIGATE].bmp_width = 32 * 2;
     unitInfos[FRIGATE].bmp_height = 32 * 2;
     unitInfos[FRIGATE].bmp_startpixel = 0;
@@ -406,8 +406,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Sonic Tank
     // Description : Sonic tank (using sound waves to destroy)
-    unitInfos[SONICTANK].bmp = gfxdata->getSurface(UNIT_SONICTANK);      // pointer to the original 8bit bitmap
-    unitInfos[SONICTANK].shadow = gfxdata->getTexture(UNIT_SONICTANK_SHADOW);      // pointer to the original 8bit bitmap
+    unitInfos[SONICTANK].bmp = g_gfxdata->getSurface(UNIT_SONICTANK);      // pointer to the original 8bit bitmap
+    unitInfos[SONICTANK].shadow = g_gfxdata->getTexture(UNIT_SONICTANK_SHADOW);      // pointer to the original 8bit bitmap
     unitInfos[SONICTANK].bmp_width = 16 * 2;
     unitInfos[SONICTANK].bmp_height = 16 * 2;
     unitInfos[SONICTANK].bmp_startpixel = 0;
@@ -426,7 +426,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Single Soldier
     // Description : 1 soldier
-    unitInfos[SOLDIER].bmp = gfxdata->getSurface(UNIT_SOLDIER);      // pointer to the original 8bit bitmap
+    unitInfos[SOLDIER].bmp = g_gfxdata->getSurface(UNIT_SOLDIER);      // pointer to the original 8bit bitmap
     unitInfos[SOLDIER].bmp_width = 16 * 2;
     unitInfos[SOLDIER].bmp_height = 16 * 2;
     unitInfos[SOLDIER].bmp_startpixel = 0;
@@ -448,7 +448,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Infantry
     // Description : 3 soldiers
-    unitInfos[INFANTRY].bmp = gfxdata->getSurface(UNIT_SOLDIERS);      // pointer to the original 8bit bitmap
+    unitInfos[INFANTRY].bmp = g_gfxdata->getSurface(UNIT_SOLDIERS);      // pointer to the original 8bit bitmap
     unitInfos[INFANTRY].bmp_width = 16 * 2;
     unitInfos[INFANTRY].bmp_height = 16 * 2;
     unitInfos[INFANTRY].bmp_startpixel = 0;
@@ -471,7 +471,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Single Trooper
     // Description : 1 trooper
-    unitInfos[TROOPER].bmp = gfxdata->getSurface(UNIT_TROOPER);      // pointer to the original 8bit bitmap
+    unitInfos[TROOPER].bmp = g_gfxdata->getSurface(UNIT_TROOPER);      // pointer to the original 8bit bitmap
     unitInfos[TROOPER].bmp_width = 16 * 2;
     unitInfos[TROOPER].bmp_height = 16 * 2;
     unitInfos[TROOPER].bmp_startpixel = 0;
@@ -495,7 +495,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Group Trooper
     // Description : 3 troopers
-    unitInfos[TROOPERS].bmp = gfxdata->getSurface(UNIT_TROOPERS);      // pointer to the original 8bit bitmap
+    unitInfos[TROOPERS].bmp = g_gfxdata->getSurface(UNIT_TROOPERS);      // pointer to the original 8bit bitmap
     unitInfos[TROOPERS].bmp_width = 16 * 2;
     unitInfos[TROOPERS].bmp_height = 16 * 2;
     unitInfos[TROOPERS].bmp_startpixel = 0;
@@ -520,7 +520,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Fremen
     // Description : A single fremen
-    unitInfos[UNIT_FREMEN_ONE].bmp = gfxdata->getSurface(UNIT_SINGLEFREMEN);      // pointer to the original 8bit bitmap
+    unitInfos[UNIT_FREMEN_ONE].bmp = g_gfxdata->getSurface(UNIT_SINGLEFREMEN);      // pointer to the original 8bit bitmap
     unitInfos[UNIT_FREMEN_ONE].bmp_width = 16 * 2;
     unitInfos[UNIT_FREMEN_ONE].bmp_height = 16 * 2;
     unitInfos[UNIT_FREMEN_ONE].bmp_startpixel = 0;
@@ -541,7 +541,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Fremen
     // Description : A group of Fremen
-    unitInfos[UNIT_FREMEN_THREE].bmp = gfxdata->getSurface(UNIT_TRIPLEFREMEN);      // pointer to the original 8bit bitmap
+    unitInfos[UNIT_FREMEN_THREE].bmp = g_gfxdata->getSurface(UNIT_TRIPLEFREMEN);      // pointer to the original 8bit bitmap
     unitInfos[UNIT_FREMEN_THREE].bmp_width = 16 * 2;
     unitInfos[UNIT_FREMEN_THREE].bmp_height = 16 * 2;
     unitInfos[UNIT_FREMEN_THREE].bmp_startpixel = 0;
@@ -561,7 +561,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Saboteur
     // Description : Special infantry unit, moves like trike, deadly as hell, not detectable on radar!
-    unitInfos[SABOTEUR].bmp = gfxdata->getSurface(UNIT_SABOTEUR);
+    unitInfos[SABOTEUR].bmp = g_gfxdata->getSurface(UNIT_SABOTEUR);
     unitInfos[SABOTEUR].buildTime = 1000;
     unitInfos[SABOTEUR].bmp_width = 16 * 2;
     unitInfos[SABOTEUR].bmp_height = 16 * 2;
@@ -587,7 +587,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
     // Unit        : Sandworm
     unitInfos[SANDWORM].speed = 3; // very fast
-    unitInfos[SANDWORM].bmp = gfxdata->getSurface(UNIT_SANDWORM);
+    unitInfos[SANDWORM].bmp = g_gfxdata->getSurface(UNIT_SANDWORM);
     unitInfos[SANDWORM].hp = 9999; // set in game.ini to a more sane amount
     unitInfos[SANDWORM].dieWhenLowerThanHP = 1000;
     unitInfos[SANDWORM].appetite = 10;
@@ -881,7 +881,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     }
 
     // huge rocket/missile
-    bulletInfos[ROCKET_BIG].bmp = gfxdata->getTexture(BULLET_ROCKET_LARGE);
+    bulletInfos[ROCKET_BIG].bmp = g_gfxdata->getTexture(BULLET_ROCKET_LARGE);
     bulletInfos[ROCKET_BIG].deathParticle = D2TM_PARTICLE_EXPLOSION_STRUCTURE01;
     bulletInfos[ROCKET_BIG].bmp_width = 48;
     bulletInfos[ROCKET_BIG].damage_vehicles = 999;
@@ -895,7 +895,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[ROCKET_BIG].description, "ROCKET_BIG");
 
     // small rocket (for ornithopter)
-    bulletInfos[ROCKET_SMALL_ORNI].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
+    bulletInfos[ROCKET_SMALL_ORNI].bmp = g_gfxdata->getTexture(BULLET_ROCKET_SMALL);
     bulletInfos[ROCKET_SMALL_ORNI].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     bulletInfos[ROCKET_SMALL_ORNI].bmp_width = 16;
     bulletInfos[ROCKET_SMALL_ORNI].damage_vehicles = 48; // they can do pretty damage
@@ -909,7 +909,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
 
     // small rocket
-    bulletInfos[ROCKET_SMALL].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
+    bulletInfos[ROCKET_SMALL].bmp = g_gfxdata->getTexture(BULLET_ROCKET_SMALL);
     bulletInfos[ROCKET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     bulletInfos[ROCKET_SMALL].bmp_width = 16;
     bulletInfos[ROCKET_SMALL].damage_vehicles = 10; // was 8
@@ -924,7 +924,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[ROCKET_SMALL].description, "ROCKET_SMALL");
 
     // small rocket - fremen rocket
-    bulletInfos[ROCKET_SMALL_FREMEN].bmp = gfxdata->getTexture(BULLET_ROCKET_SMALL);
+    bulletInfos[ROCKET_SMALL_FREMEN].bmp = g_gfxdata->getTexture(BULLET_ROCKET_SMALL);
     bulletInfos[ROCKET_SMALL_FREMEN].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     bulletInfos[ROCKET_SMALL_FREMEN].bmp_width = 16;
     bulletInfos[ROCKET_SMALL_FREMEN].damage_vehicles = 22;
@@ -939,7 +939,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
 
     // normal rocket
-    bulletInfos[ROCKET_NORMAL].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
+    bulletInfos[ROCKET_NORMAL].bmp = g_gfxdata->getTexture(BULLET_ROCKET_NORMAL);
     bulletInfos[ROCKET_NORMAL].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET;
     bulletInfos[ROCKET_NORMAL].bmp_width = 32;
     bulletInfos[ROCKET_NORMAL].damage_vehicles = 76;
@@ -954,7 +954,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[ROCKET_NORMAL].description, "ROCKET_NORMAL");
 
     // soldier shot
-    bulletInfos[BULLET_SMALL].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
+    bulletInfos[BULLET_SMALL].bmp = g_gfxdata->getTexture(BULLET_DOT_SMALL);
     bulletInfos[BULLET_SMALL].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     bulletInfos[BULLET_SMALL].bmp_width = 6;
     bulletInfos[BULLET_SMALL].damage_vehicles = 4; // vehicles are no match
@@ -967,7 +967,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[BULLET_SMALL].description, "BULLET_SMALL");
 
     // trike shot
-    bulletInfos[BULLET_TRIKE].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
+    bulletInfos[BULLET_TRIKE].bmp = g_gfxdata->getTexture(BULLET_DOT_SMALL);
     bulletInfos[BULLET_TRIKE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     bulletInfos[BULLET_TRIKE].bmp_width = 6;
     bulletInfos[BULLET_TRIKE].damage_vehicles = 3; // trikes do not do much damage to vehicles
@@ -980,7 +980,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[BULLET_TRIKE].description, "BULLET_TRIKE");
 
     // quad shot
-    bulletInfos[BULLET_QUAD].bmp = gfxdata->getTexture(BULLET_DOT_SMALL);
+    bulletInfos[BULLET_QUAD].bmp = g_gfxdata->getTexture(BULLET_DOT_SMALL);
     bulletInfos[BULLET_QUAD].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     bulletInfos[BULLET_QUAD].bmp_width = 6;
     bulletInfos[BULLET_QUAD].damage_vehicles = 6;
@@ -992,7 +992,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[BULLET_QUAD].description, "BULLET_QUAD");
 
     // normal tank shot
-    bulletInfos[BULLET_TANK].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
+    bulletInfos[BULLET_TANK].bmp = g_gfxdata->getTexture(BULLET_DOT_MEDIUM);
     bulletInfos[BULLET_TANK].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     bulletInfos[BULLET_TANK].bmp_width = 8;
     bulletInfos[BULLET_TANK].damage_vehicles = 12;
@@ -1005,7 +1005,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[BULLET_TANK].description, "BULLET_TANK");
 
     // siege tank shot
-    bulletInfos[BULLET_SIEGE].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
+    bulletInfos[BULLET_SIEGE].bmp = g_gfxdata->getTexture(BULLET_DOT_MEDIUM);
     bulletInfos[BULLET_SIEGE].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     bulletInfos[BULLET_SIEGE].bmp_width = 8;
     bulletInfos[BULLET_SIEGE].damage_vehicles = 24;
@@ -1018,7 +1018,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[BULLET_SIEGE].description, "BULLET_SIEGE");
 
     // devastator shot
-    bulletInfos[BULLET_DEVASTATOR].bmp = gfxdata->getTexture(BULLET_DOT_LARGE);
+    bulletInfos[BULLET_DEVASTATOR].bmp = g_gfxdata->getTexture(BULLET_DOT_LARGE);
     bulletInfos[BULLET_DEVASTATOR].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL; // not used anyway
     bulletInfos[BULLET_DEVASTATOR].bmp_width = 8;
     bulletInfos[BULLET_DEVASTATOR].damage_vehicles = 30;
@@ -1031,7 +1031,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
 
     // Gas rocket of a deviator
-    bulletInfos[BULLET_GAS].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
+    bulletInfos[BULLET_GAS].bmp = g_gfxdata->getTexture(BULLET_ROCKET_NORMAL);
     bulletInfos[BULLET_GAS].deathParticle = D2TM_PARTICLE_EXPLOSION_GAS;
     bulletInfos[BULLET_GAS].bmp_width = 32;
     bulletInfos[BULLET_GAS].damage_vehicles = 1;
@@ -1044,7 +1044,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[BULLET_GAS].description, "BULLET_GAS");
 
     // normal turret shot
-    bulletInfos[BULLET_TURRET].bmp = gfxdata->getTexture(BULLET_DOT_MEDIUM);
+    bulletInfos[BULLET_TURRET].bmp = g_gfxdata->getTexture(BULLET_DOT_MEDIUM);
     bulletInfos[BULLET_TURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_BULLET; // not used anyway
     bulletInfos[BULLET_TURRET].bmp_width = 8;
     bulletInfos[BULLET_TURRET].damage_vehicles = 12;
@@ -1068,7 +1068,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     strcpy(bulletInfos[BULLET_SHIMMER].description, "BULLET_SHIMMER");
 
     // rocket of rocket turret
-    bulletInfos[ROCKET_RTURRET].bmp = gfxdata->getTexture(BULLET_ROCKET_NORMAL);
+    bulletInfos[ROCKET_RTURRET].bmp = g_gfxdata->getTexture(BULLET_ROCKET_NORMAL);
     bulletInfos[ROCKET_RTURRET].deathParticle = D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL;
     bulletInfos[ROCKET_RTURRET].bmp_width = 16 * 2;
     bulletInfos[ROCKET_RTURRET].damage_vehicles = 25;
@@ -1330,7 +1330,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     Logger::info(COMP_SETUP, "Installing", "STRUCTURES");
     for (int i = 0; i < MAX_STRUCTURETYPES; i++) {
         s_StructureInfo &structureInfo = structureInfos[i];
-        structureInfo.bmp = gfxdata->getSurface(BUILD_WINDTRAP); // in case an invalid bitmap, we are a windtrap
+        structureInfo.bmp = g_gfxdata->getSurface(BUILD_WINDTRAP); // in case an invalid bitmap, we are a windtrap
         structureInfo.shadow = nullptr;
         structureInfo.flash = nullptr;
         structureInfo.flags = std::vector<s_FlagInfo>();
@@ -1359,7 +1359,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     }
 
     // Single and 4 slabs
-    structureInfos[SLAB1].bmp = gfxdata->getSurface(PLACE_SLAB1); // in case an invalid bitmap, we are a windtrap
+    structureInfos[SLAB1].bmp = g_gfxdata->getSurface(PLACE_SLAB1); // in case an invalid bitmap, we are a windtrap
     structureInfos[SLAB1].icon = ICON_STR_1SLAB;
     structureInfos[SLAB1].hp = 25;            // Not functional in-game, only for building
     structureInfos[SLAB1].bmp_width = 16 * 2;
@@ -1368,7 +1368,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[SLAB1].queuable = true;
     strcpy(structureInfos[SLAB1].name, "Concrete Slab");
 
-    structureInfos[SLAB4].bmp = gfxdata->getSurface(PLACE_SLAB4); // in case an invalid bitmap, we are a windtrap
+    structureInfos[SLAB4].bmp = g_gfxdata->getSurface(PLACE_SLAB4); // in case an invalid bitmap, we are a windtrap
     structureInfos[SLAB4].icon = ICON_STR_4SLAB;
     structureInfos[SLAB4].hp = 75;            // Not functional in-game, only for building
     structureInfos[SLAB4].bmp_width = 32 * 2;
@@ -1379,7 +1379,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
 
 
     // Concrete Wall
-    structureInfos[WALL].bmp = gfxdata->getSurface(PLACE_WALL); // in case an invalid bitmap, we are a windtrap
+    structureInfos[WALL].bmp = g_gfxdata->getSurface(PLACE_WALL); // in case an invalid bitmap, we are a windtrap
     structureInfos[WALL].icon = ICON_STR_WALL;
     structureInfos[WALL].hp = 75;            // Not functional in-game, only for building
     structureInfos[WALL].bmp_width = 16 * 2;
@@ -1390,8 +1390,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
 
     // Structure    : Windtrap
     // Description  : <none>
-    structureInfos[WINDTRAP].bmp = gfxdata->getSurface(BUILD_WINDTRAP);
-    structureInfos[WINDTRAP].shadow = gfxdata->getTexture(BUILD_WINDTRAP_SHADOW); // shadow
+    structureInfos[WINDTRAP].bmp = g_gfxdata->getSurface(BUILD_WINDTRAP);
+    structureInfos[WINDTRAP].shadow = g_gfxdata->getTexture(BUILD_WINDTRAP_SHADOW); // shadow
     structureInfos[WINDTRAP].fadecol = 128;
     structureInfos[WINDTRAP].fademax = 134;
     structureInfos[WINDTRAP].icon = ICON_STR_WINDTRAP;
@@ -1407,9 +1407,9 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[HEAVYFACTORY].bmp_width = 48 * 2;
     structureInfos[HEAVYFACTORY].bmp_height = 32 * 2;
-    structureInfos[HEAVYFACTORY].bmp = gfxdata->getSurface(BUILD_HEAVYFACTORY);
-    structureInfos[HEAVYFACTORY].shadow = gfxdata->getTexture(BUILD_HEAVYFACTORY_SHADOW); // shadow
-    structureInfos[HEAVYFACTORY].flash = gfxdata->getSurface(BUILD_HEAVYFACTORY_FLASH);
+    structureInfos[HEAVYFACTORY].bmp = g_gfxdata->getSurface(BUILD_HEAVYFACTORY);
+    structureInfos[HEAVYFACTORY].shadow = g_gfxdata->getTexture(BUILD_HEAVYFACTORY_SHADOW); // shadow
+    structureInfos[HEAVYFACTORY].flash = g_gfxdata->getSurface(BUILD_HEAVYFACTORY_FLASH);
     structureInfos[HEAVYFACTORY].fadecol = -1;
     structureInfos[HEAVYFACTORY].icon = ICON_STR_HEAVYFACTORY;
     structureInfos[HEAVYFACTORY].configured = true;
@@ -1424,8 +1424,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[HIGHTECH].bmp_width = 48 * 2;
     structureInfos[HIGHTECH].bmp_height = 32 * 2;
-    structureInfos[HIGHTECH].bmp = gfxdata->getSurface(BUILD_HIGHTECH);
-    structureInfos[HIGHTECH].shadow = gfxdata->getTexture(BUILD_HIGHTECH_SHADOW);
+    structureInfos[HIGHTECH].bmp = g_gfxdata->getSurface(BUILD_HIGHTECH);
+    structureInfos[HIGHTECH].shadow = g_gfxdata->getTexture(BUILD_HIGHTECH_SHADOW);
     structureInfos[HIGHTECH].fadecol = -1;
     structureInfos[HIGHTECH].icon = ICON_STR_HIGHTECH;
     structureInfos[HIGHTECH].configured = true;
@@ -1440,8 +1440,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[REPAIR].bmp_width = 48 * 2;
     structureInfos[REPAIR].bmp_height = 32 * 2;
-    structureInfos[REPAIR].bmp = gfxdata->getSurface(BUILD_REPAIR);
-    structureInfos[REPAIR].shadow = gfxdata->getTexture(BUILD_REPAIR_SHADOW);
+    structureInfos[REPAIR].bmp = g_gfxdata->getSurface(BUILD_REPAIR);
+    structureInfos[REPAIR].shadow = g_gfxdata->getTexture(BUILD_REPAIR_SHADOW);
     structureInfos[REPAIR].fadecol = -1;
     structureInfos[REPAIR].icon = ICON_STR_REPAIR;
     structureInfos[REPAIR].configured = true;
@@ -1456,8 +1456,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[PALACE].bmp_width = 48 * 2;
     structureInfos[PALACE].bmp_height = 48 * 2;
-    structureInfos[PALACE].bmp = gfxdata->getSurface(BUILD_PALACE);
-    structureInfos[PALACE].shadow = gfxdata->getTexture(BUILD_PALACE_SHADOW);
+    structureInfos[PALACE].bmp = g_gfxdata->getSurface(BUILD_PALACE);
+    structureInfos[PALACE].shadow = g_gfxdata->getTexture(BUILD_PALACE_SHADOW);
     structureInfos[PALACE].icon = ICON_STR_PALACE;
     structureInfos[PALACE].configured = true;
     structureInfos[PALACE].flags.push_back(s_FlagInfo{
@@ -1471,9 +1471,9 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[LIGHTFACTORY].bmp_width = 32 * 2;
     structureInfos[LIGHTFACTORY].bmp_height = 32 * 2;
-    structureInfos[LIGHTFACTORY].bmp = gfxdata->getSurface(BUILD_LIGHTFACTORY);
-    structureInfos[LIGHTFACTORY].shadow = gfxdata->getTexture(BUILD_LIGHTFACTORY_SHADOW);
-    structureInfos[LIGHTFACTORY].flash = gfxdata->getSurface(BUILD_LIGHTFACTORY_FLASH);
+    structureInfos[LIGHTFACTORY].bmp = g_gfxdata->getSurface(BUILD_LIGHTFACTORY);
+    structureInfos[LIGHTFACTORY].shadow = g_gfxdata->getTexture(BUILD_LIGHTFACTORY_SHADOW);
+    structureInfos[LIGHTFACTORY].flash = g_gfxdata->getSurface(BUILD_LIGHTFACTORY_FLASH);
     structureInfos[LIGHTFACTORY].fadecol = -1;
     structureInfos[LIGHTFACTORY].icon = ICON_STR_LIGHTFACTORY;
     structureInfos[LIGHTFACTORY].configured = true;
@@ -1488,8 +1488,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[RADAR].bmp_width = 32 * 2;
     structureInfos[RADAR].bmp_height = 32 * 2;
-    structureInfos[RADAR].bmp = gfxdata->getSurface(BUILD_RADAR);
-    structureInfos[RADAR].shadow = gfxdata->getTexture(BUILD_RADAR_SHADOW); // shadow
+    structureInfos[RADAR].bmp = g_gfxdata->getSurface(BUILD_RADAR);
+    structureInfos[RADAR].shadow = g_gfxdata->getTexture(BUILD_RADAR_SHADOW); // shadow
     structureInfos[RADAR].sight = 12;
     structureInfos[RADAR].fadecol = -1;
     structureInfos[RADAR].icon = ICON_STR_RADAR;
@@ -1511,8 +1511,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[BARRACKS].bmp_width = 32 * 2;
     structureInfos[BARRACKS].bmp_height = 32 * 2;
-    structureInfos[BARRACKS].bmp = gfxdata->getSurface(BUILD_BARRACKS);
-    structureInfos[BARRACKS].shadow = gfxdata->getTexture(BUILD_BARRACKS_SHADOW);
+    structureInfos[BARRACKS].bmp = g_gfxdata->getSurface(BUILD_BARRACKS);
+    structureInfos[BARRACKS].shadow = g_gfxdata->getTexture(BUILD_BARRACKS_SHADOW);
     structureInfos[BARRACKS].fadecol = -1;
     structureInfos[BARRACKS].icon = ICON_STR_BARRACKS;
     structureInfos[BARRACKS].configured = true;
@@ -1532,8 +1532,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[WOR].bmp_width = 32 * 2;
     structureInfos[WOR].bmp_height = 32 * 2;
-    structureInfos[WOR].bmp = gfxdata->getSurface(BUILD_WOR);
-    structureInfos[WOR].shadow = gfxdata->getTexture(BUILD_WOR_SHADOW);
+    structureInfos[WOR].bmp = g_gfxdata->getSurface(BUILD_WOR);
+    structureInfos[WOR].shadow = g_gfxdata->getTexture(BUILD_WOR_SHADOW);
     structureInfos[WOR].fadecol = -1;
     structureInfos[WOR].icon = ICON_STR_WOR;
     structureInfos[WOR].configured = true;
@@ -1549,8 +1549,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[SILO].bmp_width = 32 * 2;
     structureInfos[SILO].bmp_height = 32 * 2;
-    structureInfos[SILO].bmp = gfxdata->getSurface(BUILD_SILO);
-    structureInfos[SILO].shadow = gfxdata->getTexture(BUILD_SILO_SHADOW);
+    structureInfos[SILO].bmp = g_gfxdata->getSurface(BUILD_SILO);
+    structureInfos[SILO].shadow = g_gfxdata->getTexture(BUILD_SILO_SHADOW);
     structureInfos[SILO].fadecol = -1;
     structureInfos[SILO].icon = ICON_STR_SILO;
     structureInfos[SILO].configured = true;
@@ -1566,8 +1566,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : <none>
     structureInfos[REFINERY].bmp_width = 48 * 2;
     structureInfos[REFINERY].bmp_height = 32 * 2;
-    structureInfos[REFINERY].bmp = gfxdata->getSurface(BUILD_REFINERY);
-    structureInfos[REFINERY].shadow = gfxdata->getTexture(BUILD_REFINERY_SHADOW);
+    structureInfos[REFINERY].bmp = g_gfxdata->getSurface(BUILD_REFINERY);
+    structureInfos[REFINERY].shadow = g_gfxdata->getTexture(BUILD_REFINERY_SHADOW);
     structureInfos[REFINERY].fadecol = -1;
     structureInfos[REFINERY].icon = ICON_STR_REFINERY;
     structureInfos[REFINERY].configured = true;
@@ -1583,8 +1583,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[CONSTYARD].bmp_width = 32 * 2;
     structureInfos[CONSTYARD].bmp_height = 32 * 2;
     structureInfos[CONSTYARD].sight = 4;
-    structureInfos[CONSTYARD].bmp = gfxdata->getSurface(BUILD_CONSTYARD);
-    structureInfos[CONSTYARD].shadow = gfxdata->getTexture(BUILD_CONSTYARD_SHADOW);
+    structureInfos[CONSTYARD].bmp = g_gfxdata->getSurface(BUILD_CONSTYARD);
+    structureInfos[CONSTYARD].shadow = g_gfxdata->getTexture(BUILD_CONSTYARD_SHADOW);
     structureInfos[CONSTYARD].hasConcrete = false;
     structureInfos[CONSTYARD].flags.push_back(s_FlagInfo{
         .big = true,
@@ -1600,8 +1600,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : You can order units from this structure
     structureInfos[STARPORT].bmp_width = 48 * 2;
     structureInfos[STARPORT].bmp_height = 48 * 2;
-    structureInfos[STARPORT].bmp = gfxdata->getSurface(BUILD_STARPORT);
-    structureInfos[STARPORT].shadow = gfxdata->getTexture(BUILD_STARPORT_SHADOW);
+    structureInfos[STARPORT].bmp = g_gfxdata->getSurface(BUILD_STARPORT);
+    structureInfos[STARPORT].shadow = g_gfxdata->getTexture(BUILD_STARPORT_SHADOW);
     structureInfos[STARPORT].fadecol = -1;
     structureInfos[STARPORT].icon = ICON_STR_STARPORT;
     structureInfos[STARPORT].configured = true;
@@ -1616,8 +1616,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : Makes it possible for the player to upgrade its Heavy Factory in order to build their special weapon
     structureInfos[IX].bmp_width = 32 * 2;
     structureInfos[IX].bmp_height = 32 * 2;
-    structureInfos[IX].bmp = gfxdata->getSurface(BUILD_IX);
-    structureInfos[IX].shadow = gfxdata->getTexture(BUILD_IX_SHADOW);
+    structureInfos[IX].bmp = g_gfxdata->getSurface(BUILD_IX);
+    structureInfos[IX].shadow = g_gfxdata->getTexture(BUILD_IX_SHADOW);
     structureInfos[IX].fadecol = -1;
     structureInfos[IX].icon = ICON_STR_IX;
     structureInfos[IX].configured = true;
@@ -1632,8 +1632,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : defence
     structureInfos[TURRET].bmp_width = 16 * 2;
     structureInfos[TURRET].bmp_height = 16 * 2;
-    structureInfos[TURRET].bmp = gfxdata->getSurface(BUILD_TURRET);
-    structureInfos[TURRET].shadow = gfxdata->getTexture(BUILD_TURRET_SHADOW);
+    structureInfos[TURRET].bmp = g_gfxdata->getSurface(BUILD_TURRET);
+    structureInfos[TURRET].shadow = g_gfxdata->getTexture(BUILD_TURRET_SHADOW);
     structureInfos[TURRET].fadecol = -1;
     structureInfos[TURRET].icon = ICON_STR_TURRET;
     structureInfos[TURRET].sight = 7;
@@ -1647,8 +1647,8 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     // Description  : defence
     structureInfos[RTURRET].bmp_width = 16 * 2;
     structureInfos[RTURRET].bmp_height = 16 * 2;
-    structureInfos[RTURRET].bmp = gfxdata->getSurface(BUILD_RTURRET);
-    structureInfos[RTURRET].shadow = gfxdata->getTexture(BUILD_RTURRET_SHADOW);
+    structureInfos[RTURRET].bmp = g_gfxdata->getSurface(BUILD_RTURRET);
+    structureInfos[RTURRET].shadow = g_gfxdata->getTexture(BUILD_RTURRET_SHADOW);
     structureInfos[RTURRET].fadecol = -1;
     structureInfos[RTURRET].icon = ICON_STR_RTURRET;
     structureInfos[RTURRET].sight = 10;
