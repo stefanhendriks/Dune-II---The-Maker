@@ -129,7 +129,6 @@ void cOrderProcesser::think()
 {
     if (m_secondsUntilArrival > 0) {
         m_secondsUntilArrival--;
-        std::string msg = std::format("T-{} before Frigate arrival.", m_secondsUntilArrival);
 
         if (m_secondsUntilArrival <= 5 && m_player->getId() == HUMAN) {
             playTMinusSound(m_secondsUntilArrival);
@@ -139,7 +138,8 @@ void cOrderProcesser::think()
             sendFrigate();
             m_interface->getDrawManager()->setMessage("Frigate is arriving...");
         }
-        else {
+        else if (m_secondsUntilArrival <= 10) {
+            std::string msg = std::format("T-{} before Frigate arrival.", m_secondsUntilArrival);
             m_interface->getDrawManager()->setMessage(msg);
         }
     }
@@ -233,7 +233,7 @@ void cOrderProcesser::placeOrder()
 {
     m_orderPlaced = true;
     m_frigateSent = false;
-    m_secondsUntilArrival = 10; // wait 10 seconds
+    m_secondsUntilArrival = 25;
 }
 
 int cOrderProcesser::getRandomizedSecondsToWait()
