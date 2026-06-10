@@ -946,6 +946,15 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
                         // computer player must find enemy = human
                         targetCell = m_objects->getPlayer(0)->getFocusCell();
                     }
+                } else {
+                    auto sChunk = std::string(chunk);
+                    if (!sChunk.empty() && 
+                        std::all_of(sChunk.begin(), sChunk.end(),[](unsigned char c) { return std::isdigit(c); }))
+                    {
+                        targetCell = std::stoi(sChunk);
+                    } else {
+                        Logger::warn(COMP_SCENARIOINI, "Scenario_Section_Reinforcements", "Invalid target cell for reinforcement: '{}'", chunk);
+                    }
                 }
             }
             else if (iPart == 3) {
