@@ -43,6 +43,7 @@
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
 #include "gameobjects/map/cMap.h"
+#include "drawers/SDLDrawer.hpp"
 #include <cmath>
 
 #include "data/gfxaudio.h"
@@ -166,6 +167,8 @@ void cUnit::serviceInit(sGameServices* services)
     d2tm_assert(m_map != nullptr);
     m_pathFinder = m_map->getPathFinder();
     d2tm_assert(m_pathFinder != nullptr);
+    m_renderer = services->ctx->getSDLDrawer();
+    d2tm_assert(m_renderer != nullptr);
 }
 
 void cUnit::recreateDimensions()
@@ -578,12 +581,12 @@ void cUnit::draw_spice()
     int w = healthBar(width_x, iCredits, max);
 
     // bar itself
-    global_renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
-    global_renderDrawer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,ShadowTrans);
+    m_renderer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
+    m_renderer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,ShadowTrans);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        global_renderDrawer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,ShadowTrans);
+        m_renderer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,ShadowTrans);
     }
 }
 
@@ -625,12 +628,12 @@ void cUnit::draw_health()
     if (r > 255) r = 255;
 
     // bar itself
-    global_renderDrawer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
-    global_renderDrawer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,ShadowTrans);
+    m_renderer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
+    m_renderer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,ShadowTrans);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
-        global_renderDrawer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,ShadowTrans);
+        m_renderer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,ShadowTrans);
     }
 }
 
@@ -709,7 +712,7 @@ void cUnit::draw_experience()
 
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        global_renderDrawer->renderSprite(gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
+        m_renderer->renderSprite(gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
     }
 }
 
@@ -732,15 +735,15 @@ void cUnit::draw_path() const
         int iDy = m_mapCamera->getWindowYPositionFromCellWithOffset(movement.iPath[i], halfTile);
 
         if (i == movement.iPathIndex) { // current node we navigate to
-            global_renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 255,255});
+            m_renderer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 255,255});
         }
         else if (movement.iPath[i] == movement.iGoalCell) {
             // end of path (goal)
-            global_renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 0, 0,255});
+            m_renderer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 0, 0,255});
         }
         else {
             // everything else
-            global_renderDrawer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 64,255});
+            m_renderer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 64,255});
         }
 
         // draw a line from previous to current
@@ -757,7 +760,7 @@ void cUnit::draw_path() const
 
         int waypointX = m_mapCamera->getWindowXPositionFromCellWithOffset(waypointCell, halfTile);
         int waypointY = m_mapCamera->getWindowYPositionFromCellWithOffset(waypointCell, halfTile);
-        global_renderDrawer->renderDot(waypointX-2, waypointY-2, Color{64, 160, 255, 192}, 4);
+        m_renderer->renderDot(waypointX-2, waypointY-2, Color{64, 160, 255, 192}, 4);
     }
 }
 
@@ -803,7 +806,7 @@ void cUnit::draw()
         if (iType == CARRYALL) {
             dest = {ux, uy+24, roundedScaledWidth, roundedScaledHeight};
         }
-        global_renderDrawer->renderStrechSprite(shadow,src, dest, ShadowTrans);
+        m_renderer->renderStrechSprite(shadow,src, dest, ShadowTrans);
     }
 
     // Draw BODY
@@ -811,7 +814,7 @@ void cUnit::draw()
     if (bitmap) {
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
         cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
-        global_renderDrawer->renderStrechSprite(bitmap,src, dest);
+        m_renderer->renderStrechSprite(bitmap,src, dest);
     }
     else {
         log(std::format("unit of iType [{}] did not have a bitmap!?", iType));
@@ -826,12 +829,12 @@ void cUnit::draw()
         start_y = bmp_height * rendering.iFrame;
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
         cRectangle dest = {ux, uy, static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_height)))};
-        global_renderDrawer->renderStrechSprite(top,src, dest);
+        m_renderer->renderStrechSprite(top,src, dest);
     }
 
     // when we want to be picked up..
     if (bCarryMe) {
-        global_renderDrawer->renderSprite(gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
+        m_renderer->renderSprite(gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
     }
 
     if (m_bSelected) {
@@ -843,15 +846,15 @@ void cUnit::draw()
         int y = draw_y(bmp_height);
 
         cRectangle dest = {x,y, static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_height)))};
-        global_renderDrawer->renderStrechFullSprite(gfxdata->getTexture(FOCUS), dest);
+        m_renderer->renderStrechFullSprite(gfxdata->getTexture(FOCUS), dest);
     }
 
     if (m_settings->isDrawUnitDebug()) {
         // render pixel at the very center
-        global_renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 255, 0,255},2);
+        m_renderer->renderDot(center_draw_x(), center_draw_y(), Color{255, 255, 0,255},2);
 
         // render from the units top-left to center pixel
-        global_renderDrawer->renderLine( draw_x(), draw_y(), center_draw_x(), center_draw_y(), Color{255, 255, 0,255});
+        m_renderer->renderLine( draw_x(), draw_y(), center_draw_x(), center_draw_y(), Color{255, 255, 0,255});
     }
 }
 
@@ -3513,8 +3516,8 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 
 void cUnit::draw_debug(cTextDrawer* textDrawer)
 {
-    global_renderDrawer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,ShadowTrans});
-    global_renderDrawer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
+    m_renderer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,ShadowTrans});
+    m_renderer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
     textDrawer->drawText(draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, std::format("{}", iID));
     if (isSandworm()) {
         textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, guardTimer.get(), movewaitTimer.get()));
