@@ -16,7 +16,6 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContextCreator.h"
 #include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "include/eGameState.h"
@@ -133,7 +132,7 @@ void cGame::syncTextInputState() const
 
 cGame::cGame()
 {
-    memset(m_states, 0, sizeof(cGameState *));
+    std::fill(std::begin(m_states), std::end(m_states), nullptr);
 
     m_nextState = -1;
     m_currentState = nullptr;
@@ -583,7 +582,6 @@ void cGame::shutdown()
     // ~Graphics() would call SDL_DestroyTexture with an already-dead renderer.
     ctx.reset();
     context.reset();
-    gfxdata.reset();
 
     Logger::info(COMP_NONE, "cGame::shutdown", "Allegro FONT library shut down.");
 }
@@ -662,8 +660,12 @@ bool cGame::setupGame()
     context = std::make_unique<ContextCreator>(renderer, settingsValidator.get());
     // share Graphics to all class what use ctx !
     ctx->setGraphicsContext(context->createGraphicsContext());
+    // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
+    std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
+    m_renderDrawer = renderDrawer.get();
+    ctx->setSDLDrawer(std::move(renderDrawer));
     // share Text to all class what use ctx !
-    ctx->setTextContext(context->createTextContext(m_gameSettings.get()));
+    ctx->setTextContext(context->createTextContext(m_gameSettings.get(), m_renderDrawer));
     //m_gameObjectsContext->getMap()->setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
@@ -678,12 +680,6 @@ bool cGame::setupGame()
         m_soundPlayer->setMusicEnabled(false);
     }
 
-    // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
-    std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
-    m_renderDrawer = renderDrawer.get();
-    // this line is for backward compatibility, to avoid having to change all places where global_renderDrawer is used. But eventually, we want to remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead.
-    global_renderDrawer = m_renderDrawer; // @Mira TODO: remove global_renderDrawer and use ctx->getSDLDrawer() everywhere instead
-    // -----------------------------------
     m_notificationArea->setDrawer(m_renderDrawer);
     m_guiConsole = std::make_unique<GuiConsole>(
         m_renderDrawer,
@@ -695,8 +691,6 @@ bool cGame::setupGame()
     auto previewMaps = m_gameObjectsContext->getPreviewMaps();
     previewMaps->setRenderDrawer(m_renderDrawer); // inject render drawer into cPreviewMaps that is part of game objects context, so it can be used to create textures for map previews
     previewMaps->loadSkirmishMaps(); // load skirmish maps, so they are ready when we need them in the skirmish setup state
-
-    ctx->setSDLDrawer(std::move(renderDrawer));
 
     // do it here, because it depends on fonts to be loaded
     m_mouse = new cMouse(ctx.get());
@@ -713,18 +707,6 @@ bool cGame::setupGame()
 
     Logger::info(COMP_INIT, "cGame::setupGame", "=== GAME ===");
 
-    /*** Data files ***/
-
-    // load datafiles
-    gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
-    if (gfxdata == nullptr) {
-        Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
-        return false;
-    }
-    else {
-        Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
-    }
-
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
     Logger::info(COMP_INIT, "cGame::setupGame", "Seed is {}", t);
@@ -739,7 +721,7 @@ bool cGame::setupGame()
     // A few messages for the player
     Logger::info(COMP_INIT, "cGame::setupGame", "Initializing:  PLAYERS");
     m_players->setupPlayers(m_Houses.get());
-    cInfoContextCreator infoCreator;
+    cInfoContextCreator infoCreator(ctx->getGraphicsContext());
     infoCreator.installInfos(*m_infoContext);
 
     if (m_mapCamera != nullptr)
@@ -1080,6 +1062,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 void cGame::loadScenario()
 {
     auto *pState = dynamic_cast<cMentatState *>(m_states[GAME_BRIEFING]);
+    if (!pState) return; // state not yet created; prepareMentat() in the constructor will load the scenario
     pState->loadScenario(m_reinforcements.get());
 }
 

@@ -68,9 +68,7 @@ void cDrawManager::reset()
     m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx, m_player, m_structureUtils);
     m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx, m_player, m_structureUtils);
-    m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(
-        m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex
-    );
+    m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex);
     delete m_mouseDrawer;
     m_mouseDrawer = new cMouseDrawer(m_player, m_ctx->getTextContext()->getSmallTextDrawer());
 

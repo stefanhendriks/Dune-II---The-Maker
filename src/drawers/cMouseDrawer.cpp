@@ -1,6 +1,5 @@
 #include "cMouseDrawer.h"
 #include "include/sGameServices.h"
-#include "include/d2tmc.h"
 #include "controls/cGameControlsContext.h"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
@@ -18,6 +17,7 @@
 void cMouseDrawer::serviceInit(sGameServices* services)
 {
     m_interface = services->ctx->getGameInterface();
+    m_renderer = services->ctx->getSDLDrawer();
 }
 
 cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_player(thePlayer)
@@ -168,11 +168,11 @@ void cMouseDrawer::drawToolTipBackground()
     color = Color{red, green, blue,128};
     auto black = Color::Black;
     black.a = 128;
-    global_renderDrawer->renderRectFillColor(x, y, width, height, color);
+    m_renderer->renderRectFillColor(x, y, width, height, color);
     int shadowX = x + width;
     int shadowY = y + height;
-    global_renderDrawer->renderRectFillColor(x + 4, shadowY, (width - 4), 4, black);
-    global_renderDrawer->renderRectFillColor(shadowX, y + 4, 4, height, black);
+    m_renderer->renderRectFillColor(x + 4, shadowY, (width - 4), 4, black);
+    m_renderer->renderRectFillColor(shadowX, y + 4, 4, height, black);
 }
 
 void cMouseDrawer::drawToolTipTurretInformation(cAbstractStructure *theStructure)

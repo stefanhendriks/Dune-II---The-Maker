@@ -1,12 +1,11 @@
 #include "cHeavyFactory.h"
 
 #include "definitions.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/players/cPlayer.h"
 
-cHeavyFactory::cHeavyFactory()
+cHeavyFactory::cHeavyFactory() : cAbstractStructure()
 {
     // other variables (class specific)
     drawFlash = false;
@@ -94,9 +93,7 @@ void cHeavyFactory::draw()
         Texture *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         cRectangle src = { 0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest= { drawX, drawY, scaledWidth, scaledHeight};
-        global_renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
-
-
+        m_renderer->renderStrechSprite(bitmapToDraw, src, dest);
     }
 }
 

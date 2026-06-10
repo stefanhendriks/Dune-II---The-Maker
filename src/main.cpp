@@ -25,15 +25,11 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
-// the ultimate game variable(s)
-cGame          				game;
-SDLDrawer                   *global_renderDrawer = nullptr;
-std::shared_ptr<Graphics>   gfxdata;
-
-
 int main(int argc, char **argv)
 {
     std::unique_ptr<cLog> m_log = std::make_unique<cLog>("nlog.txt");
+    Logger::init(m_log.get());
+    cGame game;
 
     std::unique_ptr<InitialGameSettings> settings = loadSettingsFromIni("settings.ini");
     
@@ -53,7 +49,6 @@ int main(int argc, char **argv)
     }
 
     m_log->setDebug(settings->debugMode);
-    Logger::init(m_log.get());
     
     game.applySettings(std::move(settings));
 

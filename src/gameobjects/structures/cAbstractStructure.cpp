@@ -21,7 +21,6 @@
 #include "context/cInfoContext.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "data/gfxdata.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/particles/cParticles.h"
@@ -107,6 +106,7 @@ void cAbstractStructure::serviceInit(sGameServices *services)
     m_mapCamera = services->mapCamera;
     m_settings = services->settings;
     m_interface = services->ctx->getGameInterface();
+    m_renderer = services->ctx->getSDLDrawer();
 }
 
 int cAbstractStructure::pos_x()
@@ -922,9 +922,9 @@ void cAbstractStructure::drawWithShadow()
     cRectangle dest =  {drawX, drawY, scaledWidth, scaledHeight};
     Texture *shadow = getShadowBitmap();
     if (shadow) {
-        global_renderDrawer->renderStrechSprite(shadow, src, dest, ShadowTrans);
+        m_renderer->renderStrechSprite(shadow, src, dest, ShadowTrans);
     }
-    global_renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
+    m_renderer->renderStrechSprite(bitmapToDraw, src, dest);
 }
 
 /**

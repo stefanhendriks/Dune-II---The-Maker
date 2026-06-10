@@ -36,6 +36,8 @@ class cGameInterface;
 class cMapCamera;
 class cMap;
 class cPathFinder;
+class SDLDrawer;
+class Graphics;
 
 enum class eTransferType {
     NONE,                               // nothing to transfer
@@ -489,6 +491,8 @@ private:
     cMapCamera* m_mapCamera = nullptr;
     cMap* m_map = nullptr;
     cPathFinder *m_pathFinder = nullptr;
+    SDLDrawer *m_renderer = nullptr;
+    Graphics* m_gfxdata = nullptr;
 
     eActionType m_action;
     eUnitActionIntent intent;

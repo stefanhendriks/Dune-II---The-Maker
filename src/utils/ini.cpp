@@ -723,7 +723,7 @@ int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credi
             Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", linefeed);
 
             // We know the human brain now, this should be player 0 in our game (!?)...
-            if (linefeed == "Human") {
+            if (cIniUtils::caseInsCompare(linefeed, "Human")) {
                 Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
                 iHumanID = iPlayerID;
             }
@@ -929,12 +929,11 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
             }
             else if (iPart == 2) {
                 // Homebase is home of that house
-                if (strcmp(chunk, "Homebase") == 0) {
+                if (cIniUtils::caseInsCompare(chunk, "Homebase")) {
                     targetCell = m_objects->getPlayer(playerId)->getFocusCell();
                 }
-                else {
+                else if (cIniUtils::caseInsCompare(chunk, "enemybase")) {
                     // enemy base
-
                     if (playerId == 0) {
                         // Find corresponding house and get controller
                         for (int i = 0; i < MAX_PLAYERS; i++)
@@ -947,8 +946,16 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
                         // computer player must find enemy = human
                         targetCell = m_objects->getPlayer(0)->getFocusCell();
                     }
+                } else {
+                    auto sChunk = std::string(chunk);
+                    if (!sChunk.empty() && 
+                        std::all_of(sChunk.begin(), sChunk.end(),[](unsigned char c) { return std::isdigit(c); }))
+                    {
+                        targetCell = std::stoi(sChunk);
+                    } else {
+                        Logger::warn(COMP_SCENARIOINI, "Scenario_Section_Reinforcements", "Invalid target cell for reinforcement: '{}'", chunk);
+                    }
                 }
-
             }
             else if (iPart == 3) {
                 delayInMinutes = atoi(chunk);
@@ -1076,8 +1083,8 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
                     // iIS is the position of '=', so the cell number sits between position 3 and iIS
                     iCell = std::stoi(slinefeed.substr(3, iIS - 3));
 
-                    if (strcmp(chunk, "Wall") == 0) iType = WALL;
-                    if (strcmp(chunk, "Concrete") == 0) iType = SLAB1;
+                    if (cIniUtils::caseInsCompare(chunk, "Wall")) iType = WALL;
+                    if (cIniUtils::caseInsCompare(chunk, "Concrete")) iType = SLAB1;
                     break;
                 }
             }

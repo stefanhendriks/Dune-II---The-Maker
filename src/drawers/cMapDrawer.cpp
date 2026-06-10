@@ -46,8 +46,8 @@ void cMapDrawer::drawShroud()
     float tileWidth = m_camera->getZoomedTileWidth();
     float tileHeight = m_camera->getZoomedTileHeight();
 
-    int iTileHeight = (int)round(tileHeight);
-    int iTileWidth = (int)round(tileWidth);
+    int iTileHeight = (int)std::ceil(tileHeight);
+    int iTileWidth = (int)std::ceil(tileWidth);
     int iPl = m_player->getId();
 
     for (int viewportX = m_camera->getViewportStartX(); viewportX < m_camera->getViewportEndX() + 32; viewportX += 32) {
@@ -63,8 +63,8 @@ void cMapDrawer::drawShroud()
 
             int absoluteYCoordinateOnMap = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = m_camera->getWindowYPosition(absoluteYCoordinateOnMap);
-            int iDrawX = round(fDrawX);
-            int iDrawY = round(fDrawY);
+            int iDrawX = (int)std::floor(fDrawX);
+            int iDrawY = (int)std::floor(fDrawY);
             if (m_drawWithoutShroudTiles) {
                 if (m_map->isVisible(iCell, iPl)) {
                     // do nothing
@@ -101,8 +101,8 @@ void cMapDrawer::drawTerrain()
     float tileWidth = m_camera->getZoomedTileWidth();
     float tileHeight = m_camera->getZoomedTileHeight();
 
-    int iTileHeight = (int)round(tileHeight);
-    int iTileWidth = (int)round(tileWidth);
+    int iTileHeight = (int)std::ceil(tileHeight);
+    int iTileWidth = (int)std::ceil(tileWidth);
 
     int iPl = m_player->getId();
     int mouseCell = m_player->getGameControlsContext()->getMouseCell();
@@ -142,8 +142,8 @@ void cMapDrawer::drawTerrain()
             int absoluteYCoordinateOnMap = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = m_camera->getWindowYPosition(absoluteYCoordinateOnMap);
 
-            int iDrawX = round(fDrawX);
-            int iDrawY = round(fDrawY);
+            int iDrawX = (int)std::floor(fDrawX);
+            int iDrawY = (int)std::floor(fDrawY);
 
             // Draw terrain
             if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {

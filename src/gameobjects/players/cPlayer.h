@@ -45,6 +45,7 @@ class cPlayerDifficultySettings;
 class cOrderProcesser;
 class cGameControlsContext;
 class Graphics;
+class SDLDrawer;
 
 
 struct sEntityForDistance {
@@ -554,6 +555,12 @@ public:
      */
     bool selectUnits(const std::vector<int> &ids) const;
 
+    /**
+     * Adds all non-airborn units in ids to the current selection without harvester filtering.
+     * Used when SHIFT is held to add units to an existing selection.
+     */
+    void selectAdditionalUnits(const std::vector<int> &ids) const;
+
     void thinkSlow();
 
     void deselectUnit(const int &unitId);
@@ -615,6 +622,7 @@ private:
     cGameInterface *m_interface = nullptr;
     cLog *m_log = nullptr;
     Graphics *m_gfxdata = nullptr;
+    SDLDrawer *m_renderer = nullptr;
 
     Texture *bmp_structure[MAX_STRUCTURE_BMPS];
     Texture *bmp_flag;

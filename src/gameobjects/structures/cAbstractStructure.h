@@ -26,6 +26,7 @@ class cMapCamera;
 class cGameInterface;
 class cGameSettings;
 struct sGameServices;
+class SDLDrawer;
 
 class cAbstractStructure : public cScenarioObserver {
 
@@ -56,6 +57,7 @@ protected:
     cMapCamera *m_mapCamera = nullptr;
     cGameInterface *m_interface = nullptr;
     cGameSettings *m_settings = nullptr;
+    SDLDrawer *m_renderer = nullptr;
 
     bool shouldAnimateWhenUnitHeadsTowardsStructure;
     int id;				// the id within the structure[] array

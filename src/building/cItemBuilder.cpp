@@ -835,7 +835,7 @@ void cItemBuilder::onKeyHold(const cKeyboardEvent &event)
 
 void cItemBuilder::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (event.isShiftPressed()) {
+    if (event.hasEitherKey(SDL_SCANCODE_LSHIFT, SDL_SCANCODE_RSHIFT)) {
         m_buildItemMultiplierEnabled = false;
     }
 }

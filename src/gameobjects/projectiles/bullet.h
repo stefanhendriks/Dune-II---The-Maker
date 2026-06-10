@@ -10,6 +10,7 @@ class cInfoContext;
 class cMapCamera;
 class cGameInterface;
 class cGameSettings;
+class SDLDrawer;
 struct sGameServices;
 
 class cBullet {
@@ -116,4 +117,5 @@ private:
     cMapCamera *m_mapCamera = nullptr;
     cGameInterface *m_interface = nullptr;
     cGameSettings *m_settings = nullptr;
+    SDLDrawer* m_renderer = nullptr;
 };

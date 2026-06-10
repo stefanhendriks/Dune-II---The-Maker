@@ -14,7 +14,6 @@
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
 #include "data/gfxdata.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/structures/cStructures.h"
@@ -69,10 +68,17 @@ void cBullet::init()
 void cBullet::serviceInit(sGameServices *services)
 {
     m_objects = services->objects;
+    d2tm_assert(m_objects != nullptr);
     m_info = services->info;
+    d2tm_assert(m_info != nullptr);
     m_settings = services->settings;
+    d2tm_assert(m_settings != nullptr);
     m_interface = services->ctx->getGameInterface();
+    d2tm_assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
+    d2tm_assert(m_mapCamera != nullptr);
+    m_renderer = services->ctx->getSDLDrawer();
+    d2tm_assert(m_renderer != nullptr);
 }
 
 int cBullet::pos_x() const
@@ -152,7 +158,7 @@ void cBullet::draw()
     if (m_info->getBulletInfo(iType).bmp != nullptr) {
         cRectangle src = {sx,sy, bmp_width, bmp_width};
         cRectangle dest = {x,y, static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width)))};
-        global_renderDrawer->renderStrechSprite(m_info->getBulletInfo(iType).bmp, src, dest);
+        m_renderer->renderStrechSprite(m_info->getBulletInfo(iType).bmp, src, dest);
     }
 }
 

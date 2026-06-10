@@ -137,8 +137,8 @@ void cLog::doLog(eLogLevel level, eLogComponent comp, std::string_view event, st
         return;
     }
 
-    const auto now = std::chrono::system_clock::now();
-    const auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    const auto now = std::chrono::steady_clock::now();
+    const auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_startTime).count();
 
     std::string payload = std::format("{}|{}|{}|{}|{}|{}",
         getLogLevelString(level),

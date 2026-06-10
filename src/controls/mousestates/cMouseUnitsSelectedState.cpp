@@ -110,7 +110,12 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
 
         cRectangle boxSelectRectangle = m_mouse->getBoxSelectRectangle();
         const std::vector<int> &ids = m_player->getAllMyUnitsWithinViewportRect(boxSelectRectangle);
-        m_player->selectUnits(ids);
+        if (m_state == SELECTED_STATE_ADD_TO_SELECTION) {
+            m_player->selectAdditionalUnits(ids);
+        }
+        else {
+            m_player->selectUnits(ids);
+        }
     }
     else {
         // single click, no box select
@@ -201,15 +206,11 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
             if (hoverUnitId > -1) {
                 cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
                 if (pUnit->getPlayer() == m_player) {
-                    auto ids = m_player->getSelectedUnits();
-                    auto position = std::find(ids.begin(), ids.end(), hoverUnitId);
-                    if (position != ids.end()) {
+                    if (pUnit->isSelected()) {
                         m_player->deselectUnit(hoverUnitId);
                     }
                     else {
-                        // id not found, add it to the list
-                        ids.push_back(hoverUnitId); // add this unit
-                        m_player->selectUnits(ids);
+                        m_player->selectAdditionalUnits({hoverUnitId});
                     }
                 }
             }
