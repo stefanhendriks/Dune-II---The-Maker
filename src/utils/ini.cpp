@@ -929,12 +929,11 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
             }
             else if (iPart == 2) {
                 // Homebase is home of that house
-                if (strcmp(chunk, "Homebase") == 0) {
+                if (cIniUtils::caseInsCompare(chunk, "Homebase")) {
                     targetCell = m_objects->getPlayer(playerId)->getFocusCell();
                 }
-                else {
+                else if (cIniUtils::caseInsCompare(chunk, "enemybase")) {
                     // enemy base
-
                     if (playerId == 0) {
                         // Find corresponding house and get controller
                         for (int i = 0; i < MAX_PLAYERS; i++)
@@ -948,7 +947,6 @@ void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& sl
                         targetCell = m_objects->getPlayer(0)->getFocusCell();
                     }
                 }
-
             }
             else if (iPart == 3) {
                 delayInMinutes = atoi(chunk);
