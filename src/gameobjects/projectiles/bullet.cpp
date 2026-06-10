@@ -69,11 +69,17 @@ void cBullet::init()
 void cBullet::serviceInit(sGameServices *services)
 {
     m_objects = services->objects;
+    d2tm_assert(m_objects != nullptr);
     m_info = services->info;
+    d2tm_assert(m_info != nullptr);
     m_settings = services->settings;
+    d2tm_assert(m_settings != nullptr);
     m_interface = services->ctx->getGameInterface();
+    d2tm_assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
+    d2tm_assert(m_mapCamera != nullptr);
     m_renderer = services->ctx->getSDLDrawer();
+    d2tm_assert(m_renderer != nullptr);
 }
 
 int cBullet::pos_x() const
