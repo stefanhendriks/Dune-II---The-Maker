@@ -7,7 +7,7 @@
 #include "gameobjects/players/cPlayer.h"
 
 // Constructor
-cLightFactory::cLightFactory()
+cLightFactory::cLightFactory() : cAbstractStructure()
 {
     // other variables (class specific)
     drawFlash = false;
@@ -80,7 +80,7 @@ void cLightFactory::draw()
         Texture *bitmapToDraw = getPlayer()->getStructureBitmapFlash(getType());
         cRectangle src = { 0, iSourceY, pixelWidth, pixelHeight};
         cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-        global_renderDrawer->renderStrechSprite(bitmapToDraw, src, dest);
+        m_renderer->renderStrechSprite(bitmapToDraw, src, dest);
     }
 }
 
