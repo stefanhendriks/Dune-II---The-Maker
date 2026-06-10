@@ -27,6 +27,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/GameContext.hpp"
 
 #include <SDL3/SDL.h>
 #include <iostream>
@@ -48,6 +49,9 @@ cParticle::~cParticle()
 void cParticle::serviceInit(sGameServices* services)
 {
     m_services = services;
+    d2tm_assert(m_services != nullptr);
+    m_renderer = m_services->ctx->getSDLDrawer();
+    d2tm_assert(m_renderer != nullptr);
 }
 
 void cParticle::reset()
@@ -144,14 +148,14 @@ void cParticle::draw()
 
     if (isUsingAlphaChannel()) {
         if (particleInfo.usesAdditiveBlending) {
-            global_renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
+            m_renderer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
         else {
-            global_renderDrawer->renderStrechSprite(bmp, src, dest,iAlpha);
+            m_renderer->renderStrechSprite(bmp, src, dest,iAlpha);
         }
     }
     else {
-        global_renderDrawer->renderStrechSprite(bmp, src, dest,255);
+        m_renderer->renderStrechSprite(bmp, src, dest,255);
     }
 }
 
@@ -852,7 +856,7 @@ void cParticle::recolorForHouseIfGiven() {
     }
 
     int bmpIndex = m_services->info->getParticleInfo(iType).bmpIndex;
-    if (global_renderDrawer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
+    if (m_renderer->isSurface8BitPaletted(gfxdata->getSurface(bmpIndex)) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
     }
