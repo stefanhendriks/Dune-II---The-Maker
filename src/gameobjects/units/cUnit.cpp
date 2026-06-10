@@ -3063,7 +3063,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
                     takeDamage(potentialDeadUnit->getUnitInfo().damageOnEnterStructure);
                 }
 
-                potentialDeadUnit->takeDamage(potentialDeadUnit->getHitPoints() + 1);
+                potentialDeadUnit->die(false, true);
             }
         }
 
