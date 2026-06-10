@@ -555,6 +555,12 @@ public:
      */
     bool selectUnits(const std::vector<int> &ids) const;
 
+    /**
+     * Adds all non-airborn units in ids to the current selection without harvester filtering.
+     * Used when SHIFT is held to add units to an existing selection.
+     */
+    void selectAdditionalUnits(const std::vector<int> &ids) const;
+
     void thinkSlow();
 
     void deselectUnit(const int &unitId);
