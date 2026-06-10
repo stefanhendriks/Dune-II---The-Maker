@@ -712,7 +712,7 @@ void cUnit::draw_experience()
 
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        m_renderer->renderSprite(gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
+        m_renderer->renderSprite(g_gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
     }
 }
 
@@ -834,11 +834,11 @@ void cUnit::draw()
 
     // when we want to be picked up..
     if (bCarryMe) {
-        m_renderer->renderSprite(gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
+        m_renderer->renderSprite(g_gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
     }
 
     if (m_bSelected) {
-        SDL_Surface *focusBitmap = gfxdata->getSurface(FOCUS);
+        SDL_Surface *focusBitmap = g_gfxdata->getSurface(FOCUS);
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
 
@@ -846,7 +846,7 @@ void cUnit::draw()
         int y = draw_y(bmp_height);
 
         cRectangle dest = {x,y, static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_height)))};
-        m_renderer->renderStrechFullSprite(gfxdata->getTexture(FOCUS), dest);
+        m_renderer->renderStrechFullSprite(g_gfxdata->getTexture(FOCUS), dest);
     }
 
     if (m_settings->isDrawUnitDebug()) {

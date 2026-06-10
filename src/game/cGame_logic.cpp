@@ -583,7 +583,7 @@ void cGame::shutdown()
     // ~Graphics() would call SDL_DestroyTexture with an already-dead renderer.
     ctx.reset();
     context.reset();
-    gfxdata.reset();
+    g_gfxdata.reset();
 
     Logger::info(COMP_NONE, "cGame::shutdown", "Allegro FONT library shut down.");
 }
@@ -712,8 +712,8 @@ bool cGame::setupGame()
     /*** Data files ***/
 
     // load datafiles
-    gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
-    if (gfxdata == nullptr) {
+    g_gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
+    if (g_gfxdata == nullptr) {
         Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
         return false;
     }
