@@ -2,7 +2,6 @@
 
 #include "include/d2tmc.h"
 #include "data/gfxdata.h"
-//#include "data/gfxinter.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
@@ -16,7 +15,7 @@ cRandomMapGenerator::cRandomMapGenerator()
 {
 }
 
-void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMapEntry, cGameObjectContext* objects)
+void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMapEntry, cGameObjectContext* objects, SDLDrawer* renderer)
 {
     // create random map
     objects->getMap()->init(width, height);
@@ -119,7 +118,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     // end of map creation
     mapEditor.smoothMap();
 
-    global_renderDrawer->FillWithColor(randomMapEntry.terrain, Color::Black);
+    renderer->FillWithColor(randomMapEntry.terrain, Color::Black);
 
     // now put in previewmap 0
     for (int x = 0; x < objects->getMap()->getWidth(); x++) {
@@ -150,7 +149,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
                 }
             }
 
-            global_renderDrawer->setPixel(randomMapEntry.terrain, x, y, iColor);
+            renderer->setPixel(randomMapEntry.terrain, x, y, iColor);
         }
     }
 }
