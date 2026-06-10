@@ -275,6 +275,7 @@ void cGameControlsContext::setMouseState(eMouseState newState)
         }
 
         Logger::info(COMP_NONE, "cGameControlsContext::setMouseState", "changing state from [{}] to [{}] (prevState=[{}], prevStateBeforeRepair=[{}])", mouseStateString(m_state), mouseStateString(newState), mouseStateString(m_prevState), mouseStateString(m_prevStateBeforeRepair));
+        onBlurMouseStateEvent();
         m_state = newState;
         switch (m_state) {
             case MOUSESTATE_SELECT:
