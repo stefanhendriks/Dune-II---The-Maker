@@ -512,8 +512,6 @@ private:
 
     int unitsEaten; // worm related
 
-    bool isSaboteur();
-
     void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait = 35);
 
     void takeDamage(int damage);

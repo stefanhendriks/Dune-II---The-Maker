@@ -74,7 +74,7 @@ struct s_UnitInfo {
     bool canAttackAirUnits;   // ie for rocket typed units
     bool canAttackUnits;   // a unit used for attacking other units? (ie, mvc or harvester is no)
     bool canEnterAndDamageStructure;  // can this unit enter a structure and damage it? (and eventually capture?)
-    bool attackIsEnterStructure;      // for saboteur only really
+    bool attackIsEnterStructure;      // unit attacks by entering a structure (eg saboteur)
     float damageOnEnterStructure;     // the damage inflicted to a structure when entered
 
     bool renderSmokeOnUnitWhenThresholdMet; // if yes, spawn smoke particle (and attach to unit) when hp factor met
