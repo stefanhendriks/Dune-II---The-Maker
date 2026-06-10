@@ -1,19 +1,20 @@
 #include "cTextDrawer.h"
 #include "drawers/cTextTextureCache.h"
 #include "game/cGameSettings.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Color.hpp"
 #include <iostream>
 #include "include/cAssert.h"
 
-cTextDrawer::cTextDrawer(TTF_Font *theFont, cGameSettings *settings) :
+cTextDrawer::cTextDrawer(TTF_Font *theFont, cGameSettings *settings, SDLDrawer *renderer) :
     m_font(theFont),
-    m_textCache(std::make_unique<cTextTextureCache>(theFont)),
-    m_settings(settings)
+    m_textCache(std::make_unique<cTextTextureCache>(theFont, renderer)),
+    m_settings(settings),
+    m_renderer(renderer)
 {
     d2tm_assert(theFont != nullptr);
     d2tm_assert(settings != nullptr);
+    d2tm_assert(renderer != nullptr);
 }
 
 cTextDrawer::~cTextDrawer()
@@ -28,9 +29,9 @@ void cTextDrawer::drawText(int x, int y, Color color, const std::string &msg, bo
     if (!cacheEntry) return;
     cacheEntry->lifeCounter += 1;
     if (applyShadow) {
-        global_renderDrawer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
+        m_renderer->renderTexture(cacheEntry->shadowsTexture, x + 1, y + 1,cacheEntry->width, cacheEntry->height);
     }
-    global_renderDrawer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
+    m_renderer->renderTexture(cacheEntry->texture, x, y,cacheEntry->width, cacheEntry->height);
 }
 
 void cTextDrawer::drawText(cPoint &coords, Color color, const std::string &msg, bool applyShadow) const

@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <memory>
 
+class SDLDrawer;
+
 struct textKey {
     std::string msg;
     Color color;
@@ -36,7 +38,7 @@ struct textCacheEntry {
 class cTextTextureCache {
 public:
     // Constructor, initializes the cache with a TTF font
-    explicit cTextTextureCache(TTF_Font *font);
+    cTextTextureCache(TTF_Font *font, SDLDrawer *renderer);
     ~cTextTextureCache();
     // Finds a cached entry for the given color and message, or creates it if not present
     textCacheEntry* findOrCreate(Color color, const std::string &msg) const;
@@ -45,5 +47,6 @@ public:
 private:
     std::unique_ptr<textCacheEntry> createCacheEntry(Color color, const std::string &msg) const;
     TTF_Font *m_font;
+    SDLDrawer *m_renderer;
     mutable std::unordered_map<textKey, std::unique_ptr<textCacheEntry>, textKeyHash, textKeyEqual> m_textCache;
 };

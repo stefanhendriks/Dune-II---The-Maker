@@ -1,14 +1,14 @@
 #include "drawers/cTextTextureCache.h"
 #include "drawers/SDLDrawer.hpp"
-#include "include/d2tmc.h"
 
 #include "include/cAssert.h"
 #include "utils/Log.h"
 
-cTextTextureCache::cTextTextureCache(TTF_Font *font)
-    : m_font(font)
+cTextTextureCache::cTextTextureCache(TTF_Font *font, SDLDrawer *renderer)
+    : m_font(font), m_renderer(renderer)
 {
     d2tm_assert(font != nullptr);
+    d2tm_assert(renderer != nullptr);
 }
 
 cTextTextureCache::~cTextTextureCache()
@@ -36,7 +36,7 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
         Logger::error(COMP_ALFONT, "cTextTextureCache", "Failed to create shadow surface for text '{}': {}", msg, SDL_GetError());
         return nullptr;
     }
-    newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
+    newCacheEntry->shadowsTexture = SDL_CreateTextureFromSurface(m_renderer->getRenderer(), textSurface);
     SDL_SetTextureScaleMode(newCacheEntry->shadowsTexture, SDL_SCALEMODE_NEAREST);
     SDL_DestroySurface(textSurface);
 
@@ -45,7 +45,7 @@ std::unique_ptr<textCacheEntry> cTextTextureCache::createCacheEntry(Color color,
         Logger::error(COMP_ALFONT, "cTextTextureCache", "Failed to create surface for text '{}': {}", msg, SDL_GetError());
         return nullptr;
     }
-    newCacheEntry->texture = SDL_CreateTextureFromSurface(global_renderDrawer->getRenderer(), textSurface);
+    newCacheEntry->texture = SDL_CreateTextureFromSurface(m_renderer->getRenderer(), textSurface);
     SDL_SetTextureScaleMode(newCacheEntry->texture, SDL_SCALEMODE_NEAREST);
     newCacheEntry->width = textSurface->w;
     newCacheEntry->height = textSurface->h;

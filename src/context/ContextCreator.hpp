@@ -10,6 +10,7 @@ class Graphics;
 class TextContext;
 class cTextDrawer;
 class cGameSettings;
+class SDLDrawer;
 
 class ContextCreator {
 public:
@@ -18,7 +19,7 @@ public:
     ~ContextCreator();
 
     std::unique_ptr<GraphicsContext> createGraphicsContext();
-    std::unique_ptr<TextContext> createTextContext(cGameSettings *settings);
+    std::unique_ptr<TextContext> createTextContext(cGameSettings *settings, SDLDrawer *renderer);
 
 private:
     std::shared_ptr<Graphics> gfxmentat;
