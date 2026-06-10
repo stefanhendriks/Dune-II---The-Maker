@@ -26,6 +26,7 @@ class cGameObjectContext;
 class cInfoContext;
 class cParticles;
 class SDLDrawer;
+class Graphics;
 
 class cParticle {
 public:
@@ -107,6 +108,7 @@ private:
 
     sGameServices* m_services = nullptr;
     SDLDrawer* m_renderer = nullptr;
+    Graphics* m_gfxdata = nullptr;
 
     int boundUnitID;
     int boundParticleID; // when particles are 'tied together'
