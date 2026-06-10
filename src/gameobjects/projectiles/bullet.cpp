@@ -14,7 +14,6 @@
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
 #include "data/gfxdata.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/structures/cStructures.h"

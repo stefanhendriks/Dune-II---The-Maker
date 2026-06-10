@@ -1,7 +1,6 @@
 #include "texture_utils.h"
 #include "gameobjects/players/cPlayer.h"
 #include "drawers/SDLDrawer.hpp"
-#include "include/d2tmc.h"
 
 Texture* createPlayerTextureFromIndexedSurfaceWithPalette(SDLDrawer *renderer, cPlayer* player, SDL_Surface* referenceSurface, int paletteIndexForTransparency) {
     d2tm_assert(player && "player must be given");

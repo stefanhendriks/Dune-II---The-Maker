@@ -16,7 +16,6 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContextCreator.h"
 #include "game/cGame.h"
-#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "include/eGameState.h"
@@ -583,7 +582,6 @@ void cGame::shutdown()
     // ~Graphics() would call SDL_DestroyTexture with an already-dead renderer.
     ctx.reset();
     context.reset();
-    g_gfxdata.reset();
 
     Logger::info(COMP_NONE, "cGame::shutdown", "Allegro FONT library shut down.");
 }
@@ -709,18 +707,6 @@ bool cGame::setupGame()
 
     Logger::info(COMP_INIT, "cGame::setupGame", "=== GAME ===");
 
-    /*** Data files ***/
-
-    // load datafiles
-    g_gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
-    if (g_gfxdata == nullptr) {
-        Logger::error(COMP_INIT, "Load data", "Could not hook/load datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
-        return false;
-    }
-    else {
-        Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
-    }
-
     // randomize timer
     auto t = static_cast<unsigned int>(time(nullptr));
     Logger::info(COMP_INIT, "cGame::setupGame", "Seed is {}", t);
@@ -735,7 +721,7 @@ bool cGame::setupGame()
     // A few messages for the player
     Logger::info(COMP_INIT, "cGame::setupGame", "Initializing:  PLAYERS");
     m_players->setupPlayers(m_Houses.get());
-    cInfoContextCreator infoCreator;
+    cInfoContextCreator infoCreator(ctx->getGraphicsContext());
     infoCreator.installInfos(*m_infoContext);
 
     if (m_mapCamera != nullptr)
