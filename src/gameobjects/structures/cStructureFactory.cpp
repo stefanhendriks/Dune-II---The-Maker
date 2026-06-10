@@ -49,6 +49,7 @@ void cStructureFactory::serviceInit(sGameServices *services)
     m_settings = services->settings;
     m_structureUtils = services->structureUtils;
     m_interface = services->ctx->getGameInterface();
+    m_renderer = services->ctx->getSDLDrawer();
 }
 
 cStructureFactory::~cStructureFactory()
@@ -150,10 +151,10 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
                      );
 
         if (flag.big) {
-            str->addFlag(cFlag::createBigFlag(player, pos, m_mapCamera, m_settings));
+            str->addFlag(cFlag::createBigFlag(player, pos, m_mapCamera, m_settings, m_renderer));
         }
         else {
-            str->addFlag(cFlag::createSmallFlag(player, pos, m_mapCamera, m_settings));
+            str->addFlag(cFlag::createSmallFlag(player, pos, m_mapCamera, m_settings, m_renderer));
         }
     }
 
