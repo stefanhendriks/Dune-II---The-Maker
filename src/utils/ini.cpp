@@ -723,7 +723,7 @@ int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credi
             Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", linefeed);
 
             // We know the human brain now, this should be player 0 in our game (!?)...
-            if (linefeed == "Human") {
+            if (cIniUtils::caseInsCompare(linefeed, "Human")) {
                 Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
                 iHumanID = iPlayerID;
             }
@@ -1083,8 +1083,8 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
                     // iIS is the position of '=', so the cell number sits between position 3 and iIS
                     iCell = std::stoi(slinefeed.substr(3, iIS - 3));
 
-                    if (strcmp(chunk, "Wall") == 0) iType = WALL;
-                    if (strcmp(chunk, "Concrete") == 0) iType = SLAB1;
+                    if (cIniUtils::caseInsCompare(chunk, "Wall")) iType = WALL;
+                    if (cIniUtils::caseInsCompare(chunk, "Concrete")) iType = SLAB1;
                     break;
                 }
             }
