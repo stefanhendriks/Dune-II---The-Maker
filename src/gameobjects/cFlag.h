@@ -26,10 +26,9 @@ public:
     }
 private:
     cPoint m_absCoords;
-
-    cPlayer *m_player;
-    cMapCamera *m_mapCamera;
-    cGameSettings *m_settings;
+    cPlayer *m_player = nullptr;
+    cMapCamera *m_mapCamera = nullptr;
+    cGameSettings *m_settings = nullptr;
     SDLDrawer *m_renderer = nullptr;
     int m_TIMER_animate;
 
