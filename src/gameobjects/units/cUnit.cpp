@@ -14,7 +14,6 @@
 // #include "cUnits.h"
 
 
-#include "include/d2tmc.h"
 #include "utils/Log.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
@@ -169,6 +168,8 @@ void cUnit::serviceInit(sGameServices* services)
     d2tm_assert(m_pathFinder != nullptr);
     m_renderer = services->ctx->getSDLDrawer();
     d2tm_assert(m_renderer != nullptr);
+    m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
+    d2tm_assert(m_gfxdata != nullptr);
 }
 
 void cUnit::recreateDimensions()
@@ -709,10 +710,9 @@ void cUnit::draw_experience()
 
     int drawx = draw_x() + 3;
     int drawy = draw_y() - 19;
-
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        m_renderer->renderSprite(g_gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
+        m_renderer->renderSprite(m_gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
     }
 }
 
@@ -834,11 +834,11 @@ void cUnit::draw()
 
     // when we want to be picked up..
     if (bCarryMe) {
-        m_renderer->renderSprite(g_gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
+        m_renderer->renderSprite(m_gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
     }
 
     if (m_bSelected) {
-        SDL_Surface *focusBitmap = g_gfxdata->getSurface(FOCUS);
+        SDL_Surface *focusBitmap = m_gfxdata->getSurface(FOCUS);
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
 
@@ -846,7 +846,7 @@ void cUnit::draw()
         int y = draw_y(bmp_height);
 
         cRectangle dest = {x,y, static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_height)))};
-        m_renderer->renderStrechFullSprite(g_gfxdata->getTexture(FOCUS), dest);
+        m_renderer->renderStrechFullSprite(m_gfxdata->getTexture(FOCUS), dest);
     }
 
     if (m_settings->isDrawUnitDebug()) {
