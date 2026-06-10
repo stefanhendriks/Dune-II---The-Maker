@@ -1,6 +1,5 @@
 #include "cRandomMapGenerator.h"
 
-#include "include/d2tmc.h"
 #include "data/gfxdata.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/map/cMapEditor.h"

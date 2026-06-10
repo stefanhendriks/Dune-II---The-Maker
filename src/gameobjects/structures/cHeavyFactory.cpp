@@ -1,7 +1,6 @@
 #include "cHeavyFactory.h"
 
 #include "definitions.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/players/cPlayer.h"

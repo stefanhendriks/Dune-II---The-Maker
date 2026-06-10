@@ -1,6 +1,5 @@
 #include "cFlag.h"
 #include "game/cGameSettings.h"
-#include "include/d2tmc.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/players/cPlayer.h"

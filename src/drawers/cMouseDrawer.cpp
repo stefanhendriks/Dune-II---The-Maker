@@ -1,6 +1,5 @@
 #include "cMouseDrawer.h"
 #include "include/sGameServices.h"
-#include "include/d2tmc.h"
 #include "controls/cGameControlsContext.h"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"

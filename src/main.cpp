@@ -25,9 +25,6 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
-// the ultimate game variable(s)
-std::shared_ptr<Graphics>   g_gfxdata;
-
 int main(int argc, char **argv)
 {
     std::unique_ptr<cLog> m_log = std::make_unique<cLog>("nlog.txt");
