@@ -158,6 +158,12 @@ void cCreditsState::prepareCrawlerLines()
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
+        .name = "Ravenborn",
+        .txt = "Graphics",
+        .color = Color::White,
+        .height = fontHeightWithALittlePadding
+    });
+    m_lines.push_back(s_CreditLine {
         .name = "Ripps",
         .txt = "Support at Discord, testing & Skirmish Maps",
         .color = Color::White,
