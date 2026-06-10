@@ -126,6 +126,7 @@ void cUnit::init(int i)
 
     // harv
     iCredits = 0;
+    iHarvestCellMemory = -1;
 
     // Drawing
     rendering.iBodyFacing = Facing::UP;    // Body of tanks facing
