@@ -191,6 +191,7 @@ int cMouseNormalState::getMouseTileForNormalState() const
 
 void cMouseNormalState::onStateSet()
 {
+    setState(SELECT_STATE_NORMAL);
     m_mouseTile = MOUSE_NORMAL;
     m_mouse->setTile(m_mouseTile);
 }
