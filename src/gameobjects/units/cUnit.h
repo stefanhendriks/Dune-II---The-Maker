@@ -513,6 +513,7 @@ private:
     int unitsEaten; // worm related
 
     bool isSaboteur();
+    bool canAttackOnEnterStructure();
 
     void forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait = 35);
 

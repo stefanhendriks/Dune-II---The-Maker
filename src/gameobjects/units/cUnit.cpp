@@ -963,8 +963,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
     }
 
     // TODO: We have somewhere else something with "intents", so this whole if statement should be removed / replaced?
-    if (isSaboteur()) {
-        // saboteur does not attack, but only captures
+    if (canAttackOnEnterStructure()) {
         move_to(goalCell, structureId, -1, eUnitActionIntent::INTENT_CAPTURE);
         return;
     }
@@ -979,7 +978,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
 
 void cUnit::attackAt(int cell)
 {
-    if (!isAttackingUnit()) {
+    if (!isAttackingUnit() && !canAttackOnEnterStructure()) {
         return;
     }
 
@@ -2065,7 +2064,6 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
     }
 
     if (isSaboteur()) {
-        // ignore being shot?
         return;
     }
 
@@ -2870,8 +2868,7 @@ void cUnit::thinkFast_move()
                         }
                     }
                     else if (intent == eUnitActionIntent::INTENT_CAPTURE || intent == eUnitActionIntent::INTENT_MOVE) {
-                        if (isSaboteur()) {
-                            // the unit will die and inflict damage
+                        if (canAttackOnEnterStructure()) {
                             pStructure->damage(getUnitInfo().damageOnEnterStructure, -1); // no need to pass ID of unit, as it is dead
                             die(true, false);
                         }
@@ -3063,11 +3060,9 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
                 if (!potentialDeadUnit->canBeSquished()) continue;
 
                 if (potentialDeadUnit->isSaboteur()) {
-                    // this unit takes damage, catches the explosion so to speak
                     takeDamage(potentialDeadUnit->getUnitInfo().damageOnEnterStructure);
                 }
 
-                // die
                 potentialDeadUnit->die(false, true);
             }
         }
@@ -3215,6 +3210,11 @@ bool cUnit::isSaboteur()
     return iType == SABOTEUR;
 }
 
+bool cUnit::canAttackOnEnterStructure()
+{
+    return getUnitInfo().attackIsEnterStructure;
+}
+
 void cUnit::move_to(int iGoalCell)
 {
     eUnitActionIntent intent = eUnitActionIntent::INTENT_MOVE;
@@ -3250,7 +3250,7 @@ void cUnit::move_to(int iGoalCell)
             }
             else {
                 // if capturable... (TODO)
-                if (isInfantryUnit() || isSaboteur()) {
+                if (isInfantryUnit() || canAttackOnEnterStructure()) {
                     intent = eUnitActionIntent::INTENT_CAPTURE;
                 }
                 else {
