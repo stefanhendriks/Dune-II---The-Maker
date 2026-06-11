@@ -738,14 +738,12 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 }
                 if (available.empty()) {
                     Logger::warn(COMP_SKIRMISHSETUP, "cSetupSkirmishState",
-                        "Player [{}] wanted a random house but all houses are taken — skipping. House setup: [0]={} [1]={} [2]={} [3]={} [4]={}",
+                        "Player [{}] wanted a random house but all houses are taken — assigning duplicate. House setup: [0]={} [1]={} [2]={} [3]={} [4]={}",
                         p,
                         skirmishPlayer[0].iHouse, skirmishPlayer[1].iHouse,
                         skirmishPlayer[2].iHouse, skirmishPlayer[3].iHouse,
                         skirmishPlayer[4].iHouse);
-                    cPlayer* pSkipPlayer = m_objects->getPlayer(p);
-                    pSkipPlayer->init(p, nullptr);
-                    continue;
+                    available = {HARKONNEN, ATREIDES, ORDOS, SARDAUKAR};
                 }
                 iHouse = available[RNG::rnd(available.size())];
             }
