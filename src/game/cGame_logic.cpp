@@ -1006,6 +1006,7 @@ void cGame::setState(int newState)
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
             else if (newState == GAME_BRIEFING) {
+                m_gameSettings->m_cheatMode = false;
                 newStatePtr = new cMentatState(m_services.get(), MentatMode::Briefing, m_cIni.get(), m_dataCampaign.get());
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             } else if (newState == GAME_WINBRIEF) {
