@@ -159,7 +159,7 @@ void cCreditsState::prepareCrawlerLines()
     });
     m_lines.push_back(s_CreditLine {
         .name = "Ravenborn",
-        .txt = "Graphics for editor UI, sonic tank weapon, worm attack & turret directions",
+        .txt = "Internal Editor UI graphics and miscellaneous assets",
         .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
