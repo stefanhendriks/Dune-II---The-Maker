@@ -33,5 +33,6 @@ public:
 private:
     s_HouseInfo m_houseInfo[MAX_HOUSES];
     Color makeColFromString(std::string colorStr);
+    HouseColor makeHouseColorFromString(std::string colorStr);
 };
 
