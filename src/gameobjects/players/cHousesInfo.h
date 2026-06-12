@@ -23,7 +23,7 @@ public:
         return m_houseInfo[house].swap_color;
     }
 
-    Color getMinimapColor(int house) {
+    Color getMinimapColor(int house) const {
         return m_houseInfo[house].minimap_color;
     }
 
