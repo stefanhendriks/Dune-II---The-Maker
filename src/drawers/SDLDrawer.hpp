@@ -2,6 +2,7 @@
 
 #include "utils/cRectangle.h"
 #include "utils/Color.hpp"
+#include "utils/HouseColors.h"
 
 #include <map>
 #include <memory>
@@ -51,7 +52,7 @@ public:
     Texture *createRenderTargetTexture(int width, int height);
     void beginDrawingToTexture(Texture* targetTexture);
     void endDrawingToTexture();
-    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, int paletteSwapStart = -1);
+    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, const HouseColors& colorRamp);
 private:
     void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color);
 

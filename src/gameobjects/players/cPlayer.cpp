@@ -145,9 +145,9 @@ void cPlayer::setFocusCell(int cll)
     this->focusCell_ = cll;
 }
 
-int cPlayer::getSwapColor() const
+const HouseColors& cPlayer::getColors() const
 {
-    return m_HousesInfo->getSwapColor(this->house);
+    return m_HousesInfo->getColors(this->house);
 }
 
 void cPlayer::clearUnitTypeBitmaps()
