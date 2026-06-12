@@ -51,28 +51,116 @@ void cHousesInfo::installHouses(std::shared_ptr<cIniFile> gameCfg)
     const cSection &section = gameCfg->getSection(SECTION_HOUSES);
 
     // General / Default / No House
-    m_houseInfo[GENERALHOUSE].minimap_color = makeColFromString(section.getStringValue("GENERAL_MINIMAPCOLOR"));
+    if (section.hasValue("GENERAL_MINIMAPCOLOR")) {
+        m_houseInfo[GENERALHOUSE].minimap_color = makeColFromString(section.getStringValue("GENERAL_MINIMAPCOLOR"));
+    }
+    if (section.hasValue("GENERAL_COLORS_0")) { //we assume if colors 0 is set, the rest is set too, and in the correct format. No need to check each one.
+        m_houseInfo[GENERALHOUSE].colors[0] = makeHouseColorFromString(section.getStringValue("GENERAL_COLORS_0"));
+        m_houseInfo[GENERALHOUSE].colors[1] = makeHouseColorFromString(section.getStringValue("GENERAL_COLORS_1"));
+        m_houseInfo[GENERALHOUSE].colors[2] = makeHouseColorFromString(section.getStringValue("GENERAL_COLORS_2"));
+        m_houseInfo[GENERALHOUSE].colors[3] = makeHouseColorFromString(section.getStringValue("GENERAL_COLORS_3"));
+        m_houseInfo[GENERALHOUSE].colors[4] = makeHouseColorFromString(section.getStringValue("GENERAL_COLORS_4"));
+        m_houseInfo[GENERALHOUSE].colors[5] = makeHouseColorFromString(section.getStringValue("GENERAL_COLORS_5"));
+        m_houseInfo[GENERALHOUSE].colors[6] = makeHouseColorFromString(section.getStringValue("GENERAL_COLORS_6"));
+    }
 
     // Harkonnen
-    m_houseInfo[HARKONNEN].minimap_color = makeColFromString(section.getStringValue("HARKONNEN_MINIMAPCOLOR"));
+    if (section.hasValue("HARKONNEN_MINIMAPCOLOR")) {
+        m_houseInfo[HARKONNEN].minimap_color = makeColFromString(section.getStringValue("HARKONNEN_MINIMAPCOLOR"));
+    }
+    if (section.hasValue("HARKONNEN_COLORS_0")) { //we assume if colors 0 is set, the rest is set too, and in the correct format. No need to check each one.
+        m_houseInfo[HARKONNEN].colors[0] = makeHouseColorFromString(section.getStringValue("HARKONNEN_COLORS_0"));
+        m_houseInfo[HARKONNEN].colors[1] = makeHouseColorFromString(section.getStringValue("HARKONNEN_COLORS_1"));
+        m_houseInfo[HARKONNEN].colors[2] = makeHouseColorFromString(section.getStringValue("HARKONNEN_COLORS_2"));
+        m_houseInfo[HARKONNEN].colors[3] = makeHouseColorFromString(section.getStringValue("HARKONNEN_COLORS_3"));
+        m_houseInfo[HARKONNEN].colors[4] = makeHouseColorFromString(section.getStringValue("HARKONNEN_COLORS_4"));
+        m_houseInfo[HARKONNEN].colors[5] = makeHouseColorFromString(section.getStringValue("HARKONNEN_COLORS_5"));
+        m_houseInfo[HARKONNEN].colors[6] = makeHouseColorFromString(section.getStringValue("HARKONNEN_COLORS_6"));
+    }
 
     // Atreides
-    m_houseInfo[ATREIDES].minimap_color = makeColFromString(section.getStringValue("ATREIDES_MINIMAPCOLOR"));
+    if (section.hasValue("ATREIDES_MINIMAPCOLOR")) {
+        m_houseInfo[ATREIDES].minimap_color = makeColFromString(section.getStringValue("ATREIDES_MINIMAPCOLOR"));
+    }
+    if (section.hasValue("ATREIDES_COLORS_0")) { //we assume if colors 0 is set, the rest is set too, and in the correct format. No need to check each one.
+        m_houseInfo[ATREIDES].colors[0] = makeHouseColorFromString(section.getStringValue("ATREIDES_COLORS_0"));
+        m_houseInfo[ATREIDES].colors[1] = makeHouseColorFromString(section.getStringValue("ATREIDES_COLORS_1"));
+        m_houseInfo[ATREIDES].colors[2] = makeHouseColorFromString(section.getStringValue("ATREIDES_COLORS_2"));
+        m_houseInfo[ATREIDES].colors[3] = makeHouseColorFromString(section.getStringValue("ATREIDES_COLORS_3"));
+        m_houseInfo[ATREIDES].colors[4] = makeHouseColorFromString(section.getStringValue("ATREIDES_COLORS_4"));
+        m_houseInfo[ATREIDES].colors[5] = makeHouseColorFromString(section.getStringValue("ATREIDES_COLORS_5"));
+        m_houseInfo[ATREIDES].colors[6] = makeHouseColorFromString(section.getStringValue("ATREIDES_COLORS_6"));
+    }
 
     // Ordos
-    m_houseInfo[ORDOS].minimap_color = makeColFromString(section.getStringValue("ORDOS_MINIMAPCOLOR"));
+    if (section.hasValue("ORDOS_MINIMAPCOLOR")) {
+        m_houseInfo[ORDOS].minimap_color = makeColFromString(section.getStringValue("ORDOS_MINIMAPCOLOR"));
+    }
+    if (section.hasValue("ORDOS_COLORS_0")) { //we assume if colors 0 is set, the rest is set too, and in the correct format. No need to check each one.
+        m_houseInfo[ORDOS].colors[0] = makeHouseColorFromString(section.getStringValue("ORDOS_COLORS_0"));
+        m_houseInfo[ORDOS].colors[1] = makeHouseColorFromString(section.getStringValue("ORDOS_COLORS_1"));
+        m_houseInfo[ORDOS].colors[2] = makeHouseColorFromString(section.getStringValue("ORDOS_COLORS_2"));
+        m_houseInfo[ORDOS].colors[3] = makeHouseColorFromString(section.getStringValue("ORDOS_COLORS_3"));
+        m_houseInfo[ORDOS].colors[4] = makeHouseColorFromString(section.getStringValue("ORDOS_COLORS_4"));
+        m_houseInfo[ORDOS].colors[5] = makeHouseColorFromString(section.getStringValue("ORDOS_COLORS_5"));
+        m_houseInfo[ORDOS].colors[6] = makeHouseColorFromString(section.getStringValue("ORDOS_COLORS_6"));
+    }
 
     // Mercenary
-    m_houseInfo[MERCENARY].minimap_color = makeColFromString(section.getStringValue("MERCENARY_MINIMAPCOLOR"));
+    if (section.hasValue("MERCENARY_MINIMAPCOLOR")) {    
+        m_houseInfo[MERCENARY].minimap_color = makeColFromString(section.getStringValue("MERCENARY_MINIMAPCOLOR"));
+    }
+    if (section.hasValue("MERCENARY_COLORS_0")) { //we assume if colors 0 is set, the rest is set too, and in the correct format. No need to check each one.
+        m_houseInfo[MERCENARY].colors[0] = makeHouseColorFromString(section.getStringValue("MERCENARY_COLORS_0"));
+        m_houseInfo[MERCENARY].colors[1] = makeHouseColorFromString(section.getStringValue("MERCENARY_COLORS_1"));
+        m_houseInfo[MERCENARY].colors[2] = makeHouseColorFromString(section.getStringValue("MERCENARY_COLORS_2"));
+        m_houseInfo[MERCENARY].colors[3] = makeHouseColorFromString(section.getStringValue("MERCENARY_COLORS_3"));
+        m_houseInfo[MERCENARY].colors[4] = makeHouseColorFromString(section.getStringValue("MERCENARY_COLORS_4"));
+        m_houseInfo[MERCENARY].colors[5] = makeHouseColorFromString(section.getStringValue("MERCENARY_COLORS_5"));
+        m_houseInfo[MERCENARY].colors[6] = makeHouseColorFromString(section.getStringValue("MERCENARY_COLORS_6"));
+    }
 
     // Sardaukar
-    m_houseInfo[SARDAUKAR].minimap_color = makeColFromString(section.getStringValue("SARDAUKAR_MINIMAPCOLOR"));
+    if (section.hasValue("SARDAUKAR_MINIMAPCOLOR")) {
+        m_houseInfo[SARDAUKAR].minimap_color = makeColFromString(section.getStringValue("SARDAUKAR_MINIMAPCOLOR"));
+    }
+    if (section.hasValue("SARDAUKAR_COLORS_0")) { //we assume if colors 0 is set, the rest is set too, and in the correct format. No need to check each one.
+        m_houseInfo[SARDAUKAR].colors[0] = makeHouseColorFromString(section.getStringValue("SARDAUKAR_COLORS_0"));
+        m_houseInfo[SARDAUKAR].colors[1] = makeHouseColorFromString(section.getStringValue("SARDAUKAR_COLORS_1"));
+        m_houseInfo[SARDAUKAR].colors[2] = makeHouseColorFromString(section.getStringValue("SARDAUKAR_COLORS_2"));
+        m_houseInfo[SARDAUKAR].colors[3] = makeHouseColorFromString(section.getStringValue("SARDAUKAR_COLORS_3"));
+        m_houseInfo[SARDAUKAR].colors[4] = makeHouseColorFromString(section.getStringValue("SARDAUKAR_COLORS_4"));
+        m_houseInfo[SARDAUKAR].colors[5] = makeHouseColorFromString(section.getStringValue("SARDAUKAR_COLORS_5"));
+        m_houseInfo[SARDAUKAR].colors[6] = makeHouseColorFromString(section.getStringValue("SARDAUKAR_COLORS_6"));
+    }
 
     // Fremen
-    m_houseInfo[FREMEN].minimap_color = makeColFromString(section.getStringValue("FREMEN_MINIMAPCOLOR"));
+    if (section.hasValue("FREMEN_MINIMAPCOLOR")) {
+        m_houseInfo[FREMEN].minimap_color = makeColFromString(section.getStringValue("FREMEN_MINIMAPCOLOR"));
+    }
+    if (section.hasValue("FREMEN_COLORS_0")) { //we assume if colors 0 is set, the rest is set too, and in the correct format. No need to check each one.
+        m_houseInfo[FREMEN].colors[0] = makeHouseColorFromString(section.getStringValue("FREMEN_COLORS_0"));
+        m_houseInfo[FREMEN].colors[1] = makeHouseColorFromString(section.getStringValue("FREMEN_COLORS_1"));
+        m_houseInfo[FREMEN].colors[2] = makeHouseColorFromString(section.getStringValue("FREMEN_COLORS_2"));
+        m_houseInfo[FREMEN].colors[3] = makeHouseColorFromString(section.getStringValue("FREMEN_COLORS_3"));
+        m_houseInfo[FREMEN].colors[4] = makeHouseColorFromString(section.getStringValue("FREMEN_COLORS_4"));
+        m_houseInfo[FREMEN].colors[5] = makeHouseColorFromString(section.getStringValue("FREMEN_COLORS_5"));
+        m_houseInfo[FREMEN].colors[6] = makeHouseColorFromString(section.getStringValue("FREMEN_COLORS_6"));
+    }
 
     // CORRINO
-    m_houseInfo[CORRINO].minimap_color = makeColFromString(section.getStringValue("CORRINO_MINIMAPCOLOR"));
+    if (section.hasValue("CORRINO_MINIMAPCOLOR")) {
+        m_houseInfo[CORRINO].minimap_color = makeColFromString(section.getStringValue("CORRINO_MINIMAPCOLOR"));
+    }
+    if (section.hasValue("CORRINO_COLORS_0")) { //we assume if colors 0 is set, the rest is set too, and in the correct format. No need to check each one.
+        m_houseInfo[CORRINO].colors[0] = makeHouseColorFromString(section.getStringValue("CORRINO_COLORS_0"));
+        m_houseInfo[CORRINO].colors[1] = makeHouseColorFromString(section.getStringValue("CORRINO_COLORS_1"));
+        m_houseInfo[CORRINO].colors[2] = makeHouseColorFromString(section.getStringValue("CORRINO_COLORS_2"));
+        m_houseInfo[CORRINO].colors[3] = makeHouseColorFromString(section.getStringValue("CORRINO_COLORS_3"));
+        m_houseInfo[CORRINO].colors[4] = makeHouseColorFromString(section.getStringValue("CORRINO_COLORS_4"));
+        m_houseInfo[CORRINO].colors[5] = makeHouseColorFromString(section.getStringValue("CORRINO_COLORS_5"));
+        m_houseInfo[CORRINO].colors[6] = makeHouseColorFromString(section.getStringValue("CORRINO_COLORS_6"));
+    }
 }
 
 Color cHousesInfo::makeColFromString(std::string colorStr)
@@ -84,4 +172,14 @@ Color cHousesInfo::makeColFromString(std::string colorStr)
     ss >> r >> comma >> g >> comma >> b;
     //std::cout << r << ":"<<g<<":"<<b<<std::endl;
     return Color{(Uint8)r,(Uint8)g,(Uint8)b,255};
+}
+
+HouseColor cHousesInfo::makeHouseColorFromString(std::string colorStr)
+{
+    int r = 0, g = 0, b = 0;
+    char comma; // Pour consommer les virgules
+
+    std::stringstream ss(colorStr);
+    ss >> r >> comma >> g >> comma >> b;
+    return HouseColor{(Uint8)r,(Uint8)g,(Uint8)b};
 }
