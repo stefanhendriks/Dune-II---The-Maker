@@ -30,6 +30,7 @@
 
 #include "gameobjects/cUpgradeInfo.h"
 #include "gameobjects/units/cUnitInfos.h"
+#include "utils/HouseColors.h"
 
 #include <set>
 #include <string>
@@ -565,7 +566,7 @@ public:
 
     void deselectUnit(const int &unitId);
 
-    int getSwapColor() const;
+    const HouseColors& getColors() const;
 
 private:
     bool hasAliveStructure();
