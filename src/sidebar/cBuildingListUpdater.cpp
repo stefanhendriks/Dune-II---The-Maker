@@ -263,7 +263,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
     }
 
 	if (structureType == BARRACKS) {
-		if (techLevel >= 3) {
+		if (techLevel >= 4) {
 			if (house == SARDAUKAR) {
 				listConstYard->addStructureToList(WOR, 0);
 				m_player->log("onStructureCreated - added WOR to list");
@@ -309,7 +309,7 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
                     house == FREMEN) {
                 listConstYard->addStructureToList(BARRACKS, 0);
 
-                if (house == ORDOS && techLevel >= 5) {
+                if (house == ORDOS && techLevel >= 4) {
                     listConstYard->addStructureToList(WOR, 0);
                 }
             }
