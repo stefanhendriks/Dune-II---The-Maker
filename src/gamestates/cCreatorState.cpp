@@ -27,6 +27,8 @@ CreatorState::CreatorState(sGameServices* services, cIni* ini, s_DataCampaign* d
     m_cIni = ini;
     d2tm_assert(m_cIni != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
+    m_interface = m_services->ctx->getGameInterface();
+    d2tm_assert(m_interface != nullptr);
     // all State should be recreate when needed to use
     needToRecreateState.fill(true);
     // this States should not be recreated when we need to use
