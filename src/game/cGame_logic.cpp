@@ -96,6 +96,7 @@
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
 #include "game/cNotificationArea.h"
+#include "gamestates/cCreatorState.h"
 
 namespace {
 bool isConsoleToggleKey(const cKeyboardEvent &event) {
@@ -207,6 +208,8 @@ cGame::cGame()
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());
 
     m_cIni = std::make_unique<cIni>(m_services.get());
+
+    m_creatorState = std::make_unique<CreatorState>(m_services.get(), m_cIni.get(), m_dataCampaign.get());
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
