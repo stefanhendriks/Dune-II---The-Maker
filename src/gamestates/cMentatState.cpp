@@ -23,7 +23,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
       m_dataCampaign(dataCampaign),
       m_settings(services->settings),
       m_interface(m_ctx->getGameInterface()),
-      m_objets(services->objects),
+      m_objects(services->objects),
       m_cIni(cini),
       m_mode(mode),
       m_house(dataCampaign->housePlayer)
@@ -32,7 +32,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
-    d2tm_assert(m_objets != nullptr);
+    d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_cIni != nullptr);
     prepareMentat(m_house);
 }
@@ -47,7 +47,7 @@ eGameStateType cMentatState::getType()
 
 void cMentatState::prepareMentat(int house)
 {
-    auto* humanPlayer = m_objets->getPlayer(HUMAN);
+    auto* humanPlayer = m_objects->getPlayer(HUMAN);
     house = (m_house > GENERALHOUSE) ? m_house : humanPlayer->getHouse();
     bool allowMissionSelect = !m_settings->isSkirmish();
     switch (m_mode) {
