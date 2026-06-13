@@ -155,7 +155,7 @@ void CreatorState::createStateFromScratch(eGameState gameState)
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
     default:
-        Logger::error(COMP_SETUP, "CreatorState", "Forget gameState {}",gameStateToString(gameState));
+        Logger::fatal(COMP_SETUP, "CreatorState", "Forget gameState {}",gameStateToString(gameState));
         break;
     }
 }
