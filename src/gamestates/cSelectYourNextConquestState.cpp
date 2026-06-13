@@ -54,7 +54,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     m_interface(m_ctx->getGameInterface()),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_objects(services->objects),
-    m_dataCompaign(dataCompaign),
+    m_dataCampaign(dataCompaign),
     m_gfxworld(m_ctx->getGraphicsContext()->gfxworld.get()),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
     m_cIni(ini)
@@ -62,7 +62,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
-    d2tm_assert(m_dataCompaign != nullptr);
+    d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_gfxworld != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
     d2tm_assert(m_cIni != nullptr);
@@ -135,7 +135,7 @@ void cSelectYourNextConquestState::thinkFast()
         }
 
         int iHouse = m_objects->getPlayer(0)->getHouse();
-        int iMission = m_dataCompaign->mission;
+        int iMission = m_dataCampaign->mission;
 
         bool hasMessage = m_drawManager->hasMessage();
 
@@ -416,8 +416,8 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
 
     m_interface->missionInit();
     m_interface->setNextStateToTransitionTo(GAME_BRIEFING);
-    m_dataCompaign->region = iNewReg;
-    m_dataCompaign->mission++;                        // FINALLY ADD MISSION NUMBER...
+    m_dataCampaign->region = iNewReg;
+    m_dataCampaign->mission++;                        // FINALLY ADD MISSION NUMBER...
 
     // set up drawStateMentat
     m_interface->prepareMentatForPlayer();
@@ -682,7 +682,7 @@ void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
-        loadScenarioAndTransitionToNextState(m_dataCompaign->mission);
+        loadScenarioAndTransitionToNextState(m_dataCampaign->mission);
     }
 }
 
