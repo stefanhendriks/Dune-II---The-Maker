@@ -38,6 +38,10 @@ cCreatorState::~cCreatorState() {
 }
 
 
+cGameState *cCreatorState::getState(eGameState gameState) {
+    return getOrCreateState(gameState, false);
+}
+
 cGameState *cCreatorState::getOrCreateState(eGameState gameState, bool forceRecreate) {
 
     if (!m_states[gameState].has_value()) {

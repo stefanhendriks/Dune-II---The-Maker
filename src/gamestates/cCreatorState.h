@@ -18,6 +18,8 @@ public:
 
     ~cCreatorState();
 
+    cGameState *getState(eGameState gameState);
+
     cGameState *getOrCreateState(eGameState gameState, bool forceRecreate = false);
 
     [[nodiscard]] bool hasState(eGameState gameState) const;
