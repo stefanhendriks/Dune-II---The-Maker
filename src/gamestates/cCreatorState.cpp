@@ -25,15 +25,14 @@
 cCreatorState::cCreatorState(sGameServices* services, cIni* ini, s_DataCampaign* dataCampaign)
     : m_services(services)
 {
-    m_dataCampaign = dataCampaign;
     d2tm_assert(m_services != nullptr);
-    m_cIni = ini;
     d2tm_assert(m_cIni != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
-    m_interface = m_services->ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
-    // Reuse states by default. Recreate only when explicitly requested via forceRecreate.
-    needToRecreateState.fill(false);
+
+    m_dataCampaign = dataCampaign;
+    m_cIni = ini;
+    m_interface = m_services->ctx->getGameInterface();
 }
 
 cCreatorState::~cCreatorState()
@@ -51,12 +50,10 @@ cGameState* cCreatorState::getState(eGameState gameState, bool forceRecreate)
     }
 
     // state already exist
-    if (needToRecreateState[gameState] || forceRecreate) {
+    if (forceRecreate) {
         createStateFromScratch(gameState);
-        return m_states[gameState].value().get();
-    } else {
-        return m_states[gameState].value().get();
     }
+    return m_states[gameState].value().get();
 }
 
 bool cCreatorState::hasState(eGameState gameState) const

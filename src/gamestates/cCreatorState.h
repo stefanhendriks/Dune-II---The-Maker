@@ -24,7 +24,6 @@ public:
 
 private:
     EnumArray<std::optional<std::unique_ptr<cGameState>>,eGameState> m_states;
-    EnumArray<bool, eGameState> needToRecreateState;
     sGameServices* m_services = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
     cGameInterface* m_interface = nullptr;
