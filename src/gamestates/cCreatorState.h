@@ -1,6 +1,5 @@
 #pragma once
 
-#include "include/enums.h"
 #include "include/eGameState.h"
 #include "gamestates/cGameState.h"
 #include "utils/cEnumArray.h"
@@ -13,19 +12,28 @@ class GameContext;
 class cGameInterface;
 class cIni;
 
-class CreatorState {
+class cCreatorState {
 public:
-    explicit CreatorState(sGameServices* services, cIni* ini, s_DataCampaign* dataCampaign);
-    ~CreatorState();
+    explicit cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign);
 
-    cGameState *getState(eGameState gameState, bool forceRecreate = false);
+    ~cCreatorState();
+
+    cGameState *getState(eGameState gameState);
+
+    cGameState *getOrCreateState(eGameState gameState, bool forceRecreate = false);
+
+    [[nodiscard]] bool hasState(eGameState gameState) const;
+
+    void destroyState(eGameState gameState);
+
+    void destroyAllStates();
+
 private:
-    //cGameState *m_states[GameState::MAX];
-    EnumArray<std::optional<std::unique_ptr<cGameState>>,eGameState> m_states;
-    EnumArray<bool, eGameState> needToRecreateState;
+    EnumArray<std::optional<std::unique_ptr<cGameState> >, eGameState> m_states;
+    sGameServices *m_services = nullptr;
+    s_DataCampaign *m_dataCampaign = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cIni *m_cIni = nullptr;
+
     void createStateFromScratch(eGameState gameState);
-    sGameServices* m_services = nullptr;
-    s_DataCampaign* m_dataCampaign = nullptr;
-    cGameInterface* m_interface = nullptr;
-    cIni* m_cIni = nullptr;
 };

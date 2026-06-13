@@ -33,11 +33,13 @@ public:
     void prepareMentat(int house);
 private:
     std::unique_ptr<AbstractMentat> m_mentat;
+
     s_DataCampaign* m_dataCampaign = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
-    cGameObjectContext* m_objets = nullptr;
+    cGameObjectContext* m_objects = nullptr;
     cIni* m_cIni = nullptr;
     MentatMode m_mode;
     int m_house;
+    bool m_allowMissionSelect;
 };

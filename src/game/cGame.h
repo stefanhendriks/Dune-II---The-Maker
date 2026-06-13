@@ -61,6 +61,7 @@ class cStructureUtils;
 class Texture;
 class cIni;
 class cEventEmitter;
+class cCreatorState;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -184,7 +185,6 @@ public:
     void applySettings(std::unique_ptr<InitialGameSettings> gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
-    // void loadMapFromEditor(s_PreviewMap *map);
 
     Texture* getScreenTexture() const {
         return screenTexture;
@@ -216,8 +216,6 @@ private:
     std::unique_ptr<cFocusManager> m_focusManager;
 
     cSoundPlayer* m_soundPlayer;
-
-    // std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
     std::unique_ptr<InitialGameSettings> m_initialGameSettings;
 
@@ -253,7 +251,6 @@ private:
     int m_nextState;
     // the current game state we are running
     cGameState *m_currentState;
-    cGameState *m_states[GAME_MAX_STATES];
     void transitionStateIfRequired();
     void setState(int newState);
 
@@ -282,4 +279,5 @@ private:
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
     std::unique_ptr<cEventEmitter> m_eventEmitter;
+    std::unique_ptr<cCreatorState> m_creatorState;
 };
