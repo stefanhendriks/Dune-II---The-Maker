@@ -18,7 +18,7 @@ public:
 
     ~cCreatorState();
 
-    cGameState *getState(eGameState gameState, bool forceRecreate = false);
+    cGameState *getOrCreateState(eGameState gameState, bool forceRecreate = false);
 
     [[nodiscard]] bool hasState(eGameState gameState) const;
 
