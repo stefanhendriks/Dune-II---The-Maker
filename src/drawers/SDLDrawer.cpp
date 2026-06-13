@@ -323,7 +323,7 @@ void SDLDrawer::endDrawingToTexture()
     }
 }
 
-Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, int paletteSwapStart)
+Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, const HouseColors& colorRamp)
 {
     d2tm_assert(referenceSurface && "referenceSurface must be given");
 
@@ -366,17 +366,17 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
     }
     SDL_SetPaletteColors(palette, refPalette->colors, 0, refPalette->ncolors);
 
-    // Apply optional palette swap if requested (caller decides swap start)
-    if (paletteSwapStart > -1) {
-        int start = paletteSwapStart;
-        int s = 144; // original position (harkonnen)
-        for (int j = start; j < (start + 7) && s < palette->ncolors; j++) {
-            palette->colors[s].r = palette->colors[j].r;
-            palette->colors[s].g = palette->colors[j].g;
-            palette->colors[s].b = palette->colors[j].b;
-            palette->colors[s].a = palette->colors[j].a;
-            s++;
+    // Apply house colors to the classic remap band in the palette.
+    int targetIndex = 144;
+    for (const auto& rgb : colorRamp) {
+        if (targetIndex >= palette->ncolors) {
+            break;
         }
+        palette->colors[targetIndex].r = rgb[0];
+        palette->colors[targetIndex].g = rgb[1];
+        palette->colors[targetIndex].b = rgb[2];
+        palette->colors[targetIndex].a = 255;
+        targetIndex++;
     }
 
     SDL_SetSurfacePalette(modifiableSurface, palette);

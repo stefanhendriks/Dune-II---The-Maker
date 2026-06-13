@@ -4,26 +4,27 @@
 #include "utils/cIniFile.h"
 #include <SDL3/SDL.h>
 #include "utils/Color.hpp"
+#include "utils/HouseColors.h"
 
 #define MAX_HOUSES        12      // 12 different type of houses
 
 // House properties
 struct s_HouseInfo {
-    int swap_color;           // color index to start swapping with.
-    Color minimap_color;        // rgb value on minimap
+    Color minimap_color;      // rgb value on minimap
+    HouseColors colors;     // 7 RGB entries used to recolor sprites
 };
 
 class cHousesInfo {
 public:
-    cHousesInfo() = default;
+    cHousesInfo();
 
     ~cHousesInfo() = default;
 
-    int getSwapColor(int house) {
-        return m_houseInfo[house].swap_color;
+    const HouseColors& getColors(int house) const {
+        return m_houseInfo[house].colors;
     }
 
-    Color getMinimapColor(int house) {
+    Color getMinimapColor(int house) const {
         return m_houseInfo[house].minimap_color;
     }
 
@@ -32,5 +33,6 @@ public:
 private:
     s_HouseInfo m_houseInfo[MAX_HOUSES];
     Color makeColFromString(std::string colorStr);
+    HouseColor makeHouseColorFromString(std::string colorStr);
 };
 
