@@ -185,7 +185,6 @@ public:
     void applySettings(std::unique_ptr<InitialGameSettings> gs);
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
-    // void loadMapFromEditor(s_PreviewMap *map);
 
     Texture* getScreenTexture() const {
         return screenTexture;
@@ -217,8 +216,6 @@ private:
     std::unique_ptr<cFocusManager> m_focusManager;
 
     cSoundPlayer* m_soundPlayer;
-
-    // std::shared_ptr<cPreviewMaps> m_PreviewMaps;
 
     std::unique_ptr<InitialGameSettings> m_initialGameSettings;
 
