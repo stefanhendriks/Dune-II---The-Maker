@@ -22,7 +22,7 @@
 #include "context/cGameObjectContext.h"
 #include "include/cAssert.h"
 
-CreatorState::CreatorState(sGameServices* services, cIni* ini, s_DataCampaign* dataCampaign)
+cCreatorState::cCreatorState(sGameServices* services, cIni* ini, s_DataCampaign* dataCampaign)
     : m_services(services)
 {
     m_dataCampaign = dataCampaign;
@@ -36,13 +36,13 @@ CreatorState::CreatorState(sGameServices* services, cIni* ini, s_DataCampaign* d
     needToRecreateState.fill(false);
 }
 
-CreatorState::~CreatorState()
+cCreatorState::~cCreatorState()
 {
 
 }
 
 
-cGameState* CreatorState::getState(eGameState gameState, bool forceRecreate)
+cGameState* cCreatorState::getState(eGameState gameState, bool forceRecreate)
 {
     // no existing state ...
     if (!m_states[gameState].has_value()) {
@@ -59,24 +59,24 @@ cGameState* CreatorState::getState(eGameState gameState, bool forceRecreate)
     }
 }
 
-bool CreatorState::hasState(eGameState gameState) const
+bool cCreatorState::hasState(eGameState gameState) const
 {
     return m_states[gameState].has_value();
 }
 
-void CreatorState::destroyState(eGameState gameState)
+void cCreatorState::destroyState(eGameState gameState)
 {
     m_states[gameState].reset();
 }
 
-void CreatorState::destroyAllStates()
+void cCreatorState::destroyAllStates()
 {
     for (int i = 0; i < static_cast<int>(eGameState::COUNT); ++i) {
         destroyState(static_cast<eGameState>(i));
     }
 }
 
-void CreatorState::createStateFromScratch(eGameState gameState)
+void cCreatorState::createStateFromScratch(eGameState gameState)
 {
     switch (gameState)
     {
