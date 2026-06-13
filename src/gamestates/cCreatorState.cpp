@@ -14,6 +14,8 @@
 #include "gamestates/cGamePlaying.h"
 #include "gamestates/cSelectYourNextConquestState.h"
 #include "gamestates/cOptionsState.h"
+#include "gamestates/cSelectMissionState.h"
+#include "gamestates/cSetupSkirmishState.h"
 #include "game/cGameInterface.h"
 
 #include "context/GameContext.hpp"
@@ -125,6 +127,17 @@ void CreatorState::createStateFromScratch(eGameState gameState)
 
     case eGameState::OPTIONS:
         m_states[eGameState::OPTIONS] = std::make_unique<cOptionsState>(m_services, m_interface->getCurrentState());
+        break;
+
+    case eGameState::MISSIONSELECT:
+        m_states[eGameState::MISSIONSELECT] = std::make_unique<cSelectMissionState>(m_services, m_interface->getCurrentState());
+        break;
+
+    case eGameState::SETUPSKIRMISH:
+        m_states[eGameState::SETUPSKIRMISH] = std::make_unique<cSetupSkirmishState>(
+            m_services,
+            m_services->objects->getPreviewMaps(),
+            m_dataCampaign);
         break;
 
     // @mira : i prefer to rip default mode and have the compiler tell me what I've forgotten
