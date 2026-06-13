@@ -22,8 +22,12 @@
 #include "context/cGameObjectContext.h"
 #include "include/cAssert.h"
 
-cCreatorState::cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign)
-    : m_services(services) {
+cCreatorState::cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign) :
+    m_services(services),
+    m_dataCampaign(dataCampaign),
+    m_interface(m_services->ctx->getGameInterface()),
+    m_cIni(ini)
+{
     d2tm_assert(m_services != nullptr);
     d2tm_assert(m_cIni != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
