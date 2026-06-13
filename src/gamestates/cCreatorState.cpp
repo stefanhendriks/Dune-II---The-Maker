@@ -38,8 +38,8 @@ cCreatorState::~cCreatorState() {
 }
 
 
-cGameState *cCreatorState::getState(eGameState gameState, bool forceRecreate) {
-    // no existing state ...
+cGameState *cCreatorState::getOrCreateState(eGameState gameState, bool forceRecreate) {
+
     if (!m_states[gameState].has_value()) {
         createStateFromScratch(gameState);
         return m_states[gameState].value().get();
