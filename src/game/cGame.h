@@ -251,7 +251,6 @@ private:
     int m_nextState;
     // the current game state we are running
     cGameState *m_currentState;
-    cGameState *m_states[GAME_MAX_STATES];
     void transitionStateIfRequired();
     void setState(int newState);
 
