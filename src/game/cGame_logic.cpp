@@ -207,7 +207,7 @@ cGame::cGame()
 
     m_cIni = std::make_unique<cIni>(m_services.get());
 
-    m_creatorState = std::make_unique<CreatorState>(m_services.get(), m_cIni.get(), m_dataCampaign.get());
+    m_creatorState = std::make_unique<cCreatorState>(m_services.get(), m_cIni.get(), m_dataCampaign.get());
 }
 
 void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)

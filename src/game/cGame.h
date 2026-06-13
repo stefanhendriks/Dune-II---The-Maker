@@ -61,7 +61,7 @@ class cStructureUtils;
 class Texture;
 class cIni;
 class cEventEmitter;
-class CreatorState;
+class cCreatorState;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -279,5 +279,5 @@ private:
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
     std::unique_ptr<cEventEmitter> m_eventEmitter;
-    std::unique_ptr<CreatorState> m_creatorState;
+    std::unique_ptr<cCreatorState> m_creatorState;
 };
