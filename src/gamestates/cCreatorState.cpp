@@ -88,7 +88,7 @@ void CreatorState::createStateFromScratch(eGameState gameState)
         break;
 
     case eGameState::WINNING:
-        m_states[eGameState::WINNING] = std::make_unique<cWinLoseState>(m_services, Outcome::Lose);
+        m_states[eGameState::WINNING] = std::make_unique<cWinLoseState>(m_services, Outcome::Win);
         break;
 
     case eGameState::LOSING:
