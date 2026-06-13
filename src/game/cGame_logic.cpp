@@ -564,9 +564,6 @@ void cGame::shutdown()
         }
     }
 
-    // if (m_PreviewMaps != nullptr) {
-    //     m_PreviewMaps->destroy();
-    // }
 
     delete m_mapViewport;
 
@@ -1667,15 +1664,6 @@ void cGame::checkMissionWinOrFail()
 void cGame::loadMapFromEditor(int map)
 {
     setState(GAME_EDITOR);
-    auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
-    // auto previewMaps = m_gameObjectsContext->getPreviewMaps();
-    // s_PreviewMap *selectedMap = &previewMaps->getMap(map);
+    auto *pState = dynamic_cast<cEditorState*>(m_creatorState->getState(eGameState::EDITOR));
     pState->loadMap(map);
 }
-
-// void cGame::loadMapFromEditor(s_PreviewMap *map)
-// {
-//     setState(GAME_EDITOR);
-//     auto *pState = dynamic_cast<cEditorState*>(m_states[GAME_EDITOR]);
-//     pState->loadMap(map);
-// }
