@@ -14,20 +14,24 @@ class cIni;
 
 class cCreatorState {
 public:
-    explicit cCreatorState(sGameServices* services, cIni* ini, s_DataCampaign* dataCampaign);
+    explicit cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign);
+
     ~cCreatorState();
 
     cGameState *getState(eGameState gameState, bool forceRecreate = false);
+
     [[nodiscard]] bool hasState(eGameState gameState) const;
+
     void destroyState(eGameState gameState);
+
     void destroyAllStates();
 
 private:
-    EnumArray<std::optional<std::unique_ptr<cGameState>>,eGameState> m_states;
-    sGameServices* m_services = nullptr;
-    s_DataCampaign* m_dataCampaign = nullptr;
-    cGameInterface* m_interface = nullptr;
-    cIni* m_cIni = nullptr;
+    EnumArray<std::optional<std::unique_ptr<cGameState> >, eGameState> m_states;
+    sGameServices *m_services = nullptr;
+    s_DataCampaign *m_dataCampaign = nullptr;
+    cGameInterface *m_interface = nullptr;
+    cIni *m_cIni = nullptr;
 
     void createStateFromScratch(eGameState gameState);
 };
