@@ -70,6 +70,18 @@ cGameState* CreatorState::getState(eGameState gameState, bool forceRecreate)
     }
 }
 
+void CreatorState::destroyState(eGameState gameState)
+{
+    m_states[gameState].reset();
+}
+
+void CreatorState::destroyAllStates()
+{
+    for (int i = 0; i < static_cast<int>(eGameState::COUNT); ++i) {
+        destroyState(static_cast<eGameState>(i));
+    }
+}
+
 void CreatorState::createStateFromScratch(eGameState gameState)
 {
     switch (gameState)

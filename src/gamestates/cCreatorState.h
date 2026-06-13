@@ -19,6 +19,8 @@ public:
     ~CreatorState();
 
     cGameState *getState(eGameState gameState, bool forceRecreate = false);
+    void destroyState(eGameState gameState);
+    void destroyAllStates();
 private:
     //cGameState *m_states[GameState::MAX];
     EnumArray<std::optional<std::unique_ptr<cGameState>>,eGameState> m_states;
