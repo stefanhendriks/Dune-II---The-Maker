@@ -70,6 +70,11 @@ cGameState* CreatorState::getState(eGameState gameState, bool forceRecreate)
     }
 }
 
+bool CreatorState::hasState(eGameState gameState) const
+{
+    return m_states[gameState].has_value();
+}
+
 void CreatorState::destroyState(eGameState gameState)
 {
     m_states[gameState].reset();

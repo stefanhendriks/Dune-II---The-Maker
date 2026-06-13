@@ -19,6 +19,7 @@ public:
     ~CreatorState();
 
     cGameState *getState(eGameState gameState, bool forceRecreate = false);
+    bool hasState(eGameState gameState) const;
     void destroyState(eGameState gameState);
     void destroyAllStates();
 private:
