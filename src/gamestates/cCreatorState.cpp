@@ -32,19 +32,8 @@ CreatorState::CreatorState(sGameServices* services, cIni* ini, s_DataCampaign* d
     d2tm_assert(m_dataCampaign != nullptr);
     m_interface = m_services->ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
-    // all State should be recreate when needed to use
-    needToRecreateState.fill(true);
-    // this States should not be recreated when we need to use
-    needToRecreateState[eGameState::OPTIONS] = false;
-    needToRecreateState[eGameState::PLAYING] = false;
-    needToRecreateState[eGameState::SETUPSKIRMISH] = false;
-    needToRecreateState[eGameState::CREDITS] = false;
-    needToRecreateState[eGameState::MISSIONSELECT] = false;
-    needToRecreateState[eGameState::MENU] = false;
-    needToRecreateState[eGameState::EDITOR] = false;
-    needToRecreateState[eGameState::NEW_MAP_EDITOR] = false;
-    needToRecreateState[eGameState::WINNING] = false;
-    needToRecreateState[eGameState::LOSING] = false;
+    // Reuse states by default. Recreate only when explicitly requested via forceRecreate.
+    needToRecreateState.fill(false);
 }
 
 CreatorState::~CreatorState()
