@@ -323,7 +323,7 @@ void SDLDrawer::endDrawingToTexture()
     }
 }
 
-Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, const HouseColors& colorRamp)
+Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, const HouseColors& houseColors)
 {
     d2tm_assert(referenceSurface && "referenceSurface must be given");
 
@@ -368,7 +368,7 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
 
     // Apply house colors to the classic remap band in the palette.
     int targetIndex = 144;
-    for (const auto& rgb : colorRamp) {
+    for (const auto& rgb : houseColors) {
         if (targetIndex >= palette->ncolors) {
             break;
         }
