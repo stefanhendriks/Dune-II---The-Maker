@@ -110,7 +110,7 @@ bool isConsoleToggleTextInput(const cKeyboardEvent &event) {
 
     const std::string &textInput = event.getTextInput();
     return textInput == "`" || textInput == "~" || textInput == "²";
-}
+    }
 }
 
 bool cGame::shouldCaptureTextInput() const
