@@ -30,7 +30,7 @@ enum eGameStateType {
                                             // #define GAME_WINBRIEF    12      // mentat chatter when won the mission
 };
 
-const char *gameStateToString(eGameStateType state);
+const char *gameStateTypeToString(eGameStateType state);
 // #define GAME_INITIALIZE  -1      // initialize game
 // #define GAME_OVER         0      // game over
 
@@ -70,5 +70,3 @@ protected:
 private:
 
 };
-
-const char *gameStateToString(eGameState state);
