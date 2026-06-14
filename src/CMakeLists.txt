@@ -149,7 +149,7 @@ set(D2TM_SOURCES
     utils/cFocusManager.cpp
     utils/cHandleArgument.cpp
     utils/cIniFile.cpp
-    utils/cIniUTils.cpp
+    utils/cIniUtils.cpp
     utils/common.cpp
     utils/cPack.cpp
     utils/cPoint.cpp
