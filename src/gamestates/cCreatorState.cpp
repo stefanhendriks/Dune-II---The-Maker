@@ -48,15 +48,12 @@ cGameState *cCreatorState::getState(eGameState gameState) {
 
 cGameState *cCreatorState::getOrCreateState(eGameState gameState, bool forceRecreate) {
 
-    if (!m_states[gameState].has_value()) {
+    if (!hasState(gameState)) {
         createStateFromScratch(gameState);
-        return m_states[gameState].value().get();
+    } else if (forceRecreate) {
+        createStateFromScratch(gameState);
     }
 
-    // state already exist
-    if (forceRecreate) {
-        createStateFromScratch(gameState);
-    }
     return m_states[gameState].value().get();
 }
 

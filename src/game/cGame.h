@@ -249,7 +249,7 @@ private:
 
     int m_state; // TODO: Replace with enum, and later even remove with pointer to state
     int m_nextState; // TODO: Replace with enum, and later even remove with pointer to state
-    
+
     cGameState *m_currentState;
 
     void transitionStateIfRequired();
