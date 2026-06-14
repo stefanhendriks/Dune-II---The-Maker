@@ -782,10 +782,10 @@ void cGame::setState(int newState)
         return;
     }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     Logger::info(COMP_GAME, "cGame::setState", "Setting state from {}(={}) to {}(={})", m_state, stateToString(m_state), newState, stateToString(newState));
-#pragma clang diagnostic pop
+#pragma GCC diagnostic pop
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
