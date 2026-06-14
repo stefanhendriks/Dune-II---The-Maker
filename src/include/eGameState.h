@@ -24,6 +24,8 @@ enum class eGameState : char {
     COUNT            
 };
 
+const char *gameStateToString(eGameState state);
+
 // Game states (state machine)
 #define GAME_INITIALIZE  -1      // initialize game
 #define GAME_OVER         0      // game over
@@ -47,4 +49,5 @@ enum class eGameState : char {
 #define GAME_NEW_MAP_EDITOR 19    // new map editor
 #define GAME_MAX_STATES 20
 
+[[deprecated]] // We should start using eGameState enum, get rid of int state
 const char *stateToString(const int &state);
