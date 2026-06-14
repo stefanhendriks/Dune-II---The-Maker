@@ -90,6 +90,26 @@ Then make sure to (re)load `CmakeLists.txt`
 # Running
 Run `create_release.bat` (Windows) or `./create_release.sh` (Linux/macOS) once after building to produce a complete runnable package in `bin/`, including all required dependencies. Then run the executable from `bin/`.
 
+## Music (MIDI soundfont)
+
+D2TM plays music from MIDI files via FluidSynth. FluidSynth requires a General MIDI soundfont (.sf2) to render audio — without one, music is silent.
+
+**Install a soundfont:**
+
+- **Linux:** `sudo apt install fluid-soundfont-gm` (installs to `/usr/share/sounds/sf2/FluidR3_GM.sf2`)
+- **macOS / Windows:** Download [FluidR3_GM.sf2](https://member.keymusician.com/Member/FluidR3_GM/index.html) or [GeneralUser GS](https://schristiancollins.com/generaluser.php) and place it anywhere.
+
+**Point the game at it:**
+
+Set the `SDL_SOUNDFONTS` environment variable to the path of your `.sf2` file before launching:
+
+```sh
+export SDL_SOUNDFONTS=/path/to/FluidR3_GM.sf2   # Linux/macOS
+set SDL_SOUNDFONTS=C:\path\to\FluidR3_GM.sf2    # Windows
+```
+
+Add the `export` line to your shell profile (`~/.zshrc`, `~/.bashrc`) to make it permanent.
+
 # Project status
 See the [Project Board](https://github.com/stefanhendriks/Dune-II---The-Maker/projects/1) what's going on.
 

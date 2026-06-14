@@ -71,7 +71,17 @@ MIX_Audio *DataPack::getAudio(int index)
     if (it != audioCache.end())
         return it->second;
     SDL_IOStream *tmp = reader->getData(index);
-    MIX_Audio *out = MIX_LoadAudio_IO(m_mixer, tmp, true, true);
+    SDL_PropertiesID props = SDL_CreateProperties();
+    SDL_SetPointerProperty(props, MIX_PROP_AUDIO_LOAD_IOSTREAM_POINTER, tmp);
+    SDL_SetBooleanProperty(props, MIX_PROP_AUDIO_LOAD_CLOSEIO_BOOLEAN, true);
+    SDL_SetBooleanProperty(props, MIX_PROP_AUDIO_LOAD_PREDECODE_BOOLEAN, false);
+    SDL_SetPointerProperty(props, MIX_PROP_AUDIO_LOAD_PREFERRED_MIXER_POINTER, m_mixer);
+    const char *soundfont = SDL_getenv("SDL_SOUNDFONTS");
+    if (soundfont) {
+        SDL_SetStringProperty(props, "SDL_mixer.decoder.fluidsynth.soundfont_path", soundfont);
+    }
+    MIX_Audio *out = MIX_LoadAudioWithProperties(props);
+    SDL_DestroyProperties(props);
     if (!out) {
         printf("Failed to load audio %i : %s\n", index, SDL_GetError());
     }
