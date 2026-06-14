@@ -52,7 +52,7 @@ public:
     Texture *createRenderTargetTexture(int width, int height);
     void beginDrawingToTexture(Texture* targetTexture);
     void endDrawingToTexture();
-    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, const HouseColors& colorRamp);
+    Texture *createTextureFromIndexedSurfaceWithPalette(SDL_Surface *referenceSurface, int paletteIndexForTransparency, const HouseColors& houseColors);
 private:
     void set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color);
 
