@@ -11,7 +11,7 @@
 // House properties
 struct s_HouseInfo {
     Color minimap_color;      // rgb value on minimap
-    HouseColors colors;     // 7 RGB entries used to recolor sprites
+    HouseColors colors;         // 7 RGB entries used to recolor sprites
 };
 
 class cHousesInfo {
