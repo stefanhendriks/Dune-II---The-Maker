@@ -368,13 +368,13 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
 
     // Apply house colors to the classic remap band in the palette.
     int targetIndex = 144;
-    for (const auto& rgb : houseColors) {
+    for (const auto& houseColor : houseColors) {
         if (targetIndex >= palette->ncolors) {
             break;
         }
-        palette->colors[targetIndex].r = rgb[0];
-        palette->colors[targetIndex].g = rgb[1];
-        palette->colors[targetIndex].b = rgb[2];
+        palette->colors[targetIndex].r = houseColor.r;
+        palette->colors[targetIndex].g = houseColor.g;
+        palette->colors[targetIndex].b = houseColor.b;
         palette->colors[targetIndex].a = 255;
         targetIndex++;
     }

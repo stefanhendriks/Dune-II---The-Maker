@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdexcept>
 #include <string>
 #include <sstream>
 #include <unordered_map>
@@ -28,22 +29,48 @@ public:
     static bool caseInsCompare(const std::string& s1, const std::string& s2);
 
     static Color colorFromString(const std::string& colorStr) {
-        int r = 0, g = 0, b = 0;
-        char comma;
-        std::stringstream ss(colorStr);
-        ss >> r >> comma >> g >> comma >> b;
-        return Color{(Uint8)r, (Uint8)g, (Uint8)b, 255};
+        auto rgb = parseRGB(colorStr);
+        return Color{rgb.r, rgb.g, rgb.b, 255};
     }
 
     static HouseColor houseColorFromString(const std::string& colorStr) {
-        int r = 0, g = 0, b = 0;
-        char comma;
-        std::stringstream ss(colorStr);
-        ss >> r >> comma >> g >> comma >> b;
-        return HouseColor{(Uint8)r, (Uint8)g, (Uint8)b};
+        return parseRGB(colorStr);
     }
 
     // unordered_map IDs to their corresponding objects.
+private:
+
+    static Uint8 parseNumber(const std::string& token, const std::string& str) {
+        auto start = token.find_first_not_of(" \t");
+        auto end   = token.find_last_not_of(" \t");
+        if (start == std::string::npos) {
+            throw std::invalid_argument("Empty color component in: \"" + str + "\"");
+        }
+        std::string trimmed = token.substr(start, end - start + 1);
+        int value;
+        try {
+            value = std::stoi(trimmed);
+        } catch (const std::exception&) {
+            throw std::invalid_argument("Invalid value provided '" + trimmed + "' in: \"" + str + "\", expected 0-255,0-255,0-255");
+        }
+        if (value < 0 || value > 255) {
+            throw std::out_of_range("Color component " + trimmed + " is out of range [0,255] in: \"" + str + "\"");
+        }
+        return static_cast<Uint8>(value);
+    }
+
+    static HouseColor parseRGB(const std::string& colorStr) {
+        std::istringstream ss(colorStr);
+        std::string r, g, b;
+        std::getline(ss, r, ',');
+        std::getline(ss, g, ',');
+        std::getline(ss, b, ',');
+        return HouseColor{
+            parseNumber(r, colorStr),
+            parseNumber(g, colorStr),
+            parseNumber(b, colorStr)
+        };
+    }
 
     static const std::unordered_map<std::string, int> sectionMap;
     static const std::unordered_map<std::string, int> houseMap;
