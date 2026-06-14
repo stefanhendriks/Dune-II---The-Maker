@@ -1,7 +1,10 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 #include <unordered_map>
+#include "utils/Color.hpp"
+#include "utils/HouseColors.h"
 
 class cIniUtils {
 public:
@@ -23,6 +26,23 @@ public:
     static int getBulletTypeFromString(const std::string& chunk);
     // Compares two strings case-insensitively. Returns true if they are equal.
     static bool caseInsCompare(const std::string& s1, const std::string& s2);
+
+    static Color colorFromString(const std::string& colorStr) {
+        int r = 0, g = 0, b = 0;
+        char comma;
+        std::stringstream ss(colorStr);
+        ss >> r >> comma >> g >> comma >> b;
+        return Color{(Uint8)r, (Uint8)g, (Uint8)b, 255};
+    }
+
+    static HouseColor houseColorFromString(const std::string& colorStr) {
+        int r = 0, g = 0, b = 0;
+        char comma;
+        std::stringstream ss(colorStr);
+        ss >> r >> comma >> g >> comma >> b;
+        return HouseColor{(Uint8)r, (Uint8)g, (Uint8)b};
+    }
+
     // unordered_map IDs to their corresponding objects.
 
     static const std::unordered_map<std::string, int> sectionMap;

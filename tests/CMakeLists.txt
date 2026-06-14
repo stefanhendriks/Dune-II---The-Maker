@@ -1,8 +1,18 @@
 find_package(Catch2 3 REQUIRED)
 
-# Only the source files that MapGeometry directly or transitively depends on.
-# No SDL runtime linkage required — SDL2 headers are needed only to compile
-# cRectangle.h (which declares an inline toSDL() helper using SDL_Rect).
+# Test files
+set(TEST_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniUtils.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPoint.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_d2tm_math.cpp
+)
+
+# Production source files the tests depend on.
+# No SDL runtime linkage required — SDL headers are needed only to compile
+# types like cRectangle (which declares an inline toSDL() helper using SDL_Rect).
 set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/MapGeometry.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/RNG.cpp
@@ -12,10 +22,8 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/cExpandingRectangle.cpp
 )
 
-file(GLOB_RECURSE AUTO_TEST_FILES CONFIGURE_DEPENDS "*.cpp")
-
 add_executable(d2tm_tests
-    ${AUTO_TEST_FILES}
+    ${TEST_FILES}
     ${TEST_SOURCES}
 )
 
