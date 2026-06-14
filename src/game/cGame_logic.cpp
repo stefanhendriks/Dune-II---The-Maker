@@ -133,6 +133,7 @@ void cGame::syncTextInputState() const
 
 cGame::cGame()
 {
+    m_state = -1;
     m_nextState = -1;
     m_currentState = nullptr;
 

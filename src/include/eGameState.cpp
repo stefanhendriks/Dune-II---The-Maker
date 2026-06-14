@@ -1,6 +1,8 @@
 #include "include/cAssert.h"
 #include "include/eGameState.h"
 
+#include "utils/Log.h"
+
 const char *stateToString(const int &state)
 {
     switch (state) {
@@ -41,6 +43,7 @@ const char *stateToString(const int &state)
         case GAME_MISSIONSELECT:
             return "GAME_MISSIONSELECT";
         default:
+            Logger::fatal( eLogComponent::COMP_GAMESTATE , "operator[]", "State index {} is out of range", state);
             d2tm_assert(false);
             break;
     }
