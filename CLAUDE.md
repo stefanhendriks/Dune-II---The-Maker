@@ -182,6 +182,10 @@ From comments in `cGame.h`:
 - State-related methods (candidates for extraction): `state_*()`
 - Structs use `s_` prefix, enums use `e` prefix
 
+File naming:
+- Class files: `c` prefix + PascalCase — `cHousesInfo.h`, `cPlayer.cpp`
+- Non-class utility files: PascalCase — `Color.hpp`, `HouseColors.h`, `Log.h`
+
 ## Game concepts
 
 - This is a RTS game. Based on Dune 2; but with modernizations. (Much like Red Alert of Command & Conquer)
