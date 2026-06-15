@@ -159,6 +159,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
         unitInfo.canGuard = false;
 
+        unitInfo.configured = false;
+
         strcpy(unitInfo.name, "\0");
     }
 
@@ -176,6 +178,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[CARRYALL].listType = eListType::LIST_UNITS;
     unitInfos[CARRYALL].subListId = SUBLIST_HIGHTECH;
     strcpy(unitInfos[CARRYALL].name, "Carry-All");
+    unitInfos[CARRYALL].configured = true;
 
     // Unit        : Ornithopter
     // Description : Pesty little aircraft shooting bastard
@@ -195,6 +198,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
 //    unitInfos[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
     strcpy(unitInfos[ORNITHOPTER].name, "Ornithopter");
+    unitInfos[ORNITHOPTER].configured = true;
 
     // Unit        : Devastator
     // Description : Devastator
@@ -214,6 +218,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[DEVASTATOR].canGuard = true;
     unitInfos[DEVASTATOR].canAttackUnits = true;
     strcpy(unitInfos[DEVASTATOR].name, "Devastator");
+    unitInfos[DEVASTATOR].configured = true;
 
     // Unit        : Harvester
     // Description : Harvester
@@ -231,6 +236,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
     unitInfos[HARVESTER].smokeHpFactor = 0.5f;
     strcpy(unitInfos[HARVESTER].name, "Harvester");
+    unitInfos[HARVESTER].configured = true;
 
     // Unit        : Combattank
     // Description : Combattank
@@ -250,6 +256,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[TANK].canGuard = true;
     unitInfos[TANK].canAttackUnits = true;
     strcpy(unitInfos[TANK].name, "Tank");
+    unitInfos[TANK].configured = true;
 
 
     // Unit        : Siege Tank
@@ -271,6 +278,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SIEGETANK].canGuard = true;
     unitInfos[SIEGETANK].canAttackUnits = true;
     strcpy(unitInfos[SIEGETANK].name, "Siege Tank");
+    unitInfos[SIEGETANK].configured = true;
 
     // Unit        : MCV
     // Description : Movable Construction Vehicle
@@ -286,6 +294,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[MCV].renderSmokeOnUnitWhenThresholdMet = true;
     unitInfos[MCV].smokeHpFactor = 0.5f;
     strcpy(unitInfos[MCV].name, "MCV");
+    unitInfos[MCV].configured = true;
 
 
     // Unit        : Deviator
@@ -304,6 +313,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[DEVIATOR].canGuard = true;
     unitInfos[DEVIATOR].canAttackUnits = true;
     strcpy(unitInfos[DEVIATOR].name, "Deviator");
+    unitInfos[DEVIATOR].configured = true;
 
     // Unit        : Launcher
     // Description : Rocket Launcher
@@ -325,6 +335,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[LAUNCHER].canGuard = true;
     unitInfos[LAUNCHER].canAttackUnits = true;
     strcpy(unitInfos[LAUNCHER].name, "Launcher");
+    unitInfos[LAUNCHER].configured = true;
 
     // Unit        : Quad
     // Description : Quad, 4 wheeled (double gunned)
@@ -345,6 +356,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[QUAD].canGuard = true;
     unitInfos[QUAD].canAttackUnits = true;
     strcpy(unitInfos[QUAD].name, "Quad");
+    unitInfos[QUAD].configured = true;
 
 
     // Unit        : Trike (normal trike)
@@ -365,6 +377,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[TRIKE].canGuard = true;
     unitInfos[TRIKE].canAttackUnits = true;
     strcpy(unitInfos[TRIKE].name, "Trike");
+    unitInfos[TRIKE].configured = true;
 
     // Unit        : Raider Trike (Ordos trike)
     // Description : Raider Trike, 3 wheeled (single gunned), weaker, but faster
@@ -384,6 +397,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[RAIDER].smokeHpFactor = 0.5f;
     unitInfos[RAIDER].canGuard = true;
     unitInfos[RAIDER].canAttackUnits = true;
+    unitInfos[RAIDER].configured = true;
 
     // Unit        : Frigate
     // Description : Frigate
@@ -411,6 +425,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     */
 
     //units[FRIGATE].icon = ICON_FRIGATE;
+    unitInfos[FRIGATE].configured = true;
 
     // Unit        : Sonic Tank
     // Description : Sonic tank (using sound waves to destroy)
@@ -430,6 +445,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SONICTANK].canAttackUnits = true;
 
     strcpy(unitInfos[SONICTANK].name, "Sonic Tank");
+    unitInfos[SONICTANK].configured = true;
 
 
     // Unit        : Single Soldier
@@ -452,6 +468,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SOLDIER].canGuard = true;
     unitInfos[SOLDIER].canAttackUnits = true;
     strcpy(unitInfos[SOLDIER].name, "Soldier");
+    unitInfos[SOLDIER].configured = true;
 
 
     // Unit        : Infantry
@@ -476,6 +493,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[INFANTRY].canGuard = true;
     unitInfos[INFANTRY].canAttackUnits = true;
     strcpy(unitInfos[INFANTRY].name, "Light Infantry");
+    unitInfos[INFANTRY].configured = true;
 
     // Unit        : Single Trooper
     // Description : 1 trooper
@@ -500,6 +518,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[TROOPER].fireSecondaryWithinRange = 2;
     unitInfos[TROOPER].canGuard = true;
     unitInfos[TROOPER].canAttackUnits = true;
+    unitInfos[TROOPER].configured = true;
 
     // Unit        : Group Trooper
     // Description : 3 troopers
@@ -525,6 +544,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[TROOPERS].fireSecondaryWithinRange = 2;
     unitInfos[TROOPERS].canGuard = true;
     unitInfos[TROOPERS].canAttackUnits = true;
+    unitInfos[TROOPERS].configured = true;
 
     // Unit        : Fremen
     // Description : A single fremen
@@ -543,6 +563,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[UNIT_FREMEN_ONE].canAttackAirUnits = true;
     unitInfos[UNIT_FREMEN_ONE].canGuard = true;
     unitInfos[UNIT_FREMEN_ONE].canAttackUnits = true;
+    unitInfos[UNIT_FREMEN_ONE].configured = true;
 
 //  units[UNIT_FREMEN_ONE].listType=LIST_PALACE;
 //  units[UNIT_FREMEN_ONE].subListId=0;
@@ -564,6 +585,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[UNIT_FREMEN_THREE].canAttackAirUnits = true;
     unitInfos[UNIT_FREMEN_THREE].canGuard = true;
     unitInfos[UNIT_FREMEN_THREE].canAttackUnits = true;
+    unitInfos[UNIT_FREMEN_THREE].configured = true;
 //  units[UNIT_FREMEN_THREE].listType=LIST_PALACE;
 //  units[UNIT_FREMEN_THREE].subListId=0;
 
@@ -592,6 +614,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SABOTEUR].canEnterAndDamageStructure = true;
     unitInfos[SABOTEUR].attackIsEnterStructure = true;
     unitInfos[SABOTEUR].damageOnEnterStructure = 9999.99f; // a lot of damage (instant destroy)
+    unitInfos[SABOTEUR].configured = true;
 
     // Unit        : Sandworm
     unitInfos[SANDWORM].speed = 3; // very fast
@@ -608,6 +631,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SANDWORM].squish = false;
     unitInfos[SANDWORM].canGuard = true;
     unitInfos[SANDWORM].canAttackUnits = true;
+    unitInfos[SANDWORM].configured = true;
 }
 
 void cInfoContextCreator::initParticles(cParticleInfos& particleInfos)
