@@ -306,15 +306,17 @@ void cPlayer::setHouse(int iHouse)
 
         // same goes for units
         for (int i = 0; i < MAX_UNITTYPES; i++) {
-            s_UnitInfo &unitType = m_infos->getUnitInfo(i);
+            s_UnitInfo &unitInfo = m_infos->getUnitInfo(i);
 
-            bmp_unit[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitType.bmp, TransparentColorIndex);
+            if (!unitInfo.configured) continue;
+
+            bmp_unit[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitInfo.bmp, TransparentColorIndex);
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
-            if (unitType.top) {
+            if (unitInfo.top) {
 
-                bmp_unit_top[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitType.top, TransparentColorIndex);
+                bmp_unit_top[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitInfo.top, TransparentColorIndex);
             }
         }
     }
