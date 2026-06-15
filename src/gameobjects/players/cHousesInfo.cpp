@@ -1,6 +1,21 @@
 #include "cHousesInfo.h"
 #include "include/definitions.h"
 #include "utils/cIniUtils.h"
+#include "utils/Log.h"
+
+namespace {
+    struct HouseEntry { int house; const char* section; };
+    constexpr HouseEntry kHouses[] = {
+        {GENERALHOUSE, "HOUSE: GENERAL"},
+        {HARKONNEN,    "HOUSE: HARKONNEN"},
+        {ATREIDES,     "HOUSE: ATREIDES"},
+        {ORDOS,        "HOUSE: ORDOS"},
+        {SARDAUKAR,    "HOUSE: SARDAUKAR"},
+        {FREMEN,       "HOUSE: FREMEN"},
+        {MERCENARY,    "HOUSE: MERCENARY"},
+        {CORRINO,      "HOUSE: CORRINO"},
+    };
+}
 
 cHousesInfo::cHousesInfo()
 {
@@ -47,18 +62,6 @@ cHousesInfo::cHousesInfo()
 
 void cHousesInfo::installHouses(std::shared_ptr<cIniFile> gameCfg)
 {
-    struct HouseEntry { int house; const char* section; };
-    static constexpr HouseEntry kHouses[] = {
-        {GENERALHOUSE, "HOUSE: GENERAL"},
-        {HARKONNEN,    "HOUSE: HARKONNEN"},
-        {ATREIDES,     "HOUSE: ATREIDES"},
-        {ORDOS,        "HOUSE: ORDOS"},
-        {SARDAUKAR,    "HOUSE: SARDAUKAR"},
-        {FREMEN,       "HOUSE: FREMEN"},
-        {MERCENARY,    "HOUSE: MERCENARY"},
-        {CORRINO,      "HOUSE: CORRINO"},
-    };
-
     for (auto& [house, sectionName] : kHouses) {
         if (!gameCfg->hasSection(sectionName)) continue;
         const cSection& section = gameCfg->getSection(sectionName);
@@ -66,10 +69,12 @@ void cHousesInfo::installHouses(std::shared_ptr<cIniFile> gameCfg)
             m_houseInfo[house].minimap_color = cIniUtils::colorFromString(section.getStringValue("MINIMAPCOLOR"));
         }
         if (section.hasValue("TEAMCOLOR_0")) {
-            for (int i = 0; i < 7; i++) {
+            for (size_t i = 0; i < m_houseInfo[house].colors.size(); i++) {
                 std::string key = "TEAMCOLOR_" + std::to_string(i);
                 if (section.hasValue(key)) {
                     m_houseInfo[house].colors[i] = cIniUtils::houseColorFromString(section.getStringValue(key));
+                } else {
+                    Logger::warn(COMP_GAMERULES, "cHousesInfo::installHouses", "Missing {} in section [{}], using default", key, sectionName);
                 }
             }
         }
