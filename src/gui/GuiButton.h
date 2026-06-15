@@ -9,6 +9,7 @@
 
 class SDLDrawer;
 class cTextDrawer;
+class cGameSettings;
 
 
 class GuiButton : public GuiObject {
@@ -35,6 +36,8 @@ public:
     void setOnLeftMouseButtonClickedAction(std::function<void()> action);
     void setOnRightMouseButtonClickedAction(std::function<void()> action);
 
+    static void registerSettings(cGameSettings* settings);
+
     void setEnabled(bool value);
 
 private:
@@ -51,6 +54,8 @@ private:
     // pressed state
     bool m_pressed;
     bool m_enabled;
+
+    static cGameSettings* s_settings;
 
     // Functions
     void drawText() const;

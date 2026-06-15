@@ -50,6 +50,7 @@
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cWinLoseState.h"
 
+#include "gui/GuiButton.h"
 #include "gui/GuiConsole.h"
 
 #include "include/sDataCampaign.h"
@@ -244,6 +245,8 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_gameSettings->m_noAiRest = gs->noAiRest;
     m_gameSettings->m_drawUsages = gs->drawUsages;
     m_gameFilename = gs->gameFilename;
+
+    GuiButton::registerSettings(m_gameSettings.get());
 
     // save settings for later use
     m_initialGameSettings = std::move(gs);
