@@ -981,6 +981,7 @@ void cGame::setState(int newState)
                     humanPlayer->getGameControlsContext()->onFocusMouseStateEvent();
                 }
                 else {
+                    m_dataCampaign->housePlayer = humanPlayer->getHouse();
                     newStatePtr = m_creatorState->getState(eGameState::PLAYING);
                     m_currentState = newStatePtr;
 
