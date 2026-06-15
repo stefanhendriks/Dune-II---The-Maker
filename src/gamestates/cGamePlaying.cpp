@@ -730,6 +730,7 @@ void cGamePlaying::onEventEntityDestroyed(const CommonEvent &event)
 void cGamePlaying::onEventCreateUnit(const DeployUnitEvent &event)
 {
     if (event.iCell < 0 || event.unitType < 0 || event.iPlayer < 0) {
+        Logger::error(COMP_GAME, "onEventCreateUnit", "Invalid event received to create unit of type {} at cell {} for player {}. Ignoring.", event.unitType, event.iCell, event.iPlayer);
         return;
     }
 
@@ -744,10 +745,10 @@ void cGamePlaying::onEventCreateUnit(const DeployUnitEvent &event)
     );
 
     if (id < 0) {
-        Logger::error(COMP_GAME, "Deploy unit", "Failed to deploy unit of type {} at cell {} for player {}", event.unitType, event.iCell, event.iPlayer);
+        Logger::error(COMP_GAME, "onEventCreateUnit", "Failed to create unit of type {} at cell {} for player {}", event.unitType, event.iCell, event.iPlayer);
     }
     else {
-        Logger::info(COMP_GAME, "Deploy unit", "Successfully deployed unit of type {} at cell {} for player {}, id={}", event.unitType, event.iCell, event.iPlayer, id);
+        Logger::info(COMP_GAME, "onEventCreateUnit", "Successfully created unit of type {} at cell {} for player {}, id={}", event.unitType, event.iCell, event.iPlayer, id);
     }
 }
 
