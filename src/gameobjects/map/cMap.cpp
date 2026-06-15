@@ -389,8 +389,7 @@ void cMap::thinkAboutRespawningWorms()
                 failures++;
                 continue;
             }
-            Logger::error(COMP_MAP, "cMap::thinkAboutRespawningWorms","Spawning sandworm at cell [{}]", cell);
-            //cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
+            Logger::info(COMP_MAP, "cMap::thinkAboutRespawningWorms","Spawning sandworm at cell [{}]", cell);
              const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
                 .data = DeployUnitEvent {
