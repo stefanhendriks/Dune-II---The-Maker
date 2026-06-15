@@ -11,6 +11,7 @@ mkdir bin/campaign
 mkdir bin/campaign/atreides
 mkdir bin/campaign/ordos
 mkdir bin/campaign/harkonnen
+mkdir bin/campaign/sardaukar
 mkdir bin/campaign/maps
 mkdir bin/campaign/maps/seed
 mkdir bin/campaign/briefings
@@ -18,6 +19,7 @@ echo "4. Copying campaign files"
 cp resources/bin/campaign/atreides/*.* bin/campaign/atreides
 cp resources/bin/campaign/ordos/*.* bin/campaign/ordos
 cp resources/bin/campaign/harkonnen/*.* bin/campaign/harkonnen
+cp resources/bin/campaign/sardaukar/*.* bin/campaign/sardaukar
 cp resources/bin/campaign/maps/*.* bin/campaign/maps
 cp resources/bin/campaign/maps/seed/*.* bin/campaign/maps/seed
 cp resources/bin/campaign/briefings/*.* bin/campaign/briefings
