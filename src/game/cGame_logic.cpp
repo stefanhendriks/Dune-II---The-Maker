@@ -1233,7 +1233,7 @@ void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
     }
 
     // pass through any classes that are interested
-    if (m_currentState) {
+    if (m_currentState && !m_cScreenFader->isFading()) {
         m_currentState->onNotifyMouseEvent(event);
     }
 
