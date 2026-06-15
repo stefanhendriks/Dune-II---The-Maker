@@ -330,6 +330,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
         // actual group creation is at cGameLogic onKeyPressed
         setState(SELECT_STATE_NORMAL);
         m_mouseTile = MOUSE_NORMAL;
+        m_mouse->resetBoxSelect();
     }
     else {
         // select group
