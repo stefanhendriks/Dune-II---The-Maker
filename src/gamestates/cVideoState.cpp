@@ -8,7 +8,7 @@
 #include "drawers/SDLDrawer.hpp"
 
 #include "include/cAssert.h"
-#include "utils/cLog.h"
+#include "utils/Log.h"
 
 cVideoState::cVideoState(sGameServices* services)
     : cGameState(services)
@@ -23,14 +23,14 @@ cVideoState::cVideoState(sGameServices* services)
 
     m_movieFrame=0;
     if (gfxmovie != nullptr) {
-        cLogger::getInstance()->log(LOG_INFO, COMP_INIT, "video", std::format("Successful loaded video [{}]", filename));
+        Logger::info(COMP_INIT, "video", "Successful loaded video [{}]", filename);
         m_currentFrame = gfxmovie->getTexture(m_movieFrame);
         m_timerFrame = 0;
         offsetX = (m_interface->getGameSettings()->getScreenW() - 640) / 2-75;
         offsetY = (m_interface->getGameSettings()->getScreenH() - 480) / 2-75;
         return;
     } else {
-        cLogger::getInstance()->log(LOG_ERROR, COMP_INIT, "video", std::format("Failed to load video [{}]", filename));
+        Logger::error(COMP_INIT, "video", "Failed to load video [{}]", filename);
         return;
     }
 }
