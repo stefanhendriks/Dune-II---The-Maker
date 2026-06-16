@@ -2612,17 +2612,22 @@ void cUnit::thinkFast_move()
                             movement.iPathFails = 0;
                         }
                         else {
-                            log("Something else blocks path, but goal itself is not occupied.");
-                            setGoalCell(position.iCell);
-                            movement.iPathIndex = -1;
-                            movement.iPathFails = 0;
-                            iStructureID = -1;
+                            if (sID > -1 && iStructureID > -1 && sID == iStructureID) {
+                                log("Path failed toward target structure; will retry.");
+                            }
+                            else {
+                                log("Something else blocks path, but goal itself is not occupied.");
+                                setGoalCell(position.iCell);
+                                movement.iPathIndex = -1;
+                                movement.iPathFails = 0;
+                                iStructureID = -1;
 
-                            // random move around
-                            int iF = cUnit::freeAroundMove(iID, m_objects);
+                                // random move around
+                                int iF = cUnit::freeAroundMove(iID, m_objects);
 
-                            if (iF > -1) {
-                                move_to(iF);
+                                if (iF > -1) {
+                                    move_to(iF);
+                                }
                             }
                         }
                     }
