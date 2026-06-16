@@ -9,6 +9,7 @@
 
 class SDLDrawer;
 class cTextDrawer;
+class cGameSettings;
 
 
 class GuiButton : public GuiObject {
@@ -37,7 +38,10 @@ public:
 
     void setEnabled(bool value);
 
+    static void registerSettings(cGameSettings *settings);
+
 private:
+    static cGameSettings *s_settings;
     cTextDrawer *m_textDrawer;
     std::string m_buttonText;
     GuiRenderKind m_renderKind;
