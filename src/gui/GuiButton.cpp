@@ -5,13 +5,6 @@
 #include "game/cGameSettings.h"
 #include "include/cAssert.h"
 
-cGameSettings *GuiButton::s_settings = nullptr;
-
-void GuiButton::registerSettings(cGameSettings *settings)
-{
-    s_settings = settings;
-}
-
 GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText)
     : GuiObject(drawer, rect)
     , m_textDrawer(nullptr)
@@ -174,9 +167,6 @@ void GuiButton::onMouseMovedTo(const s_MouseEvent &event)
 
 void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
 {
-    if (m_focus && s_settings && s_settings->isDebugMode()) {
-        nextRenderKind();
-    }
     if (m_focus) {
         if (m_enabled && m_onRightMouseButtonClickedAction) {
             m_onRightMouseButtonClickedAction();
