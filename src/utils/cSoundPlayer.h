@@ -45,9 +45,13 @@ public:
     }
 
 private:
+    static constexpr int kSfxTrackPoolSize = 8;
+
     std::unique_ptr<cSoundData> soundData;
     MIX_Mixer *m_mixer = nullptr;
     MIX_Track *m_musicTrack = nullptr;
+    std::vector<MIX_Track *> m_sfxTracks;
+    int m_nextSfxTrack = 0;
     int m_musicVolume = 0;
     int m_soundVolume = 0;
     bool m_isMusicEnabled = false;

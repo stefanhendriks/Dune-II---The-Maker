@@ -55,6 +55,12 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
         m_isMusicEnabled = true;
         m_isSoundEnabled = true;
         m_musicTrack = MIX_CreateTrack(m_mixer);
+        for (int i = 0; i < kSfxTrackPoolSize; ++i) {
+            MIX_Track *track = MIX_CreateTrack(m_mixer);
+            if (track) {
+                m_sfxTracks.push_back(track);
+            }
+        }
     }
 
     soundData = std::make_unique<cSoundData>(datafile, m_mixer);
@@ -62,7 +68,10 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
     m_musicVolume = MaxVolume / 2;
     m_soundVolume = MaxVolume / 2;
     if (m_mixer) {
-        MIX_SetMixerGain(m_mixer, m_soundVolume / (float)MaxVolume);
+        MIX_SetMixerGain(m_mixer, 1.0f);
+    }
+    for (MIX_Track *track : m_sfxTracks) {
+        MIX_SetTrackGain(track, m_soundVolume / (float)MaxVolume);
     }
     if (m_musicTrack) {
         MIX_SetTrackGain(m_musicTrack, m_musicVolume / (float)MaxVolume);
@@ -74,6 +83,10 @@ cSoundPlayer::~cSoundPlayer()
     if (m_musicTrack) {
         MIX_StopTrack(m_musicTrack, 0);
         MIX_DestroyTrack(m_musicTrack);
+    }
+    for (MIX_Track *track : m_sfxTracks) {
+        MIX_StopTrack(track, 0);
+        MIX_DestroyTrack(track);
     }
     if (m_mixer) {
         MIX_DestroyMixer(m_mixer);
@@ -95,12 +108,16 @@ void cSoundPlayer::playSound(int sampleId)
 
 void cSoundPlayer::playSound(int sampleId, int vol)
 {
-    if (vol <= 0 || !m_isSoundEnabled || !m_mixer) {
+    if (vol <= 0 || !m_isSoundEnabled || !m_mixer || m_sfxTracks.empty()) {
         return;
     }
     MIX_Audio *audio = soundData->getAudio(sampleId);
     if (audio) {
-        MIX_PlayAudio(m_mixer, audio);
+        MIX_Track *track = m_sfxTracks[m_nextSfxTrack];
+        m_nextSfxTrack = (m_nextSfxTrack + 1) % static_cast<int>(m_sfxTracks.size());
+        MIX_SetTrackAudio(track, audio);
+        MIX_SetTrackLoops(track, kNoLoop);
+        MIX_PlayTrack(track, 0);
     }
 }
 
@@ -168,8 +185,8 @@ void cSoundPlayer::setSoundVolume(int _vol)
 {
     int vol = _vol * 128 / 10;
     m_soundVolume = std::clamp(vol, 0, MaxVolume);
-    if (m_mixer) {
-        MIX_SetMixerGain(m_mixer, m_soundVolume / (float)MaxVolume);
+    for (MIX_Track *track : m_sfxTracks) {
+        MIX_SetTrackGain(track, m_soundVolume / (float)MaxVolume);
     }
 }
 
