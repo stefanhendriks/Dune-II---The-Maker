@@ -115,8 +115,8 @@ void cSoundPlayer::playSound(int sampleId, int vol)
     if (audio) {
         MIX_Track *track = m_sfxTracks[m_nextSfxTrack];
         m_nextSfxTrack = (m_nextSfxTrack + 1) % static_cast<int>(m_sfxTracks.size());
+        MIX_StopTrack(track, 0);
         MIX_SetTrackAudio(track, audio);
-        MIX_SetTrackLoops(track, kNoLoop);
         MIX_PlayTrack(track, 0);
     }
 }

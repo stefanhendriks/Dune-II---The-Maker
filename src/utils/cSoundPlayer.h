@@ -45,7 +45,7 @@ public:
     }
 
 private:
-    static constexpr int kSfxTrackPoolSize = 8;
+    static constexpr int kSfxTrackPoolSize = 32;
 
     std::unique_ptr<cSoundData> soundData;
     MIX_Mixer *m_mixer = nullptr;
