@@ -179,6 +179,7 @@ rphl
 Rene
 Paul (code contributions)
 Miria (code contributions)
+Matt Van Horn (code contributions)
 
 
 Books / Must reads:
