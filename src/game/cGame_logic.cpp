@@ -900,6 +900,7 @@ void cGame::setState(int newState)
                     m_currentState = existingStatePtr;
 
                     m_drawManager->reset();
+                    m_drawManager->missionInit();
                     // evaluate all players, so we have initial 'alive' values set properly
                     m_players->evaluateStillAliveForAI();
                     m_gameObjectsContext->getParticles().reset();
