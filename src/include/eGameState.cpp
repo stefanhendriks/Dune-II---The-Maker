@@ -42,6 +42,8 @@ const char *stateToString(const int &state)
             return "GAME_CREDITS";
         case GAME_MISSIONSELECT:
             return "GAME_MISSIONSELECT";
+        case GAME_VIDEO:
+            return "GAME_VIDEO";
         default:
             Logger::fatal( eLogComponent::COMP_GAMESTATE , "operator[]", "State index {} is out of range", state);
             d2tm_assert(false);
@@ -73,6 +75,7 @@ const char *gameStateToString(eGameState state)
         case eGameState::SETUPSKIRMISH: return "SETUPSKIRMISH";
         case eGameState::CREDITS: return "CREDITS";
         case eGameState::MISSIONSELECT: return "MISSIONSELECT";
+        case eGameState::VIDEO: return "VIDEO";
             // COUNT is not a valid state for the game, but it is for the iteration.
             // We return a special string. Maybe an out of range error is better ?
         case eGameState::COUNT: return "[Error: GameState::COUNT]";

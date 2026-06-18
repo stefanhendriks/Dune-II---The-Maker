@@ -21,6 +21,7 @@ enum class eGameState : char {
     SETUPSKIRMISH,         // set up a skirmish game
     CREDITS,               // credits
     MISSIONSELECT,         // mission select
+    VIDEO,                 // playing a video
     COUNT            
 };
 
@@ -32,7 +33,7 @@ const char *gameStateToString(eGameState state);
 #define GAME_MENU         1      // in a menu
 #define GAME_PLAYING      2      // playing the actual game
 #define GAME_BRIEFING     3      // doing some briefing
-#define GAME_EDITOR      4      // running the editor
+#define GAME_EDITOR       4      // running the editor
 #define GAME_OPTIONS	  5		 // options menu
 #define GAME_REGION		  6		 // select a region / select your next conquest
 #define GAME_SELECT_HOUSE 8		 // pick a house
@@ -44,10 +45,11 @@ const char *gameStateToString(eGameState state);
 #define GAME_LOSING      14      // when losing, do something cool
 #define GAME_SKIRMISH    15      // playing a skirmish mission!
 #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
-#define GAME_CREDITS     17    // credits
+#define GAME_CREDITS       17    // credits
 #define GAME_MISSIONSELECT  18    // mission select
 #define GAME_NEW_MAP_EDITOR 19    // new map editor
-#define GAME_MAX_STATES 20
+#define GAME_VIDEO   20           // playing a video
+#define GAME_MAX_STATES 21
 
 [[deprecated]] // We should start using eGameState enum, get rid of int state
 const char *stateToString(const int &state);
