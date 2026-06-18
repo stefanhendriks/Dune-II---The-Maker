@@ -128,6 +128,12 @@ void cCreditsState::prepareCrawlerLines()
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
+        .name = "Matt Van Horn",
+        .txt = "Developer",
+        .color = Color::White,
+        .height = fontHeightWithALittlePadding
+    });
+    m_lines.push_back(s_CreditLine {
         .name = "Rozmy",
         .txt = "Graphics",
         .color = Color::White,
