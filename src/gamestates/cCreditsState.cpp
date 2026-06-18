@@ -129,7 +129,7 @@ void cCreditsState::prepareCrawlerLines()
     });
     m_lines.push_back(s_CreditLine {
         .name = "Matt Van Horn",
-        .txt = "Developer",
+        .txt = "Bugfixes",
         .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
