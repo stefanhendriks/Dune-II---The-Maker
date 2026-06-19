@@ -273,6 +273,11 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const DamagedEvent &event)
     if (unitIdThatAttacks > -1) {
         // respond to something that attacks us
         cUnit *originUnit = m_objects->getUnit(unitIdThatAttacks);
+        if (!originUnit->isValid()) {
+            // attacker (e.g. saboteur) may have self-destructed by the time the damage event is processed
+            log(std::format("Unit {} that attacked my structure is no longer valid, ignoring.", unitIdThatAttacks).c_str());
+            return;
+        }
         if (originUnit->getPlayer()->isSameTeamAs(player)) {
             // friendly fire, ignore
             log(std::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
