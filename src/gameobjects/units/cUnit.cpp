@@ -259,6 +259,11 @@ void cUnit::die(bool bBlowUp, bool bSquish)
         }
     }
 
+    if (iPlayer < 0) {
+        Logger::info(COMP_UNITS, "die()", "iPlayer became < 0 while it was >= 0 just a moment ago!");
+        return;
+    }
+
     // before re-initing, send out event, so in case we need to handle the event and fetch the data from that
     // entity then we can atleast pry it for data...
     const s_GameEvent event {
@@ -397,13 +402,17 @@ void cUnit::createExplosionParticle()
                 int idOfUnitAtCell = m_map->getCellIdUnitLayer(cll);
                 if (idOfUnitAtCell > -1) {
                     int id = idOfUnitAtCell;
+                    cUnit *pHitUnit = m_objects->getUnit(id);
 
-                    if (m_objects->getUnit(id)->iHitPoints > 0) {
-                        m_objects->getUnit(id)->iHitPoints -= 150;
+                    // Skip units already dying: a saboteur/devastator dies with positive HP (die() is
+                    // called before taking damage), so the HP check alone does not guard against a
+                    // recursive die() being triggered by a chained explosion (see #1404).
+                    if (!pHitUnit->bRemoveMe && pHitUnit->iHitPoints > 0) {
+                        pHitUnit->iHitPoints -= 150;
 
                         // NO HP LEFT, DIE
-                        if (m_objects->getUnit(id)->iHitPoints <= 1)
-                            m_objects->getUnit(id)->die(true, false);
+                        if (pHitUnit->iHitPoints <= 1)
+                            pHitUnit->die(true, false);
                     } // only die when the unit is going to die
                 }
 
