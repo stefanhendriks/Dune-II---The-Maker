@@ -54,6 +54,7 @@
 
 void cUnit::init(int i)
 {
+    Logger::debug(eLogComponent::COMP_UNITS, "Initialization", "Initializing unit {}", i);
     mission = -1;
     boundParticleId = -1;
     m_bSelected = false;
