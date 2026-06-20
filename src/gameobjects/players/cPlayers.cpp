@@ -67,7 +67,7 @@ const cPlayer* cPlayers::operator[](int index) const {
 }
 
 cPlayer* cPlayers::getPlayer(int index) {
-    d2tm_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && "cPlayers::getPlayer out of bounds");
+    d2tm_assert(index >= 0 && index < MAX_PLAYERS_CAPACITY && std::format("cPlayers::getPlayer out of bounds: {}\n\n", index).c_str());
     if (index < 0 || index >= MAX_PLAYERS_CAPACITY) {
         return nullptr;
     }
