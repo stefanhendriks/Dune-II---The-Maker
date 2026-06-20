@@ -193,7 +193,14 @@ void cAbstractStructure::die()
 
     // UnitID > -1, means the unit inside will die too
     if (iUnitIDWithinStructure > -1) {
-        m_objects->getUnit(iUnitIDWithinStructure)->init(iUnitIDWithinStructure); // die here... softly
+        cUnit *pUnit = m_objects->getUnit(iUnitIDWithinStructure);
+        if (!pUnit->isMarkedForRemoval()) {
+            pUnit->init(iUnitIDWithinStructure); // die here... softly
+        }
+        else {
+            Logger::debug(COMP_STRUCTURES, "cAbstractStructure::die",
+                "Unit [{}] inside structure [{}] already marked for removal, skipping init.", iUnitIDWithinStructure, id);
+        }
     }
 
     if (iUnitIDEnteringStructure > -1) {
