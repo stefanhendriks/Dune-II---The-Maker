@@ -408,11 +408,13 @@ void cUnit::createExplosionParticle()
                     // called before taking damage), so the HP check alone does not guard against a
                     // recursive die() being triggered by a chained explosion (see #1404).
                     if (!pHitUnit->bRemoveMe && pHitUnit->iHitPoints > 0) {
-                        pHitUnit->iHitPoints -= 150;
+                        pHitUnit->iHitPoints -= 150; //TODO: make use of takeDamage or something
 
                         // NO HP LEFT, DIE
-                        if (pHitUnit->iHitPoints <= 1)
+                        if (pHitUnit->iHitPoints <= 1) {
+                            //TODO: make use of takeDamage so that it determines then to call die
                             pHitUnit->die(true, false);
+                        }
                     } // only die when the unit is going to die
                 }
 
