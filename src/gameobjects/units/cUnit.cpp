@@ -2391,7 +2391,13 @@ void cUnit::think_attack_sandworm()
 
     // update movement.iGoalCell with where the attacking unit is (chase)
     setGoalCell(attackUnit->position.iCell);
-    if (movement.iGoalCell == position.iCell) {
+
+    // Only eat when the worm center is within 2 pixels of the target center.
+    // Cell comparison alone allowed eating across up to a full tile width, causing
+    // visual jarring (worm eating units that had visually escaped to rock).
+    int dx = std::abs(pos_x_centered() - attackUnit->pos_x_centered());
+    int dy = std::abs(pos_y_centered() - attackUnit->pos_y_centered());
+    if (dx <= 2 && dy <= 2) {
         // Defensive guardrail: never eat on forbidden terrain.
         if (!m_map->isCellPassableForWorm(position.iCell)) {
             actionGuard();
