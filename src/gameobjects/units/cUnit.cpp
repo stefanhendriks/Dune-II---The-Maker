@@ -260,8 +260,7 @@ void cUnit::die(bool bBlowUp, bool bSquish)
     }
 
     if (iPlayer < 0) {
-        Logger::info(COMP_UNITS, "die()", "iPlayer became < 0 while it was >= 0 just a moment ago!");
-        return;
+        Logger::fatal(COMP_UNITS, "die()", "iPlayer became < 0 while it was >= 0 just a moment ago!");
     }
 
     // before re-initing, send out event, so in case we need to handle the event and fetch the data from that
