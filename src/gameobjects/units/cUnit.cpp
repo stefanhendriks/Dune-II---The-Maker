@@ -186,6 +186,17 @@ void cUnit::setBoundParticleId(int particleId)
 
 void cUnit::die(bool bBlowUp, bool bSquish)
 {
+    // Guard against die() running on a unit that has already been destroyed and re-initialized
+    // this tick. die() ends by calling init(iID), which resets iPlayer to -1. If a unit destroys
+    // something and then dies within the same thinkFast pass, die() can be invoked a second time
+    // on the now re-initialized unit; the GAME_EVENT_DESTROYED event below calls getPlayer() ->
+    // cPlayers::getPlayer(-1), which asserts (see #1404). iPlayer < 0 only after init(), so it is a
+    // reliable "already dead" sentinel. isValid() cannot be used here: a legitimate first death has
+    // iHitPoints < 0 with bRemoveMe still false, which already makes isValid() return false.
+    if (iPlayer < 0) {
+        return;
+    }
+
     // DO NOTE: We do *not* set the HP to -1 here for a reason. Being: that the isValid() function checks for
     // health and that will give us a unit ID that is the *same* as this unit ID. (see UNIT_NEW() implementation).
     // hence we don't want to fiddle with that (for now), but instead we set a "removeMe" flag.
