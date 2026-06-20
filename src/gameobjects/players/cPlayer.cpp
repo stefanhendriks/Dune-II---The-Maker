@@ -1724,7 +1724,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                     };
                     m_interface->onNotifyGameEvent(newEvent);
                 }
-                if (cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType, m_infos)) {
+                if (buildEvent->player == this && cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType, m_infos)) {
                     startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
                 }
             }
