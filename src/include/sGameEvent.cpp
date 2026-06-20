@@ -67,7 +67,8 @@ const std::string s_GameEvent::toString(const s_GameEvent &event)
 {
     if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
         return std::format(
-            "DeployUnitEvent[cell={}, unitType={}, playerId={}, onStart={}, reinforcement={}, hp={}]",
+            "DeployUnitEvent[type={}, cell={}, unitType={}, playerId={}, onStart={}, reinforcement={}, hp={}]",
+            toString(event.eventType),
             deployEvent->iCell,
             deployEvent->unitType,
             deployEvent->iPlayer,
@@ -79,7 +80,8 @@ const std::string s_GameEvent::toString(const s_GameEvent &event)
 
     if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
         return std::format(
-            "LaunchDeathHandEvent[targetCell={}, itemToLaunch={}, playerId={}]",
+            "LaunchDeathHandEvent[type={}, targetCell={}, itemToLaunch={}, playerId={}]",
+            toString(event.eventType),
             launchEvent->targetCell,
             launchEvent->itemToLaunch ? "present" : "nullptr",
             launchEvent->playerID
@@ -88,7 +90,8 @@ const std::string s_GameEvent::toString(const s_GameEvent &event)
 
     if (const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data)) {
         return std::format(
-            "DamagedEvent[entityType={}, entityId={}, player={}, entitySpecificType={}, atCell={}, originId={}, originType={}]",
+            "DamagedEvent[type={}, entityType={}, entityId={}, player={}, entitySpecificType={}, atCell={}, originId={}, originType={}]",
+            toString(event.eventType),
             eBuildTypeString(damagedEvent->entityType),
             damagedEvent->entityID,
             damagedEvent->player ? "present" : "nullptr",
@@ -101,7 +104,8 @@ const std::string s_GameEvent::toString(const s_GameEvent &event)
 
     if (const auto *buildingEvent = std::get_if<BuildingEvent>(&event.data)) {
         return std::format(
-            "BuildingEvent[entityType={}, player={}, entitySpecificType={}, buildingListItem={}, buildingList={}]",
+            "BuildingEvent[type={}, entityType={}, player={}, entitySpecificType={}, buildingListItem={}, buildingList={}]",
+            toString(event.eventType),
             eBuildTypeString(buildingEvent->entityType),
             buildingEvent->player ? "present" : "nullptr",
             buildingEvent->entitySpecificType,
@@ -112,7 +116,8 @@ const std::string s_GameEvent::toString(const s_GameEvent &event)
 
     if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
         return std::format(
-            "CommonEvent[entityType={}, entityId={}, player={}, entitySpecificType={}, atCell={}, isReinforce={}]",
+            "CommonEvent[type={}, entityType={}, entityId={}, player={}, entitySpecificType={}, atCell={}, isReinforce={}]",
+            toString(event.eventType),
             eBuildTypeString(commonEvent->entityType),
             commonEvent->entityID,
             commonEvent->player ? "present" : "nullptr",
