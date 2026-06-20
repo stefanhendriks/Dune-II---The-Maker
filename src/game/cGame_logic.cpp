@@ -1169,6 +1169,9 @@ void cGame::setPlayerToInteractFor(cPlayer *pPlayer)
 void cGame::emitGameEvent(const s_GameEvent &event)
 {
     if (m_eventEmitter) {
+        if (m_gameSettings->isDebugMode()) {
+            Logger::trace(eLogComponent::COMP_NONE, "cGame::emitGameEvent", "event {}", s_GameEvent::toString(event));
+        }
         m_eventEmitter->emit(event);
     }
 }
