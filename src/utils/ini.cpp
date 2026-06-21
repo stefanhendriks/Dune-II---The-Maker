@@ -42,11 +42,15 @@
 #include <filesystem>
 namespace fs=std::filesystem;
 
-#include <string>
 #include <algorithm>
-#include <utility>
-#include <unordered_map>
+#include <array>
 #include <charconv>
+#include <sstream>
+#include <span>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 #include <platform.h>
 
 class cReinforcements;
@@ -115,44 +119,55 @@ static float ToFloat(const std::string& str)
 #endif
 }
 
-
 static bool ToBool(const std::string& str)
 {
-    if (str == "1" || cIniUtils::caseInsCompare(str, "true") || cIniUtils::caseInsCompare(str, "yes")) {
-        return true;
-    } else {
-        return false;
-    }
+    return str == "1" || cIniUtils::caseInsCompare(str, "true") || cIniUtils::caseInsCompare(str, "yes");
 }
 
 static std::string ToTrim(const std::string& input)
 {
-    std::string section = input; 
-    while (!section.empty() && std::isspace(static_cast<unsigned char>(section.front()))) {
-        section.erase(0, 1);
-    }
-    while (!section.empty() && std::isspace(static_cast<unsigned char>(section.back()))) {
-        section.pop_back();
-    }
-    return section;
-}
-
-static std::string removeQuote(const std::string& input)
-{
     std::string result = input;
-    if (!result.empty() && result.front() == '"') {
+    while (!result.empty() && std::isspace(static_cast<unsigned char>(result.front()))) {
         result.erase(0, 1);
     }
-    if (!result.empty() && result.back() == '"') {
+    while (!result.empty() && std::isspace(static_cast<unsigned char>(result.back()))) {
         result.pop_back();
     }
     return result;
 }
 
+static std::string removeQuote(const std::string& input)
+{
+    std::string result = input;
+    if (!result.empty() && result.front() == '"') result.erase(0, 1);
+    if (!result.empty() && result.back() == '"')  result.pop_back();
+    return result;
+}
+
+// Split a comma-separated string into a vector of tokens (not trimmed)
+static std::vector<std::string> splitByComma(const std::string& input)
+{
+    std::vector<std::string> result;
+    std::istringstream stream(input);
+    std::string token;
+    while (std::getline(stream, token, ',')) {
+        result.push_back(std::move(token));
+    }
+    return result;
+}
+
+// Extract the trimmed value from a section tag like "[UNIT: Devastator]" given the prefix "[UNIT:"
+static std::string extractTagValue(const std::string& line, std::string_view prefix)
+{
+    auto pos = line.find(prefix);
+    if (pos == std::string::npos) return {};
+    auto start = pos + prefix.size();
+    auto end = line.find(']', start);
+    return ToTrim(line.substr(start, end == std::string::npos ? std::string::npos : end - start));
+}
+
 /*********************************************************************************/
-// Reads out INPUT , will check for a [ at [0] and then checks till ], it will fill section[]
-// with the chars in between. So : [MAP] -> section = 'MAP'. Use function INI_SectionType(..)
-// to get the correct ID for that.
+// [SECTION] → "SECTION"
 std::string extractSectionName(const std::string& line)
 {
     auto start = line.find('[');
@@ -165,24 +180,20 @@ std::string extractSectionName(const std::string& line)
     return "";
 }
 
-// Reads out INPUT and will check for an '=' Use function INI_WordType(char word[25]) to get the correct ID tag.
+// "key=value" → {"key", "value"}
 std::pair<std::string, std::string> INI_SplitWord(const std::string& input)
 {
     auto pos = input.find('=');
     if (pos == std::string::npos) {
-        return {input, ""}; // No '=' found, everything to the left
+        return {input, ""};
     }
-    std::string left = input.substr(0, pos);
-    std::string right = input.substr(pos + 1);
-    return {left, right};
+    return {input.substr(0, pos), input.substr(pos + 1)};
 }
 
 
 // Reads out word[], does a string compare and returns type id
 int INI_WordType(const std::string& word, int section)
 {
-    //logbook(std::format("Going to find word-type for [{}]", word));
-
     if (section == SEC_REGION) {
         if (cIniUtils::caseInsCompare(word, "Region"))            return WORD_REGION;
         if (cIniUtils::caseInsCompare(word, "RegionConquer"))     return WORD_REGIONCONQUER;
@@ -226,7 +237,6 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "Focus"))             return WORD_FOCUS;
     }
     else if (section == INI_MAP) {
-        // When reading [MAP], interpet the 'width' and 'height' for default width and height for the Map Editor
         if (cIniUtils::caseInsCompare(word, "Width"))             return WORD_MAPWIDTH;
         if (cIniUtils::caseInsCompare(word, "Height"))            return WORD_MAPHEIGHT;
         if (cIniUtils::caseInsCompare(word, "Seed"))              return WORD_MAPSEED;
@@ -255,9 +265,9 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "PowerGive"))         return WORD_POWERGIVE;
         if (cIniUtils::caseInsCompare(word, "Cost"))              return WORD_COST;
         if (cIniUtils::caseInsCompare(word, "BuildTime"))         return WORD_BUILDTIME;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMin"))         return WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMax"))         return WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitType"))         return WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE;
+        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMin")) return WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN;
+        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMax")) return WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX;
+        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitType"))      return WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE;
     }
     else if (section == INI_UNITS) {
         if (cIniUtils::caseInsCompare(word, "Bitmap"))            return WORD_BITMAP;
@@ -274,11 +284,11 @@ int INI_WordType(const std::string& word, int section)
         // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
         if (cIniUtils::caseInsCompare(word, "AttackFrequency"))   return WORD_ATTACKFREQ;
         // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
-        if (cIniUtils::caseInsCompare(word, "NextAttackFrequency"))   return WORD_NEXTATTACKFREQ;
-        if (cIniUtils::caseInsCompare(word, "Sight"))            return WORD_SIGHT;
-        if (cIniUtils::caseInsCompare(word, "Range"))            return WORD_RANGE;
-        if (cIniUtils::caseInsCompare(word, "BuildTime"))        return WORD_BUILDTIME;
-        if (cIniUtils::caseInsCompare(word, "Description"))      return WORD_DESCRIPTION;
+        if (cIniUtils::caseInsCompare(word, "NextAttackFrequency")) return WORD_NEXTATTACKFREQ;
+        if (cIniUtils::caseInsCompare(word, "Sight"))             return WORD_SIGHT;
+        if (cIniUtils::caseInsCompare(word, "Range"))             return WORD_RANGE;
+        if (cIniUtils::caseInsCompare(word, "BuildTime"))         return WORD_BUILDTIME;
+        if (cIniUtils::caseInsCompare(word, "Description"))       return WORD_DESCRIPTION;
         // BOOLEANS
         if (cIniUtils::caseInsCompare(word, "IsHarvester"))       return WORD_ISHARVESTER;
         if (cIniUtils::caseInsCompare(word, "FireTwice"))         return WORD_FIRETWICE;
@@ -292,7 +302,6 @@ int INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "MaxCredits"))        return WORD_HARVESTLIMIT;
         if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return WORD_HARVESTSPEED;
         if (cIniUtils::caseInsCompare(word, "HarvestAmount"))     return WORD_HARVESTAMOUNT;
-
         if (cIniUtils::caseInsCompare(word, "squish"))            return WORD_SQUISH;
         if (cIniUtils::caseInsCompare(word, "SmokeHpFactor"))     return WORD_SMOKEHFACTOR;
         if (cIniUtils::caseInsCompare(word, "CanAttackAirUnits")) return WORD_CANATTACKAIRUNITS;
@@ -311,11 +320,9 @@ int INI_WordType(const std::string& word, int section)
             return WORD_NONE;
     }
     else if (section == INI_HOUSES) {
-        // each house has properties..
         if (cIniUtils::caseInsCompare(word, "ColorR"))            return WORD_RED;
         if (cIniUtils::caseInsCompare(word, "ColorG"))            return WORD_GREEN;
         if (cIniUtils::caseInsCompare(word, "ColorB"))            return WORD_BLUE;
-        // and specific stuff:
         if (cIniUtils::caseInsCompare(word, "FirePower"))         return WORD_FIREPOWER;
         if (cIniUtils::caseInsCompare(word, "FireRate"))          return WORD_FIRERATE;
         if (cIniUtils::caseInsCompare(word, "StructPrice"))       return WORD_STRUCTPRICE;
@@ -353,12 +360,12 @@ int SCEN_INI_SectionType(const std::string& section)
 
 int GAME_INI_SectionType(const std::string& section, int last)
 {
-    if (cIniUtils::caseInsCompare(section, "BULLETS"))   return INI_BULLETS;
-    if (cIniUtils::caseInsCompare(section, "UNITS"))        return INI_UNITS;
-    if (cIniUtils::caseInsCompare(section, "STRUCTURES"))   return INI_STRUCTURES;
+    if (cIniUtils::caseInsCompare(section, "BULLETS"))    return INI_BULLETS;
+    if (cIniUtils::caseInsCompare(section, "UNITS"))      return INI_UNITS;
+    if (cIniUtils::caseInsCompare(section, "STRUCTURES")) return INI_STRUCTURES;
+    if (cIniUtils::caseInsCompare(section, "TERRAINS"))   return INI_TERRAINS;
     // When nothing found; we assume its just a new ID tag for some unit or structure
     // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
-    if (cIniUtils::caseInsCompare(section, "TERRAINS"))   return INI_TERRAINS;
     return last;
 }
 
@@ -370,18 +377,11 @@ cIni::cIni(sGameServices* services)
     m_interface = services->ctx->getGameInterface();
 }
 
-/**
- * Create seed map.
- *
- * @param seed
- */
 void cIni::INI_Load_seed(int seed)
 {
-
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Generating seed map with seed {}.", seed);
 
     auto seedGenerator = cSeedMapGenerator(seed);
-
     auto seedMap = seedGenerator.generateSeedMap();
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Seedmap generated");
 
@@ -397,15 +397,6 @@ void cIni::INI_Load_seed(int seed)
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Seedmap converted into D2TM map.");
 }
 
-
-// Load
-/**
- * Return true when line starts with:
- * ; # // \n \0
- *
- * @param linefeed
- * @return
- */
 bool isCommentLine(const std::string& linefeed)
 {
     if (linefeed.empty()) return true;
@@ -415,15 +406,8 @@ bool isCommentLine(const std::string& linefeed)
     return false;
 }
 
-/**
- * Return the name of the directory to look for by house id.
- * (ie iHouse == ATREIDES) returns "atreides"
- * @param iHouse
- * @return
- */
 std::string INI_GetHouseDirectoryName(int iHouse)
 {
-    using namespace std::string_view_literals;
     switch (iHouse) {
         case ATREIDES:   return "atreides";
         case HARKONNEN:  return "harkonnen";
@@ -493,8 +477,8 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
             }
 
             if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
-                std::string reword_right = removeQuote(word_right);
-                selectYourNextConquestState->setRegionText(iRegionIndex, reword_right.c_str());
+                std::string text = removeQuote(word_right);
+                selectYourNextConquestState->setRegionText(iRegionIndex, text.c_str());
             }
 
             if (wordtype == WORD_REGIONSELECT) {
@@ -509,18 +493,6 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
     Logger::info(COMP_REGIONINI, "cIni::loadRegionfile", "[CAMPAIGN] Done");
 }
 
-/**
- * Taken the region conquered by player, in sequential form (meaning, the 1st region the
- * player conquers, corresponds with techlevel 1. While the 8th, 9th or 10th region correspond
- * with techlevel 4.
- *
- * This assumes that the player conquers the world in a fixed set of regions.
- *
- * TODO: Make this moddable.
- *
- * @param iRegion
- * @return
- */
 int getTechLevelByRegion(int iRegion)
 {
     if (iRegion == 1) return 1;
@@ -535,7 +507,7 @@ int getTechLevelByRegion(int iRegion)
 }
 
 
-void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
+void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
     m_settings->setSkirmish(false);
     m_interface->missionInit();
@@ -549,551 +521,312 @@ void cIni::loadScenario(/*int iHouse, int iRegion,*/ AbstractMentat *pMentat, cR
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] '{}' (Mission {})", filename, dataCampaign->mission);
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Opening file");
 
-    // declare some temp fields while reading the scenario file.
-    int blooms[30], fields[30];
-    memset(blooms, -1, sizeof(blooms));
-    memset(fields, -1, sizeof(fields));
+    std::array<int, 30> blooms, fields;
+    blooms.fill(-1);
+    fields.fill(-1);
 
     std::ifstream file(filename);
     if (!file.is_open()) {
         Logger::error(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Error, could not open file");
         return;
     }
+
     int section = INI_NONE;
-    int wordtype = WORD_NONE;
     int iPlayerID = -1;
     int iHumanID = -1;
     bool bSetUpPlayers = true;
-    int iPl_credits[MAX_PLAYERS];
-    int iPl_house[MAX_PLAYERS];
-    int iPl_quota[MAX_PLAYERS];
 
-    memset(iPl_credits, 0, sizeof(iPl_credits));
-    memset(iPl_house, -1, sizeof(iPl_house));
-    memset(iPl_quota, 0, sizeof(iPl_quota));
+    std::array<int, MAX_PLAYERS> iPl_credits{};
+    std::array<int, MAX_PLAYERS> iPl_house;
+    std::array<int, MAX_PLAYERS> iPl_quota{};
+    iPl_house.fill(-1);
 
     auto mapEditor = cMapEditor(m_objects->getMap());
-        // char linefeed[MAX_LINE_LENGTH];
-        char lineword[30];
-        std::string linesection;
-        memset(lineword, '\0', sizeof(lineword));
-        std::string word_left;
-        std::string word_right;
 
-        std::string linefeed;
-        while (std::getline(file, linefeed)) {
-            linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
-            if (linefeed.empty() || isCommentLine(linefeed)) {
-                continue;
-            }
+    std::string linefeed;
+    while (std::getline(file, linefeed)) {
+        linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
+        if (linefeed.empty() || isCommentLine(linefeed)) {
+            continue;
+        }
 
-            // Every line is checked for a new section.
-            linesection = extractSectionName(linefeed);
-            // strcpy(linefeed, linefeed.c_str());
+        auto sectionName = extractSectionName(linefeed);
+        if (!sectionName.empty()) {
+            int sectionType = SCEN_INI_SectionType(sectionName);
+            if (sectionType > -1) {
+                section = sectionType;
 
-            // line is not starting empty and section is found
-            if (!linesection.empty()) {
-                int sectionType = SCEN_INI_SectionType(linesection);
-                if (sectionType > -1) {
-                    // found a section
-                    section = sectionType;
+                Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] found section '{}', resulting in section id [{}]", sectionName, section);
 
-                    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] found section '{}', resulting in section id [{}]", linesection, section);
+                if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
+                    iPlayerID = std::min(iPlayerID + 1, MAX_PLAYERS - 1);
 
-                    if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-                        iPlayerID++;
+                    int house = -1;
+                    if (section == INI_HOUSEATREIDES) house = ATREIDES;
+                    if (section == INI_HOUSEORDOS)    house = ORDOS;
+                    if (section == INI_HOUSEHARKONNEN) house = HARKONNEN;
+                    if (section == INI_HOUSEMERCENARY) house = MERCENARY;
+                    if (section == INI_HOUSEFREMEN)   house = FREMEN;
+                    if (section == INI_HOUSESARDAUKAR) house = SARDAUKAR;
 
-                        if (iPlayerID > (MAX_PLAYERS - 1)) {
-                            iPlayerID = (MAX_PLAYERS - 1);
-                        }
+                    iPl_house[iPlayerID] = house;
 
-                        int house = -1;
-                        if (section == INI_HOUSEATREIDES) house = ATREIDES;
-                        if (section == INI_HOUSEORDOS) house = ORDOS;
-                        if (section == INI_HOUSEHARKONNEN) house = HARKONNEN;
-                        if (section == INI_HOUSEMERCENARY) house = MERCENARY;
-                        if (section == INI_HOUSEFREMEN) house = FREMEN;
-                        if (section == INI_HOUSESARDAUKAR) house = SARDAUKAR;
-
-                        iPl_house[iPlayerID] = house;
-
-                        Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Setting house to [{}] for playerId [{}]", iPl_house[iPlayerID], iPlayerID);
-                    }
-                }
-                continue; // next line
-            }
-
-            // Okay, we found a new section; if its NOT [GAME] then we remember this one!
-            if (section != INI_NONE) {
-                std::tie(word_left, word_right) = INI_SplitWord(linefeed);
-                wordtype = INI_WordType(word_left, section);
-            } else {
-                std::tie(word_left, word_right) = INI_SplitWord(linefeed);
-            }
-
-            if (section == INI_BASIC) {
-                INI_Scenario_Section_Basic(pMentat, wordtype, word_right);
-            }
-
-            // Dune 2 house found, load player data
-            if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-                int result = INI_Scenario_Section_House(wordtype, iPlayerID, iPl_credits, iPl_quota, word_right);
-                if (result > -1) {
-                    iHumanID = result;
+                    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Setting house to [{}] for playerId [{}]", iPl_house[iPlayerID], iPlayerID);
                 }
             }
-
-            if (section == INI_MAP) {
-                INI_Scenario_Section_MAP(blooms, fields, wordtype, linefeed);
-            }
-            else if (section == INI_UNITS) {
-                bSetUpPlayers = INI_Scenario_Section_Units(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
-            }
-            else if (section == INI_STRUCTURES) {
-                bSetUpPlayers = INI_Scenario_Section_Structures(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
-            }
-            else if (section == INI_REINFORCEMENTS) {
-                INI_Scenario_Section_Reinforcements(iHouse, linefeed, reinforcements);
-            }
-            wordtype = WORD_NONE;
+            continue;
         }
-        file.close();
 
-        mapEditor.smoothMap();
+        if (section == INI_NONE) continue;
 
-        // now add the spice blooms! :)
-        for (int iB = 0; iB < 30; iB++) {
-            // when
-            if (blooms[iB] > -1) {
-                //   map.cell[blooms[iB]].tile = BLOOM;
+        auto [word_left, word_right] = INI_SplitWord(linefeed);
+        int wordtype = INI_WordType(word_left, section);
 
-                Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice BLOOM at cell : {}", blooms[iB]);
-                mapEditor.createCell(blooms[iB], TERRAIN_BLOOM, 0);
-            }
+        if (section == INI_BASIC) {
+            INI_Scenario_Section_Basic(pMentat, wordtype, word_right);
         }
-        // At this point, show list of unit types
-        // now add the fields
-        for (int iB = 0; iB < 30; iB++) {
-            // when
-            if (fields[iB] > -1) {
-                Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice FIELD at cell : {}", fields[iB]);
-                mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (RNG::rnd(50)));
+
+        if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
+            int result = INI_Scenario_Section_House(wordtype, iPlayerID, iPl_credits, iPl_quota, word_right);
+            if (result > -1) {
+                iHumanID = result;
             }
         }
 
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Done reading");
-    // }
+        if (section == INI_MAP) {
+            INI_Scenario_Section_MAP(blooms, fields, wordtype, linefeed);
+        }
+        else if (section == INI_UNITS) {
+            bSetUpPlayers = INI_Scenario_Section_Units(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
+        }
+        else if (section == INI_STRUCTURES) {
+            bSetUpPlayers = INI_Scenario_Section_Structures(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
+        }
+        else if (section == INI_REINFORCEMENTS) {
+            INI_Scenario_Section_Reinforcements(iHouse, linefeed, reinforcements);
+        }
+    }
+    file.close();
+
+    mapEditor.smoothMap();
+
+    for (int iB = 0; iB < 30; iB++) {
+        if (blooms[iB] > -1) {
+            Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice BLOOM at cell : {}", blooms[iB]);
+            mapEditor.createCell(blooms[iB], TERRAIN_BLOOM, 0);
+        }
+    }
+
+    for (int iB = 0; iB < 30; iB++) {
+        if (fields[iB] > -1) {
+            Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice FIELD at cell : {}", fields[iB]);
+            mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (RNG::rnd(50)));
+        }
+    }
+
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Done reading");
 
     mapEditor.smoothMap();
     m_objects->getMap()->setDesiredAmountOfWorms(m_objects->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM));
 }
 
-void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& linefeed)
+void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& value)
 {
     if (wordtype == WORD_BRIEFPICTURE) {
-        // Load name, and load proper briefingpicture
-        std::string scene = cIniUtils::getSceneFileToScene(linefeed);
-
-        scene = cIniUtils::getSceneFileToScene(linefeed);
-
+        std::string scene = cIniUtils::getSceneFileToScene(value);
         if (!cIniUtils::caseInsCompare(scene, "unknown")) {
             pMentat->loadScene(scene);
         }
     }
     else if (wordtype == WORD_FOCUS) {
-        int focusCell = ToInt(linefeed);
+        int focusCell = ToInt(value);
         m_objects->getPlayer(0)->setFocusCell(focusCell);
         m_interface->getMapCamera()->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
-        m_interface->setWinFlags(ToInt(linefeed));
+        m_interface->setWinFlags(ToInt(value));
     }
     else if (wordtype == WORD_LOSEFLAGS) {
-        m_interface->setLoseFlags(ToInt(linefeed));
+        m_interface->setLoseFlags(ToInt(value));
     }
 }
 
-int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, int *iPl_credits, int *iPl_quota, const std::string& linefeed)
+int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, std::span<int> iPl_credits, std::span<int> iPl_quota, const std::string& value)
 {
     int iHumanID = -1;
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, wordtype);
-    // link house (found, because > -1)
     if (iPlayerID > -1) {
         if (wordtype == WORD_BRAIN) {
-            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", linefeed);
-
-            // We know the human brain now, this should be player 0 in our game (!?)...
-            if (cIniUtils::caseInsCompare(linefeed, "Human")) {
+            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", value);
+            if (cIniUtils::caseInsCompare(value, "Human")) {
                 Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
                 iHumanID = iPlayerID;
-            }
-            else {
+            } else {
                 Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "This brain is not human...");
             }
         }
         else if (wordtype == WORD_CREDITS) {
-            int credits = ToInt(linefeed) - 1;
+            int credits = ToInt(value) - 1;
             Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Set credits for player id [{}] to [{}]", iPlayerID, credits);
-
             iPl_credits[iPlayerID] = credits;
         }
         else if (wordtype == WORD_QUOTA) {
-            iPl_quota[iPlayerID] = ToInt(linefeed);
+            iPl_quota[iPlayerID] = ToInt(value);
         }
     }
     return iHumanID;
 }
 
-void cIni::INI_Scenario_Section_MAP(int *blooms, int *fields, int wordtype, const std::string& slinefeed)
+void cIni::INI_Scenario_Section_MAP(std::span<int> blooms, std::span<int> fields, int wordtype, const std::string& slinefeed)
 {
     m_objects->getMap()->init(64, 64);
 
-    // original dune 2 maps have 64x64 maps
     if (wordtype == WORD_MAPSEED) {
         Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
         auto [word, seek] = INI_SplitWord(slinefeed);
         INI_Load_seed(ToInt(seek));
     }
 
-    // Loaded before SEED
+    auto parseCells = [&](std::span<int> dest, const char* label) {
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] {}=", label);
+        auto [key, values] = INI_SplitWord(slinefeed);
+        int idx = 0;
+        for (const auto& token : splitByComma(values)) {
+            if (idx >= static_cast<int>(dest.size())) break;
+            auto trimmed = ToTrim(token);
+            if (trimmed.empty()) continue;
+            int original = ToInt(trimmed);
+            int iCellX = original % 64;
+            int iCellY = original / 64;
+            dest[idx++] = m_objects->getMapGeometry()->makeCell(iCellX, iCellY);
+        }
+    };
+
     if (wordtype == WORD_MAPBLOOM) {
-        // This should put spice blooms in our array
-        // Logic: read till next "," , then use that number to determine
-        // where the bloom will be (as cell nr)
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Bloom=");
-
-        int iBloomID = 0;
-        unsigned int iStringID = 6;    // B L O O M = <6>
-        int iWordID = 0;
-
-        char word[10];
-        memset(word, 0, sizeof(word)); // clear string
-
-        // C style code to parse the line
-        const char* linefeed = slinefeed.c_str();
-        for (; iStringID < slinefeed.length()+1; iStringID++) {
-            // until we encounter a "," ...
-
-            char letter[1];
-            letter[0] = '\0';
-            letter[0] = linefeed[iStringID];
-
-            // its a comma!
-            if (letter[0] == ',' || letter[0] == '\0' || letter[0] == '\n') {
-                // from prevID TILL now is a number
-                iWordID = 0;
-
-                int original_dune2_cell = atoi(word);
-                int d2tm_cell = -1;
-
-                int iCellX = (original_dune2_cell - ((original_dune2_cell / 64) * 64));
-                int iCellY = (original_dune2_cell / 64);
-
-                // Now recalculate it
-                d2tm_cell = m_objects->getMapGeometry()->makeCell(iCellX, iCellY);
-                blooms[iBloomID] = d2tm_cell;
-                memset(word, 0, sizeof(word)); // clear string
-
-                if (iBloomID < 29)
-                    iBloomID++;
-
-                if (letter[0] == '\0' || letter[0] == '\n')
-                    break; // get out
-            }
-            else {
-                word[iWordID] = letter[0]; // copy
-                if (iWordID < 9)
-                    iWordID++;
-
-            }
-        }
+        parseCells(blooms, "Bloom");
     }
-    // Loaded before SEED
     else if (wordtype == WORD_MAPFIELD) {
-        // This should put spice blooms in our array
-        // Logic: read till next "," , then use that number to determine
-        // where the bloom will be (as cell nr)
-
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Field=");
-        int iFieldID = 0;
-        unsigned int iStringID = 6;    // F I E L D = <6>
-        int iWordID = 0;
-
-        char word[10];
-        memset(word, 0, sizeof(word)); // clear string
-
-        // C style code to parse the line
-        const char* linefeed = slinefeed.c_str();
-        for (; iStringID < slinefeed.length()+1; iStringID++) {
-            // until we encounter a "," ...
-
-            char letter[1];
-            letter[0] = '\0';
-            letter[0] = linefeed[iStringID];
-
-            // its a comma!
-            if (letter[0] == ',' || letter[0] == '\0' || letter[0] == '\n') {
-                // from prevID TILL now is a number
-                iWordID = 0;
-
-                int original_dune2_cell = atoi(word);
-                int d2tm_cell = -1;
-
-                int iCellX = (original_dune2_cell - ((original_dune2_cell / 64) * 64));
-                int iCellY = (original_dune2_cell / 64);
-
-                // Now recalculate it
-                d2tm_cell = m_objects->getMapGeometry()->makeCell(iCellX, iCellY);
-                fields[iFieldID] = d2tm_cell;
-                memset(word, 0, sizeof(word)); // clear string
-
-                if (iFieldID < 29)
-                    iFieldID++;
-
-                if (letter[0] == '\0' || letter[0] == '\n')
-                    break; // get out
-            }
-            else {
-                word[iWordID] = letter[0]; // copy
-                if (iWordID < 9)
-                    iWordID++;
-
-            }
-        }
+        parseCells(fields, "Field");
     }
 }
 
 void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& slinefeed, cReinforcements *reinforcements)
 {
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Reinforcements", "[SCENARIO] -> REINFORCEMENTS");
-    int iPart = -1; /*
-                0 = Controller
-                1 = Type
-                2 = HP
-                3 = Cell
-                */
 
-    // Skip ID= part. It is just for fun there.
-    int playerId, unitType, delayInMinutes, targetCell;
-    playerId = unitType = delayInMinutes = targetCell = -1;
+    auto eqPos = slinefeed.find('=');
+    if (eqPos == std::string::npos) return;
 
-    char chunk[25];
-    bool bClearChunk = true;
-    bool bSkipped = false;
-    int iC = -1;
-    // C style code to parse the line
-    const char* linefeed = slinefeed.c_str();
-    for (unsigned int c = 0; c < slinefeed.length()+1; c++) {
-        // clear chunk
-        if (bClearChunk) {
-            memset(chunk, 0, sizeof(chunk));
-            //for (int ic=0; ic < 25; ic++)
-            //	chunk[ic] = '\0';
-            iC = 0;
-            bClearChunk = false;
-        }
+    auto parts = splitByComma(slinefeed.substr(eqPos + 1));
+    if (parts.size() < 4) {
+        Logger::warn(COMP_SCENARIOINI, "INI_Scenario_Section_Reinforcements", "Invalid reinforcement line: '{}'", slinefeed);
+        return;
+    }
 
-        // Fill in chunk
-        if (iC < 25 && bSkipped && linefeed[c] != ',') {
-            chunk[iC] = linefeed[c];
-            iC++;
-        }
-
-        // , means next part. A ' ' means end
-
-        // Example:
-        // 1=Harkonnen,Troopers,Enemybase,11
-        // <ID>=<House>,<UnitType>,<DropLocation>,<Time>
-        // <Time> may be postfixed with a '+' meaning it should repeat infinitely. Unfortunately Dune II
-        // has a bug ignoring the '+'. (but we can fix this)
-
-        bool plusDetected = (linefeed[c] == '+'); // plus has special meaning
-        if (linefeed[c] == ',' || linefeed[c] == '\0' || plusDetected) {
-            iPart++;
-
-            if (iPart == 0) {
-                int iHouse = cIniUtils::getHouseFromString(std::string(chunk));
-
-                if (iHouse > -1) {
-                    // Search for a player with this house
-                    for (int i = 0; i < MAX_PLAYERS; i++) {
-                        if (m_objects->getPlayer(i)->getHouse() == iHouse) {
-                            playerId = i; // set controller here.. phew
-                            break;
-                        }
-                    }
-                }
-            }
-            else if (iPart == 1) {
-                unitType = cIniUtils::getUnitTypeFromString(std::string(chunk));
-            }
-            else if (iPart == 2) {
-                // Homebase is home of that house
-                if (cIniUtils::caseInsCompare(chunk, "Homebase")) {
-                    targetCell = m_objects->getPlayer(playerId)->getFocusCell();
-                }
-                else if (cIniUtils::caseInsCompare(chunk, "enemybase")) {
-                    // enemy base
-                    if (playerId == 0) {
-                        // Find corresponding house and get controller
-                        for (int i = 0; i < MAX_PLAYERS; i++)
-                            if (m_objects->getPlayer(i)->getHouse() == iHouse && i != playerId) {
-                                targetCell = m_objects->getPlayer(i)->getFocusCell();
-                                break;
-                            }
-                    }
-                    else {
-                        // computer player must find enemy = human
-                        targetCell = m_objects->getPlayer(0)->getFocusCell();
-                    }
-                } else {
-                    auto sChunk = std::string(chunk);
-                    if (!sChunk.empty() && 
-                        std::all_of(sChunk.begin(), sChunk.end(),[](unsigned char c) { return std::isdigit(c); }))
-                    {
-                        targetCell = std::stoi(sChunk);
-                    } else {
-                        Logger::warn(COMP_SCENARIOINI, "Scenario_Section_Reinforcements", "Invalid target cell for reinforcement: '{}'", chunk);
-                    }
-                }
-            }
-            else if (iPart == 3) {
-                delayInMinutes = atoi(chunk);
-                bool repeat = m_settings->isAllowRepeatingReinforcements() && plusDetected;
-                int reinforcementMultiplier = 20; // convert minutes to seconds, as D2TM cReinforcement deals with seconds
-                // D2TM does not interpret the delay as minutes, as doing so takes a very long time for reinforcements
-                // to arrive. So I guess delay is not really 1 minute in game-time in Dune 2.
-                // Stefan: 08/04/2022 -> I reduced the multiplier again to 20, as it still takes a very long time;
-                // this feels better.
-                int delayD2TM = delayInMinutes * reinforcementMultiplier;
-                reinforcements->addReinforcement(playerId, unitType, targetCell, delayD2TM, repeat);
+    // Part 0: house → player id
+    int playerId = -1;
+    int reinforcingHouse = cIniUtils::getHouseFromString(ToTrim(parts[0]));
+    if (reinforcingHouse > -1) {
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (m_objects->getPlayer(i)->getHouse() == reinforcingHouse) {
+                playerId = i;
                 break;
             }
-
-            bClearChunk = true;
-        }
-        // found the = mark, this means we start chopping now!
-        if (linefeed[c] == '=') {
-            bSkipped = true;
         }
     }
+
+    // Part 1: unit type
+    int unitType = cIniUtils::getUnitTypeFromString(ToTrim(parts[1]));
+
+    // Part 2: target cell (Homebase / Enemybase / numeric cell)
+    int targetCell = -1;
+    auto location = ToTrim(parts[2]);
+    if (cIniUtils::caseInsCompare(location, "Homebase")) {
+        targetCell = m_objects->getPlayer(playerId)->getFocusCell();
+    }
+    else if (cIniUtils::caseInsCompare(location, "enemybase")) {
+        if (playerId == 0) {
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                if (m_objects->getPlayer(i)->getHouse() == iHouse && i != playerId) {
+                    targetCell = m_objects->getPlayer(i)->getFocusCell();
+                    break;
+                }
+            }
+        }
+        else {
+            targetCell = m_objects->getPlayer(0)->getFocusCell();
+        }
+    }
+    else if (!location.empty() &&
+             std::all_of(location.begin(), location.end(), [](unsigned char c) { return std::isdigit(c); })) {
+        targetCell = ToInt(location);
+    }
+    else {
+        Logger::warn(COMP_SCENARIOINI, "INI_Scenario_Section_Reinforcements", "Invalid target cell for reinforcement: '{}'", location);
+    }
+
+    // Part 3: delay in minutes, optional '+' suffix means repeat
+    auto delayStr = ToTrim(parts[3]);
+    bool repeat = false;
+    if (!delayStr.empty() && delayStr.back() == '+') {
+        repeat = m_settings->isAllowRepeatingReinforcements();
+        delayStr.pop_back();
+    }
+    int delayInMinutes = ToInt(delayStr);
+    // D2TM does not interpret the delay as real minutes; multiplier chosen to feel correct in-game
+    int delayD2TM = delayInMinutes * 20;
+    reinforcements->addReinforcement(playerId, unitType, targetCell, delayD2TM, repeat);
 }
 
-bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
-                                     const int *iPl_quota,
-                                     const std::string& slinefeed)  // ORIGINAL DUNE 2 MISSION. (duplicate code?)
+bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, std::span<const int> iPl_credits,
+                                            std::span<const int> iPl_house, std::span<const int> iPl_quota,
+                                            const std::string& slinefeed)
 {
     if (bSetUpPlayers) {
         INI_Scenario_SetupPlayers(iHumanID, iPl_credits, iPl_house, iPl_quota);
         bSetUpPlayers = false;
     }
 
-    int iPart = -1; /*
-                0 = Controller
-                1 = Type
-                2 = HP
-                3 = Cell
-                */
+    auto [key, valueStr] = INI_SplitWord(slinefeed);
+    bool bGen = key.rfind("GEN", 0) == 0; // line is a GENxxx= entry
 
-    // Skip ID= part. It is just for fun there.
-    int iController, iType, iHP, iCell;
-    iController = iType = iHP = iCell = -1;
+    auto parts = splitByComma(valueStr);
 
-    char chunk[25];
-    bool bClearChunk = true;
-    bool bSkipped = false;
-    int iC = -1;
-    bool bGen = false;
-    int iIS = -1;
+    int iController = -1;
+    int iType = -1;
+    int iCell = -1;
 
-    // check if this is a 'gen'
-    if (slinefeed.find("GEN") != std::string::npos) {
-        bGen = true;
+    if (!bGen) {
+        // Format: ID=House,StructureType,HP,Cell
+        if (parts.size() >= 4) {
+            int house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                if (m_objects->getPlayer(i)->getHouse() == house) {
+                    iController = i;
+                    break;
+                }
+            }
+            if (iController < 0) {
+                Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Structures", "WARNING: Identifying house/controller of structure (typo?): {}", parts[0]);
+            }
+            iType = cIniUtils::getStructureTypeFromString(ToTrim(parts[1]));
+            iCell = ToInt(ToTrim(parts[3]));
+        }
     }
-    // C style code to parse the line
-    const char* linefeed = slinefeed.c_str();
-    for (unsigned int c = 0; c < slinefeed.length()+1; c++) {
-        // clear chunk
-        if (bClearChunk) {
-            for (int ic = 0; ic < 25; ic++) {
-                chunk[ic] = '\0';
-            }
-
-            iC = 0;
-            bClearChunk = false;
-        }
-
-        // Fill in chunk
-        if (iC < 25 && bSkipped && linefeed[c] != ',') {
-            chunk[iC] = linefeed[c];
-            iC++;
-        }
-
-        // , means next part. A ' ' means end
-        if (linefeed[c] == ',' || linefeed[c] == '\0') {
-            iPart++;
-
-            // this line is not GENXXX
-            if (bGen == false) {
-                if (iPart == 0) {
-                    int iHouse = cIniUtils::getHouseFromString(std::string(chunk));
-
-                    // Search for a player with this house
-                    for (int i = 0; i < MAX_PLAYERS; i++) {
-                        //char msg[80];
-                        //sprintf(msg, "i=%d, ihouse=%d, house=%d", i, iHouse, player[i].house);
-                        //logbook(msg);
-                        if (m_objects->getPlayer(i)->getHouse() == iHouse) {
-                            iController = i; // set controller here.. phew
-                            break;
-                        }
-                    }
-                    // Quickfix: fremen house in original dune 2, is house 6 (not detectable)
-                    // in this game
-                    //if (iHouse == FREMEN)
-                    //	iController = 6;
-
-                    if (iController < 0) {
-                        Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Structures", "WARNING: Identifying house/controller of structure (typo?): {}", chunk);
-                    }
-                }
-                else if (iPart == 1) {
-                    iType = cIniUtils::getStructureTypeFromString(std::string(chunk));
-                }
-                else if (iPart == 3) {
-                    iCell = atoi(chunk);
-
+    else {
+        // Format: GENcell=House,StructureType
+        iCell = ToInt(key.substr(3)); // cell number follows "GEN"
+        if (parts.size() >= 2) {
+            int house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                if (m_objects->getPlayer(i)->getHouse() == house) {
+                    iController = i;
                     break;
                 }
             }
-            else {
-                if (iPart == 0) {
-                    int iHouse = cIniUtils::getHouseFromString(std::string(chunk));
-
-                    // Search for a player with this house
-                    for (int i = 0; i < MAX_PLAYERS; i++) {
-                        if (m_objects->getPlayer(i)->getHouse() == iHouse) {
-                            iController = i; // set controller here.. phew
-                            break;
-                        }
-                    }
-                }
-                else if (iPart == 1) {
-                    // Extract cell number from GEN key: format is GEN<cell>=<house>,<structureType>
-                    // iIS is the position of '=', so the cell number sits between position 3 and iIS
-                    iCell = std::stoi(slinefeed.substr(3, iIS - 3));
-
-                    if (cIniUtils::caseInsCompare(chunk, "Wall")) iType = WALL;
-                    if (cIniUtils::caseInsCompare(chunk, "Concrete")) iType = SLAB1;
-                    break;
-                }
-            }
-            bClearChunk = true;
-        }
-        // found the = mark, this means we start chopping now!
-        if (linefeed[c] == '=') {
-            bSkipped = true;
-            iIS = c;
+            auto typeName = ToTrim(parts[1]);
+            if (cIniUtils::caseInsCompare(typeName, "Wall"))     iType = WALL;
+            if (cIniUtils::caseInsCompare(typeName, "Concrete")) iType = SLAB1;
         }
     }
 
@@ -1106,89 +839,46 @@ bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, con
     return bSetUpPlayers;
 }
 
-bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const int *iPl_credits, const int *iPl_house,
-                                const int *iPl_quota, const std::string& linefeed)  // ORIGINAL DUNE 2 MISSION.
+bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, std::span<const int> iPl_credits,
+                                       std::span<const int> iPl_house, std::span<const int> iPl_quota,
+                                       const std::string& linefeed)
 {
     // setupPlayers is required, because we do matching based on name of house, hence, once
     // we encounter either a UNITS or STRUCTURES section, the assumption is made that all HOUSE information
-    // has been isProcessed.
+    // has been processed.
     if (bSetUpPlayers) {
         INI_Scenario_SetupPlayers(iHumanID, iPl_credits, iPl_house, iPl_quota);
         bSetUpPlayers = false;
     }
 
-    int iPart = -1; /*
-                0 = Controller
-                1 = Type
-                2 = HP
-                3 = Cell
-                4 = Facing (body)
-                5 = Facing (head)
-                */
+    // Format: ID=House,UnitType,HP,Cell,FacingBody,FacingHead
+    auto [key, valueStr] = INI_SplitWord(linefeed);
+    auto parts = splitByComma(valueStr);
 
-    // Skip ID= part. It is just for fun there.
-    int iController, iType, iHP, iCell, iFacingBody, iFacingHead;
-    iController = iType = iHP = iCell = iFacingBody = iFacingHead = -1;
+    int iController = -1;
+    int iType = -1;
+    int iCell = -1;
 
-    char chunk[25];
-    bool bClearChunk = true;
-    bool bSkipped = false;
-    int iC = -1;
-
-    for (int c = 0; c < MAX_LINE_LENGTH; c++) {
-        // clear chunk
-        if (bClearChunk) {
-            for (int ic = 0; ic < 25; ic++)
-                chunk[ic] = '\0';
-            iC = 0;
-            bClearChunk = false;
-        }
-        // Fill in chunk
-        if (iC < 25 && bSkipped && linefeed[c] != ',') {
-            chunk[iC] = linefeed[c];
-            iC++;
-        }
-
-        // , means next part. A ' ' means end
-        if (linefeed[c] == ',' || linefeed[c] == '\0') {
-            iPart++;
-
-            if (iPart == INI_UNITS_PART_CONTROLLER) {
-                int iHouse = cIniUtils::getHouseFromString(std::string(chunk));
-
-                // Search for a player with this house
-                for (int i = 0; i < MAX_PLAYERS; i++) {
-                    // this is why we require setUpPlayers... because it matches by house type
-                    if (m_objects->getPlayer(i)->getHouse() == iHouse) {
-                        iController = i; // set controller here.. phew
-                        break;
-                    }
-                }
-
-                if (iController < 0) {
-                    Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Units", "WARNING: Cannot identify house/controller -> STRING '{}'", chunk);
-                }
-
-            }
-            else if (iPart == INI_UNITS_PART_TYPE) {
-                iType = cIniUtils::getUnitTypeFromString(std::string(chunk));
-            }
-            else if (iPart == INI_UNITS_PART_HP) {
-                // do nothing in part 2 (for now!?)
-            }
-            else if (iPart == INI_UNITS_PART_CELL) {
-                iCell = atoi(chunk);
-            }
-            else if (iPart == INI_UNITS_PART_FACING_BODY) {
-                // we don't seem to care about facings...
+    if (parts.size() > INI_UNITS_PART_CONTROLLER) {
+        int house = cIniUtils::getHouseFromString(ToTrim(parts[INI_UNITS_PART_CONTROLLER]));
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            if (m_objects->getPlayer(i)->getHouse() == house) {
+                iController = i;
                 break;
             }
-            bClearChunk = true;
         }
-        // found the = mark, this means we start chopping now!
-        if (linefeed[c] == '=')
-            bSkipped = true;
+        if (iController < 0) {
+            Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Units", "WARNING: Cannot identify house/controller -> STRING '{}'", parts[INI_UNITS_PART_CONTROLLER]);
+        }
     }
+    if (parts.size() > INI_UNITS_PART_TYPE) {
+        iType = cIniUtils::getUnitTypeFromString(ToTrim(parts[INI_UNITS_PART_TYPE]));
+    }
+    // parts[INI_UNITS_PART_HP] skipped
+    if (parts.size() > INI_UNITS_PART_CELL) {
+        iCell = ToInt(ToTrim(parts[INI_UNITS_PART_CELL]));
+    }
+    // parts[INI_UNITS_PART_FACING_BODY] and beyond are not used
 
     if (iController > -1) {
         cUnits::unitCreate(m_objects, m_infos, m_interface, iCell, iType, iController, true);
@@ -1196,7 +886,7 @@ bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, const in
     return bSetUpPlayers;
 }
 
-void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const int *iPl_house, const int *iPl_quota)
+void cIni::INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota)
 {
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_SetupPlayers", "INI: Going to setup players");
     int iCPUId = 1; // index for CPU's, starts at 1 because ID 0 is HUMAN player
@@ -1204,7 +894,7 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
     int teamIndexAI = 1;
     bool fremenIsHumanAlly = false;
 
-    for (int playerIndex = 0; playerIndex < MAX_PLAYERS; playerIndex++) { // till 6 , since player 6 itself is sandworm
+    for (int playerIndex = 0; playerIndex < MAX_PLAYERS; playerIndex++) {
         int houseForPlayer = iPl_house[playerIndex];
         Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_SetupPlayers", "House for id [{}] is [{}] - human id is [{}]", playerIndex, houseForPlayer, iHumanID);
         if (houseForPlayer > -1) {
@@ -1218,8 +908,6 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                 m_objects->getPlayer(HUMAN)->setTeam(0);
                 m_objects->getPlayer(HUMAN)->setAutoSlabStructures(false);
 
-                // Fremen are always the same CPU index, so check what house the human player is, and depending
-                // on that set up FREMEN player team
                 m_objects->getPlayer(AI_CPU5)->setHouse(FREMEN);
                 if (houseForPlayer == ATREIDES) {
                     fremenIsHumanAlly = true;
@@ -1231,7 +919,6 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                 if (quota > 0) {
                     m_objects->getPlayer(HUMAN)->setQuota(quota);
                 }
-
             }
             else {
                 m_objects->getPlayer(iCPUId)->setAutoSlabStructures(true);
@@ -1241,7 +928,6 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                 }
 
                 if (houseForPlayer == FREMEN) {
-                    // seems like a non-standard Dune 2 mission, this will break
                     d2tm_assert(false && "No FREMEN supported in INI files yet");
                 }
 
@@ -1254,17 +940,12 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                 iCPUId++;
             }
         }
-        else {
-            // there is no house set for this player index (from the ini file that is!)
-        }
     }
 
     if (fremenIsHumanAlly) {
-        // same team as human
         m_objects->getPlayer(AI_CPU5)->setTeam(0);
     }
     else {
-        // same team as enemy cpu's
         m_objects->getPlayer(AI_CPU5)->setTeam(teamIndexAI);
     }
 
@@ -1276,12 +957,11 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] Opening file");
 
     std::string filename;
-    if (iHouse == ATREIDES) filename = "mentata.ini";
-    if (iHouse == ORDOS) filename = "mentato.ini";
+    if (iHouse == ATREIDES)  filename = "mentata.ini";
+    if (iHouse == ORDOS)     filename = "mentato.ini";
     if (iHouse == HARKONNEN) filename = "mentath.ini";
     if (iHouse == SARDAUKAR) filename = "mentats.ini";
 
-    // clear mentat
     pMentat->initSentences();
     auto path = std::string("campaign/briefings/") + filename;
 
@@ -1290,7 +970,7 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
 
     int iScenario = 0;
     int iSection = 0;
-    int iLine = 0; // max 8 lines
+    int iLine = 0;
 
     std::ifstream file(path);
     if (!file.is_open()) {
@@ -1298,53 +978,49 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
         return;
     }
 
-    std::string linesection;
     std::string linefeed;
-        while (std::getline(file, linefeed)) {
-            linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
-            if (linefeed.empty() || isCommentLine(linefeed)) {
+    while (std::getline(file, linefeed)) {
+        linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
+        if (linefeed.empty() || isCommentLine(linefeed)) {
+            continue;
+        }
+
+        auto sectionName = extractSectionName(linefeed);
+        if (!sectionName.empty()) {
+            iSection = cIniUtils::getSectionType(sectionName, iSection);
+        }
+
+        if (iSection == INI_SCEN) {
+            auto [word_left, word_right] = INI_SplitWord(linefeed);
+            int wordtype = INI_WordType(word_left, iSection);
+
+            if (wordtype == WORD_NUMBER) {
+                iScenario = ToInt(word_right);
                 continue;
             }
+        }
 
-            linesection = extractSectionName(linefeed);
-
-            if (!linesection.empty()) {
-                // until we found the right sections/parts, keep searching
-                iSection = cIniUtils::getSectionType(linesection, iSection);
-            }
-
-            if (iSection == INI_SCEN) {
+        if (iScenario == iScenarioFind) {
+            if (iSection == iSectionFind) {
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
                 int wordtype = INI_WordType(word_left, iSection);
 
-                if (wordtype == WORD_NUMBER) {
-                    iScenario = ToInt(word_right);
-                    continue;
-                }
-            }
-
-            if (iScenario == iScenarioFind) {
-                if (iSection == iSectionFind) {
-                    auto [word_left, word_right] = INI_SplitWord(linefeed);
-                    int wordtype = INI_WordType(word_left, iSection);
-
-                    if (wordtype == WORD_REGIONTEXT) {
-                        word_right = removeQuote(word_right);
-                        pMentat->setSentence(iLine, word_right.c_str());
-                        iLine++;
-                        if (iLine > 9)
-                            break;
-                    }
+                if (wordtype == WORD_REGIONTEXT) {
+                    word_right = removeQuote(word_right);
+                    pMentat->setSentence(iLine, word_right.c_str());
+                    iLine++;
+                    if (iLine > 9) break;
                 }
             }
         }
-        file.close();
+    }
+    file.close();
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] File opened");
 }
 
 
 // Game.ini loader
-void cIni::installGame(std::string filename)
+void cIni::installGame(const std::string& filename)
 {
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
@@ -1359,241 +1035,131 @@ void cIni::installGame(std::string filename)
         Logger::error(COMP_GAMERULES, "cIni::installGame", "[GameRules] Error, could not open file");
         return;
     }
-        std::string linesection;
 
-        std::string linefeed;
-        while (std::getline(file, linefeed)) {
-            linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
-            if (linefeed.empty() || isCommentLine(linefeed)) {
-                continue;
+    std::string linefeed;
+    while (std::getline(file, linefeed)) {
+        linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
+        if (linefeed.empty() || isCommentLine(linefeed)) {
+            continue;
+        }
+
+        wordtype = WORD_NONE;
+
+        auto sectionName = extractSectionName(linefeed);
+        if (!sectionName.empty()) {
+            int last = section;
+            section = GAME_INI_SectionType(sectionName, section);
+
+            if (last != section) {
+                id = -1;
+                if (section == INI_UNITS)      Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [UNITS]");
+                if (section == INI_STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [STRUCTURES]");
+                if (section == INI_BULLETS)    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [BULLETS]");
             }
 
-            // Linefeed contains a string of 1 sentence. Whenever the first character is a commentary
-            // character (which is "//", ";" or "#"), or an empty line, then skip it
-            if (isCommentLine(linefeed))
-                continue;   // Skip
-
-            wordtype = WORD_NONE;
-
-            // Every line is checked for a new section.
-            linesection = extractSectionName(linefeed);
-
-            if (!linesection.empty()) {
-                int last = section;
-
-                // determine section
-                section = GAME_INI_SectionType(linesection, section);
-
-                // When we changed section, and it's a section with adding ID's, reset the ID var
-                if (last != section) {
-                    id = -1;
-
-                    // Show in log file we entered a new section
-                    if (section == INI_UNITS) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [UNITS]");
-                    if (section == INI_STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [STRUCTURES]");
-                    if (section == INI_BULLETS) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [BULLETS]");
-                }
-
-                // New unit type
-                if (section == INI_UNITS) {
-                    // check if we found a new [UNIT part!
-                    if (linefeed.find("[UNIT:") != std::string::npos) {
-                        // Get the name of the unit:
-                        // [UNIT: <NAME>]
-                        // 1234567890123...]
-                        char name_unit[35];
-
-                        for (int nu = 0; nu < 35; nu++)
-                            name_unit[nu] = '\0';
-
-                        int c = 7, uc = 0;
-                        while (c < (MAX_LINE_LENGTH - 1)) {
-                            if (linefeed[c] != ' ' &&
-                                    linefeed[c] != ']') { // skip close bracket
-                                name_unit[uc] = linefeed[c];
-                                uc++;
-                                c++;
-                            }
-                            else {
-                                break; // get out
-                            }
-                        }
-
-                        id = cIniUtils::getUnitTypeFromString(std::string(name_unit));
-                        if (id >= MAX_UNITTYPES) id--;
-
-                    } // found a new unit type
-                }
-
-                // New structure type
-                if (section == INI_STRUCTURES) {
-                    // check if we found a new [STRUCTURE: part!
-                    if (linefeed.find("[STRUCTURE:") != std::string::npos) {
-                        // Get the name of the unit:
-                        // [STRUCTURE: <NAME>]
-                        // 123456789012345678]
-                        char name_structure[45];
-
-                        for (int nu = 0; nu < 45; nu++)
-                            name_structure[nu] = '\0';
-
-                        int c = 12, uc = 0;
-                        while (c < (MAX_LINE_LENGTH - 1)) {
-                            if (linefeed[c] != ' ' &&
-                                    linefeed[c] != ']') { // skip close bracket
-                                name_structure[uc] = linefeed[c];
-                                uc++;
-                                c++;
-                            }
-                            else
-                                break; // get out
-                        }
-
-                        id = cIniUtils::getStructureType(name_structure);
-                        if (id >= MAX_STRUCTURETYPES) id--;
-                    } // found a new structure type
-                }
-
-                // New bullet type
-                if (section == INI_BULLETS) {
-                    // check if we found a new [BULLET: part!
-                    if (linefeed.find("[BULLET:") != std::string::npos) {
-                        // Get the name of the bullet:
-                        // [BULLET: <NAME>]
-                        // 123456789012345678]
-                        char name_bullet[45];
-
-                        for (int nu = 0; nu < 45; nu++)
-                            name_bullet[nu] = '\0';
-
-                        int c = 9, uc = 0;
-                        while (c < (MAX_LINE_LENGTH - 1)) {
-                            if (linefeed[c] != ' ' &&
-                                    linefeed[c] != ']') { // skip close bracket
-                                name_bullet[uc] = linefeed[c];
-                                uc++;
-                                c++;
-                            }
-                            else
-                                break; // get out
-                        }
-
-                        id = cIniUtils::getBulletTypeFromString(name_bullet);
-                        const int bulletInfoCount = m_infos->getBulletInfos()->size();
-                        if (id >= 0 && id >= bulletInfoCount) {
-                            id--;
-                        }
-                    } // found a new bullet type
-                }
-                continue; // next line
+            if (section == INI_UNITS && linefeed.find("[UNIT:") != std::string::npos) {
+                id = cIniUtils::getUnitTypeFromString(extractTagValue(linefeed, "[UNIT:"));
+                if (id >= MAX_UNITTYPES) id--;
             }
 
-            // Check word only when in a section
-            if (section != INI_GAME) {
-                auto [word_left, word_right] = INI_SplitWord(linefeed);
-                wordtype = INI_WordType(word_left, section);
+            if (section == INI_STRUCTURES && linefeed.find("[STRUCTURE:") != std::string::npos) {
+                id = cIniUtils::getStructureType(extractTagValue(linefeed, "[STRUCTURE:"));
+                if (id >= MAX_STRUCTURETYPES) id--;
+            }
 
-                /**** [UNITS] ****/
-                // Valid ID
-                if (section == INI_UNITS && id > -1) {
-                    // Unit properties
-                    s_UnitInfo &unitInfo = m_infos->getUnitInfo(id);
-
-                    if (wordtype == WORD_HITPOINTS) unitInfo.hp = ToInt(word_right);
-                    if (wordtype == WORD_APPETITE) unitInfo.appetite = ToInt(word_right);
-
-                    if (wordtype == WORD_COST) unitInfo.cost = ToInt(word_right);
-
-                    if (wordtype == WORD_MOVESPEED) unitInfo.speed = ToInt(word_right);
-                    if (wordtype == WORD_TURNSPEED) unitInfo.turnspeed = ToInt(word_right);
-                    if (wordtype == WORD_ATTACKFREQ) unitInfo.attack_frequency = ToInt(word_right);
-                    if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = ToInt(word_right);
-
-                    if (wordtype == WORD_SIGHT) unitInfo.sight = ToInt(word_right);
-
-                    if (wordtype == WORD_RANGE) unitInfo.range = ToInt(word_right);
-                    if (wordtype == WORD_BUILDTIME) unitInfo.buildTime = ToInt(word_right);
-
-                    // Unit description
-                    if (wordtype == WORD_DESCRIPTION) {
-                        strncpy(unitInfo.name, word_right.c_str(), sizeof(unitInfo.name) - 1);
-                        unitInfo.name[sizeof(unitInfo.name) - 1] = '\0';
-                    }
-
-                    // Booleans
-                    if (wordtype == WORD_FIRETWICE) unitInfo.fireTwice = ToBool(word_right);
-                    if (wordtype == WORD_ISINFANTRY) unitInfo.infantry = ToBool(word_right);
-                    if (wordtype == WORD_ISSQUISHABLE) unitInfo.canBeSquished = ToBool(word_right);
-                    if (wordtype == WORD_CANSQUISH) unitInfo.canBeSquished = ToBool(word_right);
-                    if (wordtype == WORD_FREEROAM) unitInfo.free_roam = ToBool(word_right);
-                    if (wordtype == WORD_ISAIRBORN) unitInfo.airborn = ToBool(word_right);
-
-                    if (wordtype == WORD_HARVESTLIMIT) unitInfo.credit_capacity = ToInt(word_right);
-                    if (wordtype == WORD_HARVESTSPEED) unitInfo.harvesting_speed = ToInt(word_right);
-                    if (wordtype == WORD_HARVESTAMOUNT) unitInfo.harvesting_amount = ToInt(word_right);
-
-                    if (wordtype == WORD_SMOKEHFACTOR) unitInfo.smokeHpFactor = ToFloat(word_right);
-                    if (wordtype == WORD_SQUISH) unitInfo.canBeSquished = ToBool(word_right);
-                    if (wordtype == WORD_CANATTACKAIRUNITS) unitInfo.canAttackAirUnits = ToBool(word_right);
-                    if (wordtype == WORD_CANATTACKUNITS) unitInfo.canAttackUnits = ToBool(word_right);
-
-                    if (wordtype == WORD_PRODUCER) {
-                        int type = cIniUtils::getStructureType(word_right);
-                        unitInfo.structureTypeItLeavesFrom = type;
-                    }
+            if (section == INI_BULLETS && linefeed.find("[BULLET:") != std::string::npos) {
+                id = cIniUtils::getBulletTypeFromString(extractTagValue(linefeed, "[BULLET:"));
+                const int bulletInfoCount = m_infos->getBulletInfos()->size();
+                if (id >= 0 && id >= bulletInfoCount) {
+                    id--;
                 }
             }
 
-            // read 
-            if (section == INI_TERRAINS && id > -1) {
-                auto [word_left, word_right] = INI_SplitWord(linefeed);
-                wordtype = INI_WordType(word_left, section);
+            continue;
+        }
 
-                if (wordtype == WORD_BLOOMTIMERDURATION) m_infos->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
-                if (wordtype == WORD_TERRAIN_MINSPICE) m_infos->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAIN_MAXSPICE) m_infos->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINHILL_MINSPICE) m_infos->getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINHILL_MAXSPICE) m_infos->getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
-                if (wordtype == WORD_TERRAINWALL_HP) m_infos->getTerrainInfo()->terrainWallHp = ToInt(word_right);
+        if (section == INI_GAME) continue;
+
+        auto [word_left, word_right] = INI_SplitWord(linefeed);
+        wordtype = INI_WordType(word_left, section);
+
+        /**** [UNITS] ****/
+        if (section == INI_UNITS && id > -1) {
+            s_UnitInfo &unitInfo = m_infos->getUnitInfo(id);
+
+            if (wordtype == WORD_HITPOINTS)     unitInfo.hp = ToInt(word_right);
+            if (wordtype == WORD_APPETITE)      unitInfo.appetite = ToInt(word_right);
+            if (wordtype == WORD_COST)          unitInfo.cost = ToInt(word_right);
+            if (wordtype == WORD_MOVESPEED)     unitInfo.speed = ToInt(word_right);
+            if (wordtype == WORD_TURNSPEED)     unitInfo.turnspeed = ToInt(word_right);
+            if (wordtype == WORD_ATTACKFREQ)    unitInfo.attack_frequency = ToInt(word_right);
+            if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = ToInt(word_right);
+            if (wordtype == WORD_SIGHT)         unitInfo.sight = ToInt(word_right);
+            if (wordtype == WORD_RANGE)         unitInfo.range = ToInt(word_right);
+            if (wordtype == WORD_BUILDTIME)     unitInfo.buildTime = ToInt(word_right);
+
+            if (wordtype == WORD_DESCRIPTION) {
+                // unitInfo.name is a legacy char[] field
+                strncpy(unitInfo.name, word_right.c_str(), sizeof(unitInfo.name) - 1);
+                unitInfo.name[sizeof(unitInfo.name) - 1] = '\0';
             }
 
-            // Structure w0h00
-            if (section == INI_STRUCTURES && id > -1) {
-                auto [word_left, word_right] = INI_SplitWord(linefeed);
-                wordtype = INI_WordType(word_left, section);
-                if (wordtype == WORD_HITPOINTS) {
-                    m_infos->getStructureInfo(id).hp = ToInt(word_right);
-                }
-                if (wordtype == WORD_FIXHP) m_infos->getStructureInfo(id).fixhp = ToInt(word_right);
-                if (wordtype == WORD_POWERDRAIN) m_infos->getStructureInfo(id).power_drain = ToInt(word_right);
-                if (wordtype == WORD_HAS_CONCRETE) m_infos->getStructureInfo(id).hasConcrete = ToBool(word_right);
-                if (wordtype == WORD_POWERGIVE) m_infos->getStructureInfo(id).power_give = ToInt(word_right);
-                if (wordtype == WORD_COST) m_infos->getStructureInfo(id).cost = ToInt(word_right);
-                if (wordtype == WORD_BUILDTIME) m_infos->getStructureInfo(id).buildTime = ToInt(word_right);
-                if (wordtype == WORD_CANATTACKAIRUNITS) m_infos->getStructureInfo(id).canAttackAirUnits = ToBool(word_right);
-                if (wordtype == WORD_CANATTACKUNITS) m_infos->getStructureInfo(id).canAttackGroundUnits = ToBool(word_right);
-                if (wordtype == WORD_SIGHT) m_infos->getStructureInfo(id).sight = ToInt(word_right);
-                if (wordtype == WORD_RANGE) m_infos->getStructureInfo(id).range = ToInt(word_right);
-                if (wordtype == WORD_FIRERATE) m_infos->getStructureInfo(id).fireRate = ToInt(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMin = ToInt(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMax = ToInt(word_right);
-                if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE) m_infos->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
-            }
+            if (wordtype == WORD_FIRETWICE)       unitInfo.fireTwice = ToBool(word_right);
+            if (wordtype == WORD_ISINFANTRY)      unitInfo.infantry = ToBool(word_right);
+            if (wordtype == WORD_ISSQUISHABLE)    unitInfo.canBeSquished = ToBool(word_right);
+            if (wordtype == WORD_CANSQUISH)       unitInfo.canBeSquished = ToBool(word_right);
+            if (wordtype == WORD_FREEROAM)        unitInfo.free_roam = ToBool(word_right);
+            if (wordtype == WORD_ISAIRBORN)       unitInfo.airborn = ToBool(word_right);
+            if (wordtype == WORD_HARVESTLIMIT)    unitInfo.credit_capacity = ToInt(word_right);
+            if (wordtype == WORD_HARVESTSPEED)    unitInfo.harvesting_speed = ToInt(word_right);
+            if (wordtype == WORD_HARVESTAMOUNT)   unitInfo.harvesting_amount = ToInt(word_right);
+            if (wordtype == WORD_SMOKEHFACTOR)    unitInfo.smokeHpFactor = ToFloat(word_right);
+            if (wordtype == WORD_SQUISH)          unitInfo.canBeSquished = ToBool(word_right);
+            if (wordtype == WORD_CANATTACKAIRUNITS) unitInfo.canAttackAirUnits = ToBool(word_right);
+            if (wordtype == WORD_CANATTACKUNITS)  unitInfo.canAttackUnits = ToBool(word_right);
 
-            if (section == INI_BULLETS && id > -1) {
-                auto [word_left, word_right] = INI_SplitWord(linefeed);
-                wordtype = INI_WordType(word_left, section);
-            
-                // Bullet properties
-                if (wordtype == WORD_DAMAGE_VEHICLE) m_infos->getBulletInfo(id).damage_vehicles = ToInt(word_right);
-                if (wordtype == WORD_DAMAGE_INFANTRY) m_infos->getBulletInfo(id).damage_infantry = ToInt(word_right);
-                if (wordtype == WORD_DEVIATE_PROBABILITY) m_infos->getBulletInfo(id).deviateProbability = ToInt(word_right);
-                if (wordtype == WORD_EXPLOSION_SIZE) m_infos->getBulletInfo(id).explosionSize = ToInt(word_right);
-                if (wordtype == WORD_GROUND_BULLET) m_infos->getBulletInfo(id).groundBullet = ToBool(word_right);
+            if (wordtype == WORD_PRODUCER) {
+                unitInfo.structureTypeItLeavesFrom = cIniUtils::getStructureType(word_right);
             }
+        }
 
-        } // while
-        file.close();
+        if (section == INI_TERRAINS && id > -1) {
+            if (wordtype == WORD_BLOOMTIMERDURATION)    m_infos->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
+            if (wordtype == WORD_TERRAIN_MINSPICE)      m_infos->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
+            if (wordtype == WORD_TERRAIN_MAXSPICE)      m_infos->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
+            if (wordtype == WORD_TERRAINHILL_MINSPICE)  m_infos->getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
+            if (wordtype == WORD_TERRAINHILL_MAXSPICE)  m_infos->getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
+            if (wordtype == WORD_TERRAINWALL_HP)        m_infos->getTerrainInfo()->terrainWallHp = ToInt(word_right);
+        }
+
+        if (section == INI_STRUCTURES && id > -1) {
+            if (wordtype == WORD_HITPOINTS)    m_infos->getStructureInfo(id).hp = ToInt(word_right);
+            if (wordtype == WORD_FIXHP)        m_infos->getStructureInfo(id).fixhp = ToInt(word_right);
+            if (wordtype == WORD_POWERDRAIN)   m_infos->getStructureInfo(id).power_drain = ToInt(word_right);
+            if (wordtype == WORD_HAS_CONCRETE) m_infos->getStructureInfo(id).hasConcrete = ToBool(word_right);
+            if (wordtype == WORD_POWERGIVE)    m_infos->getStructureInfo(id).power_give = ToInt(word_right);
+            if (wordtype == WORD_COST)         m_infos->getStructureInfo(id).cost = ToInt(word_right);
+            if (wordtype == WORD_BUILDTIME)    m_infos->getStructureInfo(id).buildTime = ToInt(word_right);
+            if (wordtype == WORD_CANATTACKAIRUNITS) m_infos->getStructureInfo(id).canAttackAirUnits = ToBool(word_right);
+            if (wordtype == WORD_CANATTACKUNITS)    m_infos->getStructureInfo(id).canAttackGroundUnits = ToBool(word_right);
+            if (wordtype == WORD_SIGHT)        m_infos->getStructureInfo(id).sight = ToInt(word_right);
+            if (wordtype == WORD_RANGE)        m_infos->getStructureInfo(id).range = ToInt(word_right);
+            if (wordtype == WORD_FIRERATE)     m_infos->getStructureInfo(id).fireRate = ToInt(word_right);
+            if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMin = ToInt(word_right);
+            if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMax = ToInt(word_right);
+            if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE)       m_infos->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
+        }
+
+        if (section == INI_BULLETS && id > -1) {
+            if (wordtype == WORD_DAMAGE_VEHICLE)     m_infos->getBulletInfo(id).damage_vehicles = ToInt(word_right);
+            if (wordtype == WORD_DAMAGE_INFANTRY)    m_infos->getBulletInfo(id).damage_infantry = ToInt(word_right);
+            if (wordtype == WORD_DEVIATE_PROBABILITY) m_infos->getBulletInfo(id).deviateProbability = ToInt(word_right);
+            if (wordtype == WORD_EXPLOSION_SIZE)     m_infos->getBulletInfo(id).explosionSize = ToInt(word_right);
+            if (wordtype == WORD_GROUND_BULLET)      m_infos->getBulletInfo(id).groundBullet = ToBool(word_right);
+        }
+
+    } // while
+    file.close();
 
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] Done");
 }
