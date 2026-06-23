@@ -112,6 +112,8 @@
 #define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN 201  // (structures, how many units to spawn if destroyed? (min))
 #define WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX 202  // (structures, how many units to spawn if destroyed? (max))
 #define WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE  203  // (structures, which type of unit to spawn if destroyed?)
+#define WORD_ATTACK_IS_ENTER_STRUCTURE 204  // (unit attacks by entering a structure?)
+#define WORD_DAMAGE_ON_ENTER_STRUCTURE 205  // (damage dealt to structure on entry)
 
 
 #define WORD_BLOOMTIMERDURATION 241 // BLOOM TIMER DURATION

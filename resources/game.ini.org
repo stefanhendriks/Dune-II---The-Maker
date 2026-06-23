@@ -544,6 +544,9 @@ Range=2
 ; supported in the game.ini file yet
 BuildTime=1000
 Cost=0
+; enter-structure attack behaviour (saboteur destroys the structure it enters)
+AttackIsEnterStructure=true
+DamageOnEnterStructure=9999.99
 
 ; ========================================================
 ; Structure types
