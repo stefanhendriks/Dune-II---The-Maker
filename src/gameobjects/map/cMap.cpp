@@ -504,7 +504,8 @@ void cMap::clearShroud(int c, int size, int playerId)
     setVisibleFor(c, playerId);
 
     // go around 360 fDegrees and calculate new stuff.
-    for (float dr = 1; dr < size; dr++) {
+    int maxRadius = (size <= 1) ? size : (size - 1);
+    for (float dr = 1; dr <= maxRadius; dr++) {
         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
             // need a smarter way to do this (less CPU intensive).
 
