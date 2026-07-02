@@ -935,17 +935,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 continue;
             }
             Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Spawning sandworm at {}", cell);
-            // cUnits::unitCreate(cell, SANDWORM, AI_WORM, true);
-            const s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
-                .data = DeployUnitEvent {
-                    .iCell = cell,
-                    .unitType = SANDWORM,
-                    .iPlayer = AI_WORM,
-                    .bOnStart = true
-                }
-            };
-            m_interface->onNotifyGameEvent(event);
+            cUnits::unitCreate(m_objects, m_services->info, m_interface, cell, SANDWORM, AI_WORM, true);
             wormCell = cell; // start from here to spawn new worm
             worms--;
             failures = 0; // reset failures
