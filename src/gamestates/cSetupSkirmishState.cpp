@@ -807,18 +807,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         const s_PlaceResult &result = pPlayer->canPlaceStructureAt(pPlayer->getFocusCell(), CONSTYARD);
         if (!result.success) {
             // when failure, create mcv instead
-            // cUnits::unitCreate(pPlayer->getFocusCell(), MCV, p, true);
-            const s_GameEvent event {
-                .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
-                .data = DeployUnitEvent {
-                    .iCell = pPlayer->getFocusCell(),
-                    .unitType = MCV,
-                    .iPlayer = p,
-                    .bOnStart = true,
-                    .isReinforcement = false
-                }
-            };
-            m_interface->onNotifyGameEvent(event);
+            cUnits::unitCreate(m_objects, m_services->info, m_interface, pPlayer->getFocusCell(), MCV, p, true);
         }
         else {
             pPlayer->placeStructure(pPlayer->getFocusCell(), CONSTYARD, 100);
