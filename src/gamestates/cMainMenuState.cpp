@@ -26,6 +26,8 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_interface != nullptr);
+    m_buildStr = D2TM_BUILD_DATETIME;
+
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
@@ -39,8 +41,6 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
 
     mainMenuWidth = 130;
     mainMenuHeight = 183;
-
-    sdl2power = cRectangle{centerOfScreen+logoWidth/4, logoY+logoHeight+75,0,0};
 
     // adjust x and y according to resolution, we can add because the above values
     // assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
@@ -241,8 +241,11 @@ void cMainMenuState::draw() const
     gui_btn_credits->draw();
 
     // draw version
-    m_textDrawer->drawTextBottomRight(D2TM_VERSION,20);
-    m_textDrawer->drawText(sdl2power.getX(),sdl2power.getY(),Color{255,255,0,200},"SDL2 powered");
+    int fontH = m_textDrawer->getFontHeight();
+    int versionX = m_settings->getScreenW() - m_textDrawer->getTextLength(D2TM_VERSION) - 20;
+    int versionY = m_settings->getScreenH() - fontH * 2 - 42;
+    m_textDrawer->drawText(versionX, versionY, Color{255,255,255,255}, D2TM_VERSION);
+    m_textDrawer->drawTextBottomRight(m_buildStr, 20);
 
     if (m_settings->isDebugMode()) {
         auto m_mouse = m_interface->getMouse();
