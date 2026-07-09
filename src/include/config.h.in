@@ -5,3 +5,4 @@
 #include <string>
 
 const std::string D2TM_VERSION = "@D2TM_VERSION@";
+const std::string D2TM_BUILD_DATETIME = "@D2TM_BUILD_DATETIME@";

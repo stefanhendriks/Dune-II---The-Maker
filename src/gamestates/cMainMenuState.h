@@ -6,6 +6,7 @@
 #include "controls/sMouseEvent.h"
 
 #include <memory>
+#include <string>
 
 class Texture;
 class cTextDrawer;
@@ -39,11 +40,10 @@ private:
     int mainMenuWidth;
     int mainMenuHeight;
 
-    cRectangle sdl2power;
-
     std::unique_ptr<GuiWindow> gui_window;
     std::unique_ptr<GuiButton> gui_btn_credits;
 
     Texture *bmp_D2TM_Title;
     Texture *backGroundDebug = nullptr;
+    std::string m_buildStr;
 };

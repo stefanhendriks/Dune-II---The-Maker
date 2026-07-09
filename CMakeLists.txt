@@ -19,6 +19,8 @@ endif()
 
 message(STATUS "D2TM-Version determined to be: ${D2TM_VERSION}")
 
+string(TIMESTAMP D2TM_BUILD_DATETIME "Built at %d-%m-%Y %H:%M:%S")
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
