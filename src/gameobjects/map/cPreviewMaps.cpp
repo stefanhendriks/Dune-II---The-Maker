@@ -101,6 +101,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
     }
 
+    int validStartCells = 0;
     for (int i = 0; i < std::min(static_cast<int>(numbers.size()), MAX_SKIRMISHMAP_PLAYERS); i++) {
         try {
             int startCell = numbers[i];
@@ -110,12 +111,18 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             }
             else {
                 previewMap->iStartCell[i] = startCell;
+                validStartCells++;
             }
         }
         catch (std::invalid_argument const &e) {
             // could not perform conversion
             Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert startCell [{}] to an int. Reason: {}", numbers[i], e.what());
         }
+    }
+
+    if (validStartCells < 2) {
+        previewMap->validMap = false;
+        Logger::warn(COMP_MAP, "cPreviewMaps", "Map {} has only {} valid start cell(s); at least 2 are required - map is invalid", filename, validStartCells);
     }
 
     previewMap->width = maxWidth + 2;
