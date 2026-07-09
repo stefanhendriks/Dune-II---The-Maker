@@ -277,7 +277,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
-                if (iSkirmishMap > -1) {
+                if (iSkirmishMap > -1 && m_previewMaps->getMap(iSkirmishMap)->validMap) {
                     prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
                 }
             })
