@@ -6,7 +6,6 @@
 #include "controls/sMouseEvent.h"
 
 #include <memory>
-#include <string>
 
 class Texture;
 class cTextDrawer;
@@ -45,5 +44,4 @@ private:
 
     Texture *bmp_D2TM_Title;
     Texture *backGroundDebug = nullptr;
-    std::string m_buildStr;
 };

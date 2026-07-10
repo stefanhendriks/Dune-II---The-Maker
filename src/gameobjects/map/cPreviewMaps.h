@@ -37,6 +37,7 @@ public:
     void destroy();
 
     s_PreviewMap *getMap(int i);
+    bool isValidMap(int i) const;
 
     std::string getMapSize(int i) const;
     int getMapCount() const;

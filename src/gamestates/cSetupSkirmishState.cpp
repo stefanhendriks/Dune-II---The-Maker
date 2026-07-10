@@ -277,7 +277,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
-                if (iSkirmishMap > -1 && m_previewMaps->getMap(iSkirmishMap)->validMap) {
+                if (m_previewMaps->isValidMap(iSkirmishMap)) {
                     prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
                 }
             })
@@ -1477,7 +1477,7 @@ void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             moveCursor(0, 1);
         }
         if (event.isAction(eKeyAction::MENU_CONFIRM)) {
-            if (iSkirmishMap > -1 && m_previewMaps->getMap(iSkirmishMap)->validMap) {
+            if (m_previewMaps->isValidMap(iSkirmishMap)) {
                 prepareSkirmishGameToPlayAndTransitionToCombatState(iSkirmishMap);
             }
         }
