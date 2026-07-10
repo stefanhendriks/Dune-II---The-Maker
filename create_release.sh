@@ -46,7 +46,7 @@ cp resources/bin/skirmish/*.ini bin/skirmish
 echo "10. Copying dll files"
 echo "TODO TODO TODO"
 echo "11. Copy executable"
-cp build/d2tm bin
+cp -p build/d2tm bin
 echo "12. Copy game rules file (game.ini)"
 cp resources/game.ini.org bin/game.ini
 cp resources/bin/settings.ini bin
