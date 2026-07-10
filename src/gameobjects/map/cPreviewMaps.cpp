@@ -36,6 +36,14 @@ s_PreviewMap *cPreviewMaps::getMap(int i)
     return m_PreviewMap[i].get();
 }
 
+bool cPreviewMaps::isValidMap(int i) const
+{
+    if (i < 0 || i >= static_cast<int>(m_PreviewMap.size()) || m_PreviewMap[i] == nullptr) {
+        return false;
+    }
+    return m_PreviewMap[i]->validMap;
+}
+
 int cPreviewMaps::getMapCount() const
 {
     return static_cast<int>(m_PreviewMap.size()-1); // -1 because the first map is reserved for the random map, which is not a real skirmish map

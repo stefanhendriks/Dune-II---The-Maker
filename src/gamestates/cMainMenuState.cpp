@@ -26,8 +26,6 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_interface != nullptr);
-    m_buildStr = D2TM_BUILD_DATETIME;
-
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
@@ -245,7 +243,7 @@ void cMainMenuState::draw() const
     int versionX = m_settings->getScreenW() - m_textDrawer->getTextLength(D2TM_VERSION) - 20;
     int versionY = m_settings->getScreenH() - fontH * 2 - 42;
     m_textDrawer->drawText(versionX, versionY, Color{255,255,255,255}, D2TM_VERSION);
-    m_textDrawer->drawTextBottomRight(m_buildStr, 20);
+    m_textDrawer->drawTextBottomRight(D2TM_BUILD_DATETIME, 20);
 
     if (m_settings->isDebugMode()) {
         auto m_mouse = m_interface->getMouse();
