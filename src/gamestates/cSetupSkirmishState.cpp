@@ -1232,7 +1232,7 @@ void cSetupSkirmishState::surpriseMe()
     int mapCount = m_previewMaps->getMapCount();
     std::vector<int> validIndices;
     for (int i = 0; i < mapCount; i++) {
-        if (m_previewMaps->getMap(i)->validMap) {
+        if (m_previewMaps->isValidMap(i)) {
             validIndices.push_back(i);
         }
     }
