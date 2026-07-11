@@ -377,6 +377,9 @@ void cGamePlaying::evaluatePlayerStatus()
             bool isStillAlive = player->evaluateStillAlive();
 
             if (isAlive && !isStillAlive) {
+                Logger::info(COMP_GAME, "evaluatePlayerStatus",
+                    "Player {} ({}) marked defeated: no alive structures or non-carried ground units remain.",
+                    player->getId(), player->getHouseName());
                 onPlayerDefeated(player);
             }
             // TODO: event : Player joined/became alive, etc?

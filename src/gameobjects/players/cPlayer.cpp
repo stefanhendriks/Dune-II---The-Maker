@@ -1,4 +1,5 @@
 #include "cPlayer.h"
+#include "gameobjects/units/UnitAliveCheck.hpp"
 
 #include "building/cItemBuilder.h"
 #include "game/cGameInterface.h"
@@ -2474,8 +2475,7 @@ bool cPlayer::hasAliveUnit() {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->isAirbornUnit()) continue; // do not count airborn units
-        if (pUnit->isDead()) continue; // in case we have some 'half-dead' units that got pass the isValid check...
-        // a better way for this would be to have such units in a separate collection.
+        if (!unitCountsAsAliveForDefeat(pUnit->isDead(), pUnit->isCarried())) continue;
         if (!pUnit->belongsTo(this)) continue;
         return true;
     }
