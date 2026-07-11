@@ -2,6 +2,7 @@ find_package(Catch2 3 REQUIRED)
 
 # Test files
 set(TEST_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_UnitAliveCheck.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniUtils.cpp

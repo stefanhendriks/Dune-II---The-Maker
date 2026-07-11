@@ -481,6 +481,10 @@ public:
 
     bool isHidden();
 
+    // Alias for isHidden(): unit is temporarily off the map (in a carryall or structure)
+    // but is still alive and will return. Use this name when the intent matters.
+    bool isCarried() { return isHidden(); }
+
     bool requiresRepairing();
 
     void repair(int hp);
