@@ -2258,8 +2258,8 @@ void cUnit::think_attack()
             return;
         }
 
-        // no longer valid, or dead
-        if (!attackUnit->isValid() || attackUnit->isDead()) {
+        // no longer valid, dead, or off the map (in carryall/structure)
+        if (!attackUnit->isValid() || attackUnit->isDead() || attackUnit->isHidden()) {
             actionGuard();
             return;
         }
@@ -2382,8 +2382,8 @@ void cUnit::think_attack_sandworm()
         return;
     }
 
-    // no longer valid, or dead
-    if (!attackUnit->isValid() || attackUnit->isDead()) {
+    // no longer valid, dead, or off the map (in carryall/structure)
+    if (!attackUnit->isValid() || attackUnit->isDead() || attackUnit->isHidden()) {
         actionGuard();
         return;
     }
