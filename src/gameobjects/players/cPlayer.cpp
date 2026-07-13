@@ -1,5 +1,4 @@
 #include "cPlayer.h"
-#include "gameobjects/units/UnitAliveCheck.hpp"
 
 #include "building/cItemBuilder.h"
 #include "game/cGameInterface.h"
@@ -1838,7 +1837,7 @@ bool cPlayer::hasAnyUnitSelected() {
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
-        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (pUnit->isSelected()) {
@@ -2343,7 +2342,7 @@ std::vector<int> cPlayer::getAllMyUnitsForType(int unitType) const
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
-        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
 
@@ -2364,7 +2363,7 @@ std::vector<int> cPlayer::getInfantryUnitsOnMap() const
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
-        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isInfantryUnit()) continue;
@@ -2380,7 +2379,7 @@ std::vector<int> cPlayer::getWheelUnitsOnMap() const
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
-        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isWheelUnit()) continue;
@@ -2396,7 +2395,7 @@ std::vector<int> cPlayer::getTankUnitsOnMap() const
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
-        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isTankUnit()) continue;
@@ -2412,7 +2411,7 @@ std::vector<int> cPlayer::getLauncherUnitsOnMap() const
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
-        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isLauncherUnit()) continue;
@@ -2428,7 +2427,7 @@ std::vector<int> cPlayer::getHarvesterUnitsOnMap() const
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
-        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isHarvester()) continue;
@@ -2449,7 +2448,7 @@ std::vector<int> cPlayer::getAttackingUnitsOnMap() const
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
-        if (pUnit->isDead() && !pUnit->isHidden()) continue; // hidden units play "dead" :/
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isAttackingUnit()) continue;
@@ -2475,7 +2474,7 @@ bool cPlayer::hasAliveUnit() {
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit->isValid()) continue;
         if (pUnit->isAirbornUnit()) continue; // do not count airborn units
-        if (!unitCountsAsAliveForDefeat(pUnit->isDead(), pUnit->isCarried())) continue;
+        if (pUnit->isDead()) continue;
         if (!pUnit->belongsTo(this)) continue;
         return true;
     }

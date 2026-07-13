@@ -379,14 +379,8 @@ public:
         iHitPoints = hp;
     }
 
-    /**
-     * Returns true if dead (ie hitpoints <= 0). Also notice, this *ALSO* returns true (for now) when a
-     * unit is picked up by a carry-all. It is made 'deadish' by setting the iHitpoints to < 0 and remembering
-     * the hitpoints in the tempHitpoints variable.
-     * @return
-     */
     bool isDead() {
-        return iHitPoints <= 0;
+        return iHitPoints <= 0 && iTempHitPoints < 0;
     }
 
     bool isDamaged();
@@ -480,10 +474,6 @@ public:
     std::string getHarvesterStatusForMessageBar();
 
     bool isHidden();
-
-    // Alias for isHidden(): unit is temporarily off the map (in a carryall or structure)
-    // but is still alive and will return. Use this name when the intent matters.
-    bool isCarried() { return isHidden(); }
 
     bool requiresRepairing();
 
