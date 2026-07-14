@@ -475,6 +475,10 @@ public:
 
     bool isHidden();
 
+    bool isAlive() {
+        return isValid() && !isDead() && !isHidden();
+    }
+
     bool requiresRepairing();
 
     void repair(int hp);
