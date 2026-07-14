@@ -433,9 +433,7 @@ std::vector<int> cPlayer::getAllMyUnitsForGroupNr(const int groupId) const
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
-        if (!pUnit->isValid()) continue;
-        if (pUnit->isDead()) continue;
-        if (pUnit->isHidden()) continue;
+        if (!pUnit->isAlive()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
 
@@ -451,12 +449,10 @@ std::vector<int> cPlayer::getAllMyUnitsWithinViewportRect(const cRectangle &rect
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
-        if (!pUnit->isValid()) continue;
-        if (pUnit->isDead()) continue;
+        if (!pUnit->isAlive()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
 
-        if (pUnit->isHidden()) continue;
         if (!rect.isPointWithin(pUnit->center_draw_x(), pUnit->center_draw_y())) {
             continue;
         }
@@ -471,13 +467,11 @@ std::vector<int> cPlayer::getInfantryUnitsOnViewport(const cRectangle &rect) con
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
-        if (!pUnit->isValid()) continue;
-        if (pUnit->isDead()) continue;
+        if (!pUnit->isAlive()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isInfantryUnit()) continue;
 
-        if (pUnit->isHidden()) continue;
         if (!rect.isPointWithin(pUnit->center_draw_x(), pUnit->center_draw_y())) {
             continue;
         }
@@ -492,13 +486,11 @@ std::vector<int> cPlayer::getWheelUnitsOnViewport(const cRectangle &rect) const
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
-        if (!pUnit->isValid()) continue;
-        if (pUnit->isDead()) continue;
+        if (!pUnit->isAlive()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isWheelUnit()) continue;
 
-        if (pUnit->isHidden()) continue;
         if (!rect.isPointWithin(pUnit->center_draw_x(), pUnit->center_draw_y())) {
             continue;
         }
@@ -513,13 +505,11 @@ std::vector<int> cPlayer::getTankUnitsOnViewport(const cRectangle &rect) const
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
-        if (!pUnit->isValid()) continue;
-        if (pUnit->isDead()) continue;
+        if (!pUnit->isAlive()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isTankUnit()) continue;
 
-        if (pUnit->isHidden()) continue;
         if (!rect.isPointWithin(pUnit->center_draw_x(), pUnit->center_draw_y())) {
             continue;
         }
@@ -534,13 +524,11 @@ std::vector<int> cPlayer::getLauncherUnitsOnViewport(const cRectangle &rect) con
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
-        if (!pUnit->isValid()) continue;
-        if (pUnit->isDead()) continue;
+        if (!pUnit->isAlive()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isLauncherUnit()) continue;
 
-        if (pUnit->isHidden()) continue;
         if (!rect.isPointWithin(pUnit->center_draw_x(), pUnit->center_draw_y())) {
             continue;
         }
@@ -555,13 +543,11 @@ std::vector<int> cPlayer::getHarvesterUnitsOnViewport(const cRectangle &rect) co
     std::vector<int> ids = std::vector<int>();
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
-        if (!pUnit->isValid()) continue;
-        if (pUnit->isDead()) continue;
+        if (!pUnit->isAlive()) continue;
         if (!pUnit->belongsTo(this)) continue;
         if (pUnit->isMarkedForRemoval()) continue; // do not count marked for removal units
         if (!pUnit->isHarvester()) continue;
 
-        if (pUnit->isHidden()) continue;
         if (!rect.isPointWithin(pUnit->center_draw_x(), pUnit->center_draw_y())) {
             continue;
         }

@@ -67,7 +67,7 @@ void cGunTurret::think_animation()
 void cGunTurret::think_attack()
 {
     cUnit *unitTarget = m_objects->getUnit(iTargetID);
-    if (unitTarget->isValid() && !unitTarget->isDead() && !unitTarget->isHidden()) {
+    if (unitTarget->isAlive()) {
         int iCellX = m_objects->getMapGeometry()->getCellX(getCell());
         int iCellY = m_objects->getMapGeometry()->getCellY(getCell());
 
@@ -144,7 +144,7 @@ void cGunTurret::think_fire()
     bool lowPower = !getPlayer()->bEnoughPower();
 
     cUnit *unitTarget = m_objects->getUnit(iTargetID);
-    if (unitTarget->isValid() && !unitTarget->isDead() && !unitTarget->isHidden()) {
+    if (unitTarget->isAlive()) {
         TIMER_fire++;
 
         int iDistance = m_objects->getMapGeometry()->distance(getCell(), unitTarget->getCell());
