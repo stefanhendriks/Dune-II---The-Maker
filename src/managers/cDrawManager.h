@@ -130,7 +130,7 @@ private:
     cPlayer *m_player = nullptr;
     GameContext *m_ctx = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
-    SDLDrawer* m_renderDrawer = nullptr;
+    SDLDrawer* m_sdlDrawer = nullptr;
     Graphics* m_gfxinter = nullptr;
     Graphics* m_gfxdata = nullptr;
     cMouseDrawer* m_mouseDrawer = nullptr;

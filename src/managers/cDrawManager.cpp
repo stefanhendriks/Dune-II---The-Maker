@@ -33,7 +33,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     m_player(thePlayer),
     m_ctx(ctx),
     m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
-    m_renderDrawer(ctx->getSDLDrawer()),
+    m_sdlDrawer(ctx->getSDLDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_gameInterface(ctx->getGameInterface()),
@@ -46,7 +46,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     d2tm_assert(m_player!=nullptr);
     d2tm_assert(ctx != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
-    d2tm_assert(m_renderDrawer != nullptr);
+    d2tm_assert(m_sdlDrawer != nullptr);
     d2tm_assert(m_gfxdata != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
     d2tm_assert(m_gameInterface != nullptr);
@@ -94,7 +94,7 @@ cDrawManager::~cDrawManager()
 void cDrawManager::drawCombatState()
 {
     // MAP
-    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, m_mapCamera->getWindowWidth(), m_gameSettings->getScreenH());
+    m_sdlDrawer->setClippingFor(0, cSideBar::TopBarHeight, m_mapCamera->getWindowWidth(), m_gameSettings->getScreenH());
     m_mapDrawer->drawTerrain();
 
     m_structureDrawer->drawStructuresFirstLayer();
@@ -118,16 +118,16 @@ void cDrawManager::drawCombatState()
 
     drawRallyPoint();
 
-    m_renderDrawer->resetClippingFor();
+    m_sdlDrawer->resetClippingFor();
 
     // GUI
     drawSidebar();
 
     drawOptionBar();
 
-    m_renderDrawer->setClippingFor(0, cSideBar::TopBarHeight, m_mapCamera->getWindowWidth(), m_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
+    m_sdlDrawer->setClippingFor(0, cSideBar::TopBarHeight, m_mapCamera->getWindowWidth(), m_mapCamera->getWindowHeight() + cSideBar::TopBarHeight);
     drawStructurePlacing();
-    m_renderDrawer->resetClippingFor();
+    m_sdlDrawer->resetClippingFor();
 
     drawTopBarBackground();
     drawCredits();
@@ -135,7 +135,7 @@ void cDrawManager::drawCombatState()
     // THE MESSAGE
     drawMessage();
 
-    m_renderDrawer->resetClippingFor();
+    m_sdlDrawer->resetClippingFor();
 
     if (m_gameSettings->isDrawUsages()) {
         drawDebugInfoUsages();
@@ -204,7 +204,7 @@ void cDrawManager::drawRallyPoint()
     int rallyPointWidthScaled = m_mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = m_mapCamera->factorZoomLevel(mouseMoveBitmap->h);
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
-    m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
 
     int startX = theStructure->iDrawX() + m_mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
     int startY = theStructure->iDrawY() + m_mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
@@ -216,15 +216,15 @@ void cDrawManager::drawRallyPoint()
     int endX = drawX;
     int endY = drawY;
 
-    m_renderDrawer->renderLine( startX, startY, endX, endY, m_objects->getPlayer(HUMAN)->getMinimapColor());
+    m_sdlDrawer->renderLine( startX, startY, endX, endY, m_objects->getPlayer(HUMAN)->getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()
 {
-    m_renderDrawer->setClippingFor(m_gameSettings->getScreenW() - cSideBar::SidebarWidth, 0, m_gameSettings->getScreenW(), m_gameSettings->getScreenH());
+    m_sdlDrawer->setClippingFor(m_gameSettings->getScreenW() - cSideBar::SidebarWidth, 0, m_gameSettings->getScreenW(), m_gameSettings->getScreenH());
     m_sidebarDrawer->draw();
     m_miniMapDrawer->draw();
-    m_renderDrawer->resetClippingFor();
+    m_sdlDrawer->resetClippingFor();
 }
 
 /**
@@ -268,10 +268,10 @@ void cDrawManager::drawTopBarBackground()
 {
     Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
     for (int x = 0; x < m_gameSettings->getScreenW(); x+= topbarPiece->w) {
-        m_renderDrawer->renderSprite(topbarPiece, x, 0);
+        m_sdlDrawer->renderSprite(topbarPiece, x, 0);
     }
 
-    m_renderDrawer->renderSprite(m_btnOptions, 1, 0);
+    m_sdlDrawer->renderSprite(m_btnOptions, 1, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -294,11 +294,11 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 void cDrawManager::drawOptionBar()
 {
     // upper bar
-    m_renderDrawer->renderRectFillColor(0, 0, m_gameSettings->getScreenW(), cSideBar::TopBarHeight, Color{0, 0, 0,255});
-    m_renderDrawer->renderRectFillColor(0,m_gameSettings->getScreenW(), 40,32, Color{214,149,20,255});
+    m_sdlDrawer->renderRectFillColor(0, 0, m_gameSettings->getScreenW(), cSideBar::TopBarHeight, Color{0, 0, 0,255});
+    m_sdlDrawer->renderRectFillColor(0,m_gameSettings->getScreenW(), 40,32, Color{214,149,20,255});
 
     for (int w = 0; w < (m_gameSettings->getScreenW() + 800); w += 789) {
-        m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
     }
 }
 

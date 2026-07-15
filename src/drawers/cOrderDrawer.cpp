@@ -14,13 +14,13 @@
 
 cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
     m_ctx(ctx),
-    m_renderDrawer(ctx->getSDLDrawer()),
+    m_sdlDrawer(ctx->getSDLDrawer()),
     m_player(player)
 {
     d2tm_assert(player != nullptr);
     d2tm_assert(ctx != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderDrawer, player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
+    m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = m_buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
@@ -41,11 +41,11 @@ void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
     cOrderProcesser *orderProcesser = thePlayer->getOrderProcesser();
 
     d2tm_assert(orderProcesser);
-    m_renderDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
+    m_sdlDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
 
     bool canOrder = orderProcesser->canPlaceOrder();
     if (!canOrder) {
-        m_renderDrawer->renderRectFillColor(m_buttonRect, Color::Black, 128);
+        m_sdlDrawer->renderRectFillColor(m_buttonRect, Color::Black, 128);
     }
 
     if (m_isMouseOverOrderButton && canOrder) {
@@ -60,8 +60,8 @@ void cOrderDrawer::drawRectangleOrderButton()
     int width = m_buttonRect.getWidth();
     int height = m_buttonRect.getHeight();
     Color color = m_player->getHouseFadingColor();
-    m_renderDrawer->renderRectColor(x, y, width, height, color);
-    m_renderDrawer->renderRectColor(x+1, y+1, width-2, height-2, color);
+    m_sdlDrawer->renderRectColor(x, y, width, height, color);
+    m_sdlDrawer->renderRectColor(x+1, y+1, width-2, height-2, color);
 }
 
 void cOrderDrawer::onMouseAt(const s_MouseEvent &event)

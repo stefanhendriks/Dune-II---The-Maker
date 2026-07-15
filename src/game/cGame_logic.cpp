@@ -436,7 +436,7 @@ void cGame::drawState()
 {
     if (m_cScreenFader->getAction() == eFadeAction::FadeOut) {
         if (screenTexture) {
-            m_renderDrawer->renderSprite(screenTexture,0,0,m_cScreenFader->getAlpha());
+            m_sdlDrawer->renderSprite(screenTexture,0,0,m_cScreenFader->getAlpha());
         }
         return;
     }
@@ -459,8 +459,8 @@ void cGame::drawState()
 */
 void cGame::run()
 {
-    actualRenderer = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
-    screenTexture = m_renderDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
+    actualRenderer = m_sdlDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
+    screenTexture = m_sdlDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
     SDL_Event event;
     while (m_gameSettings->m_playing) {
         if (m_focusManager->isGameWindowActive()) {
@@ -507,15 +507,15 @@ void cGame::run()
         m_currentState->update();
         //Logger::print(LOG_INFO , COMP_NONE, "m_currentState", "m_currentState {}", gameStateToString(m_currentState->getType()));
 
-        m_renderDrawer->beginDrawingToTexture(actualRenderer);
-        m_renderDrawer->renderClearToColor();
+        m_sdlDrawer->beginDrawingToTexture(actualRenderer);
+        m_sdlDrawer->renderClearToColor();
         drawState(); // run game state, includes interaction + drawing
         transitionStateIfRequired();
         shakeScreenAndBlitBuffer();
 
-        m_renderDrawer->endDrawingToTexture();
-        m_renderDrawer->renderClearToColor();  // SDL3 persists its intermediate texture between frames; clear before composite
-        m_renderDrawer->renderSprite(actualRenderer, m_screenShake->getX(), m_screenShake->getY());
+        m_sdlDrawer->endDrawingToTexture();
+        m_sdlDrawer->renderClearToColor();  // SDL3 persists its intermediate texture between frames; clear before composite
+        m_sdlDrawer->renderSprite(actualRenderer, m_screenShake->getX(), m_screenShake->getY());
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
     }
@@ -633,11 +633,11 @@ bool cGame::setupGame()
     // share Graphics to all class what use ctx !
     ctx->setGraphicsContext(context->createGraphicsContext());
     // creation SDLDrawer and send it to GameContext, so it can be used by all classes that have access to GameContext
-    std::unique_ptr<SDLDrawer> renderDrawer = std::make_unique<SDLDrawer>(renderer);
-    m_renderDrawer = renderDrawer.get();
-    ctx->setSDLDrawer(std::move(renderDrawer));
+    std::unique_ptr<SDLDrawer> sdlDrawer = std::make_unique<SDLDrawer>(renderer);
+    m_sdlDrawer = sdlDrawer.get();
+    ctx->setSDLDrawer(std::move(sdlDrawer));
     // share Text to all class what use ctx !
-    ctx->setTextContext(context->createTextContext(m_gameSettings.get(), m_renderDrawer));
+    ctx->setTextContext(context->createTextContext(m_gameSettings.get(), m_sdlDrawer));
     //m_gameObjectsContext->getMap()->setGameContext(ctx.get());
 
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
@@ -652,16 +652,16 @@ bool cGame::setupGame()
         m_soundPlayer->setMusicEnabled(false);
     }
 
-    m_notificationArea->setDrawer(m_renderDrawer);
+    m_notificationArea->setDrawer(m_sdlDrawer);
     m_guiConsole = std::make_unique<GuiConsole>(
-        m_renderDrawer,
+        m_sdlDrawer,
         m_textDrawer,
         m_notificationArea.get(),
         m_gameSettings->getScreenW(),
         m_gameSettings->getScreenH());
 
     auto previewMaps = m_gameObjectsContext->getPreviewMaps();
-    previewMaps->setRenderDrawer(m_renderDrawer); // inject render drawer into cPreviewMaps that is part of game objects context, so it can be used to create textures for map previews
+    previewMaps->setSDLDrawer(m_sdlDrawer); // inject render drawer into cPreviewMaps that is part of game objects context, so it can be used to create textures for map previews
     previewMaps->loadSkirmishMaps(); // load skirmish maps, so they are ready when we need them in the skirmish setup state
 
     // do it here, because it depends on fonts to be loaded
@@ -725,7 +725,7 @@ bool cGame::setupGame()
     m_mouse->setMouseObserver(this);
     m_keyboard->setKeyboardObserver(this);
 
-    // I need m_renderDrawer to create cPreviewMaps
+    // I need m_sdlDrawer to create cPreviewMaps
     // m_PreviewMaps = std::make_shared<cPreviewMaps>();
 
     // m_gameObjectsContext->getMap()->setGameContext(ctx.get());
@@ -1630,16 +1630,16 @@ void cGame::initiateFadingOut()
 {
     m_cScreenFader->startFadeOut();
 
-    m_renderDrawer->beginDrawingToTexture(screenTexture);
+    m_sdlDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderTexture(renderer, actualRenderer->tex.get(), nullptr, nullptr);
-    m_renderDrawer->endDrawingToTexture();
+    m_sdlDrawer->endDrawingToTexture();
 }
 
 void cGame::takeBackGroundScreen()
 {
-    m_renderDrawer->beginDrawingToTexture(screenTexture);
+    m_sdlDrawer->beginDrawingToTexture(screenTexture);
     SDL_RenderTexture(renderer, actualRenderer->tex.get(), nullptr, nullptr);
-    m_renderDrawer->endDrawingToTexture();
+    m_sdlDrawer->endDrawingToTexture();
 }
 
 s_DataCampaign* cGame::getDataCampaign() const

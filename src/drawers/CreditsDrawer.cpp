@@ -20,7 +20,7 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
-    m_renderDrawer(ctx->getSDLDrawer())
+    m_sdlDrawer(ctx->getSDLDrawer())
 {
     d2tm_assert(player!= nullptr);
     d2tm_assert(ctx != nullptr);
@@ -190,11 +190,11 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
 void CreditsDrawer::draw()
 {
     auto *tex = m_gfxinter->getTexture(CREDITS_BAR);
-    m_renderDrawer->renderSprite(tex, m_drawX, m_drawY);
-    m_renderDrawer->setClippingFor(m_drawX+1, m_drawY+5, m_drawX+tex->w-1, m_drawY+tex->h-5);
+    m_sdlDrawer->renderSprite(tex, m_drawX, m_drawY);
+    m_sdlDrawer->setClippingFor(m_drawX+1, m_drawY+5, m_drawX+tex->w-1, m_drawY+tex->h-5);
     drawCurrentCredits(m_drawX, m_drawY);
     drawPreviousCredits(m_drawX, m_drawY);
-    m_renderDrawer->resetClippingFor();
+    m_sdlDrawer->resetClippingFor();
 
 }
 
@@ -255,7 +255,7 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            m_renderDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
         }
     }
 }
@@ -289,7 +289,7 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
         int nr = getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            m_renderDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
         }
     }
 }
