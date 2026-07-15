@@ -37,7 +37,7 @@ protected:
     int determinePreBuildAnimationIndex(cAbstractStructure *structure);
 
 private:
-    SDLDrawer* m_renderDrawer;
+    SDLDrawer* m_sdlDrawer;
     cTextDrawer* m_textDrawer;
     Graphics *m_gfxinter;
     Graphics *m_gfxdata;

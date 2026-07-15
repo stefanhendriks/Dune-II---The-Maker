@@ -36,7 +36,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
     m_mapCamera(mapCamera),
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
-    m_renderDrawer(ctx->getSDLDrawer()),
+    m_sdlDrawer(ctx->getSDLDrawer()),
     m_status(eMinimapStatus::NOTAVAILABLE),
     m_iStaticFrame(STAT14),
     m_iTrans(0)
@@ -67,7 +67,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
     //std::cout << "Minimap top left corner: (" << m_RectMinimap.getX() << ", " << m_RectMinimap.getY() << ", " << m_RectMinimap.getWidth() << ", " << m_RectMinimap.getHeight() << ")" << std::endl;
     //std::cout << "RectFullMinimap: (" << m_RectFullMinimap.getX() << ", " << m_RectFullMinimap.getY() << ", " << m_RectFullMinimap.getWidth() << ", " << m_RectFullMinimap.getHeight() << ")" << std::endl;
-    m_mipMapTex = m_renderDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
+    m_mipMapTex = m_sdlDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
 }
 
 cMiniMapDrawer::~cMiniMapDrawer()
@@ -94,7 +94,7 @@ void cMiniMapDrawer::draw()
         return;
     }
 
-    m_renderDrawer->renderRectFillColor(m_RectFullMinimap, Color::Black);
+    m_sdlDrawer->renderRectFillColor(m_RectFullMinimap, Color::Black);
 
     if (m_status == eMinimapStatus::POWERUP || m_status == eMinimapStatus::RENDERMAP || m_status == eMinimapStatus::POWERDOWN) {
         drawTerrain();
@@ -105,7 +105,7 @@ void cMiniMapDrawer::draw()
         cleanDrawTerrain();
         drawUnitsAndStructures(true);
     }
-    m_renderDrawer->renderStrechFullSprite(m_mipMapTex, m_RectMinimap);
+    m_sdlDrawer->renderStrechFullSprite(m_mipMapTex, m_RectMinimap);
 
     drawStaticFrame();
     drawViewPortRectangle();
@@ -118,7 +118,7 @@ void cMiniMapDrawer::drawStaticFrame()
     if (m_status == eMinimapStatus::LOWPOWER) return;
 
     if (m_status == eMinimapStatus::POWERDOWN) {
-        m_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_iStaticFrame), m_RectFullMinimap);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_iStaticFrame), m_RectFullMinimap);
         return;
     }
 
@@ -132,7 +132,7 @@ void cMiniMapDrawer::drawStaticFrame()
 
     // non-stat01 frames are drawn transparent
     if (m_iStaticFrame != STAT01) {
-        m_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_iStaticFrame), m_RectFullMinimap,m_iTrans);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_iStaticFrame), m_RectFullMinimap,m_iTrans);
     }
 }
 
@@ -236,7 +236,7 @@ void cMiniMapDrawer::onNotifyMouseEvent(const s_MouseEvent &event)
 
 void cMiniMapDrawer::drawTerrain()
 {
-    m_renderDrawer->beginDrawingToTexture(m_mipMapTex);
+    m_sdlDrawer->beginDrawingToTexture(m_mipMapTex);
     Color iColor = Color{0, 0, 0,255};
 
     for (int x = 0; x < (m_map->getWidth()); x++) {
@@ -255,10 +255,10 @@ void cMiniMapDrawer::drawTerrain()
                 iColor = Color{0, 0, 0,255};
             }
 
-            m_renderDrawer->renderDot(x, y, iColor, 1);
+            m_sdlDrawer->renderDot(x, y, iColor, 1);
         }
     }
-    m_renderDrawer->endDrawingToTexture();
+    m_sdlDrawer->endDrawingToTexture();
 }
 
 void cMiniMapDrawer::drawViewPortRectangle()
@@ -295,7 +295,7 @@ void cMiniMapDrawer::drawViewPortRectangle()
     if (startY + minimapHeight > m_RectFullMinimap.getEndY()) {
         minimapHeight = m_RectFullMinimap.getEndY() - startY;
     }
-    m_renderDrawer->renderRectColor(startX, startY, minimapWidth, minimapHeight, Color{255, 255, 255,255});
+    m_sdlDrawer->renderRectColor(startX, startY, minimapWidth, minimapHeight, Color{255, 255, 255,255});
 }
 
 /**
@@ -304,7 +304,7 @@ void cMiniMapDrawer::drawViewPortRectangle()
  * @param playerOnly (if false, draws all other players than player)
  */
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
-    m_renderDrawer->beginDrawingToTexture(m_mipMapTex);
+    m_sdlDrawer->beginDrawingToTexture(m_mipMapTex);
     const Color black = Color::Black;
     for (int x = 0; x < m_map->getWidth(); x++) {
         for (int y = 0; y < m_map->getHeight(); y++) {
@@ -360,10 +360,10 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
             if (iColor.r == black.r && iColor.g == black.g && iColor.b == black.b) {
                 continue;
             }
-            m_renderDrawer->renderDot(x, y, iColor, 1);
+            m_sdlDrawer->renderDot(x, y, iColor, 1);
         }
     }
-    m_renderDrawer->endDrawingToTexture();
+    m_sdlDrawer->endDrawingToTexture();
 }
 
 Color cMiniMapDrawer::getRGBColorForTerrainType(int terrainType)
@@ -476,9 +476,9 @@ void cMiniMapDrawer::onMousePressedRight(const s_MouseEvent &event)
 }
 
 void cMiniMapDrawer::cleanDrawTerrain() const {
-    m_renderDrawer->beginDrawingToTexture(m_mipMapTex);
-    m_renderDrawer->renderClearToColor(Color::Black);
-    m_renderDrawer->endDrawingToTexture();
+    m_sdlDrawer->beginDrawingToTexture(m_mipMapTex);
+    m_sdlDrawer->renderClearToColor(Color::Black);
+    m_sdlDrawer->endDrawingToTexture();
 }
 
 int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)

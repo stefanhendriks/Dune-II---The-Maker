@@ -96,7 +96,7 @@ public:
 private:
     cInputObserver *m_mouseObserver = nullptr;
     GameContext* m_ctx = nullptr;
-    SDLDrawer* m_renderDrawer = nullptr;
+    SDLDrawer* m_sdlDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
 
     bool m_leftButtonPressed;

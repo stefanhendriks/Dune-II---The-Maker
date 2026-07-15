@@ -32,7 +32,7 @@ private:
 
     bool m_isMouseOverOrderButton;
     GameContext *m_ctx;
-    SDLDrawer *m_renderDrawer;
+    SDLDrawer *m_sdlDrawer;
     cPlayer *m_player;
     cRectangle m_buttonRect;
     Texture *m_buttonBitmap;

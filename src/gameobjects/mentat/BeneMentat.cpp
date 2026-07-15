@@ -28,7 +28,7 @@ BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : Abstrac
             .withRect(*leftButton)
             .withLabel("No")
             .withTexture(gfxmentat->getTexture(BTN_NO))
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onNoButtonPressed(); })
             .build();
@@ -37,7 +37,7 @@ BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : Abstrac
             .withRect(*rightButton)
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onYesButtonPressed(); })
             .build();
@@ -89,12 +89,12 @@ void BeneMentat::draw_other()
 
 void BeneMentat::draw_eyes()
 {
-    m_renderDrawer->renderSprite(gfxmentat->getTexture(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
 }
 
 void BeneMentat::draw_mouth()
 {
-    m_renderDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
 }
 
 void BeneMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)

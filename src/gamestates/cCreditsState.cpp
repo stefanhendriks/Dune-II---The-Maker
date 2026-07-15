@@ -50,7 +50,7 @@ cCreditsState::cCreditsState(sGameServices* services) :
             .withRect(backButtonRect)
             .withLabel("Back")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -397,12 +397,12 @@ void cCreditsState::thinkFast()
 
 void cCreditsState::draw() const
 {
-    m_renderDrawer->renderSprite(m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
+    m_sdlDrawer->renderSprite(m_duneBmp, m_duneCoordinates.x, m_duneCoordinates.y);
 
     int halfScreen = m_settings->getScreenW() / 2;
 
     // draw crawler
-    m_renderDrawer->renderSprite(m_titleBmp, m_titleX, m_crawlerY);
+    m_sdlDrawer->renderSprite(m_titleBmp, m_titleX, m_crawlerY);
     int textCrawlY = m_crawlerY + m_titleHeight;
     for (auto &line : m_lines) {
         if (line.name.empty()) {

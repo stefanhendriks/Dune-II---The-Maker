@@ -19,7 +19,7 @@
 
 #include "include/cAssert.h"
 
-cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer, cStructureUtils *structureUtils) : m_structureUtils(structureUtils), m_player(thePlayer), m_ctx(ctx), m_renderDrawer(ctx->getSDLDrawer())
+cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer, cStructureUtils *structureUtils) : m_structureUtils(structureUtils), m_player(thePlayer), m_ctx(ctx), m_sdlDrawer(ctx->getSDLDrawer())
 {
     d2tm_assert(thePlayer != nullptr);
     d2tm_assert(ctx != nullptr);
@@ -162,7 +162,7 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
-                m_renderDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
+                m_sdlDrawer->renderRectFillColor(iDrawX+posX, iDrawY+posY, desiredWidth, desiredHeight,itemToPlaceColor);
             }
         }
     }
@@ -201,5 +201,5 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     // which cannot be used in this case)
     cRectangle src = { 0, 0, width, height}; // takes first frame
     cRectangle dest= {iDrawX, iDrawY, scaledWidth, scaledHeight};
-    m_renderDrawer->renderStrechSprite(bmp, src, dest,96);
+    m_sdlDrawer->renderStrechSprite(bmp, src, dest,96);
 }

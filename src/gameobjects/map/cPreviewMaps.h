@@ -29,7 +29,7 @@ class cPreviewMaps {
 public:
     cPreviewMaps();
 
-    void setRenderDrawer(SDLDrawer *renderDrawer);
+    void setSDLDrawer(SDLDrawer *sdlDrawer);
 
     ~cPreviewMaps() = default;
 
@@ -52,5 +52,5 @@ private:
     std::unique_ptr<s_PreviewMap> m_emptyMap;
 
     std::vector<std::unique_ptr<s_PreviewMap>> m_PreviewMap;
-    SDLDrawer * m_renderDrawer = nullptr;
+    SDLDrawer * m_sdlDrawer = nullptr;
 };

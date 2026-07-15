@@ -37,7 +37,7 @@ private:
     cGameInterface* m_interface = nullptr;
     Graphics* m_gfxinter;
     Graphics* m_gfxdata;
-    SDLDrawer* m_renderDrawer = nullptr;
+    SDLDrawer* m_sdlDrawer = nullptr;
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits(int drawX, int drawY);

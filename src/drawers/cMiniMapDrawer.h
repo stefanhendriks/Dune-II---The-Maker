@@ -90,7 +90,7 @@ private:
     cRectangle m_RectFullMinimap; // the total space it could take
     Texture *m_mipMapTex;
     Graphics *m_gfxinter;
-    SDLDrawer *m_renderDrawer;
+    SDLDrawer *m_sdlDrawer;
 
     eMinimapStatus m_status;
 

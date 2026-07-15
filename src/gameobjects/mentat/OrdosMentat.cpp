@@ -18,7 +18,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMe
             .withRect(*leftButton)        
             .withLabel("Repeat")
             .withTexture(gfxmentat->getTexture(BTN_REPEAT))
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {this->resetSpeak();})
             .build();
@@ -27,7 +27,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMe
             .withRect(*rightButton)        
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 Logger::info(COMP_GAME, "OrdosMentat", "changing state from mentat"); 
@@ -52,10 +52,10 @@ void OrdosMentat::draw_other()
 
 void OrdosMentat::draw_eyes()
 {
-    m_renderDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
 }
 
 void OrdosMentat::draw_mouth()
 {
-    m_renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
 }

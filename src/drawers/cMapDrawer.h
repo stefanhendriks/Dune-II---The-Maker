@@ -41,7 +41,7 @@ private:
     cPlayer *m_player = nullptr;
     cMapCamera *m_camera = nullptr;
     GameContext *m_ctx = nullptr;
-    SDLDrawer* m_renderDrawer = nullptr;
+    SDLDrawer* m_sdlDrawer = nullptr;
     Graphics *m_gfxdata = nullptr;
 
     bool m_drawWithoutShroudTiles;

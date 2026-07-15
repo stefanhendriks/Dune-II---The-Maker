@@ -53,11 +53,11 @@ void GuiValueButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
 
 void GuiValueButton::draw() const
 {
-    m_renderDrawer->renderRectFillColor(m_rect, m_theme.fillColor);
+    m_sdlDrawer->renderRectFillColor(m_rect, m_theme.fillColor);
     if (m_pressed) {
-        m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
+        m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
     } else {
-        m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+        m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
     }
 
     if (m_textDrawer != nullptr) {
@@ -69,7 +69,7 @@ void GuiValueButton::draw() const
             const cRectangle bottomRect(m_rect.getX(), m_rect.getY() + topHeight, m_rect.getWidth(), bottomHeight);
 
             if (m_texture != nullptr) {
-                m_renderDrawer->renderStrechFullSprite(m_texture, topRect);
+                m_sdlDrawer->renderStrechFullSprite(m_texture, topRect);
             } else {
                 m_textDrawer->drawTextCenteredInBox(m_label, topRect, textColor);
             }
