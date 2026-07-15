@@ -921,6 +921,11 @@ void cUnit::attackStructure(int targetStructure)
 {
     log(std::format("attackStructure() : target is [{}]", targetStructure));
 
+    if (isType(DEVIATOR)) {
+        log("attackStructure() : Deviator cannot damage structures, ignoring order.");
+        return;
+    }
+
     cAbstractStructure *target = m_objects->getStructure(targetStructure);
     if (target == nullptr || !target->isValid()) {
         log(std::format("attackStructure() : target is [{}] Invalid target.", targetStructure));
