@@ -44,11 +44,11 @@ void cWinLoseState::thinkFast()
 void cWinLoseState::draw() const
 {
     if (m_backgroundTexture)
-        m_renderDrawer->renderSprite(m_backgroundTexture,0,0);
+        m_sdlDrawer->renderSprite(m_backgroundTexture,0,0);
 
     int posW = (m_settings->getScreenW()-m_tex->w)/2;
     int posH = (m_settings->getScreenH()-m_tex->h)/2;
-    m_renderDrawer->renderSprite(m_tex,posW, posH);
+    m_sdlDrawer->renderSprite(m_tex,posW, posH);
 
     m_interface->drawCursor();
 }

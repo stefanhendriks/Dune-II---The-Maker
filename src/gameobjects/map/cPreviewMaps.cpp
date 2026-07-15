@@ -49,9 +49,9 @@ int cPreviewMaps::getMapCount() const
     return static_cast<int>(m_PreviewMap.size()-1); // -1 because the first map is reserved for the random map, which is not a real skirmish map
 }
 
-void cPreviewMaps::setRenderDrawer(SDLDrawer *renderDrawer)
+void cPreviewMaps::setSDLDrawer(SDLDrawer *sdlDrawer)
 {
-    m_renderDrawer = renderDrawer;
+    m_sdlDrawer = sdlDrawer;
 }
 
 void cPreviewMaps::destroy()
@@ -142,7 +142,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (previewMap->terrain == nullptr) {
         previewMap->terrain = SDL_CreateSurface(previewMap->width, previewMap->height, SDL_PIXELFORMAT_RGBA32);
     }
-    m_renderDrawer->FillWithColor(previewMap->terrain, Color::Black);
+    m_sdlDrawer->FillWithColor(previewMap->terrain, Color::Black);
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -191,7 +191,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             }
 
             previewMap->terrainType[iCll] = terrainType;
-            m_renderDrawer->setPixel(previewMap->terrain, 1 + iX, 1 + iY, iColor);
+            m_sdlDrawer->setPixel(previewMap->terrain, 1 + iX, 1 + iY, iColor);
         }
     }
 
@@ -201,11 +201,11 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = mapGeom.getCellX(startCell);
             int y = mapGeom.getCellY(startCell);
-            m_renderDrawer->setPixel(previewMap->terrain, 1 + x, 1 + y, Color::White);
+            m_sdlDrawer->setPixel(previewMap->terrain, 1 + x, 1 + y, Color::White);
         }
     }
     if (previewMap->terrain!= nullptr){
-        SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), previewMap->terrain);
+        SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), previewMap->terrain);
         if (out == nullptr) {
             Logger::error(COMP_SDL2, "cPreviewMaps", "Error creating texture from surface: {}", SDL_GetError());
             return;

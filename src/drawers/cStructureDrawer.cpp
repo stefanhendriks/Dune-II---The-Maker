@@ -27,7 +27,7 @@
 #include "include/cAssert.h"
 
 cStructureDrawer::cStructureDrawer(GameContext *ctx, cPlayer *player, cStructureUtils *structureUtils) :
-    m_renderDrawer(ctx->getSDLDrawer()),
+    m_sdlDrawer(ctx->getSDLDrawer()),
     m_textDrawer(ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
@@ -36,7 +36,7 @@ cStructureDrawer::cStructureDrawer(GameContext *ctx, cPlayer *player, cStructure
     m_ctx(ctx)
 {
     d2tm_assert(ctx != nullptr);
-    d2tm_assert(m_renderDrawer != nullptr);
+    d2tm_assert(m_sdlDrawer != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
     d2tm_assert(m_gfxdata != nullptr);
@@ -83,7 +83,7 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
     int width_x = m_mapCamera->factorZoomLevel(width);
     int height_y = m_mapCamera->factorZoomLevel(height);
 
-    m_renderDrawer->renderRectColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, 96);
+    m_sdlDrawer->renderRectColor(drawX, drawY, width_x, height_y, color.r, color.g, color.b, 96);
 }
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *structure)
@@ -102,7 +102,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // Draw prebuild
     cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-    m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(iDrawPreBuild), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(iDrawPreBuild), dest);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -185,7 +185,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
             int x2 = m_mapCamera->getWindowXPosition(structure->pos_x() + 16);
             int y2 = m_mapCamera->getWindowYPosition(structure->pos_y() + 16);
 
-            m_renderDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
+            m_sdlDrawer->renderLine( x1, y1, x2, y2, Color{255, 255, 255,255});
 
             int mouseCellX = m_objects->getMapGeometry()->getCellX(pContext->getMouseCell());
             int mouseCellY = m_objects->getMapGeometry()->getCellY(pContext->getMouseCell());
@@ -291,7 +291,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int scaledWidth = m_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    m_renderDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_REPAIR), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_REPAIR), dest);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
@@ -322,11 +322,11 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     if (r > 255) r = 255;
 
     // bar itself
-    m_renderDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
-    m_renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
+    m_sdlDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
+    m_sdlDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y,r,g,32,255);
 
     // bar around it
-    m_renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
+    m_sdlDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -336,7 +336,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int scaledWidth = m_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    m_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(iconId), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(iconId), dest);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)
@@ -361,7 +361,7 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
         }
     }
 
-    m_renderDrawer->renderRectFillColor((m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth), 0,
+    m_sdlDrawer->renderRectFillColor((m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth), 0,
                                       cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH(), 0, 0, 0,255);
 }
 
@@ -393,9 +393,9 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
     if (r > 255) r = 255;
 
     // bar itself
-    m_renderDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
-    m_renderDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, (Uint8)r,(Uint8)g,32,255);
+    m_sdlDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
+    m_sdlDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, (Uint8)r,(Uint8)g,32,255);
 
     // bar around it
-    m_renderDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
+    m_sdlDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
 }

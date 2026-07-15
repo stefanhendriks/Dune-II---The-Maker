@@ -14,7 +14,7 @@ struct s_MouseEvent;
 
 class GuiConsole {
 public:
-    GuiConsole(SDLDrawer* renderDrawer,
+    GuiConsole(SDLDrawer* sdlDrawer,
                cTextDrawer* textDrawer,
                cNotificationArea* notificationArea,
                int screenWidth,

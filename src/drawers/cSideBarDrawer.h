@@ -43,7 +43,7 @@ protected:
 private:
     cPlayer *m_player;
     Graphics *m_gfxinter;
-    SDLDrawer* m_renderDrawer;
+    SDLDrawer* m_sdlDrawer;
     GameContext* m_ctx = nullptr;
     cInfoContext* m_infos = nullptr;
     cBuildingListDrawer m_buildingListDrawer;

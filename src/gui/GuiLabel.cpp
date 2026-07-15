@@ -25,14 +25,14 @@ void GuiLabel::draw() const
         return;
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
-            m_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            m_sdlDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             drawText();
             break;
         case TRANSPARENT_WITHOUT_BORDER:
             drawText();
             break;
         case OPAQUE_WITH_BORDER:
-            m_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            m_sdlDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             drawRectBorder(m_theme.borderLight, m_theme.borderDark);
             drawText();
             break;
@@ -41,10 +41,10 @@ void GuiLabel::draw() const
             drawText();
             break;
         case WITH_TEXTURE:
-            m_renderDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
+            m_sdlDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
             break;
         case WITH_STRETCHED_TEXTURE:
-            m_renderDrawer->renderStrechFullSprite(m_tex, m_rect, 255);
+            m_sdlDrawer->renderStrechFullSprite(m_tex, m_rect, 255);
             break;
     }
 }

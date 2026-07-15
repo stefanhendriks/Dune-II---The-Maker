@@ -66,7 +66,7 @@ public:
 
 protected:
     GameContext* m_ctx=nullptr;
-    SDLDrawer* m_renderDrawer=nullptr;
+    SDLDrawer* m_sdlDrawer=nullptr;
 private:
 
 };

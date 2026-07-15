@@ -104,7 +104,7 @@ protected:
 
     eMentatState state;
     cTextDrawer* m_textDrawer = nullptr;
-    SDLDrawer* m_renderDrawer;
+    SDLDrawer* m_sdlDrawer;
 
     cRectangle *leftButton;
     cRectangle *rightButton;

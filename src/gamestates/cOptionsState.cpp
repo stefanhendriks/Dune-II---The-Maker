@@ -44,7 +44,7 @@ void cOptionsState::constructWindow(int prevState)
     int buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    m_guiWindow = std::make_unique<GuiWindow>(m_renderDrawer, window, m_textDrawer);
+    m_guiWindow = std::make_unique<GuiWindow>(m_sdlDrawer, window, m_textDrawer);
     m_guiWindow->setTheme(cGuiThemeBuilder().light().build());
     cSoundPlayer* soundPlayer = m_ctx->getSoundPlayer();
 
@@ -59,7 +59,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRect(toMainMenuRect)        
             .withLabel("Back to main menu")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_interface->setTransitionToWithFadingOut(GAME_MENU);
@@ -72,7 +72,7 @@ void cOptionsState::constructWindow(int prevState)
         auto gui_cheatLabel = GuiLabelBuilder()
                 .withLabel("Cheat mode enabled")
                 .withTextDrawer(m_textDrawer)
-                .withRenderer(m_renderDrawer)
+                .withRenderer(m_sdlDrawer)
                 .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
                 .withTheme(cGuiThemeBuilder().light().withTextColor(Color::Yellow).build())
                 .withRect(cheatRect)
@@ -88,7 +88,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRect(quitRect)        
             .withLabel("Quit game")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_settings->setPlaying(false);
@@ -105,7 +105,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRect(backRect)        
             .withLabel("Back")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,prevState](){
                 m_interface->setNextStateToTransitionTo(prevState);
@@ -123,7 +123,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRect(toMissionSelectRect)        
             .withLabel("Mission select")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_interface->setNextStateToTransitionTo(GAME_MISSIONSELECT);
@@ -135,7 +135,7 @@ void cOptionsState::constructWindow(int prevState)
     auto gui_MusicLabel = GuiLabelBuilder()
             .withLabel("Music")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(musicRect)
             .build();
@@ -144,7 +144,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &musicCheckRect = m_guiWindow->getRelativeRect(5+75, 5+buttonHeight, buttonHeight, buttonHeight);
     auto gui_MusicCheckLabel = GuiCheckBoxBuilder()
             .withRect(musicCheckRect)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .onCheck([soundPlayer]() {
                 soundPlayer->setMusicEnabled(true);
             })
@@ -159,7 +159,7 @@ void cOptionsState::constructWindow(int prevState)
     auto gui_MusicVolumeLabel = GuiLabelBuilder()
             .withLabel("Volume")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(musicVolumeRect)
             .build();
@@ -168,7 +168,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &btn_musicVolumeRect = m_guiWindow->getRelativeRect(5+buttonWidth/4 + 50*2, 5+buttonHeight, buttonHeight*5, buttonHeight);
     auto gui_sld_musicVolumeRect = GuiSliderBuilder()
             .withRect(btn_musicVolumeRect)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withMinValue(0)
             .withMaxValue(10)
             .withInitialValue(soundPlayer->getMusicVolume())
@@ -182,7 +182,7 @@ void cOptionsState::constructWindow(int prevState)
     auto gui_SoundLabel = GuiLabelBuilder()
             .withLabel("Sound")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(soundRect)
             .build();
@@ -191,7 +191,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &soundCheckRect = m_guiWindow->getRelativeRect(5+75, (5+buttonHeight)*2, buttonHeight, buttonHeight);
     auto gui_SoundCheckLabel = GuiCheckBoxBuilder()
             .withRect(soundCheckRect)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .onCheck([soundPlayer]() {
                 soundPlayer->setSoundEnabled(true);
             })
@@ -206,7 +206,7 @@ void cOptionsState::constructWindow(int prevState)
     auto gui_SoundVolumeLabel = GuiLabelBuilder()
             .withLabel("Volume")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(soundVolumeRect)
             .build();
@@ -215,7 +215,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &btn_soundVolumeRect = m_guiWindow->getRelativeRect(5+buttonWidth/4 + 50*2, (5+buttonHeight)*2, buttonHeight*5, buttonHeight);
     auto gui_sld_soundVolumeRect = GuiSliderBuilder()
             .withRect(btn_soundVolumeRect)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withMinValue(0)
             .withMaxValue(10)
             .withInitialValue(soundPlayer->getSoundVolume())
@@ -229,7 +229,7 @@ void cOptionsState::constructWindow(int prevState)
     auto gui_DifficultyLabel = GuiLabelBuilder()
             .withLabel("Speed")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .withRect(speedRect)
             .build();
@@ -240,7 +240,7 @@ void cOptionsState::constructWindow(int prevState)
     int convertedForSlider = 2 - timeManager->getGlobalSpeed() + 10;
     auto gui_sld_speedRect = GuiSliderBuilder()
             .withRect(sld_speedRect)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withMinValue(2)
             .withMaxValue(10)
             .withInitialValue(convertedForSlider)
@@ -265,7 +265,7 @@ void cOptionsState::thinkFast()
 void cOptionsState::draw() const
 {
     if (m_backgroundTexture) {
-        m_renderDrawer->renderSprite(m_backgroundTexture,0,0);
+        m_sdlDrawer->renderSprite(m_backgroundTexture,0,0);
     }
     m_guiWindow->draw();
 

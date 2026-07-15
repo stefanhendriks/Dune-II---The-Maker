@@ -230,7 +230,7 @@ private:
     Texture *actualRenderer= nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cTimeManager* m_timeManager;
-    SDLDrawer *m_renderDrawer = nullptr;
+    SDLDrawer *m_sdlDrawer = nullptr;
 
     std::unique_ptr<cHousesInfo> m_Houses;
     bool m_missionWasWon;               // hack: used for state transitioning :/

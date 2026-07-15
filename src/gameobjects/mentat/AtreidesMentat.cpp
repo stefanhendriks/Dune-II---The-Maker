@@ -20,7 +20,7 @@ AtreidesMentat::AtreidesMentat(GameContext* ctx, bool allowMissionSelect) : Abst
             .withRect(*leftButton)        
             .withLabel("Repeat")
             .withTexture(gfxmentat->getTexture(BTN_REPEAT))
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {this->resetSpeak();})
             .build();
@@ -29,7 +29,7 @@ AtreidesMentat::AtreidesMentat(GameContext* ctx, bool allowMissionSelect) : Abst
             .withRect(*rightButton)        
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 Logger::info(COMP_GAME, "AtreidesMentat", "changing state from mentat");
@@ -55,10 +55,10 @@ void AtreidesMentat::draw_other()
 
 void AtreidesMentat::draw_eyes()
 {
-    m_renderDrawer->renderSprite(gfxmentat->getTexture(ATR_EYES01+ iMentatEyes),  offsetX + 80, offsetY + 241);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(ATR_EYES01+ iMentatEyes),  offsetX + 80, offsetY + 241);
 }
 
 void AtreidesMentat::draw_mouth()
 {
-    m_renderDrawer->renderSprite(gfxmentat->getTexture(ATR_MOUTH01+ iMentatMouth),  offsetX + 80, offsetY + 273);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(ATR_MOUTH01+ iMentatMouth),  offsetX + 80, offsetY + 273);
 }

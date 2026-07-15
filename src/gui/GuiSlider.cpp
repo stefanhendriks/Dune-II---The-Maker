@@ -21,7 +21,7 @@ void GuiSlider::draw() const {
 }
 
 void GuiSlider::drawTrack() const {
-    m_renderDrawer->renderRectFillColor(m_rect, m_theme.fillColor);
+    m_sdlDrawer->renderRectFillColor(m_rect, m_theme.fillColor);
     drawRectBorder(m_theme.borderLight, m_theme.borderDark);
 }
 
@@ -32,8 +32,8 @@ void GuiSlider::drawKnob() const {
     int knobY = m_rect.getY();
 
     cRectangle knobRect(knobX, knobY, GUI_KNOB_WIDTH, m_rect.getHeight());
-    m_renderDrawer->renderRectFillColor(knobRect, m_theme.borderDark);
-    m_renderDrawer->gui_DrawRectBorder(knobRect, m_theme.borderLight, m_theme.borderDark);
+    m_sdlDrawer->renderRectFillColor(knobRect, m_theme.borderDark);
+    m_sdlDrawer->gui_DrawRectBorder(knobRect, m_theme.borderLight, m_theme.borderDark);
 }
 
 void GuiSlider::setValue(int value) {
