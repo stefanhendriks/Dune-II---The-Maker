@@ -657,7 +657,7 @@ void cMap::draw_units()
 
         if (pUnit->iType != SANDWORM) continue;
 
-        if (pUnit->isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             pUnit->draw();
         }
 
@@ -673,7 +673,7 @@ void cMap::draw_units()
         if (!pUnit->isInfantryUnit())
             continue; // skip non-infantry units
 
-        if (pUnit->isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             // draw
             pUnit->draw();
         }
@@ -691,7 +691,7 @@ void cMap::draw_units()
                 pUnit->isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
-        if (pUnit->isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             // draw
             pUnit->draw();
         }
@@ -720,6 +720,7 @@ void cMap::draw_units_2nd()
         if (!pUnit->rendering.bHovered && !pUnit->isSelected()) continue;
         if (!pUnit->isWithinViewport(mapViewport)) continue;
         if (pUnit->isHidden()) continue;
+        if (isHiddenByFogOfWar(pUnit)) continue;
 
         pUnit->draw_health();
         pUnit->draw_group(m_textDrawer);
@@ -735,7 +736,7 @@ void cMap::draw_units_2nd()
         if (!pUnit || !pUnit->isValid()) continue;
         if (!pUnit->isAirbornUnit()) continue;
 
-        if (pUnit->isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             pUnit->draw();
             // TODO: Only human players?
             pUnit->draw_health();
