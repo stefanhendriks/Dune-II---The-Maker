@@ -177,6 +177,8 @@ void cGamePlaying::thinkNormal()
             }
         }
 
+        m_objects->getMap()->thinkNormal();
+
         m_drawManager->think();
 
         //@mira move to Players
