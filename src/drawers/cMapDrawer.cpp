@@ -65,6 +65,12 @@ void cMapDrawer::drawShroud()
             float fDrawY = m_camera->getWindowYPosition(absoluteYCoordinateOnMap);
             int iDrawX = (int)std::floor(fDrawX);
             int iDrawY = (int)std::floor(fDrawY);
+
+            // fog of war: discovered, but not observed at this moment -> grey veil
+            if (m_map->isVisible(iCell, iPl) && !m_map->isSeen(iCell, iPl)) {
+                m_renderDrawer->renderRectFillColor(fDrawX, fDrawY, tileWidth, tileHeight, 128, 128, 128, 110);
+            }
+
             if (m_drawWithoutShroudTiles) {
                 if (m_map->isVisible(iCell, iPl)) {
                     // do nothing
