@@ -32,6 +32,44 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     d2tm_assert(camera!=nullptr);
     d2tm_assert(player!=nullptr);
     d2tm_assert(ctx != nullptr);
+
+    m_fogTexture = createFogTexture();
+}
+
+/**
+ * The shroud sprite is pure black with a hard alpha mask, so it cannot be tinted with a color
+ * modulation. Instead, create a copy of it that keeps the shapes (alpha) but is grey.
+ */
+std::unique_ptr<Texture> cMapDrawer::createFogTexture() const
+{
+    SDL_Surface *shroudSurface = m_gfxdata->getSurface(SHROUD);
+    if (shroudSurface == nullptr) return nullptr;
+
+    SDL_Surface *fogSurface = SDL_ConvertSurface(shroudSurface, SDL_PIXELFORMAT_RGBA32);
+    if (fogSurface == nullptr) return nullptr;
+
+    const SDL_PixelFormatDetails *details = SDL_GetPixelFormatDetails(fogSurface->format);
+    SDL_LockSurface(fogSurface);
+    for (int y = 0; y < fogSurface->h; y++) {
+        Uint32 *row = (Uint32 *)((Uint8 *)fogSurface->pixels + (y * fogSurface->pitch));
+        for (int x = 0; x < fogSurface->w; x++) {
+            Uint8 r, g, b, a;
+            SDL_GetRGBA(row[x], details, nullptr, &r, &g, &b, &a);
+            if (a == 0) continue; // keep transparent pixels transparent
+            row[x] = SDL_MapRGBA(details, nullptr, 128, 128, 128, a);
+        }
+    }
+    SDL_UnlockSurface(fogSurface);
+
+    SDL_Texture *fogTexture = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), fogSurface);
+    int width = fogSurface->w;
+    int height = fogSurface->h;
+    SDL_DestroySurface(fogSurface);
+
+    if (fogTexture == nullptr) return nullptr;
+
+    SDL_SetTextureScaleMode(fogTexture, SDL_SCALEMODE_NEAREST);
+    return std::make_unique<Texture>(fogTexture, width, height);
 }
 
 cMapDrawer::~cMapDrawer()
@@ -66,9 +104,16 @@ void cMapDrawer::drawShroud()
             int iDrawX = (int)std::floor(fDrawX);
             int iDrawY = (int)std::floor(fDrawY);
 
-            // fog of war: discovered, but not observed at this moment -> grey veil
-            if (m_map->isVisible(iCell, iPl) && !m_map->isSeen(iCell, iPl)) {
-                m_renderDrawer->renderRectFillColor(fDrawX, fDrawY, tileWidth, tileHeight, 128, 128, 128, 110);
+            // fog of war: discovered, but not observed at this moment -> grey veil. Uses the shroud
+            // tiles so the fog gets the same rounded borders as the shroud itself.
+            if (m_fogTexture && m_map->isVisible(iCell, iPl)) {
+                int fogTile = m_map->isSeen(iCell, iPl) ? determineWhichShroudTileToDraw(iCell, iPl, true) : 0;
+
+                if (fogTile > -1) {
+                    const cRectangle src_pos = {fogTile * 32, 0, 32, 32};
+                    cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+                    m_renderDrawer->renderStrechSprite(m_fogTexture.get(), src_pos, dest_pos, 110);
+                }
             }
 
             if (m_drawWithoutShroudTiles) {
@@ -81,7 +126,7 @@ void cMapDrawer::drawShroud()
             }
             else {
                 if (m_map->isVisible(iCell, iPl)) {
-                    int tile = determineWhichShroudTileToDraw(iCell, iPl);
+                    int tile = determineWhichShroudTileToDraw(iCell, iPl, false);
 
                     if (tile > -1) {
                         const cRectangle src_pos = {tile * 32, 0, 32, 32};
@@ -259,56 +304,25 @@ void cMapDrawer::drawCellAsColoredTile(float tileWidth, float tileHeight, int iC
     }
 }
 
-int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId) const
+int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId, bool fogOfWar) const
 {
     if (cll < 0) return -1;
     if (playerId < HUMAN || playerId >= MAX_PLAYERS) return -1;
 
     int tile; // Visible stuff, now check for not visible stuff. When found, assign the proper border
     // of shroud to it.
-    int above = m_mapGeometry->getCellAbove(cll);
-    int under = m_mapGeometry->getCellBelow(cll);
-    int left = m_mapGeometry->getCellLeft(cll);
-    int right = m_mapGeometry->getCellRight(cll);
 
-    bool a, u, l, r;
-    a = u = l = r = true;
+    // a neighbour is 'covered' when it needs to be veiled: undiscovered for the shroud, or not
+    // observed at this moment for the fog of war. Cells outside the map are never covered.
+    auto isCovered = [&](int cell) {
+        if (cell < 0) return false;
+        return fogOfWar ? !m_map->isSeen(cell, playerId) : !m_map->isVisible(cell, playerId);
+    };
 
-    if (above > -1) {
-        if (m_map->isVisible(above, playerId)) {
-            a = false;  // visible
-        }
-    }
-    else {
-        a = false;
-    }
-
-    if (under > -1) {
-        if (m_map->isVisible(under, playerId)) {
-            u = false;  // visible
-        }
-    }
-    else {
-        u = false;
-    }
-
-    if (left > -1) {
-        if (m_map->isVisible(left, playerId)) {
-            l = false;  // visible
-        }
-    }
-    else {
-        l = false;
-    }
-
-    if (right > -1) {
-        if (m_map->isVisible(right, playerId)) {
-            r = false;  // visible
-        }
-    }
-    else {
-        r = false;
-    }
+    bool a = isCovered(m_mapGeometry->getCellAbove(cll));
+    bool u = isCovered(m_mapGeometry->getCellBelow(cll));
+    bool l = isCovered(m_mapGeometry->getCellLeft(cll));
+    bool r = isCovered(m_mapGeometry->getCellRight(cll));
 
     int t = -1;    // tile id to draw... (x axis)
 
