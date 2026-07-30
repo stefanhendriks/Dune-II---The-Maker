@@ -15,7 +15,8 @@ struct tCell {
     bool passable;      // passable? > pathfinder (TRUE = default) (passable for ground units, non infantry)
     bool passableFoot;  // passable for foot units? > pathfinder (TRUE = default)
 
-    bool iVisible[MAX_PLAYERS];      // visibility for <player>
+    bool iVisible[MAX_PLAYERS];      // discovered by <player> (shroud lifted, permanent)
+    bool iSeen[MAX_PLAYERS];         // within sight range of <player> right now (fog of war)
 
     // there are 4 'dimensions' of this cell. Each represents the perspective of
     // an entity that is either a unit, structure, the 'worms' dimension and the 'air' dimension.
