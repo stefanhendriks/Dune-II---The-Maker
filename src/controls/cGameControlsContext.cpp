@@ -149,6 +149,10 @@ void cGameControlsContext::determineHoveringOverUnitId()
 
     if (m_mouseHoveringOverUnitId > -1) {
         cUnit *aUnit = m_objects->getUnit(m_mouseHoveringOverUnitId);
+        if (m_objects->getMap()->isHiddenByFogOfWar(aUnit)) {
+            m_mouseHoveringOverUnitId = -1; // hidden in the fog of war
+            return;
+        }
         if (aUnit->isValid()) {
             aUnit->rendering.bHovered = true;
         }
