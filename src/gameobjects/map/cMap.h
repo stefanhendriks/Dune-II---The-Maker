@@ -76,6 +76,7 @@ public:
     void smudge_increase(SmudgeType iType, int iCell);
 
     void thinkFast();
+    void thinkNormal();
     void thinkSlow();
 
     void clear_all(int playerId);
@@ -327,6 +328,25 @@ public:
     bool isVisible(int iCell, cPlayer *thePlayer);
 
     /**
+     * Is cell within sight range of any unit/structure of player right now? When false, but the cell
+     * is visible, the cell is 'fogged' (discovered earlier, but not observed at this moment).
+     * @param iCell
+     * @param iPlayer
+     */
+    bool isSeen(int iCell, int iPlayer) {
+        if (!isValidCell(iCell)) return false;
+        if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return false;
+        return m_cell[iCell].iSeen[iPlayer];
+    }
+
+    /**
+     * Is this unit hidden from the human player because it stands in the fog of war? Units of the
+     * human player (and its allies) are never hidden.
+     * @param pUnit
+     */
+    bool isHiddenByFogOfWar(cUnit *pUnit);
+
+    /**
      * Makes cell visible for player (ID)
      * @param iCell
      * @param iPlayer
@@ -447,6 +467,9 @@ public:
     void setTerrainInfo(s_TerrainInfo* terrainInfo);
 private:
     void setVisible(int iCell, int iPlayer, bool flag);
+
+    void updateFogOfWar();
+    void markSeen(int cell, int size, int playerId);
 
     std::vector<tCell> m_cell;
     GameContext *m_ctx = nullptr;
