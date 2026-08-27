@@ -70,4 +70,5 @@ jobs:
             specific lines. Be direct about problems, but don't nitpick pure
             style preferences that don't affect correctness or readability.
           claude_args: |
-            --max-turns 30
+            --max-turns 45
+            --allowedTools "Bash(git diff:*),Bash(git fetch:*),Bash(git log:*)"
