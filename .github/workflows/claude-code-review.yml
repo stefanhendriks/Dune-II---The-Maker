@@ -1,0 +1,56 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude-review:
+    # Run automatically on every PR push, OR when someone comments "@claude" on a PR/issue
+    if: >
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code Review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Only used for the automatic pull_request trigger; ignored when
+          # someone explicitly invokes @claude with their own instructions.
+          prompt: |
+            Before reviewing, read and follow the guidelines in .claude/review.md
+            at the root of this repository — treat it as the primary review
+            checklist. Also respect any conventions defined in CLAUDE.md and
+            elsewhere under .claude/ (coding standards, allowed patterns, etc.);
+            those take precedence over your own defaults if they conflict.
+
+            Then review this pull request to the Dune II - The Maker (D2TM)
+            codebase, a C++ real-time strategy game engine (a Dune II remake).
+
+            If review.md doesn't cover something, fall back to general good
+            judgment on:
+            - Memory safety and resource management (raw pointers, ownership, leaks)
+            - Correctness of game logic changes (units, structures, AI, pathfinding, map/terrain)
+            - Performance implications for the game loop / rendering / update code
+            - Consistency with existing code style and structures in this codebase
+            - Any changes that could break the build or existing CI
+
+            Leave inline comments on specific lines where relevant, and a short
+            summary comment overall. Be direct about problems, but don't nitpick
+            pure style preferences that don't affect correctness or readability.
+          claude_args: |
+            --max-turns 8
