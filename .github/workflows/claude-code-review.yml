@@ -29,6 +29,11 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Maintain a progress comment on the PR and wire up the GitHub
+          # comment tools so the review is reliably posted back.
+          track_progress: true
+          # Temporary while validating the workflow; remove once reviews land.
+          show_full_output: true
           # Only used for the automatic pull_request trigger; ignored when
           # someone explicitly invokes @claude with their own instructions.
           prompt: |
@@ -53,4 +58,4 @@ jobs:
             summary comment overall. Be direct about problems, but don't nitpick
             pure style preferences that don't affect correctness or readability.
           claude_args: |
-            --max-turns 8
+            --max-turns 30
