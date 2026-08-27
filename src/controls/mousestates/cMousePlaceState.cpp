@@ -120,6 +120,10 @@ bool cMousePlaceState::mayPlaceIt(cBuildingListItem *itemToPlace, int mouseCell)
                     }
 
                     // TODO: Allow placement nearby allies?
+
+                    // structure owned by someone else: its foundation slab must not
+                    // count as a build anchor, so skip the wall/slab check for this cell
+                    continue;
                 }
 
                 if (m_context->getObjects()->getMap()->getCellType(iCll) == TERRAIN_WALL ||
