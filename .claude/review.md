@@ -12,6 +12,20 @@ General principles (see `CLAUDE.md` for the full version):
   abstraction, configurability, or error handling for impossible states.
 - Match surrounding style rather than imposing a different one.
 
+## Review output format
+
+Keep the posted review short. A maintainer should read it in under a minute.
+
+- One summary comment. Target under 120 words.
+- Structure: a one-line verdict, then a list of issues found. Nothing else.
+- Each issue: `file:line` — what is wrong — suggested fix. One or two sentences.
+- If nothing needs changing, say so in one line and stop.
+- Do not narrate your process. No "Checked:" / "Verified:" list, no progress
+  recap, no enumeration of what looked fine. The value is the problems found.
+- Do not restate the PR description or commit messages back to the author.
+- Inline line comments are for concrete defects only — not observations,
+  confirmations, or praise.
+
 ## Memory safety & resource management
 
 - New/`delete` balanced; ownership of every heap allocation is clear and
