@@ -54,8 +54,11 @@ jobs:
             - Consistency with existing code style and structures in this codebase
             - Any changes that could break the build or existing CI
 
-            Leave inline comments on specific lines where relevant, and a short
-            summary comment overall. Be direct about problems, but don't nitpick
-            pure style preferences that don't affect correctness or readability.
+            Post one summary comment following the "Review output format"
+            section of .claude/review.md: a one-line verdict plus a list of
+            issues found, nothing else. Do not narrate your process or recap
+            what you checked. Leave inline comments only for concrete defects on
+            specific lines. Be direct about problems, but don't nitpick pure
+            style preferences that don't affect correctness or readability.
           claude_args: |
             --max-turns 30
