@@ -27,6 +27,7 @@ const char *gameStateTypeToString(eGameStateType state)
         case GAMESTATE_SETUP_SKIRMISH: return "GAMESTATE_SETUP_SKIRMISH";
         case GAMESTATE_TELLHOUSE: return "GAMESTATE_TELLHOUSE";
         case GAMESTATE_WINLOSE: return "GAMESTATE_WINLOSE";
+        case GAMESTATE_VIDEO: return "GAMESTATE_VIDEO";
     }
     // Handling unrecognized values ​​(if the enum is cast from an arbitrary character)
     return "Unknown GameState value";
