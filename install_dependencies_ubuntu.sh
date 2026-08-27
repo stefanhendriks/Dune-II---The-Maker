@@ -56,10 +56,12 @@ cmake -S "$BUILD_DIR/SDL3_ttf" -B "$BUILD_DIR/SDL3_ttf/build" $CMAKE_FLAGS \
   -DSDLTTF_SAMPLES=OFF
 sudo cmake --build "$BUILD_DIR/SDL3_ttf/build" --target install -j4
 
-# SDL3_mixer
+# SDL3_mixer (SDLMIXER_MIDI_TIMIDITY compiles in a MIDI synthesizer with no external files needed)
 git clone --depth 1 --branch release-3.2.4 https://github.com/libsdl-org/SDL_mixer.git "$BUILD_DIR/SDL3_mixer"
 cmake -S "$BUILD_DIR/SDL3_mixer" -B "$BUILD_DIR/SDL3_mixer/build" $CMAKE_FLAGS \
-  -DSDLMIXER_SAMPLES=OFF
+  -DSDLMIXER_SAMPLES=OFF \
+  -DSDLMIXER_MIDI_TIMIDITY=ON \
+  -DSDLMIXER_MIDI_FLUIDSYNTH=OFF
 sudo cmake --build "$BUILD_DIR/SDL3_mixer/build" --target install -j4
 
 sudo ldconfig
