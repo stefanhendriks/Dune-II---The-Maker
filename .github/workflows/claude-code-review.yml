@@ -2,15 +2,24 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, reopened, ready_for_review]
   issue_comment:
     types: [created]
 
+# One in-flight review per PR; a newer push cancels the older run instead of
+# stacking. Reviews draw from the shared Claude subscription rate limit, so
+# avoiding pile-ups matters.
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: true
+
 jobs:
   claude-review:
-    # Run automatically on every PR push, OR when someone comments "@claude" on a PR/issue
+    # Run automatically when a PR is opened / reopened / marked ready (drafts are
+    # skipped), OR when someone comments "@claude" on a PR/issue. Re-review after
+    # a push is opt-in via an "@claude" comment, to stay within the rate limit.
     if: >
-      github.event_name == 'pull_request' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude'))
     runs-on: ubuntu-latest
     permissions:
