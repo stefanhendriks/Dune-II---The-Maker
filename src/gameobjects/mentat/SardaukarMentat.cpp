@@ -19,7 +19,7 @@ SardaukarMentat::SardaukarMentat(GameContext* ctx, bool allowMissionSelect) : Ab
             .withRect(*leftButton)        
             .withLabel("Repeat")
             .withTexture(gfxmentat->getTexture(BTN_REPEAT))
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {this->resetSpeak();})
             .build();
@@ -28,7 +28,7 @@ SardaukarMentat::SardaukarMentat(GameContext* ctx, bool allowMissionSelect) : Ab
             .withRect(*rightButton)        
             .withLabel("Yes")
             .withTexture(gfxmentat->getTexture(BTN_YES))
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 Logger::info(COMP_NONE, "cYesButtonCommand::changeStateFromMentat", "called");
@@ -53,10 +53,10 @@ void SardaukarMentat::draw_other()
 
 void SardaukarMentat::draw_eyes()
 {
-    //m_renderDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
+    //m_sdlDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
 }
 
 void SardaukarMentat::draw_mouth()
 {
-    //m_renderDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
+    //m_sdlDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
 }

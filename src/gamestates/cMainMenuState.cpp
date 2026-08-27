@@ -60,7 +60,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(creditsRect)        
             .withLabel("CREDITS")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -83,7 +83,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     buttonWidth = mainMenuWidth - 8;
 
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
-    gui_window = std::make_unique<GuiWindow>(m_renderDrawer, window, m_textDrawer);
+    gui_window = std::make_unique<GuiWindow>(m_sdlDrawer, window, m_textDrawer);
     gui_window->setTheme(cGuiThemeBuilder().light().build());
 
     const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
@@ -91,7 +91,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(campaign)        
             .withLabel("Campaign")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -106,7 +106,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(skirmish)        
             .withLabel("Skirmish")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -123,7 +123,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(multiplayer)        
             .withLabel("Multiplayer")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_interface->initiateFadingOut();})
@@ -137,7 +137,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(load)        
             .withLabel("Load")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_interface->initiateFadingOut();})
@@ -151,7 +151,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(editors)        
             .withLabel("New Map Editor")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_interface->setTransitionToWithFadingOut(GAME_NEW_MAP_EDITOR);})
@@ -165,7 +165,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(options)        
             .withLabel("Options")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_interface->setNextStateToTransitionTo(GAME_OPTIONS);})
@@ -179,7 +179,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(hof)        
             .withLabel("Hall of Fame")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_interface->initiateFadingOut();})
@@ -193,7 +193,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(exit)        
             .withLabel("Exit")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
@@ -204,14 +204,14 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
 
     // prepare to drawing in cache texture
     if (m_settings->isDebugMode()) {
-        backGroundDebug = m_renderDrawer->createRenderTargetTexture(m_settings->getScreenW(), m_settings->getScreenH());
-        m_renderDrawer->beginDrawingToTexture(backGroundDebug);
+        backGroundDebug = m_sdlDrawer->createRenderTargetTexture(m_settings->getScreenW(), m_settings->getScreenH());
+        m_sdlDrawer->beginDrawingToTexture(backGroundDebug);
         for (int x = 0; x < m_settings->getScreenW(); x += 60) {
             for (int y = 0; y < m_settings->getScreenH(); y += 20) {
                 m_textDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
             }
         }
-        m_renderDrawer->endDrawingToTexture();
+        m_sdlDrawer->endDrawingToTexture();
     }
 }
 
@@ -230,10 +230,10 @@ void cMainMenuState::thinkFast()
 void cMainMenuState::draw() const
 {
     if (m_settings->isDebugMode()) {
-        m_renderDrawer->renderSprite(backGroundDebug,0,0);
+        m_sdlDrawer->renderSprite(backGroundDebug,0,0);
     }
 
-    m_renderDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
+    m_sdlDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
 
     gui_window->draw();
     gui_btn_credits->draw();

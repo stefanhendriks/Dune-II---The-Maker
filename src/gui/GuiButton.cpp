@@ -29,40 +29,40 @@ void GuiButton::draw() const
 {
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
-            m_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            m_sdlDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
             drawText();
             break;
         case TRANSPARENT_WITHOUT_BORDER:
             drawText();
             break;
         case OPAQUE_WITH_BORDER:
-            m_renderDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_enabled ? m_theme.fillColor : m_theme.disabledFillColor);
+            m_sdlDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_enabled ? m_theme.fillColor : m_theme.disabledFillColor);
             if (m_pressed) {
-                m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
+                m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
                 if (m_enabled) {
-                    m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                    m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
                 } else {
-                    m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.disabledBorderLight, m_theme.disabledBorderDark);
+                    m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.disabledBorderLight, m_theme.disabledBorderDark);
                 }
             }
             drawText();
             break;
         case TRANSPARENT_WITH_BORDER:
             if (m_pressed) {
-                m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
+                m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
-                m_renderDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
             }
             drawText();
             break;
         case WITH_TEXTURE:
-            m_renderDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
+            m_sdlDrawer->renderSprite(m_tex, m_rect.getX(),m_rect.getY());
             break;
         case WITH_STRETCHED_TEXTURE:
-            m_renderDrawer->renderStrechFullSprite(m_tex, m_rect, 255);
+            m_sdlDrawer->renderStrechFullSprite(m_tex, m_rect, 255);
             break;
     }
 }

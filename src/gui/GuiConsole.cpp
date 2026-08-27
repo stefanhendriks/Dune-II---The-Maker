@@ -8,7 +8,7 @@
 
 #include <algorithm>
 
-GuiConsole::GuiConsole(SDLDrawer* renderDrawer,
+GuiConsole::GuiConsole(SDLDrawer* sdlDrawer,
                        cTextDrawer* textDrawer,
                        cNotificationArea* notificationArea,
                        int screenWidth,
@@ -20,13 +20,13 @@ GuiConsole::GuiConsole(SDLDrawer* renderDrawer,
     const int x = 8;
     const int y = screenHeight - height - 10;
 
-    m_window = std::make_unique<GuiWindow>(renderDrawer, cRectangle(x, y, width, height), textDrawer);
+    m_window = std::make_unique<GuiWindow>(sdlDrawer, cRectangle(x, y, width, height), textDrawer);
     m_messageParser = std::make_unique<GuiConsoleMessageParser>(notificationArea);
 
     auto input = GuiTextInputBuilder()
         .withRect(m_window->getRelativeRect(8, 6, width - 16, inputHeight))
         .withTextDrawer(textDrawer)
-        .withRenderer(renderDrawer)
+        .withRenderer(sdlDrawer)
         .withTheme(cGuiThemeBuilder().light().build())
         .onEnter([this](const std::string& text) {
             submit(text);

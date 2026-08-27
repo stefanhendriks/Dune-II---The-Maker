@@ -36,10 +36,10 @@ GuiTextInput::GuiTextInput(SDLDrawer* drawer,const cRectangle& rect, cTextDrawer
 
 void GuiTextInput::draw() const
 {
-    m_renderDrawer->renderRectFillColor(m_rect, m_theme.background);
+    m_sdlDrawer->renderRectFillColor(m_rect, m_theme.background);
     if (m_focused) {
         cRectangle focusRect(m_rect.getX() - 3, m_rect.getY() - 3, m_rect.getWidth() + 6, m_rect.getHeight() + 6);
-        m_renderDrawer->renderRectColor(focusRect, m_theme.textColorHover);
+        m_sdlDrawer->renderRectColor(focusRect, m_theme.textColorHover);
     }
     // Affiche un curseur si focus
     m_writer->drawText(m_rect.getX() + kHorizontalPadding, m_rect.getY() + 4, m_theme.textColor, getFittedDisplayText());

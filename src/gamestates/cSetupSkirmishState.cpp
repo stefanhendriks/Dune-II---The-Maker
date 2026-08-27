@@ -191,7 +191,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
         .withRect(nextMaps)
         .withLabel("Next")
         .withTextDrawer(m_textDrawer)
-        .withRenderer(m_renderDrawer)
+        .withRenderer(m_sdlDrawer)
         .withTheme(theme)
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
         .onClick(nextFunction)
@@ -201,7 +201,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withRect(previousMaps)
             .withLabel("Previous")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(theme)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick(previousFunction)
@@ -254,7 +254,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withRect(backButtonRect)
             .withLabel("Back")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
@@ -273,7 +273,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withRect(startButtonRect)
             .withLabel("Start")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
@@ -290,7 +290,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withRect(surpriseMeButtonRect)
             .withLabel("Surprise me")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() { surpriseMe(); })
@@ -306,7 +306,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withRect(newMapButtonRect)
             .withLabel("New Map")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
@@ -320,7 +320,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withRect(modifyButtonRect)
             .withLabel("Modify")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
@@ -340,20 +340,20 @@ cSetupSkirmishState::~cSetupSkirmishState()
 bool cSetupSkirmishState::guiDrawFrame(int x, int y, int width, int height) const
 {
     cRectangle rect = cRectangle(x, y, width, height);
-    m_renderDrawer->gui_DrawRect(rect, colorLightBackground, colorDarkishBorder, colorOtherBorder);
+    m_sdlDrawer->gui_DrawRect(rect, colorLightBackground, colorDarkishBorder, colorOtherBorder);
     return mouse_within_rect(m_mouse, x, y, width, height);
 }
 
 bool cSetupSkirmishState::guiDrawFramePressed(int x1, int y1, int width, int height) const
 {
-    m_renderDrawer->renderRectFillColor(x1, y1, width, height, colorLightBackground);
-    m_renderDrawer->renderRectColor(x1, y1, width, height, colorOtherBorder);
+    m_sdlDrawer->renderRectFillColor(x1, y1, width, height, colorLightBackground);
+    m_sdlDrawer->renderRectColor(x1, y1, width, height, colorOtherBorder);
 
     int endX = (x1+width)-1;
     int endY = (y1+height)-1;
     // lines to darken the right sides
-    m_renderDrawer->renderLine(endX, y1, endX, endY, colorDarkishBorder);
-    m_renderDrawer->renderLine(x1, endY, endX, endY, colorDarkishBorder);
+    m_sdlDrawer->renderLine(endX, y1, endX, endY, colorDarkishBorder);
+    m_sdlDrawer->renderLine(x1, endY, endX, endY, colorDarkishBorder);
 
     return mouse_within_rect(m_mouse, x1, y1, width, height);
 }
@@ -365,29 +365,29 @@ void cSetupSkirmishState::thinkFast()
 void cSetupSkirmishState::draw() const
 {
     // Draw top-bar / title-bar
-    m_renderDrawer->gui_DrawRect(topBar, colorLightBackground, colorDarkishBorder, colorOtherBorder);
+    m_sdlDrawer->gui_DrawRect(topBar, colorLightBackground, colorDarkishBorder, colorOtherBorder);
     m_textDrawer->drawTextCentered("Skirmish", 4);
 
     // Draw Players/House/Credits/Units/Team rectangle
-    m_renderDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::White, Color::White);
+    m_sdlDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::White, Color::White);
     // Draw rectangle for the actual players (beneath playerTitleBar)
-    m_renderDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::White, Color::White);
+    m_sdlDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::White, Color::White);
 
     // Draw top-right rectangle for "Startpoints"
-    m_renderDrawer->gui_DrawRect(topRightBox, colorLightBackground, colorDarkishBorder, colorOtherBorder);
+    m_sdlDrawer->gui_DrawRect(topRightBox, colorLightBackground, colorDarkishBorder, colorOtherBorder);
 
     // Draw "Maps" (yellow title), rectangle
-    m_renderDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    m_sdlDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     m_textDrawer->drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::Yellow);
 
     // Draw "Preview" bar + title (right to "Maps")
-    m_renderDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
+    m_sdlDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //sdlDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
     m_textDrawer->drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::Yellow);
 
     // Draw the right bar where we render the map selected + any information
-    m_renderDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    m_sdlDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
 
-    m_renderDrawer->gui_DrawRect(selectArea, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
+    m_sdlDrawer->gui_DrawRect(selectArea, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     ///////
     /// DRAW PREVIEW MAP
     //////
@@ -450,7 +450,7 @@ void cSetupSkirmishState::draw() const
     }
 
     cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
-    m_renderDrawer->gui_DrawRect(bottomBarRect, colorLightBackground, colorDarkishBorder, colorOtherBorder);
+    m_sdlDrawer->gui_DrawRect(bottomBarRect, colorLightBackground, colorDarkishBorder, colorOtherBorder);
 
     // For now in draw function
     startButton->setEnabled(iSkirmishMap > -1);
@@ -556,7 +556,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
                                          previewMapRect.getHeight() * selectedMap->previewTex->w / selectedMap->previewTex->h, previewMapRect.getHeight());
 
                     }
-                    m_renderDrawer->renderStrechFullSprite(selectedMap->previewTex, dst);
+                    m_sdlDrawer->renderStrechFullSprite(selectedMap->previewTex, dst);
                 }
             }
         }
@@ -564,9 +564,9 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
             // render the 'random generated skirmish map'
             cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
             if (previewMapRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-                    m_renderDrawer->renderStrechFullSprite(selectedMap->previewTex, dst);
+                    m_sdlDrawer->renderStrechFullSprite(selectedMap->previewTex, dst);
             } else {
-                m_renderDrawer->renderStrechFullSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), dst);
+                m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), dst);
             }
         }
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
@@ -1290,7 +1290,7 @@ void cSetupSkirmishState::generateRandomMap()
     randomMap->validMap = true;
     randomMap->author = "D2TM";
 
-    SDL_Texture* out = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), randomMap->terrain);
+    SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), randomMap->terrain);
     if (out == nullptr) {
         Logger::error(COMP_SDL2, "cSetupSkirmishState", "Error creating texture from surface: {}", SDL_GetError());
         return;
@@ -1337,7 +1337,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
             textColor = bHover ? colorDarkerYellow : Color::Yellow;
             // RENDERS (AGAIN)!
             guiDrawFramePressed(iDrawX, iDrawY, mapItemButtonWidth, mapItemButtonHeight);
-            m_renderDrawer->renderRectColor(iDrawX - 2, iDrawY - 2, mapItemButtonWidth + 4, mapItemButtonHeight + 4, Color::Yellow);
+            m_sdlDrawer->renderRectColor(iDrawX - 2, iDrawY - 2, mapItemButtonWidth + 4, mapItemButtonHeight + 4, Color::Yellow);
         }
 
         // In case invalid map, render as not-selectable
@@ -1368,7 +1368,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
 
         // Render preview map on tile
         cRectangle dest = cRectangle(iDrawX + 4, iDrawY + 20, mapItemButtonWidth - 8, mapItemButtonHeight - 24);
-        m_renderDrawer->renderStrechFullSprite(tex, dest);
+        m_sdlDrawer->renderStrechFullSprite(tex, dest);
 
         // Determine next tile coordinates, and if needed wrap to next row
         iDrawX += mapItemButtonWidth + 15;

@@ -75,15 +75,15 @@ void cChooseHouseState::thinkFast()
 void cChooseHouseState::draw() const
 {
     // Render the planet Dune a bit downward
-    m_renderDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
+    m_sdlDrawer->renderSprite(bmp_Dune, coords_Dune.x, coords_Dune.y);
 
     // HOUSES
-    m_renderDrawer->renderSprite(bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
+    m_sdlDrawer->renderSprite(bmp_SelectYourHouseTitle, coords_SelectYourHouseTitle.x, coords_SelectYourHouseTitle.y);
 
-    m_renderDrawer->renderSprite(bmp_HouseAtreides, houseAtreides.getX(), houseAtreides.getY());
-    m_renderDrawer->renderSprite(bmp_HouseOrdos, houseOrdos.getX(), houseOrdos.getY());
-    m_renderDrawer->renderSprite(bmp_HouseHarkonnen, houseHarkonnen.getX(),houseOrdos.getY());
-    m_renderDrawer->renderSprite(bmp_HouseSardaukar, houseSardaukar.getX(), houseSardaukar.getY());
+    m_sdlDrawer->renderSprite(bmp_HouseAtreides, houseAtreides.getX(), houseAtreides.getY());
+    m_sdlDrawer->renderSprite(bmp_HouseOrdos, houseOrdos.getX(), houseOrdos.getY());
+    m_sdlDrawer->renderSprite(bmp_HouseHarkonnen, houseHarkonnen.getX(),houseOrdos.getY());
+    m_sdlDrawer->renderSprite(bmp_HouseSardaukar, houseSardaukar.getX(), houseSardaukar.getY());
 
     // BACK (bottom right
     // TODO: Use actual cGuiButton

@@ -20,7 +20,7 @@
 cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_player(player),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
-    m_renderDrawer(ctx->getSDLDrawer()),
+    m_sdlDrawer(ctx->getSDLDrawer()),
     m_ctx(ctx),
     m_buildingListDrawer(ctx, player),
     m_sidebar(nullptr),
@@ -36,10 +36,10 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
     m_candyHorizonBar = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),
         m_player, m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
 
-    m_candiBarRenderer = m_renderDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH()-40);
-    m_renderDrawer->beginDrawingToTexture(m_candiBarRenderer);
+    m_candiBarRenderer = m_sdlDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH()-40);
+    m_sdlDrawer->beginDrawingToTexture(m_candiBarRenderer);
     createCandyBar();
-    m_renderDrawer->endDrawingToTexture();
+    m_sdlDrawer->endDrawingToTexture();
 }
 
 cSideBarDrawer::~cSideBarDrawer()
@@ -71,7 +71,7 @@ void cSideBarDrawer::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cSideBarDrawer::draw()
 {
     // black out sidebar
-    m_renderDrawer->renderRectFillColor((m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH(), Color{0, 0, 0,255});
+    m_sdlDrawer->renderRectFillColor((m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth), 0, cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH(), Color{0, 0, 0,255});
 
     drawCandybar();
 
@@ -114,7 +114,7 @@ void cSideBarDrawer::drawBuildingLists()
 
     for (; drawX < m_ctx->getGameInterface()->getGameSettings()->getScreenW(); drawX += backgroundSprite->w) {
         for (int drawY=startY; drawY < m_ctx->getGameInterface()->getGameSettings()->getScreenH(); drawY += backgroundSprite->h) {
-            m_renderDrawer->renderSprite(backgroundSprite, drawX, drawY);
+            m_sdlDrawer->renderSprite(backgroundSprite, drawX, drawY);
         }
     }
 
@@ -125,8 +125,8 @@ void cSideBarDrawer::drawBuildingLists()
     int iDrawY = m_buildingListDrawer.getDrawY();
 
     Texture *horBar = m_gfxinter->getTexture(BMP_GERALD_SIDEBAR_PIECE);
-    m_renderDrawer->renderSprite(horBar, iDrawX-1, iDrawY-38); // above sublist buttons
-    m_renderDrawer->renderSprite(horBar, iDrawX-1, iDrawY-5); // above normal icons
+    m_sdlDrawer->renderSprite(horBar, iDrawX-1, iDrawY-38); // above sublist buttons
+    m_sdlDrawer->renderSprite(horBar, iDrawX-1, iDrawY-5); // above normal icons
 
     if (selectedListId > -1) {
         selectedList = m_sidebar->getList(selectedListId);
@@ -143,25 +143,25 @@ void cSideBarDrawer::drawBuildingLists()
         int barX = (iDrawX - 1) + (i * 66);
         Color darker = Color{89, 56, 0,255};
         Color veryDark = Color{48, 28, 0,255};
-        m_renderDrawer->renderLine( barX - 1, iDrawY, barX - 1, endY, darker);
-        m_renderDrawer->renderLine( barX, iDrawY, barX, endY, veryDark);
+        m_sdlDrawer->renderLine( barX - 1, iDrawY, barX - 1, endY, darker);
+        m_sdlDrawer->renderLine( barX, iDrawY, barX, endY, veryDark);
 
         // horizontal lines
         for (int j = 1; j < rows; j++) {
             int barY = iDrawY - 1 + (j * 50);
-            m_renderDrawer->renderLine( iDrawX, barY-1, m_ctx->getGameInterface()->getGameSettings()->getScreenW(), barY - 1, darker);
-            m_renderDrawer->renderLine( iDrawX, barY, m_ctx->getGameInterface()->getGameSettings()->getScreenW(), barY, veryDark);
+            m_sdlDrawer->renderLine( iDrawX, barY-1, m_ctx->getGameInterface()->getGameSettings()->getScreenW(), barY - 1, darker);
+            m_sdlDrawer->renderLine( iDrawX, barY, m_ctx->getGameInterface()->getGameSettings()->getScreenW(), barY, veryDark);
         }
     }
 
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
-        m_renderDrawer->renderRectFillColor(iDrawX, endY, m_ctx->getGameInterface()->getGameSettings()->getScreenW()-iDrawX, m_ctx->getGameInterface()->getGameSettings()->getScreenH()-endY, m_sidebarColor);
-        m_renderDrawer->renderSprite(horBar, iDrawX-1, endY); // just below the last icons
+        m_sdlDrawer->renderRectFillColor(iDrawX, endY, m_ctx->getGameInterface()->getGameSettings()->getScreenW()-iDrawX, m_ctx->getGameInterface()->getGameSettings()->getScreenH()-endY, m_sidebarColor);
+        m_sdlDrawer->renderSprite(horBar, iDrawX-1, endY); // just below the last icons
     }
 
     // vertical lines at the side
-    m_renderDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, m_ctx->getGameInterface()->getGameSettings()->getScreenH(), Color{255, 211, 125,255}); // left
-    m_renderDrawer->renderLine( m_ctx->getGameInterface()->getGameSettings()->getScreenW() - 1, iDrawY - 38, m_ctx->getGameInterface()->getGameSettings()->getScreenW() - 1, endY, Color{209, 150, 28,255}); // right
+    m_sdlDrawer->renderLine( iDrawX - 1, iDrawY-38, iDrawX-1, m_ctx->getGameInterface()->getGameSettings()->getScreenH(), Color{255, 211, 125,255}); // left
+    m_sdlDrawer->renderLine( m_ctx->getGameInterface()->getGameSettings()->getScreenW() - 1, iDrawY - 38, m_ctx->getGameInterface()->getGameSettings()->getScreenW() - 1, endY, Color{209, 150, 28,255}); // right
 
     // END drawing icons grid
 
@@ -199,7 +199,7 @@ void cSideBarDrawer::drawCapacities()
 
 void cSideBarDrawer::drawCandybar()
 {
-    m_renderDrawer->renderSprite(m_candiBarRenderer,m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth,40);
+    m_sdlDrawer->renderSprite(m_candiBarRenderer,m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth,40);
 }
 
 void cSideBarDrawer::drawMinimap()
@@ -209,7 +209,7 @@ void cSideBarDrawer::drawMinimap()
     // 128 pixels (each pixel is a cell) + 8 margin
     int heightMinimap = cSideBar::HeightOfMinimap;
     int drawY = cSideBar::TopBarHeight + heightMinimap;
-    m_renderDrawer->renderSprite(sprite, drawX, drawY);
+    m_sdlDrawer->renderSprite(sprite, drawX, drawY);
 
     // 11, 10
     // 78, 60
@@ -223,7 +223,7 @@ void cSideBarDrawer::drawMinimap()
     }
 
     // else, we render the house emblem
-    m_renderDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,m_ctx->getGameInterface()->getGameSettings()->getScreenW()-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1),
+    m_sdlDrawer->renderRectFillColor(drawX + 1, cSideBar::TopBarHeight + 1,m_ctx->getGameInterface()->getGameSettings()->getScreenW()-(drawX + 1), drawY-(cSideBar::TopBarHeight + 1),
                                       m_player->getEmblemBackgroundColor());
 
     if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS) || m_player->isHouse(SARDAUKAR)) {
@@ -260,7 +260,7 @@ void cSideBarDrawer::drawMinimap()
 
         cRectangle src = {srcX, srcY, emblemWidth,emblemHeight};
         cRectangle dest = {drawX, drawY, emblemDesiredWidth, emblemDesiredHeight};
-        m_renderDrawer->renderStrechSprite(m_gfxinter->getTexture(bitmapId), src, dest);
+        m_sdlDrawer->renderStrechSprite(m_gfxinter->getTexture(bitmapId), src, dest);
     }
 }
 
@@ -268,34 +268,34 @@ void cSideBarDrawer::createCandyBar()
 {
     int heightInPixels = (m_ctx->getGameInterface()->getGameSettings()->getScreenH() - cSideBar::TopBarHeight);
     // ball first
-    m_renderDrawer->renderSprite(m_candyBarBall, 0,0); // height of ball = 25
-    m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
+    m_sdlDrawer->renderSprite(m_candyBarBall, 0,0); // height of ball = 25
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
     // now draw pieces untill the end (height of piece is 23 pixels)
     int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
     int heightMinimap = cSideBar::HeightOfMinimap;
     // auto tmp = cRectangle{0,0,24, heightMinimap - (6 + 1)};  // (add 1 pixel for room between ball and bar)
     for (int y = startY; y < (heightMinimap); y += 24) {
-        m_renderDrawer->renderSprite(m_candyBarPiece, 0, y);
+        m_sdlDrawer->renderSprite(m_candyBarPiece, 0, y);
     }
     // note: no need to take top bar into account because 'm_candybar' is a separate bitmap so coords start at 0,0
     // ball is 6 pixels higher than horizontal m_candybar
     int ballY = (heightMinimap) - 6;
 
     // draw bottom m_candybar
-    m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, ballY - 10); // height of bottom = 9
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, ballY - 10); // height of bottom = 9
 
     // draw ball
-    m_renderDrawer->renderSprite(m_candyBarBall, 0, ballY); // height of ball = 25
+    m_sdlDrawer->renderSprite(m_candyBarBall, 0, ballY); // height of ball = 25
 
     // draw top m_candybar again
-    m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, ballY + 26); // height of top = 10
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, ballY + 26); // height of top = 10
 
     startY = ballY + 26 + 10;
     for (int y = startY; y < (heightInPixels + 23); y += 24) {
-        m_renderDrawer->renderSprite(m_candyBarPiece, 0, y);
+        m_sdlDrawer->renderSprite(m_candyBarPiece, 0, y);
     }
     // draw bottom
-    m_renderDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, heightInPixels - 10); // height of top = 10
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_BOTTOM), 0, heightInPixels - 10); // height of top = 10
 }
 
 void cSideBarDrawer::drawPowerUsage() const
@@ -306,7 +306,7 @@ void cSideBarDrawer::drawPowerUsage() const
     int barY = cSideBar::TotalHeightBeforePowerBarStarts + arbitraryMargin;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     //cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
-    m_renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::Black); //renderDrawer->getColor_BLACK());
+    m_sdlDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, Color::Black); //sdlDrawer->getColor_BLACK());
 
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = m_infos->getStructureInfo(WINDTRAP).power_give;
@@ -318,7 +318,7 @@ void cSideBarDrawer::drawPowerUsage() const
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    m_renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, Color{0, 232, 0,255});
+    m_sdlDrawer->renderRectFillColor(barX, powerInY, barWidth, barY+barTotalHeight-powerInY, Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * powerUse;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -332,25 +332,25 @@ void cSideBarDrawer::drawPowerUsage() const
     if (g > 255) g = 255;
 
     if (m_player->bEnoughPower()) {
-        m_renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{(Uint8)r, (Uint8)g, 32,255});
+        m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{(Uint8)r, (Uint8)g, 32,255});
     }
     else {
-        m_renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
+        m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
     }
 
-    m_renderDrawer->renderLine(barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
+    m_sdlDrawer->renderLine(barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
 
-    m_renderDrawer->renderRectColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
+    m_sdlDrawer->renderRectColor(barX, barY, barWidth, barTotalHeight, m_sidebarColor);
 
     // draw darker 'sides' at the left and top
     Color darker = Color{89, 56, 0,255};
-    m_renderDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
-    m_renderDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
+    m_sdlDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    m_sdlDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
     if (m_player->bEnoughPower()) {
-        m_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER_HIGH),barX-3, barY - 21);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER_HIGH),barX-3, barY - 21);
     }
     else {
-        m_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(ICON_POWER),barX-3, barY - 21);
     }
 }
 
@@ -361,7 +361,7 @@ void cSideBarDrawer::drawCreditsUsage()
     int barY = cSideBar::TopBarHeight + 48;
     int barWidth = (cSideBar::VerticalCandyBarWidth / 3) - 1;
     // cRectangle powerBarRect(barX, barY, barWidth, barTotalHeight);
-    m_renderDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, 0,0,0,255);
+    m_sdlDrawer->renderRectFillColor(barX, barY, barWidth, barTotalHeight, 0,0,0,255);
 
     // STEFAN: 01/05/2021 -> looks like a lot of this code can be moved to the player class to retrieve max spice capacity
     // and so forth.
@@ -377,7 +377,7 @@ void cSideBarDrawer::drawCreditsUsage()
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerInY = barY + (barTotalHeight - barHeightToDraw);
 
-    m_renderDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, Color{0, 232, 0,255});
+    m_sdlDrawer->renderRectFillColor(barX, powerInY, barWidth, barY + barTotalHeight - powerInY, Color{0, 232, 0,255});
 
     barHeightToDraw = barTotalHeight * spiceStored;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -392,24 +392,24 @@ void cSideBarDrawer::drawCreditsUsage()
     if (g > 255) g = 255;
 
     if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
-        m_renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, (Uint8)r,(Uint8)g, 32,255);
+        m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, (Uint8)r,(Uint8)g, 32,255);
     }
     else {
-        m_renderDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
+        m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
     }
 
-    m_renderDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
+    m_sdlDrawer->renderLine( barX, powerOutY, barX+barWidth, powerOutY, Color{255, 255, 255,255});
 
     // draw darker 'sides' at the left and top
     Color darker = Color{89, 56, 0,255};
-    m_renderDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
-    m_renderDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
+    m_sdlDrawer->renderLine( barX, barY, barX, barY + barTotalHeight, darker); // left side |
+    m_sdlDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
     if (spiceCapacityRatio>0.95) {
-        m_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_FULL), barX-5, barY-20);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_FULL), barX-5, barY-20);
     } else  if (spiceCapacityRatio<0.05) {
-        m_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_LOW), barX-5, barY-20);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS_LOW), barX-5, barY-20);
     } else {
-        m_renderDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS), barX-5, barY-20);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(ICON_SOLARIS), barX-5, barY-20);
     }
 }

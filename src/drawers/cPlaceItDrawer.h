@@ -30,7 +30,7 @@ private:
     cStructureUtils* m_structureUtils = nullptr;
     cPlayer *m_player;
     GameContext *m_ctx;
-    SDLDrawer *m_renderDrawer;
+    SDLDrawer *m_sdlDrawer;
     Graphics *m_gfxdata;
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;

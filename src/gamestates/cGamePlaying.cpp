@@ -225,7 +225,7 @@ void cGamePlaying::drawTrackingOverlays() const
     const cRectangle* battlefield = m_interface->getMapViewport();
     m_textDrawer->drawTextCentered(label, battlefield->getX(), battlefield->getWidth(), cSideBar::TopBarHeight + 10, fadingYellow);
 
-    m_renderDrawer->setClippingFor(battlefield->getX(), battlefield->getY(),
+    m_sdlDrawer->setClippingFor(battlefield->getX(), battlefield->getY(),
                                    battlefield->getX() + battlefield->getWidth(),
                                    battlefield->getY() + battlefield->getHeight());
 
@@ -235,10 +235,10 @@ void cGamePlaying::drawTrackingOverlays() const
         cRectangle box(u->draw_x(), u->draw_y(),
                        static_cast<int>(m_mapCamera->factorZoomLevel(u->getBmpWidth())),
                        static_cast<int>(m_mapCamera->factorZoomLevel(u->getBmpHeight())));
-        m_renderDrawer->renderRectColor(box, Color::Yellow, alpha);
+        m_sdlDrawer->renderRectColor(box, Color::Yellow, alpha);
     }
 
-    m_renderDrawer->resetClippingFor();
+    m_sdlDrawer->resetClippingFor();
 }
 
 void cGamePlaying::draw() const
@@ -394,13 +394,13 @@ void cGamePlaying::drawCombatMouse() const
 {
     auto m_mouse = m_interface->getMouse();
     if (m_mouse->isBoxSelecting()) {
-        m_renderDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(), m_interface->getColorFadeSelectedLimited(Color::White, 0.5f));
+        m_sdlDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(), m_interface->getColorFadeSelectedLimited(Color::White, 0.5f));
     }
 
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
-        m_renderDrawer->renderLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y, m_interface->getColorFadeSelectedLimited(Color::White, 0.5f));
+        m_sdlDrawer->renderLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y, m_interface->getColorFadeSelectedLimited(Color::White, 0.5f));
     }
     m_mouse->draw();
 

@@ -40,7 +40,7 @@ private:
     cTextDrawer* m_gameTextDrawer;
     cTextDrawer* m_smallTextDrawer;
     Graphics* m_gfxinter;
-    SDLDrawer* m_renderDrawer;
+    SDLDrawer* m_sdlDrawer;
 
     cPlayer *m_player;
     cInfoContext* m_infos = nullptr;

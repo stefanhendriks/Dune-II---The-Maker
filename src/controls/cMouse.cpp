@@ -18,11 +18,11 @@
 
 cMouse::cMouse(GameContext *ctx) :
     m_ctx(ctx),
-    m_renderDrawer(ctx->getSDLDrawer()),
+    m_sdlDrawer(ctx->getSDLDrawer()),
     m_coords(cPoint(0,0))
 {
     d2tm_assert(m_ctx!=nullptr);
-    d2tm_assert(m_renderDrawer!=nullptr);
+    d2tm_assert(m_sdlDrawer!=nullptr);
     m_leftButtonPressed=false;
     m_rightButtonPressed=false;
     m_leftButtonReleased=false;
@@ -59,7 +59,7 @@ void cMouse::init()
 
 void cMouse::handleEvent(const SDL_Event &event)
 {
-    SDL_Renderer *renderer = m_renderDrawer->getRenderer();
+    SDL_Renderer *renderer = m_sdlDrawer->getRenderer();
     switch (event.type) {
         case SDL_EVENT_MOUSE_BUTTON_DOWN: {
             float px, py;
@@ -193,7 +193,7 @@ void cMouse::updateState()
 void cMouse::setCursorPosition(SDL_Window *_windows, int x, int y)
 {
     float wx, wy;
-    SDL_RenderCoordinatesToWindow(m_renderDrawer->getRenderer(), (float)x, (float)y, &wx, &wy);
+    SDL_RenderCoordinatesToWindow(m_sdlDrawer->getRenderer(), (float)x, (float)y, &wx, &wy);
     SDL_WarpMouseInWindow(_windows, wx, wy);
     if (m_mouseObserver) {
         s_MouseEvent event {
@@ -373,7 +373,7 @@ void cMouse::draw()
     }
 
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
-    m_renderDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
+    m_sdlDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
 }
 
 bool cMouse::isNormalRightClick()

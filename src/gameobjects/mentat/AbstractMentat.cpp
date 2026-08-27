@@ -40,7 +40,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
     m_gameInterface = ctx->getGameInterface();
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
-    m_renderDrawer = ctx->getSDLDrawer();
+    m_sdlDrawer = ctx->getSDLDrawer();
     iMentatSentence = -1;
 
     TIMER_Speaking = -1;
@@ -77,7 +77,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
             .withRect(toMissionSelectRect)
             .withLabel("Mission select")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this] {
@@ -262,17 +262,17 @@ void AbstractMentat::thinkMouth()  // MOUTH
 
 void AbstractMentat::draw()
 {
-    m_renderDrawer->renderClearToColor(Color{7,7,15,255});
-    m_renderDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, Color{64, 64,89,255});
-    m_renderDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, Color{40,40,60,255});
-    m_renderDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, Color{0,0,0,255});
+    m_sdlDrawer->renderClearToColor(Color{7,7,15,255});
+    m_sdlDrawer->renderRectColor(offsetX-1, offsetY-1, 641, 481, Color{64, 64,89,255});
+    m_sdlDrawer->renderRectColor(offsetX-2, offsetY-2, 642, 482, Color{40,40,60,255});
+    m_sdlDrawer->renderRectColor(offsetX-3, offsetY-3, 643, 483, Color{0,0,0,255});
 
     // movie
     draw_movie();
 
     Texture *tmp = getBackgroundBitmap();
     cRectangle dest = {offsetX, offsetY, MENTAT_SCREEN_W, MENTAT_SCREEN_H};
-    m_renderDrawer->renderStrechFullSprite(tmp, dest);
+    m_sdlDrawer->renderStrechFullSprite(tmp, dest);
 
     draw_eyes();
     draw_mouth();
@@ -317,7 +317,7 @@ void AbstractMentat::draw_movie()
     // drawing only, circulating is done in think function
     Texture *tmp = gfxmovie->getTexture(iMovieFrame);
     cRectangle dest = {movieTopleftX, movieTopleftY,tmp->w, tmp->h};
-    m_renderDrawer->renderStrechFullSprite(tmp, dest);
+    m_sdlDrawer->renderStrechFullSprite(tmp, dest);
 }
 
 void AbstractMentat::initSentences()
@@ -338,7 +338,7 @@ void AbstractMentat::loadScene(const std::string &scene)
     char filename[255];
     snprintf(filename, sizeof(filename), "data/scenes/sdl_%s.dat", scene.c_str());
 
-    gfxmovie = std::make_shared<Graphics>(m_renderDrawer->getRenderer(),filename);
+    gfxmovie = std::make_shared<Graphics>(m_sdlDrawer->getRenderer(),filename);
 
     TIMER_movie = 0;
     iMovieFrame=0;
