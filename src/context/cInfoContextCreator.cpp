@@ -147,6 +147,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
         // attack related
         unitInfo.canAttackAirUnits = false;
         unitInfo.canAttackUnits = false;
+        unitInfo.canDamageStructures = true;
 
         // capturing / damage upon entering structure related
         unitInfo.canEnterAndDamageStructure = false;
@@ -312,6 +313,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[DEVIATOR].smokeHpFactor = 0.5f;
     unitInfos[DEVIATOR].canGuard = true;
     unitInfos[DEVIATOR].canAttackUnits = true;
+    unitInfos[DEVIATOR].canDamageStructures = false; // gas warhead only deviates units, does no structural damage
     strcpy(unitInfos[DEVIATOR].name, "Deviator");
     unitInfos[DEVIATOR].configured = true;
 

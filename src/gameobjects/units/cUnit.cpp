@@ -921,8 +921,8 @@ void cUnit::attackStructure(int targetStructure)
 {
     log(std::format("attackStructure() : target is [{}]", targetStructure));
 
-    if (isType(DEVIATOR)) {
-        log("attackStructure() : Deviator cannot damage structures, ignoring order.");
+    if (!canDamageStructures()) {
+        log("attackStructure() : unit cannot damage structures, ignoring order.");
         return;
     }
 
