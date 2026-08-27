@@ -346,6 +346,14 @@ public:
         return getUnitInfo().canAttackAirUnits;
     }
 
+    /**
+     * Can this unit's weapon damage structures? (the Deviator cannot)
+     * @return
+     */
+    bool canDamageStructures() const {
+        return getUnitInfo().canDamageStructures;
+    }
+
     bool isInfantryUnit() const;
     bool isWheelUnit() const;
     bool isTankUnit() const;
