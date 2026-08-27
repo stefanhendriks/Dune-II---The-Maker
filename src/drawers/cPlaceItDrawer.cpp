@@ -96,6 +96,10 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                     }
 
                     // TODO: Allow placement nearby allies?
+
+                    // structure owned by someone else: its foundation slab must not
+                    // count as a build anchor, so skip the wall/slab check for this cell
+                    continue;
                 }
 
                 if (m_objects->getMap()->getCellType(iCll) == TERRAIN_WALL ||
