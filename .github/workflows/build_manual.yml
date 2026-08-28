@@ -33,6 +33,9 @@ jobs:
           else
             echo "tag=$INPUT" >> $GITHUB_OUTPUT
           fi
+          # --target must be a branch or commit SHA; a tag name is rejected.
+          # The checkout above resolved inputs.tag, so use the checked-out commit.
+          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "date=$(date -u +'%Y-%m-%d %H:%M')" >> $GITHUB_OUTPUT
       - name: Create release
         run: |
@@ -43,7 +46,7 @@ jobs:
               --title "Manual Build - ${DATE}" \
               --notes "Manual build from ${{ inputs.tag }}" \
               --latest=false \
-              --target "${{ inputs.tag }}"
+              --target "${{ steps.resolve.outputs.sha }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -249,6 +252,8 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
       - name: Delete manual releases older than 30 days
         run: |
           CUTOFF=$(date -d '30 days ago' --utc +%Y-%m-%dT%H:%M:%SZ)
