@@ -1,4 +1,4 @@
-name: Manual build release from tag
+name: Build and publish release
 
 on:
   workflow_dispatch:
@@ -6,12 +6,16 @@ on:
       tag:
         required: true
         type: string
-        description: Tag or commit SHA
+        description: "Official: the release tag (must exist). Dev build: tag, branch, or commit SHA."
       official:
-        description: "Official release: keep the tag name, title it \"Version <tag>\", mark it latest, do not auto-prune. Leave off for throwaway dev builds."
+        description: "Official release: <tag> named, marked latest, changelog generated to the wiki, milestone closed. Off = throwaway manual- build."
         required: false
         type: boolean
         default: false
+      previous_tag:
+        description: "Previous release tag to diff the changelog against (e.g. v0.8.0). Required when official is checked."
+        required: false
+        type: string
 
 concurrency:
   group: master-builds
@@ -38,11 +42,15 @@ jobs:
           echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
           if [[ "${{ inputs.official }}" == "true" ]]; then
+            if [[ -z "${{ inputs.previous_tag }}" ]]; then
+              echo "::error::previous_tag is required when official is checked"
+              exit 1
+            fi
             # Official release: keep the tag name, curated title, mark it latest.
             # The Cleanup job only prunes "manual-*", so this one is left alone.
             echo "tag=$INPUT" >> $GITHUB_OUTPUT
             echo "title=Version ${INPUT#v}" >> $GITHUB_OUTPUT
-            echo "notes=Release notes: https://github.com/${{ github.repository }}/wiki/${INPUT}" >> $GITHUB_OUTPUT
+            echo "notes=Full changelog: https://github.com/${{ github.repository }}/wiki/${INPUT}" >> $GITHUB_OUTPUT
             echo "latest=true" >> $GITHUB_OUTPUT
           else
             # Throwaway dev build: "manual-" prefix so it is visibly not an
@@ -57,6 +65,50 @@ jobs:
             echo "notes=Manual build from ${INPUT}" >> $GITHUB_OUTPUT
             echo "latest=false" >> $GITHUB_OUTPUT
           fi
+      - name: Set up Python
+        if: ${{ inputs.official }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.14"
+      - name: Generate changelog
+        if: ${{ inputs.official }}
+        id: notes
+        uses: AbsaOSS/generate-release-notes@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag-name: ${{ inputs.tag }}
+          from-tag-name: ${{ inputs.previous_tag }}
+          chapters: |
+            - {"title": "🚀 Features", "labels": "feature, improvement"}
+            - {"title": "🎲 Gameplay", "labels": "balancing"}
+            - {"title": "🧩️ Dune 2 features", "label": "missing-dune2-piece"}
+            - {"title": "🧪 Experimental", "label": "experimental"}
+            - {"title": "🐛 Fixes", "labels": "bug"}
+            - {"title": "⚙️ Technical", "labels": "refactoring, technical"}
+      - name: Assemble changelog file
+        if: ${{ inputs.official }}
+        run: |
+          mkdir -p temp_release_notes
+          cat << 'EOF' \
+          | sed '/^## Closed Issues without Pull Request/,/^## /d' \
+          | sed '/^## Merged PRs without Issue and User Defined Labels/,/^## /d' \
+          | sed '/^## Closed PRs without Issue and User Defined Labels/,/^## /d' \
+          | sed '/^## Merged PRs Linked to .Not Closed. Issue/,/^## /d' \
+          | sed '/^## Direct Commits/,/^## /d' \
+          > temp_release_notes/${{ inputs.tag }}.md
+            ${{ steps.notes.outputs.release-notes }}
+          EOF
+      - name: Write changelog to wiki page
+        if: ${{ inputs.official }}
+        uses: docker://decathlon/wiki-page-creator-action:2.0.2
+        env:
+          GH_PAT: ${{ secrets.GH_PAT_D2TM }}
+          ACTION_MAIL: stefan@fundynamic.com
+          ACTION_NAME: stefanhendriks
+          OWNER: stefanhendriks
+          REPO_NAME: Dune-II---The-Maker
+          MD_FOLDER: temp_release_notes
       - name: Create release
         run: |
           TAG="${{ steps.resolve.outputs.tag }}"
@@ -262,6 +314,26 @@ jobs:
           TAG="${{ needs.Prepare.outputs.tag }}"
           cp bin/d2tm.zip bin/d2tm-macos-intel-${TAG}.zip
           gh release upload "$TAG" bin/d2tm-macos-intel-${TAG}.zip --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  Finalize:
+    name: Close milestone
+    needs: [Prepare, MSYS2, Ubuntu, MACOSX, MACOSX_INTEL]
+    if: ${{ inputs.official && success() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close the milestone matching the tag
+        run: |
+          TITLE="${{ inputs.tag }}"
+          NUM=$(gh api "repos/${{ github.repository }}/milestones?state=open" \
+                  --jq ".[] | select(.title == \"$TITLE\") | .number")
+          if [ -z "$NUM" ]; then
+            echo "No open milestone titled $TITLE; nothing to close."
+            exit 0
+          fi
+          gh api -X PATCH "repos/${{ github.repository }}/milestones/$NUM" -f state=closed
+          echo "Closed milestone $TITLE (#$NUM)."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
