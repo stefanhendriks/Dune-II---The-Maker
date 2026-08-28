@@ -99,16 +99,32 @@ jobs:
           > temp_release_notes/${{ inputs.tag }}.md
             ${{ steps.notes.outputs.release-notes }}
           EOF
-      - name: Write changelog to wiki page
+      - name: Publish changelog and sidebar to wiki
         if: ${{ inputs.official }}
-        uses: docker://decathlon/wiki-page-creator-action:2.0.2
         env:
           GH_PAT: ${{ secrets.GH_PAT_D2TM }}
-          ACTION_MAIL: stefan@fundynamic.com
-          ACTION_NAME: stefanhendriks
-          OWNER: stefanhendriks
-          REPO_NAME: Dune-II---The-Maker
-          MD_FOLDER: temp_release_notes
+        run: |
+          set -euo pipefail
+          git clone "https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.wiki.git" wiki
+          cd wiki
+
+          # changelog page for this release
+          cp "${{ github.workspace }}/temp_release_notes/${{ inputs.tag }}.md" "${{ inputs.tag }}.md"
+
+          # regenerate _Sidebar.md: fixed header + Releases list, newest first
+          cp "${{ github.workspace }}/.github/wiki/_Sidebar.header.md" _Sidebar.md
+          {
+            echo
+            echo "### Releases"
+            ls -1 | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+\.md$' | sed 's/\.md$//' | sort -Vr \
+              | while read -r page; do echo "- [${page}](${page})"; done
+          } >> _Sidebar.md
+
+          git config user.name "stefanhendriks"
+          git config user.email "stefan@fundynamic.com"
+          git add "${{ inputs.tag }}.md" _Sidebar.md
+          git diff --cached --quiet || git commit -m "Release notes for ${{ inputs.tag }}"
+          git push
       - name: Create release
         run: |
           TAG="${{ steps.resolve.outputs.tag }}"
