@@ -28,10 +28,14 @@ jobs:
         id: resolve
         run: |
           INPUT="${{ inputs.tag }}"
+          # Every manual build is a throwaway: name the release "manual-<...>" so
+          # it is visibly not an official release and the Cleanup job prunes it
+          # after 30 days. SHA input -> short hash; anything else (tag/branch) ->
+          # the ref name as given.
           if [[ "$INPUT" =~ ^[0-9a-f]{40}$ ]]; then
             echo "tag=manual-${INPUT:0:7}" >> $GITHUB_OUTPUT
           else
-            echo "tag=$INPUT" >> $GITHUB_OUTPUT
+            echo "tag=manual-$INPUT" >> $GITHUB_OUTPUT
           fi
           # --target must be a branch or commit SHA; a tag name is rejected.
           # The checkout above resolved inputs.tag, so use the checked-out commit.
