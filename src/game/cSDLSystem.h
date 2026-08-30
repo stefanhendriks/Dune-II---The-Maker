@@ -11,7 +11,7 @@ struct DisplayResolution {
 class cSDLSystem {
 public:
     // Initializes SDL, creates a window and renderer with the given resolution
-    cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title);
+    cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title, bool windowed);
     ~cSDLSystem();
 
     void setFullScreenMode();
@@ -40,10 +40,13 @@ public:
 
 private:
     void getWindowResolution();
-    void adaptResolution(int desiredWidth, int desiredHeight);
+    void adaptResolution(int desiredWidth, int desiredHeight, bool windowed);
+    void fitToUsableBounds();
+    void syncRenderResolutionToWindow();
     void applyFullscreenPresentation();
     DisplayResolution renderResolution;
     DisplayResolution windowResolution; //display size of screen
+    DisplayResolution usableResolution; //display size minus taskbar/dock/menu bar
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
 };

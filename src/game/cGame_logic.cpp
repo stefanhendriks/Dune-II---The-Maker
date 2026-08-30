@@ -618,7 +618,7 @@ bool cGame::setupGame()
     }
     Logger::info(COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section");
 
-    m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title);
+    m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title, m_windowed);
     if (!m_windowed) {
         m_Screen->setFullScreenMode();
     }
