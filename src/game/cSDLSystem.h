@@ -41,9 +41,12 @@ public:
 private:
     void getWindowResolution();
     void adaptResolution(int desiredWidth, int desiredHeight);
+    void fitToUsableBounds();
+    void syncRenderResolutionToWindow();
     void applyFullscreenPresentation();
     DisplayResolution renderResolution;
     DisplayResolution windowResolution; //display size of screen
+    DisplayResolution usableResolution; //display size minus taskbar/dock/menu bar
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
 };
