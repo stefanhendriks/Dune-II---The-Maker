@@ -6,11 +6,12 @@ on:
   issue_comment:
     types: [created]
 
-# One in-flight review per PR; a newer push cancels the older run instead of
-# stacking. Reviews draw from the shared Claude subscription rate limit, so
-# avoiding pile-ups matters.
+# One in-flight review per PR per trigger kind; a newer push cancels the older
+# run instead of stacking. The event kind is part of the key so that the
+# progress comment posted by track_progress (an issue_comment event) does not
+# land in the same group as the pull_request review and cancel it.
 concurrency:
-  group: claude-review-${{ github.event.pull_request.number || github.event.issue.number }}
+  group: claude-review-${{ github.event.pull_request.number || github.event.issue.number }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
