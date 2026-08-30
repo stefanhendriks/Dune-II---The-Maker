@@ -3,17 +3,17 @@ name: Build and publish release
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        required: true
-        type: string
-        description: "Official: the release tag (must exist). Dev build: tag, branch, or commit SHA."
-      official:
-        description: "Official release: <tag> named, marked latest, changelog generated to the wiki, milestone closed. Off = throwaway manual- build."
+      version:
+        description: "vX.Y.Z (official: latest + changelog + milestone) or vX.Y.Z-rcN (release candidate: prerelease). Empty = throwaway snapshot of 'ref'."
         required: false
-        type: boolean
-        default: false
+        type: string
+      ref:
+        description: "Commit SHA or branch to build and tag. Defaults to master."
+        required: false
+        type: string
+        default: master
       previous_tag:
-        description: "Previous release tag to diff the changelog against (e.g. v0.8.0). Required when official is checked."
+        description: "Previous release tag to diff the changelog against (e.g. v0.8.0). Required for an official vX.Y.Z version."
         required: false
         type: string
 
@@ -21,63 +21,91 @@ concurrency:
   group: master-builds
   cancel-in-progress: false   # wait until the current run finishes
 
+permissions:
+  contents: write   # push tags, publish releases
+
 jobs:
   Prepare:
-    name: Create release
+    name: Prepare release
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.resolve.outputs.tag }}
+      sha: ${{ steps.resolve.outputs.sha }}
+      mode: ${{ steps.resolve.outputs.mode }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ inputs.ref }}
           fetch-depth: 0
       - name: Resolve release identity
         id: resolve
         run: |
-          INPUT="${{ inputs.tag }}"
-          # --target must be a branch or commit SHA; a tag name is rejected.
-          # The checkout above resolved inputs.tag, so use the checked-out commit.
-          echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          set -euo pipefail
+          VERSION="${{ inputs.version }}"
+          SHA=$(git rev-parse HEAD)
+          SHORT=${SHA:0:7}
+          DATE=$(date -u +'%Y-%m-%d %H:%M')
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
 
-          if [[ "${{ inputs.official }}" == "true" ]]; then
-            if [[ -z "${{ inputs.previous_tag }}" ]]; then
-              echo "::error::previous_tag is required when official is checked"
+          # The mode is chosen purely from the version string:
+          #   empty          -> snapshot   (throwaway manual-<sha7>, auto-pruned)
+          #   vX.Y.Z         -> official   (latest, changelog to wiki, milestone closed)
+          #   vX.Y.Z-rcN     -> rc         (prerelease, nothing else)
+          if [ -z "$VERSION" ]; then
+            echo "mode=snapshot" >> "$GITHUB_OUTPUT"
+            echo "tag=manual-$SHORT" >> "$GITHUB_OUTPUT"
+            echo "title=Snapshot $SHORT ($DATE)" >> "$GITHUB_OUTPUT"
+            echo "notes=Snapshot build of ${{ inputs.ref }} @ $SHORT. Auto-deleted after 30 days." >> "$GITHUB_OUTPUT"
+            echo "latest=false" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          elif echo "$VERSION" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            if [ -z "${{ inputs.previous_tag }}" ]; then
+              echo "::error::previous_tag is required for an official version ($VERSION)"
               exit 1
             fi
-            # Official release: keep the tag name, curated title, mark it latest.
-            # The Cleanup job only prunes "manual-*", so this one is left alone.
-            echo "tag=$INPUT" >> $GITHUB_OUTPUT
-            echo "title=Version ${INPUT#v}" >> $GITHUB_OUTPUT
-            echo "notes=Full changelog: https://github.com/${{ github.repository }}/wiki/${INPUT}" >> $GITHUB_OUTPUT
-            echo "latest=true" >> $GITHUB_OUTPUT
+            echo "mode=official" >> "$GITHUB_OUTPUT"
+            echo "tag=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "title=Version ${VERSION#v}" >> "$GITHUB_OUTPUT"
+            echo "notes=Full changelog: https://github.com/${{ github.repository }}/wiki/$VERSION" >> "$GITHUB_OUTPUT"
+            echo "latest=true" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          elif echo "$VERSION" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+-rc[0-9]+$'; then
+            echo "mode=rc" >> "$GITHUB_OUTPUT"
+            echo "tag=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "title=RC ${VERSION#v}" >> "$GITHUB_OUTPUT"
+            echo "notes=Release candidate ${VERSION#v} (build of $SHORT)." >> "$GITHUB_OUTPUT"
+            echo "latest=false" >> "$GITHUB_OUTPUT"
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
           else
-            # Throwaway dev build: "manual-" prefix so it is visibly not an
-            # official release and Cleanup prunes it after 30 days. SHA input ->
-            # short hash; anything else (tag/branch) -> the ref name as given.
-            if [[ "$INPUT" =~ ^[0-9a-f]{40}$ ]]; then
-              echo "tag=manual-${INPUT:0:7}" >> $GITHUB_OUTPUT
-            else
-              echo "tag=manual-$INPUT" >> $GITHUB_OUTPUT
-            fi
-            echo "title=Manual Build - $(date -u +'%Y-%m-%d %H:%M')" >> $GITHUB_OUTPUT
-            echo "notes=Manual build from ${INPUT}" >> $GITHUB_OUTPUT
-            echo "latest=false" >> $GITHUB_OUTPUT
+            echo "::error::version must be vX.Y.Z or vX.Y.Z-rcN (got: $VERSION)"
+            exit 1
+          fi
+      - name: Create tag if missing
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.resolve.outputs.tag }}"
+          SHA="${{ steps.resolve.outputs.sha }}"
+          if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "Tag $TAG already exists at $(git rev-parse "$TAG")."
+          else
+            git tag "$TAG" "$SHA"
+            git push origin "$TAG"
+            echo "Created tag $TAG at $SHA."
           fi
       - name: Set up Python
-        if: ${{ inputs.official }}
+        if: ${{ steps.resolve.outputs.mode == 'official' }}
         uses: actions/setup-python@v3
         with:
           python-version: "3.14"
       - name: Generate changelog
-        if: ${{ inputs.official }}
+        if: ${{ steps.resolve.outputs.mode == 'official' }}
         id: notes
         uses: AbsaOSS/generate-release-notes@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag-name: ${{ inputs.tag }}
+          tag-name: ${{ inputs.version }}
           from-tag-name: ${{ inputs.previous_tag }}
           chapters: |
             - {"title": "🚀 Features", "labels": "feature, improvement"}
@@ -86,38 +114,59 @@ jobs:
             - {"title": "🧪 Experimental", "label": "experimental"}
             - {"title": "🐛 Fixes", "labels": "bug"}
             - {"title": "⚙️ Technical", "labels": "refactoring, technical"}
-      - name: Assemble changelog file
-        if: ${{ inputs.official }}
+      - name: Publish changelog and sidebar to wiki
+        if: ${{ steps.resolve.outputs.mode == 'official' }}
+        env:
+          GH_PAT: ${{ secrets.GH_PAT_D2TM }}
         run: |
-          mkdir -p temp_release_notes
+          set -euo pipefail
+          mkdir -p notes
           cat << 'EOF' \
           | sed '/^## Closed Issues without Pull Request/,/^## /d' \
           | sed '/^## Merged PRs without Issue and User Defined Labels/,/^## /d' \
           | sed '/^## Closed PRs without Issue and User Defined Labels/,/^## /d' \
           | sed '/^## Merged PRs Linked to .Not Closed. Issue/,/^## /d' \
           | sed '/^## Direct Commits/,/^## /d' \
-          > temp_release_notes/${{ inputs.tag }}.md
+          > "notes/${{ inputs.version }}.md"
             ${{ steps.notes.outputs.release-notes }}
           EOF
-      - name: Write changelog to wiki page
-        if: ${{ inputs.official }}
-        uses: docker://decathlon/wiki-page-creator-action:2.0.2
-        env:
-          GH_PAT: ${{ secrets.GH_PAT_D2TM }}
-          ACTION_MAIL: stefan@fundynamic.com
-          ACTION_NAME: stefanhendriks
-          OWNER: stefanhendriks
-          REPO_NAME: Dune-II---The-Maker
-          MD_FOLDER: temp_release_notes
+
+          git clone "https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.wiki.git" wiki
+          cd wiki
+          cp "../notes/${{ inputs.version }}.md" "${{ inputs.version }}.md"
+
+          # regenerate _Sidebar.md: fixed header + Releases list, newest first
+          cp "${{ github.workspace }}/.github/wiki/_Sidebar.header.md" _Sidebar.md
+          {
+            echo
+            echo "### Releases"
+            ls -1 | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+\.md$' | sed 's/\.md$//' | sort -Vr \
+              | while read -r page; do echo "- [${page}](${page})"; done
+          } >> _Sidebar.md
+
+          git config user.name "stefanhendriks"
+          git config user.email "stefan@fundynamic.com"
+          git add "${{ inputs.version }}.md" _Sidebar.md
+          git diff --cached --quiet || git commit -m "Release notes for ${{ inputs.version }}"
+          git push
       - name: Create release
         run: |
+          set -euo pipefail
           TAG="${{ steps.resolve.outputs.tag }}"
-          gh release view "$TAG" > /dev/null 2>&1 || \
-            gh release create "$TAG" \
-              --title "${{ steps.resolve.outputs.title }}" \
-              --notes "${{ steps.resolve.outputs.notes }}" \
-              --latest=${{ steps.resolve.outputs.latest }} \
-              --target "${{ steps.resolve.outputs.sha }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; leaving it as-is."
+            exit 0
+          fi
+          ARGS=(
+            --title "${{ steps.resolve.outputs.title }}"
+            --notes "${{ steps.resolve.outputs.notes }}"
+            --latest="${{ steps.resolve.outputs.latest }}"
+            --target "${{ steps.resolve.outputs.sha }}"
+          )
+          if [ "${{ steps.resolve.outputs.prerelease }}" = "true" ]; then
+            ARGS+=(--prerelease)
+          fi
+          gh release create "$TAG" "${ARGS[@]}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -144,7 +193,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ needs.Prepare.outputs.sha }}
           submodules: recursive
           fetch-depth: 0   # fetch full history to see all files
       - name: Configure
@@ -191,7 +240,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ needs.Prepare.outputs.sha }}
           submodules: recursive
           fetch-depth: 0   # fetch full history to see all files
       - name: Install dependencies
@@ -237,7 +286,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ needs.Prepare.outputs.sha }}
           submodules: recursive
           fetch-depth: 0   # fetch full history to see all files
       - name: Install dependencies
@@ -281,7 +330,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ inputs.tag }}
+          ref: ${{ needs.Prepare.outputs.sha }}
           submodules: recursive
           fetch-depth: 0   # fetch full history to see all files
       - name: Install dependencies
@@ -320,12 +369,12 @@ jobs:
   Finalize:
     name: Close milestone
     needs: [Prepare, MSYS2, Ubuntu, MACOSX, MACOSX_INTEL]
-    if: ${{ inputs.official && success() }}
+    if: ${{ needs.Prepare.outputs.mode == 'official' && success() }}
     runs-on: ubuntu-latest
     steps:
-      - name: Close the milestone matching the tag
+      - name: Close the milestone matching the version
         run: |
-          TITLE="${{ inputs.tag }}"
+          TITLE="${{ inputs.version }}"
           NUM=$(gh api "repos/${{ github.repository }}/milestones?state=open" \
                   --jq ".[] | select(.title == \"$TITLE\") | .number")
           if [ -z "$NUM" ]; then
@@ -338,14 +387,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   Cleanup:
-    name: Prune old manual releases
+    name: Prune old snapshot releases
     needs: [MSYS2, Ubuntu, MACOSX, MACOSX_INTEL]
     if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Delete manual releases older than 30 days
+      - name: Delete snapshot releases older than 30 days
         run: |
           CUTOFF=$(date -d '30 days ago' --utc +%Y-%m-%dT%H:%M:%SZ)
           gh release list --repo ${{ github.repository }} --limit 100 --json tagName,createdAt \
