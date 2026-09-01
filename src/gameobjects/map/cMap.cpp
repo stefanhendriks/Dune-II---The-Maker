@@ -362,9 +362,68 @@ void cMap::thinkFast()
     thinkAboutRespawningWorms();
 }
 
+void cMap::thinkNormal()
+{
+    updateFogOfWar();
+}
+
 void cMap::thinkSlow()
 {
     m_pathFinder->resetPathCreatedByUnit();
+}
+
+void cMap::updateFogOfWar()
+{
+    for (int c = 0; c < m_maxCells; c++) {
+        memset(m_cell[c].iSeen, 0, sizeof(m_cell[c].iSeen));
+    }
+
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid()) continue;
+
+        markSeen(pUnit->getCell(), pUnit->getUnitInfo().sight, pUnit->iPlayer);
+    }
+
+    for (int i = 0; i < MAX_STRUCTURES; i++) {
+        cAbstractStructure *pStructure = m_objects->getStructures()[i];
+        if (!pStructure || !pStructure->isValid()) continue;
+
+        markSeen(pStructure->getCell(), pStructure->getSight(), pStructure->getOwner());
+    }
+}
+
+void cMap::markSeen(int cell, int size, int playerId)
+{
+    if (!m_mapGeometry->isWithinBoundaries(cell)) return;
+    if (playerId < 0 || playerId >= MAX_PLAYERS) return;
+
+    // same radius as clearShroud, so the fog of war never lags behind the discovered area
+    int maxRadius = (size <= 1) ? size : (size - 1);
+    if (maxRadius < 0) maxRadius = 0;
+
+    int cellX = m_mapGeometry->getCellX(cell);
+    int cellY = m_mapGeometry->getCellY(cell);
+
+    for (int dx = -maxRadius; dx <= maxRadius; dx++) {
+        for (int dy = -maxRadius; dy <= maxRadius; dy++) {
+            if ((dx * dx) + (dy * dy) > (maxRadius * maxRadius)) continue; // outside the circle
+
+            int x = cellX + dx;
+            int y = cellY + dy;
+            if (!m_mapGeometry->isWithinBoundaries(x, y)) continue;
+
+            m_cell[m_mapGeometry->makeCell(x, y)].iSeen[playerId] = true;
+        }
+    }
+}
+
+bool cMap::isHiddenByFogOfWar(cUnit *pUnit)
+{
+    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
+    if (humanPlayer->isSameTeamAs(pUnit->getPlayer())) return false;
+
+    return !isSeen(pUnit->getCell(), HUMAN);
 }
 
 void cMap::thinkAboutRespawningWorms()
@@ -598,7 +657,7 @@ void cMap::draw_units()
 
         if (pUnit->iType != SANDWORM) continue;
 
-        if (pUnit->isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             pUnit->draw();
         }
 
@@ -614,7 +673,7 @@ void cMap::draw_units()
         if (!pUnit->isInfantryUnit())
             continue; // skip non-infantry units
 
-        if (pUnit->isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             // draw
             pUnit->draw();
         }
@@ -632,7 +691,7 @@ void cMap::draw_units()
                 pUnit->isInfantryUnit())
             continue; // skip airborn, infantry and sandworm
 
-        if (pUnit->isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             // draw
             pUnit->draw();
         }
@@ -661,6 +720,7 @@ void cMap::draw_units_2nd()
         if (!pUnit->rendering.bHovered && !pUnit->isSelected()) continue;
         if (!pUnit->isWithinViewport(mapViewport)) continue;
         if (pUnit->isHidden()) continue;
+        if (isHiddenByFogOfWar(pUnit)) continue;
 
         pUnit->draw_health();
         pUnit->draw_group(m_textDrawer);
@@ -676,7 +736,7 @@ void cMap::draw_units_2nd()
         if (!pUnit || !pUnit->isValid()) continue;
         if (!pUnit->isAirbornUnit()) continue;
 
-        if (pUnit->isWithinViewport(mapViewport)) {
+        if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             pUnit->draw();
             // TODO: Only human players?
             pUnit->draw_health();
@@ -1199,6 +1259,8 @@ void cMap::cellInit(int cellNr)
     // clear out the ID stuff
     memset(pCell->id, -1, sizeof(pCell->id));
     memset(pCell->iVisible, 0, sizeof(pCell->iVisible));
+    // default to 'seen', so states that never update the fog of war do not render a fogged map
+    memset(pCell->iSeen, 1, sizeof(pCell->iSeen));
 }
 
 cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer)

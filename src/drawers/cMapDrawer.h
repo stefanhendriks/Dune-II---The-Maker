@@ -3,7 +3,10 @@
 // #include "gameobjects/map/cMap.h"
 // #include "gameobjects/map/cMapCamera.h"
 
+#include <memory>
+
 struct SDL_Surface;
+class Texture;
 class cPlayer;
 class GameContext;
 class Graphics;
@@ -47,7 +50,16 @@ private:
     bool m_drawWithoutShroudTiles;
     bool m_drawGrid;
 
-    int determineWhichShroudTileToDraw(int cll, int playerId) const;
+    // the shroud sprite, but grey instead of black, used to veil the fog of war
+    std::unique_ptr<Texture> m_fogTexture;
+
+    /**
+     * Which border tile of the shroud sprite fits this cell? When fogOfWar is true the borders are
+     * determined by the cells that are not observed right now, instead of the undiscovered cells.
+     */
+    int determineWhichShroudTileToDraw(int cll, int playerId, bool fogOfWar) const;
+
+    std::unique_ptr<Texture> createFogTexture() const;
 
     void drawCellAsColoredTile(float tileWidth, float tileHeight, int iCell, float fDrawX, float fDrawY);
 };

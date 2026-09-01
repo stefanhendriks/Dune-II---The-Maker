@@ -332,7 +332,9 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfUnitAtCell = m_map->getCellIdUnitLayer(iCll);
             if (idOfUnitAtCell > -1) {
-                int iPlr = m_objects->getUnit(idOfUnitAtCell)->iPlayer;
+                cUnit *pUnit = m_objects->getUnit(idOfUnitAtCell);
+                if (m_map->isHiddenByFogOfWar(pUnit)) continue; // hidden in the fog of war
+                int iPlr = pUnit->iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
@@ -341,7 +343,9 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
 
             int idOfAirUnitAtCell = m_map->getCellIdAirUnitLayer(iCll);
             if (idOfAirUnitAtCell > -1) {
-                int iPlr = m_objects->getUnit(idOfAirUnitAtCell)->iPlayer;
+                cUnit *pUnit = m_objects->getUnit(idOfAirUnitAtCell);
+                if (m_map->isHiddenByFogOfWar(pUnit)) continue; // hidden in the fog of war
+                int iPlr = pUnit->iPlayer;
                 if (playerOnly) {
                     if (iPlr != m_player->getId()) continue; // skip non player units
                 }
@@ -353,6 +357,7 @@ void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
                 if (playerOnly) {
                     continue; // skip sandworms
                 }
+                if (m_map->isHiddenByFogOfWar(m_objects->getUnit(idOfWormAtCell))) continue;
                 iColor = m_player->getSelectFadingColor();
             }
 
