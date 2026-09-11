@@ -4,6 +4,7 @@
 #include "utils/Log.h"
 
 #include "utils/cDataPack.hpp"
+#include "utils/SfxTrackAllocator.h"
 #include <format>
 
 #include <algorithm>
@@ -113,8 +114,13 @@ void cSoundPlayer::playSound(int sampleId, int vol)
     }
     MIX_Audio *audio = soundData->getAudio(sampleId);
     if (audio) {
-        MIX_Track *track = m_sfxTracks[m_nextSfxTrack];
-        m_nextSfxTrack = (m_nextSfxTrack + 1) % static_cast<int>(m_sfxTracks.size());
+        std::vector<bool> trackBusy(m_sfxTracks.size());
+        for (size_t i = 0; i < m_sfxTracks.size(); ++i) {
+            trackBusy[i] = MIX_TrackPlaying(m_sfxTracks[i]);
+        }
+        int idx = pickSfxTrack(trackBusy, m_nextSfxTrack);
+        m_nextSfxTrack = (idx + 1) % static_cast<int>(m_sfxTracks.size());
+        MIX_Track *track = m_sfxTracks[idx];
         MIX_StopTrack(track, 0);
         MIX_SetTrackAudio(track, audio);
         MIX_PlayTrack(track, 0);
