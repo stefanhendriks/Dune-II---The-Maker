@@ -23,6 +23,7 @@ concurrency:
 
 permissions:
   contents: write   # push tags, publish releases
+  issues: write     # close the milestone on an official release
 
 jobs:
   Prepare:
