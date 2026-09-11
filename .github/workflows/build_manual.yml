@@ -22,8 +22,9 @@ concurrency:
   cancel-in-progress: false   # wait until the current run finishes
 
 permissions:
-  contents: write   # push tags, publish releases
-  issues: write     # close the milestone on an official release
+  contents: write      # push tags, publish releases
+  issues: write        # close the milestone on an official release
+  pull-requests: read  # let generate-release-notes read PR labels for the changelog
 
 jobs:
   Prepare:
