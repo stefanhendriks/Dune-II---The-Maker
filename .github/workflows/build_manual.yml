@@ -124,11 +124,7 @@ jobs:
           set -euo pipefail
           mkdir -p notes
           cat << 'EOF' \
-          | sed '/^## Closed Issues without Pull Request/,/^## /d' \
-          | sed '/^## Merged PRs without Issue and User Defined Labels/,/^## /d' \
-          | sed '/^## Closed PRs without Issue and User Defined Labels/,/^## /d' \
-          | sed '/^## Merged PRs Linked to .Not Closed. Issue/,/^## /d' \
-          | sed '/^## Direct Commits/,/^## /d' \
+          | awk '/^### .*⚠️$/ { skip=1 } /^#### Full Changelog$/ { skip=0 } !skip' \
           > "notes/${{ inputs.version }}.md"
             ${{ steps.notes.outputs.release-notes }}
           EOF
