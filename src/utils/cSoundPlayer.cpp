@@ -17,6 +17,10 @@
 namespace {
     constexpr int kNoLoop = 0;
     constexpr int MaxVolume = 128;
+    // A hard, zero-frame stop truncates whatever waveform was mid-flight,
+    // which is audible as a click/pop when the amplitude isn't near zero.
+    // A short fade avoids that without adding perceptible latency.
+    constexpr Sint64 kSfxStopFadeFrames = 128;
 }
 
 class cSoundData {
@@ -121,7 +125,7 @@ void cSoundPlayer::playSound(int sampleId, int vol)
         int idx = pickSfxTrack(trackBusy, m_nextSfxTrack);
         m_nextSfxTrack = (idx + 1) % static_cast<int>(m_sfxTracks.size());
         MIX_Track *track = m_sfxTracks[idx];
-        MIX_StopTrack(track, 0);
+        MIX_StopTrack(track, kSfxStopFadeFrames);
         MIX_SetTrackAudio(track, audio);
         MIX_PlayTrack(track, 0);
     }
