@@ -8,6 +8,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPoint.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_d2tm_math.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_SfxTrackAllocator.cpp
 )
 
 # Production source files the tests depend on.
@@ -20,6 +21,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/cPoint.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cRectangle.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cExpandingRectangle.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/SfxTrackAllocator.cpp
 )
 
 add_executable(d2tm_tests
