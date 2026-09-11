@@ -128,9 +128,9 @@ jobs:
               /^### Closed Issues without Pull Request/ { skip=1 }
               /^### Closed PRs without Issue and User Defined Labels/ { skip=1 }
               /^### Merged PRs Linked to .Not Closed. Issue/ { skip=1 }
+              /^### Direct commits/ { skip=1 }
               /^### Others - No Topic/ { skip=1 }
               /^### Merged PRs without Issue and User Defined Labels/ { skip=0 }
-              /^### Direct commits/ { skip=0 }
               /^#### Full Changelog/ { skip=0 }
               !skip
             ' \
