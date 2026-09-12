@@ -51,6 +51,7 @@ private:
     MIX_Mixer *m_mixer = nullptr;
     MIX_Track *m_musicTrack = nullptr;
     std::vector<MIX_Track *> m_sfxTracks;
+    std::vector<bool> m_sfxTrackBusy;
     int m_nextSfxTrack = 0;
     int m_musicVolume = 0;
     int m_soundVolume = 0;

@@ -66,6 +66,7 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
                 m_sfxTracks.push_back(track);
             }
         }
+        m_sfxTrackBusy.resize(m_sfxTracks.size());
     }
 
     soundData = std::make_unique<cSoundData>(datafile, m_mixer);
@@ -118,11 +119,10 @@ void cSoundPlayer::playSound(int sampleId, int vol)
     }
     MIX_Audio *audio = soundData->getAudio(sampleId);
     if (audio) {
-        std::vector<bool> trackBusy(m_sfxTracks.size());
         for (size_t i = 0; i < m_sfxTracks.size(); ++i) {
-            trackBusy[i] = MIX_TrackPlaying(m_sfxTracks[i]);
+            m_sfxTrackBusy[i] = MIX_TrackPlaying(m_sfxTracks[i]);
         }
-        int idx = pickSfxTrack(trackBusy, m_nextSfxTrack);
+        int idx = pickSfxTrack(m_sfxTrackBusy, m_nextSfxTrack);
         m_nextSfxTrack = (idx + 1) % static_cast<int>(m_sfxTracks.size());
         MIX_Track *track = m_sfxTracks[idx];
         MIX_StopTrack(track, kSfxStopFadeFrames);
