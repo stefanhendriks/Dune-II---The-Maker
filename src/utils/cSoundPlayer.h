@@ -45,13 +45,18 @@ public:
     }
 
 private:
-    static constexpr int kSfxTrackPoolSize = 32;
+    static constexpr int kSfxTrackPoolSize = 64;
+    static constexpr int kPriorityNormal = 0;
+    static constexpr int kPriorityVoice = 1;
+
+    void playSoundWithPriority(int sampleId, int vol, int priority);
 
     std::unique_ptr<cSoundData> soundData;
     MIX_Mixer *m_mixer = nullptr;
     MIX_Track *m_musicTrack = nullptr;
     std::vector<MIX_Track *> m_sfxTracks;
     std::vector<bool> m_sfxTrackBusy;
+    std::vector<int> m_sfxTrackPriority;
     SDL_PropertiesID m_sfxPlayOptions = 0;
     int m_nextSfxTrack = 0;
     int m_musicVolume = 0;
