@@ -17,10 +17,10 @@
 namespace {
     constexpr int kNoLoop = 0;
     constexpr int MaxVolume = 128;
-    // A hard, zero-frame stop truncates whatever waveform was mid-flight,
-    // which is audible as a click/pop when the amplitude isn't near zero.
-    // A short fade avoids that without adding perceptible latency.
-    constexpr Sint64 kSfxStopFadeFrames = 128;
+    // A hard, zero-frame start/stop begins or truncates a waveform away from
+    // a zero crossing, which is audible as a click/pop. A short fade on both
+    // ends avoids that without adding perceptible latency.
+    constexpr Sint64 kSfxFadeFrames = 128;
 }
 
 class cSoundData {
@@ -67,6 +67,8 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
             }
         }
         m_sfxTrackBusy.resize(m_sfxTracks.size());
+        m_sfxPlayOptions = SDL_CreateProperties();
+        SDL_SetNumberProperty(m_sfxPlayOptions, MIX_PROP_PLAY_FADE_IN_FRAMES_NUMBER, kSfxFadeFrames);
     }
 
     soundData = std::make_unique<cSoundData>(datafile, m_mixer);
@@ -86,6 +88,9 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
 
 cSoundPlayer::~cSoundPlayer()
 {
+    if (m_sfxPlayOptions) {
+        SDL_DestroyProperties(m_sfxPlayOptions);
+    }
     if (m_musicTrack) {
         MIX_StopTrack(m_musicTrack, 0);
         MIX_DestroyTrack(m_musicTrack);
@@ -125,9 +130,9 @@ void cSoundPlayer::playSound(int sampleId, int vol)
         int idx = pickSfxTrack(m_sfxTrackBusy, m_nextSfxTrack);
         m_nextSfxTrack = (idx + 1) % static_cast<int>(m_sfxTracks.size());
         MIX_Track *track = m_sfxTracks[idx];
-        MIX_StopTrack(track, kSfxStopFadeFrames);
+        MIX_StopTrack(track, kSfxFadeFrames);
         MIX_SetTrackAudio(track, audio);
-        MIX_PlayTrack(track, 0);
+        MIX_PlayTrack(track, m_sfxPlayOptions);
     }
 }
 
