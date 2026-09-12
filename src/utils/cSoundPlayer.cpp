@@ -67,6 +67,7 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
             }
         }
         m_sfxTrackBusy.resize(m_sfxTracks.size());
+        m_sfxTrackPriority.resize(m_sfxTracks.size(), kPriorityNormal);
         m_sfxPlayOptions = SDL_CreateProperties();
         SDL_SetNumberProperty(m_sfxPlayOptions, MIX_PROP_PLAY_FADE_IN_FRAMES_NUMBER, kSfxFadeFrames);
     }
@@ -119,6 +120,11 @@ void cSoundPlayer::playSound(int sampleId)
 
 void cSoundPlayer::playSound(int sampleId, int vol)
 {
+    playSoundWithPriority(sampleId, vol, kPriorityNormal);
+}
+
+void cSoundPlayer::playSoundWithPriority(int sampleId, int vol, int priority)
+{
     if (vol <= 0 || !m_isSoundEnabled || !m_mixer || m_sfxTracks.empty()) {
         return;
     }
@@ -127,8 +133,9 @@ void cSoundPlayer::playSound(int sampleId, int vol)
         for (size_t i = 0; i < m_sfxTracks.size(); ++i) {
             m_sfxTrackBusy[i] = MIX_TrackPlaying(m_sfxTracks[i]);
         }
-        int idx = pickSfxTrack(m_sfxTrackBusy, m_nextSfxTrack);
+        int idx = pickSfxTrack(m_sfxTrackBusy, m_sfxTrackPriority, priority, m_nextSfxTrack);
         m_nextSfxTrack = (idx + 1) % static_cast<int>(m_sfxTracks.size());
+        m_sfxTrackPriority[idx] = priority;
         MIX_Track *track = m_sfxTracks[idx];
         MIX_StopTrack(track, kSfxFadeFrames);
         MIX_SetTrackAudio(track, audio);
@@ -145,7 +152,10 @@ void cSoundPlayer::playVoice(int sampleId, int house)
         sampleId += 2;
     }
 
-    playSound(sampleId);
+    if (!m_isSoundEnabled) {
+        return;
+    }
+    playSoundWithPriority(sampleId, m_soundVolume, kPriorityVoice);
 }
 
 void cSoundPlayer::playMusic(int sampleId)
