@@ -52,6 +52,7 @@ private:
     MIX_Track *m_musicTrack = nullptr;
     std::vector<MIX_Track *> m_sfxTracks;
     std::vector<bool> m_sfxTrackBusy;
+    SDL_PropertiesID m_sfxPlayOptions = 0;
     int m_nextSfxTrack = 0;
     int m_musicVolume = 0;
     int m_soundVolume = 0;
