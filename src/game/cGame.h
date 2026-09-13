@@ -19,6 +19,7 @@
 #include "observers/cScenarioObserver.h"
 #include "utils/Color.hpp"
 #include "utils/Log.h"
+#include "game/MissionStats.h"
 
 #include <memory>
 #include <string>
@@ -201,6 +202,8 @@ public:
     void drawTextFps() const;
     void drawTextTime() const;
     void checkMissionWinOrFail();
+
+    MissionStats getMissionStats() const;
 
 private:
     bool m_playSound;                       // play sound?
