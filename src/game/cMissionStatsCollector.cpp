@@ -7,10 +7,7 @@
 
 void cMissionStatsCollector::missionInit()
 {
-    m_unitsBuilt = 0;
-    m_unitsLost = 0;
-    m_structuresBuilt = 0;
-    m_structuresLost = 0;
+    m_playerStats = {};
     m_missionStartTicks = SDL_GetTicks();
 }
 
@@ -26,27 +23,34 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
         return;
     }
 
-    if (commonEvent->player == nullptr || !commonEvent->player->isHuman()) {
+    if (commonEvent->player == nullptr) {
         return;
     }
+
+    const int playerId = commonEvent->player->getId();
+    if (playerId < 0 || playerId >= MAX_PLAYERS) {
+        return;
+    }
+
+    PlayerMissionStats &stats = m_playerStats[playerId];
 
     if (event.eventType == eGameEventType::GAME_EVENT_CREATED) {
         if (commonEvent->isReinforce) {
             return; // reinforcements were not built by the player this mission
         }
         if (commonEvent->entityType == eBuildType::UNIT) {
-            m_unitsBuilt++;
+            stats.unitsBuilt++;
         }
         else if (commonEvent->entityType == eBuildType::STRUCTURE) {
-            m_structuresBuilt++;
+            stats.structuresBuilt++;
         }
     }
     else { // GAME_EVENT_DESTROYED
         if (commonEvent->entityType == eBuildType::UNIT) {
-            m_unitsLost++;
+            stats.unitsLost++;
         }
         else if (commonEvent->entityType == eBuildType::STRUCTURE) {
-            m_structuresLost++;
+            stats.structuresLost++;
         }
     }
 }
@@ -54,10 +58,7 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
 MissionStats cMissionStatsCollector::snapshot() const
 {
     MissionStats stats;
-    stats.unitsBuilt = m_unitsBuilt;
-    stats.unitsLost = m_unitsLost;
-    stats.structuresBuilt = m_structuresBuilt;
-    stats.structuresLost = m_structuresLost;
+    stats.players = m_playerStats;
     stats.elapsedSeconds = (SDL_GetTicks() - m_missionStartTicks) / 1000;
     return stats;
 }
