@@ -78,7 +78,7 @@ void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &) const
     if (m_statement == Outcome::Lose) {
         m_interface->goingToWinLoseBrief(GAME_LOSEBRIEF);
     } else {
-        m_interface->goingToWinLoseBrief(GAME_WINBRIEF);
+        m_interface->setNextStateToTransitionTo(GAME_SCORING);
     }
     // FADE OUT
     m_interface->initiateFadingOut();

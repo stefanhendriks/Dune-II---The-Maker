@@ -7,6 +7,7 @@
 #include "gamestates/cEditorState.h"
 #include "gamestates/cNewMapEditorState.h"
 #include "gamestates/cCreditsState.h"
+#include "gamestates/cScoringState.h"
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cMentatState.h"
 #include "gamestates/cTellHouseState.h"
@@ -95,6 +96,10 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
 
         case eGameState::LOSING:
             m_states[eGameState::LOSING] = std::make_unique<cWinLoseState>(m_services, Outcome::Lose);
+            break;
+
+        case eGameState::SCORING:
+            m_states[eGameState::SCORING] = std::make_unique<cScoringState>(m_services);
             break;
 
         case eGameState::BRIEFING:
