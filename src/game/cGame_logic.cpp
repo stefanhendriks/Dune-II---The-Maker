@@ -21,6 +21,7 @@
 #include "include/eGameState.h"
 
 #include "game/cGameConditionChecker.h"
+#include "game/cMissionStatsCollector.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenFader.h"
 #include "game/cSDLSystem.h"
@@ -188,6 +189,7 @@ cGame::cGame()
     d2tm_assert(m_players != nullptr);
 
     m_gameConditionChecker = std::make_unique<cGameConditionChecker>(m_gameObjectsContext.get());
+    m_missionStatsCollector = std::make_unique<cMissionStatsCollector>();
 
     m_eventEmitter = std::make_unique<cEventEmitter>(
         [this](const s_GameEvent &event) {
@@ -312,6 +314,7 @@ void cGame::missionInit()
     m_mapCamera->resetZoom();
 
     m_gameConditionChecker->missionInit();
+    m_missionStatsCollector->missionInit();
 
     m_musicVolume = 96; // volume is 0...
 
@@ -352,6 +355,10 @@ void cGame::setMissionWon()
     m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
     playMusicByType(MUSIC_WIN);
+
+    const MissionStats stats = m_missionStatsCollector->snapshot();
+    Logger::info(COMP_GAME, "cGame::setMissionWon", "Mission stats: unitsBuilt={} unitsLost={} structuresBuilt={} structuresLost={} elapsedSeconds={}",
+        stats.unitsBuilt, stats.unitsLost, stats.structuresBuilt, stats.structuresLost, stats.elapsedSeconds);
 
     takeBackGroundScreen();
 }
@@ -1193,6 +1200,8 @@ void cGame::dispatchGameEvent(const s_GameEvent &event)
     }
 
     m_gameObjectsContext->getPlayers()->onNotifyGameEvent(event);
+
+    m_missionStatsCollector->onNotifyGameEvent(event);
 }
 
 void cGame::onNotifyGameEvent(const s_GameEvent &event)

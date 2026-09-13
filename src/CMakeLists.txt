@@ -35,6 +35,7 @@ set(D2TM_SOURCES
     game/cGame_logic.cpp
     game/cGameConditionChecker.cpp
     game/cGameInterface.cpp
+    game/cMissionStatsCollector.cpp
     game/cNotificationArea.cpp
     game/cSDLSystem.cpp
     game/cScreenFader.cpp

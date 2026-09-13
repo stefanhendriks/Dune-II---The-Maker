@@ -52,6 +52,7 @@ class GameContext;
 class cScreenShake;
 class cFocusManager;
 class cGameConditionChecker;
+class cMissionStatsCollector;
 class cScreenFader;
 class SDLDrawer;
 class cMapCamera;
@@ -275,6 +276,7 @@ private:
     std::unique_ptr<ContextCreator> context;
     std::unique_ptr<s_DataCampaign> m_dataCampaign;
     std::unique_ptr<cGameConditionChecker> m_gameConditionChecker;
+    std::unique_ptr<cMissionStatsCollector> m_missionStatsCollector;
     std::unique_ptr<cScreenFader> m_cScreenFader;
 
     std::unique_ptr<sGameServices> m_services;
