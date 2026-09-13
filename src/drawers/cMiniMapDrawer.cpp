@@ -149,7 +149,10 @@ void cMiniMapDrawer::think()
 {
     if (m_player->hasAtleastOneStructure(RADAR)) {
         if (m_status == eMinimapStatus::NOTAVAILABLE) {
-            m_status = eMinimapStatus::POWERUP;
+            // Route through POWERDOWN instead of jumping straight to POWERUP, so the
+            // power check below (which plays SOUND_RADAR) always gets a chance to run,
+            // even when power is already sufficient the instant the radar completes.
+            m_status = eMinimapStatus::POWERDOWN;
         }
     }
     else {
