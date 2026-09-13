@@ -357,8 +357,12 @@ void cGame::setMissionWon()
     playMusicByType(MUSIC_WIN);
 
     const MissionStats stats = m_missionStatsCollector->snapshot();
-    Logger::info(COMP_GAME, "cGame::setMissionWon", "Mission stats: unitsBuilt={} unitsLost={} structuresBuilt={} structuresLost={} elapsedSeconds={}",
-        stats.unitsBuilt, stats.unitsLost, stats.structuresBuilt, stats.structuresLost, stats.elapsedSeconds);
+    Logger::info(COMP_GAME, "cGame::setMissionWon", "Mission stats: elapsedSeconds={}", stats.elapsedSeconds);
+    for (int playerId = 0; playerId < MAX_PLAYERS; playerId++) {
+        const PlayerMissionStats &playerStats = stats.players[playerId];
+        Logger::info(COMP_GAME, "cGame::setMissionWon", "Player {} stats: unitsBuilt={} unitsLost={} structuresBuilt={} structuresLost={}",
+            playerId, playerStats.unitsBuilt, playerStats.unitsLost, playerStats.structuresBuilt, playerStats.structuresLost);
+    }
 
     takeBackGroundScreen();
 }

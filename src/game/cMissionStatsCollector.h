@@ -11,9 +11,6 @@ public:
     [[nodiscard]] MissionStats snapshot() const;
 
 private:
-    int m_unitsBuilt = 0;
-    int m_unitsLost = 0;
-    int m_structuresBuilt = 0;
-    int m_structuresLost = 0;
+    std::array<PlayerMissionStats, MAX_PLAYERS> m_playerStats;
     uint64_t m_missionStartTicks = 0;
 };
