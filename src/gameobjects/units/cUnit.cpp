@@ -16,7 +16,6 @@
 
 #include "utils/Log.h"
 #include "data/gfxdata.h"
-#include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/projectiles/bullet.h"
@@ -29,11 +28,8 @@
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "utils/cSoundPlayer.h"
-#include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
-#include <SDL3/SDL.h>
 #include <format>
-#include "drawers/cTextDrawer.h"
 #include "gameobjects/units/cPathFinder.h"
 #include "utils/d2tm_math.h"
 #include "context/cInfoContext.h"
@@ -42,7 +38,6 @@
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
 #include "gameobjects/map/cMap.h"
-#include "drawers/SDLDrawer.hpp"
 #include <cmath>
 
 #include "data/gfxaudio.h"
@@ -168,10 +163,6 @@ void cUnit::serviceInit(sGameServices* services)
     d2tm_assert(m_map != nullptr);
     m_pathFinder = m_map->getPathFinder();
     d2tm_assert(m_pathFinder != nullptr);
-    m_renderer = services->ctx->getSDLDrawer();
-    d2tm_assert(m_renderer != nullptr);
-    m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
-    d2tm_assert(m_gfxdata != nullptr);
 }
 
 void cUnit::recreateDimensions()
@@ -593,26 +584,6 @@ int cUnit::getBmpHeight() const
     return m_infos->getUnitInfo(iType).bmp_height;
 }
 
-void cUnit::draw_spice()
-{
-    float width_x = m_mapCamera->factorZoomLevel(getBmpWidth());
-    int height_y = m_mapCamera->factorZoomLevel(4);
-    int drawx = draw_x();
-    int drawy = draw_y() - ((height_y * 2) + 2);
-
-    int max = getUnitInfo().credit_capacity;
-    int w = healthBar(width_x, iCredits, max);
-
-    // bar itself
-    m_renderer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
-    m_renderer->renderRectFillColor(drawx, drawy, w, height_y, 255, 91, 1,ShadowTrans);
-
-    // bar around it (only when it makes sense due zooming)
-    if (height_y > 2) {
-        m_renderer->renderRectColor(drawx, drawy,width_x, height_y, 255, 255, 255,ShadowTrans);
-    }
-}
-
 int cUnit::getBmpWidth() const
 {
     return m_infos->getUnitInfo(iType).bmp_width;
@@ -632,61 +603,6 @@ float cUnit::getTempHealthNormalized()
     return (iTempHitPoints / flMAX);
 }
 
-void cUnit::draw_health()
-{
-    if (iHitPoints < 0) return;
-
-    // draw units health
-    float width_x = m_mapCamera->factorZoomLevel(getBmpWidth());
-    int height_y = m_mapCamera->factorZoomLevel(4);
-    int drawx = draw_x();
-    int drawy = draw_y() - (height_y + 2);
-
-    float healthNormalized = getHealthNormalized();
-
-    int w = healthNormalized * width_x;
-    int r = (1.1 - healthNormalized) * 255;
-    int g = healthNormalized * 255;
-
-    if (r > 255) r = 255;
-
-    // bar itself
-    m_renderer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
-    m_renderer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,ShadowTrans);
-
-    // bar around it (only when it makes sense due zooming)
-    if (height_y > 2) {
-        m_renderer->renderRectColor(drawx, drawy, width_x, height_y, 255, 255, 255,ShadowTrans);
-    }
-}
-
-void cUnit::draw_group(cTextDrawer* textDrawer)
-{
-    if (iHitPoints < 0) return;
-
-    int height_y = m_mapCamera->factorZoomLevel(4);
-    int drawx = draw_x();
-    int drawy = draw_y() - (height_y + 2);
-    // draw group
-    // TODO: make text smaller depending on zoom factor?
-    if (iPlayer == HUMAN) {
-        std::string groups;
-        for (int i = 0; i < MAX_UNIT_GROUPS; i++) {
-            if (iGroups[i]) {
-                if (!groups.empty()) {
-                    groups += " ";
-                }
-                groups += std::to_string(i + 1);
-            }
-        }
-
-        if (!groups.empty()) {
-            textDrawer->drawText(drawx + 26, drawy - 11, Color::Black, groups);
-            textDrawer->drawText(drawx + 26, drawy - 12, Color::White, groups);
-        }
-    }
-}
-
 // this method returns the amount of percent extra damage may be done
 float cUnit::fExpDamage()
 {
@@ -703,181 +619,9 @@ float cUnit::fExpDamage()
     return fResult;
 }
 
-void cUnit::draw_experience()
+bool cUnit::isDrawUnitDebugEnabled() const
 {
-    int iStars = (int) fExperience;
-
-    if (iStars < 1)
-        return; // no stars to draw!
-
-    int iStarType = 0;
-
-    // twice correct and upgrade star type
-    if (iStars > 2) {
-        iStarType++;
-        iStars -= 3;
-    }
-
-    // red stars now, very much experience!
-    if (iStars > 2) {
-        iStarType++;
-        iStars -= 3;
-    }
-
-    // still enough experience! wow
-    if (iStars > 2) {
-        iStars = 3;
-    }
-
-
-    int drawx = draw_x() + 3;
-    int drawy = draw_y() - 19;
-    // 1 star = 1 experience
-    for (int i = 0; i < iStars; i++) {
-        m_renderer->renderSprite(m_gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
-    }
-}
-
-void cUnit::draw_path() const
-{
-    // for debugging purposes
-    if (position.iCell == movement.iGoalCell)
-        return;
-
-    if (movement.iPath[0] < 0)
-        return;
-
-    int halfTile = 16;
-    int iPrevX = m_mapCamera->getWindowXPositionFromCellWithOffset(movement.iPath[0], halfTile);
-    int iPrevY = m_mapCamera->getWindowYPositionFromCellWithOffset(movement.iPath[0], halfTile);
-
-    for (int i = 1; i < MAX_PATH_SIZE; i++) {
-        if (movement.iPath[i] < 0) break;
-        int iDx = m_mapCamera->getWindowXPositionFromCellWithOffset(movement.iPath[i], halfTile);
-        int iDy = m_mapCamera->getWindowYPositionFromCellWithOffset(movement.iPath[i], halfTile);
-
-        if (i == movement.iPathIndex) { // current node we navigate to
-            m_renderer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 255,255});
-        }
-        else if (movement.iPath[i] == movement.iGoalCell) {
-            // end of path (goal)
-            m_renderer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 0, 0,255});
-        }
-        else {
-            // everything else
-            m_renderer->renderLine(iPrevX, iPrevY, iDx, iDy, Color{255, 255, 64,255});
-        }
-
-        // draw a line from previous to current
-        iPrevX = iDx;
-        iPrevY = iDy;
-    }
-
-    // Render remembered waypoint cells as blue dots.
-    for (int i = 0; i < MAX_WAYPOINTS_SIZE; i++) {
-        int waypointCell = movement.waypointCells[i];
-        if (waypointCell < 0) {
-            break;
-        }
-
-        int waypointX = m_mapCamera->getWindowXPositionFromCellWithOffset(waypointCell, halfTile);
-        int waypointY = m_mapCamera->getWindowYPositionFromCellWithOffset(waypointCell, halfTile);
-        m_renderer->renderDot(waypointX-2, waypointY-2, Color{64, 160, 255, 192}, 4);
-    }
-}
-
-void cUnit::draw()
-{
-    if (isHidden()) {
-        // temp hitpoints filled, meaning it is not visible (but not dead). Ie, it is being repaired, or transfered
-        // by carry-all
-        return;
-    }
-
-    // Selection box x, y position. Depends on unit size
-    const int ux = draw_x();
-    const int uy = draw_y();
-
-    if (isSandworm()) {
-        return;
-    }
-
-    s_UnitInfo &unitType = getUnitInfo();
-    const int bmp_width = unitType.bmp_width;
-    const int bmp_height = unitType.bmp_height;
-
-    // the multiplier we will use to draw the unit
-    const int bmp_head = convertAngleToDrawIndex(facingToInt(rendering.iHeadFacing));
-    const int bmp_body = convertAngleToDrawIndex(facingToInt(rendering.iBodyFacing));
-
-    // draw body first
-    int start_x = bmp_body * bmp_width;
-    int start_y = bmp_height * rendering.iFrame;
-
-    cPlayer *cPlayer = m_objects->getPlayer(this->iPlayer);
-
-    const float scaledWidth = m_mapCamera->factorZoomLevel(bmp_width);
-    const float scaledHeight = m_mapCamera->factorZoomLevel(bmp_height);
-
-    Texture *shadow = cPlayer->getUnitShadowBitmap(iType);
-    int roundedScaledWidth = static_cast<int>(round(scaledWidth));
-    int roundedScaledHeight = static_cast<int>(round(scaledHeight));
-    if (shadow) {
-        cRectangle src = {start_x, start_y, bmp_width, bmp_height};
-        cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
-        if (iType == CARRYALL) {
-            dest = {ux, uy+24, roundedScaledWidth, roundedScaledHeight};
-        }
-        m_renderer->renderStrechSprite(shadow,src, dest, ShadowTrans);
-    }
-
-    // Draw BODY
-    Texture *bitmap = cPlayer->getUnitBitmap(iType);
-    if (bitmap) {
-        cRectangle src = {start_x, start_y, bmp_width, bmp_height};
-        cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
-        m_renderer->renderStrechSprite(bitmap,src, dest);
-    }
-    else {
-        log(std::format("unit of iType [{}] did not have a bitmap!?", iType));
-    }
-
-
-    // Draw TOP
-    Texture *top = cPlayer->getUnitTopBitmap(iType);
-    if (top && iHitPoints > -1) {
-        // recalculate start_x using head instead of body
-        start_x = bmp_head * bmp_width;
-        start_y = bmp_height * rendering.iFrame;
-        cRectangle src = {start_x, start_y, bmp_width, bmp_height};
-        cRectangle dest = {ux, uy, static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width))), static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_height)))};
-        m_renderer->renderStrechSprite(top,src, dest);
-    }
-
-    // when we want to be picked up..
-    if (bCarryMe) {
-        m_renderer->renderSprite(m_gfxdata->getTexture(SYMB_PICKMEUP), ux, uy - 7);
-    }
-
-    if (m_bSelected) {
-        SDL_Surface *focusBitmap = m_gfxdata->getSurface(FOCUS);
-        int bmp_width = focusBitmap->w;
-        int bmp_height = focusBitmap->h;
-
-        int x = draw_x(bmp_width);
-        int y = draw_y(bmp_height);
-
-        cRectangle dest = {x,y, static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_width))),static_cast<int>(round(m_mapCamera->factorZoomLevel(bmp_height)))};
-        m_renderer->renderStrechFullSprite(m_gfxdata->getTexture(FOCUS), dest);
-    }
-
-    if (m_settings->isDrawUnitDebug()) {
-        // render pixel at the very center
-        m_renderer->renderDot(center_draw_x(), center_draw_y(), Color{255, 255, 0,255},2);
-
-        // render from the units top-left to center pixel
-        m_renderer->renderLine( draw_x(), draw_y(), center_draw_x(), center_draw_y(), Color{255, 255, 0,255});
-    }
+    return m_settings->isDrawUnitDebug();
 }
 
 // TODO: only do this when iCell is updated
@@ -3550,16 +3294,6 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 {
     if (viewport == nullptr) return false;
     return dimensions.isOverlapping(viewport);
-}
-
-void cUnit::draw_debug(cTextDrawer* textDrawer)
-{
-    m_renderer->renderRectColor(dimensions.getX(),dimensions.getY(), dimensions.getWidth(),dimensions.getHeight(), Color{255, 0, 255,ShadowTrans});
-    m_renderer->renderDot(center_draw_x(), center_draw_y(), Color{255, 0, 255,ShadowTrans},1);
-    textDrawer->drawText(draw_x(), draw_y(), Color{255, 255, 255,ShadowTrans}, std::format("{}", iID));
-    if (isSandworm()) {
-        textDrawer->drawText(draw_x(), draw_y()-16, Color{255,255,255,255}, std::format("{} / {} / {}", unitsEaten, guardTimer.get(), movewaitTimer.get()));
-    }
 }
 
 void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDealsDamage)
