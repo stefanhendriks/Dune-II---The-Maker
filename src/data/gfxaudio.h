@@ -1,3 +1,18 @@
+/**
+ * @file gfxaudio.h
+ *
+ * Dune 2 - The Maker
+ *
+ * @author Stefan Hendriks & the D2TM Team
+ * @www http://www.dune2themaker.com
+ * @copyright Copyright (c) 2001 - 2026 D2TM Team
+ * @license This software is released under the MIT License.
+ *
+ * Note: Dune 2 is a trademark of Westwood Studios/Electronic Arts.
+ *
+ * This is a non-commercial educational project.
+ */
+
 /* Allegro datafile object indexes, produced by grabber v4.0.3 (RC2), MSVC */
 /* Datafile: c:\Projecten\DUNE II - The Maker\Source\data\gfxaudio.dat */
 /* Date: Fri Feb 17 16:16:15 2006 */

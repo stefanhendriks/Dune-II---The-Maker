@@ -1,3 +1,18 @@
+/**
+ * @file gfxinter.h
+ *
+ * Dune 2 - The Maker
+ *
+ * @author Stefan Hendriks & the D2TM Team
+ * @www http://www.dune2themaker.com
+ * @copyright Copyright (c) 2001 - 2026 D2TM Team
+ * @license This software is released under the MIT License.
+ *
+ * Note: Dune 2 is a trademark of Westwood Studios/Electronic Arts.
+ *
+ * This is a non-commercial educational project.
+ */
+
 /* Allegro datafile object indexes, produced by grabber v4.2.0, MSVC.s */
 /* Datafile: c:\projects\fundynamic\Dune-II---The-Maker\data\gfxinter.dat */
 /* Date: Wed Nov 24 14:58:46 2021 */

@@ -1,3 +1,18 @@
+/**
+ * @file cPlayerBrainFremenSuperWeapon.cpp
+ *
+ * Dune 2 - The Maker
+ *
+ * @author Stefan Hendriks & the D2TM Team
+ * @www http://www.dune2themaker.com
+ * @copyright Copyright (c) 2001 - 2026 D2TM Team
+ * @license This software is released under the MIT License.
+ *
+ * Note: Dune 2 is a trademark of Westwood Studios/Electronic Arts.
+ *
+ * This is a non-commercial educational project.
+ */
+
 #include "cPlayerBrainFremenSuperWeapon.h"
 // #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
