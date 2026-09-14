@@ -41,6 +41,8 @@ class cGameObjectContext;
 class cGameInterface;
 class cLog;
 class cPathFinder;
+class SDLDrawer;
+class Graphics;
 
 class cMap : public cScenarioObserver {
 
@@ -477,8 +479,10 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
-    cLog *m_log = nullptr;    
+    cLog *m_log = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
+    SDLDrawer *m_sdlDrawer = nullptr;
+    Graphics *m_gfxdata = nullptr;
 
     std::unique_ptr<MapGeometry> m_mapGeometry;
     std::unique_ptr<cPathFinder> m_pathFinder;
