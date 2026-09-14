@@ -18,8 +18,8 @@ HEADER_TEMPLATE = """/**
  *
  * @author Stefan Hendriks & the D2TM Team
  * @www http://www.dune2themaker.com
- * @copyright Copyright (c) 2001 - 2026 D2TM Team
- * @license This software is released under the MIT License.
+ * @copyright Copyright (c) 2002 - 2026 Stefan Hendriks and contributors
+ * @license This software is released under the MIT License. See LICENSE.md.
  *
  * Note: Dune 2 is a trademark of Westwood Studios/Electronic Arts.
  *
