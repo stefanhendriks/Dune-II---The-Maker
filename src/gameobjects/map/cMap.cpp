@@ -37,6 +37,9 @@
 #include "context/cGameObjectContext.h"
 #include "gameobjects/units/cUnit.h"
 #include "drawers/cTextDrawer.h"
+#include "drawers/cUnitDrawer.h"
+#include "drawers/SDLDrawer.hpp"
+#include "context/GraphicsContext.hpp"
 #include "include/sGameServices.h"
 
 #include <format>
@@ -83,6 +86,12 @@ void cMap::serviceInit(sGameServices* services)
 
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
     d2tm_assert(m_textDrawer != nullptr);
+
+    m_sdlDrawer = m_ctx->getSDLDrawer();
+    d2tm_assert(m_sdlDrawer != nullptr);
+
+    m_gfxdata = m_ctx->getGraphicsContext()->gfxdata.get();
+    d2tm_assert(m_gfxdata != nullptr);
 
     m_settings = services->settings;
     d2tm_assert(m_settings != nullptr);
@@ -657,15 +666,17 @@ void cMap::draw_units()
         cUnit *pUnit = m_objects->getUnit(i);
         if (!pUnit || !pUnit->isValid()) continue;
 
+        cUnitDrawer unitDrawer(*pUnit, m_sdlDrawer, m_gfxdata);
+
         // DEBUG MODE: DRAW PATHS
         if (m_settings->isDrawUnitDebug()) {
-            pUnit->draw_path();
+            unitDrawer.draw_path();
         }
 
         if (pUnit->iType != SANDWORM) continue;
 
         if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
-            pUnit->draw();
+            unitDrawer.draw();
         }
 
         drawUnitDebug(pUnit);
@@ -682,7 +693,7 @@ void cMap::draw_units()
 
         if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             // draw
-            pUnit->draw();
+            cUnitDrawer(*pUnit, m_sdlDrawer, m_gfxdata).draw();
         }
 
         drawUnitDebug(pUnit);
@@ -700,7 +711,7 @@ void cMap::draw_units()
 
         if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
             // draw
-            pUnit->draw();
+            cUnitDrawer(*pUnit, m_sdlDrawer, m_gfxdata).draw();
         }
 
         drawUnitDebug(pUnit);
@@ -712,7 +723,7 @@ void cMap::drawUnitDebug(cUnit *pUnit) const
     if (!pUnit) return;
     if (!m_settings->isDrawUnitDebug()) return;
 
-    pUnit->draw_debug(m_textDrawer);
+    cUnitDrawer(*pUnit, m_sdlDrawer, m_gfxdata).draw_debug(m_textDrawer);
 }
 
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
@@ -729,11 +740,12 @@ void cMap::draw_units_2nd()
         if (pUnit->isHidden()) continue;
         if (isHiddenByFogOfWar(pUnit)) continue;
 
-        pUnit->draw_health();
-        pUnit->draw_group(m_textDrawer);
-        pUnit->draw_experience();
+        cUnitDrawer unitDrawer(*pUnit, m_sdlDrawer, m_gfxdata);
+        unitDrawer.draw_health();
+        unitDrawer.draw_group(m_textDrawer);
+        unitDrawer.draw_experience();
         if (pUnit->iType == HARVESTER) {
-            pUnit->draw_spice();
+            unitDrawer.draw_spice();
         }
     }
 
@@ -744,9 +756,10 @@ void cMap::draw_units_2nd()
         if (!pUnit->isAirbornUnit()) continue;
 
         if (pUnit->isWithinViewport(mapViewport) && !isHiddenByFogOfWar(pUnit)) {
-            pUnit->draw();
+            cUnitDrawer unitDrawer(*pUnit, m_sdlDrawer, m_gfxdata);
+            unitDrawer.draw();
             // TODO: Only human players?
-            pUnit->draw_health();
+            unitDrawer.draw_health();
             if (m_settings->isDebugMode()) {
                 drawUnitDebug(pUnit);
             }
