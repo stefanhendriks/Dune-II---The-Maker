@@ -8,6 +8,7 @@
 #include "gameobjects/map/cMap.h"
 #include "definitions.h"
 #include "utils/d2tm_math.h"
+#include "utils/Log.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
@@ -132,11 +133,15 @@ void cPlayerBrainMissionKindAttack::onNotifyGameEvent(const s_GameEvent &event)
         case GAME_EVENT_DESTROYED:
                 if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
                     onEventDestroyed(*commonEvent);
+                } else {
+                    Logger::warn(COMP_AI, "cPlayerBrainMissionKindAttack::onNotifyGameEvent", "GAME_EVENT_DESTROYED did not carry a CommonEvent");
                 }
             break;
         case GAME_EVENT_DEVIATED:
                 if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
                     onEventDeviated(*commonEvent);
+                } else {
+                    Logger::warn(COMP_AI, "cPlayerBrainMissionKindAttack::onNotifyGameEvent", "GAME_EVENT_DEVIATED did not carry a CommonEvent");
                 }
             break;
         default:

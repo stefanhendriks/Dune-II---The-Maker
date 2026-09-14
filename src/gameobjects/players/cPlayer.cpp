@@ -1635,6 +1635,8 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                     }
                 };                
                 m_interface->onNotifyGameEvent(newEvent);
+            } else {
+                Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_PLAYER_DEFEATED did not carry a CommonEvent");
             }
             break;
 
@@ -1650,6 +1652,8 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                     }
                 };
                 m_interface->onNotifyGameEvent(newEvent);
+            } else {
+                Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_SPECIAL_LAUNCHED did not carry a BuildingEvent");
             }
             break;
 
@@ -1668,6 +1672,8 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                     };
                     m_interface->onNotifyGameEvent(newEvent);
                 }
+            } else {
+                Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_SPECIAL_SELECT_TARGET did not carry a BuildingEvent");
             }
             break;
 
@@ -1676,6 +1682,8 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                 if (commonEvent->player == this) {
                     onEntityDiscovered(*commonEvent);
                 }
+            } else {
+                Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_DISCOVERED did not carry a CommonEvent");
             }
             break;
 
@@ -1687,6 +1695,8 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                 if (commonEvent->player == this && commonEvent->entityType == eBuildType::UNIT) {
                     onMyUnitDestroyed(*commonEvent);
                 }
+            } else {
+                Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_DESTROYED did not carry a CommonEvent");
             }
             break;
 
@@ -1699,6 +1709,8 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                         getSideBar()->setSelectedListId(eListType::LIST_CONSTYARD);
                     }
                 }
+            } else {
+                Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_CREATED did not carry a CommonEvent");
             }
             break;
 
@@ -1720,6 +1732,8 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                 if (buildEvent->player == this && cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType, m_infos)) {
                     startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
                 }
+            } else {
+                Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_LIST_ITEM_FINISHED did not carry a BuildingEvent");
             }
             break;
 
@@ -1729,6 +1743,8 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                 if (buildEvent->player == this && cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType, m_infos)) {
                     startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
                 }
+            } else {
+                Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_LIST_ITEM_ADDED/CANCELLED did not carry a BuildingEvent");
             }
             break;
         default:
