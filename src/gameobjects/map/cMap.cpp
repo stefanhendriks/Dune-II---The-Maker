@@ -424,6 +424,9 @@ bool cMap::isHiddenByFogOfWar(cUnit *pUnit)
 {
     if (!m_settings->isFogOfWarEnabled()) return false;
 
+    // TODO(#1465) - hardcoded to the human observer; AI decision-making doesn't
+    // consult this (or per-player visibility) at all yet, so AI still has
+    // perfect knowledge of unit positions regardless of fog of war.
     cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     if (humanPlayer->isSameTeamAs(pUnit->getPlayer())) return false;
 
