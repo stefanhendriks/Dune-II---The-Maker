@@ -319,16 +319,22 @@ void cGamePlaying::onNotifyGameEvent(const s_GameEvent &event)
         case eGameEventType::GAME_EVENT_SPECIAL_LAUNCH:
             if (const auto *launchEvent = std::get_if<LaunchDeathHandEvent>(&event.data)) {
                 onEventSpecialLaunch(*launchEvent);
+            } else {
+                Logger::warn(COMP_GAME, "onNotifyGameEvent", "GAME_EVENT_SPECIAL_LAUNCH did not carry a LaunchDeathHandEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_DESTROYED:
             if (const auto *destroyEvent = std::get_if<CommonEvent>(&event.data)) {
                 onEventEntityDestroyed(*destroyEvent);
+            } else {
+                Logger::warn(COMP_GAME, "onNotifyGameEvent", "GAME_EVENT_DESTROYED did not carry a CommonEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_CREATE_UNIT:
             if (const auto *deployEvent = std::get_if<DeployUnitEvent>(&event.data)) {
                 onEventCreateUnit(*deployEvent);
+            } else {
+                Logger::warn(COMP_GAME, "onNotifyGameEvent", "GAME_EVENT_CREATE_UNIT did not carry a DeployUnitEvent");
             }
             break;
         default:

@@ -8,6 +8,7 @@
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
+#include "utils/Log.h"
 #include <format>
 #include "include/cAssert.h"
 
@@ -85,6 +86,8 @@ void cPlayerBrainMissionKindSaboteur::onNotifyGameEvent(const s_GameEvent &event
     if (event.eventType == GAME_EVENT_DESTROYED) {
         if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
             onEventDestroyed(*commonEvent);
+        } else {
+            Logger::warn(COMP_AI, "cPlayerBrainMissionKindSaboteur::onNotifyGameEvent", "GAME_EVENT_DESTROYED did not carry a CommonEvent");
         }
     }
 }
