@@ -61,7 +61,7 @@ std::unique_ptr<Texture> cMapDrawer::createFogTexture() const
     }
     SDL_UnlockSurface(fogSurface);
 
-    SDL_Texture *fogTexture = SDL_CreateTextureFromSurface(m_renderDrawer->getRenderer(), fogSurface);
+    SDL_Texture *fogTexture = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), fogSurface);
     int width = fogSurface->w;
     int height = fogSurface->h;
     SDL_DestroySurface(fogSurface);
@@ -112,7 +112,7 @@ void cMapDrawer::drawShroud()
                 if (fogTile > -1) {
                     const cRectangle src_pos = {fogTile * 32, 0, 32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                    m_renderDrawer->renderStrechSprite(m_fogTexture.get(), src_pos, dest_pos, 110);
+                    m_sdlDrawer->renderStrechSprite(m_fogTexture.get(), src_pos, dest_pos, 110);
                 }
             }
 
