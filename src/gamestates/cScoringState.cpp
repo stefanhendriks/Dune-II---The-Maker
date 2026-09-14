@@ -69,17 +69,21 @@ void cScoringState::draw() const
     m_textDrawer->drawTextCentered(std::format("Mission time: {:02}:{:02}", minutes, seconds), y, Color::White);
     y += lineHeight * 2;
 
-    for (int playerId = 0; playerId < MAX_PLAYERS; playerId++) {
-        const PlayerMissionStats &playerStats = m_stats.players[playerId];
-        if (playerStats.unitsBuilt == 0 && playerStats.unitsLost == 0 &&
-            playerStats.structuresBuilt == 0 && playerStats.structuresLost == 0) {
+    // AI_CPU5 (Fremen superweapon trigger) and AI_WORM are not real opponents, never shown here.
+    for (int playerId = HUMAN; playerId < AI_WORM - 1; playerId++) {
+        cPlayer *player = m_interface->getPlayer(playerId);
+        bool isPlaying = playerId == HUMAN || player->getHouse() != GENERALHOUSE;
+        if (!isPlaying) {
             continue;
         }
 
-        cPlayer* player = m_interface->getPlayer(playerId);
-        std::string playerName = player != nullptr ? player->getHouseName() : std::format("Player {}", playerId);
+        const PlayerMissionStats &playerStats = m_stats.players[playerId];
+        std::string label = playerId == HUMAN ? "YOU" : "ENEMY";
+        std::string playerName = std::format("{} - {}", label, player->getHouseName());
+        Color minimapColor = player->getMinimapColor();
+        Color nameColor = m_interface->getColorFadeSelected(minimapColor.r, minimapColor.g, minimapColor.b);
 
-        m_textDrawer->drawTextCentered(playerName, y, Color::Green);
+        m_textDrawer->drawTextCentered(playerName, y, nameColor);
         y += lineHeight;
         m_textDrawer->drawTextCentered(
             std::format("Units built: {}   Units lost: {}", playerStats.unitsBuilt, playerStats.unitsLost),
