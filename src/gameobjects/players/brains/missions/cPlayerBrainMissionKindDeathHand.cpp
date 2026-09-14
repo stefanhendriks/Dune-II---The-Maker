@@ -8,6 +8,7 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"
 #include "include/sGameEvent.h"
+#include "utils/Log.h"
 #include "gameobjects/map/cMap.h"
 #include "definitions.h"
 #include "gameobjects/players/cPlayer.h"
@@ -104,6 +105,8 @@ void cPlayerBrainMissionKindDeathHand::onNotifyGameEvent(const s_GameEvent &even
     if (event.eventType == eGameEventType::GAME_EVENT_LIST_ITEM_CANCELLED) {
         if (const auto *buildingEvent = std::get_if<BuildingEvent>(&event.data)) {
             onBuildItemCancelled(*buildingEvent);
+        } else {
+            Logger::warn(COMP_AI, "cPlayerBrainMissionKindDeathHand::onNotifyGameEvent", "GAME_EVENT_LIST_ITEM_CANCELLED did not carry a BuildingEvent");
         }
     }
 }

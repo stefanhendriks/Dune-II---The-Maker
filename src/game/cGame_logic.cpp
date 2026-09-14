@@ -1201,6 +1201,8 @@ void cGame::dispatchGameEvent(const s_GameEvent &event)
             if (notifEvent->player == nullptr || notifEvent->player == m_controlledPlayer) {
                 m_notificationArea->addNotification(notifEvent->message, notifEvent->type);
             }
+        } else {
+            Logger::warn(COMP_GAME, "cGame::dispatchGameEvent", "GAME_EVENT_NOTIFICATION did not carry a NotificationEvent");
         }
     }
 

@@ -17,6 +17,7 @@
 #include "include/sDataCampaign.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "utils/Log.h"
 
 namespace brains {
 
@@ -139,6 +140,8 @@ void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
                 if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
                     onMyStructureDestroyed(*commonEvent);
                 }
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainCampaign::onNotifyGameEvent", "GAME_EVENT_DESTROYED did not carry a CommonEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_CREATED:
@@ -146,6 +149,8 @@ void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
                 if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
                     onMyStructureCreated(*commonEvent);
                 }
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainCampaign::onNotifyGameEvent", "GAME_EVENT_CREATED did not carry a CommonEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_DAMAGED:
@@ -157,6 +162,8 @@ void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
                         onMyUnitAttacked(*damagedEvent);
                     }
                 }
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainCampaign::onNotifyGameEvent", "GAME_EVENT_DAMAGED did not carry a DamagedEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_DECAY:
@@ -164,11 +171,15 @@ void cPlayerBrainCampaign::onNotifyGameEvent(const s_GameEvent &event)
                 if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
                     onMyStructureDecayed(*commonEvent);
                 }
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainCampaign::onNotifyGameEvent", "GAME_EVENT_DECAY did not carry a CommonEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_DISCOVERED:
             if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
                 onEntityDiscoveredEvent(*commonEvent);
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainCampaign::onNotifyGameEvent", "GAME_EVENT_DISCOVERED did not carry a CommonEvent");
             }
             break;
         default:

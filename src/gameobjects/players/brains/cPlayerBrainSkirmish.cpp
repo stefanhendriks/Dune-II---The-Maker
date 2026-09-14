@@ -15,6 +15,7 @@
 #include "gameobjects/players/cPlayers.h"
 #include "utils/common.h"
 #include "utils/RNG.hpp"
+#include "utils/Log.h"
 #include <format>
 #include "include/cAssert.h"
 
@@ -160,6 +161,8 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
                 if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
                     onMyStructureDestroyed(*commonEvent);
                 }
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainSkirmish::onNotifyGameEvent", "GAME_EVENT_DESTROYED did not carry a CommonEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_CREATED:
@@ -167,6 +170,8 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
                 if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
                     onMyStructureCreated(*commonEvent);
                 }
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainSkirmish::onNotifyGameEvent", "GAME_EVENT_CREATED did not carry a CommonEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_DAMAGED:
@@ -178,6 +183,8 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
                         onMyUnitAttacked(*damagedEvent);
                     }
                 }
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainSkirmish::onNotifyGameEvent", "GAME_EVENT_DAMAGED did not carry a DamagedEvent");
             }
             break;
         case eGameEventType::GAME_EVENT_DECAY:
@@ -185,12 +192,16 @@ void cPlayerBrainSkirmish::onNotifyGameEvent(const s_GameEvent &event)
                 if ((commonEvent->player == player) && (commonEvent->entityType == eBuildType::STRUCTURE)) {
                     onMyStructureDecayed(*commonEvent);
                 }
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainSkirmish::onNotifyGameEvent", "GAME_EVENT_DECAY did not carry a CommonEvent");
             }
             // should repair when under 75%?
             break;
         case eGameEventType::GAME_EVENT_DISCOVERED:
             if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
                 onEntityDiscoveredEvent(*commonEvent);
+            } else {
+                Logger::warn(COMP_AI, "cPlayerBrainSkirmish::onNotifyGameEvent", "GAME_EVENT_DISCOVERED did not carry a CommonEvent");
             }
             break;
         default:
