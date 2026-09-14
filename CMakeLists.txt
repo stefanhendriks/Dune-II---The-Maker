@@ -112,8 +112,16 @@ set(D2TM_COMMON_WARNINGS
     -Wpedantic
     -Wzero-as-null-pointer-constant
     -Wextra-semi
-    -Werror
 )
+
+# Treat warnings as errors on CI (GitHub Actions sets CI=true) so nothing slips
+# past a PR build, but not for local development builds by default, so a dirty
+# in-progress local build isn't blocked by them. Opt in locally with
+# `cmake .. -DD2TM_WERROR=ON` to reproduce the CI build's strictness.
+option(D2TM_WERROR "Treat warnings as errors, like CI does" OFF)
+if(DEFINED ENV{CI} OR D2TM_WERROR)
+    list(APPEND D2TM_COMMON_WARNINGS -Werror)
+endif()
 
 if(APPLE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE D2TM_CLANG=1)
