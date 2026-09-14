@@ -21,6 +21,7 @@ struct InitialGameSettings {
     bool disableReinforcements = false;
     bool noAiRest = false;
     bool drawUsages = false;
+    bool fogOfWarEnabled = false;
     bool pauseWhenLosingFocus = false;
     std::string gameFilename = "game.ini";
 };

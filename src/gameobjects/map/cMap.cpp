@@ -364,7 +364,9 @@ void cMap::thinkFast()
 
 void cMap::thinkNormal()
 {
-    updateFogOfWar();
+    if (m_settings->isFogOfWarEnabled()) {
+        updateFogOfWar();
+    }
 }
 
 void cMap::thinkSlow()
@@ -420,6 +422,8 @@ void cMap::markSeen(int cell, int size, int playerId)
 
 bool cMap::isHiddenByFogOfWar(cUnit *pUnit)
 {
+    if (!m_settings->isFogOfWarEnabled()) return false;
+
     cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     if (humanPlayer->isSameTeamAs(pUnit->getPlayer())) return false;
 

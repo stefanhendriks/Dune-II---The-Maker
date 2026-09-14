@@ -20,6 +20,7 @@ const std::map<std::string, cHandleArgument::Options> cHandleArgument::optionStr
     {"-screenHeight",           Options::SCREENY},
     {"-usages",                 Options::USAGES},
     {"-autopause",              Options::PAUSE_WHEN_LOSING_FOCUS},
+    {"-fogofwar",               Options::FOG_OF_WAR},
     {"--help",                  Options::HELP}
 };
 
@@ -105,6 +106,9 @@ int cHandleArgument::handleArguments(int argc, char *argv[], InitialGameSettings
             case Options::PAUSE_WHEN_LOSING_FOCUS:
                 settings->pauseWhenLosingFocus = true;
                 break;
+            case Options::FOG_OF_WAR:
+                settings->fogOfWarEnabled = true;
+                break;
         }
     }
     return 0;
@@ -133,6 +137,7 @@ void cHandleArgument::printInstructions() const
     std::cout << "Other\n";
     std::cout << "---------\n\n";
     std::cout << "-autopause             - Pauses game when losing focus\n";
+    std::cout << "-fogofwar              - Enable fog of war\n";
     std::cout << "\n\n";
     std::cout << "Debugging\n";
     std::cout << "---------\n\n";
