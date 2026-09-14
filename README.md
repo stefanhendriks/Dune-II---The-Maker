@@ -35,6 +35,14 @@ Read [the wiki](https://github.com/stefanhendriks/Dune-II---The-Maker/wiki) for 
 
 Make sure you can run `make` (or `ninja`) from command line.
 
+## Warnings as errors
+CI treats all compiler warnings as errors. Local builds don't, by default, so a
+work-in-progress build isn't blocked by them. To reproduce CI's strictness
+locally, configure with `-DD2TM_WERROR=ON`:
+```
+    cmake .. -DD2TM_WERROR=ON
+```
+
 ## Windows (MinGW64)
 It depends on a MinGW64 environment, via [MSYS2](https://www.msys2.org/). From
 an MSYS2 MINGW64 shell, install the same packages CI installs (see the
