@@ -27,6 +27,7 @@ private:
         NOAIREST,
         USAGES,
         PAUSE_WHEN_LOSING_FOCUS,
+        FOG_OF_WAR,
         SCREENX,
         SCREENY,
         HELP

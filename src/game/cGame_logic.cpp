@@ -245,6 +245,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_gameSettings->m_disableReinforcements = gs->disableReinforcements;
     m_gameSettings->m_noAiRest = gs->noAiRest;
     m_gameSettings->m_drawUsages = gs->drawUsages;
+    m_gameSettings->m_fogOfWarEnabled = gs->fogOfWarEnabled;
     m_gameFilename = gs->gameFilename;
 
     // save settings for later use

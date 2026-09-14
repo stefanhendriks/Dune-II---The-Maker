@@ -91,6 +91,8 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
         gameSettings->drawUsages = section.getBoolean("drawUsages");
     if (section.hasValue("pauseWhenLosingFocus"))
         gameSettings->pauseWhenLosingFocus = section.getBoolean("pauseWhenLosingFocus");
+    if (section.hasValue("fogOfWarEnabled"))
+        gameSettings->fogOfWarEnabled = section.getBoolean("fogOfWarEnabled");
 
     return gameSettings;
 }

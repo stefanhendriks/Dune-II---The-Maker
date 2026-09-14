@@ -27,6 +27,9 @@ public:
     bool isDrawUsages() const {
         return m_drawUsages;
     }
+    bool isFogOfWarEnabled() const {
+        return m_fogOfWarEnabled;
+    }
     bool isDrawUnitDebug() const {
         return m_drawUnitDebug;
     }
@@ -105,8 +108,9 @@ private:
     bool m_oneAi;      
     bool m_disableWormAi;
     bool m_disableReinforcements;
-    bool m_drawUsages;           
-    bool m_drawUnitDebug;        
+    bool m_drawUsages;
+    bool m_fogOfWarEnabled = false;
+    bool m_drawUnitDebug;
     bool m_noAiRest;
     bool m_turretsDownOnLowPower = false;
     bool m_rocketTurretsDownOnLowPower = false;
