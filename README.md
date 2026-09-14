@@ -35,10 +35,12 @@ Read [the wiki](https://github.com/stefanhendriks/Dune-II---The-Maker/wiki) for 
 
 Make sure you can run `make` (or `ninja`) from command line.
 
-## Windows (MinGW)
-It currently depends on MinGW32. Make sure you also have GCC 14 installed,
-which you can do via MSYS2 (using `pacman`). GCC 14 is not installed by
-default in MinGW32!
+## Windows (MinGW64)
+It depends on a MinGW64 environment, via [MSYS2](https://www.msys2.org/). From
+an MSYS2 MINGW64 shell, install the same packages CI installs (see the
+`install:` line of the "Install MSYS2 with MinGW 64-bit" step in
+[`build_pr.yml`](.github/workflows/build_pr.yml) for the current list) via
+`pacman -S <packages>`.
 
 - git clone this project
 - create a `build` dir
