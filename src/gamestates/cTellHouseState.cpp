@@ -5,11 +5,13 @@
 #include "include/iniDefine.h"
 #include "include/sDataCampaign.h"
 #include "data/gfxdata.h"
+#include "data/gfxaudio.h"
 #include "game/cGameInterface.h"
 #include "context/GameContext.hpp"
 #include "include/definitions.h"
 
 #include "include/cAssert.h"
+#include "utils/Log.h"
 
 cTellHouseState::cTellHouseState(sGameServices* services, cIni *ini, s_DataCampaign* dataCampaign)
     : cGameState(services),
@@ -39,19 +41,26 @@ void cTellHouseState::prepareMentat(int house)
     m_house = house;
     m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
     m_mentat->setHouse(house);
+
+    auto *interface = m_ctx->getGameInterface();
     if (house == ATREIDES) {
+        interface->playSound(SOUND_ATREIDES);
         m_cIni->loadBriefing(ATREIDES, 0, INI_DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("platr");
     } else if (house == HARKONNEN) {
+        interface->playSound(SOUND_HARKONNEN);
         m_cIni->loadBriefing(HARKONNEN, 0, INI_DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plhar");
     } else if (house == ORDOS) {
+        interface->playSound(SOUND_ORDOS);
         m_cIni->loadBriefing(ORDOS, 0, INI_DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plord");
     } else if (house == SARDAUKAR) {
+        //interface->playSound(SOUND_SARDAUKAR);
         m_cIni->loadBriefing(SARDAUKAR, 0, INI_DESCRIPTION, m_mentat.get());
-        //m_mentat->loadScene("plsar");   
+        //m_mentat->loadScene("plsar");
     } else {
+        Logger::warn(COMP_GAMERULES, "cTellHouseState::prepareMentat", "called with an invalid house value: {}", house);
         m_mentat->setSentence(0, "Looks like you choose an unknown house");
     }
     m_mentat->speak();

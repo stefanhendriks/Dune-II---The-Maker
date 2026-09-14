@@ -1,8 +1,6 @@
 #include "game/cGameInterface.h"
 #include "context/cGameObjectContext.h"
-#include "data/gfxaudio.h"
 #include "game/cGame.h"
-#include "utils/Log.h"
 #include "include/Texture.hpp"
 #include "controls/cMouse.h"
 #include "gameobjects/units/cReinforcements.h"
@@ -23,27 +21,7 @@ cMouse* cGameInterface::getMouse() const
 
 void cGameInterface::prepareMentatToTellAboutHouse(int house) const
 {
-    switch(house) {
-    case ATREIDES:
-            m_game->prepareMentatToTellAboutHouse(ATREIDES);
-            m_game->playSound(SOUND_ATREIDES);
-            break;
-    case HARKONNEN:
-            m_game->prepareMentatToTellAboutHouse(HARKONNEN);
-            m_game->playSound(SOUND_HARKONNEN);
-            break;
-    case ORDOS:
-            m_game->prepareMentatToTellAboutHouse(ORDOS);
-            m_game->playSound(SOUND_ORDOS);
-            break;
-    case SARDAUKAR:
-            m_game->prepareMentatToTellAboutHouse(SARDAUKAR);
-            //m_game->playSound(SOUND_SARDAUKAR);
-            break;
-    default:
-        Logger::warn(COMP_GAMERULES, "cGameInterface::prepareMentatToTellAboutHouse", "called with an invalid house value: {}", house);
-        break;
-    }
+    m_game->prepareMentatToTellAboutHouse(house);
     m_game->setNextStateToTransitionTo(GAME_TELLHOUSE);
     m_game->initiateFadingOut();
 }
