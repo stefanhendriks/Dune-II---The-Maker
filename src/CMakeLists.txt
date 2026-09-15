@@ -31,6 +31,7 @@ set(D2TM_SOURCES
     drawers/cStructureDrawer.cpp
     drawers/cTextDrawer.cpp
     drawers/cTextTextureCache.cpp
+    drawers/cUnitDrawer.cpp
     drawers/SDLDrawer.cpp
     game/cGame_logic.cpp
     game/cGameConditionChecker.cpp

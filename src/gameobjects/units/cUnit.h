@@ -25,7 +25,6 @@ static constexpr int MAX_PATH_SIZE = 512;
 static constexpr int MAX_WAYPOINTS_SIZE = 48;
 
 class cPlayer;
-class cTextDrawer;
 class cAbstractStructure;
 struct sGameServices;
 
@@ -36,8 +35,6 @@ class cGameInterface;
 class cMapCamera;
 class cMap;
 class cPathFinder;
-class SDLDrawer;
-class Graphics;
 
 enum class eTransferType {
     NONE,                               // nothing to transfer
@@ -196,7 +193,9 @@ public:
     void init(int i);        // inits units
 
     int draw_x();
+    int draw_x(int bmpWidth);
     int draw_y();
+    int draw_y(int bmpHeight);
 
     int pos_x();
     int pos_y();
@@ -207,12 +206,20 @@ public:
     int center_draw_x();
     int center_draw_y();
 
-    void draw_health();
-    void draw_experience();
-    void draw_spice();
-    void draw_group(cTextDrawer* textDrawer);
-    void draw();
-    void draw_path() const;
+    [[nodiscard]] cMapCamera *getMapCamera() const {
+        return m_mapCamera;
+    }
+
+    [[nodiscard]] bool isDrawUnitDebugEnabled() const;
+
+    [[nodiscard]] const cRectangle &getDimensions() const {
+        return dimensions;
+    }
+
+    [[nodiscard]] int getUnitsEaten() const {
+        return unitsEaten;
+    }
+
     bool isValid() const;     // valid unit?
 
     void shoot(int iTargetCell);  // shoot at goalcell
@@ -456,8 +463,6 @@ public:
 
     bool isMarkedForRemoval();
 
-    void draw_debug(cTextDrawer* textDrawer);
-
     void setBoundParticleId(int particleId);
 
     int getHitPoints() {
@@ -497,8 +502,6 @@ private:
     cMapCamera* m_mapCamera = nullptr;
     cMap* m_map = nullptr;
     cPathFinder *m_pathFinder = nullptr;
-    SDLDrawer *m_renderer = nullptr;
-    Graphics* m_gfxdata = nullptr;
 
     eActionType m_action;
     eUnitActionIntent intent;
@@ -587,10 +590,6 @@ private:
     void forgetAboutUnitToPickUp();
 
     void tellCarryAllThatWouldPickMeUpToForgetAboutMe() const;
-
-    int draw_x(int bmpWidth);
-
-    int draw_y(int bmpHeight);
 
     bool isAbleToGuard();
 
