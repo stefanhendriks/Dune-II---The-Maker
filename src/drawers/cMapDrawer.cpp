@@ -24,6 +24,7 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     m_ctx(ctx),
     m_sdlDrawer(ctx->getSDLDrawer()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
+    m_settings(ctx->getGameInterface()->getGameSettings()),
     m_drawWithoutShroudTiles(false),
     m_drawGrid(false)
 {
@@ -32,6 +33,7 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     d2tm_assert(camera!=nullptr);
     d2tm_assert(player!=nullptr);
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(m_settings != nullptr);
 
     m_fogTexture = createFogTexture();
 }
@@ -106,17 +108,7 @@ void cMapDrawer::drawShroud()
             int iDrawX = (int)std::floor(fDrawX);
             int iDrawY = (int)std::floor(fDrawY);
 
-            // fog of war: discovered, but not observed at this moment -> grey veil. Uses the shroud
-            // tiles so the fog gets the same rounded borders as the shroud itself.
-            if (m_fogTexture && m_map->isVisible(iCell, iPl)) {
-                int fogTile = m_map->isSeen(iCell, iPl) ? determineWhichShroudTileToDraw(iCell, iPl, true) : 0;
-
-                if (fogTile > -1) {
-                    const cRectangle src_pos = {fogTile * 32, 0, 32, 32};
-                    cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                    m_sdlDrawer->renderStrechSprite(m_fogTexture.get(), src_pos, dest_pos, 110);
-                }
-            }
+            drawFogVeil(iCell, iPl, iDrawX, iDrawY, iTileWidth, iTileHeight);
 
             if (m_drawWithoutShroudTiles) {
                 if (m_map->isVisible(iCell, iPl)) {
@@ -372,6 +364,20 @@ int cMapDrawer::determineWhichShroudTileToDraw(int cll, int playerId, bool fogOf
 
     tile = t - 1;
     return tile;
+}
+
+void cMapDrawer::drawFogVeil(int iCell, int iPl, int iDrawX, int iDrawY, int iTileWidth, int iTileHeight)
+{
+    if (!m_settings->isFogOfWarEnabled()) return;
+    if (!m_fogTexture) return;
+    if (!m_map->isVisible(iCell, iPl)) return;
+
+    int fogTile = m_map->isSeen(iCell, iPl) ? determineWhichShroudTileToDraw(iCell, iPl, true) : 0;
+    if (fogTile <= -1) return;
+
+    const cRectangle src_pos = {fogTile * 32, 0, 32, 32};
+    cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
+    m_sdlDrawer->renderStrechSprite(m_fogTexture.get(), src_pos, dest_pos, 110);
 }
 
 void cMapDrawer::setPlayer(cPlayer *thePlayer)
