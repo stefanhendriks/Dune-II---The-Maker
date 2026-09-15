@@ -37,8 +37,10 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
 }
 
 /**
- * The shroud sprite is pure black with a hard alpha mask, so it cannot be tinted with a color
- * modulation. Instead, create a copy of it that keeps the shapes (alpha) but is grey.
+ * The shroud sprite is pure black with a hard alpha mask. Reuse its shape (alpha) for the fog
+ * veil too, rendered black like the shroud itself, but at reduced opacity (see the alpha passed
+ * to renderStrechSprite in drawShroud) so a discovered-but-not-currently-visible tile still reads
+ * as darkened rather than fully hidden.
  */
 std::unique_ptr<Texture> cMapDrawer::createFogTexture() const
 {
@@ -56,7 +58,7 @@ std::unique_ptr<Texture> cMapDrawer::createFogTexture() const
             Uint8 r, g, b, a;
             SDL_GetRGBA(row[x], details, nullptr, &r, &g, &b, &a);
             if (a == 0) continue; // keep transparent pixels transparent
-            row[x] = SDL_MapRGBA(details, nullptr, 128, 128, 128, a);
+            row[x] = SDL_MapRGBA(details, nullptr, 0, 0, 0, a);
         }
     }
     SDL_UnlockSurface(fogSurface);
