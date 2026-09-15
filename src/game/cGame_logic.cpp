@@ -579,9 +579,6 @@ void cGame::shutdown()
 bool cGame::setupGame()
 {
     Logger::g_loggerInstance->setDebug(m_gameSettings->m_debugMode);
-    Logger::info(COMP_NONE, "cGame::setupGame", "=== Dune II - The Maker ===");
-    Logger::info(COMP_VERSION, "cGame::setupGame", "=== Version information ===");
-    Logger::info(COMP_VERSION, "Initializing", "Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__);
 
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");

@@ -12,6 +12,7 @@
 
 #include "game/cGame.h"
 
+#include "config.h"
 #include "utils/Log.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -29,6 +30,10 @@ int main(int argc, char **argv)
 {
     std::unique_ptr<cLog> m_log = std::make_unique<cLog>("nlog.txt");
     Logger::init(m_log.get());
+    Logger::info(COMP_NONE, "main", "=== Dune II - The Maker ===");
+    Logger::info(COMP_VERSION, "main", "=== Version information ===");
+    Logger::info(COMP_VERSION, "Initializing", "Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__);
+
     cGame game;
 
     std::unique_ptr<InitialGameSettings> settings = loadSettingsFromIni("settings.ini");
