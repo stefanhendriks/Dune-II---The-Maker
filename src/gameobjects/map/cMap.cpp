@@ -1411,6 +1411,8 @@ void cMap::onNotifyGameEvent(const s_GameEvent &event)
                     // 1000/5 = taking care of thinkFast 5ms loop. The second part
                     // is the actual amount of seconds we want to delay before blowing up the spice bloom
                     m_mBloomTimers[commonEvent->atCell] = (1000 / 5) * (45 + RNG::rnd(120));
+                } else {
+                    Logger::warn(COMP_MAP, "cMap::onNotifyGameEvent", "GAME_EVENT_SPICE_BLOOM_SPAWNED did not carry a CommonEvent");
                 }
             }
             break;
@@ -1418,6 +1420,8 @@ void cMap::onNotifyGameEvent(const s_GameEvent &event)
             if (m_bAutoDetonateSpiceBlooms) {
                 if (const auto *commonEvent = std::get_if<CommonEvent>(&event.data)) {
                     m_mBloomTimers.erase(commonEvent->atCell);
+                } else {
+                    Logger::warn(COMP_MAP, "cMap::onNotifyGameEvent", "GAME_EVENT_SPICE_BLOOM_BLEW did not carry a CommonEvent");
                 }
             }
             break;
@@ -1441,6 +1445,8 @@ void cMap::onEntityCreated(const s_GameEvent &event)
         if (commonEvent->entitySpecificType == SANDWORM) {
             evaluateIfWeShouldSetTimerToRespawnWorm();
         }
+    } else {
+        Logger::warn(COMP_MAP, "cMap::onEntityCreated", "GAME_EVENT_CREATED did not carry a CommonEvent");
     }
 }
 
@@ -1494,6 +1500,8 @@ void cMap::onEntityDestroyed(const s_GameEvent &event)
             // a sandworm got destroyed, set timer to re-spawn it
             setSandwormRespawnTimer();
         }
+    } else {
+        Logger::warn(COMP_MAP, "cMap::onEntityDestroyed", "GAME_EVENT_DESTROYED did not carry a CommonEvent");
     }
 }
 

@@ -2,6 +2,7 @@
 
 #include "include/sGameEvent.h"
 #include "gameobjects/players/cPlayer.h"
+#include "utils/Log.h"
 
 #include <SDL3/SDL.h>
 
@@ -20,6 +21,7 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
 
     const auto *commonEvent = std::get_if<CommonEvent>(&event.data);
     if (commonEvent == nullptr) {
+        Logger::warn(COMP_GAME, "cMissionStatsCollector::onNotifyGameEvent", "GAME_EVENT_CREATED/GAME_EVENT_DESTROYED did not carry a CommonEvent");
         return;
     }
 
