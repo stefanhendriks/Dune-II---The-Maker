@@ -251,6 +251,31 @@ void cOptionsState::constructWindow(int prevState)
             })
             .build();
     m_guiWindow->addGuiObject(std::move(gui_sld_speedRect));
+
+    const cRectangle &fogOfWarRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*4, 50, buttonHeight);
+    auto gui_FogOfWarLabel = GuiLabelBuilder()
+            .withLabel("Fog of war")
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_sdlDrawer)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withTextAlign(GuiTextAlignHorizontal::LEFT)
+            .withRect(fogOfWarRect)
+            .build();
+    m_guiWindow->addGuiObject(std::move(gui_FogOfWarLabel));
+
+    const cRectangle &fogOfWarCheckRect = m_guiWindow->getRelativeRect(5+75, (5+buttonHeight)*4, buttonHeight, buttonHeight);
+    auto gui_FogOfWarCheckLabel = GuiCheckBoxBuilder()
+            .withRect(fogOfWarCheckRect)
+            .withRenderer(m_sdlDrawer)
+            .onCheck([this]() {
+                m_settings->setFogOfWarEnabled(true);
+            })
+            .onUnCheck([this]() {
+                m_settings->setFogOfWarEnabled(false);
+            })
+            .build();
+    gui_FogOfWarCheckLabel->setChecked(m_settings->isFogOfWarEnabled());
+    m_guiWindow->addGuiObject(std::move(gui_FogOfWarCheckLabel));
 }
 
 cOptionsState::~cOptionsState()

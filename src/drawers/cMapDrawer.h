@@ -11,6 +11,7 @@ class cPlayer;
 class GameContext;
 class Graphics;
 class SDLDrawer;
+class cGameSettings;
 class cMap;
 class cMapCamera;
 class MapGeometry;
@@ -46,6 +47,7 @@ private:
     GameContext *m_ctx = nullptr;
     SDLDrawer* m_sdlDrawer = nullptr;
     Graphics *m_gfxdata = nullptr;
+    cGameSettings* m_settings = nullptr;
 
     bool m_drawWithoutShroudTiles;
     bool m_drawGrid;
@@ -62,4 +64,11 @@ private:
     std::unique_ptr<Texture> createFogTexture() const;
 
     void drawCellAsColoredTile(float tileWidth, float tileHeight, int iCell, float fDrawX, float fDrawY);
+
+    /**
+     * Draws the grey veil over a discovered-but-not-currently-observed cell, when fog of war is
+     * enabled. isSeen() alone isn't enough to decide this: it stops updating the instant fog of war
+     * is disabled, so this checks the live setting itself rather than trusting isSeen()'s state.
+     */
+    void drawFogVeil(int iCell, int iPl, int iDrawX, int iDrawY, int iTileWidth, int iTileHeight);
 };

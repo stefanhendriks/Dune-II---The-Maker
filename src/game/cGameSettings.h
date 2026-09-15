@@ -30,6 +30,9 @@ public:
     bool isFogOfWarEnabled() const {
         return m_fogOfWarEnabled;
     }
+    void setFogOfWarEnabled(bool value) {
+        m_fogOfWarEnabled = value;
+    }
     bool isDrawUnitDebug() const {
         return m_drawUnitDebug;
     }
