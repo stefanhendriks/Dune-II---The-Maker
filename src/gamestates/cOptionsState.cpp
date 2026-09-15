@@ -258,6 +258,7 @@ void cOptionsState::constructWindow(int prevState)
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withTextAlign(GuiTextAlignHorizontal::LEFT)
             .withRect(fogOfWarRect)
             .build();
     m_guiWindow->addGuiObject(std::move(gui_FogOfWarLabel));
