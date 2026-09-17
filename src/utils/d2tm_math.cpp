@@ -1,19 +1,18 @@
-/*
+/**
+ * @file d2tm_math.cpp
+ *
+ * Dune 2 - The Maker
+ *
+ * @author Stefan Hendriks & the D2TM Team
+ * @www http://www.dune2themaker.com
+ * @copyright Copyright (c) 2002 - 2026 Stefan Hendriks and contributors
+ * @license This software is released under the MIT License. See LICENSE.md.
+ *
+ * Note: Dune 2 is a trademark of Westwood Studios/Electronic Arts.
+ *
+ * This is a non-commercial educational project.
+ */
 
-  Dune II - The Maker
-
-  Author : Stefan Hendriks
-  Contact: stefan@fundynamic.com
-  Website: http://dune2themaker.fundynamic.com
-
-  2001 - 2022 (c) code by Stefan Hendriks
-
-  Purpose of this file:
-
-    math.cpp should deliver all mathematical functions needed in the game.
-
-
-  */
 #include "d2tm_math.h"
 
 #include <cmath>

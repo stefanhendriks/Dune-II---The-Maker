@@ -1,22 +1,18 @@
-/*
+/**
+ * @file cPlayer.h
+ *
+ * Dune 2 - The Maker
+ *
+ * @author Stefan Hendriks & the D2TM Team
+ * @www http://www.dune2themaker.com
+ * @copyright Copyright (c) 2002 - 2026 Stefan Hendriks and contributors
+ * @license This software is released under the MIT License. See LICENSE.md.
+ *
+ * Note: Dune 2 is a trademark of Westwood Studios/Electronic Arts.
+ *
+ * This is a non-commercial educational project.
+ */
 
-  Dune II - The Maker
-
-  Author : Stefan Hendriks
-  Contact: stefan@fundynamic.com
-  Website: http://dune2themaker.fundynamic.com
-
-  2001 - 2010 (c) code by Stefan Hendriks
-
-  A player has a sidebar. The sidebar contains lists of items that can be built. These
-  items can be structures/units but also special weapons, etc.
-
-  In order to build items, a player has an itemBuilder.
-
-  A player can upgrade the sidebar lists. Therefore a cBuildingListUpgrader is used.
-  The state of upgrades is held by a cPlayerUpgradeState object.
-
-  */
 #pragma once
 
 
