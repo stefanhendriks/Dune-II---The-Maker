@@ -22,8 +22,8 @@ cTellHouseState::cTellHouseState(sGameServices* services, cIni *ini, s_DataCampa
     d2tm_assert(services != nullptr);
     d2tm_assert(m_cIni != nullptr);
     d2tm_assert(dataCampaign != nullptr);
-    auto interface = services->ctx->getGameInterface();
-    m_mouse = interface->getMouse();
+    m_interface = services->ctx->getGameInterface();
+    m_mouse = m_interface->getMouse();
     d2tm_assert(m_mouse != nullptr);
     prepareMentat(m_house);
 }
@@ -42,21 +42,20 @@ void cTellHouseState::prepareMentat(int house)
     m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
     m_mentat->setHouse(house);
 
-    auto *interface = m_ctx->getGameInterface();
     if (house == ATREIDES) {
-        interface->playSound(SOUND_ATREIDES);
+        m_interface->playSound(SOUND_ATREIDES);
         m_cIni->loadBriefing(ATREIDES, 0, INI_DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("platr");
     } else if (house == HARKONNEN) {
-        interface->playSound(SOUND_HARKONNEN);
+        m_interface->playSound(SOUND_HARKONNEN);
         m_cIni->loadBriefing(HARKONNEN, 0, INI_DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plhar");
     } else if (house == ORDOS) {
-        interface->playSound(SOUND_ORDOS);
+        m_interface->playSound(SOUND_ORDOS);
         m_cIni->loadBriefing(ORDOS, 0, INI_DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plord");
     } else if (house == SARDAUKAR) {
-        //interface->playSound(SOUND_SARDAUKAR);
+        //m_interface->playSound(SOUND_SARDAUKAR);
         m_cIni->loadBriefing(SARDAUKAR, 0, INI_DESCRIPTION, m_mentat.get());
         //m_mentat->loadScene("plsar");
     } else {
