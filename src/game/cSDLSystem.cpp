@@ -140,8 +140,17 @@ cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &t
     }
     else {
         Logger::info(COMP_SDL2, "SDL_mixer", "Initialized successfully");
-        for (auto i =0; i < MIX_GetNumAudioDecoders();i++) {
-            Logger::info(COMP_SDL2, "SDL_mixer", "Audio decoder {} : {}", i, MIX_GetAudioDecoder(i));
+        bool hasMidi = false;
+        for (auto i = 0; i < MIX_GetNumAudioDecoders(); i++) {
+            const char *name = MIX_GetAudioDecoder(i);
+            Logger::info(COMP_SDL2, "SDL_mixer", "Audio decoder {} : {}", i, name);
+            if (SDL_strcasecmp(name, "MIDI") == 0 || SDL_strcasecmp(name, "MID") == 0) {
+                hasMidi = true;
+            }
+        }
+        if (!hasMidi) {
+            Logger::warn(COMP_SDL2, "SDL_mixer", "No MIDI decoder found — music will not play. "
+                "On Windows, run install_dependencies_windows.ps1 to rebuild SDL3_mixer with MIDI support.");
         }
     }
 
