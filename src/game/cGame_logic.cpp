@@ -368,6 +368,11 @@ void cGame::setMissionWon()
     takeBackGroundScreen();
 }
 
+MissionStats cGame::getMissionStats() const
+{
+    return m_missionStatsCollector->snapshot();
+}
+
 void cGame::setMissionLost()
 {
     m_missionWasWon = false;
@@ -813,6 +818,7 @@ void cGame::setState(int newState)
                 case GAME_SELECT_HOUSE: mapped = eGameState::SELECT_HOUSE; return true;
                 case GAME_TELLHOUSE: mapped = eGameState::TELLHOUSE; return true;
                 case GAME_WINNING: mapped = eGameState::WINNING; return true;
+                case GAME_SCORING: mapped = eGameState::SCORING; return true;
                 case GAME_WINBRIEF: mapped = eGameState::WINBRIEF; return true;
                 case GAME_LOSEBRIEF: mapped = eGameState::LOSEBRIEF; return true;
                 case GAME_LOSING: mapped = eGameState::LOSING; return true;
