@@ -254,7 +254,7 @@ void cOptionsState::constructWindow(int prevState)
 
     const cRectangle &fogOfWarRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*4, 50, buttonHeight);
     auto gui_FogOfWarLabel = GuiLabelBuilder()
-            .withLabel("Fog of war")
+            .withLabel("FOW")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
