@@ -1071,12 +1071,12 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 {
     m_gameObjectsContext->getPlayer(HUMAN)->setHouse(house);
     m_dataCampaign->housePlayer = house;
-    if (!m_creatorState->hasState(eGameState::TELLHOUSE)) {
-        m_creatorState->getState(eGameState::TELLHOUSE);
+    bool stateAlreadyExisted = m_creatorState->hasState(eGameState::TELLHOUSE);
+    auto *pState = dynamic_cast<cTellHouseState *>(m_creatorState->getState(eGameState::TELLHOUSE));
+    if (!stateAlreadyExisted) {
         playMusicByTypeForStateTransition(MUSIC_BRIEFING);
-    } else {
-        Logger::warn(COMP_GAME, "cGame::prepareMentatToTellAboutHouse", "cMentatState for TELLHOUSE already exists. Not creating a new one.");
     }
+    pState->prepareMentat(house);
 }
 
 void cGame::loadScenario()
