@@ -19,6 +19,7 @@
 #include "observers/cScenarioObserver.h"
 #include "utils/Color.hpp"
 #include "utils/Log.h"
+#include "game/eScalingMode.h"
 
 #include <memory>
 #include <string>
@@ -205,6 +206,7 @@ public:
 private:
     bool m_playSound;                       // play sound?
     bool m_windowed;        			    // windowed
+    eScalingMode m_scalingMode;             // how the game scales to the screen in fullscreen
     bool m_pauseWhenLosingFocus;            // pausing the game when losing focus
     float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
     float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)

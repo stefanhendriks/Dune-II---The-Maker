@@ -9,6 +9,7 @@ enum class eKeyAction {
     GAME_SPEED_UP,
     GAME_SPEED_DOWN,
     TOGGLE_FULLSCREEN,
+    TOGGLE_SCALING_MODE,
     TOGGLE_CHEAT,
     // Map scrolling
     SCROLL_LEFT,

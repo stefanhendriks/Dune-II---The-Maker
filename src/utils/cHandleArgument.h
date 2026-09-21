@@ -16,6 +16,8 @@ private:
         GAME,
         WINDOWED,
         FULLSCREEN,
+        INTEGERSCALE,
+        LETTERBOX,
         NOMUSIC,
         NOSOUND,
         DEBUG,

@@ -139,6 +139,7 @@ cGame::cGame()
     m_currentState = nullptr;
 
     m_windowed = false;
+    m_scalingMode = eScalingMode::INTEGER_SCALE;
     m_playSound = true;
     context = nullptr;
     ctx = nullptr;
@@ -223,6 +224,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_cameraBorderOrKeyMoveSpeed = gs->cameraBorderOrKeyMoveSpeed;
     m_cameraEdgeMove = gs->cameraEdgeMove;
     m_windowed = gs->windowed;
+    m_scalingMode = gs->scalingMode;
 
     m_gameSettings->m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
     m_gameSettings->setTurretsDownOnLowPower(gs->turretsDownOnLowPower);
@@ -627,7 +629,7 @@ bool cGame::setupGame()
     }
     Logger::info(COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section");
 
-    m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title, m_windowed);
+    m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title, m_windowed, m_scalingMode);
     if (!m_windowed) {
         m_Screen->setFullScreenMode();
     }
@@ -1391,6 +1393,13 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
             m_Screen->setWindowMode();
             m_windowed = true;
         }
+    }
+
+    if (event.isAction(eKeyAction::TOGGLE_SCALING_MODE)) {
+        m_Screen->toggleScalingMode();
+        m_scalingMode = m_Screen->getScalingMode();
+        auto message = std::format("Scaling mode: {}", m_scalingMode == eScalingMode::INTEGER_SCALE ? "Integer scale" : "Letterbox");
+        m_notificationArea->addNotification(message, eNotificationType::NEUTRAL);
     }
 
     if (event.isAction(eKeyAction::TOGGLE_CHEAT)) {

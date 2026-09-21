@@ -7,6 +7,8 @@ const std::map<std::string, cHandleArgument::Options> cHandleArgument::optionStr
     {"-game",                   Options::GAME},
     {"-windowed",               Options::WINDOWED},
     {"-fullscreen",             Options::FULLSCREEN},
+    {"-integerscale",           Options::INTEGERSCALE},
+    {"-letterbox",              Options::LETTERBOX},
     {"-nomusic",                Options::NOMUSIC},
     {"-nosound",                Options::NOSOUND},
     {"-debug",                  Options::DEBUG},
@@ -55,6 +57,12 @@ int cHandleArgument::handleArguments(int argc, char *argv[], InitialGameSettings
                 break;
             case Options::FULLSCREEN:
                 settings->windowed = false;
+                break;
+            case Options::INTEGERSCALE:
+                settings->scalingMode = eScalingMode::INTEGER_SCALE;
+                break;
+            case Options::LETTERBOX:
+                settings->scalingMode = eScalingMode::LETTERBOX;
                 break;
             case Options::NOMUSIC:
                 settings->playMusic = false;
@@ -124,6 +132,8 @@ void cHandleArgument::printInstructions() const
     std::cout << "-fullscreen            - Run game in fullscreen instead of windowed\n";
     std::cout << "-screenWidth <value>   - Width of screen / window (minimum 800)\n";
     std::cout << "-screenHeight <value>  - Height of screen / window (minimum 600)\n";
+    std::cout << "-integerscale          - Fullscreen scales in whole steps (1x, 2x, ...), may leave black bars\n";
+    std::cout << "-letterbox             - Fullscreen fills the screen edge to edge at a fractional scale\n";
     std::cout << "\n\n";
     std::cout << "Sound/Music\n";
     std::cout << "-----------\n\n";
