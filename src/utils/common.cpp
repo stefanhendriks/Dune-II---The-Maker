@@ -58,6 +58,10 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
         gameSettings->cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     if (section.hasValue("FullScreen"))
         gameSettings->windowed = !section.getBoolean("FullScreen");
+    if (section.hasValue("ScalingMode"))
+        gameSettings->scalingMode = section.getStringValue("ScalingMode") == "Letterbox"
+            ? eScalingMode::LETTERBOX
+            : eScalingMode::INTEGER_SCALE;
     if (section.hasValue("AllowRepeatingReinforcements"))
         gameSettings->allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
     if (section.hasValue("AllTurretsDownOnLowPower"))

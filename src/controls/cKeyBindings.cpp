@@ -17,6 +17,7 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::GAME_SPEED_DOWN,     {SDL_SCANCODE_KP_MINUS});
     // Alt-modified
     bind(eKeyAction::TOGGLE_FULLSCREEN,   {SDL_SCANCODE_RETURN}, false, true,  false);
+    bind(eKeyAction::TOGGLE_SCALING_MODE, {SDL_SCANCODE_L},      false, true,  false);
     bind(eKeyAction::TOGGLE_CHEAT,        {SDL_SCANCODE_C},      false, true,  false);
 
     // Map scrolling
@@ -120,6 +121,7 @@ const std::vector<std::pair<std::string, eKeyAction>>& cKeyBindings::getActionTa
         {"GAME_SPEED_UP",             eKeyAction::GAME_SPEED_UP},
         {"GAME_SPEED_DOWN",           eKeyAction::GAME_SPEED_DOWN},
         {"TOGGLE_FULLSCREEN",         eKeyAction::TOGGLE_FULLSCREEN},
+        {"TOGGLE_SCALING_MODE",       eKeyAction::TOGGLE_SCALING_MODE},
         {"TOGGLE_CHEAT",              eKeyAction::TOGGLE_CHEAT},
         {"SCROLL_LEFT",               eKeyAction::SCROLL_LEFT},
         {"SCROLL_RIGHT",              eKeyAction::SCROLL_RIGHT},

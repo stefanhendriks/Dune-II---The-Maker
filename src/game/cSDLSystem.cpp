@@ -26,25 +26,45 @@ void cSDLSystem::applyFullscreenPresentation()
     // by the logical presentation already in effect, and always report a scale of 1.
     SDL_GetRenderOutputSize(renderer, &renderW, &renderH);
 
-    // LETTERBOX, not INTEGER_SCALE: fullscreen has to fill the screen. INTEGER_SCALE only allows
-    // whole factors (1x, 2x, 3x ...), so playing at 1280x720 on a 1920x1080 screen is stuck at 1x
-    // and leaves the game as a small rectangle in a black frame - a 1.5x scale is exactly what is
-    // needed there. adaptResolution gives renderResolution the aspect ratio of the display, so
-    // LETTERBOX fills the screen edge to edge instead of adding bars.
-    // The price is that at a fractional scale the game pixels are no longer all the same size
-    // (at 1.5x, one game pixel covers 1 or 2 screen pixels). That is the behaviour players had
-    // before, and it beats losing most of the screen.
-    float scaleToFillScreen = std::min((float)renderW / (float)renderResolution.width,
-                                       (float)renderH / (float)renderResolution.height);
+    if (m_scalingMode == eScalingMode::INTEGER_SCALE) {
+        // Every game pixel maps to the same-sized block on screen (1x, 2x, 3x ...). If the screen
+        // is larger than an exact multiple, the remainder appears as black borders. This avoids
+        // fractional scaling (LETTERBOX at e.g. 1.167x) which produces jagged, uneven pixels even
+        // with nearest-neighbour filtering. renderResolution is already capped to the logical
+        // screen size in adaptResolution, so the scale is always >= 1.
+        int intScale = std::min(renderW / renderResolution.width, renderH / renderResolution.height);
 
-    SDL_SetRenderLogicalPresentation(renderer, renderResolution.width, renderResolution.height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
+        SDL_SetRenderLogicalPresentation(renderer, renderResolution.width, renderResolution.height, SDL_LOGICAL_PRESENTATION_INTEGER_SCALE);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
 
-    Logger::info(COMP_SDL2, "desktop", "Renderer output size : {}x{}", renderW, renderH);
-    Logger::info(COMP_SDL2, "desktop", "Presentation mode : LETTERBOX (scale = {})", scaleToFillScreen);
+        Logger::info(COMP_SDL2, "desktop", "Renderer output size : {}x{}", renderW, renderH);
+        Logger::info(COMP_SDL2, "desktop", "Presentation mode : INTEGER_SCALE (integer scale = {})", intScale);
+    } else {
+        // Fullscreen fills the screen edge to edge instead of adding bars, at the cost of a
+        // fractional scale (at 1.5x, one game pixel covers 1 or 2 screen pixels).
+        float scaleToFillScreen = std::min((float)renderW / (float)renderResolution.width,
+                                           (float)renderH / (float)renderResolution.height);
+
+        SDL_SetRenderLogicalPresentation(renderer, renderResolution.width, renderResolution.height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+
+        Logger::info(COMP_SDL2, "desktop", "Renderer output size : {}x{}", renderW, renderH);
+        Logger::info(COMP_SDL2, "desktop", "Presentation mode : LETTERBOX (scale = {})", scaleToFillScreen);
+    }
     float scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
     Logger::info(COMP_SDL2, "DPI", "Display content scale : {}", scale);
+}
+
+void cSDLSystem::toggleScalingMode()
+{
+    m_scalingMode = (m_scalingMode == eScalingMode::LETTERBOX) ? eScalingMode::INTEGER_SCALE : eScalingMode::LETTERBOX;
+    Logger::info(COMP_SDL2, "desktop", "Scaling mode toggled to {}",
+                 m_scalingMode == eScalingMode::INTEGER_SCALE ? "INTEGER_SCALE" : "LETTERBOX");
+    if (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) {
+        applyFullscreenPresentation();
+    }
 }
 
 void cSDLSystem::setFullScreenMode()
@@ -211,7 +231,8 @@ cSDLSystem::~cSDLSystem()
     Logger::info(COMP_SDL2, "SDL shutdown", "Thanks for playing!");
 }
 
-cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title, bool windowed)
+cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title, bool windowed, eScalingMode scalingMode)
+    : m_scalingMode(scalingMode)
 {
     Logger::info(COMP_SDL2, "cSDLSystem", "=== SDL ===");
 

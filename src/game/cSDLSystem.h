@@ -3,6 +3,8 @@
 #include <string>
 #include <SDL3/SDL.h>
 
+#include "game/eScalingMode.h"
+
 struct DisplayResolution {
     int width;
     int height;
@@ -11,12 +13,17 @@ struct DisplayResolution {
 class cSDLSystem {
 public:
     // Initializes SDL, creates a window and renderer with the given resolution
-    cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title, bool windowed);
+    cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title, bool windowed, eScalingMode scalingMode);
     ~cSDLSystem();
 
     void setFullScreenMode();
     void setWindowMode();
     void onPixelSizeChanged();
+    void toggleScalingMode();
+
+    eScalingMode getScalingMode() const {
+        return m_scalingMode;
+    }
 
     cSDLSystem &operator=(const cSDLSystem &) = delete;
     cSDLSystem &operator=(cSDLSystem &&) = delete;
@@ -49,4 +56,5 @@ private:
     DisplayResolution usableResolution; //display size minus taskbar/dock/menu bar
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
+    eScalingMode m_scalingMode;
 };

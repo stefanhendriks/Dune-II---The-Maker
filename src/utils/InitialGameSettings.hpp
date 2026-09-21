@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#include "game/eScalingMode.h"
+
 struct InitialGameSettings {
     int screenW = 800;
     int screenH = 600;
@@ -8,6 +10,7 @@ struct InitialGameSettings {
     float cameraBorderOrKeyMoveSpeed = 0.5f;
     bool cameraEdgeMove = true;
     bool windowed = false;
+    eScalingMode scalingMode = eScalingMode::INTEGER_SCALE;
     bool allowRepeatingReinforcements = false;
     bool turretsDownOnLowPower = false;
     bool rocketTurretsDownOnLowPower = false;
