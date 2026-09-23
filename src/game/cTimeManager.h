@@ -47,6 +47,8 @@ public:
     std::string getCurrentTime() const;
     // returns the stored timer value on time format
     std::string getCurrentTimer() const;
+    // returns the stored timer value in seconds (pause-aware, see pauseTimer()/restartTimer())
+    uint64_t getElapsedSeconds() const;
 
     // start timer control
     void startTimer();

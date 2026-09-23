@@ -358,7 +358,7 @@ void cGame::setMissionWon()
 
     playMusicByType(MUSIC_WIN);
 
-    const MissionStats stats = m_missionStatsCollector->snapshot();
+    const MissionStats stats = m_missionStatsCollector->snapshot(m_timeManager->getElapsedSeconds());
     Logger::info(COMP_GAME, "cGame::setMissionWon", "Mission stats: elapsedSeconds={}", stats.elapsedSeconds);
     for (int playerId = 0; playerId < MAX_PLAYERS; playerId++) {
         const PlayerMissionStats &playerStats = stats.players[playerId];
@@ -371,7 +371,7 @@ void cGame::setMissionWon()
 
 MissionStats cGame::getMissionStats() const
 {
-    return m_missionStatsCollector->snapshot();
+    return m_missionStatsCollector->snapshot(m_timeManager->getElapsedSeconds());
 }
 
 void cGame::setMissionLost()

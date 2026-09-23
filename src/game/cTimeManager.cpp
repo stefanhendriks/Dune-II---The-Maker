@@ -47,6 +47,11 @@ std::string cTimeManager::getCurrentTime() const
 #endif
 }
 
+uint64_t cTimeManager::getElapsedSeconds() const
+{
+    return m_timeCounter->getTime();
+}
+
 std::string cTimeManager::getCurrentTimer() const
 {
 #if D2TM_CLANG
