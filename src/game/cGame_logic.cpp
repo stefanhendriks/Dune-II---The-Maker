@@ -1024,6 +1024,9 @@ void cGame::setState(int newState)
             else if (newState == GAME_WINNING) {
                 newStatePtr = m_creatorState->getState(eGameState::WINNING);
             }
+            else if (newState == GAME_SCORING) {
+                newStatePtr = m_creatorState->getState(eGameState::SCORING);
+            }
             else if (newState == GAME_TELLHOUSE) {
                 m_dataCampaign->housePlayer = m_gameObjectsContext->getPlayer(HUMAN)->getHouse();
                 newStatePtr = m_creatorState->getState(eGameState::TELLHOUSE);
