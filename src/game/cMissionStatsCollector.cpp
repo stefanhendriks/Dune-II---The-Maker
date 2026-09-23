@@ -6,14 +6,16 @@
 
 #include <SDL3/SDL.h>
 
-void cMissionStatsCollector::missionInit()
-{
-    m_playerStats = {};
-    m_missionStartTicks = SDL_GetTicks();
-}
-
 void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
 {
+    if (event.eventType == eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN) {
+        // Reset here, not at mission setup: the scenario's starting units/structures are placed
+        // between mission setup and this event, and must not be counted as player-built.
+        m_playerStats = {};
+        m_missionStartTicks = SDL_GetTicks();
+        return;
+    }
+
     if (event.eventType != eGameEventType::GAME_EVENT_CREATED &&
         event.eventType != eGameEventType::GAME_EVENT_DESTROYED) {
         return;

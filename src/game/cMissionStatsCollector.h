@@ -6,7 +6,6 @@ struct s_GameEvent;
 
 class cMissionStatsCollector {
 public:
-    void missionInit();
     void onNotifyGameEvent(const s_GameEvent &event);
     [[nodiscard]] MissionStats snapshot() const;
 

@@ -317,7 +317,6 @@ void cGame::missionInit()
     m_mapCamera->resetZoom();
 
     m_gameConditionChecker->missionInit();
-    m_missionStatsCollector->missionInit();
 
     m_musicVolume = 96; // volume is 0...
 
