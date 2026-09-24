@@ -37,10 +37,15 @@ cScoringState::cScoringState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_interface->goingToWinLoseBrief(GAME_WINBRIEF);
-                m_interface->initiateFadingOut();
+                continueToWinBrief();
             })
             .build();
+}
+
+void cScoringState::continueToWinBrief() const
+{
+    m_interface->goingToWinLoseBrief(GAME_WINBRIEF);
+    m_interface->initiateFadingOut();
 }
 
 cScoringState::~cScoringState()
@@ -102,6 +107,12 @@ void cScoringState::draw() const
 
 void cScoringState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    // Any left click continues, matching the WINNING screen's click-anywhere behavior the
+    // player just came from — the Continue button is a visual cue, not a precise hit target.
+    if (event.eventType == MOUSE_LEFT_BUTTON_CLICKED) {
+        continueToWinBrief();
+        return;
+    }
     m_continueButton->onNotifyMouseEvent(event);
 }
 

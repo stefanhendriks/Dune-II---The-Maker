@@ -29,6 +29,9 @@ public:
     eGameStateType getType() override;
 
 private:
+    void continueToWinBrief() const;
+
+
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
