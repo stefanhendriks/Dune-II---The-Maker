@@ -21,7 +21,6 @@ cScoringState::cScoringState(sGameServices* services) :
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
 
-    m_backgroundTexture = m_interface->getScreenTexture();
     m_stats = m_interface->getMissionStats();
 
     int continueButtonWidth = m_textDrawer->getTextLength(" Continue ");
@@ -50,7 +49,6 @@ void cScoringState::continueToWinBrief() const
 
 cScoringState::~cScoringState()
 {
-    m_backgroundTexture = nullptr;
 }
 
 void cScoringState::thinkFast()
@@ -59,9 +57,7 @@ void cScoringState::thinkFast()
 
 void cScoringState::draw() const
 {
-    if (m_backgroundTexture) {
-        m_sdlDrawer->renderSprite(m_backgroundTexture, 0, 0);
-    }
+    m_sdlDrawer->renderClearToColor();
 
     int lineHeight = m_textDrawer->getFontHeight() + 4;
     int y = 40;

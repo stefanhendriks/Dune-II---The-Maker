@@ -8,8 +8,6 @@
 
 #include <memory>
 
-class Texture;
-
 class cGameSettings;
 class cGameInterface;
 class cTextDrawer;
@@ -31,11 +29,9 @@ public:
 private:
     void continueToWinBrief() const;
 
-
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
-    Texture* m_backgroundTexture = nullptr;
     MissionStats m_stats;
     std::unique_ptr<GuiButton> m_continueButton;
 };
