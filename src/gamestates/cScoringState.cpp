@@ -71,17 +71,18 @@ void cScoringState::draw() const
 
     // AI_CPU5 (Fremen superweapon trigger) and AI_WORM are not real opponents, never shown here.
     for (int playerId = HUMAN; playerId < AI_WORM - 1; playerId++) {
-        cPlayer *player = m_interface->getPlayer(playerId);
-        bool isPlaying = playerId == HUMAN || player->getHouse() != GENERALHOUSE;
+        const PlayerMissionStats &playerStats = m_stats.players[playerId];
+        // Read from the mission-start snapshot, not the live player: cGamePlaying resets a
+        // defeated player's house to GENERALHOUSE as elimination cleanup, which would otherwise
+        // hide anyone the player actually beat during the mission.
+        bool isPlaying = playerId == HUMAN || playerStats.house != GENERALHOUSE;
         if (!isPlaying) {
             continue;
         }
 
-        const PlayerMissionStats &playerStats = m_stats.players[playerId];
         std::string label = playerId == HUMAN ? "YOU" : "ENEMY";
-        std::string playerName = std::format("{} - {}", label, player->getHouseName());
-        Color minimapColor = player->getMinimapColor();
-        Color nameColor = m_interface->getColorFadeSelected(minimapColor.r, minimapColor.g, minimapColor.b);
+        std::string playerName = std::format("{} - {}", label, cPlayer::getHouseNameForId(playerStats.house));
+        Color nameColor = m_interface->getColorFadeSelected(playerStats.minimapColor.r, playerStats.minimapColor.g, playerStats.minimapColor.b);
 
         m_textDrawer->drawTextCentered(playerName, y, nameColor);
         y += lineHeight;

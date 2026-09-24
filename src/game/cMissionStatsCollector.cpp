@@ -2,7 +2,12 @@
 
 #include "include/sGameEvent.h"
 #include "gameobjects/players/cPlayer.h"
+#include "gameobjects/players/cPlayers.h"
 #include "utils/Log.h"
+
+cMissionStatsCollector::cMissionStatsCollector(cPlayers *players) : m_players(players)
+{
+}
 
 void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
 {
@@ -10,6 +15,16 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
         // Reset here, not at mission setup: the scenario's starting units/structures are placed
         // between mission setup and this event, and must not be counted as player-built.
         m_playerStats = {};
+        // Capture each player's house now, before any of them can be defeated: cGamePlaying
+        // resets a defeated player's house to GENERALHOUSE as part of elimination cleanup, so
+        // reading it live at scoring time would hide anyone the player actually beat.
+        for (int playerId = 0; playerId < MAX_PLAYERS; playerId++) {
+            const cPlayer *player = m_players->getPlayer(playerId);
+            if (player != nullptr) {
+                m_playerStats[playerId].house = player->getHouse();
+                m_playerStats[playerId].minimapColor = player->getMinimapColor();
+            }
+        }
         return;
     }
 
