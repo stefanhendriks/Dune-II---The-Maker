@@ -2200,10 +2200,11 @@ void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
     if (pUnit->isHarvester()) { // a harvester died
         // addNotification("You've lost a Harvester.", eNotificationType::PRIORITY);
         const s_GameEvent newEvent {
-            .eventType = eGameEventType::GAME_EVENT_LIST_ITEM_FINISHED,
+            .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
             .data = NotificationEvent {
                 .message = "You've lost a Harvester",
                 .type = eNotificationType::PRIORITY,
+                .player = this,
             }
         };
         m_interface->onNotifyGameEvent(newEvent);
@@ -2219,6 +2220,7 @@ void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
                 .data = NotificationEvent {
                     .message = "You have one Harvester left",
                     .type = eNotificationType::NEUTRAL,
+                    .player = this,
                 }
             };
             m_interface->onNotifyGameEvent(newEvent);
@@ -2240,6 +2242,7 @@ void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
                     .data = NotificationEvent {
                         .message = "No harvesters and refineries left!",
                         .type = eNotificationType::BAD,
+                        .player = this,
                     }
                 };
                 m_interface->onNotifyGameEvent(newEvent);
@@ -2269,6 +2272,7 @@ void cPlayer::reinforceHarvesterIfNeeded(int cell)
                 .data = NotificationEvent {
                     .message = "No more Harvester left, reinforcing...",
                     .type = eNotificationType::BAD,
+                    .player = this,
                 }
             };
             m_interface->onNotifyGameEvent(event);
