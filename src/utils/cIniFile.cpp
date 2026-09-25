@@ -1,3 +1,20 @@
+/**
+ * @file cIniFile.cpp
+ *
+ * Dune 2 - The Maker
+ *
+ * original @author Mira.
+ * This modified file is now for Stefan Hendriks & the D2TM Team
+ * 
+ * @www http://www.dune2themaker.com
+ * @copyright Copyright (c) 2002 - 2026 Stefan Hendriks and contributors
+ * @license This software is released under the MIT License. See LICENSE.md.
+ *
+ * Note: Dune 2 is a trademark of Westwood Studios/Electronic Arts.
+ *
+ * This is a non-commercial educational project.
+ */
+
 #include "cIniFile.h"
 #include "utils/Log.h"
 #include <fstream>
