@@ -11,8 +11,11 @@ struct PlayerMissionStats {
     Color minimapColor;
     int unitsBuilt = 0;
     int unitsLost = 0;
+    int unitsDestroyed = 0;
     int structuresBuilt = 0;
     int structuresLost = 0;
+    int structuresDestroyed = 0;
+    int damageDealt = 0;
 };
 
 struct MissionStats {

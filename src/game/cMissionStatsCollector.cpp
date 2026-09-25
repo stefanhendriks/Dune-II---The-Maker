@@ -1,12 +1,30 @@
 #include "game/cMissionStatsCollector.h"
 
+#include "context/cGameObjectContext.h"
 #include "include/sGameEvent.h"
 #include "gameobjects/players/cPlayer.h"
-#include "gameobjects/players/cPlayers.h"
+#include "gameobjects/structures/cAbstractStructure.h"
+#include "gameobjects/units/cUnit.h"
 #include "utils/Log.h"
 
-cMissionStatsCollector::cMissionStatsCollector(cPlayers *players) : m_players(players)
+cMissionStatsCollector::cMissionStatsCollector(cGameObjectContext *objects) : m_objects(objects)
 {
+}
+
+cPlayer *cMissionStatsCollector::resolveOriginPlayer(int originId, eBuildType originType) const
+{
+    if (originId < 0) {
+        return nullptr;
+    }
+    if (originType == eBuildType::UNIT) {
+        cUnit *pUnit = m_objects->getUnit(originId);
+        return (pUnit != nullptr && pUnit->isValid()) ? pUnit->getPlayer() : nullptr;
+    }
+    if (originType == eBuildType::STRUCTURE) {
+        cAbstractStructure *pStructure = m_objects->getStructure(originId);
+        return pStructure != nullptr ? pStructure->getPlayer() : nullptr;
+    }
+    return nullptr;
 }
 
 void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
@@ -19,11 +37,24 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
         // resets a defeated player's house to GENERALHOUSE as part of elimination cleanup, so
         // reading it live at scoring time would hide anyone the player actually beat.
         for (int playerId = 0; playerId < MAX_PLAYERS; playerId++) {
-            const cPlayer *player = m_players->getPlayer(playerId);
+            const cPlayer *player = m_objects->getPlayer(playerId);
             if (player != nullptr) {
                 m_playerStats[playerId].house = player->getHouse();
                 m_playerStats[playerId].minimapColor = player->getMinimapColor();
             }
+        }
+        return;
+    }
+
+    if (event.eventType == eGameEventType::GAME_EVENT_DAMAGED) {
+        const auto *damagedEvent = std::get_if<DamagedEvent>(&event.data);
+        if (damagedEvent == nullptr) {
+            Logger::warn(COMP_GAME, "cMissionStatsCollector::onNotifyGameEvent", "GAME_EVENT_DAMAGED did not carry a DamagedEvent");
+            return;
+        }
+        cPlayer *attacker = resolveOriginPlayer(damagedEvent->originId, damagedEvent->originType);
+        if (attacker != nullptr && attacker->getId() >= 0 && attacker->getId() < MAX_PLAYERS) {
+            m_playerStats[attacker->getId()].damageDealt += damagedEvent->damage;
         }
         return;
     }
@@ -37,6 +68,20 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
     if (commonEvent == nullptr) {
         Logger::warn(COMP_GAME, "cMissionStatsCollector::onNotifyGameEvent", "GAME_EVENT_CREATED/GAME_EVENT_DESTROYED did not carry a CommonEvent");
         return;
+    }
+
+    if (event.eventType == eGameEventType::GAME_EVENT_DESTROYED) {
+        cPlayer *killer = resolveOriginPlayer(commonEvent->originId, commonEvent->originType);
+        if (killer != nullptr && killer->getId() >= 0 && killer->getId() < MAX_PLAYERS) {
+            PlayerMissionStats &killerStats = m_playerStats[killer->getId()];
+            killerStats.damageDealt += commonEvent->damage;
+            if (commonEvent->entityType == eBuildType::UNIT) {
+                killerStats.unitsDestroyed++;
+            }
+            else if (commonEvent->entityType == eBuildType::STRUCTURE) {
+                killerStats.structuresDestroyed++;
+            }
+        }
     }
 
     if (commonEvent->player == nullptr) {
