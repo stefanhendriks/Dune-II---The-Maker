@@ -22,23 +22,6 @@ cScoringState::cScoringState(sGameServices* services) :
     d2tm_assert(m_textDrawer != nullptr);
 
     m_stats = m_interface->getMissionStats();
-
-    int continueButtonWidth = m_textDrawer->getTextLength(" Continue ");
-    int continueButtonHeight = 21;
-    int continueButtonY = m_settings->getScreenH() - 21;
-    int continueButtonX = m_settings->getScreenW() - continueButtonWidth;
-    cRectangle continueButtonRect(continueButtonX, continueButtonY, continueButtonWidth, continueButtonHeight);
-    m_continueButton = GuiButtonBuilder()
-            .withRect(continueButtonRect)
-            .withLabel("Continue")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() {
-                continueToWinBrief();
-            })
-            .build();
 }
 
 void cScoringState::continueToWinBrief() const
@@ -97,19 +80,17 @@ void cScoringState::draw() const
         y += lineHeight * 2;
     }
 
-    m_continueButton->draw();
+    m_textDrawer->drawTextCentered("CLICK TO CONTINUE", m_settings->getScreenH() - lineHeight - 8, Color::White);
     m_interface->drawCursor();
 }
 
 void cScoringState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     // Any left click continues, matching the WINNING screen's click-anywhere behavior the
-    // player just came from — the Continue button is a visual cue, not a precise hit target.
+    // player just came from.
     if (event.eventType == MOUSE_LEFT_BUTTON_CLICKED) {
         continueToWinBrief();
-        return;
     }
-    m_continueButton->onNotifyMouseEvent(event);
 }
 
 void cScoringState::onNotifyKeyboardEvent(const cKeyboardEvent &)
