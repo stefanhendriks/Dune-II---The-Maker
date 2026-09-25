@@ -81,12 +81,12 @@ void cScoringState::draw() const
             y, Color::White);
         y += lineHeight;
         m_textDrawer->drawTextCentered(
-            std::format("Damage dealt: {}", playerStats.damageDealt),
+            std::format("Damage dealt: {}   received: {}", playerStats.damageDealt, playerStats.damageReceived),
             y, Color::White);
         y += lineHeight * 2;
     }
 
-    m_textDrawer->drawTextCentered("CLICK TO CONTINUE", m_settings->getScreenH() - lineHeight - 8, Color::White);
+    m_textDrawer->drawTextCentered("Click to continue", m_settings->getScreenH() - lineHeight - 8, Color::White);
     m_interface->drawCursor();
 }
 
