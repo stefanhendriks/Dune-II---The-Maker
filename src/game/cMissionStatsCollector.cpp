@@ -22,7 +22,10 @@ cPlayer *cMissionStatsCollector::resolveOriginPlayer(int originId, eBuildType or
     }
     if (originType == eBuildType::STRUCTURE) {
         cAbstractStructure *pStructure = m_objects->getStructure(originId);
-        return pStructure != nullptr ? pStructure->getPlayer() : nullptr;
+        // isValid() guards iPlayer < 0: getPlayer() asserts (aborts) on that, so a slot that was
+        // cleared and not yet reassigned to a real owner must be checked first, not just
+        // whether the pointer itself is non-null.
+        return (pStructure != nullptr && pStructure->isValid()) ? pStructure->getPlayer() : nullptr;
     }
     return nullptr;
 }
