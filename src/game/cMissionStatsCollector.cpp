@@ -74,6 +74,12 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
         if (attacker != nullptr && attacker->getId() >= 0 && attacker->getId() < MAX_PLAYERS) {
             m_playerStats[attacker->getId()].damageDealt += damagedEvent->damage;
         }
+        if (damagedEvent->player != nullptr) {
+            const int victimId = damagedEvent->player->getId();
+            if (victimId >= 0 && victimId < MAX_PLAYERS) {
+                m_playerStats[victimId].damageReceived += damagedEvent->damage;
+            }
+        }
         return;
     }
 
@@ -125,6 +131,7 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
         }
     }
     else { // GAME_EVENT_DESTROYED
+        stats.damageReceived += commonEvent->damage;
         if (commonEvent->entityType == eBuildType::UNIT) {
             stats.unitsLost++;
         }
