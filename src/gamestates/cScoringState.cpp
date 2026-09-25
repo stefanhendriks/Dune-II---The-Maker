@@ -71,11 +71,17 @@ void cScoringState::draw() const
         m_textDrawer->drawTextCentered(playerName, y, nameColor);
         y += lineHeight;
         m_textDrawer->drawTextCentered(
-            std::format("Units built: {}   Units lost: {}", playerStats.unitsBuilt, playerStats.unitsLost),
+            std::format("Units built: {}   lost: {}   destroyed: {}",
+                playerStats.unitsBuilt, playerStats.unitsLost, playerStats.unitsDestroyed),
             y, Color::White);
         y += lineHeight;
         m_textDrawer->drawTextCentered(
-            std::format("Structures built: {}   Structures lost: {}", playerStats.structuresBuilt, playerStats.structuresLost),
+            std::format("Structures built: {}   lost: {}   destroyed: {}",
+                playerStats.structuresBuilt, playerStats.structuresLost, playerStats.structuresDestroyed),
+            y, Color::White);
+        y += lineHeight;
+        m_textDrawer->drawTextCentered(
+            std::format("Damage dealt: {}", playerStats.damageDealt),
             y, Color::White);
         y += lineHeight * 2;
     }
