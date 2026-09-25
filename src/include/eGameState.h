@@ -14,6 +14,7 @@ enum class eGameState : char {
     INTRO,               
     TELLHOUSE,             // tell about the house
     WINNING,               // when winning, do some cool animation
+    SCORING,               // crude mission scoring screen, shown after winning
     WINBRIEF,              // mentat chatter when won the mission
     LOSEBRIEF,             // briefing when losing
     LOSING,                // when losing, do something cool
@@ -47,7 +48,8 @@ const char *gameStateToString(eGameState state);
 #define GAME_CREDITS     17    // credits
 #define GAME_MISSIONSELECT  18    // mission select
 #define GAME_NEW_MAP_EDITOR 19    // new map editor
-#define GAME_MAX_STATES 20
+#define GAME_SCORING     20      // crude mission scoring screen, shown after winning
+#define GAME_MAX_STATES 21
 
 [[deprecated]] // We should start using eGameState enum, get rid of int state
 const char *stateToString(const int &state);

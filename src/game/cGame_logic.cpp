@@ -190,7 +190,7 @@ cGame::cGame()
     d2tm_assert(m_players != nullptr);
 
     m_gameConditionChecker = std::make_unique<cGameConditionChecker>(m_gameObjectsContext.get());
-    m_missionStatsCollector = std::make_unique<cMissionStatsCollector>();
+    m_missionStatsCollector = std::make_unique<cMissionStatsCollector>(m_gameObjectsContext.get());
 
     m_eventEmitter = std::make_unique<cEventEmitter>(
         [this](const s_GameEvent &event) {
@@ -317,7 +317,6 @@ void cGame::missionInit()
     m_mapCamera->resetZoom();
 
     m_gameConditionChecker->missionInit();
-    m_missionStatsCollector->missionInit();
 
     m_musicVolume = 96; // volume is 0...
 
@@ -359,7 +358,7 @@ void cGame::setMissionWon()
 
     playMusicByType(MUSIC_WIN);
 
-    const MissionStats stats = m_missionStatsCollector->snapshot();
+    const MissionStats stats = m_missionStatsCollector->snapshot(m_timeManager->getElapsedSeconds());
     Logger::info(COMP_GAME, "cGame::setMissionWon", "Mission stats: elapsedSeconds={}", stats.elapsedSeconds);
     for (int playerId = 0; playerId < MAX_PLAYERS; playerId++) {
         const PlayerMissionStats &playerStats = stats.players[playerId];
@@ -368,6 +367,11 @@ void cGame::setMissionWon()
     }
 
     takeBackGroundScreen();
+}
+
+MissionStats cGame::getMissionStats() const
+{
+    return m_missionStatsCollector->snapshot(m_timeManager->getElapsedSeconds());
 }
 
 void cGame::setMissionLost()
@@ -815,6 +819,7 @@ void cGame::setState(int newState)
                 case GAME_SELECT_HOUSE: mapped = eGameState::SELECT_HOUSE; return true;
                 case GAME_TELLHOUSE: mapped = eGameState::TELLHOUSE; return true;
                 case GAME_WINNING: mapped = eGameState::WINNING; return true;
+                case GAME_SCORING: mapped = eGameState::SCORING; return true;
                 case GAME_WINBRIEF: mapped = eGameState::WINBRIEF; return true;
                 case GAME_LOSEBRIEF: mapped = eGameState::LOSEBRIEF; return true;
                 case GAME_LOSING: mapped = eGameState::LOSING; return true;
@@ -1018,6 +1023,9 @@ void cGame::setState(int newState)
             }
             else if (newState == GAME_WINNING) {
                 newStatePtr = m_creatorState->getState(eGameState::WINNING);
+            }
+            else if (newState == GAME_SCORING) {
+                newStatePtr = m_creatorState->getState(eGameState::SCORING);
             }
             else if (newState == GAME_TELLHOUSE) {
                 m_dataCampaign->housePlayer = m_gameObjectsContext->getPlayer(HUMAN)->getHouse();

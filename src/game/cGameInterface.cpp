@@ -266,3 +266,8 @@ cGameSettings* cGameInterface::getGameSettings() const
 {
     return m_game->m_gameSettings.get();
 }
+
+MissionStats cGameInterface::getMissionStats() const
+{
+    return m_game->getMissionStats();
+}
