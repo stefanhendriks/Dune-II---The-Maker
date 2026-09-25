@@ -699,11 +699,18 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
 
     cUnit *pUnit = nullptr;
     int originId = -1;
+    eBuildType originType = eBuildType::UNKNOWN;
     if (iOwnerUnit > -1) {
         if (m_objects->getUnit(iOwnerUnit)->isValid()) {
             pUnit = m_objects->getUnit(iOwnerUnit);
             originId = iOwnerUnit;
+            originType = eBuildType::UNIT;
         }
+    }
+    else if (iOwnerStructure > -1) {
+        // turret/rocket turret killing shot: no exp-damage bonus (that only applies to units)
+        originId = iOwnerStructure;
+        originType = eBuildType::STRUCTURE;
     }
 
     if (pUnit) {
@@ -716,14 +723,7 @@ void cBullet::damageStructure(int idOfStructureAtCell, double factor)
         return; // invalid pointer!
     }
 
-    pStructure->damage(iDamage, originId);
-
-    if (pStructure->isDead()) {
-        if (pUnit) {
-            // TODO: update statistics (structures destroyed ??)
-        }
-    }
-
+    pStructure->damage(iDamage, originId, originType);
 }
 
 /**

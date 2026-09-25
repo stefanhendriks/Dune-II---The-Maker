@@ -14,6 +14,7 @@
 #include "gameobjects/cFlag.h"
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/structures/cStructureInfo.h"
+#include "include/enums.h"
 
 #include <vector>
 #include <string>
@@ -125,7 +126,7 @@ public:
 
     int getSmokeChance();             // probability to create smoke particle
 
-    void die();                       // die
+    void die(int originId = -1, eBuildType originType = eBuildType::UNKNOWN, int killingDamage = 0); // die
 
     // drawing
     int iDrawX();
@@ -268,7 +269,7 @@ public:
     }
     void setRepairing(bool value);
 
-    void damage(int hp, int originId);
+    void damage(int hp, int originId, eBuildType originType = eBuildType::UNKNOWN);
     void decay(int hp);
     float getHealthNormalized() const;
 

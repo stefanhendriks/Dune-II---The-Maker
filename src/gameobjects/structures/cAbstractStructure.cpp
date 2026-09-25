@@ -176,7 +176,7 @@ int cAbstractStructure::getRange()
 
 
 // this structure dies
-void cAbstractStructure::die()
+void cAbstractStructure::die(int originId, eBuildType originType, int killingDamage)
 {
     // selected structure
     // TODO: remove this, based on events
@@ -278,7 +278,10 @@ void cAbstractStructure::die()
             .entityID = getStructureId(),
             .player = pPlayer,
             .entitySpecificType = getType(),
-            .atCell = iCell
+            .atCell = iCell,
+            .originId = originId,
+            .originType = originType,
+            .damage = killingDamage
         }
     };
     m_interface->onNotifyGameEvent(event);
@@ -505,7 +508,7 @@ void cAbstractStructure::decay(int hp)
 
     @param originId = ID of unit who damaged me. It can be < 0 meaning unknown unit (or not applicable)
 **/
-void cAbstractStructure::damage(int hp, int originId)
+void cAbstractStructure::damage(int hp, int originId, eBuildType originType)
 {
     int damage = hp;
     if (damage < 0) {
@@ -517,8 +520,7 @@ void cAbstractStructure::damage(int hp, int originId)
     Logger::info(COMP_STRUCTURES, "cAbstractStructure::damage", "Structure [{}] received [{}] damage from originId [{}], HP is now [{}]", id, damage, originId, iHitPoints);
 
     if (iHitPoints < 1) {
-        // TODO: update statistics? (structure lost)
-        die();
+        die(originId, originType, damage);
     }
     else {
         int iChance = getSmokeChance();
@@ -542,7 +544,8 @@ void cAbstractStructure::damage(int hp, int originId)
                 .player = getPlayer(),
                 .entitySpecificType = getType(),
                 .originId = originId,
-                .originType = eBuildType::UNIT // TODO: What if another structure damaged me!?
+                .originType = originType,
+                .damage = damage
             }
         };
         m_interface->onNotifyGameEvent(event);
