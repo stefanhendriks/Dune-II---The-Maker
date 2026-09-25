@@ -4,9 +4,6 @@
 #include "controls/cKeyboardEvent.h"
 #include "controls/sMouseEvent.h"
 #include "game/MissionStats.h"
-#include "gui/GuiButton.h"
-
-#include <memory>
 
 class cGameSettings;
 class cGameInterface;
@@ -33,5 +30,4 @@ private:
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     MissionStats m_stats;
-    std::unique_ptr<GuiButton> m_continueButton;
 };
