@@ -16,6 +16,7 @@ struct PlayerMissionStats {
     int structuresLost = 0;
     int structuresDestroyed = 0;
     int damageDealt = 0;
+    int damageReceived = 0;
 };
 
 struct MissionStats {
