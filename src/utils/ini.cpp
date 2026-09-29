@@ -370,6 +370,7 @@ cIni::cIni(sGameServices* services)
     m_objects = services->objects;
     m_infos = services->info;
     m_interface = services->ctx->getGameInterface();
+    m_drawManager = services->drawManager;
 }
 
 /**
@@ -1227,8 +1228,8 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, const int *iPl_credits, const
                     fremenIsHumanAlly = true;
                 }
 
-                d2tm_assert(m_interface->getDrawManager());
-                m_interface->getDrawManager()->missionInit();
+                d2tm_assert(m_drawManager);
+                m_drawManager->missionInit();
 
                 if (quota > 0) {
                     m_objects->getPlayer(HUMAN)->setQuota(quota);

@@ -9,13 +9,11 @@ class cGame;
 class cGameSettings;
 class cMouse;
 class cPlayer;
-class cDrawManager;
 class cMapCamera;
 class cRectangle;
 struct s_GameEvent;
 struct s_PreviewMap;
 class Texture;
-class cDrawManager;
 
 class cGameInterface
 {
@@ -25,7 +23,6 @@ public:
 
     cMouse* getMouse() const;
     void drawCursor() const;
-    cDrawManager* getDrawManager() const;
     cMapCamera* getMapCamera() const;
     cRectangle* getMapViewport() const;
     void setMissionWon() const;

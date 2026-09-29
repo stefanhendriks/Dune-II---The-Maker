@@ -12,6 +12,7 @@ class GameContext;
 class Graphics;
 class SDLDrawer;
 class cInfoContext;
+class cDrawManager;
 struct sGameServices;
 
 class cSideBarDrawer : cInputObserver {
@@ -46,6 +47,7 @@ private:
     SDLDrawer* m_sdlDrawer;
     GameContext* m_ctx = nullptr;
     cInfoContext* m_infos = nullptr;
+    cDrawManager* m_drawManager = nullptr;
     cBuildingListDrawer m_buildingListDrawer;
     cSideBar *m_sidebar;
     Color m_sidebarColor;

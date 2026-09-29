@@ -86,6 +86,7 @@ private:
     cInfoContext *m_info = nullptr;
     cGameInterface *m_interface = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
+    cDrawManager *m_drawManager = nullptr;
 
     bool m_orderPlaced;
 

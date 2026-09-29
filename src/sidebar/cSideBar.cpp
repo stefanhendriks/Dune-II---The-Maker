@@ -58,7 +58,7 @@ void cSideBar::think()
 void cSideBar::serviceInit(sGameServices* services)
 {
     m_gameInterface = services->ctx->getGameInterface();
-    m_drawManager = m_gameInterface->getDrawManager();
+    m_drawManager = services->drawManager;
     m_settings = services->settings;
 }
 
