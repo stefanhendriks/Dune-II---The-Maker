@@ -24,6 +24,7 @@ class cGameSettings;
 class cGameObjectContext;
 class cInfoContext;
 class cGameInterface;
+class cDrawManager;
 struct sGameServices;
 
 // public stuff
@@ -66,6 +67,7 @@ private:
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
     cGameInterface* m_interface = nullptr;
+    cDrawManager* m_drawManager = nullptr;
 };
 
 

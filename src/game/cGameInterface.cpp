@@ -61,11 +61,6 @@ void cGameInterface::drawCursor() const
     m_game->getMouse()->draw();
 }
 
-cDrawManager* cGameInterface::getDrawManager() const
-{
-    return m_game->m_drawManager;
-}
-
 cMapCamera* cGameInterface::getMapCamera() const
 {
     return m_game->m_mapCamera;

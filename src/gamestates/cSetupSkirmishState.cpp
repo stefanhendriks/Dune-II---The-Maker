@@ -934,7 +934,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Skirmish game without sandworms");
     }
 
-    auto drawManager = m_interface->getDrawManager();
+    auto drawManager = m_services->drawManager;
     drawManager->missionInit();
     m_interface->setTransitionToWithFadingOut(GAME_PLAYING);
 }

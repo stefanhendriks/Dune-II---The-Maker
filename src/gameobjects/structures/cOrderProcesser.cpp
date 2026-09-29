@@ -47,6 +47,7 @@ void cOrderProcesser::serviceInit(sGameServices *services)
     m_info = services->info;
     m_structureUtils = services->structureUtils;
     m_interface = services->ctx->getGameInterface();
+    m_drawManager = services->drawManager;
     updatePricesForStarport();
 }
 
@@ -136,11 +137,11 @@ void cOrderProcesser::think()
 
         if (m_secondsUntilArrival == 0) {
             sendFrigate();
-            m_interface->getDrawManager()->setMessage("Frigate is arriving...");
+            m_drawManager->setMessage("Frigate is arriving...");
         }
         else if (m_secondsUntilArrival <= 10) {
             std::string msg = std::format("T-{} before Frigate arrival.", m_secondsUntilArrival);
-            m_interface->getDrawManager()->setMessage(msg);
+            m_drawManager->setMessage(msg);
         }
     }
 
