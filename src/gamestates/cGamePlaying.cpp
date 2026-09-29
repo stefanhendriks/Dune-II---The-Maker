@@ -62,7 +62,7 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     d2tm_assert(m_reinforcements != nullptr);
     m_structureFactory = services->objects->getStructureFactory();
     d2tm_assert(m_structureFactory != nullptr);
-    m_drawManager = m_interface->getRenderDrawManager();
+    m_drawManager = services->drawManager;
     d2tm_assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
     d2tm_assert(m_textDrawer != nullptr);

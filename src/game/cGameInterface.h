@@ -28,7 +28,6 @@ public:
     cDrawManager* getDrawManager() const;
     cMapCamera* getMapCamera() const;
     cRectangle* getMapViewport() const;
-    cDrawManager* getRenderDrawManager() const;
     void setMissionWon() const;
     void setMissionLost() const;
     void missionInit() const;

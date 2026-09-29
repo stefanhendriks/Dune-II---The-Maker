@@ -70,7 +70,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     regionSceneState = eRegionSceneState::SCENE_INIT;
     m_mouse = m_interface->getMouse();
 
-    m_drawManager = m_interface->getRenderDrawManager();
+    m_drawManager = services->drawManager;
 	d2tm_assert(m_drawManager != nullptr);
     iRegionSceneAlpha = 0;  // alpha for scene in introduction state
 
