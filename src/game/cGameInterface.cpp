@@ -236,11 +236,6 @@ int cGameInterface::getStructureTypeByUnitBuildId(int unitBuildId) const
     return m_game->m_structureUtils->getStructureTypeByUnitBuildId(unitBuildId);
 }
 
-cDrawManager* cGameInterface::getRenderDrawManager() const
-{
-    return m_game->m_drawManager;
-}
-
 int cGameInterface::getCurrentState() const
 {
     return m_game->getCurrentState();
