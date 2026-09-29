@@ -3,7 +3,6 @@
 #include "game/cGame.h"
 #include "include/Texture.hpp"
 #include "controls/cMouse.h"
-#include "gameobjects/units/cReinforcements.h"
 #include "include/sGameEvent.h"
 #include "utils/cStructureUtils.h"
 
@@ -80,11 +79,6 @@ cRectangle* cGameInterface::getMapViewport() const
 void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const
 {
     m_game->setPlayerToInteractFor(pPlayer);
-}
-
-cReinforcements* cGameInterface::getReinforcements() const
-{
-    return m_game->m_reinforcements.get();
 }
 
 void cGameInterface::setMissionWon() const

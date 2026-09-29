@@ -10,6 +10,7 @@ class cStructureUtils;
 class cEventEmitter;
 class cDrawManager;
 class cRectangle;
+class cReinforcements;
 
 struct sGameServices
 {
@@ -22,4 +23,5 @@ struct sGameServices
     cEventEmitter *eventEmitter = nullptr;
     cDrawManager *drawManager = nullptr;
     cRectangle *mapViewport = nullptr;
+    cReinforcements *reinforcements = nullptr;
 };

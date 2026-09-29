@@ -58,7 +58,7 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     d2tm_assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
     d2tm_assert(m_mapCamera != nullptr);
-    m_reinforcements = m_interface->getReinforcements();
+    m_reinforcements = services->reinforcements;
     d2tm_assert(m_reinforcements != nullptr);
     m_structureFactory = services->objects->getStructureFactory();
     d2tm_assert(m_structureFactory != nullptr);

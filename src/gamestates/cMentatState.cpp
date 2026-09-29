@@ -24,6 +24,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
       m_settings(services->settings),
       m_interface(m_ctx->getGameInterface()),
       m_objects(services->objects),
+      m_reinforcements(services->reinforcements),
       m_cIni(cini),
       m_mode(mode),
       m_house(dataCampaign->housePlayer),
@@ -34,6 +35,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_objects != nullptr);
+    d2tm_assert(m_reinforcements != nullptr);
     d2tm_assert(m_cIni != nullptr);
     prepareMentat(m_house);
 }
@@ -64,7 +66,7 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
             m_interface->missionInit();
             m_interface->setupPlayers();
-            m_cIni->loadScenario(m_mentat.get(), m_interface->getReinforcements(),m_dataCampaign);
+            m_cIni->loadScenario(m_mentat.get(), m_reinforcements,m_dataCampaign);
             m_cIni->loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat.get());
             break;
         case MentatMode::WinBrief:

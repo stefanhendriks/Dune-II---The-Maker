@@ -11,7 +11,6 @@ class cMouse;
 class cPlayer;
 class cDrawManager;
 class cMapCamera;
-class cReinforcements;
 class cRectangle;
 struct s_GameEvent;
 struct s_PreviewMap;
@@ -29,7 +28,6 @@ public:
     cDrawManager* getDrawManager() const;
     cMapCamera* getMapCamera() const;
     cRectangle* getMapViewport() const;
-    cReinforcements* getReinforcements() const;
     cDrawManager* getRenderDrawManager() const;
     void setMissionWon() const;
     void setMissionLost() const;

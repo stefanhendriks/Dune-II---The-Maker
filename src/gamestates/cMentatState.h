@@ -38,6 +38,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cGameObjectContext* m_objects = nullptr;
+    cReinforcements* m_reinforcements = nullptr;
     cIni* m_cIni = nullptr;
     MentatMode m_mode;
     int m_house;
