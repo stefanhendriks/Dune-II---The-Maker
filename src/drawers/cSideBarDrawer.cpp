@@ -54,7 +54,7 @@ cSideBarDrawer::~cSideBarDrawer()
 void cSideBarDrawer::serviceInit(sGameServices* services)
 {
     m_infos = services->info;
-    m_drawManager = services->drawManager;
+    m_services = services;
     m_buildingListDrawer.serviceInit(services);
 }
 
@@ -184,7 +184,7 @@ void cSideBarDrawer::drawBuildingLists()
         }
     }
 
-    cOrderDrawer *orderDrawer = m_drawManager->getOrderDrawer();
+    cOrderDrawer *orderDrawer = m_services->drawManager->getOrderDrawer();
 
     // allow clicking on the order button
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
