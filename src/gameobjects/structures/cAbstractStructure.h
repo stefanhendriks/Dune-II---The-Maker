@@ -16,6 +16,7 @@
 #pragma once
 
 #include "gameobjects/cFlag.h"
+#include "include/enums/ListEnums.h"
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/structures/cStructureInfo.h"
 

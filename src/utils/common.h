@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "enums.h"
+#include "include/enums/BuildEnums.h"
 
 #include <string>
 #include <array>

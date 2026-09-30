@@ -16,7 +16,9 @@
 #pragma once
 
 #include "definitions.h"
-#include "enums.h"
+#include "include/enums/BuildEnums.h"
+#include "include/enums/CombatEnums.h"
+#include "include/enums/ListEnums.h"
 
 #include "observers/cInputObserver.h"
 #include "gameobjects/structures/cStructureInfo.h"

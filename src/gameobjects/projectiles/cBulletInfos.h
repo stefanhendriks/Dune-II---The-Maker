@@ -15,11 +15,11 @@
 
 #pragma once
 
-#include "enums.h"
-
 #include <vector>
 #include <string>
 #include <array>
+
+#include "include/cAssert.h"
 
 #include <SDL3/SDL.h>
 

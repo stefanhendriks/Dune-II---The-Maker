@@ -24,7 +24,7 @@
 #include "gameobjects/structures/cStructures.h"
 #include "utils/cStructureUtils.h"
 #include "gameobjects/units/cUnits.h"
-#include "enums.h"
+#include "include/enums/BuildEnums.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"

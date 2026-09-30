@@ -19,7 +19,8 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include "include/enums.h"
+#include "include/enums/BuildEnums.h"
+#include "include/enums/ListEnums.h"
 
 // UPGRADES stuff
 #define MAX_UPGRADETYPES       50    // maximum of upgrades

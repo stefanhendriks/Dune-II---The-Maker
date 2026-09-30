@@ -18,7 +18,6 @@
 #include <string>
 #include <map>
 #include "include/cAssert.h"
-#include "enums.h"
 
 enum class eGameDirFileName {
     ARRAKEEN,
