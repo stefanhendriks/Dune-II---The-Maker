@@ -31,7 +31,7 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices 
     d2tm_assert(ctx != nullptr);
     d2tm_assert(services != nullptr);
 
-    m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),
+    m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), 
         m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
     m_candyBarPiece = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),
         m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
