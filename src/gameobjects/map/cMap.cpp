@@ -101,6 +101,10 @@ void cMap::serviceInit(sGameServices* services)
     d2tm_assert(m_objects != nullptr);
     m_interface = m_ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_mapCamera = services->mapCamera;
+    d2tm_assert(m_mapCamera != nullptr);
+    m_mapViewport = services->mapViewport;
+    d2tm_assert(m_mapViewport != nullptr);
     m_pathFinder->serviceInit(services);
 }
 
@@ -574,7 +578,7 @@ void cMap::clearShroud(int c, int size, int playerId)
 {
     if (!m_mapGeometry->isWithinBoundaries(c)) return;
 
-    auto *mapCamera = m_interface->getMapCamera();
+    auto *mapCamera = m_mapCamera;
 
     setVisibleFor(c, playerId);
 
@@ -656,7 +660,7 @@ void cMap::remove_id(int iIndex, int iIDType)
 
 void cMap::draw_units()
 {
-    auto *mapViewport = m_interface->getMapViewport();
+    auto *mapViewport = m_mapViewport;
 
     //@Mira SDL2 blender
     //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
@@ -729,7 +733,7 @@ void cMap::drawUnitDebug(cUnit *pUnit) const
 // draw 2nd layer for units, this is health/spice bars and eventually airborn units (last)
 void cMap::draw_units_2nd()
 {
-    auto *mapViewport = m_interface->getMapViewport();
+    auto *mapViewport = m_mapViewport;
 
     // draw health of units
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
@@ -774,7 +778,7 @@ int cMap::mouse_draw_x()
     if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
         int absX = m_mapGeometry->getAbsoluteXPositionFromCell(mouseCell);
-        return m_interface->getMapCamera()->getWindowXPosition(absX);
+        return m_mapCamera->getWindowXPosition(absX);
     }
     return -1;
 }
@@ -786,7 +790,7 @@ int cMap::mouse_draw_y()
     if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
         int absY = m_mapGeometry->getAbsoluteYPositionFromCell(mouseCell);
-        return m_interface->getMapCamera()->getWindowYPosition(absY);
+        return m_mapCamera->getWindowYPosition(absY);
     }
     return -1;
 }
@@ -1115,7 +1119,7 @@ bool cMap::isStructureVisible(cAbstractStructure *pStructure, int iPlayer)
 
 int cMap::findNearByValidDropLocation(int cell, int minRange, int range, int unitTypeToDrop)
 {
-    auto *mapCamera = m_interface->getMapCamera();
+    auto *mapCamera = m_mapCamera;
 
     if (minRange < 1) {
         minRange = 1;
@@ -1156,7 +1160,7 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
 
 // int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
 // {
-//     auto *mapCamera = m_interface->getMapCamera();
+//     auto *mapCamera = m_mapCamera;
 
 //     // go around 360 fDegrees and calculate new stuff.
 //     for (float dr = 1; dr < range; dr++) { // go outwards

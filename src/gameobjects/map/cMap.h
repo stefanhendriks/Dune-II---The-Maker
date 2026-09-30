@@ -43,6 +43,8 @@ class cLog;
 class cPathFinder;
 class SDLDrawer;
 class Graphics;
+class cMapCamera;
+class cRectangle;
 
 class cMap : public cScenarioObserver {
 
@@ -479,6 +481,8 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
+    cMapCamera *m_mapCamera = nullptr;
+    cRectangle *m_mapViewport = nullptr;
     cLog *m_log = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
     SDLDrawer *m_sdlDrawer = nullptr;
