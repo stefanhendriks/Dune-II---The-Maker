@@ -2,6 +2,7 @@
 
 #include "utils/Color.hpp"
 #include "include/eNotificationType.h"
+#include "game/MissionStats.h"
 
 #include <string>
 
@@ -77,6 +78,7 @@ public:
     void changeStateFromMentat() const;
     cPlayer* getPlayer(int id) const;
     cGameSettings* getGameSettings() const;
+    MissionStats getMissionStats() const;
 private:
     cGame* m_game = nullptr;
 };

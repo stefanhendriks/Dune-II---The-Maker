@@ -42,6 +42,8 @@ const char *stateToString(const int &state)
             return "GAME_CREDITS";
         case GAME_MISSIONSELECT:
             return "GAME_MISSIONSELECT";
+        case GAME_SCORING:
+            return "GAME_SCORING";
         default:
             Logger::fatal( eLogComponent::COMP_GAMESTATE , "operator[]", "State index {} is out of range", state);
             d2tm_assert(false);
@@ -66,6 +68,7 @@ const char *gameStateToString(eGameState state)
         case eGameState::INTRO: return "INTRO";
         case eGameState::TELLHOUSE: return "TELLHOUSE";
         case eGameState::WINNING: return "WINNING";
+        case eGameState::SCORING: return "SCORING";
         case eGameState::WINBRIEF: return "WINBRIEF";
         case eGameState::LOSEBRIEF: return "LOSEBRIEF";
         case eGameState::LOSING: return "LOSING";

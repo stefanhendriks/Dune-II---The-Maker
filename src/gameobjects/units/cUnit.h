@@ -224,7 +224,7 @@ public:
 
     void shoot(int iTargetCell);  // shoot at goalcell
 
-    void die(bool bBlowUp, bool bSquish);			// die!
+    void die(bool bBlowUp, bool bSquish, int originId = -1, eBuildType originType = eBuildType::UNKNOWN, int killingDamage = 0); // die!
 
     void updateCellXAndY();        // updateCellXAndY status
 

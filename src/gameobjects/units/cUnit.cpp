@@ -176,7 +176,7 @@ void cUnit::setBoundParticleId(int particleId)
     this->boundParticleId = particleId;
 }
 
-void cUnit::die(bool bBlowUp, bool bSquish)
+void cUnit::die(bool bBlowUp, bool bSquish, int originId, eBuildType originType, int killingDamage)
 {
     // DO NOTE: We do *not* set the HP to -1 here for a reason. Being: that the isValid() function checks for
     // health and that will give us a unit ID that is the *same* as this unit ID. (see UNIT_NEW() implementation).
@@ -262,7 +262,10 @@ void cUnit::die(bool bBlowUp, bool bSquish)
             .entityType = eBuildType::UNIT,
             .entityID = iID,
             .player = getPlayer(),
-            .entitySpecificType = iType
+            .entitySpecificType = iType,
+            .originId = originId,
+            .originType = originType,
+            .damage = killingDamage
         }
     };
     m_interface->onNotifyGameEvent(event);
@@ -3299,8 +3302,31 @@ bool cUnit::isWithinViewport(cRectangle *viewport) const
 void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDealsDamage)
 {
     iHitPoints -= damage;
+
+    // Resolved upfront regardless of outcome: needed both to attribute a kill (below) and to
+    // attribute non-lethal damage (further below).
+    auto originType = eBuildType::UNKNOWN;
+    auto originId = -1;
+    auto originCell = -1;
+    if (unitWhoDealsDamage > -1) {
+        cUnit *pUnit = m_objects->getUnit(unitWhoDealsDamage);
+        if (pUnit->isValid()) {
+            originType = eBuildType::UNIT;
+            originId = unitWhoDealsDamage;
+            originCell = pUnit->position.iCell;
+        }
+    }
+    else if (structureWhoDealsDamage > -1) {
+        cAbstractStructure *pStructure = m_objects->getStructure(structureWhoDealsDamage);
+        if (pStructure) { // can be NULL (destroyed after firing this bullet)
+            originId = structureWhoDealsDamage;
+            originType = eBuildType::STRUCTURE;
+            originCell = pStructure->getCell();
+        }
+    }
+
     if (isDead()) {
-        die(true, false);
+        die(true, false, originId, originType, damage);
     }
     else {
         if (boundParticleId < 0) {
@@ -3324,28 +3350,9 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
         if (iHitPoints < getUnitInfo().dieWhenLowerThanHP) {
             iHitPoints = 0; // to make it appear 'dead' for the rest of the code
             // unit does not explode in this case, simply vanishes
-            die(false, false);
+            die(false, false, originId, originType, damage);
         }
         else {
-            auto originType = eBuildType::UNKNOWN;
-            auto originId = -1;
-            auto originCell = -1;
-            if (unitWhoDealsDamage > -1) {
-                cUnit *pUnit = m_objects->getUnit(unitWhoDealsDamage);
-                if (pUnit->isValid()) {
-                    originType = eBuildType::UNIT;
-                    originId = unitWhoDealsDamage;
-                    originCell = pUnit->position.iCell;
-                }
-            }
-            else if (structureWhoDealsDamage > -1) {
-                cAbstractStructure *pStructure = m_objects->getStructure(structureWhoDealsDamage);
-                if (pStructure) { // can be NULL (destroyed after firing this bullet)
-                    originId = structureWhoDealsDamage;
-                    originType = eBuildType::STRUCTURE;
-                    originCell = pStructure->getCell();
-                }
-            }
             const s_GameEvent event {
                 .eventType = eGameEventType::GAME_EVENT_DAMAGED,
                 .data = DamagedEvent {
@@ -3355,7 +3362,8 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
                     .entitySpecificType = getType(),
                     .atCell = originCell,
                     .originId = originId,
-                    .originType = originType
+                    .originType = originType,
+                    .damage = damage
                 }
             };
             m_interface->onNotifyGameEvent(event);

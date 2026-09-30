@@ -42,6 +42,7 @@ struct DamagedEvent {
     int atCell = -1;
     int originId = -1; // in case GAME_EVENT_DAMAGED, this is the id that inflicted damage
     eBuildType originType = eBuildType::UNKNOWN; // in case GAME_EVENT_DAMAGED, this is the kind of entity that inflicted damage
+    int damage = 0; // amount of damage inflicted by this hit
 };
 
 // BUILDING_EVENT
@@ -74,6 +75,13 @@ struct CommonEvent {
     int entitySpecificType = -1; // type of <entityType>, ie, if entityType is STRUCTURE. This value can be CONSTYARD
     int atCell = -1;        // if applicable (== > -1) where on the map did this event happen?
     bool isReinforce = false;       // only applicable for UNIT and CREATED events. So we can distinguish between 'normal' CREATED units and reinforced units.
+    /**
+     * If eventType == DESTROYED, who dealt the killing blow (id + kind). -1 / UNKNOWN if there
+     * was no attacker (e.g. self-destruct, sandworm, debug kill).
+     */
+    int originId = -1;
+    eBuildType originType = eBuildType::UNKNOWN;
+    int damage = 0; // if eventType == DESTROYED, the amount of the killing blow
 };
 
 // NOTIFICATION_EVENT
