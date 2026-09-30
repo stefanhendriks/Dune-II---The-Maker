@@ -33,6 +33,7 @@ void cMouseDrawer::serviceInit(sGameServices* services)
 {
     m_interface = services->ctx->getGameInterface();
     m_renderer = services->ctx->getSDLDrawer();
+    m_settings = services->settings;
 }
 
 cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_player(thePlayer)
@@ -53,7 +54,7 @@ int cMouseDrawer::getDrawXToolTip(int width)
     int x = m_mouseX + 32;
 
     // correct drawing position so it does not fall off screen.
-    int diffX = (x + width) - m_interface->getGameSettings()->getScreenW();
+    int diffX = (x + width) - m_settings->getScreenW();
     if (diffX > 0) {
         x-= diffX;
     }
@@ -65,7 +66,7 @@ int cMouseDrawer::getDrawYToolTip(int height)
     int y = m_mouseY + 32;
 
     // correct drawing position so it does not fall off screen.
-    int diffY = (y + height) - m_interface->getGameSettings()->getScreenH();
+    int diffY = (y + height) - m_settings->getScreenH();
     if (diffY > 0) {
         y -= diffY;
     }
