@@ -24,7 +24,7 @@ enum eMessageDrawerFadingState {
 
 class cMessageDrawer {
 public:
-    explicit cMessageDrawer(GameContext* ctx);
+    explicit cMessageDrawer(GameContext* ctx, sGameServices* services);
     ~cMessageDrawer();
 
     void serviceInit(sGameServices*) {}
@@ -68,6 +68,7 @@ private:
     SDLDrawer* m_sdlDrawer=nullptr;
     GameContext* m_ctx;
     Graphics* m_gfxinter;
+    sGameServices* m_services;
 
     void createMessageBarBmp(int desiredWidth);
 };

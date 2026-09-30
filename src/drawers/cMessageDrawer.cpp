@@ -6,7 +6,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "game/cGameSettings.h"
-#include "game/cGameInterface.h"
+#include "include/sGameServices.h"
 
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
@@ -15,7 +15,7 @@
 // this class has to be abstracted in such a way so it is used in both those states, yet without the wonky init
 // functions
 
-cMessageDrawer::cMessageDrawer(GameContext* ctx) :
+cMessageDrawer::cMessageDrawer(GameContext* ctx, sGameServices* services) :
     m_TIMER_message(0),
     m_alpha(0),
     m_state(messages::eMessageDrawerState::COMBAT),
@@ -23,9 +23,11 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx) :
     m_textDrawer(ctx->getTextContext()->getGameTextDrawer()),
     m_sdlDrawer(ctx->getSDLDrawer()),
     m_ctx(ctx),
-    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get())
+    m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
+    m_services(services)
 {
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(services != nullptr);
     m_bmpBar = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
@@ -130,7 +132,7 @@ void cMessageDrawer::initCombatPosition()
 
     int margin = 4;
     int widthOfOptionsButton = 160 + margin;
-    int desiredWidth = m_ctx->getGameInterface()->getGameSettings()->getScreenW() - (cSideBar::SidebarWidth + widthOfOptionsButton);
+    int desiredWidth = m_services->settings->getScreenW() - (cSideBar::SidebarWidth + widthOfOptionsButton);
     createMessageBarBmp(desiredWidth);
     // default positions in-game (battle mode)
     m_position.x = widthOfOptionsButton;
