@@ -13,7 +13,7 @@
  * This is a non-commercial educational project.
  */
 
-#include "iniDefine.h"
+#include "iniSections.h"
 #include "include/definitions.h"
 #include "utils/common.h"
 

@@ -57,7 +57,6 @@
 #include "gui/GuiConsole.h"
 
 #include "include/sDataCampaign.h"
-#include "iniDefine.h"
 #include "managers/cDrawManager.h"
 #include "gameobjects/map/cPreviewMaps.h"
 #include "gameobjects/map/MapGeometry.hpp"

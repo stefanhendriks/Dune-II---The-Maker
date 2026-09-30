@@ -14,7 +14,11 @@
  */
 
 #include "utils/ini.h"
-#include "iniDefine.h"
+#include "iniSections.h"
+#include "iniWordsGeneral.h"
+#include "iniWordsHouseSpecific.h"
+#include "iniWordsRegionSpecific.h"
+#include "iniUnitsParts.h"
 #include "utils/cIniUtils.h"
 
 #include "data/gfxdata.h"
