@@ -23,8 +23,6 @@
 #include <sstream>
 #include <vector>
 
-static const std::string SECTION_SETTINGS = "SETTINGS";
-
 class cSection {
 public:
     cSection();
