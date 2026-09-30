@@ -87,6 +87,7 @@ class cGameSettings;
 class cInfoContext;
 class cGameObjectContext;
 class cGameInterface;
+class cStructureUtils;
 class cLog;
 
 class cPlayer : public cScenarioObserver {
@@ -621,6 +622,7 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
+    cStructureUtils *m_structureUtils = nullptr;
     cLog *m_log = nullptr;
     Graphics *m_gfxdata = nullptr;
     SDLDrawer *m_renderer = nullptr;

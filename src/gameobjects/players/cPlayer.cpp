@@ -8,6 +8,7 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/structures/cStructures.h"
 #include "utils/common.h"
+#include "utils/cStructureUtils.h"
 #include "utils/Log.h"
 #include "utils/texture_utils.h"
 #include "gameobjects/players/cHousesInfo.h"
@@ -74,6 +75,8 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_structureUtils = services->structureUtils;
+    d2tm_assert(m_structureUtils != nullptr);
     m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
     d2tm_assert(m_gfxdata != nullptr);
     m_renderer = services->ctx->getSDLDrawer();
@@ -893,10 +896,10 @@ bool cPlayer::isSameTeamAs(const cPlayer *pPlayer) const
  */
 void cPlayer::update()
 {
-    powerUsage_ = m_interface->getTotalPowerUsageForPlayer(this);
-    powerProduce_ = m_interface->getTotalPowerOutForPlayer(this);
+    powerUsage_ = m_structureUtils->getTotalPowerUsageForPlayer(this);
+    powerProduce_ = m_structureUtils->getTotalPowerOutForPlayer(this);
     // update spice capacity
-    maxCredits_ = m_interface->getTotalSpiceCapacityForPlayer(this);
+    maxCredits_ = m_structureUtils->getTotalSpiceCapacityForPlayer(this);
 }
 
 int cPlayer::getCredits() const
@@ -1370,7 +1373,7 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
         return eCantBuildReason::ALREADY_BUILDING;
     }
 
-    int iStrucType = m_interface->getStructureTypeByUnitBuildId(iUnitType);
+    int iStrucType = m_structureUtils->getStructureTypeByUnitBuildId(iUnitType);
 
     // Do the reality-check, do we have the building needed?
     if (!hasAtleastOneStructure(iStrucType)) {
