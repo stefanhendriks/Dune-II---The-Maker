@@ -3,7 +3,6 @@
 
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
-#include "game/cGameInterface.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
@@ -35,6 +34,7 @@ void cPlaceItDrawer::serviceInit(sGameServices* services)
 {
     m_objects = services->objects;
     m_infos = services->info;
+    m_mapCamera = services->mapCamera;
 }
 
 void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell)
@@ -157,8 +157,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
                 }
 
                 // Draw bad gfx on spot
-                float desiredWidth = m_ctx->getGameInterface()->getMapCamera()->getZoomedTileWidth();
-                float desiredHeight = m_ctx->getGameInterface()->getMapCamera()->getZoomedTileHeight();
+                float desiredWidth = m_mapCamera->getZoomedTileWidth();
+                float desiredHeight = m_mapCamera->getZoomedTileHeight();
                 float posX = iX * desiredWidth;
                 float posY = iY * desiredHeight;
                 // cRectangle rectangle = cRectangle(posX, posY, desiredWidth, desiredHeight);
@@ -180,8 +180,8 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
     int width = m_infos->getStructureInfo(structureId).bmp_width;
     int height = m_infos->getStructureInfo(structureId).bmp_height;
 
-    int scaledWidth = m_ctx->getGameInterface()->getMapCamera()->factorZoomLevel(width);
-    int scaledHeight = m_ctx->getGameInterface()->getMapCamera()->factorZoomLevel(height);
+    int scaledWidth = m_mapCamera->factorZoomLevel(width);
+    int scaledHeight = m_mapCamera->factorZoomLevel(height);
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {
