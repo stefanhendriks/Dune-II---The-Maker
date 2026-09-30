@@ -12,7 +12,7 @@ struct sGameServices;
 
 class cOrderDrawer {
 public:
-    explicit cOrderDrawer(GameContext *ctx, cPlayer *player);
+    explicit cOrderDrawer(GameContext *ctx, cPlayer *player, sGameServices *services);
 
     ~cOrderDrawer();
 
