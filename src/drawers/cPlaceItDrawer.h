@@ -9,6 +9,7 @@ class SDLDrawer;
 class cStructureUtils;
 class cGameObjectContext;
 class cInfoContext;
+class cMapCamera;
 struct sGameServices;
 
 class cPlaceItDrawer {
@@ -34,4 +35,5 @@ private:
     Graphics *m_gfxdata;
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
+    cMapCamera* m_mapCamera = nullptr;
 };
