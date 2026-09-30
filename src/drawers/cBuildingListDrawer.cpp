@@ -49,6 +49,7 @@ void cBuildingListDrawer::serviceInit(sGameServices* services)
 {
     m_infos = services->info;
     m_interface = services->ctx->getGameInterface();
+    m_settings = services->settings;
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw)
@@ -142,7 +143,7 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 
 int cBuildingListDrawer::getDrawX()
 {
-    return (m_interface->getGameSettings()->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar) + 2;
+    return (m_settings->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar) + 2;
 }
 
 int cBuildingListDrawer::getDrawY()
@@ -321,7 +322,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
             m_gameTextDrawer->drawText(textX, textY, std::format("{}",amountToShow));
         }
 
-        if (m_interface->getGameSettings()->isDebugMode()) {
+        if (m_settings->isDebugMode()) {
             if (m_renderListIds) {
                 int textX = iDrawX + 41;
                 int textY = iDrawY + 40;
