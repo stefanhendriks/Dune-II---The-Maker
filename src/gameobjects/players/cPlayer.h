@@ -20,6 +20,8 @@
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/players/brains/cPlayerBrain.h"
+#include "include/enums/CombatEnums.h"
+#include "include/enums/HouseFlags.h"
 #include "utils/cRectangle.h"
 #include "utils/Color.hpp"
 

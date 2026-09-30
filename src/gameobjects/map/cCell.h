@@ -17,7 +17,7 @@
 #define CCELL_H_
 
 #include "definitions.h"
-#include "enums.h"
+#include "include/enums/MapEnums.h"
 #include <optional>
 
 struct tCell {

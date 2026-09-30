@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include "enums.h"
 #include "utils/cPoint.h"
 
 #include "include/cAssert.h"

@@ -16,7 +16,7 @@
 #pragma once
 
 #include "cAbstractStructure.h"
-#include "enums.h"
+#include "include/enums/CombatEnums.h"
 
 class cRepairFacility : public cAbstractStructure {
 private:

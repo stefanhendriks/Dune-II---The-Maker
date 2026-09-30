@@ -23,7 +23,8 @@
 #pragma once
 
 #include <string>
-#include "include/enums.h"
+#include "include/enums/BuildEnums.h"
+#include "include/enums/ListEnums.h"
 
 class cBuildingList;
 class cInfoContext;

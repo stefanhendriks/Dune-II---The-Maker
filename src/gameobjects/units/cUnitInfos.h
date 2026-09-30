@@ -19,7 +19,7 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include "include/enums.h"
+#include "include/enums/ListEnums.h"
 
 #include <SDL3/SDL.h>
 class Texture;

@@ -21,8 +21,8 @@
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
 #include "include/sGameServices.h"
+#include "include/enums/BuildEnums.h"
 #include "gameobjects/map/cMap.h"
-#include "enums.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include <format>

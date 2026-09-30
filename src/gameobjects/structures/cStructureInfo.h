@@ -19,8 +19,6 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include "include/enums.h"
-
 #include <SDL3/SDL.h>
 class Texture;
 #include <vector>

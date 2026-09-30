@@ -31,6 +31,7 @@
 #include "utils/Log.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/sTerrainInfo.h"
+#include "include/enums/HouseFlags.h"
 
 #include <stdexcept>
 

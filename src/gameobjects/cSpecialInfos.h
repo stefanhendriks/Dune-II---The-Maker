@@ -19,7 +19,8 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include "include/enums.h"
+#include "include/enums/BuildEnums.h"
+#include "include/enums/ListEnums.h"
 
 // SPECIALS (super weapons) stuff
 #define MAX_SPECIALTYPES       10    // maximum of specialInfo
