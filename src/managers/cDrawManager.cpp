@@ -65,7 +65,7 @@ void cDrawManager::reset()
     m_mapDrawer = std::make_unique<cMapDrawer>(m_ctx, m_objects->getMap(), m_player, m_mapCamera, m_services);
     m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(m_ctx, m_objects->getMap(), m_player, m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
-    m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx);
+    m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx, m_services);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx, m_player, m_structureUtils);
     m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx, m_player, m_structureUtils);
     m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex);
