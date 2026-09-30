@@ -17,26 +17,28 @@
 #include <algorithm>
 #include "include/cAssert.h"
 
-cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player) :
+cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices *services) :
     m_player(player),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_sdlDrawer(ctx->getSDLDrawer()),
     m_ctx(ctx),
+    m_services(services),
     m_buildingListDrawer(ctx, player),
     m_sidebar(nullptr),
     m_sidebarColor(Color{214, 149, 20,255})
 {
     d2tm_assert(player!= nullptr);
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(services != nullptr);
 
-    m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), 
+    m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),
         m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
     m_candyBarPiece = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),
         m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
     m_candyHorizonBar = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),
         m_player, m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
 
-    m_candiBarRenderer = m_sdlDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH()-40);
+    m_candiBarRenderer = m_sdlDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_services->settings->getScreenH()-40);
     m_sdlDrawer->beginDrawingToTexture(m_candiBarRenderer);
     createCandyBar();
     m_sdlDrawer->endDrawingToTexture();
@@ -54,7 +56,6 @@ cSideBarDrawer::~cSideBarDrawer()
 void cSideBarDrawer::serviceInit(sGameServices* services)
 {
     m_infos = services->info;
-    m_services = services;
     m_buildingListDrawer.serviceInit(services);
 }
 
@@ -267,7 +268,7 @@ void cSideBarDrawer::drawMinimap()
 
 void cSideBarDrawer::createCandyBar()
 {
-    int heightInPixels = (m_ctx->getGameInterface()->getGameSettings()->getScreenH() - cSideBar::TopBarHeight);
+    int heightInPixels = (m_services->settings->getScreenH() - cSideBar::TopBarHeight);
     // ball first
     m_sdlDrawer->renderSprite(m_candyBarBall, 0,0); // height of ball = 25
     m_sdlDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
