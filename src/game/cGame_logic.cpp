@@ -595,8 +595,7 @@ bool cGame::setupGame()
     m_services->reinforcements = m_reinforcements.get();
 
     init(); // Must be first! (loads ini file at the end, which is required before going on...)
-
-    const std::string &gameDir = settings->getStringValue(SECTION_SETTINGS, "GameDir");
+    const std::string &gameDir = settings->getStringValue("SETTINGS", "GameDir");
     std::unique_ptr<cFileValidator> settingsValidator = std::make_unique<cFileValidator>(gameDir);
     {
         std::map<eGameDirFileName, std::string> m_transfertMap;
