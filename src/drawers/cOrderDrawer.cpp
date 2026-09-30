@@ -8,25 +8,26 @@
 #include "utils/texture_utils.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
-#include "game/cGameInterface.h"
+#include "include/sGameServices.h"
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
 
-cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player) :
+cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player, sGameServices *services) :
     m_ctx(ctx),
     m_sdlDrawer(ctx->getSDLDrawer()),
     m_player(player)
 {
     d2tm_assert(player != nullptr);
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(services != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
     int halfOfButton = m_buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
     int halfOfButtonHeight = m_buttonBitmap->h / 2;
-    m_buttonRect = cRectangle((m_ctx->getGameInterface()->getGameSettings()->getScreenW() - halfOfSidebar) - halfOfButton,
-                            (m_ctx->getGameInterface()->getGameSettings()->getScreenH() - halfOfHeightLeftForButton) - halfOfButtonHeight,
+    m_buttonRect = cRectangle((services->settings->getScreenW() - halfOfSidebar) - halfOfButton,
+                            (services->settings->getScreenH() - halfOfHeightLeftForButton) - halfOfButtonHeight,
                             m_buttonBitmap->w, m_buttonBitmap->h);
     m_isMouseOverOrderButton = false;
 }

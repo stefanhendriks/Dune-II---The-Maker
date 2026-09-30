@@ -61,7 +61,7 @@ void cDrawManager::reset()
     m_sidebarColor = Color{214, 149, 20,255};
     m_sidebarDrawer = std::make_unique<cSideBarDrawer>(m_ctx, m_player, m_services);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(m_ctx, m_player);
-    m_orderDrawer = std::make_unique<cOrderDrawer>(m_ctx, m_player);
+    m_orderDrawer = std::make_unique<cOrderDrawer>(m_ctx, m_player, m_services);
     m_mapDrawer = std::make_unique<cMapDrawer>(m_ctx, m_objects->getMap(), m_player, m_mapCamera, m_services);
     m_miniMapDrawer = std::make_unique<cMiniMapDrawer>(m_ctx, m_objects->getMap(), m_player, m_mapCamera);
     m_particleDrawer = std::make_unique<cParticleDrawer>();
