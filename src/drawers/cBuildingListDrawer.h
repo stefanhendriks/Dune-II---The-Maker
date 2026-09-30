@@ -25,6 +25,7 @@ class Graphics;
 class SDLDrawer;
 class cInfoContext;
 class cGameInterface;
+class cGameSettings;
 struct sGameServices;
 
 class cBuildingListDrawer : cInputObserver {
@@ -60,6 +61,7 @@ private:
     cPlayer *m_player;
     cInfoContext* m_infos = nullptr;
     cGameInterface* m_interface = nullptr;
+    cGameSettings* m_settings = nullptr;
 
     bool m_renderListIds;
 
