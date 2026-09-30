@@ -25,7 +25,7 @@
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 #include "utils/ini.h"
-#include "include/iniDefine.h"
+#include "iniSections.h"
 #include "utils/RNG.hpp"
 #include "gameobjects/players/cPlayer.h"
 #include "data/gfxdata.h"

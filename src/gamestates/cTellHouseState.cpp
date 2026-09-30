@@ -17,7 +17,7 @@
 #include "gameobjects/mentat/BeneMentat.h"
 #include "utils/ini.h"
 #include "controls/cMouse.h"
-#include "include/iniDefine.h"
+#include "iniSections.h"
 #include "include/sDataCampaign.h"
 #include "data/gfxdata.h"
 #include "data/gfxaudio.h"
