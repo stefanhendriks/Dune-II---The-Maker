@@ -19,7 +19,7 @@ struct sGameServices;
 
 class cMapDrawer {
 public:
-    cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera);
+    cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera, sGameServices *services);
     ~cMapDrawer();
 
     void setPlayer(cPlayer *thePlayer);

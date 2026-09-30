@@ -3,7 +3,7 @@
 #include "controls/cGameControlsContext.h"
 #include "data/gfxdata.h"
 #include "context/GameContext.hpp"
-#include "game/cGameInterface.h"
+#include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/players/cPlayer.h"
@@ -16,7 +16,7 @@
 #include <cmath>
 #include "include/cAssert.h"
 
-cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera) :
+cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera, sGameServices *services) :
     m_map(map),
     m_mapGeometry(map ? map->getGeometry() : nullptr),
     m_player(player),
@@ -24,7 +24,7 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     m_ctx(ctx),
     m_sdlDrawer(ctx->getSDLDrawer()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
-    m_settings(ctx->getGameInterface()->getGameSettings()),
+    m_settings(services->settings),
     m_drawWithoutShroudTiles(false),
     m_drawGrid(false)
 {
@@ -33,6 +33,7 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     d2tm_assert(camera!=nullptr);
     d2tm_assert(player!=nullptr);
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(services != nullptr);
     d2tm_assert(m_settings != nullptr);
 
     m_fogTexture = createFogTexture();
@@ -213,7 +214,7 @@ void cMapDrawer::drawTerrain()
             }
 
             // Draw debugging information
-            if (m_ctx->getGameInterface()->getGameSettings()->isDebugMode()) {
+            if (m_settings->isDebugMode()) {
                 if (mouseCell > -1) {
                     int cellX = (viewportX / 32);
                     int cellY = (viewportY / 32);
@@ -237,7 +238,7 @@ void cMapDrawer::drawTerrain()
         }
     }
 
-    if (m_ctx->getGameInterface()->getGameSettings()->isDebugMode()) {
+    if (m_settings->isDebugMode()) {
 //        int absoluteXCoordinate = mapCamera->getAbsMapMouseX(mouse_x);
 //        int absoluteYCoordinate = mapCamera->getAbsMapMouseY(mouse_y);
 //        cTextDrawer textDrawer = cTextDrawer(bene_font);
