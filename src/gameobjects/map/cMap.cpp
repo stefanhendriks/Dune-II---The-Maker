@@ -1160,7 +1160,7 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
 
 // int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
 // {
-//     auto *mapCamera = m_mapCamera;
+//     auto *mapCamera = m_interface->getMapCamera();
 
 //     // go around 360 fDegrees and calculate new stuff.
 //     for (float dr = 1; dr < range; dr++) { // go outwards
