@@ -4,7 +4,6 @@
 #include "include/Texture.hpp"
 #include "controls/cMouse.h"
 #include "include/sGameEvent.h"
-#include "utils/cStructureUtils.h"
 
 #include <format>
 
@@ -209,26 +208,6 @@ void cGameInterface::playSound(int sampleId) const
 void cGameInterface::playSoundWithDistance(int sampleId, int distance) const
 {
     m_game->playSoundWithDistance(sampleId, distance);
-}
-
-int cGameInterface::getTotalPowerUsageForPlayer(cPlayer *pPlayer) const
-{
-    return m_game->m_structureUtils->getTotalPowerUsageForPlayer(pPlayer);
-}
-
-int cGameInterface::getTotalPowerOutForPlayer(cPlayer *pPlayer) const
-{
-    return m_game->m_structureUtils->getTotalPowerOutForPlayer(pPlayer);
-}
-
-int cGameInterface::getTotalSpiceCapacityForPlayer(cPlayer *pPlayer) const
-{
-    return m_game->m_structureUtils->getTotalSpiceCapacityForPlayer(pPlayer);
-}
-
-int cGameInterface::getStructureTypeByUnitBuildId(int unitBuildId) const
-{
-    return m_game->m_structureUtils->getStructureTypeByUnitBuildId(unitBuildId);
 }
 
 int cGameInterface::getCurrentState() const

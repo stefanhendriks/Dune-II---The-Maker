@@ -66,11 +66,6 @@ public:
     void playSound(int sampleId) const;
     void playSoundWithDistance(int sampleId, int distance) const;
 
-    int getTotalPowerUsageForPlayer(cPlayer *pPlayer) const;
-    int getTotalPowerOutForPlayer(cPlayer *pPlayer) const;
-    int getTotalSpiceCapacityForPlayer(cPlayer *pPlayer) const;
-    int getStructureTypeByUnitBuildId(int unitBuildId) const;
-
     void changeStateFromMentat() const;
     cPlayer* getPlayer(int id) const;
     cGameSettings* getGameSettings() const;
