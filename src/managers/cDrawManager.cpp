@@ -59,7 +59,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
 void cDrawManager::reset()
 {
     m_sidebarColor = Color{214, 149, 20,255};
-    m_sidebarDrawer = std::make_unique<cSideBarDrawer>(m_ctx, m_player);
+    m_sidebarDrawer = std::make_unique<cSideBarDrawer>(m_ctx, m_player, m_services);
     m_creditsDrawer = std::make_unique<CreditsDrawer>(m_ctx, m_player);
     m_orderDrawer = std::make_unique<cOrderDrawer>(m_ctx, m_player);
     m_mapDrawer = std::make_unique<cMapDrawer>(m_ctx, m_objects->getMap(), m_player, m_mapCamera);

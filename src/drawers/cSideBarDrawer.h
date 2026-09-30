@@ -16,7 +16,7 @@ struct sGameServices;
 
 class cSideBarDrawer : cInputObserver {
 public:
-    explicit cSideBarDrawer(GameContext *ctx, cPlayer *player);
+    explicit cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices *services);
     ~cSideBarDrawer() override;
 
     void serviceInit(sGameServices* services);
