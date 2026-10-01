@@ -3,6 +3,7 @@ find_package(Catch2 3 REQUIRED)
 # Test files
 set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiButton.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiCheckBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiTextInput.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
@@ -26,6 +27,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/Log.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cIniFile.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiButton.cpp
+    ${CMAKE_SOURCE_DIR}/src/gui/GuiCheckBox.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiObject.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiTextInput.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/RNG.cpp
