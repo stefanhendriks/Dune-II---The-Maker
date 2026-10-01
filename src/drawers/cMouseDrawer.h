@@ -23,6 +23,7 @@ class cPlayer;
 class cWindTrap;
 class cGameInterface;
 class cGameSettings;
+class cMouse;
 struct sGameServices;
 class SDLDrawer;
 
@@ -58,6 +59,7 @@ private:
     cTextWriter* m_textWriter = nullptr;
     cGameInterface* m_interface = nullptr;
     cGameSettings* m_settings = nullptr;
+    cMouse* m_mouse = nullptr;
     SDLDrawer* m_renderer = nullptr;
 };
 
