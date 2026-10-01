@@ -3,6 +3,7 @@ find_package(Catch2 3 REQUIRED)
 # Test files
 set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiButton.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiTextInput.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniUtils.cpp
@@ -16,13 +17,17 @@ set(TEST_FILES
 # No SDL runtime linkage required — SDL headers are needed only to compile
 # types like cRectangle (which declares an inline toSDL() helper using SDL_Rect).
 set(TEST_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/controls/cKeyBindings.cpp
+    ${CMAKE_SOURCE_DIR}/src/controls/cKeyboardEvent.cpp
     ${CMAKE_SOURCE_DIR}/src/drawers/SDLDrawer.cpp
     ${CMAKE_SOURCE_DIR}/src/drawers/cTextDrawer.cpp
     ${CMAKE_SOURCE_DIR}/src/drawers/cTextTextureCache.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/MapGeometry.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/Log.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/cIniFile.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiButton.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiObject.cpp
+    ${CMAKE_SOURCE_DIR}/src/gui/GuiTextInput.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/RNG.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/d2tm_math.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cPoint.cpp
