@@ -34,7 +34,7 @@ struct GuiCheckBoxParams {
 };
 
 
-class GuiCheckBox : public GuiObject {
+class GuiCheckBox : public GuiObject, public GuiClickable, public GuiStatefulVisual {
 public:
     GuiCheckBox(SDLDrawer* drawer, const cRectangle &rect);
     ~GuiCheckBox();
@@ -55,7 +55,12 @@ public:
     void setUnCheckAction(std::function<void()> unCheckAction);
 
     // disable CheckBox
-    void setEnabled(bool value);
+    void setEnabled(bool value) override;
+    bool isEnabled() const override;
+    void setOnLeftMouseButtonClickedAction(std::function<void()> action) override;
+    void setOnRightMouseButtonClickedAction(std::function<void()> action) override;
+    void setVisualState(VisualState state) override;
+    VisualState visualState() const override;
     // tells the component what initial state it should be in
     void setChecked(bool value);
 
@@ -68,6 +73,9 @@ private:
     bool m_pressed;
     bool m_enabled;
     bool m_checked;
+    std::function<void()> m_onLeftMouseButtonClickedAction;
+    std::function<void()> m_onRightMouseButtonClickedAction;
+    VisualState m_visualState = VisualState::Normal;
 
     void drawBox() const;
     void onMouseMovedTo(const s_MouseEvent &event);

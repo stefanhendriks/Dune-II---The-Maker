@@ -92,15 +92,62 @@ void GuiStateButton::onNotifyMouseEvent(const s_MouseEvent &event)
 
 void GuiStateButton::setPressed(bool value)
 {
+    if (!m_enabled) {
+        return;
+    }
     if (value) {
         // Only execute the click action if the state actually changes from UNCLICKED to CLICKED
         if (m_state != GuiState::CLICKED) {
             changeState(GuiState::CLICKED);
-            m_onLeftMouseButtonClickedAction();
+            if (m_onLeftMouseButtonClickedAction) {
+                m_onLeftMouseButtonClickedAction();
+            }
         }
     } else {
         changeState(GuiState::UNCLICKED);
     }
+}
+
+void GuiStateButton::setEnabled(bool enabled)
+{
+    m_enabled = enabled;
+    if (!m_enabled) {
+        m_visualState = VisualState::Disabled;
+        changeState(GuiState::DISABLED);
+        return;
+    }
+
+    m_visualState = VisualState::Normal;
+    changeState(GuiState::UNCLICKED);
+}
+
+bool GuiStateButton::isEnabled() const
+{
+    return m_enabled;
+}
+
+void GuiStateButton::setVisualState(VisualState state)
+{
+    m_visualState = state;
+    switch (state) {
+        case VisualState::Disabled:
+            setEnabled(false);
+            break;
+        case VisualState::Pressed:
+            setPressed(true);
+            break;
+        case VisualState::Hover:
+        case VisualState::Normal:
+            if (m_enabled) {
+                changeState(GuiState::UNCLICKED);
+            }
+            break;
+    }
+}
+
+GuiStateButton::VisualState GuiStateButton::visualState() const
+{
+    return m_visualState;
 }
 
 void GuiStateButton::onNotifyKeyboardEvent(const cKeyboardEvent &event)

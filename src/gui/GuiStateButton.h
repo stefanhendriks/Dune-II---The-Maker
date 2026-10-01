@@ -34,7 +34,7 @@ struct GuiStateButtonParams {
     GuiButtonGroup* group=nullptr;
 };
 
-class GuiStateButton : public GuiObject {
+class GuiStateButton : public GuiObject, public GuiClickable, public GuiStatefulVisual {
 public:
     explicit GuiStateButton(SDLDrawer* drawer, const cRectangle &rect);
     ~GuiStateButton();
@@ -45,8 +45,13 @@ public:
     void setPressed(bool value);
     void setGroup(GuiButtonGroup* group);
     void draw() const override;
-    void setOnLeftMouseButtonClickedAction(std::function<void()> action);
-    void setOnRightMouseButtonClickedAction(std::function<void()> action);
+
+    void setEnabled(bool enabled) override;
+    bool isEnabled() const override;
+    void setOnLeftMouseButtonClickedAction(std::function<void()> action) override;
+    void setOnRightMouseButtonClickedAction(std::function<void()> action) override;
+    void setVisualState(VisualState state) override;
+    VisualState visualState() const override;
 private:
     enum class GuiState : char {DISABLED =0, CLICKED, UNCLICKED, COUNT};
     void changeState(GuiState newState);
@@ -57,6 +62,8 @@ private:
     std::function<void()> m_onLeftMouseButtonClickedAction;
     std::function<void()> m_onRightMouseButtonClickedAction;
     std::optional<GuiButtonGroup*> m_group;
+    bool m_enabled = true;
+    VisualState m_visualState = VisualState::Normal;
 };
 
 
