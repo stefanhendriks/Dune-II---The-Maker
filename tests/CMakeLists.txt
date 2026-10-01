@@ -7,6 +7,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiCycleButton.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiSlider.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiTextInput.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiWindow.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniUtils.cpp
@@ -34,6 +35,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/gui/GuiObject.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiSlider.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiTextInput.cpp
+    ${CMAKE_SOURCE_DIR}/src/gui/GuiWindow.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/RNG.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/d2tm_math.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cPoint.cpp
