@@ -15,6 +15,7 @@
 
 #include "building/cItemBuilder.h"
 #include "config.h"
+#include "context/AudioContext.hpp"
 #include "context/ContextCreator.hpp"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContextCreator.h"
@@ -80,7 +81,6 @@
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
 #include "utils/ini.h"
-#include "utils/RNG.hpp"
 
 #include "controls/cGameControlsContext.h"
 #include "controls/eKeyAction.h"
@@ -142,7 +142,6 @@ cGame::cGame()
 
     m_windowed = false;
     m_scalingMode = eScalingMode::INTEGER_SCALE;
-    m_playSound = true;
     context = nullptr;
     ctx = nullptr;
     m_pauseWhenLosingFocus = false;
@@ -234,8 +233,6 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 
     m_gameSettings->m_playMusic = gs->playMusic;
 
-    m_playSound = gs->playSound;
-
     m_gameSettings->m_debugMode = gs->debugMode;
 
     m_gameSettings->m_drawUnitDebug = gs->drawUnitDebug;
@@ -263,8 +260,6 @@ void cGame::init()
 
     auto map = m_gameObjectsContext->getMap();
     map->setTerrainInfo(m_infoContext->getTerrainInfo());
-    m_newMusicSample = MUSIC_MENU;
-    m_newMusicCountdown = 0;
 
     m_gameSettings->m_drawFps = false;
     m_nextState = -1;
@@ -273,8 +268,6 @@ void cGame::init()
     m_gameSettings->m_playing = true;
     m_gameSettings->m_skirmish = false;
     m_notificationArea->clear();
-
-    m_musicVolume = 96; // volume is 0...
 
     setState(GAME_INITIALIZE);
 
@@ -320,8 +313,6 @@ void cGame::missionInit()
 
     m_gameConditionChecker->missionInit();
 
-    m_musicVolume = 96; // volume is 0...
-
     m_cScreenFader->inititialize();
 
     m_screenShake->reset();
@@ -356,7 +347,7 @@ void cGame::setMissionWon()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_soundPlayer->playVoice(SOUND_VOICE_07_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
+    m_audioContext->playVoice(SOUND_VOICE_07_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
     playMusicByType(MUSIC_WIN);
 
@@ -384,7 +375,7 @@ void cGame::setMissionLost()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_soundPlayer->playVoice(SOUND_VOICE_08_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
+    m_audioContext->playVoice(SOUND_VOICE_08_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
     playMusicByType(MUSIC_LOSE);
 
@@ -395,32 +386,7 @@ void cGame::setMissionLost()
 // think function belongs to combat state (tbd)
 void cGame::thinkFast_audio()
 {
-    if (!m_gameSettings->isPlayMusic()) // no music enabled, so no need to think
-        return;
-
-    // all this does is repeating music in the same theme.
-    if (m_gameSettings->m_musicType < 0)
-        return;
-
-    if (m_newMusicCountdown > 0) {
-        m_newMusicCountdown--;
-    }
-
-    if (m_newMusicCountdown == 0) {
-        m_soundPlayer->playMusic(m_newMusicSample);
-        m_newMusicCountdown--; // so we don't keep re-starting music
-    }
-
-    if (m_newMusicCountdown < 0) {
-        if (!m_soundPlayer->getMusicEnabled()) return;
-        if (!m_soundPlayer->isMusicPlaying()) {
-            int desiredMusicType = m_gameSettings->m_musicType;
-            if (m_gameSettings->m_musicType == MUSIC_ATTACK) {
-                desiredMusicType = MUSIC_PEACE; // set back to peace
-            }
-            playMusicByType(desiredMusicType);
-        }
-    }
+    m_audioContext->thinkFast();
 }
 
 void cGame::updateMouseAndKeyboardState()
@@ -660,13 +626,14 @@ bool cGame::setupGame()
     m_textDrawer = ctx->getTextContext()->getGameTextDrawer();
 
     std::unique_ptr<cSoundPlayer> soundPlayer = std::make_unique<cSoundPlayer>(settingsValidator->getFullName(eGameDirFileName::GFXAUDIO));
-    m_soundPlayer = soundPlayer.get();
-    ctx->setSoundPlayer(std::move(soundPlayer));
-    if (!m_playSound) {
-        m_soundPlayer->setSoundEnabled(false);
+    auto audioContext = std::make_unique<AudioContext>(std::move(soundPlayer), m_gameSettings.get());
+    m_audioContext = audioContext.get();
+    ctx->setAudioContext(std::move(audioContext));
+    if (!m_initialGameSettings->playSound) {
+        m_audioContext->getSoundPlayer()->setSoundEnabled(false);
     }
     if (!m_gameSettings->m_playMusic) {
-        m_soundPlayer->setMusicEnabled(false);
+        m_audioContext->getSoundPlayer()->setMusicEnabled(false);
     }
 
     m_notificationArea->setDrawer(m_sdlDrawer);
@@ -1364,23 +1331,17 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::TOGGLE_MUSIC)) {
-        m_gameSettings->m_playMusic = !m_gameSettings->m_playMusic;
-        if (!m_gameSettings->isPlayMusic()) {
-            m_soundPlayer->stopMusic();
-        }
-        else {
-            m_soundPlayer->playMusic(m_newMusicSample);
-        }
+        m_audioContext->toggleMusic();
         m_notificationArea->addNotification("Music toggle successfully", eNotificationType::NEUTRAL);
     }
 
     if (event.isAction(eKeyAction::MUSIC_VOLUME_DOWN)) {
-        m_soundPlayer->changeMusicVolume(-10);
+        m_audioContext->changeMusicVolume(-10);
         m_notificationArea->addNotification("Music volume down", eNotificationType::NEUTRAL);
     }
 
     if (event.isAction(eKeyAction::MUSIC_VOLUME_UP)) {
-        m_soundPlayer->changeMusicVolume(10);
+        m_audioContext->changeMusicVolume(10);
         m_notificationArea->addNotification("Music volume up", eNotificationType::NEUTRAL);
     }
 
@@ -1423,12 +1384,12 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
 
 void cGame::playSound(int sampleId)
 {
-    m_soundPlayer->playSound(sampleId);
+    m_audioContext->playSound(sampleId);
 }
 
 void cGame::playSound(int sampleId, int vol)
 {
-    m_soundPlayer->playSound(sampleId, vol);
+    m_audioContext->playSound(sampleId, vol);
 }
 
 void cGame::playSoundWithDistance(int sampleId, int iDistance)
@@ -1443,7 +1404,7 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
     float maxDistance = m_mapCamera->divideByZoomLevel(m_gameObjectsContext->getMapGeometry()->getMaxDistanceInPixels() / 2);
     float distanceNormalized = 1.0 - (iDistance / maxDistance);
 
-    float volume = m_soundPlayer->getMaxVolume() * distanceNormalized;
+    float volume = m_audioContext->getMaxVolume() * distanceNormalized;
 
     // zoom factor influences volume (more zoomed in means louder)
     float volumeFactor = m_mapCamera->factorZoomLevel(0.7f);
@@ -1458,109 +1419,22 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 
 void cGame::playVoice(int sampleId, int playerId)
 {
-    m_soundPlayer->playVoice(sampleId, m_gameObjectsContext->getPlayer(playerId)->getHouse());
+    m_audioContext->playVoice(sampleId, m_gameObjectsContext->getPlayer(playerId)->getHouse());
 }
 
 void cGame::playMusicByTypeForStateTransition(int iType)
 {
-    if (m_gameSettings->m_musicType != iType) {
-        m_newMusicCountdown = 0;
-        playMusicByType(iType, HUMAN, false);
-    }
+    m_audioContext->playMusicByTypeForStateTransition(iType, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 }
 
 bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
 {
-    if (playerId != HUMAN) {
-        // skip music we want to play for non human player
-        return false;
-    }
-
-    Logger::info(COMP_SOUND, "cGame::playMusicByType", "iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice);
-
-    if (triggerWithVoice) {
-        if (iType == m_gameSettings->m_musicType) {
-            Logger::info(COMP_SOUND, "cGame::playMusicByType", "m_musicType = {}, iType is {}, so bailing", m_gameSettings->m_musicType, iType);
-            return false;
-        }
-    }
-
-    m_gameSettings->m_musicType = iType;
-    Logger::info(COMP_SOUND, "cGame::playMusicByType", "m_musicType = {}", m_gameSettings->m_musicType);
-
-    if (!m_gameSettings->m_playMusic) {
-        return false; // todo: have a 'no-sound soundplayer' instead of doing this :/
-    }
-
-    if (m_newMusicCountdown > 0) {
-        // do not interfere with previous 'change to music' thing?
-        return false;
-    }
-
-
-    int sampleId = MIDI_MENU;
-    if (iType == MUSIC_WIN) {
-        sampleId = MIDI_WIN01 + RNG::rnd(3);
-    }
-    else if (iType == MUSIC_LOSE) {
-        sampleId = MIDI_LOSE01 + RNG::rnd(6);
-    }
-    else if (iType == MUSIC_ATTACK) {
-        sampleId = MIDI_ATTACK01 + RNG::rnd(6);
-    }
-    else if (iType == MUSIC_PEACE) {
-        sampleId = MIDI_BUILDING01 + RNG::rnd(9);
-    }
-    else if (iType == MUSIC_MENU) {
-        sampleId = MIDI_MENU;
-    }
-    else if (iType == MUSIC_CONQUEST) {
-        sampleId = MIDI_SCENARIO;
-    }
-    else if (iType == MUSIC_BRIEFING) {
-        int houseIndex = m_gameObjectsContext->getPlayer(HUMAN)->getHouse();
-        if (houseIndex == ATREIDES) {
-            sampleId = MIDI_MENTAT_ATR;
-        }
-        else if (houseIndex == HARKONNEN) {
-            sampleId = MIDI_MENTAT_HAR;
-        }
-        else if (houseIndex == ORDOS) {
-            sampleId = MIDI_MENTAT_ORD;
-        }
-        else if (houseIndex == SARDAUKAR) {
-            sampleId = MIDI_MENTAT_HAR; // no @SARDAUKAR srd music, so use harkonnen one
-        }
-        else {
-            d2tm_assert(false && "Undefined house.");
-        }
-    }
-    else {
-        d2tm_assert(false && "Undefined music type.");
-    }
-
-    if (triggerWithVoice) {
-        // voice triggered music (ie "Enemy unit approaching"), so have music stop a bit
-        if (isState(GAME_PLAYING)) {
-            m_newMusicCountdown = 400; // wait a bit longer
-        }
-        else {
-            m_newMusicCountdown = 0;
-        }
-        m_soundPlayer->stopMusic();
-    }
-    else {
-        // instant switch
-        m_newMusicCountdown = 0;
-    }
-
-    m_newMusicSample = sampleId;
-    return true;
+    return m_audioContext->playMusicByType(iType, playerId, triggerWithVoice, isState(GAME_PLAYING), m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 }
 
 int cGame::getMaxVolume()
 {
-    return m_soundPlayer->getMaxVolume();
+    return m_audioContext->getMaxVolume();
 }
 
 void cGame::thinkNormal()

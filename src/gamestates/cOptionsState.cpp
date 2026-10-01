@@ -22,6 +22,7 @@
 #include "gui/GuiCheckBox.hpp"
 #include "gui/GuiSlider.hpp"
 #include "game/cTimeManager.h"
+#include "context/AudioContext.hpp"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
@@ -61,7 +62,7 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     m_guiWindow = std::make_unique<GuiWindow>(m_sdlDrawer, window, m_textDrawer);
     m_guiWindow->setTheme(cGuiThemeBuilder().light().build());
-    cSoundPlayer* soundPlayer = m_ctx->getSoundPlayer();
+    cSoundPlayer* soundPlayer = m_ctx->getAudioContext()->getSoundPlayer();
 
     // Title
     m_guiWindow->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
