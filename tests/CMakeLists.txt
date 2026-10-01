@@ -64,4 +64,7 @@ target_link_libraries(d2tm_tests PRIVATE cpp_stacktrace)
 
 include(CTest)
 include(Catch)
-catch_discover_tests(d2tm_tests)
+catch_discover_tests(d2tm_tests
+    PROPERTIES
+        ENVIRONMENT "SDL_VIDEODRIVER=dummy;SDL_AUDIODRIVER=dummy"
+)
