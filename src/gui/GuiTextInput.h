@@ -23,7 +23,7 @@
 class cTextDrawer;
 class SDLDrawer;
 
-class GuiTextInput : public GuiObject {
+class GuiTextInput : public GuiObject, public GuiFocusable, public GuiTextual {
 public:
     GuiTextInput(SDLDrawer* drawer, const cRectangle& rect, cTextDrawer* textDrawer);
 
@@ -33,9 +33,10 @@ public:
     bool hasKeyboardFocus() const override { return m_focused; }
 
     const std::string& getText() const { return m_text; }
-    void setText(const std::string& text);
-    void setFocused(bool focused) { m_focused = focused; }
-    void setTextDrawer(cTextDrawer* drawer) { m_writer = drawer; }
+    void setText(const std::string& text) override;
+    void setFocused(bool focused) override { m_focused = focused; }
+    void setTextDrawer(cTextDrawer* drawer) override { m_writer = drawer; }
+    void setTextAlignHorizontal(GuiTextAlignHorizontal align) override { (void)align; }
     void setOnEnter(std::function<void(const std::string&)> callback) { m_onEnter = std::move(callback); }
 
 private:

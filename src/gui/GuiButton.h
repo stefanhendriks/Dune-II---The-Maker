@@ -26,7 +26,7 @@ class SDLDrawer;
 class cTextDrawer;
 
 
-class GuiButton : public GuiObject {
+class GuiButton : public GuiObject, public GuiClickable, public GuiTextual, public GuiStatefulVisual {
 public:
     GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText);
     ~GuiButton();
@@ -38,19 +38,27 @@ public:
     // From GuiObject
     void draw() const override;
 
-    void setTextAlignHorizontal(GuiTextAlignHorizontal value);
-    void setTextDrawer(cTextDrawer *cTextDrawer);
+    // From GuiTextual
+    void setTextAlignHorizontal(GuiTextAlignHorizontal value) override;
+    void setTextDrawer(cTextDrawer *cTextDrawer) override;
+    void setText(const std::string& text) override;
+
+    // From GuiClickable
+    void setEnabled(bool value) override;
+    bool isEnabled() const override;
+    void setOnLeftMouseButtonClickedAction(std::function<void()> action) override;
+    void setOnRightMouseButtonClickedAction(std::function<void()> action) override;
+
+    // From GuiStatefulVisual
+    void setVisualState(VisualState state) override;
+    VisualState visualState() const override;
+
     void setRenderKind(GuiRenderKind value);
     void setTexture(Texture *tex);
 
     void nextRenderKind();
 
     void toggleTextAlignHorizontal();
-
-    void setOnLeftMouseButtonClickedAction(std::function<void()> action);
-    void setOnRightMouseButtonClickedAction(std::function<void()> action);
-
-    void setEnabled(bool value);
 
 private:
     cTextDrawer *m_textDrawer;
@@ -66,6 +74,7 @@ private:
     // pressed state
     bool m_pressed;
     bool m_enabled;
+    VisualState m_visualState = VisualState::Normal;
 
     // Functions
     void drawText() const;
