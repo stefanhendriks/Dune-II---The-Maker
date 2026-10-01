@@ -22,6 +22,7 @@
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
 #include "game/cGameSettings.h"
 #include "utils/cStructureUtils.h"
 #include "gameobjects/map/cMapCamera.h"
@@ -217,7 +218,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
             .entitySpecificType = iStructureType
         }
     };
-    m_interface->onNotifyGameEvent(event);
+    m_services->eventEmitter->emit(event);
 
     return str;
 }
