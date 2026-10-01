@@ -4,6 +4,7 @@ find_package(Catch2 3 REQUIRED)
 set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiButton.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiCheckBox.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiCycleButton.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiSlider.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gui/test_GuiTextInput.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
@@ -29,6 +30,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/cIniFile.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiButton.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiCheckBox.cpp
+    ${CMAKE_SOURCE_DIR}/src/gui/GuiCycleButton.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiObject.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiSlider.cpp
     ${CMAKE_SOURCE_DIR}/src/gui/GuiTextInput.cpp

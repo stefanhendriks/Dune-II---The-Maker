@@ -82,7 +82,7 @@ void GuiCycleButton::draw() const
 // Navigation dans la liste
 void GuiCycleButton::nextValue()
 {
-    if (m_values.empty()) return;
+    if (!m_enabled || m_values.empty()) return;
     m_currentIndex = (m_currentIndex + 1) % m_values.size();
     if (!m_displayText.empty()) {
         m_displayText = std::to_string(m_values[m_currentIndex]);
@@ -92,7 +92,7 @@ void GuiCycleButton::nextValue()
 
 void GuiCycleButton::previousValue()
 {
-    if (m_values.empty()) return;
+    if (!m_enabled || m_values.empty()) return;
     m_currentIndex = (m_currentIndex == 0) ? m_values.size() - 1 : m_currentIndex - 1;
     if (!m_displayText.empty()) {
         m_displayText = std::to_string(m_values[m_currentIndex]);
