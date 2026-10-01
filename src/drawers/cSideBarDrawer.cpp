@@ -26,7 +26,6 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 #include <SDL3/SDL.h>
 #include <algorithm>
@@ -194,7 +193,7 @@ void cSideBarDrawer::drawBuildingLists()
         if (list->isAvailable() == false) continue; // not available, so no interaction possible
 
         // render hover over border
-        auto m_mouse = m_ctx->getGameInterface()->getMouse();
+        auto m_mouse = m_services->mouse;
         if (list->isOverButton(m_mouse->getX(), m_mouse->getX())) {
             m_buildingListDrawer.drawButtonHoverRectangle(list);
         }
