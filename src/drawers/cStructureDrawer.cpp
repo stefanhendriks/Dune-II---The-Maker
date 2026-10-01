@@ -21,7 +21,7 @@
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/structures/cStructures.h"
 #include "data/gfxdata.h"
-#include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 #include "gameobjects/structures/cGunTurret.h"
 #include "gameobjects/structures/cRepairFacility.h"
 #include "gameobjects/structures/cRocketTurret.h"
@@ -65,6 +65,7 @@ void cStructureDrawer::serviceInit(sGameServices* services)
     m_infos = services->info;
     m_mapCamera = services->mapCamera;
     m_settings = services->settings;
+    m_mouse = services->mouse;
 }
 
 void cStructureDrawer::drawStructuresFirstLayer()
@@ -193,7 +194,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
     if (m_settings->isDebugMode()) {
         cAbstractStructure *pStructure = m_player->getSelectedStructure();
         if (pStructure && pStructure == structure) {
-            cMouse *pMouse = m_ctx->getGameInterface()->getMouse();
+            cMouse *pMouse = m_mouse;
             cGameControlsContext *pContext = m_player->getGameControlsContext();
 
             int x1 = pMouse->getX();
