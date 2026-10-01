@@ -651,7 +651,7 @@ void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, con
     else if (wordtype == WORD_FOCUS) {
         int focusCell = ToInt(value);
         m_objects->getPlayer(0)->setFocusCell(focusCell);
-        m_interface->getMapCamera()->centerAndJumpViewPortToCell(focusCell);
+        m_services->mapCamera->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
         m_interface->setWinFlags(ToInt(value));
