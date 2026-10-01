@@ -13,7 +13,7 @@
  * This is a non-commercial educational project.
  */
 
-#include "gui/GuiLabel.hpp"
+#include "gui/GuiLabel.h"
 #include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "include/cAssert.h"

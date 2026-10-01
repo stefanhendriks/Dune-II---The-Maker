@@ -13,7 +13,7 @@
  * This is a non-commercial educational project.
  */
 
-#include "gui/GuiSlider.hpp"
+#include "gui/GuiSlider.h"
 #include "drawers/SDLDrawer.hpp"
 #include <algorithm>
 #include <iostream>

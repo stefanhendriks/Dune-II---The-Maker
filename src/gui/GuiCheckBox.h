@@ -1,5 +1,5 @@
 /**
- * @file GuiCheckBox.hpp
+ * @file GuiCheckBox.h
  *
  * Dune 2 - The Maker
  *

@@ -18,9 +18,9 @@
 
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
-#include "gui/GuiLabel.hpp"
-#include "gui/GuiCheckBox.hpp"
-#include "gui/GuiSlider.hpp"
+#include "gui/GuiLabel.h"
+#include "gui/GuiCheckBox.h"
+#include "gui/GuiSlider.h"
 #include "game/cTimeManager.h"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"

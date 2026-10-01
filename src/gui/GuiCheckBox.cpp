@@ -13,7 +13,7 @@
  * This is a non-commercial educational project.
  */
 
-#include "gui/GuiCheckBox.hpp"
+#include "gui/GuiCheckBox.h"
 
 #include "drawers/SDLDrawer.hpp"
 #include <iostream>

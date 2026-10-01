@@ -1,5 +1,5 @@
 /**
- * @file GuiLabel.hpp
+ * @file GuiLabel.h
  *
  * Dune 2 - The Maker
  *

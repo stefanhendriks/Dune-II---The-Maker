@@ -1,5 +1,5 @@
 /**
- * @file GuiSlider.hpp
+ * @file GuiSlider.h
  *
  * Dune 2 - The Maker
  *
