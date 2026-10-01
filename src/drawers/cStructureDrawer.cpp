@@ -64,6 +64,7 @@ void cStructureDrawer::serviceInit(sGameServices* services)
     m_objects = services->objects;
     m_infos = services->info;
     m_mapCamera = services->mapCamera;
+    m_settings = services->settings;
 }
 
 void cStructureDrawer::drawStructuresFirstLayer()
@@ -189,7 +190,7 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
     }
 
     // :-/
-    if (m_ctx->getGameInterface()->getGameSettings()->isDebugMode()) {
+    if (m_settings->isDebugMode()) {
         cAbstractStructure *pStructure = m_player->getSelectedStructure();
         if (pStructure && pStructure == structure) {
             cMouse *pMouse = m_ctx->getGameInterface()->getMouse();
@@ -376,8 +377,8 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
         }
     }
 
-    m_sdlDrawer->renderRectFillColor((m_ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::SidebarWidth), 0,
-                                      cSideBar::SidebarWidth, m_ctx->getGameInterface()->getGameSettings()->getScreenH(), 0, 0, 0,255);
+    m_sdlDrawer->renderRectFillColor((m_settings->getScreenW() - cSideBar::SidebarWidth), 0,
+                                      cSideBar::SidebarWidth, m_settings->getScreenH(), 0, 0, 0,255);
 }
 
 void cStructureDrawer::drawStructureHealthBar(int iStructure)
