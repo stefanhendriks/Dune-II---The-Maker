@@ -34,6 +34,10 @@ GuiValueButton::GuiValueButton(SDLDrawer* drawer, const cRectangle& rect, int in
 
 void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
 {
+    if (!m_enabled) {
+        return;
+    }
+
     switch (event.eventType) {
         case MOUSE_MOVED_TO:
             m_focus = m_rect.isPointWithin(event.coords);
@@ -48,12 +52,18 @@ void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
         case MOUSE_LEFT_BUTTON_CLICKED:
             if (m_rect.isPointWithin(event.coords)) {
                 increaseValue();
+                if (m_onLeftMouseButtonClickedAction) {
+                    m_onLeftMouseButtonClickedAction();
+                }
             }
             m_pressed = false;
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
             if (m_rect.isPointWithin(event.coords)) {
                 decreaseValue();
+                if (m_onRightMouseButtonClickedAction) {
+                    m_onRightMouseButtonClickedAction();
+                }
             }
             m_pressed = false;
             break;
@@ -69,7 +79,7 @@ void GuiValueButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
 void GuiValueButton::draw() const
 {
     m_sdlDrawer->renderRectFillColor(m_rect, m_theme.fillColor);
-    if (m_pressed) {
+    if (m_pressed || m_visualState == VisualState::Pressed) {
         m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
     } else {
         m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
@@ -77,6 +87,9 @@ void GuiValueButton::draw() const
 
     if (m_textDrawer != nullptr) {
         Color textColor = m_focus ? m_theme.textColorHover : m_theme.textColor;
+        if (!m_enabled) {
+            textColor = m_theme.disabledTextColor;
+        }
         if (!m_label.empty() || m_texture != nullptr) {
             const int topHeight = m_rect.getHeight() / 2;
             const int bottomHeight = m_rect.getHeight() - topHeight;
@@ -99,6 +112,50 @@ void GuiValueButton::draw() const
 void GuiValueButton::setTextDrawer(cTextDrawer *drawer)
 {
     m_textDrawer = drawer;
+}
+
+void GuiValueButton::setEnabled(bool enabled)
+{
+    m_enabled = enabled;
+    if (!m_enabled) {
+        m_visualState = VisualState::Disabled;
+        m_pressed = false;
+    } else if (m_visualState == VisualState::Disabled) {
+        m_visualState = VisualState::Normal;
+    }
+}
+
+bool GuiValueButton::isEnabled() const
+{
+    return m_enabled;
+}
+
+void GuiValueButton::setOnLeftMouseButtonClickedAction(std::function<void()> action)
+{
+    m_onLeftMouseButtonClickedAction = std::move(action);
+}
+
+void GuiValueButton::setOnRightMouseButtonClickedAction(std::function<void()> action)
+{
+    m_onRightMouseButtonClickedAction = std::move(action);
+}
+
+void GuiValueButton::setVisualState(VisualState state)
+{
+    m_visualState = state;
+    if (state == VisualState::Disabled) {
+        m_enabled = false;
+        m_pressed = false;
+    } else if (state == VisualState::Pressed) {
+        m_pressed = true;
+    } else {
+        m_pressed = false;
+    }
+}
+
+GuiValueButton::VisualState GuiValueButton::visualState() const
+{
+    return m_visualState;
 }
 
 void GuiValueButton::setOnChanged(std::function<void(int)> callback)
