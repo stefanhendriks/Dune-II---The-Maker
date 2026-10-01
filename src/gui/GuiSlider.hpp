@@ -31,7 +31,7 @@ struct GuiSliderParams {
     std::function<void(int)> onValueChanged = nullptr;
 };
 
-class GuiSlider : public GuiObject {
+class GuiSlider : public GuiObject, public GuiClickable, public GuiStatefulVisual {
 public:
     GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue = 0, int maxValue = 100, int initialValue = 0);
 
@@ -45,12 +45,23 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
+    void setEnabled(bool enabled) override;
+    bool isEnabled() const override;
+    void setOnLeftMouseButtonClickedAction(std::function<void()> action) override;
+    void setOnRightMouseButtonClickedAction(std::function<void()> action) override;
+    void setVisualState(VisualState state) override;
+    VisualState visualState() const override;
+
 private:
     int m_minValue;
     int m_maxValue;
     int m_value;
     bool m_dragging;
+    bool m_enabled = true;
+    VisualState m_visualState = VisualState::Normal;
     std::function<void(int)> m_onValueChanged;
+    std::function<void()> m_onLeftMouseButtonClickedAction;
+    std::function<void()> m_onRightMouseButtonClickedAction;
 
     void drawTrack() const;
     void drawKnob() const;
