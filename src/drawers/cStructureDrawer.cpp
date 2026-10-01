@@ -194,11 +194,10 @@ void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structur
     if (m_settings->isDebugMode()) {
         cAbstractStructure *pStructure = m_player->getSelectedStructure();
         if (pStructure && pStructure == structure) {
-            cMouse *pMouse = m_mouse;
             cGameControlsContext *pContext = m_player->getGameControlsContext();
 
-            int x1 = pMouse->getX();
-            int y1 = pMouse->getY();
+            int x1 = m_mouse->getX();
+            int y1 = m_mouse->getY();
             int x2 = m_mapCamera->getWindowXPosition(structure->pos_x() + 16);
             int y2 = m_mapCamera->getWindowYPosition(structure->pos_y() + 16);
 
