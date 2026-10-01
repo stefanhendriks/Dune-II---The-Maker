@@ -26,6 +26,7 @@ class cEventEmitter;
 class cDrawManager;
 class cRectangle;
 class cReinforcements;
+class cMouse;
 
 struct sGameServices
 {
@@ -39,4 +40,5 @@ struct sGameServices
     cDrawManager *drawManager = nullptr;
     cRectangle *mapViewport = nullptr;
     cReinforcements *reinforcements = nullptr;
+    cMouse *mouse = nullptr;
 };

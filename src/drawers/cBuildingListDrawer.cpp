@@ -50,6 +50,7 @@ void cBuildingListDrawer::serviceInit(sGameServices* services)
     m_infos = services->info;
     m_interface = services->ctx->getGameInterface();
     m_settings = services->settings;
+    m_mouse = services->mouse;
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw)
@@ -332,7 +333,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         }
 
         // draw rectangle when mouse hovers over icon
-        auto m_mouse = m_interface->getMouse();
         if (isOverItemCoordinates_Boolean(m_mouse->getX(), m_mouse->getY(), iDrawX, iDrawY)) {
             m_sdlDrawer->renderRectColor((iDrawX + 1), (iDrawY + 1), (iDrawXEnd - 1)-(iDrawX + 1), (iDrawYEnd - 1)-(iDrawY + 1), selectFadingColor);
             m_sdlDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, selectFadingColor);

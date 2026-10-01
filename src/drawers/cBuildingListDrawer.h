@@ -26,6 +26,7 @@ class SDLDrawer;
 class cInfoContext;
 class cGameInterface;
 class cGameSettings;
+class cMouse;
 struct sGameServices;
 
 class cBuildingListDrawer : cInputObserver {
@@ -62,6 +63,7 @@ private:
     cInfoContext* m_infos = nullptr;
     cGameInterface* m_interface = nullptr;
     cGameSettings* m_settings = nullptr;
+    cMouse* m_mouse = nullptr;
 
     bool m_renderListIds;
 
