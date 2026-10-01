@@ -194,7 +194,7 @@ void cSideBarDrawer::drawBuildingLists()
 
         // render hover over border
         auto m_mouse = m_services->mouse;
-        if (list->isOverButton(m_mouse->getX(), m_mouse->getX())) {
+        if (list->isOverButton(m_mouse->getX(), m_mouse->getY())) {
             m_buildingListDrawer.drawButtonHoverRectangle(list);
         }
     }
