@@ -69,6 +69,11 @@ void GuiLabel::setTextAlignHorizontal(GuiTextAlignHorizontal value)
     m_textAlignHorizontal = value;
 }
 
+void GuiLabel::setText(const std::string& text)
+{
+    m_buttonText = text;
+}
+
 void GuiLabel::setRenderKind(GuiRenderKind value)
 {
     m_renderKind = value;

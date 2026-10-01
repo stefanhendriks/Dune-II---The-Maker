@@ -37,7 +37,7 @@ struct GuiLabelParams {
 };
 
 
-class GuiLabel : public GuiObject {
+class GuiLabel : public GuiObject, public GuiTextual {
 public:
     GuiLabel(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText);
     ~GuiLabel();
@@ -48,8 +48,12 @@ public:
 
     // From GuiObject
     void draw() const override;
-    void setTextAlignHorizontal(GuiTextAlignHorizontal value);
-    void setTextDrawer(cTextDrawer *cTextDrawer);
+
+    // From GuiTextual
+    void setTextAlignHorizontal(GuiTextAlignHorizontal value) override;
+    void setTextDrawer(cTextDrawer *cTextDrawer) override;
+    void setText(const std::string& text) override;
+
     void setRenderKind(GuiRenderKind value);
     void setTexture(Texture *tex);
 
