@@ -87,6 +87,11 @@ void GuiButton::setTextAlignHorizontal(GuiTextAlignHorizontal value)
     m_textAlignHorizontal = value;
 }
 
+void GuiButton::setText(const std::string& text)
+{
+    m_buttonText = text;
+}
+
 void GuiButton::setRenderKind(GuiRenderKind value)
 {
     m_renderKind = value;
@@ -178,6 +183,15 @@ void GuiButton::onNotifyMouseEvent(const s_MouseEvent &event)
 void GuiButton::onMouseMovedTo(const s_MouseEvent &event)
 {
     m_focus = m_rect.isPointWithin(event.coords);
+    if (!m_enabled) {
+        m_visualState = VisualState::Disabled;
+    } else if (m_pressed) {
+        m_visualState = VisualState::Pressed;
+    } else if (m_focus) {
+        m_visualState = VisualState::Hover;
+    } else {
+        m_visualState = VisualState::Normal;
+    }
 }
 
 void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
@@ -193,6 +207,7 @@ void GuiButton::onMouseRightButtonPressed(const s_MouseEvent &)
 {
     if (m_enabled) {
         m_pressed = m_focus;
+        m_visualState = m_pressed ? VisualState::Pressed : (m_focus ? VisualState::Hover : VisualState::Normal);
     }
 }
 
@@ -200,6 +215,7 @@ void GuiButton::onMouseLeftButtonPressed(const s_MouseEvent &)
 {
     if (m_enabled) {
         m_pressed = m_focus;
+        m_visualState = m_pressed ? VisualState::Pressed : (m_focus ? VisualState::Hover : VisualState::Normal);
     }
 }
 
@@ -209,6 +225,7 @@ void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &) {
             m_onLeftMouseButtonClickedAction();
             // un-press the button
             m_pressed = false;
+            m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
         }
     }
 }
@@ -226,6 +243,35 @@ void GuiButton::setOnRightMouseButtonClickedAction(std::function<void()> action)
 void GuiButton::setEnabled(bool value)
 {
     m_enabled = value;
+    if (!m_enabled) {
+        m_visualState = VisualState::Disabled;
+        m_pressed = false;
+    } else if (m_focus) {
+        m_visualState = VisualState::Hover;
+    } else {
+        m_visualState = VisualState::Normal;
+    }
+}
+
+bool GuiButton::isEnabled() const
+{
+    return m_enabled;
+}
+
+void GuiButton::setVisualState(VisualState state)
+{
+    m_visualState = state;
+    if (state == VisualState::Disabled) {
+        m_enabled = false;
+        m_pressed = false;
+    } else {
+        m_enabled = true;
+    }
+}
+
+GuiButton::VisualState GuiButton::visualState() const
+{
+    return m_visualState;
 }
 
 void GuiButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
