@@ -104,6 +104,9 @@ public:
     int getMusicType() const {
         return m_musicType;
     }
+    void setMusicType(int value) {
+        m_musicType = value;
+    }
     bool isPlaySound() const {
         return m_playSound;
     }

@@ -16,7 +16,7 @@
 #include "context/GameContext.hpp"
 #include "game/cTimeManager.h"
 #include "game/cTimeCounter.h"
-#include "utils/cSoundPlayer.h"
+#include "context/AudioContext.hpp"
 #include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "game/cGameInterface.h"
@@ -52,19 +52,19 @@ cTimeManager *GameContext::getTimeManager() const {
     throw std::runtime_error("cTimeManager not defined");
 }
 
-void GameContext::setSoundPlayer(std::unique_ptr<cSoundPlayer> soundPlayer) {
-    if (!soundPlayer) {
-        throw std::runtime_error("cSoundPlayer is not initialized!");
+void GameContext::setAudioContext(std::unique_ptr<AudioContext> audioContext) {
+    if (!audioContext) {
+        throw std::runtime_error("AudioContext is not initialized!");
     }
-    m_soundPlayer = std::move(soundPlayer);
+    m_audioContext = std::move(audioContext);
 }
 
 
-cSoundPlayer *GameContext::getSoundPlayer() const {
-    if (m_soundPlayer) {
-        return m_soundPlayer.get();
+AudioContext *GameContext::getAudioContext() const {
+    if (m_audioContext) {
+        return m_audioContext.get();
     }
-    throw std::runtime_error("cSoundPlayer not defined");
+    throw std::runtime_error("AudioContext not defined");
 }
 
 void GameContext::setTextContext(std::unique_ptr<TextContext> textContext) {

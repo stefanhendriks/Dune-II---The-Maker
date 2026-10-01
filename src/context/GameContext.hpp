@@ -23,7 +23,7 @@
 #include "game/cGameSettings.h"
 
 class cTimeManager;
-class cSoundPlayer;
+class AudioContext;
 class SDLDrawer;
 class cGameInterface;
 class cLog;
@@ -39,8 +39,8 @@ public:
     void setTimeManager(std::unique_ptr<cTimeManager> timeManager);
     cTimeManager* getTimeManager() const;
 
-    void setSoundPlayer(std::unique_ptr<cSoundPlayer> soundPlayer);
-    cSoundPlayer* getSoundPlayer() const;
+    void setAudioContext(std::unique_ptr<AudioContext> audioContext);
+    AudioContext* getAudioContext() const;
 
     void setTextContext(std::unique_ptr<TextContext> textContext);
     TextContext* getTextContext() const;
@@ -55,7 +55,7 @@ public:
 private:
     std::unique_ptr<GraphicsContext> m_graphicsContext;
     std::unique_ptr<cTimeManager> m_timeManager;
-    std::unique_ptr<cSoundPlayer> m_soundPlayer;
+    std::unique_ptr<AudioContext> m_audioContext;
     std::unique_ptr<TextContext> m_textContext;
     std::unique_ptr<SDLDrawer> m_SDLDrawer;
     std::unique_ptr<cGameInterface> m_gameInterface;

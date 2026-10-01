@@ -37,7 +37,7 @@ class cInfoContext;
 class cGameState;
 class cPlayer;
 class cPlayers;
-class cSoundPlayer;
+class AudioContext;
 class cSDLSystem;
 class cHousesInfo;
 class cReinforcements;
@@ -211,21 +211,19 @@ public:
     MissionStats getMissionStats() const;
 
 private:
-    bool m_playSound;                       // play sound?
     bool m_windowed;        			    // windowed
     eScalingMode m_scalingMode;             // how the game scales to the screen in fullscreen
     bool m_pauseWhenLosingFocus;            // pausing the game when losing focus
     float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
     float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
     bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
-    int m_musicVolume;                      // volume of the music
 
     std::string m_gameFilename;
 
     std::unique_ptr<cSDLSystem> m_Screen;
     std::unique_ptr<cFocusManager> m_focusManager;
 
-    cSoundPlayer* m_soundPlayer;
+    AudioContext* m_audioContext = nullptr;
 
     std::unique_ptr<InitialGameSettings> m_initialGameSettings;
 
@@ -244,9 +242,6 @@ private:
 
     std::unique_ptr<cHousesInfo> m_Houses;
     bool m_missionWasWon;               // hack: used for state transitioning :/
-
-    int m_newMusicSample;
-    int m_newMusicCountdown;
 
     std::unique_ptr<cScreenShake> m_screenShake;
     std::unique_ptr<cNotificationArea> m_notificationArea;

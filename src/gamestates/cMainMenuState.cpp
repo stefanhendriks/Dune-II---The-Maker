@@ -24,6 +24,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "utils/Graphics.hpp"
+#include "context/AudioContext.hpp"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 #include "game/cGameInterface.h"
@@ -289,7 +290,7 @@ void cMainMenuState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
         }
 
         if (event.isAction(eKeyAction::TOGGLE_MUSIC) || event.hasKey(SDL_SCANCODE_MUTE)) {
-            auto m_soundPlayer = m_ctx->getSoundPlayer();
+            auto m_soundPlayer = m_ctx->getAudioContext()->getSoundPlayer();
             m_settings->setPlayMusic(!m_settings->isPlayMusic());
             if (!m_settings->isPlayMusic()) {
                 m_soundPlayer->stopMusic();
