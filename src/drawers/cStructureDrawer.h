@@ -24,6 +24,7 @@ class cGameObjectContext;
 class cInfoContext;
 class cMapCamera;
 class cGameSettings;
+class cMouse;
 struct sGameServices;
 
 #include "gameobjects/structures/cAbstractStructure.h"
@@ -64,6 +65,7 @@ private:
     cInfoContext* m_infos = nullptr;
     cMapCamera* m_mapCamera = nullptr;
     cGameSettings* m_settings = nullptr;
+    cMouse* m_mouse = nullptr;
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;
     void renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const;
