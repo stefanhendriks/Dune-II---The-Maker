@@ -16,6 +16,7 @@
 #include "cMouseDrawer.h"
 #include "include/sGameServices.h"
 #include "controls/cGameControlsContext.h"
+#include "controls/cMouse.h"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
@@ -34,6 +35,7 @@ void cMouseDrawer::serviceInit(sGameServices* services)
     m_interface = services->ctx->getGameInterface();
     m_renderer = services->ctx->getSDLDrawer();
     m_settings = services->settings;
+    m_mouse = services->mouse;
 }
 
 cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_player(thePlayer)
@@ -46,7 +48,7 @@ cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_play
 
 void cMouseDrawer::draw()
 {
-    m_interface->getMouse()->draw();
+    m_mouse->draw();
 }
 
 int cMouseDrawer::getDrawXToolTip(int width)
