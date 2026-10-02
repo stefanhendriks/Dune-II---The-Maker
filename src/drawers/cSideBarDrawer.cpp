@@ -70,6 +70,7 @@ cSideBarDrawer::~cSideBarDrawer()
 void cSideBarDrawer::serviceInit(sGameServices* services)
 {
     m_infos = services->info;
+    m_mouse = services->mouse;
     m_buildingListDrawer.serviceInit(services);
 }
 
@@ -193,7 +194,6 @@ void cSideBarDrawer::drawBuildingLists()
         if (list->isAvailable() == false) continue; // not available, so no interaction possible
 
         // render hover over border
-        auto m_mouse = m_services->mouse;
         if (list->isOverButton(m_mouse->getX(), m_mouse->getY())) {
             m_buildingListDrawer.drawButtonHoverRectangle(list);
         }
