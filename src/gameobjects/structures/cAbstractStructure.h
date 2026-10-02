@@ -29,6 +29,7 @@ class cGameObjectContext;
 class cInfoContext;
 class cMapCamera;
 class cGameInterface;
+class cEventEmitter;
 class cGameSettings;
 struct sGameServices;
 class SDLDrawer;
@@ -62,6 +63,7 @@ protected:
     cMapCamera *m_mapCamera = nullptr;
     cGameInterface *m_interface = nullptr;
     cGameSettings *m_settings = nullptr;
+    cEventEmitter *m_eventEmitter = nullptr;
     SDLDrawer *m_renderer = nullptr;
 
     bool shouldAnimateWhenUnitHeadsTowardsStructure;
