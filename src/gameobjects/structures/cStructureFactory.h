@@ -23,6 +23,7 @@ class cMapCamera;
 class cGameInterface;
 class cGameSettings;
 class cStructureUtils;
+class cEventEmitter;
 class SDLDrawer;
 struct sGameServices;
 
@@ -63,6 +64,7 @@ private:
     cGameInterface *m_interface = nullptr;
     cGameSettings *m_settings = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
+    cEventEmitter *m_eventEmitter = nullptr;
     sGameServices *m_services = nullptr;
     SDLDrawer *m_renderer = nullptr;
 
