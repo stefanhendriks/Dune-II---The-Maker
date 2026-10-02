@@ -19,6 +19,11 @@
 #include "utils/cRectangle.h"
 #include "gui/GuiTheme.hpp"
 
+#include <functional>
+#include <string>
+
+class cTextDrawer;
+
 enum GuiRenderKind {
     OPAQUE_WITH_BORDER = 0,
     OPAQUE_WITHOUT_BORDER = 1,
@@ -31,6 +36,39 @@ enum GuiRenderKind {
 enum GuiTextAlignHorizontal {
     LEFT,
     CENTER
+};
+
+class GuiTextual {
+public:
+    virtual ~GuiTextual() = default;
+    virtual void setTextDrawer(cTextDrawer* drawer) = 0;
+    virtual void setTextAlignHorizontal(GuiTextAlignHorizontal align) {
+        (void)align;
+    }
+    virtual void setText(const std::string& text) = 0;
+};
+
+class GuiClickable {
+public:
+    virtual ~GuiClickable() = default;
+    virtual void setEnabled(bool enabled) = 0;
+    virtual bool isEnabled() const = 0;
+    virtual void setOnLeftMouseButtonClickedAction(std::function<void()> action) = 0;
+    virtual void setOnRightMouseButtonClickedAction(std::function<void()> action) = 0;
+};
+
+class GuiStatefulVisual {
+public:
+    enum class VisualState {
+        Normal,
+        Hover,
+        Pressed,
+        Disabled
+    };
+
+    virtual ~GuiStatefulVisual() = default;
+    virtual void setVisualState(VisualState state) = 0;
+    virtual VisualState visualState() const = 0;
 };
 
 class SDLDrawer;

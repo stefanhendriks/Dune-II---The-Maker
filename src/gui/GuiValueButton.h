@@ -25,7 +25,7 @@ class SDLDrawer;
 class cTextDrawer;
 class Texture;
 
-class GuiValueButton : public GuiObject {
+class GuiValueButton : public GuiObject, public GuiClickable, public GuiTextual, public GuiStatefulVisual {
 public:
     GuiValueButton(SDLDrawer* drawer, const cRectangle& rect, int initialValue, int stepValue, int minValue, int maxValue);
 
@@ -33,10 +33,18 @@ public:
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
     void draw() const override;
 
-    void setTextDrawer(cTextDrawer *drawer);
+    void setTextDrawer(cTextDrawer *drawer) override;
+    void setText(const std::string& label) override { m_label = label; }
     void setOnChanged(std::function<void(int)> callback);
     void setLabel(const std::string& label);
     void setTexture(Texture *texture);
+
+    void setEnabled(bool enabled) override;
+    bool isEnabled() const override;
+    void setOnLeftMouseButtonClickedAction(std::function<void()> action) override;
+    void setOnRightMouseButtonClickedAction(std::function<void()> action) override;
+    void setVisualState(VisualState state) override;
+    VisualState visualState() const override;
 
     int getValue() const;
     void setValue(int value);
@@ -48,6 +56,8 @@ private:
 
     cTextDrawer *m_textDrawer = nullptr;
     std::function<void(int)> m_onChanged = nullptr;
+    std::function<void()> m_onLeftMouseButtonClickedAction = nullptr;
+    std::function<void()> m_onRightMouseButtonClickedAction = nullptr;
     std::string m_label;
     Texture *m_texture = nullptr;
     int m_value = 0;
@@ -56,6 +66,8 @@ private:
     int m_maxValue = 0;
     bool m_focus = false;
     bool m_pressed = false;
+    bool m_enabled = true;
+    VisualState m_visualState = VisualState::Normal;
 };
 
 class GuiValueButtonBuilder {

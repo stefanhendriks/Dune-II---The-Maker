@@ -24,7 +24,7 @@
 class SDLDrawer;
 class cTextDrawer;
 
-class GuiCycleButton : public GuiObject {
+class GuiCycleButton : public GuiObject, public GuiClickable, public GuiTextual {
 public:
     GuiCycleButton(SDLDrawer* drawer, const cRectangle& rect, const std::vector<int>& values);
 
@@ -38,14 +38,24 @@ public:
     void previousValue();
 
     int getSelectedValue() const { return m_values[m_currentIndex]; }
-    void setTextDrawer(cTextDrawer* drawer) { m_textDrawer = drawer; }
+    void setTextDrawer(cTextDrawer* drawer) override { m_textDrawer = drawer; }
+    void setText(const std::string& text) override { m_displayText = text; }
     void setOnChanged(std::function<void(int)> callback) { m_onChanged = callback; }
+
+    void setEnabled(bool enabled) override;
+    bool isEnabled() const override;
+    void setOnLeftMouseButtonClickedAction(std::function<void()> action) override;
+    void setOnRightMouseButtonClickedAction(std::function<void()> action) override;
 
 private:
     std::vector<int> m_values;
     size_t m_currentIndex;
     cTextDrawer* m_textDrawer;
     std::function<void(int)> m_onChanged; // Optionnal callback
+    std::function<void()> m_onLeftMouseButtonClickedAction;
+    std::function<void()> m_onRightMouseButtonClickedAction;
+    std::string m_displayText;
+    bool m_enabled = true;
 };
 
 

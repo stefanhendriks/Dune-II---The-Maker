@@ -30,6 +30,46 @@ GuiSlider::GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue, in
     d2tm_assert(drawer != nullptr);
 }
 
+void GuiSlider::setEnabled(bool enabled)
+{
+    m_enabled = enabled;
+    m_dragging = false;
+    if (!m_enabled) {
+        m_visualState = VisualState::Disabled;
+    } else {
+        m_visualState = VisualState::Normal;
+    }
+}
+
+bool GuiSlider::isEnabled() const
+{
+    return m_enabled;
+}
+
+void GuiSlider::setOnLeftMouseButtonClickedAction(std::function<void()> action)
+{
+    m_onLeftMouseButtonClickedAction = std::move(action);
+}
+
+void GuiSlider::setOnRightMouseButtonClickedAction(std::function<void()> action)
+{
+    m_onRightMouseButtonClickedAction = std::move(action);
+}
+
+void GuiSlider::setVisualState(VisualState state)
+{
+    m_visualState = state;
+    if (state == VisualState::Disabled) {
+        m_enabled = false;
+        m_dragging = false;
+    }
+}
+
+GuiSlider::VisualState GuiSlider::visualState() const
+{
+    return m_visualState;
+}
+
 void GuiSlider::draw() const {
     drawTrack();
     drawKnob();
@@ -70,15 +110,31 @@ void GuiSlider::setOnValueChanged(std::function<void(int)> callback) {
 }
 
 void GuiSlider::onNotifyMouseEvent(const s_MouseEvent &event) {
+    if (!m_enabled) {
+        return;
+    }
+
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_PRESSED:
             if (m_rect.isPointWithin(event.coords)) {
                 m_dragging = true;
+                m_visualState = VisualState::Pressed;
                 updateValueFromMouse(event.coords.x);
             }
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
+            if (m_rect.isPointWithin(event.coords) && m_onLeftMouseButtonClickedAction) {
+                m_onLeftMouseButtonClickedAction();
+            }
             m_dragging = false;
+            m_visualState = VisualState::Normal;
+            break;
+        case MOUSE_RIGHT_BUTTON_CLICKED:
+            if (m_rect.isPointWithin(event.coords) && m_onRightMouseButtonClickedAction) {
+                m_onRightMouseButtonClickedAction();
+            }
+            m_dragging = false;
+            m_visualState = VisualState::Normal;
             break;
         case MOUSE_MOVED_TO:
             if (m_dragging) {
