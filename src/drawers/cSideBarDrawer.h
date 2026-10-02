@@ -27,6 +27,7 @@ class GameContext;
 class Graphics;
 class SDLDrawer;
 class cInfoContext;
+class cMouse;
 struct sGameServices;
 
 class cSideBarDrawer : cInputObserver {
@@ -61,6 +62,7 @@ private:
     SDLDrawer* m_sdlDrawer;
     GameContext* m_ctx = nullptr;
     cInfoContext* m_infos = nullptr;
+    cMouse* m_mouse = nullptr;
     sGameServices* m_services = nullptr;
     cBuildingListDrawer m_buildingListDrawer;
     cSideBar *m_sidebar;
