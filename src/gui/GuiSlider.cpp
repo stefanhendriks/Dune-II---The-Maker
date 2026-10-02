@@ -33,6 +33,7 @@ GuiSlider::GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue, in
 void GuiSlider::setEnabled(bool enabled)
 {
     m_enabled = enabled;
+    m_dragging = false;
     if (!m_enabled) {
         m_visualState = VisualState::Disabled;
     } else {
@@ -60,8 +61,7 @@ void GuiSlider::setVisualState(VisualState state)
     m_visualState = state;
     if (state == VisualState::Disabled) {
         m_enabled = false;
-    } else {
-        m_enabled = true;
+        m_dragging = false;
     }
 }
 
@@ -120,12 +120,19 @@ void GuiSlider::onNotifyMouseEvent(const s_MouseEvent &event) {
                 m_dragging = true;
                 m_visualState = VisualState::Pressed;
                 updateValueFromMouse(event.coords.x);
-                if (m_onLeftMouseButtonClickedAction) {
-                    m_onLeftMouseButtonClickedAction();
-                }
             }
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
+            if (m_rect.isPointWithin(event.coords) && m_onLeftMouseButtonClickedAction) {
+                m_onLeftMouseButtonClickedAction();
+            }
+            m_dragging = false;
+            m_visualState = VisualState::Normal;
+            break;
+        case MOUSE_RIGHT_BUTTON_CLICKED:
+            if (m_rect.isPointWithin(event.coords) && m_onRightMouseButtonClickedAction) {
+                m_onRightMouseButtonClickedAction();
+            }
             m_dragging = false;
             m_visualState = VisualState::Normal;
             break;
