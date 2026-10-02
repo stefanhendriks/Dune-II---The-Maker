@@ -64,6 +64,7 @@ void cStructureFactory::serviceInit(sGameServices *services)
     m_mapCamera = services->mapCamera;
     m_settings = services->settings;
     m_structureUtils = services->structureUtils;
+    m_eventEmitter = services->eventEmitter;
     m_interface = services->ctx->getGameInterface();
     m_renderer = services->ctx->getSDLDrawer();
 }
@@ -218,7 +219,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
             .entitySpecificType = iStructureType
         }
     };
-    m_services->eventEmitter->emit(event);
+    m_eventEmitter->emit(event);
 
     return str;
 }
