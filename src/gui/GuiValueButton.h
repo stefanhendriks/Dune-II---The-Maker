@@ -34,7 +34,6 @@ public:
     void draw() const override;
 
     void setTextDrawer(cTextDrawer *drawer) override;
-    void setTextAlignHorizontal(GuiTextAlignHorizontal align) override { (void)align; }
     void setText(const std::string& label) override { m_label = label; }
     void setOnChanged(std::function<void(int)> callback);
     void setLabel(const std::string& label);

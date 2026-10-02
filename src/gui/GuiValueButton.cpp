@@ -44,10 +44,22 @@ void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
             if (!m_focus) {
                 m_pressed = false;
             }
+            if (!m_enabled) {
+                m_visualState = VisualState::Disabled;
+            } else if (m_pressed) {
+                m_visualState = VisualState::Pressed;
+            } else if (m_focus) {
+                m_visualState = VisualState::Hover;
+            } else {
+                m_visualState = VisualState::Normal;
+            }
             break;
         case MOUSE_LEFT_BUTTON_PRESSED:
         case MOUSE_RIGHT_BUTTON_PRESSED:
             m_pressed = m_rect.isPointWithin(event.coords);
+            if (m_pressed) {
+                m_visualState = VisualState::Pressed;
+            }
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
             if (m_rect.isPointWithin(event.coords)) {
@@ -57,6 +69,7 @@ void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
                 }
             }
             m_pressed = false;
+            m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
             if (m_rect.isPointWithin(event.coords)) {
@@ -66,6 +79,7 @@ void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
                 }
             }
             m_pressed = false;
+            m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
             break;
         default:
             break;
@@ -120,6 +134,7 @@ void GuiValueButton::setEnabled(bool enabled)
     if (!m_enabled) {
         m_visualState = VisualState::Disabled;
         m_pressed = false;
+        m_focus = false;
     } else if (m_visualState == VisualState::Disabled) {
         m_visualState = VisualState::Normal;
     }
@@ -143,13 +158,24 @@ void GuiValueButton::setOnRightMouseButtonClickedAction(std::function<void()> ac
 void GuiValueButton::setVisualState(VisualState state)
 {
     m_visualState = state;
-    if (state == VisualState::Disabled) {
-        m_enabled = false;
-        m_pressed = false;
-    } else if (state == VisualState::Pressed) {
-        m_pressed = true;
-    } else {
-        m_pressed = false;
+    switch (state) {
+        case VisualState::Disabled:
+            m_enabled = false;
+            m_pressed = false;
+            m_focus = false;
+            break;
+        case VisualState::Pressed:
+            m_pressed = true;
+            m_focus = true;
+            break;
+        case VisualState::Hover:
+            m_pressed = false;
+            m_focus = true;
+            break;
+        case VisualState::Normal:
+            m_pressed = false;
+            m_focus = false;
+            break;
     }
 }
 

@@ -42,7 +42,9 @@ class GuiTextual {
 public:
     virtual ~GuiTextual() = default;
     virtual void setTextDrawer(cTextDrawer* drawer) = 0;
-    virtual void setTextAlignHorizontal(GuiTextAlignHorizontal align) = 0;
+    virtual void setTextAlignHorizontal(GuiTextAlignHorizontal align) {
+        (void)align;
+    }
     virtual void setText(const std::string& text) = 0;
 };
 
@@ -53,13 +55,6 @@ public:
     virtual bool isEnabled() const = 0;
     virtual void setOnLeftMouseButtonClickedAction(std::function<void()> action) = 0;
     virtual void setOnRightMouseButtonClickedAction(std::function<void()> action) = 0;
-};
-
-class GuiFocusable {
-public:
-    virtual ~GuiFocusable() = default;
-    virtual bool hasKeyboardFocus() const = 0;
-    virtual void setFocused(bool focused) = 0;
 };
 
 class GuiStatefulVisual {
