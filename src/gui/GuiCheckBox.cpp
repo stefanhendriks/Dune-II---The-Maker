@@ -131,6 +131,15 @@ void GuiCheckBox::onNotifyMouseEvent(const s_MouseEvent &event)
         case MOUSE_RIGHT_BUTTON_PRESSED:
             onMouseRightButtonPressed(event);
             break;
+        case MOUSE_RIGHT_BUTTON_CLICKED:
+            if (m_rect.isPointWithin(event.coords)) {
+                if (m_enabled && m_onRightMouseButtonClickedAction) {
+                    m_onRightMouseButtonClickedAction();
+                }
+                m_pressed = false;
+                m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
+            }
+            break;
         case MOUSE_LEFT_BUTTON_CLICKED:
             onMouseLeftButtonClicked(event);
             break;
@@ -156,23 +165,25 @@ void GuiCheckBox::onMouseMovedTo(const s_MouseEvent &event)
     }
 }
 
-void GuiCheckBox::onMouseRightButtonPressed(const s_MouseEvent &)
+void GuiCheckBox::onMouseRightButtonPressed(const s_MouseEvent &event)
 {
-    if (m_enabled) {
+    if (m_enabled && m_rect.isPointWithin(event.coords)) {
         m_pressed = m_focus;
+        m_visualState = m_pressed ? VisualState::Pressed : (m_focus ? VisualState::Hover : VisualState::Normal);
     }
 }
 
-void GuiCheckBox::onMouseLeftButtonPressed(const s_MouseEvent &)
+void GuiCheckBox::onMouseLeftButtonPressed(const s_MouseEvent &event)
 {
-    if (m_enabled) {
+    if (m_enabled && m_rect.isPointWithin(event.coords)) {
         m_pressed = m_focus;
+        m_visualState = m_pressed ? VisualState::Pressed : (m_focus ? VisualState::Hover : VisualState::Normal);
     }
 }
 
-void GuiCheckBox::onMouseLeftButtonClicked(const s_MouseEvent &)
+void GuiCheckBox::onMouseLeftButtonClicked(const s_MouseEvent &event)
 {
-    if (!m_focus || !m_enabled) {
+    if (!m_rect.isPointWithin(event.coords) || !m_enabled) {
         return;
     }
 
@@ -191,6 +202,9 @@ void GuiCheckBox::onMouseLeftButtonClicked(const s_MouseEvent &)
     if (m_onLeftMouseButtonClickedAction) {
         m_onLeftMouseButtonClickedAction();
     }
+
+    m_pressed = false;
+    m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
 }
 
 void GuiCheckBox::setCheckAction(std::function<void()> action)
@@ -233,10 +247,24 @@ void GuiCheckBox::setOnRightMouseButtonClickedAction(std::function<void()> actio
 void GuiCheckBox::setVisualState(VisualState state)
 {
     m_visualState = state;
-    if (state == VisualState::Disabled) {
-        m_enabled = false;
-    } else {
-        m_enabled = true;
+    switch (state) {
+        case VisualState::Disabled:
+            m_enabled = false;
+            m_pressed = false;
+            m_focus = false;
+            break;
+        case VisualState::Pressed:
+            m_pressed = true;
+            m_focus = false;
+            break;
+        case VisualState::Hover:
+            m_pressed = false;
+            m_focus = true;
+            break;
+        case VisualState::Normal:
+            m_pressed = false;
+            m_focus = false;
+            break;
     }
 }
 

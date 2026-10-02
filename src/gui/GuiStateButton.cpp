@@ -131,10 +131,13 @@ void GuiStateButton::setVisualState(VisualState state)
     m_visualState = state;
     switch (state) {
         case VisualState::Disabled:
-            setEnabled(false);
+            m_enabled = false;
+            changeState(GuiState::DISABLED);
             break;
         case VisualState::Pressed:
-            setPressed(true);
+            if (m_enabled) {
+                changeState(GuiState::CLICKED);
+            }
             break;
         case VisualState::Hover:
         case VisualState::Normal:

@@ -39,7 +39,6 @@ public:
 
     int getSelectedValue() const { return m_values[m_currentIndex]; }
     void setTextDrawer(cTextDrawer* drawer) override { m_textDrawer = drawer; }
-    void setTextAlignHorizontal(GuiTextAlignHorizontal align) override { (void)align; }
     void setText(const std::string& text) override { m_displayText = text; }
     void setOnChanged(std::function<void(int)> callback) { m_onChanged = callback; }
 

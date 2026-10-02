@@ -42,21 +42,25 @@ GuiButton::~GuiButton()
 
 void GuiButton::draw() const
 {
+    const bool isDisabled = !m_enabled || m_visualState == VisualState::Disabled;
+    const bool isPressed = m_pressed || m_visualState == VisualState::Pressed;
+    const bool isHovered = m_focus || m_visualState == VisualState::Hover;
+
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
-            m_sdlDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_theme.fillColor);
+            m_sdlDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), isDisabled ? m_theme.disabledFillColor : m_theme.fillColor);
             drawText();
             break;
         case TRANSPARENT_WITHOUT_BORDER:
             drawText();
             break;
         case OPAQUE_WITH_BORDER:
-            m_sdlDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), m_enabled ? m_theme.fillColor : m_theme.disabledFillColor);
-            if (m_pressed) {
+            m_sdlDrawer->renderRectFillColor(m_rect.getX(), m_rect.getY(), m_rect.getWidth(), m_rect.getHeight(), isDisabled ? m_theme.disabledFillColor : m_theme.fillColor);
+            if (isPressed) {
                 m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
-                if (m_enabled) {
+                if (!isDisabled) {
                     m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
                 } else {
                     m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.disabledBorderLight, m_theme.disabledBorderDark);
@@ -65,11 +69,15 @@ void GuiButton::draw() const
             drawText();
             break;
         case TRANSPARENT_WITH_BORDER:
-            if (m_pressed) {
+            if (isPressed) {
                 m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
             }
             else {
-                m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                if (!isDisabled) {
+                    m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
+                } else {
+                    m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.disabledBorderLight, m_theme.disabledBorderDark);
+                }
             }
             drawText();
             break;
@@ -109,8 +117,10 @@ void GuiButton::setTexture(Texture *tex)
 
 void GuiButton::drawText() const
 {
-    Color textColor = m_focus ? m_theme.textColorHover : m_theme.textColor;
-    if (!m_enabled) {
+    const bool isDisabled = !m_enabled || m_visualState == VisualState::Disabled;
+    const bool isHovered = m_focus || m_visualState == VisualState::Hover;
+    Color textColor = isHovered ? m_theme.textColorHover : m_theme.textColor;
+    if (isDisabled) {
         textColor = m_theme.disabledTextColor;
     }
 
@@ -219,15 +229,17 @@ void GuiButton::onMouseLeftButtonPressed(const s_MouseEvent &)
     }
 }
 
-void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &) {
-    if (m_focus) {
-        if (m_enabled && m_onLeftMouseButtonClickedAction) {
-            m_onLeftMouseButtonClickedAction();
-            // un-press the button
-            m_pressed = false;
-            m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
-        }
+void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &event) {
+    if (!m_rect.isPointWithin(event.coords) || !m_enabled) {
+        return;
     }
+
+    if (m_focus && m_onLeftMouseButtonClickedAction) {
+        m_onLeftMouseButtonClickedAction();
+    }
+
+    m_pressed = false;
+    m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
 }
 
 void GuiButton::setOnLeftMouseButtonClickedAction(std::function<void()> action)
@@ -261,11 +273,24 @@ bool GuiButton::isEnabled() const
 void GuiButton::setVisualState(VisualState state)
 {
     m_visualState = state;
-    if (state == VisualState::Disabled) {
-        m_enabled = false;
-        m_pressed = false;
-    } else {
-        m_enabled = true;
+    switch (state) {
+        case VisualState::Disabled:
+            m_enabled = false;
+            m_pressed = false;
+            m_focus = false;
+            break;
+        case VisualState::Pressed:
+            m_pressed = true;
+            m_focus = true;
+            break;
+        case VisualState::Hover:
+            m_pressed = false;
+            m_focus = true;
+            break;
+        case VisualState::Normal:
+            m_pressed = false;
+            m_focus = false;
+            break;
     }
 }
 
