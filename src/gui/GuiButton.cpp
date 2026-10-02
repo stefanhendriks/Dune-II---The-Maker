@@ -44,7 +44,7 @@ void GuiButton::draw() const
 {
     const bool isDisabled = !m_enabled || m_visualState == VisualState::Disabled;
     const bool isPressed = m_pressed || m_visualState == VisualState::Pressed;
-    const bool isHovered = m_focus || m_visualState == VisualState::Hover;
+    //const bool isHovered = m_focus || m_visualState == VisualState::Hover;
 
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
