@@ -34,7 +34,7 @@ public:
 
     const std::string& getText() const { return m_text; }
     void setText(const std::string& text) override;
-    void setFocused(bool focused) override { m_focused = focused; }
+    void setFocused(bool focused) { m_focused = focused; }
     void setTextDrawer(cTextDrawer* drawer) override { m_writer = drawer; }
     void setOnEnter(std::function<void(const std::string&)> callback) { m_onEnter = std::move(callback); }
 
