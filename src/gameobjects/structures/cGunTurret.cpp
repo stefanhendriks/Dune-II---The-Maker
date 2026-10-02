@@ -29,6 +29,7 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
 
 namespace {
 constexpr auto kTurretFacings = 8;
@@ -317,7 +318,7 @@ void cGunTurret::think_guard()
                         .atCell = unitToAttack->getCell()
                     }
                 };
-                m_interface->onNotifyGameEvent(event);
+                m_eventEmitter->emit(event);
             }
         }
     }
