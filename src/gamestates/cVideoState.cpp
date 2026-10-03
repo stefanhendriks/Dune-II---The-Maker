@@ -19,7 +19,7 @@ cVideoState::cVideoState(sGameServices* services)
     d2tm_assert(m_mouse != nullptr);
 
     const auto filename = "intro.pak";
-    gfxmovie = std::make_unique<Graphics>(m_renderDrawer->getRenderer(),filename);
+    gfxmovie = std::make_unique<Graphics>(m_sdlDrawer->getRenderer(),filename);
 
     m_movieFrame=0;
     if (gfxmovie != nullptr) {
@@ -67,7 +67,7 @@ void cVideoState::draw() const
     m_mouse->setTile(MOUSE_NORMAL);
     if (m_currentFrame != nullptr) {
         cRectangle dest = {offsetX, offsetY,640+150, 480+150};
-        m_renderDrawer->renderStrechFullSprite(m_currentFrame, dest);
+        m_sdlDrawer->renderStrechFullSprite(m_currentFrame, dest);
     }
     m_mouse->draw();
 }
