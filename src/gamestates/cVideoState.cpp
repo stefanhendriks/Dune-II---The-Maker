@@ -25,7 +25,6 @@ cVideoState::cVideoState(sGameServices* services)
     if (gfxmovie != nullptr) {
         Logger::info(COMP_INIT, "video", "Successful loaded video [{}]", filename);
         m_currentFrame = gfxmovie->getTexture(m_movieFrame);
-        m_timerFrame = 0;
         offsetX = (m_interface->getGameSettings()->getScreenW() - 640) / 2-75;
         offsetY = (m_interface->getGameSettings()->getScreenH() - 480) / 2-75;
         return;
