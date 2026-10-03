@@ -208,7 +208,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRect(intro)        
             .withLabel("Introduction")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_renderDrawer)
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this](){m_interface->setNextStateToTransitionTo(GAME_VIDEO);})
