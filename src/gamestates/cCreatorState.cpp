@@ -24,6 +24,7 @@
 #include "gamestates/cCreditsState.h"
 #include "gamestates/cWinLoseState.h"
 #include "gamestates/cMentatState.h"
+#include "gamestates/cVideoState.h"
 #include "gamestates/cTellHouseState.h"
 #include "gamestates/cChooseHouseState.h"
 #include "gamestates/cGamePlaying.h"
@@ -98,6 +99,10 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
 
         case eGameState::EDITOR:
             m_states[eGameState::EDITOR] = std::make_unique<cEditorState>(m_services);
+            break;
+
+        case eGameState::VIDEO:
+            m_states[eGameState::VIDEO] = std::make_unique<cVideoState>(m_services);
             break;
 
         case eGameState::NEW_MAP_EDITOR:

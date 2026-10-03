@@ -961,7 +961,7 @@ void cGame::setState(int newState)
                 newStatePtr = m_creatorState->getState(eGameState::EDITOR);
             }
             else if (newState == GAME_VIDEO) {
-                newStatePtr = new cVideoState(m_services.get());
+                newStatePtr = m_creatorState->getState(eGameState::VIDEO);
             }
             else if (newState == GAME_MENU) {
                 m_gameSettings->m_cheatMode = false;
