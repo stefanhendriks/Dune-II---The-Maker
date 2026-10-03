@@ -205,7 +205,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     int introY = hofY+heightBetweenButton;
     const cRectangle &intro = cRectangle(buttonsX, introY, buttonWidth, buttonHeight);
     auto gui_btn_Intro = GuiButtonBuilder()
-            .withRect(intro)        
+            .withRect(intro)
             .withLabel("Introduction")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_sdlDrawer)
