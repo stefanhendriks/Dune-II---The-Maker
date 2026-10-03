@@ -31,7 +31,6 @@ private:
     cMouse* m_mouse = nullptr;
     std::unique_ptr<Graphics> gfxmovie;
     int m_movieFrame = 0;
-    int m_timerFrame = 0;
     int offsetX;
     int offsetY;
     Texture* m_currentFrame = nullptr;
