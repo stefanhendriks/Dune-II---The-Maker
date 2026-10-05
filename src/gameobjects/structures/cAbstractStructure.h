@@ -19,7 +19,7 @@
 #include "include/enums/ListEnums.h"
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/structures/cStructureInfo.h"
-#include "include/enums.h"
+#include "include/enums/BuildEnums.h"
 
 #include <vector>
 #include <string>
