@@ -16,7 +16,7 @@
 #pragma once
 
 #include "game/MissionStats.h"
-#include "include/enums.h"
+#include "include/enums/BuildEnums.h"
 
 struct s_GameEvent;
 class cPlayer;

@@ -19,6 +19,7 @@
 #include "Facing.h"
 #include "include/cAssert.h"
 #include "include/enums/CombatEnums.h"
+#include "include/enums/BuildEnums.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "utils/cRectangle.h"
 #include "gameobjects/units/cTimer.h"
