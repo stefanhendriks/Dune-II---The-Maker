@@ -889,21 +889,31 @@ void cGame::setState(int newState)
             else if (newState == GAME_PLAYING) {
                     m_currentState = existingStatePtr;
 
-                    m_drawManager->reset();
-                    m_drawManager->missionInit();
-                    // evaluate all players, so we have initial 'alive' values set properly
-                    m_players->evaluateStillAliveForAI();
-                    m_gameObjectsContext->getParticles().reset();
-                    // in-between solution until we have a proper combat state object
-                    m_drawManager->init();
+                    if (m_state == GAME_OPTIONS) {
+                        // just resume: don't reset mission state (and with it, mission stats)
+                        // for a mission that is still in progress.
+                        m_timeManager->restartTimer();
+                        takeBackGroundScreen();
+                        // we came from options menu, notify mouse
+                        humanPlayer->getGameControlsContext()->onFocusMouseStateEvent();
+                    }
+                    else {
+                        m_drawManager->reset();
+                        m_drawManager->missionInit();
+                        // evaluate all players, so we have initial 'alive' values set properly
+                        m_players->evaluateStillAliveForAI();
+                        m_gameObjectsContext->getParticles().reset();
+                        // in-between solution until we have a proper combat state object
+                        m_drawManager->init();
 
-                    // handle update
-                    s_GameEvent event {
-                        .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
-                    };
-                    // the game is about to begin!
-                    onNotifyGameEvent(event);
-                    m_timeManager->startTimer();
+                        // handle update
+                        s_GameEvent event {
+                            .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+                        };
+                        // the game is about to begin!
+                        onNotifyGameEvent(event);
+                        m_timeManager->startTimer();
+                    }
             }
 
             m_currentState = existingStatePtr;
