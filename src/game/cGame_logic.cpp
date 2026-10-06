@@ -206,6 +206,7 @@ cGame::cGame()
     m_services->settings = m_gameSettings.get();
     m_services->structureUtils = m_structureUtils.get();
     m_services->eventEmitter = m_eventEmitter.get();
+    m_services->missionStatsCollector = m_missionStatsCollector.get();
 
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());

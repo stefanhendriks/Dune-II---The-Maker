@@ -17,7 +17,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
-#include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
 #include "include/sGameServices.h"
 #include "actions/cRespondToThreatAction.h"
 //#include "gameobjects/particles/cParticles.h"
@@ -1136,7 +1136,7 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
                         .entitySpecificType = buildOrder.buildId,
                     }
                 };
-                m_interface->onNotifyGameEvent(event);
+                m_eventEmitter->emit(event);
             }
         }
         else if (buildOrder.buildType == eBuildType::SPECIAL) {

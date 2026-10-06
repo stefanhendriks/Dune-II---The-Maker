@@ -8,6 +8,7 @@
 class cGameSettings;
 class cGameInterface;
 class cTextDrawer;
+class cMouse;
 
 class cScoringState : public cGameState {
 
@@ -29,5 +30,6 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
+    cMouse* m_mouse = nullptr;
     MissionStats m_stats;
 };

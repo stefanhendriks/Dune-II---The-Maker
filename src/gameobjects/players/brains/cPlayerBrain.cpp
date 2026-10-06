@@ -35,6 +35,7 @@ void cPlayerBrain::serviceInit(sGameServices* services)
     m_info = services->info;
     m_settings = services->settings;
     m_interface = services->ctx->getGameInterface();
+    m_eventEmitter = services->eventEmitter;
 }
 
 }

@@ -24,6 +24,7 @@ class cGameObjectContext;
 class cInfoContext;
 class cGameSettings;
 class cGameInterface;
+class cEventEmitter;
 struct sGameServices;
 
 namespace {
@@ -64,6 +65,7 @@ protected:
     cInfoContext *m_info = nullptr;
     cGameSettings *m_settings = nullptr;
     cGameInterface *m_interface = nullptr;
+    cEventEmitter *m_eventEmitter = nullptr;
 
 private:
 
