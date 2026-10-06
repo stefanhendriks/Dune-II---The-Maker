@@ -12,6 +12,14 @@ General principles (see `CLAUDE.md` for the full version):
   abstraction, configurability, or error handling for impossible states.
 - Match surrounding style rather than imposing a different one.
 
+## Architectural direction
+
+See `.claude/rules/architecture-direction.md` for active migrations: removing
+`cGameInterface` (new usages should be flagged, not just old ones migrated),
+the `sGameServices` caching pattern (no "train-wreck" chains through
+`m_services`), construction-order safety for cached fields, and keeping
+`*Context`-style service classes narrow.
+
 ## Review output format
 
 Keep the posted review short. A maintainer should read it in under a minute.
@@ -104,9 +112,9 @@ Keep the posted review short. A maintainer should read it in under a minute.
 
 ## Style conventions (do not nitpick beyond these)
 
-- `m_camelCase` members, `camelCase()` functions, `s_` structs, `e` enums,
-  `c`-prefixed class files.
-- `if`/`else` bodies always multi-line braced; never one-liners.
-- Compare `std::optional<T>` directly to `T`; no needless dereference.
-- `cAbstractStructure` id via `getStructureId()`, never `.id` / `.getId()`.
+- Naming: `.claude/rules/naming-conventions.md` — members, functions,
+  method-tier prefixes, file naming, and the no-`c`-prefix rule for new
+  classes.
+- Coding style: `.claude/rules/coding-conventions.md` — brace style,
+  `std::optional` comparisons, `getStructureId()`.
 - Comments explain *why* when non-obvious; no placeholder or narration comments.
