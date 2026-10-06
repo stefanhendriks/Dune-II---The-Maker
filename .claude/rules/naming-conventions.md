@@ -14,8 +14,12 @@ repeating this list — update this file only, not copies elsewhere.
 
 ## File naming
 
-- Class files: `c` prefix + PascalCase — `cHousesInfo.h`, `cPlayer.cpp`
+- Class files (existing/legacy classes): `c` prefix + PascalCase —
+  `cHousesInfo.h`, `cPlayer.cpp`
 - Non-class utility files: PascalCase — `Color.hpp`, `HouseColors.h`, `Log.h`
+- New classes: PascalCase with no `c` prefix — see below. File names follow
+  the class name, e.g. `AudioContext.hpp` / `AudioContext.cpp`, not
+  `cAudioContext.h`.
 
 ## New classes: no `c` prefix
 

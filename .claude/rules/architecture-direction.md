@@ -66,12 +66,13 @@ safe to cache (see above).
 
 ## Modernizing legacy C-style code
 
-When a legacy C-style file is touched substantially (not just a small fix),
-prefer modernizing it to idiomatic C++23 as part of that change — see the
-`ini.cpp`/`ini.h` modernization (#1389) for the kind of transformation this
-means in practice. This is not a mandate to proactively rewrite untouched
-legacy files; it applies when a file is already being substantially edited
-for another reason.
+Modernizing a legacy C-style file to idiomatic C++23 is a deliberate,
+maintainer-approved exception to the surgical-changes default in `CLAUDE.md`
+§3. It happens as its own dedicated change — see the `ini.cpp`/`ini.h`
+modernization (#1389) for the kind of transformation this means in practice
+— not bundled into an unrelated fix or feature PR. Don't take touching a
+file for another reason as license to modernize it along the way; that's
+still the drive-by-refactor case §3 flags.
 
 ## New source files
 
