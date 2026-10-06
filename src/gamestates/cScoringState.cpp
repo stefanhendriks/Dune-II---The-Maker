@@ -1,13 +1,17 @@
 #include "gamestates/cScoringState.h"
 
 #include "context/GameContext.hpp"
+#include "controls/cMouse.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
+#include "game/cMissionStatsCollector.h"
+#include "game/cTimeManager.h"
 #include "gameobjects/players/cPlayer.h"
 #include "include/cAssert.h"
 #include "include/definitions.h"
+#include "include/sGameServices.h"
 
 #include <format>
 
@@ -15,13 +19,14 @@ cScoringState::cScoringState(sGameServices* services) :
     cGameState(services),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
-    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer())
+    m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_mouse(services->mouse)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
 
-    m_stats = m_interface->getMissionStats();
+    m_stats = services->missionStatsCollector->snapshot(m_ctx->getTimeManager()->getElapsedSeconds());
 }
 
 void cScoringState::continueToWinBrief() const
@@ -87,7 +92,7 @@ void cScoringState::draw() const
     }
 
     m_textDrawer->drawTextCentered("Click to continue", m_settings->getScreenH() - lineHeight - 8, Color::White);
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 void cScoringState::onNotifyMouseEvent(const s_MouseEvent &event)

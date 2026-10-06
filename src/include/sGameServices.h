@@ -27,6 +27,7 @@ class cDrawManager;
 class cRectangle;
 class cReinforcements;
 class cMouse;
+class cMissionStatsCollector;
 
 struct sGameServices
 {
@@ -41,4 +42,5 @@ struct sGameServices
     cRectangle *mapViewport = nullptr;
     cReinforcements *reinforcements = nullptr;
     cMouse *mouse = nullptr;
+    cMissionStatsCollector *missionStatsCollector = nullptr;
 };
