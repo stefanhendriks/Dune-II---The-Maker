@@ -22,7 +22,7 @@
 #include "gameobjects/players/cPlayerDifficultySettings.h"
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
-#include "game/cGameInterface.h"
+#include "context/AudioContext.hpp"
 
 cRefinery::cRefinery()
 {
@@ -91,7 +91,7 @@ void cRefinery::think_unit_occupation()
 
     // let player know...
     if (pPlayer->isHuman()) {
-        m_interface->playVoice(SOUND_VOICE_02_ATR, pPlayer->getId());
+        m_audioContext->playVoice(SOUND_VOICE_02_ATR, pPlayer->getHouse());
     }
 
     // perhaps we can find a carryall to help us out

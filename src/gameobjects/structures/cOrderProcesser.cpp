@@ -34,6 +34,7 @@
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
+#include "context/AudioContext.hpp"
 #include "utils/cStructureUtils.h"
 #include "data/gfxaudio.h"
 
@@ -62,6 +63,7 @@ void cOrderProcesser::serviceInit(sGameServices *services)
     m_info = services->info;
     m_structureUtils = services->structureUtils;
     m_interface = services->ctx->getGameInterface();
+    m_audioContext = services->ctx->getAudioContext();
     m_drawManager = services->drawManager;
     updatePricesForStarport();
 }
@@ -135,7 +137,7 @@ void cOrderProcesser::playTMinusSound(int seconds)
     }
 
     if (soundIdToPlay > -1) {
-        m_interface->playSound(soundIdToPlay);
+        m_audioContext->playSound(soundIdToPlay);
     }
 }
 
