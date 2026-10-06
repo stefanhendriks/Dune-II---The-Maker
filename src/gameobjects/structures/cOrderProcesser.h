@@ -23,6 +23,7 @@ class cInfoContext;
 class cGameInterface;
 class cStructureUtils;
 class cDrawManager;
+class AudioContext;
 struct sGameServices;
 
 class cOrderProcesser {
@@ -102,6 +103,7 @@ private:
     cGameInterface *m_interface = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cDrawManager *m_drawManager = nullptr;
+    AudioContext *m_audioContext = nullptr;
 
     bool m_orderPlaced;
 

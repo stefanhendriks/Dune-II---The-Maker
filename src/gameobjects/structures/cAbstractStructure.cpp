@@ -110,6 +110,7 @@ void cAbstractStructure::serviceInit(sGameServices *services)
     m_settings = services->settings;
     m_interface = services->ctx->getGameInterface();
     m_eventEmitter = services->eventEmitter;
+    m_audioContext = services->ctx->getAudioContext();
     m_renderer = services->ctx->getSDLDrawer();
 }
 

@@ -25,6 +25,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"
+#include "context/AudioContext.hpp"
 
 cStarPort::cStarPort()
 {
@@ -103,7 +104,7 @@ void cStarPort::think_deploy()
                     if (rallyPoint > -1) {
                         m_objects->getUnit(id)->move_to(rallyPoint, -1, -1);
                     }
-                    m_interface->playVoice(SOUND_VOICE_05_ATR, iPlayer); // unit deployed
+                    m_audioContext->playVoice(SOUND_VOICE_05_ATR, m_objects->getPlayer(iPlayer)->getHouse()); // unit deployed
                 }
                 else {
                     // could not find cell to deploy to, reinforce it
