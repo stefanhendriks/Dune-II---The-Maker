@@ -134,6 +134,8 @@ State transitions go through `cGame::setNextStateToTransitionTo()` + `initiateFa
 
 `src/context/GameContext.hpp` aggregates shared services passed to states and drawers: `GraphicsContext`, `TextContext`, `cTimeManager`, `cSoundPlayer`, `SDLDrawer`. States receive a `GameContext*` and use it instead of reaching into globals.
 
+This is part of an active, ongoing migration — see `.claude/rules/architecture-direction.md` for the current direction (removing `cGameInterface`, the `sGameServices` caching pattern, construction-order safety, and narrow `*Context` service classes).
+
 ### Rendering
 
 `src/drawers/` contains specialized drawers (one per concern: map, minimap, sidebar, particles, structures, mouse, messages, etc.). `cDrawManager` (`src/managers/cDrawManager.h`) composes them for the combat/playing state. All rendering goes through `SDLDrawer` which wraps SDL2's renderer.
@@ -175,16 +177,7 @@ Game data (unit stats, structure costs, scenario rules) is loaded from INI files
 
 ## Naming Conventions
 
-From comments in `cGame.h`:
-- Member variables: `m_camelCasedVariableName`
-- Functions: `camelCased()`
-- Speed-differentiated methods: `thinkFast_*()`, `thinkSlow_*()`
-- State-related methods (candidates for extraction): `state_*()`
-- Structs use `s_` prefix, enums use `e` prefix
-
-File naming:
-- Class files: `c` prefix + PascalCase — `cHousesInfo.h`, `cPlayer.cpp`
-- Non-class utility files: PascalCase — `Color.hpp`, `HouseColors.h`, `Log.h`
+See `.claude/rules/naming-conventions.md` — the single source of truth for code and file naming, including the no-`c`-prefix rule for new classes.
 
 ## Game concepts
 
