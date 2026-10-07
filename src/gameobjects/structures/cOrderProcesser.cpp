@@ -115,7 +115,7 @@ void cOrderProcesser::playTMinusSound(int seconds)
             soundIdToPlay = SOUND_VOICE_06_HAR;
         }
         else if (m_player->getHouse() == SARDAUKAR) {
-            soundIdToPlay = SOUND_VOICE_06_HAR;    // no @SARDAUKAR srd voice yet, so use harkonnen one
+            soundIdToPlay = SOUND_VOICE_06_ATR;    // no @SARDAUKAR srd voice yet, matches the atreides fallback used for voice lines elsewhere
         }
         else if (m_player->getHouse() == ORDOS) {
             soundIdToPlay = SOUND_VOICE_06_ORD;
@@ -132,7 +132,7 @@ void cOrderProcesser::playTMinusSound(int seconds)
             soundIdToPlay = (SOUND_ORD_S1 + (seconds - 1));
         }
         else if (m_player->getHouse() == SARDAUKAR) {
-            soundIdToPlay = (SOUND_HAR_S1 + (seconds - 1));    // no @SARDAUKAR srd voice yet, so use harkonnen one
+            soundIdToPlay = (SOUND_ATR_S1 + (seconds - 1));    // no @SARDAUKAR srd voice yet, matches the atreides fallback used for voice lines elsewhere
         }
     }
 
