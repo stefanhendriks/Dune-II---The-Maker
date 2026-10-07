@@ -18,6 +18,7 @@
 #include "building/cItemBuilder.h"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
 #include "include/sGameServices.h"
 #include "utils/common.h"
 #include "utils/Log.h"
@@ -166,7 +167,7 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
             .buildingListItem = item
         }
     };
-    m_gameInterface->onNotifyGameEvent(event);
+    m_eventEmitter->emit(event);
 
     if (isAvailable() != beforeAddingAvailable) {
         // emit another event that this list became available! (so that sidebar can animate things)
@@ -180,7 +181,7 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
                 .buildingList = this
             }
         };
-        m_gameInterface->onNotifyGameEvent(event);
+        m_eventEmitter->emit(event);
     }
 
     startFlashing();
@@ -249,7 +250,7 @@ bool cBuildingList::removeItemFromList(int position)
                 .buildingList = this
             }
         };
-        m_gameInterface->onNotifyGameEvent(event);
+        m_eventEmitter->emit(event);
     }
     return true;
 }
@@ -450,6 +451,7 @@ void cBuildingList::serviceInit(sGameServices* services)
     m_info = services->info;
     m_gameInterface = services->ctx->getGameInterface();
     m_settings = services->settings;
+    m_eventEmitter = services->eventEmitter;
 }
 
 Color cBuildingList::getFlashingColor()

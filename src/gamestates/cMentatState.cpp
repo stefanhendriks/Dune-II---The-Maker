@@ -38,6 +38,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
       m_dataCampaign(dataCampaign),
       m_settings(services->settings),
       m_interface(m_ctx->getGameInterface()),
+      m_mouse(services->mouse),
       m_objects(services->objects),
       m_reinforcements(services->reinforcements),
       m_cIni(cini),
@@ -132,9 +133,9 @@ void cMentatState::thinkFast()
 
 void cMentatState::draw() const
 {
-    m_interface->getMouse()->setTile(MOUSE_NORMAL);
+    m_mouse->setTile(MOUSE_NORMAL);
     if (m_mentat) m_mentat->draw();
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 void cMentatState::onNotifyMouseEvent(const s_MouseEvent &event)

@@ -25,6 +25,7 @@
 
 class cTextDrawer;
 class cGameInterface;
+class cMouse;
 class GuiWindow;
 class GuiCycleButton;
 class GuiTextInput;
@@ -49,6 +50,7 @@ private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    cMouse* m_mouse = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
     cPreviewMaps* m_previewMap = nullptr;
     void constructWindow();

@@ -19,6 +19,8 @@
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
 #include "game/cGameInterface.h"
+#include "controls/cMouse.h"
+#include "utils/cRectangle.h"
 #include "include/eGameState.h"
 #include "include/sGameServices.h"
 #include "data/gfxdata.h"
@@ -52,6 +54,8 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
     m_gameInterface(ctx->getGameInterface()),
+    m_mouse(services->mouse),
+    m_mapViewport(services->mapViewport),
     m_objects(services->objects),
     m_mapCamera(services->mapCamera),
     m_gameSettings(services->settings),
@@ -115,7 +119,7 @@ void cDrawManager::drawCombatState()
     m_structureDrawer->drawStructuresFirstLayer();
 
     // draw layer 1 (beneath units, on top of terrain)
-    m_particleDrawer->determineParticlesToDraw(*m_gameInterface->getMapViewport());
+    m_particleDrawer->determineParticlesToDraw(*m_mapViewport);
     m_particleDrawer->drawLowerLayer();
 
     m_objects->getMap()->draw_units();
@@ -290,7 +294,7 @@ void cDrawManager::drawTopBarBackground()
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
-    if (m_gameInterface->getMouse()->isLeftButtonClicked() && m_gameInterface->getMouse()->isOverRectangle(&optionsRect)) {
+    if (m_mouse->isLeftButtonClicked() && m_mouse->isOverRectangle(&optionsRect)) {
         m_gameInterface->setNextStateToTransitionTo(GAME_OPTIONS);
     }
 }
