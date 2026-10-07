@@ -28,6 +28,7 @@ class cGameSettings;
 class cGameObjectContext;
 class cInfoContext;
 class cGameInterface;
+class cGameConditionChecker;
 struct sGameServices;
 
 // public stuff
@@ -59,4 +60,5 @@ private:
     cInfoContext* m_infos = nullptr;
     cGameInterface* m_interface = nullptr;
     sGameServices* m_services = nullptr;
+    cGameConditionChecker* m_gameConditionChecker = nullptr;
 };

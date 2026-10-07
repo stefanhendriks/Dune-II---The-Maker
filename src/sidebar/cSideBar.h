@@ -34,9 +34,10 @@
 #include "controls/sMouseEvent.h"
 
 class cPlayer;
-class cGameInterface;
 class cDrawManager;
 class cGameSettings;
+class AudioContext;
+class cEventEmitter;
 struct sGameServices;
 
 //// List ID's corresponding buttons
@@ -132,9 +133,10 @@ private:
     // the lists:
     cBuildingList *m_lists[LIST_MAX];
     cPlayer *m_player;
-    cGameInterface* m_gameInterface = nullptr;
     cDrawManager* m_drawManager = nullptr;
     cGameSettings* m_settings = nullptr;
+    AudioContext* m_audioContext = nullptr;
+    cEventEmitter* m_eventEmitter = nullptr;
 
     bool m_isMouseOverSidebarValue;
 

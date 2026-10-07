@@ -26,6 +26,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 
 #include "include/cAssert.h"
 
@@ -34,6 +35,7 @@ cCreditsState::cCreditsState(sGameServices* services) :
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_mouse(services->mouse),
     m_moveSpeed(0.15f)
 {
     d2tm_assert(m_textDrawer != nullptr);
@@ -437,7 +439,7 @@ void cCreditsState::draw() const
     }
 
     backButton->draw();
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 void cCreditsState::onNotifyMouseEvent(const s_MouseEvent &event)

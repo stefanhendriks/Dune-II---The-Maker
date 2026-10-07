@@ -44,6 +44,7 @@
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
+#include "game/cGameConditionChecker.h"
 #include "game/cGameSettings.h"
 #include <format>
 #include <filesystem>
@@ -385,6 +386,7 @@ cIni::cIni(sGameServices* services)
     m_infos = services->info;
     m_interface = services->ctx->getGameInterface();
     m_services = services;
+    m_gameConditionChecker = services->gameConditionChecker;
 }
 
 void cIni::INI_Load_seed(int seed)
@@ -654,10 +656,10 @@ void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, con
         m_services->mapCamera->centerAndJumpViewPortToCell(focusCell);
     }
     else if (wordtype == WORD_WINFLAGS) {
-        m_interface->setWinFlags(ToInt(value));
+        m_gameConditionChecker->setWinFlags(ToInt(value));
     }
     else if (wordtype == WORD_LOSEFLAGS) {
-        m_interface->setLoseFlags(ToInt(value));
+        m_gameConditionChecker->setLoseFlags(ToInt(value));
     }
 }
 
