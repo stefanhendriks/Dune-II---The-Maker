@@ -18,6 +18,8 @@
 #include "utils/Log.h"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
+#include "game/cEventEmitter.h"
+#include "game/cScreenShake.h"
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
@@ -110,6 +112,7 @@ void cAbstractStructure::serviceInit(sGameServices *services)
     m_settings = services->settings;
     m_interface = services->ctx->getGameInterface();
     m_eventEmitter = services->eventEmitter;
+    m_screenShake = services->screenShake;
     m_audioContext = services->ctx->getAudioContext();
     m_renderer = services->ctx->getSDLDrawer();
 }
@@ -271,7 +274,7 @@ void cAbstractStructure::die(int originId, eBuildType originType, int killingDam
     m_objects->getMap()->remove_id(id, MAPID_STRUCTURES);
 
     // screen shaking
-    m_interface->shakeScreen((iWidth * iHeight) * 20);
+    m_screenShake->shake((iWidth * iHeight) * 20);
 
     // eligible for cleanup
     dead = true;
@@ -289,7 +292,7 @@ void cAbstractStructure::die(int originId, eBuildType originType, int killingDam
             .damage = killingDamage
         }
     };
-    m_interface->onNotifyGameEvent(event);
+    m_eventEmitter->emit(event);
 }
 
 
@@ -499,7 +502,7 @@ void cAbstractStructure::decay(int hp)
             .entitySpecificType = getType()
         }
     };
-    m_interface->onNotifyGameEvent(event);
+    m_eventEmitter->emit(event);
 }
 
 
@@ -553,7 +556,7 @@ void cAbstractStructure::damage(int hp, int originId, eBuildType originType)
                 .damage = damage
             }
         };
-        m_interface->onNotifyGameEvent(event);
+        m_eventEmitter->emit(event);
     }
 }
 

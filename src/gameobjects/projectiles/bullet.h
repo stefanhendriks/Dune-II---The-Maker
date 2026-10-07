@@ -25,6 +25,8 @@ class cInfoContext;
 class cMapCamera;
 class cGameInterface;
 class cGameSettings;
+class cEventEmitter;
+class cScreenShake;
 class SDLDrawer;
 struct sGameServices;
 
@@ -132,5 +134,7 @@ private:
     cMapCamera *m_mapCamera = nullptr;
     cGameInterface *m_interface = nullptr;
     cGameSettings *m_settings = nullptr;
+    cEventEmitter *m_eventEmitter = nullptr;
+    cScreenShake *m_screenShake = nullptr;
     SDLDrawer* m_renderer = nullptr;
 };
