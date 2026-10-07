@@ -23,7 +23,7 @@
 struct s_DataCampaign;
 class cMouse;
 class cIni;
-class cGameInterface;
+class AudioContext;
 
 class cTellHouseState : public cGameState {
 public:
@@ -45,5 +45,5 @@ private:
     s_DataCampaign* m_dataCampaign = nullptr;
     cMouse* m_mouse = nullptr;
     cIni* m_cIni = nullptr;
-    cGameInterface* m_interface = nullptr;
+    AudioContext* m_audioContext = nullptr;
 };

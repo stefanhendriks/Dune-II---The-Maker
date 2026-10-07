@@ -16,6 +16,8 @@
 #include "bullet.h"
 #include "game/cGameSettings.h"
 #include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
+#include "game/cScreenShake.h"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
@@ -78,8 +80,10 @@ void cBullet::serviceInit(sGameServices *services)
     d2tm_assert(m_settings != nullptr);
     m_interface = services->ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
-    m_mapCamera = m_interface->getMapCamera();
+    m_mapCamera = services->mapCamera;
     d2tm_assert(m_mapCamera != nullptr);
+    m_eventEmitter = services->eventEmitter;
+    m_screenShake = services->screenShake;
     m_renderer = services->ctx->getSDLDrawer();
     d2tm_assert(m_renderer != nullptr);
 }
@@ -373,7 +377,7 @@ void cBullet::arrivedAtDestinationLogic()
     }
 
     if (iType == ROCKET_BIG) {
-        m_interface->shakeScreen(40);
+        m_screenShake->shake(40);
     }
 
     die();
@@ -537,7 +541,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
                         .entitySpecificType = groundUnitTakingDamage->iType
                     }
                 };
-                m_interface->onNotifyGameEvent(event);
+                m_eventEmitter->emit(event);
             }
         }
     }

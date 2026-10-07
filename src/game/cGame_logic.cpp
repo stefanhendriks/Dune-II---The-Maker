@@ -208,6 +208,7 @@ cGame::cGame()
     m_services->eventEmitter = m_eventEmitter.get();
     m_services->missionStatsCollector = m_missionStatsCollector.get();
     m_services->gameConditionChecker = m_gameConditionChecker.get();
+    m_services->screenShake = m_screenShake.get();
 
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());
