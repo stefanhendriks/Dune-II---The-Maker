@@ -49,16 +49,21 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
 
     const cSection &section = file->getSection("SETTINGS");
 
-    if (section.hasValue("ScreenWidth"))
+    if (section.hasValue("ScreenWidth")) {
         gameSettings->screenW = section.getInt("ScreenWidth");
-    if (section.hasValue("ScreenHeight"))
+    }
+    if (section.hasValue("ScreenHeight")) {
         gameSettings->screenH = section.getInt("ScreenHeight");
-    if (section.hasValue("CameraDragMoveSpeed"))
+    }
+    if (section.hasValue("CameraDragMoveSpeed")) {
         gameSettings->cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
-    if (section.hasValue("CameraBorderOrKeyMoveSpeed"))
+    }
+    if (section.hasValue("CameraBorderOrKeyMoveSpeed")) {
         gameSettings->cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
-    if (section.hasValue("FullScreen"))
+    }
+    if (section.hasValue("FullScreen")) {
         gameSettings->windowed = !section.getBoolean("FullScreen");
+    }
     if (section.hasValue("CameraEdgeMove")) {
         gameSettings->cameraEdgeMove = section.getBoolean("CameraEdgeMove");
     } else {
@@ -66,45 +71,62 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
         // with normal window interactions), on when fullscreen
         gameSettings->cameraEdgeMove = !gameSettings->windowed;
     }
-    if (section.hasValue("ScalingMode"))
+    if (section.hasValue("ScalingMode")) {
         gameSettings->scalingMode = section.getStringValue("ScalingMode") == "Letterbox"
             ? eScalingMode::LETTERBOX
             : eScalingMode::INTEGER_SCALE;
-    if (section.hasValue("AllowRepeatingReinforcements"))
+    }
+    if (section.hasValue("AllowRepeatingReinforcements")) {
         gameSettings->allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
-    if (section.hasValue("AllTurretsDownOnLowPower"))
+    }
+    if (section.hasValue("AllTurretsDownOnLowPower")) {
         gameSettings->turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
-    if (section.hasValue("RocketTurretsDownOnLowPower"))
+    }
+    if (section.hasValue("RocketTurretsDownOnLowPower")) {
         gameSettings->rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
-    if (section.hasValue("GameRules"))
+    }
+    if (section.hasValue("GameRules")) {
         gameSettings->gameFilename = section.getStringValue("GameRules");
-    if (section.hasValue("NoAI"))
+    }
+    if (section.hasValue("NoAI")) {
         gameSettings->disableAI = section.getBoolean("NoAI");
-    if (section.hasValue("Debug"))
+    }
+    if (section.hasValue("Debug")) {
         gameSettings->debugMode = section.getBoolean("Debug");
+    }
 
-    if (section.hasValue("playMusic"))
+    if (section.hasValue("playMusic")) {
         gameSettings->playMusic = section.getBoolean("playMusic");
-    if (section.hasValue("playSound"))
+    }
+    if (section.hasValue("playSound")) {
         gameSettings->playSound = section.getBoolean("playSound");
+    }
 
-    if (section.hasValue("drawUnitDebug"))
+    if (section.hasValue("drawUnitDebug")) {
         gameSettings->drawUnitDebug = section.getBoolean("drawUnitDebug");
-    if (section.hasValue("oneAi"))
+    }
+    if (section.hasValue("oneAi")) {
         gameSettings->oneAi = section.getBoolean("oneAi");
-    if (section.hasValue("disableWormAi"))
+    }
+    if (section.hasValue("disableWormAi")) {
         gameSettings->disableWormAi = section.getBoolean("disableWormAi");
+    }
 
-    if (section.hasValue("disableReinforcements"))
+    if (section.hasValue("disableReinforcements")) {
         gameSettings->disableReinforcements = section.getBoolean("disableReinforcements");
-    if (section.hasValue("noAiRest"))
+    }
+    if (section.hasValue("noAiRest")) {
         gameSettings->noAiRest = section.getBoolean("noAiRest");
-    if (section.hasValue("drawUsages"))
+    }
+    if (section.hasValue("drawUsages")) {
         gameSettings->drawUsages = section.getBoolean("drawUsages");
-    if (section.hasValue("pauseWhenLosingFocus"))
+    }
+    if (section.hasValue("pauseWhenLosingFocus")) {
         gameSettings->pauseWhenLosingFocus = section.getBoolean("pauseWhenLosingFocus");
-    if (section.hasValue("fogOfWarEnabled"))
+    }
+    if (section.hasValue("fogOfWarEnabled")) {
         gameSettings->fogOfWarEnabled = section.getBoolean("fogOfWarEnabled");
+    }
 
     return gameSettings;
 }
