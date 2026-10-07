@@ -24,6 +24,7 @@ class cReinforcements;
 class cGameInterface;
 class cGameSettings;
 class cIni;
+class cMouse;
 
 enum class MentatMode {
     Briefing,
@@ -52,6 +53,7 @@ private:
     s_DataCampaign* m_dataCampaign = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    cMouse* m_mouse = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cReinforcements* m_reinforcements = nullptr;
     cIni* m_cIni = nullptr;

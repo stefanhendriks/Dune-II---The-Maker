@@ -15,6 +15,7 @@
 
 #include "gamestates/cNewMapEditorState.h"
 #include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
@@ -36,6 +37,7 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services)
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_mouse(services->mouse),
     m_guiWindow(nullptr),
     m_previewMap(services->objects->getPreviewMaps())
 {
@@ -218,7 +220,7 @@ void cNewMapEditorState::thinkFast()
 void cNewMapEditorState::draw() const
 {
     m_guiWindow->draw();
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 void cNewMapEditorState::onNotifyMouseEvent(const s_MouseEvent &event)

@@ -44,6 +44,8 @@ class GameContext;
 class cGameInterface;
 class cGameObjectContext;
 class cMapCamera;
+class cMouse;
+class cRectangle;
 class cGameSettings;
 class cStructureUtils;
 struct sGameServices;
@@ -150,6 +152,8 @@ private:
     Graphics* m_gfxdata = nullptr;
     cMouseDrawer* m_mouseDrawer = nullptr;
     cGameInterface* m_gameInterface = nullptr;
+    cMouse* m_mouse = nullptr;
+    cRectangle* m_mapViewport = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cMapCamera* m_mapCamera = nullptr;
     cGameSettings* m_gameSettings = nullptr;

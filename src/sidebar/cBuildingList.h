@@ -27,6 +27,7 @@ class cItemBuilder;
 class cInfoContext;
 class cGameInterface;
 class cGameSettings;
+class cEventEmitter;
 struct sGameServices;
 
 /**
@@ -199,6 +200,7 @@ private:
     cInfoContext* m_info = nullptr;
     cGameInterface* m_gameInterface = nullptr;
     cGameSettings* m_settings = nullptr;
+    cEventEmitter* m_eventEmitter = nullptr;
 
     int getFreeSlot();
 

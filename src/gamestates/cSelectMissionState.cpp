@@ -23,6 +23,7 @@
 #include "gui/GuiWindow.h"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
+#include "controls/cMouse.h"
 
 #include "include/cAssert.h"
 
@@ -30,7 +31,8 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface())
+    m_interface(m_ctx->getGameInterface()),
+    m_mouse(services->mouse)
 {
     d2tm_assert(services != nullptr);
     int margin = m_settings->getScreenH() * 0.3;
@@ -106,7 +108,7 @@ void cSelectMissionState::draw() const
     gui_window->draw();
 
     // MOUSE
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 void cSelectMissionState::onNotifyMouseEvent(const s_MouseEvent &event)
