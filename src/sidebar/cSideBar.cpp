@@ -22,7 +22,8 @@
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "data/gfxaudio.h"
-#include "game/cGameInterface.h"
+#include "context/AudioContext.hpp"
+#include "game/cEventEmitter.h"
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
 
@@ -72,9 +73,10 @@ void cSideBar::think()
 
 void cSideBar::serviceInit(sGameServices* services)
 {
-    m_gameInterface = services->ctx->getGameInterface();
     m_drawManager = services->drawManager;
     m_settings = services->settings;
+    m_audioContext = services->ctx->getAudioContext();
+    m_eventEmitter = services->eventEmitter;
 }
 
 void cSideBar::drawMessageBarWithItemInfo(cBuildingListItem *item) const
@@ -190,7 +192,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
         if (list->isOverButton(event.coords.x, event.coords.y)) {
             // clicked on it. Set focus on this one
             setSelectedListId(eListTypeFromInt(i));
-            m_gameInterface->playSound(SOUND_BUTTON); // click sound
+            m_audioContext->playSound(SOUND_BUTTON); // click sound
             break;
         }
     }
@@ -311,7 +313,7 @@ void cSideBar::cancelBuildingListItem(cBuildingListItem *item)
                     .buildingListItem = item
                 }
             };
-            m_gameInterface->onNotifyGameEvent(event);
+            m_eventEmitter->emit(event);
             // else, only the number is decreased (used for queueing)
 
             cItemBuilder *itemBuilder = m_player->getItemBuilder();

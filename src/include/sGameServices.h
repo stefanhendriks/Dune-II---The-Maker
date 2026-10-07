@@ -28,6 +28,7 @@ class cRectangle;
 class cReinforcements;
 class cMouse;
 class cMissionStatsCollector;
+class cGameConditionChecker;
 
 struct sGameServices
 {
@@ -43,4 +44,5 @@ struct sGameServices
     cReinforcements *reinforcements = nullptr;
     cMouse *mouse = nullptr;
     cMissionStatsCollector *missionStatsCollector = nullptr;
+    cGameConditionChecker *gameConditionChecker = nullptr;
 };
