@@ -59,12 +59,13 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
         gameSettings->cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     if (section.hasValue("FullScreen"))
         gameSettings->windowed = !section.getBoolean("FullScreen");
-    if (section.hasValue("CameraEdgeMove"))
+    if (section.hasValue("CameraEdgeMove")) {
         gameSettings->cameraEdgeMove = section.getBoolean("CameraEdgeMove");
-    else
+    } else {
         // no explicit setting: default off when windowed (edge-scrolling fights
         // with normal window interactions), on when fullscreen
         gameSettings->cameraEdgeMove = !gameSettings->windowed;
+    }
     if (section.hasValue("ScalingMode"))
         gameSettings->scalingMode = section.getStringValue("ScalingMode") == "Letterbox"
             ? eScalingMode::LETTERBOX

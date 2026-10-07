@@ -2,7 +2,9 @@
 
 ## Brace style
 
-Always expand if/else/else-if bodies to multiple lines. Never compress to a one-liner, even for a single statement.
+Use braces for if/else/else-if bodies. The only one-liner allowed is a true
+single line — condition and statement together, no line break — and that's
+reserved for early returns/exits (guard clauses), not real logic.
 
 ```cpp
 // correct
@@ -12,8 +14,16 @@ if (condition) {
     statement;
 }
 
-// wrong
+// acceptable — early return/exit only, condition and statement on one line
+if (condition) return;
+if (!isValid) continue;
+
+// wrong — braces compressed onto one line
 if (condition) { statement; } else { statement; }
+
+// wrong — condition and statement split across two lines without braces
+if (condition)
+    statement;
 ```
 
 ## std::optional comparisons
