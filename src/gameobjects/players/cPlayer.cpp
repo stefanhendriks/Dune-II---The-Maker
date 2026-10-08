@@ -17,6 +17,7 @@
 
 #include "building/cItemBuilder.h"
 #include "game/cGameInterface.h"
+#include "game/cScreenFader.h"
 #include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
 #include "gameobjects/units/cReinforcements.h"
@@ -90,6 +91,8 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_screenFader = services->screenFader;
+    d2tm_assert(m_screenFader != nullptr);
     m_structureUtils = services->structureUtils;
     d2tm_assert(m_structureUtils != nullptr);
     m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
@@ -786,7 +789,7 @@ Color cPlayer::getPrimaryBuildingFadingColor() const
  */
 Color cPlayer::getSelectFadingColor() const
 {
-    return m_interface->getColorFadeSelected(255, 255, 255);
+    return m_screenFader->getColorFadeSelected(255, 255, 255);
 }
 
 eHouseBitFlag cPlayer::getHouseBitFlag()

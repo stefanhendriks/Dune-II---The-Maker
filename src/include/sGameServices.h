@@ -30,6 +30,7 @@ class cMouse;
 class cMissionStatsCollector;
 class cGameConditionChecker;
 class cScreenShake;
+class cScreenFader;
 
 struct sGameServices
 {
@@ -47,4 +48,5 @@ struct sGameServices
     cMissionStatsCollector *missionStatsCollector = nullptr;
     cGameConditionChecker *gameConditionChecker = nullptr;
     cScreenShake *screenShake = nullptr;
+    cScreenFader *screenFader = nullptr;
 };

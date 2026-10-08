@@ -35,6 +35,7 @@
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
 #include "game/cGameInterface.h"
+#include "game/cScreenFader.h"
 #include "controls/eKeyAction.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/map/cMapCamera.h"
@@ -71,6 +72,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     //fix others pointers
     m_interface = m_ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_screenFader = services->screenFader;
+    d2tm_assert(m_screenFader != nullptr);
     m_mapCamera = m_interface->getMapCamera();
     d2tm_assert(m_mapCamera != nullptr);
     m_reinforcements = services->reinforcements;
@@ -417,13 +420,13 @@ void cGamePlaying::drawCombatMouse() const
 {
     auto m_mouse = m_interface->getMouse();
     if (m_mouse->isBoxSelecting()) {
-        m_sdlDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(), m_interface->getColorFadeSelectedLimited(Color::White, 0.5f));
+        m_sdlDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(), m_screenFader->getColorFadeSelectedLimited(Color::White, 0.5f));
     }
 
     if (m_mouse->isMapScrolling()) {
         cPoint startPoint = m_mouse->getDragLineStartPoint();
         cPoint endPoint = m_mouse->getDragLineEndPoint();
-        m_sdlDrawer->renderLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y, m_interface->getColorFadeSelectedLimited(Color::White, 0.5f));
+        m_sdlDrawer->renderLine(startPoint.x, startPoint.y, endPoint.x, endPoint.y, m_screenFader->getColorFadeSelectedLimited(Color::White, 0.5f));
     }
     m_mouse->draw();
 
