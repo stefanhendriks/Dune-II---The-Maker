@@ -5,6 +5,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/cGameInterface.h"
+#include "game/cScreenFader.h"
 #include "game/cGameSettings.h"
 #include "game/cMissionStatsCollector.h"
 #include "game/cTimeManager.h"
@@ -20,11 +21,13 @@ cScoringState::cScoringState(sGameServices* services) :
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
-    m_mouse(services->mouse)
+    m_mouse(services->mouse),
+    m_screenFader(services->screenFader)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_screenFader != nullptr);
 
     m_stats = services->missionStatsCollector->snapshot(m_ctx->getTimeManager()->getElapsedSeconds());
 }
@@ -71,7 +74,7 @@ void cScoringState::draw() const
 
         std::string label = playerId == HUMAN ? "YOU" : "ENEMY";
         std::string playerName = std::format("{} - {}", label, cPlayer::getHouseNameForId(playerStats.house));
-        Color nameColor = m_interface->getColorFadeSelected(playerStats.minimapColor.r, playerStats.minimapColor.g, playerStats.minimapColor.b);
+        Color nameColor = m_screenFader->getColorFadeSelected(playerStats.minimapColor.r, playerStats.minimapColor.g, playerStats.minimapColor.b);
 
         m_textDrawer->drawTextCentered(playerName, y, nameColor);
         y += lineHeight;

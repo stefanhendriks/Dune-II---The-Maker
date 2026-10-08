@@ -28,6 +28,7 @@ class cInfoContext;
 class cGameInterface;
 class cGameSettings;
 class cEventEmitter;
+class cScreenFader;
 struct sGameServices;
 
 /**
@@ -201,6 +202,7 @@ private:
     cGameInterface* m_gameInterface = nullptr;
     cGameSettings* m_settings = nullptr;
     cEventEmitter* m_eventEmitter = nullptr;
+    cScreenFader* m_screenFader = nullptr;
 
     int getFreeSlot();
 

@@ -19,6 +19,7 @@
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
 #include "game/cEventEmitter.h"
+#include "game/cScreenFader.h"
 #include "include/sGameServices.h"
 #include "utils/common.h"
 #include "utils/Log.h"
@@ -452,11 +453,12 @@ void cBuildingList::serviceInit(sGameServices* services)
     m_gameInterface = services->ctx->getGameInterface();
     m_settings = services->settings;
     m_eventEmitter = services->eventEmitter;
+    m_screenFader = services->screenFader;
 }
 
 Color cBuildingList::getFlashingColor()
 {
-    return m_gameInterface->getColorFadeSelected(255, 209, 64);
+    return m_screenFader->getColorFadeSelected(255, 209, 64);
 }
 
 void cBuildingList::think()

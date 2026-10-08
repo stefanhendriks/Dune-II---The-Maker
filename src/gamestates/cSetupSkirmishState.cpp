@@ -36,6 +36,7 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"
+#include "game/cScreenFader.h"
 #include "include/sDataCampaign.h"
 #include "gameobjects/units/cUnits.h"
 #include "include/Texture.hpp"
@@ -60,6 +61,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_screenFader(services->screenFader),
     m_objects(services->objects),
     m_services(services),
     m_dataCampaign(dataCompaign),
@@ -69,6 +71,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_screenFader != nullptr);
     d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
@@ -507,8 +510,8 @@ void cSetupSkirmishState::drawCredits(const s_SkirmishPlayer &sSkirmishPlayer, c
 Color cSetupSkirmishState::getTextColorForRect(const s_SkirmishPlayer &sSkirmishPlayer, const cRectangle &rect) const
 {
     if (rect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-        Color colorSelectedRedFade = m_interface->getColorFadeSelected(255, 0, 0);
-        Color colorDisabledFade = m_interface->getColorFadeSelected(128, 128, 128);
+        Color colorSelectedRedFade = m_screenFader->getColorFadeSelected(255, 0, 0);
+        Color colorDisabledFade = m_screenFader->getColorFadeSelected(128, 128, 128);
         return sSkirmishPlayer.bPlaying ? colorSelectedRedFade : colorDisabledFade;
     }
 

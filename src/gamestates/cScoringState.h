@@ -9,6 +9,7 @@ class cGameSettings;
 class cGameInterface;
 class cTextDrawer;
 class cMouse;
+class cScreenFader;
 
 class cScoringState : public cGameState {
 
@@ -31,5 +32,6 @@ private:
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cMouse* m_mouse = nullptr;
+    cScreenFader* m_screenFader = nullptr;
     MissionStats m_stats;
 };

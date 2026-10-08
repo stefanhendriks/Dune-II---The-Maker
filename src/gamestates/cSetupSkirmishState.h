@@ -36,6 +36,7 @@ class SDLDrawer;
 class cTextDrawer;
 class cGameSettings;
 class cGameInterface;
+class cScreenFader;
 class GuiButton;
 
 struct s_DataCampaign;
@@ -67,6 +68,7 @@ private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    cScreenFader* m_screenFader = nullptr;
     cGameObjectContext* m_objects = nullptr;
     sGameServices* m_services = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
