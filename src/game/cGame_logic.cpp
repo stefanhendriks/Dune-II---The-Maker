@@ -701,9 +701,9 @@ bool cGame::setupGame()
     m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos(m_infoContext.get(), m_gameSettings.get()));
     cPlayer *humanPlayer = m_gameObjectsContext->getPlayer(HUMAN);
 
+    m_services->mapViewport = m_mapViewport;
     m_drawManager = new cDrawManager(ctx.get(), humanPlayer, m_services.get());
     m_services->drawManager = m_drawManager;
-    m_services->mapViewport = m_mapViewport;
 
     setupPlayers();
 
