@@ -43,6 +43,7 @@ class cGameSettings;
 class cInfoContext;
 class cGameObjectContext;
 class cGameInterface;
+class cScreenShake;
 class cLog;
 class cPathFinder;
 class SDLDrawer;
@@ -485,6 +486,7 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
+    cScreenShake *m_screenShake = nullptr;
     cMapCamera *m_mapCamera = nullptr;
     cRectangle *m_mapViewport = nullptr;
     cLog *m_log = nullptr;
