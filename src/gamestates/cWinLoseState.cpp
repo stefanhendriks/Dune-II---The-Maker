@@ -20,6 +20,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
@@ -35,6 +36,8 @@ cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) :
     auto ctx = services->ctx;
     m_interface = ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_mouse = services->mouse;
+    d2tm_assert(m_mouse != nullptr);
     auto gfxinter = ctx->getGraphicsContext()->gfxinter;
     d2tm_assert(gfxinter != nullptr);
 
@@ -65,7 +68,7 @@ void cWinLoseState::draw() const
     int posH = (m_settings->getScreenH()-m_tex->h)/2;
     m_sdlDrawer->renderSprite(m_tex,posW, posH);
 
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 void cWinLoseState::onNotifyMouseEvent(const s_MouseEvent &event)

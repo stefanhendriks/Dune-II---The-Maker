@@ -60,6 +60,7 @@ cEditorState::cEditorState(sGameServices* services)
     m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_mouse(services->mouse),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_previewMaps(services->objects->getPreviewMaps())
 {
@@ -67,6 +68,7 @@ cEditorState::cEditorState(sGameServices* services)
     d2tm_assert(m_gfxeditor != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_mouse != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
 
     m_undoRedo = std::make_unique<cEditorUndoRedoHistory>();
@@ -419,7 +421,7 @@ void cEditorState::draw() const
         drawStartCells();
     m_selectBar->draw();
     m_currentBar->draw();
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -729,7 +731,7 @@ void cEditorState::drawHoveredCellHighlight() const
         return;
     }
 
-    cMouse *mouse = m_interface->getMouse();
+    cMouse *mouse = m_mouse;
     if (mouse == nullptr) {
         return;
     }
@@ -797,7 +799,7 @@ void cEditorState::drawPastePreviewGhost() const
         return;
     }
 
-    cMouse *mouse = m_interface->getMouse();
+    cMouse *mouse = m_mouse;
     int anchorTileX = 0;
     int anchorTileY = 0;
     if (!tryGetEditableTileFromMouseCoords(mouse->getMouseCoords(), anchorTileX, anchorTileY)) {
@@ -938,7 +940,7 @@ void cEditorState::pasteClipboardAtMouseCursor()
         return;
     }
 
-    cMouse *mouse = m_interface->getMouse();
+    cMouse *mouse = m_mouse;
     int anchorTileX = 0;
     int anchorTileY = 0;
     if (!tryGetEditableTileFromMouseCoords(mouse->getMouseCoords(), anchorTileX, anchorTileY)) {

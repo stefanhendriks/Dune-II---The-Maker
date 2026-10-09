@@ -37,11 +37,13 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     cGameState(services),
     m_settings(services->settings),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
-    m_interface(m_ctx->getGameInterface())
+    m_interface(m_ctx->getGameInterface()),
+    m_mouse(services->mouse)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_mouse != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
 
@@ -262,12 +264,11 @@ void cMainMenuState::draw() const
     m_textDrawer->drawTextBottomRight(D2TM_BUILD_DATETIME, 20);
 
     if (m_settings->isDebugMode()) {
-        auto m_mouse = m_interface->getMouse();
         m_textDrawer->drawText(0, 0, std::format("{}, {}", m_mouse->getX(), m_mouse->getY()).c_str());
     }
 
     // MOUSE
-    m_interface->drawCursor();
+    m_mouse->draw();
 
 }
 
