@@ -38,6 +38,8 @@ class Graphics;
 class SDLDrawer;
 class cGameObjectContext;
 class cInfoContext;
+class cMouse;
+class AudioContext;
 struct sGameServices;
 
 // the BuildingListItemState
@@ -101,6 +103,8 @@ private:
     GameContext* m_ctx = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
+    cMouse* m_mouse = nullptr;
+    AudioContext* m_audioContext = nullptr;
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
     Texture *m_mipMapTex;
