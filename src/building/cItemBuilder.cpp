@@ -18,6 +18,8 @@
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
 #include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
+#include "context/AudioContext.hpp"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/structures/cStructures.h"
@@ -62,6 +64,8 @@ cItemBuilder::~cItemBuilder()
 void cItemBuilder::serviceInit(sGameServices* services)
 {
     m_services = services;
+    m_eventEmitter = services->eventEmitter;
+    m_audioContext = services->ctx->getAudioContext();
 }
 
 /**
@@ -234,7 +238,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
         // play voice when placeIt is false`
         if (!item->shouldPlaceIt()) {
             if (m_player->isHuman()) {
-                m_services->ctx->getGameInterface()->playVoice(SOUND_VOICE_01_ATR, m_player->getId()); // "Construction Complete"
+                m_audioContext->playVoice(SOUND_VOICE_01_ATR, m_player->getHouse()); // "Construction Complete"
             }
             item->setPlaceIt(true);
 
@@ -247,7 +251,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     .buildingListItem = item // mandatory for this event!
                 }
             };
-            m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
+            m_eventEmitter->emit(event);
         }
     }
     else {
@@ -289,7 +293,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     .entitySpecificType = buildId,
                 }
             };
-            m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
+            m_eventEmitter->emit(event);
         }
         else if (eBuildType == SPECIAL) {
             m_buildingListUpdater->onBuildItemCompleted(item);
@@ -359,7 +363,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                         .entitySpecificType = buildId,
                     }
                 };
-                m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
+                m_eventEmitter->emit(event);
             }
             else if (special.providesType == BULLET) {
                 // Case: Deathhand, it is finished, and the player should select a target first.
@@ -377,7 +381,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                                 .buildingListItem = item
                             }
                         };
-                        m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
+                        m_eventEmitter->emit(event);
                     }
                 }
                 else {
@@ -400,7 +404,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     .buildingListItem = item
                 }
             };
-            m_services->ctx->getGameInterface()->onNotifyGameEvent(event);
+            m_eventEmitter->emit(event);
 
             // these destroy the data..
             m_buildingListUpdater->onUpgradeCompleted(item);

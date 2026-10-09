@@ -17,8 +17,8 @@
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "cMapCamera.h"
 #include "cMapEditor.h"
-#include "game/cGameInterface.h"
 #include "game/cScreenShake.h"
+#include "game/cEventEmitter.h"
 #include "utils/Log.h"
 #include "data/gfxdata.h"
 #include "gameobjects/particles/cParticle.h"
@@ -65,7 +65,6 @@ cMap::cMap()
     m_settings = nullptr;
     m_infos = nullptr;
     m_objects = nullptr;
-    m_interface = nullptr;
     m_log = nullptr;
 }
 
@@ -103,14 +102,14 @@ void cMap::serviceInit(sGameServices* services)
     d2tm_assert(m_infos != nullptr);
     m_objects = services->objects;
     d2tm_assert(m_objects != nullptr);
-    m_interface = m_ctx->getGameInterface();
-    d2tm_assert(m_interface != nullptr);
     m_mapCamera = services->mapCamera;
     d2tm_assert(m_mapCamera != nullptr);
     m_mapViewport = services->mapViewport;
     d2tm_assert(m_mapViewport != nullptr);
     m_screenShake = services->screenShake;
     d2tm_assert(m_screenShake != nullptr);
+    m_eventEmitter = services->eventEmitter;
+    d2tm_assert(m_eventEmitter != nullptr);
     m_pathFinder->serviceInit(services);
 }
 
@@ -484,7 +483,7 @@ void cMap::thinkAboutRespawningWorms()
                     .bOnStart = true
                 }
             };
-            m_interface->onNotifyGameEvent(event);
+            m_eventEmitter->emit(event);
             break;
         }
     }
@@ -625,7 +624,7 @@ void cMap::clearShroud(int c, int size, int playerId)
                             .atCell = cl
                         }
                     };
-                    m_interface->onNotifyGameEvent(event);
+                    m_eventEmitter->emit(event);
                 }
 
                 int unitId = getCellIdUnitLayer(cl);
@@ -643,7 +642,7 @@ void cMap::clearShroud(int c, int size, int playerId)
                             }
                         };
 
-                        m_interface->onNotifyGameEvent(event);
+                        m_eventEmitter->emit(event);
                     }
                 }
             } // make visible
@@ -974,7 +973,7 @@ void cMap::createCell(int cell, int terrainType, int tile)
                 .atCell = cell
             }
         };
-        m_interface->onNotifyGameEvent(event);
+        m_eventEmitter->emit(event);
     }
 }
 
@@ -1421,7 +1420,7 @@ void cMap::detonateSpiceBloom(int cell)
             .atCell = cell,
         }
     };
-    m_interface->onNotifyGameEvent(event);
+    m_eventEmitter->emit(event);
 
 }
 
