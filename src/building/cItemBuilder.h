@@ -28,6 +28,8 @@
 
 class cPlayer;
 class cBuildingListUpdater;
+class cEventEmitter;
+class AudioContext;
 struct sGameServices;
 
 class cItemBuilder : cInputObserver {
@@ -75,6 +77,8 @@ private:
     cBuildingListItem *m_items[MAX_ITEMS];
 
     sGameServices* m_services = nullptr;
+    cEventEmitter* m_eventEmitter = nullptr;
+    AudioContext* m_audioContext = nullptr;
     cPlayer *m_player;  // the player context for this builder
     cBuildingListUpdater *m_buildingListUpdater;
 
