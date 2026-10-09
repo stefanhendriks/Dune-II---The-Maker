@@ -314,6 +314,7 @@ void cGame::init()
 void cGame::missionInit()
 {
     m_mapCamera->resetZoom();
+    m_mapCamera->resetViewportBookmarks();
 
     m_gameConditionChecker->missionInit();
 
