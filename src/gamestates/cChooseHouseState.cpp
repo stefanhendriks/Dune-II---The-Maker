@@ -25,17 +25,20 @@
 #include "context/GraphicsContext.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 #include "include/cAssert.h"
 
 cChooseHouseState::cChooseHouseState(sGameServices* services) :
     cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
-    m_interface(m_ctx->getGameInterface())
+    m_interface(m_ctx->getGameInterface()),
+    m_mouse(services->mouse)
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_mouse != nullptr);
     auto settings =services->settings;
     d2tm_assert(settings != nullptr);
 
@@ -106,7 +109,7 @@ void cChooseHouseState::draw() const
     m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " Back");
 
     // MOUSE
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 eGameStateType cChooseHouseState::getType()

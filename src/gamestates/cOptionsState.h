@@ -28,6 +28,7 @@ class GameContext;
 class cTextDrawer;
 class GuiWindow;
 class cGameInterface;
+class cMouse;
 class cGameSettings;
 
 class cOptionsState : public cGameState {
@@ -50,6 +51,7 @@ private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    cMouse* m_mouse = nullptr;
 
     int m_prevState;
 

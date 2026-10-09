@@ -25,6 +25,7 @@
 class Texture;
 class cTextDrawer;
 class cGameInterface;
+class cMouse;
 class GuiButton;
 class GuiWindow;
 
@@ -44,7 +45,8 @@ public:
 private:
     cGameSettings * m_settings = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
-    cGameInterface* m_interface = nullptr;    
+    cGameInterface* m_interface = nullptr;
+    cMouse* m_mouse = nullptr;
 
     int logoX;
     int logoY;

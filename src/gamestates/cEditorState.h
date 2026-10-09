@@ -35,6 +35,7 @@ class GuiBar;
 class GuiButtonGroup;
 class cTextDrawer;
 class cGameInterface;
+class cMouse;
 class cEditorUndoRedoHistory;
 class cEditorCam;
 
@@ -58,6 +59,7 @@ private:
     Graphics *m_gfxeditor = nullptr;
     cGameSettings *m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    cMouse* m_mouse = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
     cPreviewMaps* m_previewMaps = nullptr;
     std::string m_mapName, m_mapAuthor, m_mapDescription;

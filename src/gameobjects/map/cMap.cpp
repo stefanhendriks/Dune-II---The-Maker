@@ -18,6 +18,7 @@
 #include "cMapCamera.h"
 #include "cMapEditor.h"
 #include "game/cGameInterface.h"
+#include "game/cScreenShake.h"
 #include "utils/Log.h"
 #include "data/gfxdata.h"
 #include "gameobjects/particles/cParticle.h"
@@ -108,6 +109,8 @@ void cMap::serviceInit(sGameServices* services)
     d2tm_assert(m_mapCamera != nullptr);
     m_mapViewport = services->mapViewport;
     d2tm_assert(m_mapViewport != nullptr);
+    m_screenShake = services->screenShake;
+    d2tm_assert(m_screenShake != nullptr);
     m_pathFinder->serviceInit(services);
 }
 
@@ -1409,7 +1412,7 @@ void cMap::detonateSpiceBloom(int cell)
     mapEditor.createCell(cell, TERRAIN_SAND, 0);
     int size = 75 + (RNG::rnd(100));
     mapEditor.createRandomField(cell, TERRAIN_SPICE, size);
-    m_interface->shakeScreen(20);
+    m_screenShake->shake(20);
 
     s_GameEvent event {
         .eventType = eGameEventType::GAME_EVENT_SPICE_BLOOM_BLEW,
