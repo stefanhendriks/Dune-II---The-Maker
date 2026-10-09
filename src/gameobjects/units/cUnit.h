@@ -39,6 +39,7 @@ class cGameSettings;
 class cInfoContext;
 class cGameObjectContext;
 class cGameInterface;
+class cScreenShake;
 class cMapCamera;
 class cMap;
 class cPathFinder;
@@ -506,6 +507,7 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
+    cScreenShake *m_screenShake = nullptr;
     cMapCamera* m_mapCamera = nullptr;
     cMap* m_map = nullptr;
     cPathFinder *m_pathFinder = nullptr;

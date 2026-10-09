@@ -27,6 +27,7 @@
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
 #include "game/cGameInterface.h"
+#include "controls/cMouse.h"
 #include "game/cGameSettings.h"
 
 #include "include/cAssert.h"
@@ -36,12 +37,14 @@ cOptionsState::cOptionsState(sGameServices* services, int prevState)
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_mouse(services->mouse),
     m_prevState(prevState),
     m_guiWindow(nullptr)
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_mouse != nullptr);
 
     refresh();
     m_backgroundTexture = m_interface->getScreenTexture();
@@ -311,7 +314,7 @@ void cOptionsState::draw() const
     m_guiWindow->draw();
 
     // MOUSE
-    m_interface->drawCursor();
+    m_mouse->draw();
 }
 
 void cOptionsState::onNotifyMouseEvent(const s_MouseEvent &event)
