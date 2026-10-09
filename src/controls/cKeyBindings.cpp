@@ -45,6 +45,18 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::CENTER_ON_HOME,      {SDL_SCANCODE_H});
     bind(eKeyAction::CENTER_ON_STRUCTURE, {SDL_SCANCODE_C});
     bind(eKeyAction::ZOOM_RESET,          {SDL_SCANCODE_Z});
+    // F4/F5 already carry Ctrl/Shift-modified debug actions (clear shroud, destroy/damage at cursor),
+    // so bookmarks 4 and 5 use F6/F7 instead to avoid any clash while in debug mode.
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_1, {SDL_SCANCODE_F1}, true, false, false);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_2, {SDL_SCANCODE_F2}, true, false, false);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_3, {SDL_SCANCODE_F3}, true, false, false);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_4, {SDL_SCANCODE_F6}, true, false, false);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_5, {SDL_SCANCODE_F7}, true, false, false);
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_1, {SDL_SCANCODE_F1}, false, false, true);
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_2, {SDL_SCANCODE_F2}, false, false, true);
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_3, {SDL_SCANCODE_F3}, false, false, true);
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_4, {SDL_SCANCODE_F6}, false, false, true);
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_5, {SDL_SCANCODE_F7}, false, false, true);
     bind(eKeyAction::TOGGLE_FPS,          {SDL_SCANCODE_F});
     bind(eKeyAction::TOGGLE_TIME_DISPLAY, {SDL_SCANCODE_BACKSLASH});
     bind(eKeyAction::OPEN_MENU,           {SDL_SCANCODE_ESCAPE});
@@ -145,6 +157,16 @@ const std::vector<std::pair<std::string, eKeyAction>>& cKeyBindings::getActionTa
         {"CENTER_ON_HOME",            eKeyAction::CENTER_ON_HOME},
         {"CENTER_ON_STRUCTURE",       eKeyAction::CENTER_ON_STRUCTURE},
         {"ZOOM_RESET",                eKeyAction::ZOOM_RESET},
+        {"SAVE_VIEWPORT_BOOKMARK_1",  eKeyAction::SAVE_VIEWPORT_BOOKMARK_1},
+        {"SAVE_VIEWPORT_BOOKMARK_2",  eKeyAction::SAVE_VIEWPORT_BOOKMARK_2},
+        {"SAVE_VIEWPORT_BOOKMARK_3",  eKeyAction::SAVE_VIEWPORT_BOOKMARK_3},
+        {"SAVE_VIEWPORT_BOOKMARK_4",  eKeyAction::SAVE_VIEWPORT_BOOKMARK_4},
+        {"SAVE_VIEWPORT_BOOKMARK_5",  eKeyAction::SAVE_VIEWPORT_BOOKMARK_5},
+        {"JUMP_TO_VIEWPORT_BOOKMARK_1", eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_1},
+        {"JUMP_TO_VIEWPORT_BOOKMARK_2", eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_2},
+        {"JUMP_TO_VIEWPORT_BOOKMARK_3", eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_3},
+        {"JUMP_TO_VIEWPORT_BOOKMARK_4", eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_4},
+        {"JUMP_TO_VIEWPORT_BOOKMARK_5", eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_5},
         {"TOGGLE_FPS",                eKeyAction::TOGGLE_FPS},
         {"TOGGLE_TIME_DISPLAY",       eKeyAction::TOGGLE_TIME_DISPLAY},
         {"OPEN_MENU",                 eKeyAction::OPEN_MENU},
