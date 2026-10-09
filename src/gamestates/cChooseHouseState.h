@@ -24,6 +24,7 @@ struct SDL_Surface;
 class Texture;
 class GameContext;
 class cGameInterface;
+class cMouse;
 class cTextDrawer;
 class Graphics;
 
@@ -44,6 +45,7 @@ private:
     cTextDrawer* m_textDrawer = nullptr;
     Graphics *m_gfxinter = nullptr;
     cGameInterface* m_interface = nullptr;
+    cMouse* m_mouse = nullptr;
     cRectangle *backButtonRect;
 
     Texture *bmp_Dune;

@@ -40,6 +40,7 @@
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
+#include "game/cScreenShake.h"
 #include "gameobjects/map/cMap.h"
 #include <cmath>
 
@@ -162,6 +163,8 @@ void cUnit::serviceInit(sGameServices* services)
     d2tm_assert(m_interface != nullptr);
     m_mapCamera = m_interface->getMapCamera();
     d2tm_assert(m_mapCamera != nullptr);
+    m_screenShake = services->screenShake;
+    d2tm_assert(m_screenShake != nullptr);
     m_map = m_objects->getMap();
     d2tm_assert(m_map != nullptr);
     m_pathFinder = m_map->getPathFinder();
@@ -337,7 +340,7 @@ void cUnit::createExplosionParticle()
         }
 
         if (iType == HARVESTER) {
-            m_interface->shakeScreen(25);
+            m_screenShake->shake(25);
             mapEditor.createRandomField(position.iCell, TERRAIN_SPICE, ((iCredits + 1) / 7));
         }
 
