@@ -111,6 +111,26 @@ int cKeyboardEvent::getAddToSelGroupNumber() const
     return 0;
 }
 
+int cKeyboardEvent::getSaveViewportBookmarkNumber() const
+{
+    if (isAction(eKeyAction::SAVE_VIEWPORT_BOOKMARK_1)) return 1;
+    if (isAction(eKeyAction::SAVE_VIEWPORT_BOOKMARK_2)) return 2;
+    if (isAction(eKeyAction::SAVE_VIEWPORT_BOOKMARK_3)) return 3;
+    if (isAction(eKeyAction::SAVE_VIEWPORT_BOOKMARK_4)) return 4;
+    if (isAction(eKeyAction::SAVE_VIEWPORT_BOOKMARK_5)) return 5;
+    return 0;
+}
+
+int cKeyboardEvent::getJumpToViewportBookmarkNumber() const
+{
+    if (isAction(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_1)) return 1;
+    if (isAction(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_2)) return 2;
+    if (isAction(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_3)) return 3;
+    if (isAction(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_4)) return 4;
+    if (isAction(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_5)) return 5;
+    return 0;
+}
+
 bool cKeyboardEvent::hasKey(SDL_Scancode scanCode) const
 {
     if (scanCode < 0 || scanCode >= SDL_SCANCODE_COUNT) return false;
