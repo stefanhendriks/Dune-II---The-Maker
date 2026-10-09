@@ -64,6 +64,16 @@ public:
      */
     int getAddToSelGroupNumber() const;
 
+    /**
+     * Returns the bookmark number (1–5) if a save-viewport-bookmark key is pressed, 0 otherwise.
+     */
+    int getSaveViewportBookmarkNumber() const;
+
+    /**
+     * Returns the bookmark number (1–5) if a jump-to-viewport-bookmark key is pressed, 0 otherwise.
+     */
+    int getJumpToViewportBookmarkNumber() const;
+
     // Raw key checks — kept public during migration to isAction(); will be removed once all callers are converted.
     bool hasKey(SDL_Scancode scanCode) const;
 

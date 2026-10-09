@@ -27,6 +27,8 @@
 | Arrow keys (hold) | Scroll map |
 | T | Track selected units (press again or scroll map to stop) |
 | F (hold) | Show FPS counter |
+| CTRL + F1 / F2 / F3 / F6 / F7 | Save current viewport position/zoom to bookmark 1–5 |
+| SHIFT + F1 / F2 / F3 / F6 / F7 | Jump to viewport bookmark 1–5 (no-op if that bookmark was never saved) |
 
 ---
 
