@@ -41,6 +41,7 @@
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
 #include "game/cScreenShake.h"
+#include "game/cEventEmitter.h"
 #include "gameobjects/map/cMap.h"
 #include <cmath>
 
@@ -161,8 +162,10 @@ void cUnit::serviceInit(sGameServices* services)
     d2tm_assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
-    m_mapCamera = m_interface->getMapCamera();
+    m_mapCamera = services->mapCamera;
     d2tm_assert(m_mapCamera != nullptr);
+    m_eventEmitter = services->eventEmitter;
+    d2tm_assert(m_eventEmitter != nullptr);
     m_screenShake = services->screenShake;
     d2tm_assert(m_screenShake != nullptr);
     m_map = m_objects->getMap();
@@ -274,7 +277,7 @@ void cUnit::die(bool bBlowUp, bool bSquish, int originId, eBuildType originType,
             .damage = killingDamage
         }
     };
-    m_interface->onNotifyGameEvent(event);
+    m_eventEmitter->emit(event);
 
     init(iID);    // re-init
 
@@ -1487,7 +1490,7 @@ void cUnit::thinkFast_move_airUnit()
                             .isReinforcement = isReinforcement
                         }
                     };
-                    m_interface->onNotifyGameEvent(event);
+                    m_eventEmitter->emit(event);
                 }
 
                 // now make sure this carry-all will not be drawn as having a unit:
@@ -2441,7 +2444,7 @@ void cUnit::thinkFast_move()
                                 .isReinforce = isReinforcement
                             }
                         };
-                        m_interface->onNotifyGameEvent(event);
+                        m_eventEmitter->emit(event);
 
                         // stop trying - forget about path stuff
                         setGoalCell(position.iCell);
@@ -3372,7 +3375,7 @@ void cUnit::takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDeals
                     .damage = damage
                 }
             };
-            m_interface->onNotifyGameEvent(event);
+            m_eventEmitter->emit(event);
         }
     }
 }
