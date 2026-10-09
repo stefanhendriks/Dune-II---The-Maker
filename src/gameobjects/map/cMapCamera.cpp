@@ -214,6 +214,33 @@ void cMapCamera::setViewportPosition(int x, int y)
     keepViewportWithinReasonableBounds();
 }
 
+void cMapCamera::saveViewportBookmark(int bookmarkNumber)
+{
+    if (bookmarkNumber < 1 || bookmarkNumber > MaxViewportBookmarks) return;
+
+    sViewportBookmark &bookmark = m_viewportBookmarks[bookmarkNumber - 1];
+    bookmark.isSet = true;
+    bookmark.x = m_viewportStartX;
+    bookmark.y = m_viewportStartY;
+    bookmark.zoomLevel = m_zoomLevel;
+}
+
+void cMapCamera::jumpToViewportBookmark(int bookmarkNumber)
+{
+    if (bookmarkNumber < 1 || bookmarkNumber > MaxViewportBookmarks) return;
+
+    const sViewportBookmark &bookmark = m_viewportBookmarks[bookmarkNumber - 1];
+    if (!bookmark.isSet) return;
+
+    setZoomLevel(bookmark.zoomLevel);
+    setViewportPosition(static_cast<int>(bookmark.x), static_cast<int>(bookmark.y));
+}
+
+void cMapCamera::resetViewportBookmarks()
+{
+    m_viewportBookmarks.fill(sViewportBookmark{});
+}
+
 int cMapCamera::getCellFromAbsolutePosition(int x, int y)
 {
     return m_mapGeometry->getCellWithMapDimensions((x / 32), (y / 32));
@@ -401,6 +428,16 @@ void cMapCamera::onKeyPressed(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::SCROLL_DOWN)) {
         setMoveY(0.0f, m_moveSpeedBorderOrKeys);
         m_keyPressedDown = false;
+    }
+
+    int saveBookmarkNumber = event.getSaveViewportBookmarkNumber();
+    if (saveBookmarkNumber > 0) {
+        saveViewportBookmark(saveBookmarkNumber);
+    }
+
+    int jumpBookmarkNumber = event.getJumpToViewportBookmarkNumber();
+    if (jumpBookmarkNumber > 0) {
+        jumpToViewportBookmark(jumpBookmarkNumber);
     }
 }
 

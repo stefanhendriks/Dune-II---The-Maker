@@ -30,6 +30,7 @@
 
 #include "observers/cInputObserver.h"
 #include "utils/cRectangle.h"
+#include <array>
 #include <cmath>
 
 class cMap;
@@ -155,6 +156,24 @@ public:
 
     void centerAndJumpViewPortToCell(int cell);
 
+    static constexpr int MaxViewportBookmarks = 5;
+
+    /**
+     * Saves the current viewport position and zoom level into the given bookmark slot (1-5).
+     */
+    void saveViewportBookmark(int bookmarkNumber);
+
+    /**
+     * Jumps to the viewport position and zoom level stored in the given bookmark slot (1-5).
+     * Does nothing if that slot has never been saved.
+     */
+    void jumpToViewportBookmark(int bookmarkNumber);
+
+    /**
+     * Clears all viewport bookmarks. Called when a new mission/skirmish starts.
+     */
+    void resetViewportBookmarks();
+
     void trackToAbsPosition(float absX, float absY);
 
     float getZoomedTileWidth() const {
@@ -254,4 +273,13 @@ private:
 
     void onKeyHold(const cKeyboardEvent &event);
     void onKeyPressed(const cKeyboardEvent &event);
+
+    struct sViewportBookmark {
+        bool isSet = false;
+        float x = 0.0f;
+        float y = 0.0f;
+        float zoomLevel = 1.0f;
+    };
+
+    std::array<sViewportBookmark, MaxViewportBookmarks> m_viewportBookmarks;
 };
