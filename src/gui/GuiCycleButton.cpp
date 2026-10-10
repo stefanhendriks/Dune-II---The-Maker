@@ -23,16 +23,42 @@ GuiCycleButton::GuiCycleButton(SDLDrawer* drawer,const cRectangle& rect, const s
     d2tm_assert(drawer != nullptr);
 }
 
+void GuiCycleButton::setEnabled(bool enabled)
+{
+    m_enabled = enabled;
+}
+
+bool GuiCycleButton::isEnabled() const
+{
+    return m_enabled;
+}
+
+void GuiCycleButton::setOnLeftMouseButtonClickedAction(std::function<void()> action)
+{
+    m_onLeftMouseButtonClickedAction = std::move(action);
+}
+
+void GuiCycleButton::setOnRightMouseButtonClickedAction(std::function<void()> action)
+{
+    m_onRightMouseButtonClickedAction = std::move(action);
+}
+
 void GuiCycleButton::onNotifyMouseEvent(const s_MouseEvent& event) 
 {
-    if (!m_rect.isPointWithin(event.coords.x, event.coords.y)) {
+    if (!m_enabled || !m_rect.isPointWithin(event.coords.x, event.coords.y)) {
         return;
     }
     if (event.eventType == MOUSE_LEFT_BUTTON_CLICKED) {
         nextValue();
+        if (m_onLeftMouseButtonClickedAction) {
+            m_onLeftMouseButtonClickedAction();
+        }
     }
     else if (event.eventType == MOUSE_RIGHT_BUTTON_CLICKED) {
         previousValue();
+        if (m_onRightMouseButtonClickedAction) {
+            m_onRightMouseButtonClickedAction();
+        }
     }
 }
 
@@ -42,14 +68,11 @@ void GuiCycleButton::onNotifyKeyboardEvent(const cKeyboardEvent& )
 
 void GuiCycleButton::draw() const
 {
-    // 1. Dessiner le fond/bordure via GuiObject
     drawRectFillBorder(m_theme);
 
-    // 2. Dessiner le texte de la valeur actuelle
     if (m_textDrawer && !m_values.empty()) {
-        std::string label = std::to_string(m_values[m_currentIndex]);
-        // Utilise tes fonctions de dessin habituelles
-        m_textDrawer->drawText(m_rect.getX()+5, m_rect.getY()+3, m_theme.textColor, label);
+        std::string label = m_displayText.empty() ? std::to_string(m_values[m_currentIndex]) : m_displayText;
+        m_textDrawer->drawText(m_rect.getX() + 5, m_rect.getY() + 3, m_theme.textColor, label);
     }
 }
 
@@ -58,6 +81,7 @@ void GuiCycleButton::nextValue()
 {
     if (m_values.empty()) return;
     m_currentIndex = (m_currentIndex + 1) % m_values.size();
+    m_displayText = std::to_string(m_values[m_currentIndex]);
     if (m_onChanged) m_onChanged(m_values[m_currentIndex]);
 }
 
@@ -65,5 +89,6 @@ void GuiCycleButton::previousValue()
 {
     if (m_values.empty()) return;
     m_currentIndex = (m_currentIndex == 0) ? m_values.size() - 1 : m_currentIndex - 1;
+    m_displayText = std::to_string(m_values[m_currentIndex]);
     if (m_onChanged) m_onChanged(m_values[m_currentIndex]);
 }
