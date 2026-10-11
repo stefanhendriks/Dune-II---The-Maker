@@ -840,6 +840,17 @@ void cGame::setState(int newState)
 
         cPlayer *humanPlayer = m_gameObjectsContext->getPlayer(HUMAN);
 
+        if (newState == GAME_PLAYING && m_state == GAME_OPTIONS) {
+            // Options was opened while a mission was in progress; resume it instead of
+            // re-running the normal mission-start sequence (which would reset mission stats).
+            m_timeManager->restartTimer();
+            takeBackGroundScreen();
+            humanPlayer->getGameControlsContext()->onFocusMouseStateEvent();
+            m_currentState = m_creatorState->getState(eGameState::PLAYING);
+            m_state = newState;
+            return;
+        }
+
         cGameState *existingStatePtr = nullptr;
         eGameState targetCreatorState = eGameState::MENU;
         if (mapToCreatorState(newState, targetCreatorState)) {
@@ -891,31 +902,21 @@ void cGame::setState(int newState)
             else if (newState == GAME_PLAYING) {
                     m_currentState = existingStatePtr;
 
-                    if (m_state == GAME_OPTIONS) {
-                        // just resume: don't reset mission state (and with it, mission stats)
-                        // for a mission that is still in progress.
-                        m_timeManager->restartTimer();
-                        takeBackGroundScreen();
-                        // we came from options menu, notify mouse
-                        humanPlayer->getGameControlsContext()->onFocusMouseStateEvent();
-                    }
-                    else {
-                        m_drawManager->reset();
-                        m_drawManager->missionInit();
-                        // evaluate all players, so we have initial 'alive' values set properly
-                        m_players->evaluateStillAliveForAI();
-                        m_gameObjectsContext->getParticles().reset();
-                        // in-between solution until we have a proper combat state object
-                        m_drawManager->init();
+                    m_drawManager->reset();
+                    m_drawManager->missionInit();
+                    // evaluate all players, so we have initial 'alive' values set properly
+                    m_players->evaluateStillAliveForAI();
+                    m_gameObjectsContext->getParticles().reset();
+                    // in-between solution until we have a proper combat state object
+                    m_drawManager->init();
 
-                        // handle update
-                        s_GameEvent event {
-                            .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
-                        };
-                        // the game is about to begin!
-                        onNotifyGameEvent(event);
-                        m_timeManager->startTimer();
-                    }
+                    // handle update
+                    s_GameEvent event {
+                        .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+                    };
+                    // the game is about to begin!
+                    onNotifyGameEvent(event);
+                    m_timeManager->startTimer();
             }
 
             m_currentState = existingStatePtr;
@@ -977,32 +978,24 @@ void cGame::setState(int newState)
                 newStatePtr = m_creatorState->getState(eGameState::OPTIONS);
             }
             else if (newState == GAME_PLAYING) {
-                if (m_state == GAME_OPTIONS) {
-                    m_timeManager->restartTimer();
-                    takeBackGroundScreen();
-                    // we came from options menu, notify mouse
-                    humanPlayer->getGameControlsContext()->onFocusMouseStateEvent();
-                }
-                else {
-                    m_dataCampaign->housePlayer = humanPlayer->getHouse();
-                    newStatePtr = m_creatorState->getState(eGameState::PLAYING);
-                    m_currentState = newStatePtr;
+                m_dataCampaign->housePlayer = humanPlayer->getHouse();
+                newStatePtr = m_creatorState->getState(eGameState::PLAYING);
+                m_currentState = newStatePtr;
 
-                    m_drawManager->reset();
-                    // evaluate all players, so we have initial 'alive' values set properly
-                    m_players->evaluateStillAliveForAI();
-                    m_gameObjectsContext->getParticles().reset();
-                    // in-between solution until we have a proper combat state object
-                    m_drawManager->init();
+                m_drawManager->reset();
+                // evaluate all players, so we have initial 'alive' values set properly
+                m_players->evaluateStillAliveForAI();
+                m_gameObjectsContext->getParticles().reset();
+                // in-between solution until we have a proper combat state object
+                m_drawManager->init();
 
-                    // handle update
-                    s_GameEvent event {
-                        .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
-                    };
-                    // the game is about to begin!
-                    onNotifyGameEvent(event);
-                    m_timeManager->startTimer();
-                }
+                // handle update
+                s_GameEvent event {
+                    .eventType = eGameEventType::GAME_EVENT_ABOUT_TO_BEGIN,
+                };
+                // the game is about to begin!
+                onNotifyGameEvent(event);
+                m_timeManager->startTimer();
             }
             else if (newState == GAME_LOSING) {
                 newStatePtr = m_creatorState->getState(eGameState::LOSING);
