@@ -411,7 +411,7 @@ void cGame::initSkirmish()
 
 void cGame::shakeScreenAndBlitBuffer()
 {
-    m_screenShake->update(m_state, GAME_PLAYING, m_mapCamera);
+    m_screenShake->update(m_state, GAME_PLAYING, m_mapCamera.get());
     fadeOutOrBlitScreenBuffer();
 }
 
@@ -527,16 +527,16 @@ void cGame::shutdown()
     m_currentState = nullptr;
     m_creatorState->destroyAllStates();
 
-    delete m_mapViewport;
+    m_mapViewport.reset();
 
-    delete m_drawManager;
+    m_drawManager.reset();
 
-    delete m_mapCamera;
+    m_mapCamera.reset();
 
     m_players->destroyAllegroBitmaps();
 
-    delete m_mouse;
-    delete m_keyboard;
+    m_mouse.reset();
+    m_keyboard.reset();
 
     // Release all Graphics/Texture objects now, while the renderer is still valid.
     // ~cSDLSystem() calls SDL_Quit() later (when cGame itself is destroyed),
@@ -594,7 +594,7 @@ bool cGame::setupGame()
     // INI
     const auto title = std::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
 
-    m_keyboard = new cKeyboard();
+    m_keyboard = std::make_unique<cKeyboard>();
     Logger::info(COMP_INIT, "Initializing Keyboard", "install_keyboard()");
 
     if (settings->hasSection("KEYS")) {
@@ -653,14 +653,14 @@ bool cGame::setupGame()
     previewMaps->loadSkirmishMaps(); // load skirmish maps, so they are ready when we need them in the skirmish setup state
 
     // do it here, because it depends on fonts to be loaded
-    m_mouse = new cMouse(ctx.get());
+    m_mouse = std::make_unique<cMouse>(ctx.get());
     m_mouse->setSettings(m_gameSettings.get());
-    m_services->mouse = m_mouse;
+    m_services->mouse = m_mouse.get();
 
     /***
      * Viewport(s)
      */
-    m_mapViewport = new cRectangle(0, cSideBar::TopBarHeight, m_gameSettings->getScreenW() - cSideBar::SidebarWidth, m_gameSettings->getScreenH() - cSideBar::TopBarHeight);
+    m_mapViewport = std::make_unique<cRectangle>(0, cSideBar::TopBarHeight, m_gameSettings->getScreenW() - cSideBar::SidebarWidth, m_gameSettings->getScreenH() - cSideBar::TopBarHeight);
 
     Logger::info(COMP_INIT, "cGame::setupGame", "Color conversion method set");
 
@@ -685,11 +685,10 @@ bool cGame::setupGame()
     cInfoContextCreator infoCreator(ctx->getGraphicsContext());
     infoCreator.installInfos(*m_infoContext);
 
-    if (m_mapCamera != nullptr)
-        delete m_mapCamera;
+    m_mapCamera.reset();
 
-    m_mapCamera = new cMapCamera(m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove, m_gameSettings.get(), m_mouse);
-    m_services->mapCamera = m_mapCamera;
+    m_mapCamera = std::make_unique<cMapCamera>(m_gameObjectsContext->getMap(), m_cameraDragMoveSpeed, m_cameraBorderOrKeyMoveSpeed, m_cameraEdgeMove, m_gameSettings.get(), m_mouse.get());
+    m_services->mapCamera = m_mapCamera.get();
     m_structureUtils->serviceInit(m_services.get());
 
     m_cIni->installGame(m_gameFilename);
@@ -703,9 +702,9 @@ bool cGame::setupGame()
     m_infoContext->setUpgradeInfos(infoCreator.createUpgradeInfos(m_infoContext.get(), m_gameSettings.get()));
     cPlayer *humanPlayer = m_gameObjectsContext->getPlayer(HUMAN);
 
-    m_services->mapViewport = m_mapViewport;
-    m_drawManager = new cDrawManager(ctx.get(), humanPlayer, m_services.get());
-    m_services->drawManager = m_drawManager;
+    m_services->mapViewport = m_mapViewport.get();
+    m_drawManager = std::make_unique<cDrawManager>(ctx.get(), humanPlayer, m_services.get());
+    m_services->drawManager = m_drawManager.get();
 
     setupPlayers();
 
@@ -732,7 +731,7 @@ bool cGame::setupGame()
  */
 void cGame::setupPlayers()
 {
-    m_players->setupRuntimePlayerComponents(m_sideBarFactory.get(), m_mouse, m_dataCampaign->mission, m_services.get());
+    m_players->setupRuntimePlayerComponents(m_sideBarFactory.get(), m_mouse.get(), m_dataCampaign->mission, m_services.get());
     setPlayerToInteractFor(m_gameObjectsContext->getPlayer(0));
 }
 
