@@ -77,12 +77,12 @@ void cGameInterface::drawCursor() const
 
 cMapCamera* cGameInterface::getMapCamera() const
 {
-    return m_game->m_mapCamera;
+    return m_game->m_mapCamera.get();
 }
 
 cRectangle* cGameInterface::getMapViewport() const
 {
-    return m_game->m_mapViewport;
+    return m_game->m_mapViewport.get();
 }
 
 void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const

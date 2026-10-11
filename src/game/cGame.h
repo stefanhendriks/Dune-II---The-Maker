@@ -96,11 +96,11 @@ public:
         m_gameFilename = filename;
     }
 
-    cRectangle *m_mapViewport;
+    std::unique_ptr<cRectangle> m_mapViewport;
     // TODO: move these to a another class that we can pass around, instead of having them as global variables.
     // begin
-    cMapCamera					*m_mapCamera;
-    cDrawManager                *m_drawManager;
+    std::unique_ptr<cMapCamera> m_mapCamera;
+    std::unique_ptr<cDrawManager> m_drawManager;
     std::unique_ptr<cStructureUtils>   m_structureUtils;
     std::unique_ptr<cReinforcements> m_reinforcements;
     // end
@@ -160,7 +160,7 @@ public:
     Color getColorFadeSelected(int r, int g, int b, bool rFlag = true, bool gFlag = true, bool bFlag = true);
 
     cMouse *getMouse() {
-        return m_mouse; // NOOOO
+        return m_mouse.get(); // NOOOO
     }
 
     void setPlayerToInteractFor(cPlayer *pPlayer);
@@ -230,8 +230,8 @@ private:
     // Non-owning shortcut to the players container (owned by m_gameObjectsContext)
     cPlayers* m_players = nullptr;
 
-    cMouse *m_mouse;
-    cKeyboard *m_keyboard;
+    std::unique_ptr<cMouse> m_mouse;
+    std::unique_ptr<cKeyboard> m_keyboard;
     SDL_Window *window;
     SDL_Renderer *renderer;
     Texture *screenTexture=nullptr;

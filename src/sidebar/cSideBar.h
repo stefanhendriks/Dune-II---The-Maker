@@ -102,7 +102,7 @@ public:
     static const int VerticalCandyBarWidth = 24;
     static const int SidebarWidthWithoutCandyBar = 200;
     static const int SidebarWidth = SidebarWidthWithoutCandyBar + VerticalCandyBarWidth; // including vertical candy bar
-    static const int TopBarHeight = 42;
+    static constexpr int TopBarHeight = 42;
     static const int HeightOfMinimap = 200 + 8;
     static const int WidthOfMinimap = 200;
     static const int PowerBarMarginHeight = 32; // for a power icon
