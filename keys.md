@@ -27,8 +27,8 @@
 | Arrow keys (hold) | Scroll map |
 | T | Track selected units (press again or scroll map to stop) |
 | F (hold) | Show FPS counter |
-| CTRL + F1 / F2 / F3 / F6 / F7 | Save current viewport position/zoom to bookmark 1–5 |
-| SHIFT + F1 / F2 / F3 / F6 / F7 | Jump to viewport bookmark 1–5 (no-op if that bookmark was never saved) |
+| ALT + F1–F5 | Save current viewport position/zoom to bookmark 1–5 |
+| F1–F5 | Jump to viewport bookmark 1–5 (no-op if that bookmark was never saved) |
 
 ---
 
@@ -56,15 +56,17 @@
 | TAB | Cycle debug visualization mode |
 | G (hold) | Show grid overlay |
 | D (hold, + TAB) | Show map without shroud |
-| F2 | Win mission |
-| F3 | Lose mission |
-| F4 | Give 5000 credits to all players |
-| F4 + SHIFT | Destroy unit/structure at mouse cell |
-| F5 | Reveal entire map |
-| F5 + SHIFT | Damage unit at mouse cell (→ 25 HP) |
-| F6 | Kill all carry-alls |
-| F8 | Spawn enemy ornithopter at mouse cell |
-| 0–3 (hold) | Switch camera/control to player 0–3 |
+| SHIFT + TAB + F2 | Win mission |
+| SHIFT + TAB + F3 | Lose mission |
+| SHIFT + TAB + F4 | Give 5000 credits to all players |
+| SHIFT + TAB + F5 | Reveal entire map |
+| SHIFT + TAB + F6 | Kill all carry-alls |
+| SHIFT + TAB + F7 | Destroy unit/structure at mouse cell |
+| SHIFT + TAB + F8 | Spawn enemy ornithopter at mouse cell |
+| SHIFT + TAB + F9 | Spawn sandworm at mouse cell |
+| SHIFT + TAB + F10 | Damage unit at mouse cell (→ 25 HP) |
+| SHIFT + TAB + F12 | Clear shroud at mouse cell |
+| TAB + 0–3 (hold) | Switch camera/control to player 0–3 |
 
 ---
 
