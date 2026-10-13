@@ -19,6 +19,7 @@ struct s_KeysCombo {
     bool altPressed = false;
     bool ctrlPressed = false;
     bool shiftPressed = false;
+    bool tabPressed = false;
 };
 
 enum class eKeyEventType {
