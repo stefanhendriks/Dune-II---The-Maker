@@ -5,6 +5,8 @@ on:
     types: [opened, reopened, ready_for_review]
   issue_comment:
     types: [created]
+  pull_request_review_comment:
+    types: [created]
 
 # One in-flight review per PR per trigger kind; a newer push cancels the older
 # run instead of stacking. The event kind is part of the key so that the
@@ -17,13 +19,16 @@ concurrency:
 jobs:
   claude-review:
     # Run automatically when a PR is opened / reopened / marked ready (drafts are
-    # skipped), OR when a repo collaborator comments "@claude" on a PR/issue.
-    # Re-review after a push is opt-in via an "@claude" comment, to stay within
-    # the rate limit. The author_association check keeps non-collaborators from
-    # triggering (and billing) reviews on a public repo.
+    # skipped), OR when a repo collaborator comments "@claude" on a PR/issue —
+    # either a regular conversation comment (issue_comment) or an inline
+    # diff/review comment (pull_request_review_comment); GitHub fires these as
+    # two different event types for the same "@claude" mention. Re-review after
+    # a push is opt-in via an "@claude" comment, to stay within the rate limit.
+    # The author_association check keeps non-collaborators from triggering (and
+    # billing) reviews on a public repo.
     if: >
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
+      (contains(fromJSON('["issue_comment","pull_request_review_comment"]'), github.event_name) && contains(github.event.comment.body, '@claude') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
     runs-on: ubuntu-latest
     permissions:
       contents: read
