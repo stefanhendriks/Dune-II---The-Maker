@@ -45,18 +45,16 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::CENTER_ON_HOME,      {SDL_SCANCODE_H});
     bind(eKeyAction::CENTER_ON_STRUCTURE, {SDL_SCANCODE_C});
     bind(eKeyAction::ZOOM_RESET,          {SDL_SCANCODE_Z});
-    // F4/F5 already carry Ctrl/Shift-modified debug actions (clear shroud, destroy/damage at cursor),
-    // so bookmarks 4 and 5 use F6/F7 instead to avoid any clash while in debug mode.
-    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_1, {SDL_SCANCODE_F1}, true, false, false);
-    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_2, {SDL_SCANCODE_F2}, true, false, false);
-    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_3, {SDL_SCANCODE_F3}, true, false, false);
-    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_4, {SDL_SCANCODE_F6}, true, false, false);
-    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_5, {SDL_SCANCODE_F7}, true, false, false);
-    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_1, {SDL_SCANCODE_F1}, false, false, true);
-    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_2, {SDL_SCANCODE_F2}, false, false, true);
-    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_3, {SDL_SCANCODE_F3}, false, false, true);
-    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_4, {SDL_SCANCODE_F6}, false, false, true);
-    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_5, {SDL_SCANCODE_F7}, false, false, true);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_1, {SDL_SCANCODE_F1}, false, true, false);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_2, {SDL_SCANCODE_F2}, false, true, false);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_3, {SDL_SCANCODE_F3}, false, true, false);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_4, {SDL_SCANCODE_F4}, false, true, false);
+    bind(eKeyAction::SAVE_VIEWPORT_BOOKMARK_5, {SDL_SCANCODE_F5}, false, true, false);
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_1, {SDL_SCANCODE_F1});
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_2, {SDL_SCANCODE_F2});
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_3, {SDL_SCANCODE_F3});
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_4, {SDL_SCANCODE_F4});
+    bind(eKeyAction::JUMP_TO_VIEWPORT_BOOKMARK_5, {SDL_SCANCODE_F5});
     bind(eKeyAction::TOGGLE_FPS,          {SDL_SCANCODE_F});
     bind(eKeyAction::TOGGLE_TIME_DISPLAY, {SDL_SCANCODE_BACKSLASH});
     bind(eKeyAction::OPEN_MENU,           {SDL_SCANCODE_ESCAPE});
@@ -121,17 +119,17 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::MENU_CONFIRM, {SDL_SCANCODE_RETURN});
     bind(eKeyAction::MENU_CANCEL,  {SDL_SCANCODE_BACKSPACE});
 
-    // Debug
-    bind(eKeyAction::DEBUG_WIN,                  {SDL_SCANCODE_F2});
-    bind(eKeyAction::DEBUG_LOSE,                 {SDL_SCANCODE_F3});
-    bind(eKeyAction::DEBUG_GIVE_CREDITS,         {SDL_SCANCODE_F4});
-    bind(eKeyAction::DEBUG_DESTROY_AT_CURSOR,    {SDL_SCANCODE_F4}, false, false, true);
-    bind(eKeyAction::DEBUG_REVEAL_MAP,           {SDL_SCANCODE_F5});
-    bind(eKeyAction::DEBUG_DAMAGE_AT_CURSOR,     {SDL_SCANCODE_F5}, false, false, true);
-    bind(eKeyAction::DEBUG_KILL_CARRYALLS,       {SDL_SCANCODE_F6});
-    bind(eKeyAction::DEBUG_SPAWN_ORNITHOPTER,    {SDL_SCANCODE_F8});
-    bind(eKeyAction::DEBUG_SPAWN_WORM,           {SDL_SCANCODE_F9});
-    bind(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR, {SDL_SCANCODE_F4}, true, false, false);
+    // Debug (all require Shift+Tab so they can't clash with plain/Alt-bound actions on the same F-key)
+    bind(eKeyAction::DEBUG_WIN,                  {SDL_SCANCODE_F2},  false, false, true, true);
+    bind(eKeyAction::DEBUG_LOSE,                 {SDL_SCANCODE_F3},  false, false, true, true);
+    bind(eKeyAction::DEBUG_GIVE_CREDITS,         {SDL_SCANCODE_F4},  false, false, true, true);
+    bind(eKeyAction::DEBUG_DESTROY_AT_CURSOR,    {SDL_SCANCODE_F7},  false, false, true, true);
+    bind(eKeyAction::DEBUG_REVEAL_MAP,           {SDL_SCANCODE_F5},  false, false, true, true);
+    bind(eKeyAction::DEBUG_DAMAGE_AT_CURSOR,     {SDL_SCANCODE_F10}, false, false, true, true);
+    bind(eKeyAction::DEBUG_KILL_CARRYALLS,       {SDL_SCANCODE_F6},  false, false, true, true);
+    bind(eKeyAction::DEBUG_SPAWN_ORNITHOPTER,    {SDL_SCANCODE_F8},  false, false, true, true);
+    bind(eKeyAction::DEBUG_SPAWN_WORM,           {SDL_SCANCODE_F9},  false, false, true, true);
+    bind(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR, {SDL_SCANCODE_F12}, false, false, true, true);
     bind(eKeyAction::DEBUG_SWITCH_PLAYER_0,      {SDL_SCANCODE_0});
     bind(eKeyAction::DEBUG_SWITCH_PLAYER_1,      {SDL_SCANCODE_1});
     bind(eKeyAction::DEBUG_SWITCH_PLAYER_2,      {SDL_SCANCODE_2});
@@ -253,22 +251,23 @@ void cKeyBindings::checkForClashes() const
         nameOf[action] = name;
     }
 
-    // Build map: (scancode, ctrl, alt, shift) -> action names that share it
-    std::map<std::tuple<SDL_Scancode, bool, bool, bool>, std::vector<std::string>> keyMap;
+    // Build map: (scancode, ctrl, alt, shift, tab) -> action names that share it
+    std::map<std::tuple<SDL_Scancode, bool, bool, bool, bool>, std::vector<std::string>> keyMap;
     for (auto &[action, binding] : m_bindings) {
         std::string name = nameOf.count(action) ? nameOf.at(action) : std::to_string(static_cast<int>(action));
         for (SDL_Scancode sc : binding.keys) {
-            keyMap[{sc, binding.requireCtrl, binding.requireAlt, binding.requireShift}].push_back(name);
+            keyMap[{sc, binding.requireCtrl, binding.requireAlt, binding.requireShift, binding.requireTab}].push_back(name);
         }
     }
 
     for (auto &[key, names] : keyMap) {
         if (names.size() < 2) continue;
-        auto [sc, ctrl, alt, shift] = key;
+        auto [sc, ctrl, alt, shift, tab] = key;
         std::string modifiers;
         if (ctrl)  modifiers += "Ctrl+";
         if (alt)   modifiers += "Alt+";
         if (shift) modifiers += "Shift+";
+        if (tab)   modifiers += "Tab+";
         std::string nameList;
         for (size_t i = 0; i < names.size(); ++i) {
             if (i > 0) nameList += ", ";
@@ -288,6 +287,7 @@ bool cKeyBindings::matches(const std::bitset<SDL_SCANCODE_COUNT> &keys, const s_
     if (binding.requireCtrl  && !combo.ctrlPressed)  return false;
     if (binding.requireAlt   && !combo.altPressed)   return false;
     if (binding.requireShift && !combo.shiftPressed)  return false;
+    if (binding.requireTab   && !combo.tabPressed)    return false;
 
     // A binding that doesn't require a modifier must not fire when that modifier is active,
     // unless the modifier key itself is one of the binding's keys (e.g. ATTACK_MODE uses LCTRL as its key).
@@ -300,6 +300,7 @@ bool cKeyBindings::matches(const std::bitset<SDL_SCANCODE_COUNT> &keys, const s_
     if (!binding.requireCtrl  && combo.ctrlPressed  && !keysContain(SDL_SCANCODE_LCTRL,  SDL_SCANCODE_RCTRL))  return false;
     if (!binding.requireAlt   && combo.altPressed   && !keysContain(SDL_SCANCODE_LALT,   SDL_SCANCODE_RALT))   return false;
     if (!binding.requireShift && combo.shiftPressed && !keysContain(SDL_SCANCODE_LSHIFT, SDL_SCANCODE_RSHIFT)) return false;
+    if (!binding.requireTab   && combo.tabPressed   && !keysContain(SDL_SCANCODE_TAB,     SDL_SCANCODE_TAB))   return false;
 
     for (SDL_Scancode sc : binding.keys) {
         if (sc >= 0 && sc < SDL_SCANCODE_COUNT && keys.test(static_cast<size_t>(sc))) {
@@ -310,9 +311,9 @@ bool cKeyBindings::matches(const std::bitset<SDL_SCANCODE_COUNT> &keys, const s_
 }
 
 void cKeyBindings::bind(eKeyAction action, std::initializer_list<SDL_Scancode> keys,
-                        bool requireCtrl, bool requireAlt, bool requireShift)
+                        bool requireCtrl, bool requireAlt, bool requireShift, bool requireTab)
 {
-    m_bindings[action] = s_KeyBinding{std::vector<SDL_Scancode>(keys), requireCtrl, requireAlt, requireShift};
+    m_bindings[action] = s_KeyBinding{std::vector<SDL_Scancode>(keys), requireCtrl, requireAlt, requireShift, requireTab};
 }
 
 s_KeyBinding cKeyBindings::parseBinding(const std::string &value)
@@ -333,6 +334,7 @@ s_KeyBinding cKeyBindings::parseBinding(const std::string &value)
         if      (lower == "alt")   { binding.requireAlt   = true; }
         else if (lower == "ctrl")  { binding.requireCtrl  = true; }
         else if (lower == "shift") { binding.requireShift = true; }
+        else if (lower == "tab")   { binding.requireTab   = true; }
         else {
             SDL_Scancode sc = SDL_GetScancodeFromName(token.c_str());
             if (sc != SDL_SCANCODE_UNKNOWN) {

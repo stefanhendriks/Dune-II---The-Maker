@@ -81,6 +81,7 @@ void cKeyboard::handleEvent(const SDL_Event &event)
     m_currentCombo.altPressed   = isPressed(m_keysPressed, SDL_SCANCODE_LALT)   || isPressed(m_keysPressed, SDL_SCANCODE_RALT);
     m_currentCombo.ctrlPressed  = isPressed(m_keysPressed, SDL_SCANCODE_LCTRL)  || isPressed(m_keysPressed, SDL_SCANCODE_RCTRL);
     m_currentCombo.shiftPressed = isPressed(m_keysPressed, SDL_SCANCODE_LSHIFT) || isPressed(m_keysPressed, SDL_SCANCODE_RSHIFT);
+    m_currentCombo.tabPressed   = isPressed(m_keysPressed, SDL_SCANCODE_TAB);
 }
 
 void cKeyboard::updateState()
