@@ -17,11 +17,13 @@ concurrency:
 jobs:
   claude-review:
     # Run automatically when a PR is opened / reopened / marked ready (drafts are
-    # skipped), OR when someone comments "@claude" on a PR/issue. Re-review after
-    # a push is opt-in via an "@claude" comment, to stay within the rate limit.
+    # skipped), OR when a repo collaborator comments "@claude" on a PR/issue.
+    # Re-review after a push is opt-in via an "@claude" comment, to stay within
+    # the rate limit. The author_association check keeps non-collaborators from
+    # triggering (and billing) reviews on a public repo.
     if: >
       (github.event_name == 'pull_request' && github.event.pull_request.draft == false) ||
-      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude'))
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
     runs-on: ubuntu-latest
     permissions:
       contents: read
