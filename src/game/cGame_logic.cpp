@@ -770,40 +770,43 @@ void cGame::setState(int newState)
         return;
     }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    Logger::info(COMP_GAME, "cGame::setState", "Setting state from {}(={}) to {}(={})", m_state, stateToString(m_state), newState, stateToString(newState));
-#pragma GCC diagnostic pop
+    auto mapToCreatorState = [](int state, eGameState &mapped) -> bool {
+        switch (state) {
+            case GAME_INITIALIZE: mapped = eGameState::INITIALIZE; return true;
+            case GAME_MENU: mapped = eGameState::MENU; return true;
+            case GAME_PLAYING: mapped = eGameState::PLAYING; return true;
+            case GAME_BRIEFING: mapped = eGameState::BRIEFING; return true;
+            case GAME_EDITOR: mapped = eGameState::EDITOR; return true;
+            case GAME_OPTIONS: mapped = eGameState::OPTIONS; return true;
+            case GAME_REGION: mapped = eGameState::REGION; return true;
+            case GAME_SELECT_HOUSE: mapped = eGameState::SELECT_HOUSE; return true;
+            case GAME_TELLHOUSE: mapped = eGameState::TELLHOUSE; return true;
+            case GAME_WINNING: mapped = eGameState::WINNING; return true;
+            case GAME_SCORING: mapped = eGameState::SCORING; return true;
+            case GAME_WINBRIEF: mapped = eGameState::WINBRIEF; return true;
+            case GAME_LOSEBRIEF: mapped = eGameState::LOSEBRIEF; return true;
+            case GAME_LOSING: mapped = eGameState::LOSING; return true;
+            case GAME_SETUPSKIRMISH: mapped = eGameState::SETUPSKIRMISH; return true;
+            case GAME_CREDITS: mapped = eGameState::CREDITS; return true;
+            case GAME_MISSIONSELECT: mapped = eGameState::MISSIONSELECT; return true;
+            case GAME_NEW_MAP_EDITOR: mapped = eGameState::NEW_MAP_EDITOR; return true;
+            default:
+                return false;
+        }
+    };
+
+    eGameState oldStateForLog = eGameState::INITIALIZE;
+    eGameState newStateForLog = eGameState::INITIALIZE;
+    mapToCreatorState(m_state, oldStateForLog);
+    mapToCreatorState(newState, newStateForLog);
+    Logger::info(COMP_GAME, "cGame::setState", "Setting state from {}(={}) to {}(={})",
+                 m_state, gameStateToString(oldStateForLog), newState, gameStateToString(newStateForLog));
 
     if (newState > -1) {
         bool deleteOldState = (newState != GAME_REGION &&
                                newState != GAME_PLAYING &&
                                newState != GAME_EDITOR &&
                                newState != GAME_OPTIONS); // don't delete these states, but re-use!
-
-        auto mapToCreatorState = [](int state, eGameState &mapped) -> bool {
-            switch (state) {
-                case GAME_MENU: mapped = eGameState::MENU; return true;
-                case GAME_PLAYING: mapped = eGameState::PLAYING; return true;
-                case GAME_BRIEFING: mapped = eGameState::BRIEFING; return true;
-                case GAME_EDITOR: mapped = eGameState::EDITOR; return true;
-                case GAME_OPTIONS: mapped = eGameState::OPTIONS; return true;
-                case GAME_REGION: mapped = eGameState::REGION; return true;
-                case GAME_SELECT_HOUSE: mapped = eGameState::SELECT_HOUSE; return true;
-                case GAME_TELLHOUSE: mapped = eGameState::TELLHOUSE; return true;
-                case GAME_WINNING: mapped = eGameState::WINNING; return true;
-                case GAME_SCORING: mapped = eGameState::SCORING; return true;
-                case GAME_WINBRIEF: mapped = eGameState::WINBRIEF; return true;
-                case GAME_LOSEBRIEF: mapped = eGameState::LOSEBRIEF; return true;
-                case GAME_LOSING: mapped = eGameState::LOSING; return true;
-                case GAME_SETUPSKIRMISH: mapped = eGameState::SETUPSKIRMISH; return true;
-                case GAME_CREDITS: mapped = eGameState::CREDITS; return true;
-                case GAME_MISSIONSELECT: mapped = eGameState::MISSIONSELECT; return true;
-                case GAME_NEW_MAP_EDITOR: mapped = eGameState::NEW_MAP_EDITOR; return true;
-                default:
-                    return false;
-            }
-        };
 
         if (newState == GAME_PLAYING) {
             // make sure to delete options menu now
