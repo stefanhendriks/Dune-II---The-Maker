@@ -468,6 +468,10 @@ void cGame::run()
                 case SDL_EVENT_WINDOW_FOCUS_GAINED:
                 case SDL_EVENT_WINDOW_RESTORED:
                     m_focusManager->onWindowFocusGained();
+                    // macOS only hides the cursor while the window actually holds key focus, so if
+                    // focus wasn't granted at boot (e.g. the mouse moved during window creation), the
+                    // initial SDL_HideCursor() call in setupGame() is a no-op until focus is regained.
+                    SDL_HideCursor();
                     break;
                 case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
                     m_Screen->onPixelSizeChanged();
