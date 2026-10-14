@@ -32,6 +32,10 @@ Read [the wiki](https://github.com/stefanhendriks/Dune-II---The-Maker/wiki) for 
 ## Prerequisites
 - `CMake` version 3.21 or higher
 - `GCC` version 14 or higher
+- `SDL3` with `SDL3_image`, `SDL3_ttf` and `SDL3_mixer`
+- `Catch2` version 3 (for the unit tests)
+
+The `install_dependencies_*.sh` scripts (and the MSYS2 package list for Windows, see below) install the libraries.
 
 Make sure you can run `make` (or `ninja`) from command line.
 
@@ -57,11 +61,14 @@ an MSYS2 MINGW64 shell, install the same packages CI installs (see the
     cd build
     cmake .. -G "MinGW Makefiles"
     cmake --build . --target all -- -j 6
+    ctest --output-on-failure
 ```
 
 If you use `ninja` you can use `cmake .. -G Ninja` instead.
 
-Once compilation is done you'll end up with a `d2tm.exe` file and several DLL's.
+Or run `rebuildwin.bat` from the MSYS2 MINGW64 shell, which does a clean build in `build/` and runs the tests.
+
+Once compilation is done you'll end up with a `d2tm.exe` file. The DLL's it needs are copied into `bin/` together with it by `create_release.bat` (see [Running](#running)).
 
 ## Ubuntu
 - git clone this project
@@ -72,7 +79,10 @@ Once compilation is done you'll end up with a `d2tm.exe` file and several DLL's.
     cd build
     cmake ..
     make -j4
+    ctest --output-on-failure
 ```
+
+Or run `./rebuildmacos.sh`, which does a clean build in `build/`, runs the tests and copies the binary to `bin/`.
 
 ## MacOS
 - git clone this project
@@ -83,7 +93,13 @@ Once compilation is done you'll end up with a `d2tm.exe` file and several DLL's.
     cd build
     cmake ..
     make -j4
+    ctest --output-on-failure
 ```
+
+Or run `./rebuildmacos.sh`, which does a clean build in `build/`, runs the tests and copies the binary to `bin/`.
+
+## Tests
+Unit tests (Catch2) live in `tests/` and are built together with the game as `d2tm_tests`. Run them from the `build` dir with `ctest --output-on-failure`. CI runs them on every platform.
 
 ## Clion
 ### Mac OS
