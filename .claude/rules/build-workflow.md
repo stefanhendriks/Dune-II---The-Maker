@@ -14,4 +14,6 @@ The standard compound command:
 ./rebuildmacos.sh && ./create_release.sh
 ```
 
-The game binary is `bin/d2tm` and must be run from the repo root.
+On Windows (from an MSYS2 MINGW64 shell) the equivalent is `rebuildwin.bat` followed by `create_release.bat`.
+
+The game binary is `bin/d2tm` (`bin/d2tm.exe` on Windows). Run it with `bin/` as the working directory: data paths such as `settings.ini` and `skirmish/` are resolved relative to it.
