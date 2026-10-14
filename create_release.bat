@@ -53,7 +53,7 @@ echo 12. Copy game rules file (game.ini)
 copy resources\game.ini.org bin\game.ini
 copy resources\bin\settings.ini bin
 echo 13. Copy txt files
-copy resources\bin\doc\versionhistory.txt bin
-copy resources\bin\doc\controls.txt bin
+copy resources\doc\versionhistory.txt bin
+copy resources\doc\controls.txt bin
 copy resources\bin\windowed.bat bin
 echo Done.
