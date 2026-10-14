@@ -415,9 +415,7 @@ void cUnit::createExplosionParticle()
                         // NO HP LEFT, DIE
                         if (pHitUnit->iHitPoints <= 1) {
                             //TODO: make use of takeDamage so that it determines then to call die
-                            // this unit's own iPlayer is still valid here (init() only resets it
-                            // once this die() call reaches its own emit/init further down), so it
-                            // can safely be credited as the origin of this kill.
+                            // credit this unit as origin: still valid until init() at the end of die()
                             pHitUnit->die(true, false, iID, eBuildType::UNIT);
                         }
                     } // only die when the unit is going to die
@@ -433,9 +431,7 @@ void cUnit::createExplosionParticle()
                     if (pStructure->getHitPoints() > 0) {
 
                         int iDamage = 150 + RNG::rnd(100);
-                        // this unit's own iPlayer is still valid at this point (init() only resets
-                        // it once this die() call reaches its own emit/init further down), so it can
-                        // safely be credited as the origin of this kill.
+                        // credit this unit as origin: still valid until init() at the end of die()
                         pStructure->damage(iDamage, iID, eBuildType::UNIT);
 
                         int iChance = 10;
@@ -2668,8 +2664,6 @@ void cUnit::thinkFast_move()
                     }
                     else if (intent == eUnitActionIntent::INTENT_CAPTURE || intent == eUnitActionIntent::INTENT_MOVE) {
                         if (canAttackOnEnterStructure()) {
-                            // this unit's own iPlayer is still valid here (die() hasn't run yet), so
-                            // it can safely be credited as the origin of this kill.
                             pStructure->damage(getUnitInfo().damageOnEnterStructure, iID, eBuildType::UNIT);
                             die(true, false);
                         }
@@ -2680,9 +2674,7 @@ void cUnit::thinkFast_move()
                                 die(false, false);
                             }
                             else {
-                                // the unit will inflict damage before dying: damage() must run while
-                                // this unit is still valid, so it can be credited as the origin of
-                                // this kill (die() resets iPlayer once it completes).
+                                // damage before die(), so this unit is still valid to credit as origin
                                 pStructure->damage(getUnitInfo().damageOnEnterStructure, iID, eBuildType::UNIT);
                                 die(true, false);
                             }
@@ -2866,8 +2858,6 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
                     takeDamage(potentialDeadUnit->getUnitInfo().damageOnEnterStructure);
                 }
 
-                // this unit is still valid here (it isn't the one dying), so it can safely be
-                // credited as the origin of this squish kill.
                 potentialDeadUnit->die(false, true, iID, eBuildType::UNIT);
             }
         }
