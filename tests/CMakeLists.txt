@@ -29,13 +29,13 @@ add_executable(d2tm_tests
     ${TEST_SOURCES}
 )
 
-# SDL2_INCLUDE_DIRS is populated by the root CMakeLists.txt for all platforms
-# (pkg-config on macOS, find_package on Linux/Windows).
+# SDL3_INCLUDE_DIRS is populated by pkg-config in the root CMakeLists.txt on macOS.
+# On Linux/Windows it is empty: the SDL3 targets from link_libraries() provide the includes.
 target_include_directories(d2tm_tests
     PRIVATE
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/src/include
-        ${SDL2_INCLUDE_DIRS}
+        ${SDL3_INCLUDE_DIRS}
 )
 
 target_link_libraries(d2tm_tests PRIVATE Catch2::Catch2WithMain)
