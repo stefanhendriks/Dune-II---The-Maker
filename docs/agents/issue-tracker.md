@@ -20,3 +20,11 @@ Create a GitHub issue.
 ## When a skill says "fetch the relevant ticket"
 
 Run `gh issue view <number> --comments`.
+
+## Before filing a new issue
+
+Search existing issues for overlap first — 400+ are open, many long-standing wishlist items. Don't create a duplicate.
+
+## When asked for a plan or analysis on a ticket
+
+Post it as a comment on the ticket itself (`gh issue comment <number> --body "..."`), not just in chat.

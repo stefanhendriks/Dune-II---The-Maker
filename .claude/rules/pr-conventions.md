@@ -43,3 +43,11 @@ After a force-push or rebase on a branch that already has an open PR, update the
 ```sh
 gh pr edit <number> --title "..." --body "..."
 ```
+
+## No AI attribution
+
+Do not add a `claude` label, or mention Claude/AI assistance, in PR titles, bodies, or comments.
+
+## Contributor privacy
+
+Don't name or attribute a specific tester or contributor in a PR body, issue comment, or post unless they've explicitly agreed to be credited.

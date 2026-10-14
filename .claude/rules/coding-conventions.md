@@ -52,3 +52,11 @@ structure->getStructureId()
 structure->id
 structure->getId()
 ```
+
+## TODO markers
+
+Deferred work left in code should reference the tracking issue:
+
+```cpp
+// TODO(#1234) - short sentence describing what's deferred and why
+```
