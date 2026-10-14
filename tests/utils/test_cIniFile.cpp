@@ -17,9 +17,8 @@ TEST_CASE("cIniFile - loads a file whose UTF-8 name has non-ASCII characters", "
 
     const std::u8string utf8Name = file.u8string();
     cIniFile ini(std::string(utf8Name.begin(), utf8Name.end()));
+    std::filesystem::remove_all(dir); // before the REQUIREs, so a failing run doesn't leave it behind
 
     REQUIRE(ini.isLoadSuccess());
     REQUIRE(ini.getSection("SKIRMISH").getStringValue("Title") == "Sineads Plains");
-
-    std::filesystem::remove_all(dir);
 }
