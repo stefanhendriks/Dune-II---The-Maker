@@ -539,7 +539,7 @@ public:
     }
 
     // properties (for now public, should become private)
-    int selected_structure;
+    int selected_structure = -1;
 
     void deselectStructure();
 
@@ -596,26 +596,26 @@ private:
 
     void onMyStructureDestroyed(const CommonEvent &event);
 
-    bool m_Human;
+    bool m_Human = false;
 
     // TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
     // TODO: redundant? OBSOLETE. Since we're getting more properties for units and thereby
     // can/should create units specific for houses.
-    cPlayerDifficultySettings *difficultySettings;
+    cPlayerDifficultySettings *difficultySettings = nullptr;
     // these have all state, and need to be recreated for each mission.
     cSideBar *sidebar;            // each player has a sidebar (lists of what it can build)
     std::unique_ptr<cItemBuilder> itemBuilder; // each player can build items
     std::unique_ptr<cBuildingListUpdater> buildingListUpdater; // modifies list of sidebar on upgrades
     std::unique_ptr<cOrderProcesser> orderProcesser; // process orders for starport
-    cHousesInfo* m_HousesInfo;
+    cHousesInfo* m_HousesInfo = nullptr;
     std::unique_ptr<cGameControlsContext> gameControlsContext;
 
-    int techLevel;        // technology level
-    int house;
+    int techLevel = 0;        // technology level
+    int house = GENERALHOUSE;
     Color minimapColor;            // color of this team on minimap;
     Color emblemBackgroundColor;    // color of the emblem background
-    int id;    // this id is the reference to the player array
-    int iTeam;
+    int id = -1;    // this id is the reference to the player array
+    int iTeam = -1;
 
     cGameSettings *m_settings = nullptr;
     cInfoContext *m_infos = nullptr;
@@ -634,27 +634,27 @@ private:
     Texture *bmp_unit[MAX_UNITTYPES]; // the body of unit
     Texture *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
 
-    int iPrimaryBuilding[MAX_STRUCTURETYPES];    // remember the primary ID (structure id) of each structure type
-    int iStructures[MAX_STRUCTURETYPES]; // remember what is built for each type of structure
-    int iStructureUpgradeLevel[MAX_STRUCTURETYPES]; // remember the upgrade level for each structure type
-    bool m_appliedUpgrades[MAX_UPGRADETYPES]; // tracks which independent upgrades have been applied
+    int iPrimaryBuilding[MAX_STRUCTURETYPES] = {};    // remember the primary ID (structure id) of each structure type
+    int iStructures[MAX_STRUCTURETYPES] = {}; // remember what is built for each type of structure
+    int iStructureUpgradeLevel[MAX_STRUCTURETYPES] = {}; // remember the upgrade level for each structure type
+    bool m_appliedUpgrades[MAX_UPGRADETYPES] = {}; // tracks which independent upgrades have been applied
 
-    int powerUsage_;      // total amount of power usage
-    int powerProduce_;      // total amount of power generated
+    int powerUsage_ = 0;      // total amount of power usage
+    int powerProduce_ = 0;      // total amount of power generated
 
-    float credits;        // the credits this player has
-    float maxCredits_;    // max credits a player can have (influenced by silo's)
+    float credits = 0;        // the credits this player has
+    float maxCredits_ = 1000;    // max credits a player can have (influenced by silo's)
 
-    int focusCell_;        // this is the cell that will be showed in the game centralized upon map loading
+    int focusCell_ = 0;        // this is the cell that will be showed in the game centralized upon map loading
 
     std::unique_ptr<brains::cPlayerBrain> brain_;
 
     bool m_autoSlabStructures; // flag that will automatically place slabs beneath a structure when placed
 
     // A condition to win the mission
-    int spiceQuota;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)
+    int spiceQuota = 0;              // > 0 means this amount to harvest, (if win/lose flags set accordingly for game)
 
-    bool alive;
+    bool alive = false;
 
     void reinforceHarvesterIfNeeded(int cell);
 };
