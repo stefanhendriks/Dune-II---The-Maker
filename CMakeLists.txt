@@ -173,7 +173,10 @@ else()
             -mwindows
     )
 
-    target_link_options(cpp_stacktrace INTERFACE $<$<CONFIG:Debug>:/DEBUG>)
+    # /DEBUG is MSVC-only; MinGW's ld treats it as an input file. MinGW gets debug info from -g.
+    if(MSVC)
+        target_link_options(cpp_stacktrace INTERFACE $<$<CONFIG:Debug>:/DEBUG>)
+    endif()
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE cpp_stacktrace)
