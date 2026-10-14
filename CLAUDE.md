@@ -71,7 +71,11 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 D2TM (Dune II - The Maker) is a C++23 remake of the classic RTS game Dune II. 
 It uses SDL3 (+ SDL3_image, SDL3_ttf, SDL3_mixer) for rendering, audio, and input. 
 
-Unit tests use Catch2 (v3) and live in `tests/` (registered in `tests/CMakeLists.txt`). They build into `d2tm_tests` alongside the game and run via `ctest`; CI runs them on every platform. The tests cover pure logic only (utils, map geometry); there are no tests that need a running game or SDL window.
+Unit tests use Catch2 (v3) and live in `tests/` (registered in `tests/CMakeLists.txt`). They build into `d2tm_tests` alongside the game and run via `ctest`; CI runs them on every platform. The tests cover pure logic only (utils, map geometry); there are no tests that need a running game or SDL window. See also `.claude/rules/build-workflow.md`.
+
+### Related repos
+
+Raw game assets (sprites, sounds) and the `sdl_*.dat` packer tool live in the sibling repo `Dune-II---The-Maker-Data`, not in this repo. Asset-level fixes go in `resources/bin/data/` there, not `bin/data/` (which is this repo's gitignored, packaged output).
 
 ## Build Commands
 **One-time setup (dependencies):**
@@ -197,6 +201,9 @@ See `.claude/rules/naming-conventions.md` — the single source of truth for cod
 - produce small PR's (a very limited set of changes)
 - branch names are usually: `<prefix>/<ticket-githubnr here>/<short-description-of-feature>`
   - prefixes can be `feature` (new feature), `bugfix` or `improv` (for technical improvements usually)
+- prefer rebasing a branch onto the latest base branch over merging; confirm with the maintainer first if the branch is already shared with another contributor
+- do not add a `Co-Authored-By` trailer (or similar AI-attribution line) to commit messages
+- confirm with the maintainer before creating or closing issues, changing labels, or posting comments — don't do these unprompted (see `docs/agents/issue-tracker.md` for more)
 
 ## Agent skills
 

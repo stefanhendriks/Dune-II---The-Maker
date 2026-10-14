@@ -78,4 +78,6 @@ still the drive-by-refactor case §3 flags.
 
 All `src/` files get the standard MIT license header (see any existing file
 for the exact block). This applies to every new file, not just the ones
-that already have it.
+that already have it. The header's author line names Stefan Hendriks
+specifically (`@author Stefan Hendriks & the D2TM Team`) — don't drop the
+name and credit only "the D2TM Team".
