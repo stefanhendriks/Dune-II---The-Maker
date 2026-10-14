@@ -41,11 +41,12 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
             Logger::error(COMP_SDL2, "saveScreen", "Error reading pixels: {}", SDL_GetError());
             return false;
         }
-        if (IMG_SavePNG(surface, filename.c_str()) != 0) {
+        bool saved = IMG_SavePNG(surface, filename.c_str());
+        if (!saved) {
             Logger::error(COMP_SDL2, "saveScreen", "IMG_SavePNG error: {}", SDL_GetError());
         }
         SDL_DestroySurface(surface);
-        return true;
+        return saved;
     }
     catch (const std::exception& e) {
         Logger::error(COMP_SDL2, "saveScreen", "Unexpected exception: {}", e.what());
