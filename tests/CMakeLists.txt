@@ -4,6 +4,7 @@ find_package(Catch2 3 REQUIRED)
 set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniFile.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniUtils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPoint.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
@@ -21,6 +22,8 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/cPoint.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cRectangle.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cExpandingRectangle.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/cIniFile.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Log.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/SfxTrackAllocator.cpp
 )
 
