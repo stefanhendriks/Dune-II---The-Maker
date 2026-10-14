@@ -69,32 +69,41 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ## Project Overview
 
 D2TM (Dune II - The Maker) is a C++23 remake of the classic RTS game Dune II. 
-It uses SDL2 (+ SDL2_image, SDL2_ttf, SDL2_mixer) for rendering, audio, and input. 
+It uses SDL3 (+ SDL3_image, SDL3_ttf, SDL3_mixer) for rendering, audio, and input. 
 
-There are no automated tests in this project.
+Unit tests use Catch2 (v3) and live in `tests/` (registered in `tests/CMakeLists.txt`). They build into `d2tm_tests` alongside the game and run via `ctest`; CI runs them on every platform. The tests cover pure logic only (utils, map geometry); there are no tests that need a running game or SDL window.
 
 ## Build Commands
-**macOS (one-time setup):**
+**One-time setup (dependencies):**
 ```sh
-./install_dependencies_macosx.sh   # installs gcc, cmake, ninja, sdl2 via brew
+./install_dependencies_macosx.sh   # macOS: cmake, ninja, pkg-config, sdl3 (+ ttf/image/mixer), catch2 via brew
+./install_dependencies_ubuntu.sh   # Ubuntu/Debian: build tools + catch2 via apt, SDL3 libs built from source
 ```
+On Windows, build in an MSYS2 MINGW64 shell and install the packages from the `install:` line of the
+"Install MSYS2 with MinGW 64-bit" step in `.github/workflows/build_pr.yml` with `pacman -S`.
 
-**Build:**
+**Build and test:**
 ```sh
 mkdir build && cd build
-cmake ..
+cmake ..          # Windows (MinGW64): cmake .. -G "MinGW Makefiles"
 make -j4          # or: cmake --build . --target all -- -j 6
+ctest --output-on-failure
 ```
 
-**Quick rebuild (macOS):**
+**Quick rebuild:**
 ```sh
-./rebuildmacos.sh   # rm -rf build, then cmake + build
+./rebuildmacos.sh   # macOS/Linux: rm -rf build, cmake + build, ctest, copy build/d2tm to bin/
+rebuildwin.bat      # Windows (from an MSYS2 MINGW64 shell): rm -rf build, cmake + build, ctest
 ```
 
-The binary is `build/d2tm`. Run it from the repo root so it can find `bin/` (game data lives there).
+CI builds with `-DCMAKE_BUILD_TYPE=RelWithDebInfo` and treats warnings as errors; locally the default
+build type is Debug and warnings are not errors unless you configure with `-DD2TM_WERROR=ON`.
+
+The binary is `build/d2tm` (`build/d2tm.exe` on Windows).
 Before you can run the game, make sure to run ./create_release script (on Windows this is .bat, on *nix systems .sh one)
 
-After that you will have a complete package in <PROJECT ROOT>/bin where you can execute d2tm.exe or ./d2tm
+After that you will have a complete package in <PROJECT ROOT>/bin where you can execute d2tm.exe or ./d2tm.
+Run it with `bin/` as the working directory: data paths such as `settings.ini` and `skirmish/` are resolved relative to it.
 
 **CLion on macOS (Apple Silicon):** Set C compiler to `/opt/homebrew/bin/gcc-15`, C++ to `/opt/homebrew/bin/g++-15`.
 
@@ -105,19 +114,18 @@ python3 astyle.py
 
 ## Architecture
 
-### Entry Point & Global State
+### Entry Point
 
-`src/include/d2tmc.h` declares the single global `cGame game` instance plus `global_renderDrawer` and `gfxdata`. 
-
-These globals are explicitly acknowledged as legacy and are being incrementally moved into proper classes.
+`src/main.cpp` creates the `cGame` instance as a local, applies settings (`settings.ini` plus command-line arguments), then calls `setupGame()`, `run()` and `shutdown()`. The old globals (`game`, `global_renderDrawer`, `gfxdata`) are gone; shared state is reached through the context classes and `sGameServices` described below.
 
 ### cGame — Central Facade
 
-`src/game/cGame.h` is the top-level class. It owns or references virtually everything:
-- **Game objects** directly as members: `cUnits`, `cStructures`, `cBullets`, `cParticles`, `cMap`, `cPlayers`
-- **Info/config tables** (loaded from INI): `cUnitInfos`, `cStructureInfos`, `cBulletInfos`, `cParticleInfos`, `cSpecialInfos`, `cUpgradeInfos`
-- **State machine**: `m_state`, `m_nextState`, array of `cGameState*` with `setNextStateToTransitionTo()` + `transitionStateIfRequired()`
-- **Subsystems**: `cTimeManager`, `cDrawManager`, `cMapCamera`, `cInteractionManager`, `cSoundPlayer`, `cScreenShake`, `cScreenFader`
+`src/game/cGame.h` is the top-level class (implementation in `src/game/cGame_logic.cpp`). It owns or references virtually everything:
+- **Game objects** via `cGameObjectContext` (`src/context/cGameObjectContext.h`): `cUnits`, `cStructures`, `cBullets`, `cParticles`, `cMap`, `cPlayers`
+- **Info/config tables** (loaded from INI) via `cInfoContext` (`src/context/cInfoContext.h`): `cUnitInfos`, `cStructureInfos`, `cBulletInfos`, `cParticleInfos`, `cSpecialInfos`, `cUpgradeInfos`
+- **State machine**: `m_state`, `m_nextState`, `m_currentState` with `setNextStateToTransitionTo()` + `transitionStateIfRequired()`; `cCreatorState` creates and caches the `cGameState` instances
+- **Subsystems**: `cTimeManager`, `cDrawManager`, `cMapCamera`, `AudioContext` (wraps `cSoundPlayer`), `cScreenShake`, `cScreenFader`, `cEventEmitter`, `cMissionStatsCollector`
+- **Services**: `sGameServices` (`src/include/sGameServices.h`) bundles pointers to the above and is handed to objects that need them
 
 Game loop timing uses three speeds called in `run()`:
 - `thinkFast()` — every ~5 ms (input, animation, audio)
@@ -128,40 +136,40 @@ Game loop timing uses three speeds called in `run()`:
 
 States are defined in `src/gamestates/` and implement `cGameState` (abstract base with `thinkFast()`, `thinkNormal()`, `thinkSlow()`, `draw()`). States include: `cMainMenuState`, `cGamePlaying`, `cSetupSkirmishState`, `cMentatState`, `cChooseHouseState`, `cSelectYourNextConquestState`, `cWinLoseState`, etc.
 
-State transitions go through `cGame::setNextStateToTransitionTo()` + `initiateFadingOut()`. See `m_game_implication_on_state.txt` for documented state-to-state flows.
+State transitions go through `cGame::setNextStateToTransitionTo()` + `initiateFadingOut()`.
 
 ### GameContext — Dependency Container
 
-`src/context/GameContext.hpp` aggregates shared services passed to states and drawers: `GraphicsContext`, `TextContext`, `cTimeManager`, `cSoundPlayer`, `SDLDrawer`. States receive a `GameContext*` and use it instead of reaching into globals.
+`src/context/GameContext.hpp` aggregates shared services passed to states and drawers: `GraphicsContext`, `TextContext`, `cTimeManager`, `AudioContext`, `SDLDrawer` (and, for now, `cGameInterface`). States receive a `GameContext*` and use it instead of reaching into globals.
 
 This is part of an active, ongoing migration — see `.claude/rules/architecture-direction.md` for the current direction (removing `cGameInterface`, the `sGameServices` caching pattern, construction-order safety, and narrow `*Context` service classes).
 
 ### Rendering
 
-`src/drawers/` contains specialized drawers (one per concern: map, minimap, sidebar, particles, structures, mouse, messages, etc.). `cDrawManager` (`src/managers/cDrawManager.h`) composes them for the combat/playing state. All rendering goes through `SDLDrawer` which wraps SDL2's renderer.
+`src/drawers/` contains specialized drawers (one per concern: map, minimap, sidebar, particles, structures, mouse, messages, etc.). `cDrawManager` (`src/managers/cDrawManager.h`) composes them for the combat/playing state. All rendering goes through `SDLDrawer` which wraps SDL3's renderer.
 
-Graphics assets are loaded from `.dat` files in `bin/data/` via the `Graphics` class. 
-Multiple `Graphics` instances are used: `gfxdata`, `gfxinter`, `gfxworld`, `gfxmentat`, etc. (declared in `src/data/gfx*.h`).
+Graphics assets are loaded from `.dat` files in `bin/data/` (sources in `resources/bin/data/`) via the `Graphics` class. 
+Multiple `Graphics` instances are used: `gfxdata`, `gfxinter`, `gfxworld`, `gfxmentat`, `gfxeditor`, held by `GraphicsContext` (`src/context/GraphicsContext.hpp`). The generated `src/data/gfx*.h` headers define the index constants into each `.dat` file.
 
 ### Game Objects
 
 All live in `src/gameobjects/`:
 - **Units** (`cUnit`, `cUnits`) — array-based pool, `cUnitInfos` holds static type data
 - **Structures** (`cAbstractStructure` subclasses, `cStructures`) — each building type is a subclass (e.g. `cRefinery`, `cBarracks`, `cPalace`)
-- **Projectiles** (`bullet`, `cBullets`)
+- **Projectiles** (`cBullet` in `bullet.h`, `cBullets`)
 - **Particles** (`cParticle`, `cParticles`)
 
 ### Players & AI
 
-`src/player/cPlayer.h` represents each of up to 7 players (index 0 = human, 1–6 = AI). 
+`src/gameobjects/players/cPlayer.h` represents each of up to 7 players (index 0 = human, 1–6 = AI). 
 
-Each player owns a `cPlayerBrain` (`src/player/brains/`) with variants: `cPlayerBrainCampaign`, `cPlayerBrainSkirmish`, `cPlayerBrainSandworm`, `cPlayerBrainEmpty`. 
+Each player owns a `cPlayerBrain` (`src/gameobjects/players/brains/`) with variants: `cPlayerBrainCampaign`, `cPlayerBrainSkirmish`, `cPlayerBrainSandworm`, `cPlayerBrainEmpty`. 
 
 Brains are ticked every ~100 ms and execute `cPlayerBrainMission`s (attack, explore, DeathHand, Fremen, Saboteur).
 
 ### Map
 
-`cMap` (`src/map/cMap.h`) is a flat cell array (32×32 px tiles). `cCell` holds per-cell data (terrain type, unit/structure IDs, fog-of-war). `cMapCamera` handles viewport scrolling.
+`cMap` (`src/gameobjects/map/cMap.h`) is a flat cell array (32×32 px tiles). `cCell` holds per-cell data (terrain type, unit/structure IDs, fog-of-war). `cMapCamera` handles viewport scrolling.
 
 ### Events / Observer Pattern
 
@@ -173,7 +181,7 @@ Game events flow through two observer interfaces:
 
 ### INI Configuration
 
-Game data (unit stats, structure costs, scenario rules) is loaded from INI files at startup via `cIniFile` / `cIniUtils`. Campaign missions are in `bin/campaign/`, skirmish maps in `bin/skirmish/`. `game.ini` in the repo root (also `resources/game.ini`) drives most gameplay parameters.
+Game data (unit stats, structure costs, scenario rules) is loaded from INI files at startup via `cIniFile` / `cIniUtils`. Campaign missions are in `bin/campaign/`, skirmish maps in `bin/skirmish/` (sources in `resources/bin/campaign/` and `resources/bin/skirmish/`; edit those, `bin/` is regenerated by create_release). `game.ini` drives most gameplay parameters: `resources/game.ini.org` holds the shipped rules (create_release copies it to `bin/game.ini`), `resources/game.ini` is a developer profile with tweaked values. New keys usually go into both.
 
 ## Naming Conventions
 
