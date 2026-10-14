@@ -17,6 +17,7 @@
 
 #include "cIniFile.h"
 #include "utils/Log.h"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -147,7 +148,8 @@ bool cIniFile::load(const std::string &config)
 {
     m_fileName = config;
     Logger::info(COMP_GAMERULES, "cIniFile::load", "Load file {}", m_fileName);
-    std::ifstream in(m_fileName.c_str());
+    // m_fileName is UTF-8; open through a path so Windows uses the wide API (a narrow name goes through the ANSI code page)
+    std::ifstream in(std::filesystem::path(std::u8string(m_fileName.begin(), m_fileName.end())));
     if (!in) {
         // throw and catch so we can dump more information about why it failed
         // see also: https://stackoverflow.com/a/51118995/214597
