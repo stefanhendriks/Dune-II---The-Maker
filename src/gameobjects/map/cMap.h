@@ -323,11 +323,7 @@ public:
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc
 
-    bool isVisible(int iCell, int iPlayer) {
-        if (!isValidCell(iCell)) return false;
-        if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return false;
-        return m_cell[iCell].iVisible[iPlayer];
-    }
+    bool isVisible(int iCell, int iPlayer);
 
     /**
      * is Cell visible for player?
@@ -342,11 +338,7 @@ public:
      * @param iCell
      * @param iPlayer
      */
-    bool isSeen(int iCell, int iPlayer) {
-        if (!isValidCell(iCell)) return false;
-        if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return false;
-        return m_cell[iCell].iSeen[iPlayer];
-    }
+    bool isSeen(int iCell, int iPlayer);
 
     /**
      * Is this unit hidden from the human player because it stands in the fog of war? Units of the
@@ -401,14 +393,6 @@ public:
      * @return
      */
     int getCellSlowDown(int i);
-
-    /**
-     * Checks if param c (cell index) is within the boundaries of the Array (thus, this also accepts the outer
-     * map boundaries)
-     * @param c
-     * @return
-     */
-    bool isValidCell(int c) const;
 
     int getMaxCells() const {
         return m_maxCells;

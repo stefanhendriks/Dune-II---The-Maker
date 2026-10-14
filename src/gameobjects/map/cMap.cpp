@@ -161,7 +161,7 @@ void cMap::init(int width, int height)
 
 void cMap::smudge_increase(SmudgeType iType, int iCell)
 {
-    if (!isValidCell(iCell)) return;
+    if (!m_mapGeometry->isValidCell(iCell)) return;
     tCell *pCell = getCell(iCell);
 
     if ( !pCell->smudgetype.has_value() )
@@ -203,7 +203,7 @@ bool cMap::occupiedByWallOrMountain(int iCell)
 
 bool cMap::occupiedInDimension(int iCell, int dimension)
 {
-    if (!isValidCell(iCell)) return false;
+    if (!m_mapGeometry->isValidCell(iCell)) return false;
     if (dimension < 0 || dimension >= MAPID_MAX) return false;
 
     return m_cell[iCell].id[dimension] > -1;
@@ -918,14 +918,9 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     return iStartCell;
 }
 
-bool cMap::isValidCell(int c) const //rip
-{
-    return m_mapGeometry->isValidCell(c);
-}
-
 void cMap::createCell(int cell, int terrainType, int tile)
 {
-    if (!isValidCell(cell)) return;
+    if (!m_mapGeometry->isValidCell(cell)) return;
     if (terrainType > TERRAIN_WALL) return;
     if (terrainType < TERRAIN_BLOOM) return;
     if (tile < 0) return;
@@ -999,7 +994,7 @@ void cMap::setVisibleFor(int iCell, cPlayer *pPlayer)
 
 void cMap::setVisible(int iCell, int iPlayer, bool flag)
 {
-    if (!isValidCell(iCell)) return;
+    if (!m_mapGeometry->isValidCell(iCell)) return;
     if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return;
 
     m_cell[iCell].iVisible[iPlayer] = flag;
@@ -1068,7 +1063,7 @@ int cMap::findNearestSpiceBloom(int iCell)
 
 bool cMap::isValidTerrainForStructureAtCell(int cll)
 {
-    if (!isValidCell(cll)) return false;
+    if (!m_mapGeometry->isValidCell(cll)) return false;
     int cellType = getCellType(cll);
     // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
     bool allowedCellType = (cellType == TERRAIN_SLAB || cellType == TERRAIN_ROCK);
@@ -1204,7 +1199,7 @@ cAbstractStructure *cMap::findClosestStructureType(int cell, int structureType, 
 {
     d2tm_assert(player);
     d2tm_assert(structureType > -1);
-    d2tm_assert(isValidCell(cell));
+    d2tm_assert(m_mapGeometry->isValidCell(cell));
 
     int foundStructureId = -1;    // found structure id
     long shortestDistance = 9999; // max distance to search in
@@ -1296,7 +1291,7 @@ cAbstractStructure *cMap::findClosestAvailableStructureType(int cell, int struct
 {
     d2tm_assert(pPlayer);
     d2tm_assert(structureType > -1);
-    d2tm_assert(isValidCell(cell));
+    d2tm_assert(m_mapGeometry->isValidCell(cell));
 
     int foundStructureId = -1;    // found structure id
     long shortestDistance = 9999; // max distance to search in
@@ -1329,7 +1324,7 @@ cMap::findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int stru
 {
     d2tm_assert(pPlayer);
     d2tm_assert(structureType > -1);
-    d2tm_assert(isValidCell(cell));
+    d2tm_assert(m_mapGeometry->isValidCell(cell));
 
     int foundStructureId = -1;    // found structure id
     long shortestDistance = 9999; // max distance to search in
@@ -1389,7 +1384,7 @@ bool cMap::isCellPassableForWorm(int cell)
 
 bool cMap::isValidTerrainForConcreteAtCell(int cell)
 {
-    if (!isValidCell(cell)) return false;
+    if (!m_mapGeometry->isValidCell(cell)) return false;
     int cellType = getCellType(cell);
     // TODO: make this a flag in the cell/terrain type kind? (there is no such thing yet, its all hard-coded)
     bool allowedCellType = (cellType == TERRAIN_SLAB || cellType == TERRAIN_ROCK);
@@ -1402,7 +1397,7 @@ bool cMap::isValidTerrainForConcreteAtCell(int cell)
 
 void cMap::detonateSpiceBloom(int cell)
 {
-    if (!isValidCell(cell)) return;
+    if (!m_mapGeometry->isValidCell(cell)) return;
     int cellTypeAtCell = getCellType(cell);
     if (cellTypeAtCell != TERRAIN_BLOOM) return;
 
@@ -1527,3 +1522,16 @@ void cMap::onEntityDestroyed(const s_GameEvent &event)
     }
 }
 
+bool cMap::isVisible(int iCell, int iPlayer)
+{
+    if (!m_mapGeometry->isValidCell(iCell)) return false;
+    if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return false;
+    return m_cell[iCell].iVisible[iPlayer];
+}
+
+bool cMap::isSeen(int iCell, int iPlayer)
+{
+    if (!m_mapGeometry->isValidCell(iCell)) return false;
+    if (iPlayer < 0 || iPlayer >= MAX_PLAYERS) return false;
+    return m_cell[iCell].iSeen[iPlayer];
+}
