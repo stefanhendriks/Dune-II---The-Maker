@@ -198,7 +198,7 @@ public:
         return iPlayer;    // return the player id who owns this structure
     }
     int getRallyPoint() {
-        return iRallyPoint;
+        return canHaveRallyPoint() ? iRallyPoint : -1;
     }
     int getFrame() {
         return iFrame;
@@ -322,6 +322,8 @@ public:
     void think_flag_new();
 
     bool canSpawnUnits() const;
+
+    bool canHaveRallyPoint() const;
 
     eListType getAssociatedListID() const;
 

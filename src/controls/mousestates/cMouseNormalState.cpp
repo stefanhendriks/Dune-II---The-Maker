@@ -240,7 +240,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::ATTACK_MODE)) {
         cAbstractStructure *pSelectedStructure = m_player->getSelectedStructure();
         // when selecting a structure
-        if (pSelectedStructure && pSelectedStructure->belongsTo(m_player) && pSelectedStructure->canSpawnUnits()) {
+        if (pSelectedStructure && pSelectedStructure->belongsTo(m_player) && pSelectedStructure->canHaveRallyPoint()) {
             setState(SELECT_STATE_RALLY);
             m_mouseTile = MOUSE_RALLY;
         }
