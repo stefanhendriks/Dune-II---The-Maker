@@ -1121,6 +1121,14 @@ void cGame::changeStateFromMentat()
     }
 
     // NOT a skirmish game
+    // won the last mission, nothing left to conquer: show the credits (they lead back to the main menu)
+    if (isState(GAME_WINBRIEF) && m_dataCampaign->mission >= LAST_CAMPAIGN_MISSION) {
+        setNextStateToTransitionTo(GAME_CREDITS);
+
+        initiateFadingOut();
+        return;
+    }
+
     // won mission, transition to region selection (Select your next Conquest)
     if (isState(GAME_WINBRIEF)) {
         setNextStateToTransitionTo(GAME_REGION);

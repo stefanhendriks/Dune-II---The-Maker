@@ -15,6 +15,8 @@
 
 #pragma once
 
+static constexpr int LAST_CAMPAIGN_MISSION = 9;
+
 struct s_DataCampaign {
     int housePlayer;
     int region;                   // what region is selected?
