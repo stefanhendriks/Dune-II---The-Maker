@@ -259,8 +259,8 @@ bool cPathFinder::isCellPassableForActiveUnit(int candidateCell) const
     }
 
     // Never allow traversing the invisible 1-cell map border.
-    const int mapWidth = m_map->getWidth();
-    const int mapHeight = m_map->getHeight();
+    const int mapWidth = m_mapGeometry->getWidth();
+    const int mapHeight = m_mapGeometry->getHeight();
     const int cellX = candidateCell % mapWidth;
     const int cellY = candidateCell / mapWidth;
     if (cellX <= 0 || cellY <= 0 || cellX >= (mapWidth - 1) || cellY >= (mapHeight - 1)) {
@@ -341,7 +341,7 @@ void cPathFinder::executeCreatePathSearch()
     }
 
     std::queue<int> frontier;
-    const int mapWidth = m_map->getWidth();
+    const int mapWidth = m_mapGeometry->getWidth();
     const int targetX = m_currentCell % mapWidth;
     const int targetY = m_currentCell / mapWidth;
     bool reachedCurrentCell = false;

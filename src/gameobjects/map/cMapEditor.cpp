@@ -51,11 +51,11 @@ void cMapEditor::createRandomField(int cell, int terrainType, int size)
     int y = m_mapGeometry->getCellY(cell);
 
     if (x < 0) {
-        x = RNG::rnd(m_map->getWidth());
+        x = RNG::rnd(m_mapGeometry->getWidth());
     }
 
     if (y < 0) {
-        y = RNG::rnd(m_map->getHeight());
+        y = RNG::rnd(m_mapGeometry->getHeight());
     }
 
     if (terrainType == TERRAIN_ROCK && size < 0) {
@@ -430,8 +430,8 @@ void cMapEditor::removeSingleRockSpots()
     // soft out rocky spots!
     int startX = 1;
     int startY = 1;
-    int endX = m_map->getWidth() - 1;
-    int endY = m_map->getHeight() - 1;
+    int endX = m_mapGeometry->getWidth() - 1;
+    int endY = m_mapGeometry->getHeight() - 1;
 
     for (int y = startY; y < endY; y++) {
         for (int x = startX; x < endX; x++) {

@@ -152,12 +152,12 @@ void cMapCamera::keepViewportWithinReasonableBounds()
         m_viewportStartY = -halfViewportHeight;
     }
 
-    int maxWidth = (m_pMap->getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
+    int maxWidth = (m_pMap->getGeometry()->getWidth() * TILESIZE_WIDTH_PIXELS) + halfViewportWidth;
     if (getViewportEndX() > maxWidth) {
         m_viewportStartX = maxWidth - m_viewportWidth;
     }
 
-    int maxHeight = (m_pMap->getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
+    int maxHeight = (m_pMap->getGeometry()->getHeight() * TILESIZE_HEIGHT_PIXELS) + halfViewportHeight;
     if ((getViewportEndY()) > maxHeight) {
         m_viewportStartY = maxHeight - m_viewportHeight;
     }

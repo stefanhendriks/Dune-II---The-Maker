@@ -135,8 +135,8 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     renderer->FillWithColor(randomMapEntry.terrain, Color::Black);
 
     // now put in previewmap 0
-    for (int x = 0; x < objects->getMap()->getWidth(); x++) {
-        for (int y = 0; y < objects->getMap()->getHeight(); y++) {
+    for (int x = 0; x < objects->getMap()->getGeometry()->getWidth(); x++) {
+        for (int y = 0; y < objects->getMap()->getGeometry()->getHeight(); y++) {
 
             int cll = objects->getMapGeometry()->getCellWithMapDimensions(x, y);
             if (cll < 0) continue;

@@ -70,7 +70,9 @@ public:
     double distance(int cell1, int cell2) const;
     double distance(int x1, int y1, int x2, int y2) const;
 
-    int getMaxCells() const { return maxCells; }
+    [[nodiscard]] int getWidth() const { return mapWidth; }
+    [[nodiscard]] int getHeight() const { return mapHeight; }
+    [[nodiscard]] int getMaxCells() const { return maxCells; }
     int getMaxDistanceInPixels() const;
 
     bool isAtMapBoundaries(int cell) const;

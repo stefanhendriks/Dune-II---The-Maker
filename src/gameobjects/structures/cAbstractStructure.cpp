@@ -858,7 +858,8 @@ void cAbstractStructure::unitHeadsTowardsStructure(int unitId)
 
 int cAbstractStructure::getRandomStructureCell()
 {
-    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * m_objects->getMap()->getWidth());
+    const auto *mapGeometry = m_objects->getMapGeometry();
+    return getCell() + RNG::rnd(getWidth()) + (RNG::rnd(getHeight()) * mapGeometry->getWidth());
 }
 
 /**

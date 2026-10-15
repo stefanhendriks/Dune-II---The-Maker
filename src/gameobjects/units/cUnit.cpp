@@ -1190,7 +1190,7 @@ void cUnit::think_turn_to_desired_body_facing()
         }
         else {
             // when close to a border, then reduce turnspeed so that orni's wont crash over the map borders
-            if ((position.iCellX < 4 || position.iCellX >= (m_map->getWidth()-4)) || (position.iCellY < 4 || position.iCellY >= (m_map->getHeight()-4))) {
+            if ((position.iCellX < 4 || position.iCellX >= (m_map->getGeometry()->getWidth()-4)) || (position.iCellY < 4 || position.iCellY >= (m_map->getGeometry()->getHeight()-4))) {
                 turnspeed = 0;
             }
         }

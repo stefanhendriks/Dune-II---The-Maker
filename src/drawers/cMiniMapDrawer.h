@@ -30,6 +30,7 @@
 
 
 class cMap;
+class MapGeometry;
 class cMapCamera;
 class cPlayer;
 class Texture;
@@ -98,9 +99,10 @@ private:
     bool m_isMouseOver;
 
     //@mira : where is map ? Where is this initialisation ?
-    cMap *m_map;	// the minimap drawer reads data from here
-    cPlayer *m_player;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
-    cMapCamera *m_mapCamera;
+    cMap *m_map = nullptr;	// the minimap drawer reads data from here
+    MapGeometry *m_mapGeometry = nullptr;
+    cPlayer *m_player = nullptr;	// the player used as 'context' (ie, for drawing the rectangle / viewport on the minimap)
+    cMapCamera *m_mapCamera = nullptr;
     GameContext* m_ctx = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
