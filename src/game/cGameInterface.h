@@ -19,7 +19,6 @@ class cGame;
 class cPlayer;
 struct s_GameEvent;
 struct s_PreviewMap;
-class Texture;
 
 class cGameInterface
 {
@@ -49,7 +48,6 @@ public:
     void loadMapFromEditor(int iSkirmishMap) const;
     void checkMissionWinOrFail() const;
     void goingToWinLoseBrief(int winOrLoseBrief) const;
-    Texture* getScreenTexture() const;
     void drawTextFps() const;
     void drawTextTime() const;
     int getCurrentState() const;

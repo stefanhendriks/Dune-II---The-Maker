@@ -31,6 +31,7 @@ class cMissionStatsCollector;
 class cGameConditionChecker;
 class cScreenShake;
 class cScreenFader;
+class Texture;
 
 struct sGameServices
 {
@@ -49,4 +50,5 @@ struct sGameServices
     cGameConditionChecker *gameConditionChecker = nullptr;
     cScreenShake *screenShake = nullptr;
     cScreenFader *screenFader = nullptr;
+    Texture *screenTexture = nullptr; // set in cGame::run(), before any state transition
 };

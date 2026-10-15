@@ -15,7 +15,6 @@
 
 #include "game/cGameInterface.h"
 #include "game/cGame.h"
-#include "include/Texture.hpp"
 #include "include/sGameEvent.h"
 
 #include <format>
@@ -111,11 +110,6 @@ void cGameInterface::drawTextTime() const
 void cGameInterface::goingToWinLoseBrief(int winOrLoseBrief) const
 {
     m_game->goingToWinLoseBrief(winOrLoseBrief);
-}
-
-Texture* cGameInterface::getScreenTexture() const
-{
-    return m_game->getScreenTexture();
 }
 
 void cGameInterface::jumpToSelectYourNextConquestMission(int index) const

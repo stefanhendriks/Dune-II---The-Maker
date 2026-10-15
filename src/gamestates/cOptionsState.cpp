@@ -47,7 +47,7 @@ cOptionsState::cOptionsState(sGameServices* services, int prevState)
     d2tm_assert(m_mouse != nullptr);
 
     refresh();
-    m_backgroundTexture = m_interface->getScreenTexture();
+    m_backgroundTexture = services->screenTexture;
 }
 
 void cOptionsState::constructWindow(int prevState)
