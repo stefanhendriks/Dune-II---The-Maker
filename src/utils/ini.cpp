@@ -954,6 +954,12 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_cred
         }
     }
 
+    // CPU slots this scenario doesn't use may still hold a house from the region screen
+    // (which sets house = player index); clear them so they don't count as enemies
+    for (int unusedCPUId = iCPUId; unusedCPUId < AI_CPU5; unusedCPUId++) {
+        m_objects->getPlayer(unusedCPUId)->setHouse(GENERALHOUSE);
+    }
+
     if (fremenIsHumanAlly) {
         m_objects->getPlayer(AI_CPU5)->setTeam(0);
     }
