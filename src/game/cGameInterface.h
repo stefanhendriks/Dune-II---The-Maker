@@ -15,12 +15,6 @@
 
 #pragma once
 
-#include "utils/Color.hpp"
-#include "include/eNotificationType.h"
-#include "game/MissionStats.h"
-
-#include <string>
-
 class cGame;
 class cGameSettings;
 class cMouse;
@@ -38,7 +32,6 @@ public:
     virtual ~cGameInterface() = default;
 
     cMouse* getMouse() const;
-    void drawCursor() const;
     cMapCamera* getMapCamera() const;
     cRectangle* getMapViewport() const;
     void setMissionWon() const;
@@ -48,7 +41,6 @@ public:
 
     void emitGameEvent(const s_GameEvent &event) const;
     void onNotifyGameEvent(const s_GameEvent &event) const;
-    void addNotification(const std::string &message, eNotificationType type) const;
 
     void prepareMentatToTellAboutHouse(int house) const;
     void prepareMentatForPlayer() const;
@@ -71,9 +63,6 @@ public:
     int getCurrentState() const;
 
     void reduceShaking() const;
-    void shakeScreen(int duration) const;
-    Color getColorFadeSelectedLimited(Color color, float minFade) const;
-    Color getColorFadeSelected(int r, int g, int b) const;
     void setWinFlags(int value) const;
     void setLoseFlags(int value) const;
     bool playMusicByType(int iType) const;
@@ -85,7 +74,6 @@ public:
     void changeStateFromMentat() const;
     cPlayer* getPlayer(int id) const;
     cGameSettings* getGameSettings() const;
-    MissionStats getMissionStats() const;
 private:
     cGame* m_game = nullptr;
 };

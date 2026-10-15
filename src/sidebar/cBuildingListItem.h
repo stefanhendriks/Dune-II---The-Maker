@@ -28,7 +28,6 @@
 
 class cBuildingList;
 class cInfoContext;
-class cGameInterface;
 class cGameSettings;
 struct s_SpecialInfo;
 struct s_UpgradeInfo;
@@ -50,7 +49,7 @@ public:
     cBuildingListItem(int theID, s_UnitInfo entry, int subList);
     cBuildingListItem(int theID, s_UpgradeInfo entry);
 
-    void serviceInit(cInfoContext* info, cGameSettings* settings, cGameInterface* gameInterface);
+    void serviceInit(cInfoContext* info, cGameSettings* settings);
 
     static const int DefaultTimerCap = 35;
     static const int DebugTimerCap = 2;
@@ -311,7 +310,6 @@ private:
     cBuildingList *m_myList;
     cInfoContext* m_info = nullptr;
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_gameInterface = nullptr;
 
     cBuildingListItem(int theID, s_StructureInfo entry, cBuildingList *list, int subList);
     cBuildingListItem(int theID, s_UnitInfo entry, cBuildingList *list, int subList);

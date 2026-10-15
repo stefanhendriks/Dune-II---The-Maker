@@ -21,10 +21,8 @@
 #include "include/eGameState.h"
 #include "utils/cRectangle.h"
 #include "observers/cScenarioObserver.h"
-#include "utils/Color.hpp"
 #include "utils/Log.h"
 #include "game/eScalingMode.h"
-#include "game/MissionStats.h"
 
 #include <memory>
 #include <string>
@@ -152,12 +150,9 @@ public:
     void playVoice(int sampleId, int playerId);
     void playMusicByTypeForStateTransition(int iType);
     bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
-    void addNotification(const std::string &message, eNotificationType type);
 
     int getMaxVolume();
 
-    Color getColorFadeSelectedLimited(Color color, float minFade);
-    Color getColorFadeSelected(int r, int g, int b, bool rFlag = true, bool gFlag = true, bool bFlag = true);
 
     cMouse *getMouse() {
         return m_mouse.get(); // NOOOO
@@ -173,7 +168,6 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    void shakeScreen(int duration);
     void reduceShaking() const;
 
     void setWinFlags(int value);
@@ -208,7 +202,6 @@ public:
     void drawTextTime() const;
     void checkMissionWinOrFail();
 
-    MissionStats getMissionStats() const;
 
 private:
     bool m_windowed;        			    // windowed

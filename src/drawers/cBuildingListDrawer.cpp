@@ -24,7 +24,6 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 #include "utils/common.h"
 #include "utils/Log.h"
@@ -48,7 +47,6 @@ cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player
 void cBuildingListDrawer::serviceInit(sGameServices* services)
 {
     m_infos = services->info;
-    m_interface = services->ctx->getGameInterface();
     m_settings = services->settings;
     m_mouse = services->mouse;
 }

@@ -24,7 +24,6 @@ class GameContext;
 class Graphics;
 class SDLDrawer;
 class cInfoContext;
-class cGameInterface;
 class cGameSettings;
 class cMouse;
 struct sGameServices;
@@ -61,7 +60,6 @@ private:
 
     cPlayer *m_player;
     cInfoContext* m_infos = nullptr;
-    cGameInterface* m_interface = nullptr;
     cGameSettings* m_settings = nullptr;
     cMouse* m_mouse = nullptr;
 

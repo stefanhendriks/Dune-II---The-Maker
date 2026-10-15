@@ -25,7 +25,6 @@
 
 class cItemBuilder;
 class cInfoContext;
-class cGameInterface;
 class cGameSettings;
 class cEventEmitter;
 class cScreenFader;
@@ -199,7 +198,6 @@ private:
 
     cItemBuilder *m_itemBuilder;
     cInfoContext* m_info = nullptr;
-    cGameInterface* m_gameInterface = nullptr;
     cGameSettings* m_settings = nullptr;
     cEventEmitter* m_eventEmitter = nullptr;
     cScreenFader* m_screenFader = nullptr;

@@ -39,8 +39,6 @@ void cUnits::serviceInit(sGameServices* services)
     d2tm_assert(m_infos != nullptr);
     m_objects = services->objects;
     d2tm_assert(m_objects != nullptr);
-    m_interface = services->ctx->getGameInterface();
-    d2tm_assert(m_interface != nullptr);
     m_map = m_objects->getMap();
     d2tm_assert(m_map != nullptr);
 

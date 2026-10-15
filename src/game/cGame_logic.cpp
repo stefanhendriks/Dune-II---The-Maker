@@ -366,11 +366,6 @@ void cGame::setMissionWon()
     takeBackGroundScreen();
 }
 
-MissionStats cGame::getMissionStats() const
-{
-    return m_missionStatsCollector->snapshot(m_timeManager->getElapsedSeconds());
-}
-
 void cGame::setMissionLost()
 {
     m_missionWasWon = false;
@@ -513,11 +508,6 @@ void cGame::run()
         SDL_RenderPresent(renderer);
         m_timeManager->waitForCPU(); // wait for CPU to catch up, so we don't run too fast
     }
-}
-
-void cGame::shakeScreen(int duration)
-{
-    m_screenShake->shake(duration);
 }
 
 /**
@@ -1221,16 +1211,6 @@ void cGame::reduceShaking() const {
 }
 
 
-Color cGame::getColorFadeSelectedLimited(Color color, float minFade)
-{
-    return m_cScreenFader->getColorFadeSelectedLimited(color, minFade);
-}
-
-Color cGame::getColorFadeSelected(int r, int g, int b, bool rFlag, bool gFlag, bool bFlag)
-{
-    return m_cScreenFader->getColorFadeSelected(r,g,b,rFlag,gFlag,bFlag);
-}
-
 void cGame::setWinFlags(int value)
 {
     m_gameConditionChecker->setWinFlags(value);
@@ -1335,11 +1315,6 @@ void cGame::saveBmpScreenToDisk()
     if (saved) {
         m_notificationArea->addNotification("Screenshot saved.", eNotificationType::NEUTRAL);
     }
-}
-
-void cGame::addNotification(const std::string &message, eNotificationType type)
-{
-    m_notificationArea->addNotification(message, type);
 }
 
 void cGame::onKeyDownGame(const cKeyboardEvent &)

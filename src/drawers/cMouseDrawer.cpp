@@ -18,7 +18,6 @@
 #include "controls/cGameControlsContext.h"
 #include "controls/cMouse.h"
 #include "context/GameContext.hpp"
-#include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cRefinery.h"
 #include "gameobjects/structures/cSpiceSilo.h"
@@ -32,7 +31,6 @@
 
 void cMouseDrawer::serviceInit(sGameServices* services)
 {
-    m_interface = services->ctx->getGameInterface();
     m_renderer = services->ctx->getSDLDrawer();
     m_settings = services->settings;
     m_mouse = services->mouse;

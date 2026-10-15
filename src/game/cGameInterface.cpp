@@ -70,11 +70,6 @@ void cGameInterface::initSkirmish() const
 //     m_game->loadMapFromEditor(map);
 // }
 
-void cGameInterface::drawCursor() const
-{
-    m_game->getMouse()->draw();
-}
-
 cMapCamera* cGameInterface::getMapCamera() const
 {
     return m_game->m_mapCamera.get();
@@ -120,11 +115,6 @@ void cGameInterface::onNotifyGameEvent(const s_GameEvent &event) const
     emitGameEvent(event);
 }
 
-void cGameInterface::addNotification(const std::string &message, eNotificationType type) const
-{
-    m_game->addNotification(message, type);
-}
-
 void cGameInterface::checkMissionWinOrFail() const
 {
     m_game->checkMissionWinOrFail();
@@ -143,11 +133,6 @@ void cGameInterface::drawTextTime() const
 void cGameInterface::reduceShaking() const
 {
     m_game->reduceShaking();
-}
-
-void cGameInterface::shakeScreen(int duration) const
-{
-    m_game->shakeScreen(duration);
 }
 
 void cGameInterface::goingToWinLoseBrief(int winOrLoseBrief) const
@@ -178,16 +163,6 @@ void cGameInterface::prepareMentatForPlayer() const
 void cGameInterface::loadScenario() const
 {
     m_game->loadScenario();
-}
-
-Color cGameInterface::getColorFadeSelectedLimited(Color color, float minFade) const
-{
-    return m_game->getColorFadeSelectedLimited(color, minFade);
-}
-
-Color cGameInterface::getColorFadeSelected(int r, int g, int b) const
-{
-    return m_game->getColorFadeSelected(r, g, b);
 }
 
 void cGameInterface::setWinFlags(int value) const
@@ -245,7 +220,3 @@ cGameSettings* cGameInterface::getGameSettings() const
     return m_game->m_gameSettings.get();
 }
 
-MissionStats cGameInterface::getMissionStats() const
-{
-    return m_game->getMissionStats();
-}
