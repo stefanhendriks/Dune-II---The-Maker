@@ -209,12 +209,10 @@ void cBullet::thinkFast()
     if (TIMER_homing > 0) {
         TIMER_homing--;
 
-        if (iHoming > -1) {
-            if (m_objects->getUnit(iHoming)->isValid()) {
-                int cll = m_objects->getUnit(iHoming)->getCell();
-                targetX = m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(cll);
-                targetY = m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(cll);
-            }
+        if (m_objects->getUnits()->isValidUnit(iHoming)) {
+            int cll = m_objects->getUnit(iHoming)->getCell();
+            targetX = m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(cll);
+            targetY = m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(cll);
         }
     }
 
@@ -466,7 +464,7 @@ bool cBullet::damageAirUnit(int cell) const
 
     if (doesAirUnitTakeDamage(unitIdOnAirLayer)) {
         cUnit *airUnit = m_objects->getUnit(unitIdOnAirLayer);
-        int originUnitId = (iOwnerUnit > -1 && m_objects->getUnit(iOwnerUnit)->isValid()) ? iOwnerUnit : -1;
+        int originUnitId = m_objects->getUnits()->isValidUnit(iOwnerUnit) ? iOwnerUnit : -1;
         airUnit->takeDamage(iDamage, originUnitId, iOwnerStructure);
         return true;
     }
@@ -490,7 +488,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
     if (!groundUnitTakingDamage->isValid()) return false;
 
     float iDamage = getDamageToInflictToUnit(*groundUnitTakingDamage) * factor;
-    int originUnitId = (iOwnerUnit > -1 && m_objects->getUnit(iOwnerUnit)->isValid()) ? iOwnerUnit : -1;
+    int originUnitId = m_objects->getUnits()->isValidUnit(iOwnerUnit) ? iOwnerUnit : -1;
     groundUnitTakingDamage->takeDamage(iDamage, originUnitId, iOwnerStructure);
 
     // this unit will think what to do now (he got hit ouchy!)
@@ -592,7 +590,7 @@ void cBullet::damageSandworm(int cell, double factor) const
 
     cUnit *worm = m_objects->getUnit(id);
     float damage = getDamageToInflictToNonInfantry() * factor;
-    int originUnitId = (iOwnerUnit > -1 && m_objects->getUnit(iOwnerUnit)->isValid()) ? iOwnerUnit : -1;
+    int originUnitId = m_objects->getUnits()->isValidUnit(iOwnerUnit) ? iOwnerUnit : -1;
     worm->takeDamage(damage, originUnitId, iOwnerStructure);
 }
 
