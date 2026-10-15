@@ -37,9 +37,10 @@
 static constexpr int MENTAT_SCREEN_W = 640;
 static constexpr int MENTAT_SCREEN_H = 480;
 
-AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
+AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, bool canMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(settings != nullptr);
     m_gameInterface = ctx->getGameInterface();
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
@@ -72,8 +73,8 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
     if (canMissionSelect) {
 
         int length = m_textDrawer->getTextLength("Mission select");
-        const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_gameInterface->getGameSettings()->getScreenW() - length,
-                                                m_gameInterface->getGameSettings()->getScreenH() - m_textDrawer->getFontHeight(),
+        const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(settings->getScreenW() - length,
+                                                settings->getScreenH() - m_textDrawer->getFontHeight(),
                                                 "Mission select");
 
         auto gui_btn_toMissionSelect = GuiButtonBuilder()
@@ -95,8 +96,8 @@ AbstractMentat::AbstractMentat(GameContext* ctx, bool canMissionSelect)
 
     state = INIT;
 
-    offsetX = (m_gameInterface->getGameSettings()->getScreenW() - MENTAT_SCREEN_W) / 2;
-    offsetY = (m_gameInterface->getGameSettings()->getScreenH() - MENTAT_SCREEN_H) / 2;
+    offsetX = (settings->getScreenW() - MENTAT_SCREEN_W) / 2;
+    offsetY = (settings->getScreenH() - MENTAT_SCREEN_H) / 2;
     movieTopleftX = offsetX + 256;
     movieTopleftY = offsetY + 120;
     memset(sentence, 0, sizeof(sentence));

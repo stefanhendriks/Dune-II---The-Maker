@@ -24,7 +24,7 @@
 #include "context/GameContext.hpp"
 #include "include/cAssert.h"
 
-SardaukarMentat::SardaukarMentat(GameContext* ctx, bool allowMissionSelect) : AbstractMentat(ctx, allowMissionSelect)
+SardaukarMentat::SardaukarMentat(GameContext* ctx, cGameSettings* settings, bool allowMissionSelect) : AbstractMentat(ctx, settings, allowMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
     iBackgroundFrame = MENTATS;

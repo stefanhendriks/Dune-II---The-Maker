@@ -18,6 +18,7 @@
 #include "AbstractMentat.h"
 
 class cTextDrawer;
+class cPlayer;
 struct s_DataCampaign;
 
 /**
@@ -25,7 +26,7 @@ struct s_DataCampaign;
  */
 class BeneMentat : public AbstractMentat {
 public:
-    BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign);
+    BeneMentat(GameContext* ctx, cGameSettings* settings, cPlayer* humanPlayer, s_DataCampaign* dataCampaign);
     void think() override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 private:
@@ -36,5 +37,6 @@ private:
     void draw_eyes() override;
     void draw_other() override;
     void draw() override;
+    cPlayer* m_humanPlayer;
     s_DataCampaign* m_dataCampaign;
 };

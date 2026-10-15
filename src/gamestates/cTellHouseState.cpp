@@ -23,6 +23,7 @@
 #include "data/gfxaudio.h"
 #include "context/AudioContext.hpp"
 #include "context/GameContext.hpp"
+#include "context/cGameObjectContext.h"
 #include "include/definitions.h"
 
 #include "include/cAssert.h"
@@ -40,6 +41,9 @@ cTellHouseState::cTellHouseState(sGameServices* services, cIni *ini, s_DataCampa
     m_mouse = services->mouse;
     d2tm_assert(m_mouse != nullptr);
     m_audioContext = services->ctx->getAudioContext();
+    m_settings = services->settings;
+    d2tm_assert(m_settings != nullptr);
+    m_humanPlayer = services->objects->getPlayer(HUMAN);
     prepareMentat(m_house);
 }
 
@@ -54,7 +58,7 @@ eGameStateType cTellHouseState::getType()
 void cTellHouseState::prepareMentat(int house)
 {
     m_house = house;
-    m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
+    m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, m_humanPlayer, m_dataCampaign);
     m_mentat->setHouse(house);
 
     if (house == ATREIDES) {

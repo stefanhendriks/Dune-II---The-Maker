@@ -31,7 +31,7 @@
 #include "context/cInfoContext.h"
 #include <iostream>
 
-BeneMentat::BeneMentat(GameContext* ctx, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, false), m_dataCampaign(dataCampaign)
+BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, false), m_humanPlayer(humanPlayer), m_dataCampaign(dataCampaign)
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(dataCampaign != nullptr);
@@ -65,7 +65,7 @@ void BeneMentat::onYesButtonPressed()
     m_dataCampaign->mission = 1; // first mission
     m_dataCampaign->region  = 1; // and the first "region" so to speak
     m_gameInterface->missionInit();
-    m_gameInterface->getPlayer(HUMAN)->setHouse(this->getHouse());
+    m_humanPlayer->setHouse(this->getHouse());
     m_dataCampaign->housePlayer = this->getHouse();
     m_gameInterface->initiateFadingOut();
 }
@@ -73,7 +73,7 @@ void BeneMentat::onYesButtonPressed()
 void BeneMentat::onNoButtonPressed()
 {
     Logger::info(COMP_GAME, "BeneMentat::onNoButtonPressed", "Player chose NOT to join house [{}]", cPlayer::getHouseNameForId(this->getHouse()));
-    m_gameInterface->getPlayer(HUMAN)->setHouse(GENERALHOUSE);
+    m_humanPlayer->setHouse(GENERALHOUSE);
     m_dataCampaign->housePlayer = GENERALHOUSE;
     m_gameInterface->setNextStateToTransitionTo(GAME_SELECT_HOUSE);
     m_gameInterface->initiateFadingOut();

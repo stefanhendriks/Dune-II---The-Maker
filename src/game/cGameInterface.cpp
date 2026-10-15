@@ -14,7 +14,6 @@
  */
 
 #include "game/cGameInterface.h"
-#include "context/cGameObjectContext.h"
 #include "game/cGame.h"
 #include "include/Texture.hpp"
 #include "include/sGameEvent.h"
@@ -172,15 +171,5 @@ int cGameInterface::getCurrentState() const
 void cGameInterface::changeStateFromMentat() const
 {
     m_game->changeStateFromMentat();
-}
-
-cPlayer* cGameInterface::getPlayer(int id) const
-{
-    return m_game->m_gameObjectsContext->getPlayer(id);
-}
-
-cGameSettings* cGameInterface::getGameSettings() const
-{
-    return m_game->m_gameSettings.get();
 }
 

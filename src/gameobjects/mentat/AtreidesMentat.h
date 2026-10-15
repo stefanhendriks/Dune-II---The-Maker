@@ -19,7 +19,7 @@
 
 class AtreidesMentat : public AbstractMentat {
 public:
-    AtreidesMentat(GameContext* ctx, bool allowMissionSelect);
+    AtreidesMentat(GameContext* ctx, cGameSettings* settings, bool allowMissionSelect);
     void think() override;
 
     protected:

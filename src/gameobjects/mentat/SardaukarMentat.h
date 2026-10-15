@@ -19,7 +19,7 @@
 
 class SardaukarMentat : public AbstractMentat {
 public:
-    SardaukarMentat(GameContext* ctx, bool allowMissionSelect);
+    SardaukarMentat(GameContext* ctx, cGameSettings* settings, bool allowMissionSelect);
     void think();
 private:
     void draw_mouth();
