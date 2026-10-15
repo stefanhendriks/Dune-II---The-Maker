@@ -46,6 +46,7 @@ class cRectangle;
 class cGameInterface;
 class cStructureUtils;
 class cInfoContext;
+class AudioContext;
 struct sGameServices;
 
 class cGameControlsContext : public cInputObserver, cScenarioObserver {
@@ -62,6 +63,7 @@ public:
     cGameInterface *getInterface() const { return m_interface; }
     cStructureUtils *getStructureUtils() const { return m_structureUtils; }
     cInfoContext *getInfos() const { return m_infos; }
+    AudioContext *getAudioContext() const { return m_audioContext; }
     cRectangle *getMapViewport() const { return m_mapViewport; }
 
     int getIdOfStructureWhereMouseHovers() const {
@@ -152,6 +154,7 @@ private:
     cGameInterface *m_interface = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cInfoContext *m_infos = nullptr;
+    AudioContext *m_audioContext = nullptr;
     cRectangle *m_mapViewport = nullptr;
 
     // the states, initialized once to save a lot of construct/destructs (and make it possible

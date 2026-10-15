@@ -42,6 +42,7 @@
 #include "game/cGameSettings.h"
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
+#include "context/AudioContext.hpp"
 
 #include <SDL3/SDL.h>
 #include <format>
@@ -91,6 +92,8 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_objects != nullptr);
     m_interface = services->ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_audioContext = services->ctx->getAudioContext();
+    d2tm_assert(m_audioContext != nullptr);
     m_screenFader = services->screenFader;
     d2tm_assert(m_screenFader != nullptr);
     m_structureUtils = services->structureUtils;
@@ -2133,7 +2136,7 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
     }
 
     if (mayPlayVoice && hasVoiceToPlay) {
-        m_interface->playVoice(voiceId, getId());
+        m_audioContext->playVoice(voiceId, getHouse());
     }
 }
 
@@ -2610,11 +2613,11 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
     }
 
     if (unitSelected) {
-        m_interface->playSound(SOUND_REPORTING);
+        m_audioContext->playSound(SOUND_REPORTING);
     }
 
     if (infantrySelected) {
-        m_interface->playSound(SOUND_YESSIR);
+        m_audioContext->playSound(SOUND_YESSIR);
     }
 
     // return true if we selected any unit

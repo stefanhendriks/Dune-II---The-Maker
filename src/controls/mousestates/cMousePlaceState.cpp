@@ -16,7 +16,7 @@
 #include "cMousePlaceState.h"
 
 #include "gameobjects/map/cMap.h"
-#include "game/cGameInterface.h"
+#include "context/AudioContext.hpp"
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cStructures.h"
@@ -82,7 +82,7 @@ void cMousePlaceState::onMouseLeftButtonClicked()
     }
 
     if (mayPlaceIt(itemToPlace, m_context->getMouseCell())) {
-        m_context->getInterface()->playSound(SOUND_PLACE);
+        m_context->getAudioContext()->playSound(SOUND_PLACE);
         m_player->placeItem(mouseCell, itemToPlace);
         m_context->toPreviousState();
     }

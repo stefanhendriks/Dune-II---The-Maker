@@ -78,6 +78,7 @@ void cGameControlsContext::serviceInit(sGameServices *services)
     m_interface = services->ctx->getGameInterface();
     m_structureUtils = services->structureUtils;
     m_infos = services->info;
+    m_audioContext = services->ctx->getAudioContext();
     m_mapViewport = services->mapViewport;
 }
 

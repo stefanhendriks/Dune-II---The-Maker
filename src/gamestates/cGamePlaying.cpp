@@ -25,6 +25,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
+#include "context/AudioContext.hpp"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
 #include <SDL3/SDL.h>
@@ -75,6 +76,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     //fix others pointers
     m_interface = m_ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_audioContext = m_ctx->getAudioContext();
+    d2tm_assert(m_audioContext != nullptr);
     m_screenFader = services->screenFader;
     d2tm_assert(m_screenFader != nullptr);
     m_mapCamera = services->mapCamera;
@@ -835,7 +838,7 @@ void cGamePlaying::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
             if (structureId > -1) {
                 cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
                 if (pStructure && pStructure->isValid()) {
-                    m_interface->playSound(SOUND_PLACE);
+                    m_audioContext->playSound(SOUND_PLACE);
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId, m_objects, m_info, m_interface, m_mapCamera);
 
                     const s_GameEvent launchedEvent{

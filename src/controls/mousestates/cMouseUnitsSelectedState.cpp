@@ -19,7 +19,7 @@
 #include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
 #include "context/cInfoContext.h"
-#include "game/cGameInterface.h"
+#include "context/AudioContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/units/cUnits.h"
@@ -232,11 +232,11 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
         }
 
         if (infantryAcknowledged) {
-            m_context->getInterface()->playSound(SOUND_MOVINGOUT + RNG::rnd(2));
+            m_context->getAudioContext()->playSound(SOUND_MOVINGOUT + RNG::rnd(2));
         }
 
         if (unitAcknowledged) {
-            m_context->getInterface()->playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
+            m_context->getAudioContext()->playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
         }
     }
 
