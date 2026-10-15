@@ -42,12 +42,11 @@ enum eLogComponent {
     COMP_GAME,
     COMP_NONE,
     COMP_INIT,
-    // COMP_ALLEGRO,		/** Use for allegro specific calls **/
     COMP_SDL2,        /** Use for SDL2 specific calls **/
     COMP_SETUP,
     COMP_VERSION,		/** version specific loggin messages **/
     COMP_SKIRMISHSETUP, /** When skirmish game is being set up **/
-    COMP_ALFONT, 		/** ALFONT library specific **/
+    COMP_TEXT, 		/** Text rendering **/
     COMP_SOUND, 		/** Sound related **/
     COMP_REGIONINI,		/** Used for regions **/
     COMP_PLAYER,			/** Player related **/

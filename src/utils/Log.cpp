@@ -73,7 +73,7 @@ std::string_view getLogComponentString(eLogComponent component)
         { COMP_SDL2, "SDL2" },
         { COMP_VERSION, "VERSION" },
         { COMP_SKIRMISHSETUP, "SKIRMISHSETUP" },
-        { COMP_ALFONT, "ALFONT" },
+        { COMP_TEXT, "TEXT" },
         { COMP_SOUND, "SOUND" },
         { COMP_REGIONINI, "REGIONINI" },
         { COMP_PLAYER, "PLAYER" },
