@@ -31,6 +31,7 @@
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
+#include "context/AudioContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"
 #include "drawers/cTextDrawer.h"
@@ -85,6 +86,9 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     regionSceneState = eRegionSceneState::SCENE_INIT;
     m_mouse = services->mouse;
     d2tm_assert(m_mouse != nullptr);
+
+    m_audioContext = m_ctx->getAudioContext();
+    d2tm_assert(m_audioContext != nullptr);
 
     m_drawManager = services->drawManager;
 	d2tm_assert(m_drawManager != nullptr);
@@ -441,7 +445,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     // load map
     m_interface->loadScenario();
 
-    m_interface->playMusicByType(MUSIC_BRIEFING);
+    m_audioContext->playMusicByType(MUSIC_BRIEFING, HUMAN, false, false, m_objects->getPlayer(HUMAN)->getHouse());
 
     state = REGSTATE_FADEOUT;
     m_interface->initiateFadingOut();

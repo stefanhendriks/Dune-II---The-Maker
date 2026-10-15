@@ -17,6 +17,7 @@
 
 #include "building/cItemBuilder.h"
 #include "game/cGameInterface.h"
+#include "include/eGameState.h"
 #include "game/cScreenFader.h"
 #include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
@@ -2128,7 +2129,8 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
     bool mayPlayVoice = true;
     if (triggerMusic) {
         if (m_settings->getMusicType() != MUSIC_ATTACK) {
-            mayPlayVoice = m_interface->playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay);
+            bool isPlayingMission = m_interface->getCurrentState() == GAME_PLAYING;
+            mayPlayVoice = m_audioContext->playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay, isPlayingMission, getHouse());
         }
         else {
             mayPlayVoice = false;

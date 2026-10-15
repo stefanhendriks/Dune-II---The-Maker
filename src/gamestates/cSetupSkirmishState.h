@@ -39,6 +39,7 @@ class cGameInterface;
 class cScreenFader;
 class cMapCamera;
 class cGameConditionChecker;
+class AudioContext;
 class GuiButton;
 
 struct s_DataCampaign;
@@ -74,6 +75,7 @@ private:
     cGameConditionChecker* m_gameConditionChecker = nullptr;
     cScreenFader* m_screenFader = nullptr;
     cGameObjectContext* m_objects = nullptr;
+    AudioContext* m_audioContext = nullptr;
     sGameServices* m_services = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
     cPreviewMaps* m_previewMaps = nullptr;

@@ -36,6 +36,7 @@ class cGameSettings;
 class cTextDrawer;
 class cGameObjectContext;
 class cDrawManager;
+class AudioContext;
 
 struct s_DataCampaign;
 enum eRegionState {
@@ -111,6 +112,7 @@ private:
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cGameObjectContext* m_objects = nullptr;
+    AudioContext* m_audioContext = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;
     Graphics* m_gfxworld = nullptr;
     Graphics* m_gfxinter = nullptr;

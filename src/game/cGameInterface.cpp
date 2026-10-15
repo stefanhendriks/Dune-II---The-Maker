@@ -132,16 +132,6 @@ void cGameInterface::loadScenario() const
     m_game->loadScenario();
 }
 
-bool cGameInterface::playMusicByType(int iType) const
-{
-    return m_game->playMusicByType(iType);
-}
-
-bool cGameInterface::playMusicByType(int iType, int playerId, bool triggerWithVoice) const
-{
-    return m_game->playMusicByType(iType, playerId, triggerWithVoice);
-}
-
 int cGameInterface::getCurrentState() const
 {
     return m_game->getCurrentState();

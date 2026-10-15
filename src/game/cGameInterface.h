@@ -52,8 +52,6 @@ public:
     void drawTextTime() const;
     int getCurrentState() const;
 
-    bool playMusicByType(int iType) const;
-    bool playMusicByType(int iType, int playerId, bool triggerWithVoice) const;
 
     void changeStateFromMentat() const;
 private:

@@ -33,6 +33,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
+#include "context/AudioContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"
@@ -66,6 +67,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     m_gameConditionChecker(services->gameConditionChecker),
     m_screenFader(services->screenFader),
     m_objects(services->objects),
+    m_audioContext(m_ctx->getAudioContext()),
     m_services(services),
     m_dataCampaign(dataCompaign),
     m_previewMaps(previewMaps),
@@ -76,6 +78,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_screenFader != nullptr);
     d2tm_assert(m_objects != nullptr);
+    d2tm_assert(m_audioContext != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
     for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -920,7 +923,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     m_gameConditionChecker->setWinFlags(3);
     m_gameConditionChecker->setLoseFlags(1);
 
-    m_interface->playMusicByType(MUSIC_PEACE);
+    m_audioContext->playMusicByType(MUSIC_PEACE, HUMAN, false, false, m_objects->getPlayer(HUMAN)->getHouse());
 
     m_objects->getMap()->setAutoSpawnSpiceBlooms(spawnBlooms);
     m_objects->getMap()->setAutoDetonateSpiceBlooms(detonateBlooms);
