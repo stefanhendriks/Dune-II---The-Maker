@@ -1206,7 +1206,6 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     emitGameEvent(event);
 }
 
-
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (m_drawManager) {

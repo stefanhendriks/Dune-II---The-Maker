@@ -153,8 +153,6 @@ public:
 
     int getMaxVolume();
 
-
-
     void setPlayerToInteractFor(cPlayer *pPlayer);
     void setMousePosition(int w, int h);
 
@@ -164,8 +162,6 @@ public:
     void onNotifyGameEvent(const s_GameEvent &event) override;
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
-
-
 
     void setMissionLost();
     void setMissionWon();
@@ -195,7 +191,6 @@ public:
     void drawTextFps() const;
     void drawTextTime() const;
     void checkMissionWinOrFail();
-
 
 private:
     bool m_windowed;        			    // windowed
