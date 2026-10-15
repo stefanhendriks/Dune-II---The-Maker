@@ -21,7 +21,7 @@
 #include "utils/cRectangle.h"
 #include "utils/cSoundPlayer.h"
 #include "managers/cDrawManager.h"
-#include "game/cGameInterface.h"
+#include "context/AudioContext.hpp"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/players/cPlayer.h"
@@ -152,11 +152,11 @@ void cMouseNormalState::onMouseLeftButtonClicked()
         }
 
         if (unitSelected) {
-            m_context->getInterface()->playSound(SOUND_REPORTING);
+            m_context->getAudioContext()->playSound(SOUND_REPORTING);
         }
 
         if (infantrySelected) {
-            m_context->getInterface()->playSound(SOUND_YESSIR);
+            m_context->getAudioContext()->playSound(SOUND_YESSIR);
         }
 
         selectedUnits = unitSelected || infantrySelected;

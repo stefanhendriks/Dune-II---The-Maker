@@ -1401,11 +1401,6 @@ void cGame::playSoundWithDistance(int sampleId, int iDistance)
 }
 
 
-void cGame::playVoice(int sampleId, int playerId)
-{
-    m_audioContext->playVoice(sampleId, m_gameObjectsContext->getPlayer(playerId)->getHouse());
-}
-
 void cGame::playMusicByTypeForStateTransition(int iType)
 {
     m_audioContext->playMusicByTypeForStateTransition(iType, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());

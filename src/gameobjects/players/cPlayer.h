@@ -85,6 +85,7 @@ class cGameSettings;
 class cInfoContext;
 class cGameObjectContext;
 class cGameInterface;
+class AudioContext;
 class cScreenFader;
 class cStructureUtils;
 class cLog;
@@ -621,6 +622,7 @@ private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cGameInterface *m_interface = nullptr;
+    AudioContext *m_audioContext = nullptr;
     cScreenFader *m_screenFader = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cLog *m_log = nullptr;

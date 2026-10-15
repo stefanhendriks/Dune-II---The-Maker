@@ -38,6 +38,7 @@ class cStructureUtils;
 class cScreenFader;
 class cScreenShake;
 class cEventEmitter;
+class AudioContext;
 class cMouse;
 class cRectangle;
 
@@ -68,6 +69,7 @@ private:
     cStructureUtils *m_structureUtils = nullptr;
     cReinforcements* m_reinforcements = nullptr;
     cGameInterface* m_interface = nullptr;
+    AudioContext* m_audioContext = nullptr;
     cScreenFader* m_screenFader = nullptr;
     cMapCamera* m_mapCamera = nullptr;
     cRectangle* m_mapViewport = nullptr;
