@@ -142,7 +142,6 @@ bool cGameInterface::playMusicByType(int iType, int playerId, bool triggerWithVo
     return m_game->playMusicByType(iType, playerId, triggerWithVoice);
 }
 
-
 int cGameInterface::getCurrentState() const
 {
     return m_game->getCurrentState();
