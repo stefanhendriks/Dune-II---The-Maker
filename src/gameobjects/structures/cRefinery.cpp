@@ -89,13 +89,13 @@ void cRefinery::think_unit_occupation()
 
     setAnimating(false);
 
-    // let player know...
-    if (pPlayer->isHuman()) {
-        m_audioContext->playVoice(SOUND_VOICE_02_ATR, pPlayer->getHouse());
-    }
-
     // perhaps we can find a carryall to help us out
     int iHarvestCell = cUnit::findHarvestSpot(iUnitID, m_objects);
+
+    // no spice to go to: let player know the harvester is deployed (idle) next to the refinery
+    if (iHarvestCell < 0 && pPlayer->isHuman()) {
+        m_audioContext->playVoice(SOUND_VOICE_02_ATR, pPlayer->getHouse());
+    }
 
     if (iHarvestCell > -1) {
         int iCarry = cUnit::carryallTransfer(iUnitID, iHarvestCell, m_objects);
