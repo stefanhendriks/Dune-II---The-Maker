@@ -549,7 +549,7 @@ void cGame::shutdown()
     ctx.reset();
     context.reset();
 
-    Logger::info(COMP_NONE, "cGame::shutdown", "Allegro FONT library shut down.");
+    Logger::info(COMP_NONE, "cGame::shutdown", "Graphics and texture contexts released.");
 }
 
 

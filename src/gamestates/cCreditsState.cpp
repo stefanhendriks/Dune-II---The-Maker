@@ -214,14 +214,14 @@ void cCreditsState::prepareCrawlerLines()
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
-        .name = "Allegro",
-        .txt = "by Shawn Hargreaves (et al)",
+        .name = "SDL3",
+        .txt = "by Sam Lantinga and contributors",
         .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
     m_lines.push_back(s_CreditLine {
-        .name = "AlFONT",
-        .txt = "by Javier Gonzalez",
+        .name = "",
+        .txt = "with SDL_image, SDL_ttf and SDL_mixer",
         .color = Color::White,
         .height = fontHeightWithALittlePadding
     });
