@@ -52,7 +52,6 @@ public:
     void drawTextTime() const;
     int getCurrentState() const;
 
-
     void changeStateFromMentat() const;
 private:
     cGame* m_game = nullptr;
