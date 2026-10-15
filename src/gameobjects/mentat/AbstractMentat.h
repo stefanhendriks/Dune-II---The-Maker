@@ -28,6 +28,7 @@ struct SDL_Surface;
 class Texture;
 class GameContext;
 class cGameInterface;
+class cGameSettings;
 class SDLDrawer;
 class cTextDrawer;
 
@@ -40,7 +41,7 @@ enum eMentatState {
 
 class AbstractMentat : public cInputObserver {
 public:
-    AbstractMentat(GameContext* ctx, bool canMissionSelect);
+    AbstractMentat(GameContext* ctx, cGameSettings* settings, bool canMissionSelect);
     virtual ~AbstractMentat();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;

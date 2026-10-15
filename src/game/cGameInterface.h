@@ -16,7 +16,6 @@
 #pragma once
 
 class cGame;
-class cGameSettings;
 class cPlayer;
 struct s_GameEvent;
 struct s_PreviewMap;
@@ -62,8 +61,6 @@ public:
     void playSoundWithDistance(int sampleId, int distance) const;
 
     void changeStateFromMentat() const;
-    cPlayer* getPlayer(int id) const;
-    cGameSettings* getGameSettings() const;
 private:
     cGame* m_game = nullptr;
 };

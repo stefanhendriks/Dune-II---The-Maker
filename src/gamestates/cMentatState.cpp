@@ -71,15 +71,15 @@ void cMentatState::prepareMentat(int house)
     switch (m_mode) {
         case MentatMode::Briefing:
             if (house == ATREIDES)
-                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == ORDOS)
-                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == SARDAUKAR)
-                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else 
-                m_mentat = std::make_unique<BeneMentat>(m_ctx, m_dataCampaign);
+                m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, humanPlayer, m_dataCampaign);
             m_interface->missionInit();
             m_interface->setupPlayers();
             m_cIni->loadScenario(m_mentat.get(), m_reinforcements,m_dataCampaign);
@@ -87,15 +87,15 @@ void cMentatState::prepareMentat(int house)
             break;
         case MentatMode::WinBrief:
             if (house == ATREIDES)
-                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == ORDOS) 
-                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == SARDAUKAR)
-                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else 
-                m_mentat = std::make_unique<BeneMentat>(m_ctx,m_dataCampaign);
+                m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, humanPlayer, m_dataCampaign);
             
             if (RNG::rnd(100) < 50)
                 m_mentat->loadScene("win01");
@@ -105,15 +105,15 @@ void cMentatState::prepareMentat(int house)
             break;
         case MentatMode::LoseBrief:
             if (house == ATREIDES) 
-                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == ORDOS)
-                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else if (house == SARDAUKAR)
-                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_allowMissionSelect);
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_allowMissionSelect);
             else 
-                m_mentat = std::make_unique<BeneMentat>(m_ctx,m_dataCampaign);
+                m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, humanPlayer, m_dataCampaign);
             
             if (RNG::rnd(100) < 50)
                 m_mentat->loadScene("lose01");
