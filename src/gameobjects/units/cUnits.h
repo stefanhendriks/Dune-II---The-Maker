@@ -138,7 +138,6 @@ public:
 private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
-    cGameInterface *m_interface = nullptr;
     cMap* m_map = nullptr;
     // Maximum number of units
     static constexpr int MAX_UNITS_CAPACITY = 300;

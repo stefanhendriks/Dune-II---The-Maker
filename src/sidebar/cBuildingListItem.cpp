@@ -19,7 +19,6 @@
 #include "utils/common.h"
 #include "sidebar/cBuildingList.h"
 #include "context/cInfoContext.h"
-#include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include <format>
 #include "include/cAssert.h"
@@ -61,11 +60,10 @@ cBuildingListItem::~cBuildingListItem()
     m_myList = NULL;
 }
 
-void cBuildingListItem::serviceInit(cInfoContext* info, cGameSettings* settings, cGameInterface* gameInterface)
+void cBuildingListItem::serviceInit(cInfoContext* info, cGameSettings* settings)
 {
     m_info = info;
     m_settings = settings;
-    m_gameInterface = gameInterface;
     m_timerCap = m_settings->isCheatMode() ? DebugTimerCap : DefaultTimerCap;
     int totalBuildTime = getTotalBuildTime();
     if (m_cost > 0 && totalBuildTime > 0) {

@@ -17,7 +17,6 @@
 #include "context/cInfoContext.h"
 #include "building/cItemBuilder.h"
 #include "context/GameContext.hpp"
-#include "game/cGameInterface.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenFader.h"
 #include "include/sGameServices.h"
@@ -152,7 +151,7 @@ bool cBuildingList::addItemToList(cBuildingListItem *item)
     m_items[slotId] = item;
     item->setSlotId(slotId);
     item->setList(this);
-    item->serviceInit(m_info, m_settings, m_gameInterface);
+    item->serviceInit(m_info, m_settings);
     m_maxItems = slotId + 1;
 
     // notify game that the item just has been added!
@@ -450,7 +449,6 @@ void cBuildingList::setItemBuilder(cItemBuilder *value)
 void cBuildingList::serviceInit(sGameServices* services)
 {
     m_info = services->info;
-    m_gameInterface = services->ctx->getGameInterface();
     m_settings = services->settings;
     m_eventEmitter = services->eventEmitter;
     m_screenFader = services->screenFader;
