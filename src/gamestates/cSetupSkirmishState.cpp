@@ -42,6 +42,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "include/Texture.hpp"
 #include "gui/GuiButton.h"
+#include "gui/GuiWindow.h"
 
 #include <algorithm>
 #include <format>
@@ -115,7 +116,6 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     auto theme = cGuiThemeBuilder().light().build();
 
     // Colors
-    colorDarkishBackground = theme.background;
     colorDarkishBorder = theme.borderLight;
     colorDarkerYellow = theme.textDarkColor;
     colorDisabled = theme.disabledTextColor;
@@ -191,6 +191,31 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     previewMapRect = cRectangle(previewMap.getX()+23, previewMap.getY()+23, 256, 256);
 
     selectArea = cRectangle(0, mapListTopY, screen_x -widthOfRightColumn-2, screen_y-topBarHeight-mapListTopY);
+
+    // Frames, drawn as GuiWindows: light (theme), dark with light borders, dark with white borders
+    GuiTheme darkPanelTheme = theme;
+    darkPanelTheme.fillColor = theme.background;
+    darkPanelTheme.borderDark = theme.borderLight;
+
+    GuiTheme playerPanelTheme = darkPanelTheme;
+    playerPanelTheme.borderLight = Color::White;
+    playerPanelTheme.borderDark = Color::White;
+
+    auto createPanel = [this](const cRectangle &rect, const GuiTheme &panelTheme) {
+        auto panel = std::make_unique<GuiWindow>(m_sdlDrawer, rect, m_textDrawer);
+        panel->setTheme(panelTheme);
+        return panel;
+    };
+    m_panels.push_back(createPanel(topBar, theme));
+    m_panels.push_back(createPanel(playerTitleBar, playerPanelTheme));
+    m_panels.push_back(createPanel(playerList, playerPanelTheme));
+    m_panels.push_back(createPanel(topRightBox, theme));
+    m_panels.push_back(createPanel(mapListTitle, darkPanelTheme));
+    m_panels.push_back(createPanel(previewMapTitle, darkPanelTheme));
+    m_panels.push_back(createPanel(previewMap, darkPanelTheme));
+    m_panels.push_back(createPanel(selectArea, darkPanelTheme));
+    m_bottomBar = createPanel(cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2), theme);
+
     int margin = 10;
 
     maxMapsInSelectAreaHorizontally = selectArea.getWidth() / (mapItemButtonWidth+margin);
@@ -388,30 +413,15 @@ void cSetupSkirmishState::thinkFast()
 
 void cSetupSkirmishState::draw() const
 {
-    // Draw top-bar / title-bar
-    m_sdlDrawer->gui_DrawRect(topBar, colorLightBackground, colorDarkishBorder, colorOtherBorder);
+    // Draw the frames: title bar, player list, "Startpoints" box, map list and preview
+    for (const auto &panel : m_panels) {
+        panel->draw();
+    }
+
+    // Titles in the frames
     m_textDrawer->drawTextCentered("Skirmish", 4);
-
-    // Draw Players/House/Credits/Units/Team rectangle
-    m_sdlDrawer->gui_DrawRect(playerTitleBar, colorDarkishBackground, Color::White, Color::White);
-    // Draw rectangle for the actual players (beneath playerTitleBar)
-    m_sdlDrawer->gui_DrawRect(playerList, colorDarkishBackground, Color::White, Color::White);
-
-    // Draw top-right rectangle for "Startpoints"
-    m_sdlDrawer->gui_DrawRect(topRightBox, colorLightBackground, colorDarkishBorder, colorOtherBorder);
-
-    // Draw "Maps" (yellow title), rectangle
-    m_sdlDrawer->gui_DrawRect(mapListTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     m_textDrawer->drawTextCentered("Maps", mapListTitle.getX(), mapListTitle.getWidth(), mapListTitle.getY() + 4, Color::Yellow);
-
-    // Draw "Preview" bar + title (right to "Maps")
-    m_sdlDrawer->gui_DrawRect(previewMapTitle, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);    //sdlDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);      
     m_textDrawer->drawTextCentered("Preview", previewMapTitle.getX(), previewMapTitle.getWidth(), previewMapTitle.getY() + 4, Color::Yellow);
-
-    // Draw the right bar where we render the map selected + any information
-    m_sdlDrawer->gui_DrawRect(previewMap, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
-
-    m_sdlDrawer->gui_DrawRect(selectArea, colorDarkishBackground, colorDarkishBorder, colorDarkishBorder);
     ///////
     /// DRAW PREVIEW MAP
     //////
@@ -473,8 +483,7 @@ void cSetupSkirmishState::draw() const
         }
     }
 
-    cRectangle bottomBarRect = cRectangle(-1, screen_y - topBarHeight, screen_x + 2, topBarHeight + 2);
-    m_sdlDrawer->gui_DrawRect(bottomBarRect, colorLightBackground, colorDarkishBorder, colorOtherBorder);
+    m_bottomBar->draw();
 
     // For now in draw function
     startButton->setEnabled(iSkirmishMap > -1);
