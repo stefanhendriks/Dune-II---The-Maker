@@ -606,7 +606,7 @@ void cParticle::thinkFast()
 int cParticle::create(long x, long y, int iType, int iHouse, int iFrame,
                       cGameObjectContext* objects, cInfoContext* info, int iUnitID)
 {
-    int iNewId = findNewSlot(objects->getParticles());
+    int iNewId = objects->getParticles().findNewSlot();
 
     if (iNewId < 0) {
         return -1;
@@ -742,19 +742,6 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame,
 
     pParticle.recolorForHouseIfGiven();
     return iNewId;
-}
-
-int cParticle::findNewSlot(cParticles& particles)
-{
-    int i = 0;
-    for (auto &particle : particles) {
-        if (!particle.isValid()) {
-            return i;
-        }
-        i++;
-    }
-
-    return -1;
 }
 
 cParticle& cParticle::getBoundParticle()

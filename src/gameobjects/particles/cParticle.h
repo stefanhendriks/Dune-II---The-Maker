@@ -27,7 +27,6 @@ class Texture;
 struct sGameServices;
 class cGameObjectContext;
 class cInfoContext;
-class cParticles;
 class SDLDrawer;
 class Graphics;
 
@@ -41,7 +40,6 @@ public:
     // Factory methods
     static int create(long x, long y, int iType, int iHouse, int iFrame,
                       cGameObjectContext* objects, cInfoContext* info, int iUnitID = -1);
-    static int findNewSlot(cParticles& particles);
     // resets the particle system (frees all particles textures colored for houses)
     static void reset();
 
