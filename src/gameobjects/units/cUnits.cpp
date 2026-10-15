@@ -90,6 +90,11 @@ const cUnit* cUnits::getUnit(int index) const {
     return &m_units[index];
 }
 
+bool cUnits::isValidUnit(int index) const
+{
+    return index > -1 && getUnit(index)->isValid();
+}
+
 int cUnits::findAvailableSlot() const {
     for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
         if (!m_units[i].isValid()) {

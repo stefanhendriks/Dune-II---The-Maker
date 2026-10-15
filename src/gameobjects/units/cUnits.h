@@ -59,6 +59,13 @@ public:
     const cUnit* getUnit(int index) const;
 
     /**
+     * Shorthand for the "index > -1 and unit is valid" check
+     * @param index The unit index, -1 means no unit
+     * @return true when index refers to a valid unit
+     */
+    bool isValidUnit(int index) const;
+
+    /**
      * Get the capacity (maximum number of units)
      * @return The capacity
      */
