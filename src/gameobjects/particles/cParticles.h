@@ -48,6 +48,19 @@ public:
     // recherche/existence
     bool valid(std::size_t i) const noexcept { return i < MAX_PARTICLES; }
 
+    // returns the index of the first unused particle, or -1 when all are in use
+    int findNewSlot() const {
+        int i = 0;
+        for (const auto &particle : m_particles) {
+            if (!particle.isValid()) {
+                return i;
+            }
+            i++;
+        }
+
+        return -1;
+    }
+
     // initialisation
     void reset() noexcept {
         cParticle::reset();
