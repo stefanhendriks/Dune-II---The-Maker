@@ -90,8 +90,7 @@ const cUnit* cUnits::getUnit(int index) const {
     return &m_units[index];
 }
 
-bool cUnits::isValidUnit(int index) const
-{
+bool cUnits::isValidUnit(int index) const {
     return index > -1 && getUnit(index)->isValid();
 }
 
