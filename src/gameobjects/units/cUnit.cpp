@@ -3533,9 +3533,8 @@ int cUnit::findNearbyStructureThatCanDamageUnitsToAttack(int range)
         if (getPlayer()->isSameTeamAs(pStructure->getPlayer())) continue;
         if (!m_map->isStructureVisible(pStructure, iPlayer)) continue; // not visible
 
-        // ignore structures which cannot attack air or ground units
-        if (!pStructure->canAttackAirUnits()) continue;
-        if (!pStructure->canAttackGroundUnits()) continue;
+        // ignore structures which can attack neither air nor ground units
+        if (!pStructure->canAttackAirUnits() && !pStructure->canAttackGroundUnits()) continue;
 
         // see big comment about this in findNearbyStructureToAttack
         int distance = m_objects->getMapGeometry()->distance(position.iCell, pStructure->getRandomStructureCell());
