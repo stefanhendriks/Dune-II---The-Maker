@@ -1121,6 +1121,8 @@ void cGame::changeStateFromMentat()
     }
 
     // NOT a skirmish game
+    Logger::info(COMP_GAME, "cGame::changeStateFromMentat", "state {}, campaign mission {}, region {}", m_state, m_dataCampaign->mission, m_dataCampaign->region);
+
     // won the last mission, nothing left to conquer: show the credits (they lead back to the main menu)
     if (isState(GAME_WINBRIEF) && m_dataCampaign->mission >= LAST_CAMPAIGN_MISSION) {
         setNextStateToTransitionTo(GAME_CREDITS);
