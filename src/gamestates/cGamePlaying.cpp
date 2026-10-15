@@ -36,6 +36,7 @@
 #include "context/cInfoContext.h"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
+#include "game/cEventEmitter.h"
 #include "controls/eKeyAction.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/map/cMapCamera.h"
@@ -80,6 +81,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     d2tm_assert(m_reinforcements != nullptr);
     m_structureFactory = services->objects->getStructureFactory();
     d2tm_assert(m_structureFactory != nullptr);
+    m_eventEmitter = services->eventEmitter;
+    d2tm_assert(m_eventEmitter != nullptr);
     m_drawManager = services->drawManager;
     d2tm_assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
@@ -549,6 +552,17 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
             if (u->isSelected() && u->iType == MCV && u->getPlayer()->isHuman()) {
                 bool canPlace = u->getPlayer()->canPlaceStructureAt(u->getCell(), CONSTYARD, u->iID).success;
                 if (canPlace) {
+                    // at the structure cap the Construction Yard can't be created; keep the MCV
+                    if (m_structureFactory->getFreeSlot() < 0) {
+                        m_eventEmitter->emit(s_GameEvent{
+                            .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+                            .data = NotificationEvent{
+                                .message = "Cannot deploy: maximum number of structures reached.",
+                                .type = eNotificationType::BAD,
+                            }
+                        });
+                        continue;
+                    }
                     int iLocation = u->getCell();
                     u->die(false, false);
                     humanPlayer->placeStructure(iLocation, CONSTYARD, 100);
