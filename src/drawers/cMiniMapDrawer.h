@@ -34,6 +34,7 @@ class cMapCamera;
 class cPlayer;
 class Texture;
 class GameContext;
+class cGameSettings;
 class Graphics;
 class SDLDrawer;
 class cGameObjectContext;
@@ -53,7 +54,7 @@ enum eMinimapStatus {
 
 class cMiniMapDrawer {
 public:
-    explicit cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *mapCamera);
+    explicit cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *map, cPlayer *player, cMapCamera *mapCamera);
     cMiniMapDrawer() = delete;
     ~cMiniMapDrawer();
 

@@ -154,9 +154,6 @@ public:
     int getMaxVolume();
 
 
-    cMouse *getMouse() {
-        return m_mouse.get(); // NOOOO
-    }
 
     void setPlayerToInteractFor(cPlayer *pPlayer);
     void setMousePosition(int w, int h);
@@ -168,10 +165,7 @@ public:
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 
-    void reduceShaking() const;
 
-    void setWinFlags(int value);
-    void setLoseFlags(int value);
 
     void setMissionLost();
     void setMissionWon();

@@ -17,10 +17,7 @@
 
 class cGame;
 class cGameSettings;
-class cMouse;
 class cPlayer;
-class cMapCamera;
-class cRectangle;
 struct s_GameEvent;
 struct s_PreviewMap;
 class Texture;
@@ -31,15 +28,11 @@ public:
     cGameInterface(cGame* game);
     virtual ~cGameInterface() = default;
 
-    cMouse* getMouse() const;
-    cMapCamera* getMapCamera() const;
-    cRectangle* getMapViewport() const;
     void setMissionWon() const;
     void setMissionLost() const;
     void missionInit() const;
     void setupPlayers() const;
 
-    void emitGameEvent(const s_GameEvent &event) const;
     void onNotifyGameEvent(const s_GameEvent &event) const;
 
     void prepareMentatToTellAboutHouse(int house) const;
@@ -62,9 +55,6 @@ public:
     void drawTextTime() const;
     int getCurrentState() const;
 
-    void reduceShaking() const;
-    void setWinFlags(int value) const;
-    void setLoseFlags(int value) const;
     bool playMusicByType(int iType) const;
     bool playMusicByType(int iType, int playerId, bool triggerWithVoice) const;
     void playVoice(int sampleId, int playerId) const;

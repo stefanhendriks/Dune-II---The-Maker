@@ -19,7 +19,7 @@
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/map/cMapCamera.h"
-#include "game/cGameInterface.h"
+#include "game/cGameSettings.h"
 #include "controls/cMouse.h"
 #include "context/AudioContext.hpp"
 #include "data/gfxdata.h"
@@ -45,7 +45,7 @@
 #include "gameobjects/particles/cParticle.h"
 #include "utils/RNG.hpp"
 
-cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
+cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
     m_map(map),
     m_player(player),
@@ -60,6 +60,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
     d2tm_assert(map!=nullptr);
     d2tm_assert(player!=nullptr);
     d2tm_assert(mapCamera!=nullptr);
+    d2tm_assert(settings!=nullptr);
 
     float reportX = cSideBar::WidthOfMinimap*1.f / getMapWidthInPixels();
     float reportY = cSideBar::HeightOfMinimap*1.f / getMapHeightInPixels();
@@ -68,7 +69,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMa
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
-    int topLeftX = ctx->getGameInterface()->getGameSettings()->getScreenW() - cSideBar::WidthOfMinimap;
+    int topLeftX = settings->getScreenW() - cSideBar::WidthOfMinimap;
     m_drawX = topLeftX + (halfWidthOfMinimap - m_factorZoom*halfWidthOfMap);
 
     int halfHeightOfMinimap = cSideBar::HeightOfMinimap / 2;
