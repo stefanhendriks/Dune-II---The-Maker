@@ -364,22 +364,6 @@ public:
     void setVisibleFor(int iCell, cPlayer *pPlayer);
 
     /**
-     * Get height of map in cells
-     * @return
-     */
-    int getHeight() const {
-        return m_height;
-    }
-
-    /**
-     * Get width of map in cells
-     * @return
-     */
-    int getWidth() const {
-        return m_width;
-    }
-
-    /**
      * Returns the amount of cells of a specific type
      * @param cellType
      * @return

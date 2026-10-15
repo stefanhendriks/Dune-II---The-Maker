@@ -111,7 +111,7 @@ cGamePlaying::~cGamePlaying()
 void cGamePlaying::centerCameraOnUnits(const std::vector<int>& unitIds)
 {
     int sumX = 0, sumY = 0, count = 0;
-    int mapWidth = m_objects->getMap()->getWidth();
+    int mapWidth = m_objects->getMapGeometry()->getWidth();
     for (int id : unitIds) {
         cUnit* u = m_objects->getUnit(id);
         if (!u->isValid()) continue;

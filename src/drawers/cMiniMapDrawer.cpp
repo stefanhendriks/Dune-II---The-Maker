@@ -48,6 +48,7 @@
 cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
     m_map(map),
+    m_mapGeometry(map ? map->getGeometry() : nullptr),
     m_player(player),
     m_mapCamera(mapCamera),
     m_ctx(ctx),
@@ -58,6 +59,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *
     m_iTrans(0)
 {
     d2tm_assert(map!=nullptr);
+    d2tm_assert(m_mapGeometry != nullptr);
     d2tm_assert(player!=nullptr);
     d2tm_assert(mapCamera!=nullptr);
     d2tm_assert(settings!=nullptr);
@@ -261,11 +263,11 @@ void cMiniMapDrawer::drawTerrain()
     m_sdlDrawer->beginDrawingToTexture(m_mipMapTex);
     Color iColor = Color{0, 0, 0,255};
 
-    for (int x = 0; x < (m_map->getWidth()); x++) {
-        for (int y = 0; y < (m_map->getHeight()); y++) {
+    for (int x = 0; x < m_mapGeometry->getWidth(); x++) {
+        for (int y = 0; y < m_mapGeometry->getHeight(); y++) {
             iColor = Color{0, 0, 0,255};
             //@mira where is map ?
-            int iCll = m_map->getGeometry()->makeCell(x, y);
+            int iCll = m_mapGeometry->makeCell(x, y);
 
             if (m_map->isVisible(iCll, m_player->getId())) {
                 iColor = getRGBColorForTerrainType(m_map->getCellType(iCll));
@@ -273,7 +275,7 @@ void cMiniMapDrawer::drawTerrain()
 
             // TODO: make flexible map borders
             // do not show the helper border
-            if (!m_map->getGeometry()->isWithinBoundaries(x, y)) {
+            if (!m_mapGeometry->isWithinBoundaries(x, y)) {
                 iColor = Color{0, 0, 0,255};
             }
 
@@ -328,12 +330,12 @@ void cMiniMapDrawer::drawViewPortRectangle()
 void cMiniMapDrawer::drawUnitsAndStructures(bool playerOnly) const {
     m_sdlDrawer->beginDrawingToTexture(m_mipMapTex);
     const Color black = Color::Black;
-    for (int x = 0; x < m_map->getWidth(); x++) {
-        for (int y = 0; y < m_map->getHeight(); y++) {
+    for (int x = 0; x < m_mapGeometry->getWidth(); x++) {
+        for (int y = 0; y < m_mapGeometry->getHeight(); y++) {
             // do not show the helper border
-            if (!m_map->getGeometry()->isWithinBoundaries(x, y)) continue;
+            if (!m_mapGeometry->isWithinBoundaries(x, y)) continue;
 
-            int iCll = m_map->getGeometry()->makeCell(x, y);
+            int iCll = m_mapGeometry->makeCell(x, y);
 
             if (!m_map->isVisible(iCll, m_player->getId())) {
                 // invisible cell
@@ -423,11 +425,11 @@ Color cMiniMapDrawer::getRGBColorForTerrainType(int terrainType)
 }
 
 int cMiniMapDrawer::getMapHeightInPixels() const {
-    return m_map->getHeight();
+    return m_mapGeometry->getHeight();
 }
 
 int cMiniMapDrawer::getMapWidthInPixels() const {
-    return m_map->getWidth();
+    return m_mapGeometry->getWidth();
 }
 
 void cMiniMapDrawer::onMouseAt(const s_MouseEvent &event)
@@ -514,7 +516,7 @@ int cMiniMapDrawer::getMouseCell(int mouseX, int mouseY)
     int mouseMiniMapX = static_cast<int>(std::floor(mouseMiniMapXf));
     int mouseMiniMapY = static_cast<int>(std::floor(mouseMiniMapYf));
 
-    auto mouseMiniMapPoint = m_map->getGeometry()->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
+    auto mouseMiniMapPoint = m_mapGeometry->fixCoordinatesToBeWithinPlayableMap(mouseMiniMapX, mouseMiniMapY);
 
-    return m_map->getGeometry()->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
+    return m_mapGeometry->getCellWithMapBorders(mouseMiniMapPoint.x, mouseMiniMapPoint.y);
 }

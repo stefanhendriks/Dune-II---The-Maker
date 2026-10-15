@@ -1002,15 +1002,16 @@ void cMap::setVisible(int iCell, int iPlayer, bool flag)
 
 int cMap::findNearestSpiceBloom(int iCell)
 {
-    int quarterOfMap = getWidth() / 4;
+    const int mapWidth = m_mapGeometry->getWidth();
+    const int quarterOfMap = mapWidth / 4;
     int iDistance = quarterOfMap;
-    int halfWidth = getWidth() / 2;
-    int halfHeight = getHeight() / 2;
+    const int halfWidth = mapWidth / 2;
+    const int halfHeight = m_mapGeometry->getHeight() / 2;
 
     if (iCell < 0) {
         // use cell at center
-        iCell = getGeometry()->getCellWithMapDimensions(halfWidth, halfHeight);
-        iDistance = getWidth();
+        iCell = m_mapGeometry->getCellWithMapDimensions(halfWidth, halfHeight);
+        iDistance = mapWidth;
     }
 
     int cx, cy;
