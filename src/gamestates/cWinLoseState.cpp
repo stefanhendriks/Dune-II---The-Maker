@@ -41,8 +41,7 @@ cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) :
     auto gfxinter = ctx->getGraphicsContext()->gfxinter;
     d2tm_assert(gfxinter != nullptr);
 
-    if (m_interface->getScreenTexture() != nullptr)
-        m_backgroundTexture = m_interface->getScreenTexture();
+    m_backgroundTexture = services->screenTexture;
     
     if (m_statement == Outcome::Lose) {
         m_tex = gfxinter->getTexture(BMP_LOSING);

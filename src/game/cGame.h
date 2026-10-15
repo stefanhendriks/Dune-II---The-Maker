@@ -177,9 +177,6 @@ public:
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
 
-    Texture* getScreenTexture() const {
-        return screenTexture;
-    }
     void takeBackGroundScreen();
 
     void goingToWinLoseBrief(int value);

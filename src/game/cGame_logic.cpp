@@ -446,6 +446,7 @@ void cGame::run()
 {
     actualRenderer = m_sdlDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
     screenTexture = m_sdlDrawer->createRenderTargetTexture(m_gameSettings->m_screenW, m_gameSettings->m_screenH);
+    m_services->screenTexture = screenTexture;
     SDL_Event event;
     while (m_gameSettings->m_playing) {
         if (m_focusManager->isGameWindowActive()) {
