@@ -552,7 +552,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
             if (u->isSelected() && u->iType == MCV && u->getPlayer()->isHuman()) {
                 bool canPlace = u->getPlayer()->canPlaceStructureAt(u->getCell(), CONSTYARD, u->iID).success;
                 if (canPlace) {
-                    // at the structure cap the Construction Yard can't be created; keep the MCV
+                    // at the structure cap the Construction Yard can't be created; keep the MCV (and any other selected ones)
                     if (m_structureFactory->getFreeSlot() < 0) {
                         m_eventEmitter->emit(s_GameEvent{
                             .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
@@ -561,7 +561,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
                                 .type = eNotificationType::BAD,
                             }
                         });
-                        continue;
+                        break;
                     }
                     int iLocation = u->getCell();
                     u->die(false, false);
