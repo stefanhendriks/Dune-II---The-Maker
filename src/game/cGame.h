@@ -137,16 +137,6 @@ public:
     // Use this instead
     void setNextStateToTransitionTo(int newState);
 
-    // Game acts as a facade, delegates to sound player
-    void playSound(int sampleId); // Maximum volume
-    void playSound(int sampleId, int vol);
-
-    /**
-     * Play sound with distance taken into account. iDistance is the distance outside screen.
-     * Meaning <= 1 is ON SCREEN > 1 means distance from screen.
-    */
-    void playSoundWithDistance(int sampleId, int iOnScreen);
-
     void playMusicByTypeForStateTransition(int iType);
     bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
 

@@ -15,7 +15,6 @@
 
 #include "bullet.h"
 #include "game/cGameSettings.h"
-#include "game/cGameInterface.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenShake.h"
 #include "data/gfxdata.h"
@@ -41,6 +40,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "context/GameContext.hpp"
+#include "context/AudioContext.hpp"
 
 static constexpr auto ANIMATION_SPEED = 12;
 
@@ -78,8 +78,8 @@ void cBullet::serviceInit(sGameServices *services)
     d2tm_assert(m_info != nullptr);
     m_settings = services->settings;
     d2tm_assert(m_settings != nullptr);
-    m_interface = services->ctx->getGameInterface();
-    d2tm_assert(m_interface != nullptr);
+    m_audioContext = services->ctx->getAudioContext();
+    d2tm_assert(m_audioContext != nullptr);
     m_mapCamera = services->mapCamera;
     d2tm_assert(m_mapCamera != nullptr);
     m_eventEmitter = services->eventEmitter;
@@ -360,10 +360,10 @@ void cBullet::arrivedAtDestinationLogic()
                 // HACK HACK: produce sounds here... should be taken from bullet data structure; or via events
                 // so that elsewhere this can be handled.
                 if (RNG::rnd(100) < 35) {
-                    m_interface->playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2),
-                                               ABS_length(m_mapCamera->getViewportCenterX(), m_mapCamera->getViewportCenterY(),
-                                                          m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(cellToDamage),
-                                                          m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(cellToDamage)));
+                    playSoundWithDistance(SOUND_TANKDIE + RNG::rnd(2),
+                                  ABS_length(m_mapCamera->getViewportCenterX(), m_mapCamera->getViewportCenterY(),
+                                             m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(cellToDamage),
+                                             m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(cellToDamage)), m_audioContext, m_objects, m_mapCamera);
                 }
                 if (RNG::rnd(100) < 20) {
                     cParticle::create(posX, posY, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, m_objects, m_info);
@@ -517,10 +517,10 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
 
         // TODO: Stefan: is this needed?!- aren't we playing sound effects in a more generic way?
         // TODO: impact sound effect should be configured!?
-        m_interface->playSoundWithDistance(SOUND_GAS,
-                                           ABS_length(m_mapCamera->getViewportCenterX(), m_mapCamera->getViewportCenterY(),
-                                                      m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(cell),
-                                                      m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(cell)));
+        playSoundWithDistance(SOUND_GAS,
+                              ABS_length(m_mapCamera->getViewportCenterX(), m_mapCamera->getViewportCenterY(),
+                                         m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(cell),
+                                         m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(cell)), m_audioContext, m_objects, m_mapCamera);
 
         // take over unit
         if (RNG::rnd(100) < gets_Bullet().deviateProbability) {

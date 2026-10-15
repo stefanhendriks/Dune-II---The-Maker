@@ -28,7 +28,9 @@ class Graphics;
 class cPlayer;
 struct SDL_Surface;
 class SDLDrawer;
-class cGameInterface;
+class AudioContext;
+class cGameObjectContext;
+class cMapCamera;
 struct sGameServices;
 
 // the credits drawer takes state of a player, and draws the credits accordingly
@@ -50,7 +52,9 @@ public:
 private:
     cPlayer *m_player;  //
     GameContext* m_ctx;
-    cGameInterface* m_interface = nullptr;
+    AudioContext* m_audioContext = nullptr;
+    cGameObjectContext* m_objects = nullptr;
+    cMapCamera* m_mapCamera = nullptr;
     Graphics* m_gfxinter;
     Graphics* m_gfxdata;
     SDLDrawer* m_sdlDrawer = nullptr;

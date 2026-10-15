@@ -142,10 +142,6 @@ bool cGameInterface::playMusicByType(int iType, int playerId, bool triggerWithVo
     return m_game->playMusicByType(iType, playerId, triggerWithVoice);
 }
 
-void cGameInterface::playSoundWithDistance(int sampleId, int distance) const
-{
-    m_game->playSoundWithDistance(sampleId, distance);
-}
 
 int cGameInterface::getCurrentState() const
 {

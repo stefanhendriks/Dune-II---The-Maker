@@ -26,7 +26,7 @@ struct InitialGameSettings;
 class cGameObjectContext;
 class cMapCamera;
 class cInfoContext;
-class cGameInterface;
+class AudioContext;
 /**
  * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)
  * @param desiredMs
@@ -50,9 +50,15 @@ float healthBar(float max_w, int i, int w);
 
 int iFindCloseBorderCell(int iCll, cGameObjectContext* objects);
 
-int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots, cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, cMapCamera* mapCamera);
+int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots, cGameObjectContext* objects, cInfoContext* infos, AudioContext* audio, cMapCamera* mapCamera);
 
 int distanceBetweenCellAndCenterOfScreen(int iCell, cGameObjectContext* objects, cMapCamera* mapCamera);
+
+/**
+ * Play sound with distance taken into account. iDistance is the distance outside screen.
+ * Meaning <= 1 is ON SCREEN > 1 means distance from screen. The camera zoom level also influences the volume.
+ */
+void playSoundWithDistance(int sampleId, int iDistance, AudioContext* audio, cGameObjectContext* objects, cMapCamera* mapCamera);
 
 const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId, cInfoContext* infos);
 
