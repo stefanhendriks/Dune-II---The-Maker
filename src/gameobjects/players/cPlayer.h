@@ -122,7 +122,7 @@ public:
     bool bEnoughSpiceCapacityToStoreCredits(int threshold) const;
 
     // credits
-    void substractCredits(int amount);
+    void substractCredits(float amount);
     void setCredits(int credits);
     void giveCredits(float amountToGive);
     int getCredits() const;
