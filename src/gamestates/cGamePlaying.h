@@ -36,7 +36,10 @@ class cTextDrawer;
 class cInfoContext;
 class cStructureUtils;
 class cScreenFader;
+class cScreenShake;
 class cEventEmitter;
+class cMouse;
+class cRectangle;
 
 class cGamePlaying : public cGameState {
 public:
@@ -67,8 +70,11 @@ private:
     cGameInterface* m_interface = nullptr;
     cScreenFader* m_screenFader = nullptr;
     cMapCamera* m_mapCamera = nullptr;
-    cStructureFactory* m_structureFactory = nullptr;
+    cRectangle* m_mapViewport = nullptr;
+    cMouse* m_mouse = nullptr;
     cEventEmitter* m_eventEmitter = nullptr;
+    cScreenShake* m_screenShake = nullptr;
+    cStructureFactory* m_structureFactory = nullptr;
     cDrawManager *m_drawManager = nullptr;
     cPlayer *m_controlledPlayer = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
