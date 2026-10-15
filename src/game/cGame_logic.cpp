@@ -1206,20 +1206,6 @@ void cGame::onNotifyGameEvent(const s_GameEvent &event)
     emitGameEvent(event);
 }
 
-void cGame::reduceShaking() const {
-    m_screenShake->reduce();
-}
-
-
-void cGame::setWinFlags(int value)
-{
-    m_gameConditionChecker->setWinFlags(value);
-}
-
-void cGame::setLoseFlags(int value)
-{
-    m_gameConditionChecker->setLoseFlags(value);
-}
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)
 {

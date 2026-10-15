@@ -16,6 +16,7 @@
 #include "CreditsDrawer.h"
 #include "include/sGameServices.h"
 #include "game/cGameInterface.h"
+#include "game/cGameSettings.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "gameobjects/players/cPlayer.h"
@@ -30,7 +31,7 @@
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
 
-CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
+CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer *player) :
     m_player(player),
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
@@ -39,6 +40,7 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
 {
     d2tm_assert(player!= nullptr);
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(settings != nullptr);
 
     memset(m_offset_credit, 0, sizeof(m_offset_credit));
     memset(m_offset_direction, 0, sizeof(m_offset_direction));
@@ -52,7 +54,7 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cPlayer *player) :
 
     // center credits bar within sidebar
     int widthCreditsBar = (m_gfxinter->getSurface(CREDITS_BAR))->w;
-    m_drawX = ctx->getGameInterface()->getGameSettings()->getScreenW() - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
+    m_drawX = settings->getScreenW() - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
     m_drawY = 0;
 }
 

@@ -17,7 +17,6 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGame.h"
 #include "include/Texture.hpp"
-#include "controls/cMouse.h"
 #include "include/sGameEvent.h"
 
 #include <format>
@@ -25,11 +24,6 @@
 cGameInterface::cGameInterface(cGame* game)
     : m_game(game)
 {
-}
-
-cMouse* cGameInterface::getMouse() const
-{
-    return m_game->getMouse();
 }
 
 void cGameInterface::prepareMentatToTellAboutHouse(int house) const
@@ -70,16 +64,6 @@ void cGameInterface::initSkirmish() const
 //     m_game->loadMapFromEditor(map);
 // }
 
-cMapCamera* cGameInterface::getMapCamera() const
-{
-    return m_game->m_mapCamera.get();
-}
-
-cRectangle* cGameInterface::getMapViewport() const
-{
-    return m_game->m_mapViewport.get();
-}
-
 void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const
 {
     m_game->setPlayerToInteractFor(pPlayer);
@@ -105,14 +89,9 @@ void cGameInterface::setupPlayers() const
     m_game->setupPlayers();
 }
 
-void cGameInterface::emitGameEvent(const s_GameEvent &event) const
-{
-    m_game->emitGameEvent(event);
-}
-
 void cGameInterface::onNotifyGameEvent(const s_GameEvent &event) const
 {
-    emitGameEvent(event);
+    m_game->emitGameEvent(event);
 }
 
 void cGameInterface::checkMissionWinOrFail() const
@@ -128,11 +107,6 @@ void cGameInterface::drawTextFps() const
 void cGameInterface::drawTextTime() const
 {
     m_game->drawTextTime();
-}
-
-void cGameInterface::reduceShaking() const
-{
-    m_game->reduceShaking();
 }
 
 void cGameInterface::goingToWinLoseBrief(int winOrLoseBrief) const
@@ -163,16 +137,6 @@ void cGameInterface::prepareMentatForPlayer() const
 void cGameInterface::loadScenario() const
 {
     m_game->loadScenario();
-}
-
-void cGameInterface::setWinFlags(int value) const
-{
-    m_game->setWinFlags(value);
-}
-
-void cGameInterface::setLoseFlags(int value) const
-{
-    m_game->setLoseFlags(value);
 }
 
 bool cGameInterface::playMusicByType(int iType) const

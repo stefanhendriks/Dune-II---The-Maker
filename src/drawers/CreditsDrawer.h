@@ -23,6 +23,7 @@
 #pragma once
 
 class GameContext;
+class cGameSettings;
 class Graphics;
 class cPlayer;
 struct SDL_Surface;
@@ -34,7 +35,7 @@ struct sGameServices;
 
 class CreditsDrawer {
 public:
-    explicit CreditsDrawer(GameContext* ctx, cPlayer *player);
+    explicit CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer *player);
     virtual ~CreditsDrawer();
 
     void serviceInit(sGameServices* services);

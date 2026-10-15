@@ -83,7 +83,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     d2tm_assert(m_cIni != nullptr);
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
-    m_mouse = m_interface->getMouse();
+    m_mouse = services->mouse;
+    d2tm_assert(m_mouse != nullptr);
 
     m_drawManager = services->drawManager;
 	d2tm_assert(m_drawManager != nullptr);

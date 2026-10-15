@@ -37,6 +37,7 @@
 #include "context/cGameObjectContext.h"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
+#include "game/cGameConditionChecker.h"
 #include "include/sDataCampaign.h"
 #include "gameobjects/units/cUnits.h"
 #include "include/Texture.hpp"
@@ -61,6 +62,8 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_mapCamera(services->mapCamera),
+    m_gameConditionChecker(services->gameConditionChecker),
     m_screenFader(services->screenFader),
     m_objects(services->objects),
     m_services(services),
@@ -99,7 +102,10 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     randomMapGenerator = std::make_unique<cRandomMapGenerator>();
     generateRandomMap();
 
-    m_mouse = m_interface->getMouse();
+    m_mouse = services->mouse;
+    d2tm_assert(m_mouse != nullptr);
+    d2tm_assert(m_mapCamera != nullptr);
+    d2tm_assert(m_gameConditionChecker != nullptr);
 
     spawnWorms = 2;
     techLevel = 9;
@@ -818,7 +824,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
         // Set map position
         if (p == HUMAN) {
-            m_interface->getMapCamera()->centerAndJumpViewPortToCell(pPlayer->getFocusCell());
+            m_mapCamera->centerAndJumpViewPortToCell(pPlayer->getFocusCell());
         }
 
         // create constyard
@@ -911,8 +917,8 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
 
     // default flags (destroy everyone but me/my team)
-    m_interface->setWinFlags(3);
-    m_interface->setLoseFlags(1);
+    m_gameConditionChecker->setWinFlags(3);
+    m_gameConditionChecker->setLoseFlags(1);
 
     m_interface->playMusicByType(MUSIC_PEACE);
 
