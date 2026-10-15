@@ -1498,19 +1498,6 @@ int cGame::getCurrentState() const
     return m_state;
 }
 
-void cGame::drawTextFps() const
-{
-    m_textDrawer->drawText(180,8, Color::Black, std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
-}
-
-void cGame::drawTextTime() const
-{
-    auto time = m_timeManager->getCurrentTime();
-    m_textDrawer->drawText(m_gameSettings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::White, time);
-    time = m_timeManager->getCurrentTimer();
-    m_textDrawer->drawText(m_gameSettings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::White, time);
-}
-
 void cGame::checkMissionWinOrFail()
 {
     if (m_gameConditionChecker->isMissionFailed()) {

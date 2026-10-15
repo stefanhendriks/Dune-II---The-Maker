@@ -97,16 +97,6 @@ void cGameInterface::checkMissionWinOrFail() const
     m_game->checkMissionWinOrFail();
 }
 
-void cGameInterface::drawTextFps() const
-{
-    m_game->drawTextFps();
-}
-
-void cGameInterface::drawTextTime() const
-{
-    m_game->drawTextTime();
-}
-
 void cGameInterface::goingToWinLoseBrief(int winOrLoseBrief) const
 {
     m_game->goingToWinLoseBrief(winOrLoseBrief);

@@ -38,6 +38,7 @@
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
 #include "game/cScreenShake.h"
+#include "game/cTimeManager.h"
 #include "game/cEventEmitter.h"
 #include "controls/cMouse.h"
 #include "controls/eKeyAction.h"
@@ -98,6 +99,10 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     d2tm_assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
     d2tm_assert(m_textDrawer != nullptr);
+    m_gameTextDrawer = m_ctx->getTextContext()->getGameTextDrawer();
+    d2tm_assert(m_gameTextDrawer != nullptr);
+    m_timeManager = m_ctx->getTimeManager();
+    d2tm_assert(m_timeManager != nullptr);
 
     m_controlledPlayer = m_objects->getPlayer(HUMAN);
     m_drawManager->setPlayerToDraw(m_controlledPlayer);
@@ -280,16 +285,29 @@ void cGamePlaying::draw() const
     m_drawManager->drawCombatState();
     drawTrackingOverlays();
     if (m_settings->shouldDrawFps()) {
-        m_interface->drawTextFps();
+        drawTextFps();
     }
 
     drawCombatMouse();
 
     if (m_settings->shouldDrawTime()) {
-        m_interface->drawTextTime();
+        drawTextTime();
     }
     // MOUSE
     m_drawManager->drawCombatMouse();
+}
+
+void cGamePlaying::drawTextFps() const
+{
+    m_gameTextDrawer->drawText(180,8, Color::Black, std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
+}
+
+void cGamePlaying::drawTextTime() const
+{
+    auto time = m_timeManager->getCurrentTime();
+    m_gameTextDrawer->drawText(m_settings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1, Color::White, time);
+    time = m_timeManager->getCurrentTimer();
+    m_gameTextDrawer->drawText(m_settings->getScreenW()- cSideBar::SidebarWidth-75, cSideBar::TopBarHeight + 1+15, Color::White, time);
 }
 
 void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent &event)

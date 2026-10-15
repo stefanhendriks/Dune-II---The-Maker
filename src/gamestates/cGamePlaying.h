@@ -27,6 +27,7 @@ class Texture;
 
 class cReinforcements;
 class cTextDrawer;
+class cTimeManager;
 class cMapCamera;
 class cGameInterface;
 class cStructureFactory;
@@ -80,8 +81,12 @@ private:
     cDrawManager *m_drawManager = nullptr;
     cPlayer *m_controlledPlayer = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
+    cTextDrawer* m_gameTextDrawer = nullptr;
+    cTimeManager* m_timeManager = nullptr;
     void evaluatePlayerStatus();
     void drawCombatMouse() const;
+    void drawTextFps() const;
+    void drawTextTime() const;
     int m_TIMER_evaluatePlayerStatus;
     
 

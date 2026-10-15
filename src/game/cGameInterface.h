@@ -48,8 +48,6 @@ public:
     void loadMapFromEditor(int iSkirmishMap) const;
     void checkMissionWinOrFail() const;
     void goingToWinLoseBrief(int winOrLoseBrief) const;
-    void drawTextFps() const;
-    void drawTextTime() const;
     int getCurrentState() const;
 
     void changeStateFromMentat() const;
