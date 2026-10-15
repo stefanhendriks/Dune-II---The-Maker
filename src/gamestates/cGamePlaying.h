@@ -36,6 +36,7 @@ class cTextDrawer;
 class cInfoContext;
 class cStructureUtils;
 class cScreenFader;
+class cEventEmitter;
 
 class cGamePlaying : public cGameState {
 public:
@@ -67,6 +68,7 @@ private:
     cScreenFader* m_screenFader = nullptr;
     cMapCamera* m_mapCamera = nullptr;
     cStructureFactory* m_structureFactory = nullptr;
+    cEventEmitter* m_eventEmitter = nullptr;
     cDrawManager *m_drawManager = nullptr;
     cPlayer *m_controlledPlayer = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
