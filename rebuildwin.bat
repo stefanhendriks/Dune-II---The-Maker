@@ -5,4 +5,4 @@ cmake .. -G "MinGW Makefiles"
 cmake --build . --target all -- -j 6
 ctest --output-on-failure
 cd ..
-
+copy build/d2tm.exe bin
