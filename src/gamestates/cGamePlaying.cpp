@@ -36,7 +36,9 @@
 #include "context/cInfoContext.h"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
+#include "game/cScreenShake.h"
 #include "game/cEventEmitter.h"
+#include "controls/cMouse.h"
 #include "controls/eKeyAction.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/map/cMapCamera.h"
@@ -75,14 +77,20 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     d2tm_assert(m_interface != nullptr);
     m_screenFader = services->screenFader;
     d2tm_assert(m_screenFader != nullptr);
-    m_mapCamera = m_interface->getMapCamera();
+    m_mapCamera = services->mapCamera;
     d2tm_assert(m_mapCamera != nullptr);
+    m_mapViewport = services->mapViewport;
+    d2tm_assert(m_mapViewport != nullptr);
+    m_mouse = services->mouse;
+    d2tm_assert(m_mouse != nullptr);
+    m_eventEmitter = services->eventEmitter;
+    d2tm_assert(m_eventEmitter != nullptr);
+    m_screenShake = services->screenShake;
+    d2tm_assert(m_screenShake != nullptr);
     m_reinforcements = services->reinforcements;
     d2tm_assert(m_reinforcements != nullptr);
     m_structureFactory = services->objects->getStructureFactory();
     d2tm_assert(m_structureFactory != nullptr);
-    m_eventEmitter = services->eventEmitter;
-    d2tm_assert(m_eventEmitter != nullptr);
     m_drawManager = services->drawManager;
     d2tm_assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
@@ -146,7 +154,7 @@ void cGamePlaying::thinkFast()
 
     m_objects->getMap()->thinkFast();
 
-    m_interface->reduceShaking();
+    m_screenShake->reduce();
 
     // units think (move only)
     for (cUnit &cUnit : *m_objects->getUnits()) {
@@ -245,7 +253,7 @@ void cGamePlaying::drawTrackingOverlays() const
     int count = static_cast<int>(m_trackedUnitIds.size());
     std::string label = count == 1 ? "Tracking 1 unit" : std::format("Tracking {} units", count);
 
-    const cRectangle* battlefield = m_interface->getMapViewport();
+    const cRectangle* battlefield = m_mapViewport;
     m_textDrawer->drawTextCentered(label, battlefield->getX(), battlefield->getWidth(), cSideBar::TopBarHeight + 10, fadingYellow);
 
     m_sdlDrawer->setClippingFor(battlefield->getX(), battlefield->getY(),
@@ -297,7 +305,7 @@ void cGamePlaying::onNotifyMouseEvent(const s_MouseEvent &event)
         pBuilder->onNotifyMouseEvent(event);
     }
 
-    if (event.eventType == eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED && m_interface->getMouse()->isMapScrolling()) {
+    if (event.eventType == eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED && m_mouse->isMapScrolling()) {
         m_trackedUnitIds.clear();
     }
 }
@@ -421,7 +429,6 @@ void cGamePlaying::evaluatePlayerStatus()
 
 void cGamePlaying::drawCombatMouse() const
 {
-    auto m_mouse = m_interface->getMouse();
     if (m_mouse->isBoxSelecting()) {
         m_sdlDrawer->renderRectColor(m_mouse->getBoxSelectRectangle(), m_screenFader->getColorFadeSelectedLimited(Color::White, 0.5f));
     }
@@ -840,7 +847,7 @@ void cGamePlaying::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
                             .buildingListItem = itemToDeploy
                         }
                     };
-                    m_interface->emitGameEvent(launchedEvent);
+                    m_eventEmitter->emit(launchedEvent);
                 }
             }
         }
@@ -865,7 +872,7 @@ void cGamePlaying::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
             .entitySpecificType = itemToDeploy->getBuildId()
         }
     };
-    m_interface->emitGameEvent(finishedEvent);
+    m_eventEmitter->emit(finishedEvent);
 }
 
 void cGamePlaying::update()
