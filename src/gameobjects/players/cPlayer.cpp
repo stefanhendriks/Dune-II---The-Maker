@@ -930,7 +930,7 @@ void cPlayer::setCredits(int credits)
     this->credits = credits;
 }
 
-void cPlayer::substractCredits(int amount)
+void cPlayer::substractCredits(float amount)
 {
     credits -= amount;
 }
