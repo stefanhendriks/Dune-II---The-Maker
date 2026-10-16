@@ -78,6 +78,12 @@ bool cKeyboardEvent::isAction(eKeyAction action) const
     return m_keyBindings->matches(m_keys, m_combo, action);
 }
 
+bool cKeyboardEvent::involvesActionKey(eKeyAction action) const
+{
+    if (!m_keyBindings) return false;
+    return m_keyBindings->containsActionKey(m_keys, action);
+}
+
 int cKeyboardEvent::getGroupNumber() const
 {
     if (isAction(eKeyAction::GROUP_1)) return 1;
