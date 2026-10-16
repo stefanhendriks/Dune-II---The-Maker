@@ -41,6 +41,12 @@ public:
      */
     bool isAction(eKeyAction action) const;
 
+    /**
+     * Returns true when the event contains a key bound to the given action, regardless of which
+     * modifiers are held. Use this to detect the release of a modifier-style action key.
+     */
+    bool involvesActionKey(eKeyAction action) const;
+
     bool isBackspace() const;
     bool isEnter() const;
     bool isShiftPressed() const;

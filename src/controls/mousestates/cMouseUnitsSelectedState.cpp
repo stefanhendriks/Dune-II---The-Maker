@@ -352,6 +352,11 @@ void cMouseUnitsSelectedState::onStateSet()
     // only on state change we refresh the entire vector
     m_selectedUnits = m_player->getSelectedUnits();
 
+    // start fresh: a modifier key released while in another mouse state never reached us,
+    // so a mode like 'add to selection' could otherwise still be active (#1009)
+    m_state = SELECTED_STATE_MOVE;
+    m_prevState = SELECTED_STATE_MOVE;
+
     evaluateSelectedUnits();
     updateSelectedUnitsState();
 
@@ -569,12 +574,14 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
 
 void cMouseUnitsSelectedState::onKeyPressed(const cKeyboardEvent &event)
 {
-    if (event.isAction(eKeyAction::ATTACK_MODE)) {
+    // Releasing the key must always end the mode, even when another modifier is held at that
+    // moment (e.g. Shift released while Alt is down), otherwise the mode stays stuck (#1009).
+    if (event.involvesActionKey(eKeyAction::ATTACK_MODE)) {
         setState(SELECTED_STATE_ATTACK);
         evaluateMouseMoveState();
     }
 
-    if (event.isAction(eKeyAction::ADD_TO_SELECTION)) {
+    if (event.involvesActionKey(eKeyAction::ADD_TO_SELECTION)) {
         toPreviousState();
         evaluateMouseMoveState();
     }
