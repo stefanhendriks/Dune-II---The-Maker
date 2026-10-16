@@ -302,6 +302,13 @@ cPoint MapGeometry::fixCoordinatesToBeWithinPlayableMap(int x, int y) const
     return {std::clamp(x, 1, mapWidth - 2), std::clamp(y, 1, mapHeight - 2)};
 }
 
+int MapGeometry::clampCellToPlayableMap(int cell) const
+{
+    if (!isValidCell(cell)) return cell;
+    cPoint playable = fixCoordinatesToBeWithinPlayableMap(getCellX(cell), getCellY(cell));
+    return makeCell(playable);
+}
+
 cPoint MapGeometry::fixCoordinatesToBeWithinMap(int x, int y) const
 {
     return {std::clamp(x, 0, mapWidth - 1), std::clamp(y, 0, mapHeight - 1)};

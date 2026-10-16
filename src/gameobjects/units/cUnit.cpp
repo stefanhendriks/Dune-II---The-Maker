@@ -809,6 +809,8 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     log(std::format("(move_to - START) : to cell [{}], iStructureIdToEnter[{}], iUnitIdToPickup[{}] (to attack, if > -1), intent[{}]",
                     iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent)));
 
+    // never send a unit onto the invisible map border, it would sit outside the play area
+    iCll = m_objects->getMapGeometry()->clampCellToPlayableMap(iCll);
     setGoalCell(iCll);
     if (iStructureID > -1) {
         unitWillNoLongerBeInteractingWithStructure();
