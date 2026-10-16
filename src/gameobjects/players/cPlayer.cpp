@@ -1573,9 +1573,19 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
+    if (isStructureLimitReached(iStructureType)) {
+        log("canBuildStructure: FALSE, reason STRUCTURE_LIMIT_REACHED");
+        return eCantBuildReason::STRUCTURE_LIMIT_REACHED;
+    }
+
     log("canBuildStructure: ALLOWED");
 
     return eCantBuildReason::NONE;
+}
+
+bool cPlayer::isStructureLimitReached(int iStructureType) const
+{
+    return m_objects->getStructureFactory()->isStructureLimitReached(iStructureType);
 }
 
 cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage)
@@ -1583,6 +1593,10 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
     cStructureFactory *pStructureFactory = m_objects->getStructureFactory();
     bool canPlace = canPlaceStructureAt(destinationCell, iStructureTypeId).success;
     if (!canPlace) {
+        return nullptr;
+    }
+
+    if (isStructureLimitReached(iStructureTypeId)) {
         return nullptr;
     }
 
@@ -1606,6 +1620,11 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
 
     bool canPlace = canPlaceStructureAt(destinationCell, iStructureTypeId).success;
     if (!canPlace) {
+        return nullptr;
+    }
+
+    // keep the item in 'place it' mode (and the credits spent on it) until a structure slot frees up
+    if (isStructureLimitReached(iStructureTypeId)) {
         return nullptr;
     }
 

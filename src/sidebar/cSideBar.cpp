@@ -95,6 +95,12 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const
         return false;
     }
 
+    if (item->isTypeStructure() &&
+        m_player->isStructureLimitReached(item->getBuildId())) {
+        m_drawManager->setMessage("Unable to create more.");
+        return false;
+    }
+
     cBuildingList *list = item->getList();
     if (item->isAvailable()) {
         // Item should not be placed, so it can be built

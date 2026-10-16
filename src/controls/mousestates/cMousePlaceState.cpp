@@ -28,6 +28,7 @@
 #include "gameobjects/map/MapGeometry.hpp"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "managers/cDrawManager.h"
 #include <algorithm>
 #include "include/cAssert.h"
 
@@ -78,6 +79,11 @@ void cMousePlaceState::onMouseLeftButtonClicked()
 
     cBuildingListItem *itemToPlace = m_player->getSideBar()->getList(eListType::LIST_CONSTYARD)->getItemToPlace();
     if (itemToPlace == nullptr) {
+        return;
+    }
+
+    if (m_player->isStructureLimitReached(itemToPlace->getBuildId())) {
+        m_context->getDrawManager()->setMessage("Unable to create more.");
         return;
     }
 

@@ -39,6 +39,11 @@ enum eCantBuildReason {
     NOT_AVAILABLE,
 
     /**
+     * All structure slots in the game are in use, so no new structure can be created
+     */
+    STRUCTURE_LIMIT_REACHED,
+
+    /**
      * There is no reason we can't build it (ie SUCCESS)
      */
     NONE

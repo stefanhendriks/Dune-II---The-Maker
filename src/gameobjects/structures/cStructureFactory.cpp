@@ -330,6 +330,15 @@ int cStructureFactory::getFreeSlot()
     return -1; // NONE
 }
 
+bool cStructureFactory::isStructureLimitReached(int iStructureType)
+{
+    // SLAB and WALL only change terrain, they don't take a structure slot
+    if (iStructureType == SLAB1 || iStructureType == SLAB4 || iStructureType == WALL) {
+        return false;
+    }
+    return getFreeSlot() < 0;
+}
+
 /**
 <p>
  This function will return how many (if any) slabs are found for the surface of a structure type. This function
