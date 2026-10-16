@@ -1730,6 +1730,9 @@ void cPlayerBrainCampaign::thinkState_ProcessBuildOrders()
                 int iCll = buildOrder.placeAt;
 
                 cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
+                // no structure slot free: keep the order, so placing is retried once a slot frees up
+                if (player->isStructureLimitReached(structureType)) break;
+
                 player->placeItem(iCll, pItem);
 
                 buildOrder.state = buildOrder::eBuildOrderState::REMOVEME;
