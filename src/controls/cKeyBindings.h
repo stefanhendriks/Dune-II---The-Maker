@@ -45,6 +45,12 @@ public:
      */
     bool matches(const std::bitset<SDL_SCANCODE_COUNT> &keys, const s_KeysCombo &combo, eKeyAction action) const;
 
+    /**
+     * Returns true when the given key set contains one of the keys bound to the given action,
+     * ignoring modifiers. Called internally by cKeyboardEvent::involvesActionKey().
+     */
+    bool containsActionKey(const std::bitset<SDL_SCANCODE_COUNT> &keys, eKeyAction action) const;
+
 private:
     std::map<eKeyAction, s_KeyBinding> m_bindings;
 
