@@ -809,6 +809,17 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
         return;
     }
 
+    // halfway into the structure we are entering: finish entering, else we get stuck between two cells
+    // (the structure cell would block us, while we only pick a new next cell once fully on a cell)
+    if (isMovingBetweenCells() && iStructureID > -1 &&
+            m_map->getCellIdStructuresLayer(movement.iNextCell) == iStructureID) {
+        cAbstractStructure *pStructure = m_objects->getStructure(iStructureID);
+        if (pStructure && pStructure->isValid() && pStructure->getUnitIdEntering() == iID) {
+            log("(move_to - IGNORED) : already entering structure");
+            return;
+        }
+    }
+
     log(std::format("(move_to - START) : to cell [{}], iStructureIdToEnter[{}], iUnitIdToPickup[{}] (to attack, if > -1), intent[{}]",
                     iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent)));
 
