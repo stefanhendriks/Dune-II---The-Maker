@@ -2588,7 +2588,7 @@ void cUnit::thinkFast_move()
     // TODO: this "thinkFast_move" thing should be abstracted somewhere, so that "occupied" becomes an abstraction
     // as well and thus this kind of hack can be prevented.
     if (isSandworm()) {
-        bOccupied = false;
+        bOccupied = !m_map->isCellPassableForWorm(movement.iNextCell);
     }
 
     if (bOccupied) {

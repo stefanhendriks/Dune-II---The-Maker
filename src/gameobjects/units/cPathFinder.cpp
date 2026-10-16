@@ -175,6 +175,13 @@ int cPathFinder::validateCreatePathInput(int unitId)
         }
     }
 
+    // The distance field is seeded at the goal without a passability check, so a sandworm goal on
+    // rock would yield a path that ends on rock.
+    if (m_activeUnit->isSandworm() && !m_map->isCellPassableForWorm(goalCell)) {
+        m_activeUnit->log("CREATE_PATH -- END invalid goal terrain for sandworm");
+        return -6;
+    }
+
     if (m_pathsCreated > 40) {
         m_activeUnit->log("CREATE_PATH -- Too many paths END 3");
         m_activeUnit->movewaitTimer.reset(50 + RNG::rnd(50));
