@@ -175,6 +175,7 @@ public:
     // Harvester specific
     int iCredits;       // credits stored in this baby
     int iHarvestCellMemory; // remembers the last spice cell this harvester was working on
+    bool m_stayAtGoalCell;  // ordered by the player to stop at a cell: a harvester does not look for spice by itself there
 
     // Carry-All specific
     // -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
@@ -254,6 +255,7 @@ public:
 
     void move_to_enter_structure(cAbstractStructure *pStructure, eUnitActionIntent intent);
     void move_to(int iGoalCell);
+    void move_to_and_stay(int iGoalCell); // player order: a harvester stays at the goal cell when it is not spice
     void move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUnitActionIntent intent);
     void move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup);
 
