@@ -75,6 +75,8 @@ public:
 
     bool isAtMapBoundaries(int cell) const;
     cPoint fixCoordinatesToBeWithinPlayableMap(int x, int y) const;
+    // moves a cell on the invisible 1-cell border onto the nearest playable cell; invalid cells are returned as-is
+    int clampCellToPlayableMap(int cell) const;
     cPoint fixCoordinatesToBeWithinMap(int x, int y) const;
     cPoint getAbsolutePositionFromCell(int cell) const;
 

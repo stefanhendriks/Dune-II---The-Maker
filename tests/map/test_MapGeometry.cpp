@@ -74,6 +74,28 @@ TEST_CASE("MapGeometry - getCellWithMapBorders", "[map][geometry]")
     REQUIRE(geo.getCellWithMapBorders(1,  63) == -1);
 }
 
+TEST_CASE("MapGeometry - clampCellToPlayableMap", "[map][geometry]")
+{
+    MapGeometry geo(MAP_W, MAP_H);
+
+    // Playable cells are returned unchanged
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(1,  1))  == geo.makeCell(1,  1));
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(30, 40)) == geo.makeCell(30, 40));
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(62, 62)) == geo.makeCell(62, 62));
+
+    // Border cells move onto the nearest playable cell
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(30, 0))  == geo.makeCell(30, 1));
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(0,  30)) == geo.makeCell(1,  30));
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(63, 30)) == geo.makeCell(62, 30));
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(30, 63)) == geo.makeCell(30, 62));
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(0,  0))  == geo.makeCell(1,  1));
+    REQUIRE(geo.clampCellToPlayableMap(geo.makeCell(63, 63)) == geo.makeCell(62, 62));
+
+    // Invalid cells are returned as-is
+    REQUIRE(geo.clampCellToPlayableMap(-1)   == -1);
+    REQUIRE(geo.clampCellToPlayableMap(4096) == 4096);
+}
+
 TEST_CASE("MapGeometry - isValidCell", "[map][geometry]")
 {
     MapGeometry geo(MAP_W, MAP_H);
