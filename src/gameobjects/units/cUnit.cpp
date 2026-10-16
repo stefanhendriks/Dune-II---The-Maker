@@ -848,13 +848,14 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
  * longer want to be picked up. Ie, we died, or we wanted to move away ourselves and the carry-all should not
  * interfere.
  */
-void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe() const
+void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe()
 {
     if (willBePickedUpBy > -1) {
         cUnit *pUnit = m_objects->getUnit(willBePickedUpBy);
         if (pUnit->isValid()) {
             pUnit->forgetAboutUnitToPickUp();
         }
+        willBePickedUpBy = -1;
     }
 }
 
@@ -1675,6 +1676,13 @@ void cUnit::setPosY(float newVal)
 
 void cUnit::forgetAboutUnitToPickUp()  // forget about this
 {
+    if (iUnitID > -1) {
+        // let the unit know it should no longer wait for us
+        cUnit *pUnit = m_objects->getUnit(iUnitID);
+        if (pUnit->isValid() && pUnit->willBePickedUpBy == iID) {
+            pUnit->willBePickedUpBy = -1;
+        }
+    }
     setGoalCell(position.iCell);
     m_transferType = eTransferType::NONE;
     iUnitID = -1;
@@ -2338,6 +2346,9 @@ void cUnit::thinkFast_move()
         movewaitTimer.decrement();
         return;
     }
+
+    // a carry-all is on its way to pick us up; it can only do so when we stand still on a cell
+    if (willBePickedUpBy > -1 && !isMovingBetweenCells()) return;
 
     // when there is a valid goal cell (differs), then we go further
     if (movement.iGoalCell == position.iCell) {
@@ -3247,6 +3258,9 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
 bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell)
 {
+    // a carry-all may still be on its way with an older transfer (ie, back to the spice field)
+    tellCarryAllThatWouldPickMeUpToForgetAboutMe();
+
     int r = cUnit::carryallFreeForTransfer(iPlayer, m_objects);
     if (r < 0) {
         return false;
@@ -3269,7 +3283,10 @@ void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell)
 
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate)
 {
-    movewaitTimer.reset(650); // wait for pickup!
+    if (!isMovingBetweenCells()) {
+        // when between cells, keep moving so the carry-all finds us standing on a cell
+        movewaitTimer.reset(650); // wait for pickup!
+    }
     thinkwaitTimer.reset(650);
     if (!candidate->hasUnitHeadingTowards() && !candidate->hasUnitWithin()) {
         candidate->unitHeadsTowardsStructure(iID);
