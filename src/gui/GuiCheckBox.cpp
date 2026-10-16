@@ -129,10 +129,10 @@ void GuiCheckBox::onNotifyMouseEvent(const s_MouseEvent &event)
             onMouseMovedTo(event);
             break;
         case MOUSE_RIGHT_BUTTON_PRESSED:
-            onMouseRightButtonPressed(event);
+            onMouseRightButtonPressed();
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
-            if (m_rect.isPointWithin(event.coords)) {
+            if (m_focus) {
                 if (m_enabled && m_onRightMouseButtonClickedAction) {
                     m_onRightMouseButtonClickedAction();
                 }
@@ -141,10 +141,10 @@ void GuiCheckBox::onNotifyMouseEvent(const s_MouseEvent &event)
             }
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
-            onMouseLeftButtonClicked(event);
+            onMouseLeftButtonClicked();
             break;
         case MOUSE_LEFT_BUTTON_PRESSED:
-            onMouseLeftButtonPressed(event);
+            onMouseLeftButtonPressed();
             break;
         default:
             break;
@@ -165,25 +165,25 @@ void GuiCheckBox::onMouseMovedTo(const s_MouseEvent &event)
     }
 }
 
-void GuiCheckBox::onMouseRightButtonPressed(const s_MouseEvent &event)
+void GuiCheckBox::onMouseRightButtonPressed()
 {
-    if (m_enabled && m_rect.isPointWithin(event.coords)) {
-        m_pressed = m_focus;
-        m_visualState = m_pressed ? VisualState::Pressed : (m_focus ? VisualState::Hover : VisualState::Normal);
+    if (m_enabled && m_focus) {
+        m_pressed = true;
+        m_visualState = VisualState::Pressed;
     }
 }
 
-void GuiCheckBox::onMouseLeftButtonPressed(const s_MouseEvent &event)
+void GuiCheckBox::onMouseLeftButtonPressed()
 {
-    if (m_enabled && m_rect.isPointWithin(event.coords)) {
-        m_pressed = m_focus;
-        m_visualState = m_pressed ? VisualState::Pressed : (m_focus ? VisualState::Hover : VisualState::Normal);
+    if (m_enabled && m_focus) {
+        m_pressed = true;
+        m_visualState = VisualState::Pressed;
     }
 }
 
-void GuiCheckBox::onMouseLeftButtonClicked(const s_MouseEvent &event)
+void GuiCheckBox::onMouseLeftButtonClicked()
 {
-    if (!m_rect.isPointWithin(event.coords) || !m_enabled) {
+    if (!m_focus || !m_enabled) {
         return;
     }
 

@@ -93,7 +93,7 @@ void GuiValueButton::onNotifyKeyboardEvent(const cKeyboardEvent &)
 void GuiValueButton::draw() const
 {
     m_sdlDrawer->renderRectFillColor(m_rect, m_theme.fillColor);
-    if (m_pressed || m_visualState == VisualState::Pressed) {
+    if (m_visualState == VisualState::Pressed) {
         m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderDark, m_theme.borderLight);
     } else {
         m_sdlDrawer->gui_DrawRectBorder(m_rect, m_theme.borderLight, m_theme.borderDark);
