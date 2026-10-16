@@ -95,7 +95,8 @@ void cRepairFacility::think_animation()
 
 void cRepairFacility::think_animation_unitDeploy()
 {
-    if (!isAnimating()) return; // do nothing when not animating
+    // when animating was stopped halfway, still close the door (see startAnimating)
+    if (!isAnimating() && animDir != eAnimationDirection::ANIM_CLOSE) return;
     TIMER_flag++;
     int waitLimit = animDir == eAnimationDirection::ANIM_SPAWN_UNIT ? 120 : 30;
     if (TIMER_flag > waitLimit) {
@@ -111,7 +112,9 @@ void cRepairFacility::think_animation_unitDeploy()
                 animDir = eAnimationDirection::ANIM_CLOSE; // and close again
                 break;
             case eAnimationDirection::ANIM_CLOSE:
-                iFrame--;
+                if (iFrame > 0) {
+                    iFrame--;
+                }
                 if (iFrame < 1) {
                     // no longer animating
                     animDir = eAnimationDirection::ANIM_NONE;
@@ -134,7 +137,13 @@ void cRepairFacility::think_guard()
 
 void cRepairFacility::startAnimating()
 {
-    animDir = isAnimating() ? eAnimationDirection::ANIM_OPEN : eAnimationDirection::ANIM_NONE;
+    if (isAnimating()) {
+        animDir = eAnimationDirection::ANIM_OPEN;
+        return;
+    }
+
+    // stopped animating (ie a unit heads towards us) while the door is (half) open: close it instead of freezing
+    animDir = iFrame > 0 ? eAnimationDirection::ANIM_CLOSE : eAnimationDirection::ANIM_NONE;
 }
 
 void cRepairFacility::onNotifyGameEvent(const s_GameEvent &event)
