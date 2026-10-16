@@ -161,6 +161,10 @@ void cOrderProcesser::think()
             m_drawManager->setMessage(msg);
         }
     }
+    else if (m_secondsUntilArrival == 0 && m_orderPlaced && !m_frigateSent) {
+        // the frigate could not be spawned (ie all unit slots taken), try again
+        sendFrigate();
+    }
 
     if (m_secondsUntilNewPricesWillBeCalculated > 0) {
         m_secondsUntilNewPricesWillBeCalculated--;
@@ -267,7 +271,6 @@ void cOrderProcesser::sendFrigate()
 
     if (structureId > -1) {
         // found structure
-        m_objects->getStructures()[structureId]->setAnimating(true);
         int destinationCell = m_objects->getStructures()[structureId]->getCell();
 
         int iStartCell = m_objects->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(destinationCell);
@@ -280,9 +283,11 @@ void cOrderProcesser::sendFrigate()
             // STEP 2: create frigate
             int unitId = cUnits::unitCreate(m_objects, m_info, m_interface, iStartCell, FRIGATE, m_player->getId(), true);
             if (unitId < 0) {
-                Logger::warn(COMP_STRUCTURES, "cOrderProcesser::sendFrigate", "unable to spawn frigate");
+                Logger::warn(COMP_STRUCTURES, "cOrderProcesser::sendFrigate", "unable to spawn frigate, will retry");
                 return;
             }
+
+            m_objects->getStructures()[structureId]->setAnimating(true);
 
             // STEP 2b: make sure its facing the starport directly
             int iCellX = m_objects->getMapGeometry()->getCellX(iStartCell);
