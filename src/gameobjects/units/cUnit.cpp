@@ -1417,6 +1417,14 @@ void cUnit::thinkFast_move_airUnit()
                                 if (!structureUnitWantsToEnter->isInProcessOfBeingEnteredOrOccupiedByUnit(unitIdOfUnitThatHasBeenPickedUp)) {
                                     structureUnitWantsToEnter->enterStructure(unitIdOfUnitThatHasBeenPickedUp);
                                 }
+                                else {
+                                    // still occupied (we got dropped nearby), keep heading for it instead of forgetting about it
+                                    // (carry-all transfers to a structure are only done for refineries and repair facilities)
+                                    eUnitActionIntent enterIntent = structureUnitWantsToEnter->getType() == REFINERY ?
+                                                                    eUnitActionIntent::INTENT_UNLOAD_SPICE :
+                                                                    eUnitActionIntent::INTENT_REPAIR;
+                                    unitToPickupOrDrop.move_to_enter_structure(structureUnitWantsToEnter, enterIntent);
+                                }
                             }
 
                             int pufX = (pos_x() + getBmpWidth() / 2);
