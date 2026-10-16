@@ -275,6 +275,13 @@ void cBuildingListUpdater::onStructureCreatedSkirmishMode(int structureType) con
 
         listConstYard->addStructureToList(WINDTRAP, 0);
         m_player->log("onStructureCreated - added WINDTRAP to list");
+
+        // a rebuilt ConstYard: re-add what the structures we still own make available
+        for (int type = 0; type < MAX_STRUCTURETYPES; type++) {
+            if (type == CONSTYARD) continue;
+            if (!m_player->hasAtleastOneStructure(type)) continue;
+            onStructureCreatedSkirmishMode(type);
+        }
     }
 
 	if (structureType == BARRACKS) {
@@ -566,8 +573,9 @@ void cBuildingListUpdater::evaluateUpgrades()
 
         // check if m_player has the additional structure (if required)
         if (upgradeInfo.needsStructureType > -1) {
-            hasRequiredStructureType = m_player->hasAtleastOneStructure(upgradeInfo.needsStructureType);
-            if (!hasRequiredStructureType) {
+            if (!m_player->hasAtleastOneStructure(upgradeInfo.needsStructureType)) {
+                // do not overwrite: a missing upgradeInfo.structureType (ie the ConstYard) must stay missing
+                hasRequiredStructureType = false;
                 addToUpgradesList = false;
                 m_player->log(std::format("Upgrade [{}] has not required additional structureType (upgradeInfo.needsStructureType) [{}].",
                                         upgradeInfo.description, m_info->getStructureInfo(upgradeInfo.needsStructureType).name));
