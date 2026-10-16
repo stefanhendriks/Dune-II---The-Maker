@@ -867,9 +867,8 @@ void cGame::setState(int newState)
                     // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
                     auto *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
 
-                    if (m_dataCampaign->mission > 1) {
-                        pState->conquerRegions();
-                    }
+                    // always, so the reused state leaves its old fade-out state (ie after losing mission 2)
+                    pState->conquerRegions();
 
                     if (m_missionWasWon) {
                         // we won
