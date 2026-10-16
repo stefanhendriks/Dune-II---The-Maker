@@ -35,6 +35,18 @@ bool isPressed(const std::bitset<SDL_SCANCODE_COUNT> &keys, SDL_Scancode scancod
     return isValidScancode(scancode) && keys.test(toScancodeIndex(scancode));
 }
 
+bool isModifierPressed(const s_KeysCombo &combo)
+{
+    return combo.ctrlPressed || combo.altPressed || combo.shiftPressed;
+}
+
+bool isModifierKey(SDL_Scancode scancode)
+{
+    return scancode == SDL_SCANCODE_LCTRL || scancode == SDL_SCANCODE_RCTRL ||
+           scancode == SDL_SCANCODE_LALT || scancode == SDL_SCANCODE_RALT ||
+           scancode == SDL_SCANCODE_LSHIFT || scancode == SDL_SCANCODE_RSHIFT;
+}
+
 }
 
 cKeyboard::cKeyboard() :
@@ -72,6 +84,12 @@ void cKeyboard::handleEvent(const SDL_Event &event)
     if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat) {
         m_keysPressed.set(index);
         m_keysReleased.reset(index);
+        if (isModifierPressed(m_currentCombo) && !isModifierKey(scancode)) {
+            m_keysChorded.set(index);
+        } else {
+            // a missed key-up (e.g. focus lost mid-combo) must not keep swallowing this key
+            m_keysChorded.reset(index);
+        }
     }
     else if (event.type == SDL_EVENT_KEY_UP) {
         m_keysPressed.reset(index);
@@ -92,11 +110,21 @@ void cKeyboard::updateState()
     }
     m_textInputs.clear();
 
-    if (m_keysPressed.any()) {
-        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, m_keysPressed, m_currentCombo, m_keyBindings.get()));
+    // When the modifier of a combo (e.g. CTRL+Z) is released before its key, that key must not
+    // trigger its plain binding (e.g. Z resets the zoom), so leave it out of the events.
+    std::bitset<SDL_SCANCODE_COUNT> keysPressed = m_keysPressed;
+    std::bitset<SDL_SCANCODE_COUNT> keysReleased = m_keysReleased;
+    if (!isModifierPressed(m_currentCombo)) {
+        keysPressed &= ~m_keysChorded;
+        keysReleased &= ~m_keysChorded;
     }
-    if (m_keysReleased.any()) {
-        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, m_keysReleased, m_currentCombo, m_keyBindings.get()));
-        m_keysReleased.reset();
+
+    if (keysPressed.any()) {
+        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::HOLD, keysPressed, m_currentCombo, m_keyBindings.get()));
     }
+    if (keysReleased.any()) {
+        m_keyboardObserver->onNotifyKeyboardEvent(cKeyboardEvent(eKeyEventType::PRESSED, keysReleased, m_currentCombo, m_keyBindings.get()));
+    }
+    m_keysChorded &= ~m_keysReleased;
+    m_keysReleased.reset();
 }
