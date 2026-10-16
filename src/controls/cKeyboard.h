@@ -47,6 +47,8 @@ private:
     std::unique_ptr<cKeyBindings> m_keyBindings;
     std::bitset<SDL_SCANCODE_COUNT> m_keysPressed;
     std::bitset<SDL_SCANCODE_COUNT> m_keysReleased;
+    // Keys pressed while a modifier was held; they only count as part of that modifier combo, not as plain keys
+    std::bitset<SDL_SCANCODE_COUNT> m_keysChorded;
     std::vector<std::string> m_textInputs;
     s_KeysCombo m_currentCombo;
 };
