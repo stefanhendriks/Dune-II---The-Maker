@@ -444,6 +444,9 @@ public:
      */
     eCantBuildReason canBuildStructure(int iStructureType);
 
+    // true when all structure slots in the game are in use, so a structure of this type can't be created
+    bool isStructureLimitReached(int iStructureType) const;
+
     int getStructureTypeBeingBuilt() const;
     cBuildingListItem *getStructureBuildingListItemBeingBuilt() const;
 

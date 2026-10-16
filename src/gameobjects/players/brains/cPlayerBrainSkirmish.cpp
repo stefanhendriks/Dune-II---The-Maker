@@ -1462,6 +1462,9 @@ int cPlayerBrainSkirmish::getStructureToBuild() const
         case NOT_AVAILABLE:
             // The building is not available
             return -1;
+        case STRUCTURE_LIMIT_REACHED:
+            // no structure slot left, wait until one frees up
+            return -1;
     }
 
     return structureIWantToBuild;
