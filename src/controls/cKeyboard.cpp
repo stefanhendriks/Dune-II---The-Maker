@@ -86,6 +86,9 @@ void cKeyboard::handleEvent(const SDL_Event &event)
         m_keysReleased.reset(index);
         if (isModifierPressed(m_currentCombo) && !isModifierKey(scancode)) {
             m_keysChorded.set(index);
+        } else {
+            // a missed key-up (e.g. focus lost mid-combo) must not keep swallowing this key
+            m_keysChorded.reset(index);
         }
     }
     else if (event.type == SDL_EVENT_KEY_UP) {
