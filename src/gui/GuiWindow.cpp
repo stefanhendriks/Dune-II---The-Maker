@@ -42,6 +42,7 @@ void GuiWindow::draw() const
     }
 
     // draw title
+    if (title.empty()) return;
     m_textDrawer->drawTextCentered(title.c_str(), m_rect.getX(), m_rect.getWidth(), m_rect.getY() + 2, Color::Yellow);
 }
 
