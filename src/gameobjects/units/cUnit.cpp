@@ -442,8 +442,8 @@ void cUnit::createExplosionParticle()
                         }
 
                         if (RNG::rnd(100) < iChance) {
-                            long x = pos_x() + (m_mapCamera->getViewportStartX()) + 16 + (-8 + RNG::rnd(16));
-                            long y = pos_y() + (m_mapCamera->getViewportStartY()) + 16 + (-8 + RNG::rnd(16));
+                            long x = pos_x() + 16 + (-8 + RNG::rnd(16));
+                            long y = pos_y() + 16 + (-8 + RNG::rnd(16));
                             cParticle::create(x, y, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, m_objects, m_infos);
                         }
                     }
