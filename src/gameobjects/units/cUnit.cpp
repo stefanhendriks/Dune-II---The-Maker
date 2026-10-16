@@ -2339,6 +2339,9 @@ void cUnit::thinkFast_move()
         return;
     }
 
+    // a carry-all is on its way to pick us up; it can only do so when we stand still on a cell
+    if (willBePickedUpBy > -1 && !isMovingBetweenCells()) return;
+
     // when there is a valid goal cell (differs), then we go further
     if (movement.iGoalCell == position.iCell) {
         setAction(eActionType::GUARD); // do nothing
@@ -3269,7 +3272,10 @@ void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell)
 
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate)
 {
-    movewaitTimer.reset(650); // wait for pickup!
+    if (!isMovingBetweenCells()) {
+        // when between cells, keep moving so the carry-all finds us standing on a cell
+        movewaitTimer.reset(650); // wait for pickup!
+    }
     thinkwaitTimer.reset(650);
     if (!candidate->hasUnitHeadingTowards() && !candidate->hasUnitWithin()) {
         candidate->unitHeadsTowardsStructure(iID);
