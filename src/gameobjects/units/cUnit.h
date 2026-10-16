@@ -602,7 +602,7 @@ private:
 
     void forgetAboutUnitToPickUp();
 
-    void tellCarryAllThatWouldPickMeUpToForgetAboutMe() const;
+    void tellCarryAllThatWouldPickMeUpToForgetAboutMe();
 
     bool isAbleToGuard();
 
