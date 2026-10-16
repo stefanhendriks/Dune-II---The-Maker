@@ -128,6 +128,7 @@ void cUnit::init(int i)
     // harv
     iCredits = 0;
     iHarvestCellMemory = -1;
+    m_stayAtGoalCell = false;
 
     // Drawing
     rendering.iBodyFacing = Facing::UP;    // Body of tanks facing
@@ -812,6 +813,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
                     iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent)));
 
     setGoalCell(iCll);
+    m_stayAtGoalCell = false;
     if (iStructureID > -1) {
         unitWillNoLongerBeInteractingWithStructure();
     }
@@ -3010,6 +3012,12 @@ bool cUnit::canAttackOnEnterStructure()
     return getUnitInfo().attackIsEnterStructure;
 }
 
+void cUnit::move_to_and_stay(int iGoalCell)
+{
+    move_to(iGoalCell);
+    m_stayAtGoalCell = true;
+}
+
 void cUnit::move_to(int iGoalCell)
 {
     eUnitActionIntent intent = eUnitActionIntent::INTENT_MOVE;
@@ -3613,6 +3621,11 @@ void cUnit::think_harvester()
             if (iCredits < getUnitInfo().credit_capacity)
                 harvestTimer.increment();
                 // TIMER_harvest++;
+        }
+        else if (m_stayAtGoalCell) {
+            // the player ordered us here, stay until the next order
+            rendering.iFrame = 0;
+            return;
         }
         else {
             // not on spice, find a new location
