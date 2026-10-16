@@ -52,6 +52,10 @@
 
 #include "data/gfxaudio.h"
 
+namespace {
+constexpr int kEnemyWarningCooldownSeconds = 30;
+}
+
 int cPlayer::groupIdToIndex(int groupId)
 {
     if (groupId < 1 || groupId > MAX_UNIT_GROUPS) return -1;
@@ -263,6 +267,8 @@ void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
     for (int i = 0; i < MAX_UPGRADETYPES; i++) {
         m_appliedUpgrades[i] = false;
     }
+
+    m_enemyWarningCooldown = 0;
 
     credits = 0;
     maxCredits_ = 1000;
@@ -2123,7 +2129,8 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
         }
     }
 
-    bool hasVoiceToPlay = isHuman() && voiceId > -1; // don't warn when already in "attack music mode"
+    // don't warn when already in "attack music mode", nor again shortly after the previous warning (#945)
+    bool hasVoiceToPlay = isHuman() && voiceId > -1 && m_enemyWarningCooldown == 0;
 
     bool mayPlayVoice = true;
     if (triggerMusic) {
@@ -2137,6 +2144,7 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
 
     if (mayPlayVoice && hasVoiceToPlay) {
         m_audioContext->playVoice(voiceId, getHouse());
+        m_enemyWarningCooldown = kEnemyWarningCooldownSeconds;
     }
 }
 
@@ -2645,6 +2653,10 @@ bool cPlayer::isContextMouseState(eMouseState state)
 
 void cPlayer::thinkSlow()
 {
+    if (m_enemyWarningCooldown > 0) {
+        m_enemyWarningCooldown--;
+    }
+
     if (orderProcesser) {
         orderProcesser->think();
     }
