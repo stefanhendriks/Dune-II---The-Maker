@@ -179,6 +179,7 @@ int cPathFinder::validateCreatePathInput(int unitId)
     // rock would yield a path that ends on rock.
     if (m_activeUnit->isSandworm() && !m_map->isCellPassableForWorm(goalCell)) {
         m_activeUnit->log("CREATE_PATH -- END invalid goal terrain for sandworm");
+        m_activeUnit->movewaitTimer.reset(50 + RNG::rnd(50));
         return -6;
     }
 
