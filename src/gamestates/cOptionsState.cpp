@@ -132,8 +132,8 @@ void cOptionsState::constructWindow(int prevState)
                 .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));
 
-    // Mission select from options menu, only when playing the game
-    if (m_prevState == GAME_PLAYING) {
+    // Mission select from options menu, only when playing a campaign mission (a skirmish has no campaign to continue, #995)
+    if (m_prevState == GAME_PLAYING && !m_settings->isSkirmish()) {
         rows = 3;
         int toMissionSelect = mainMenuHeight - ((buttonHeight * rows) + (margin * rows));// 424
         const cRectangle &toMissionSelectRect = m_guiWindow->getRelativeRect(margin, toMissionSelect, buttonWidth,
