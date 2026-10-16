@@ -830,6 +830,11 @@ void cGame::setState(int newState)
             m_creatorState->destroyState(eGameState::OPTIONS);
         }
 
+        if (newState == GAME_SELECT_HOUSE) {
+            // a new campaign starts, so drop the conquest state of the previous one (it would skip the intro)
+            m_creatorState->destroyState(eGameState::REGION);
+        }
+
         if (newState == GAME_MISSIONSELECT) {
             deleteOldState = true; // delete old missionselect state everytime
         }
