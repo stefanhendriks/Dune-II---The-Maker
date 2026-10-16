@@ -678,8 +678,13 @@ void cBuildingListUpdater::applyUpgrade(const s_UpgradeInfo &upgradeInfo)
     eListType listType = upgradeInfo.providesTypeList;
     int subListType = upgradeInfo.providesTypeSubList;
 
-    cBuildingList *listBeingUpgraded = sideBar->getList(listType);
-    listBeingUpgraded->setStatusAvailable(subListType);
+    // when re-applying an earlier upgrade while the next upgrade of the same list is still in progress,
+    // keep the list blocked until that upgrade is done (#1048)
+    cBuildingListItem *upgradeInProgress = m_player->isUpgradingList(listType, subListType);
+    if (upgradeInProgress == nullptr || upgradeInProgress->isDoneBuilding()) {
+        cBuildingList *listBeingUpgraded = sideBar->getList(listType);
+        listBeingUpgraded->setStatusAvailable(subListType);
+    }
 
     d2tm_assert(upgradeInfo.providesTypeId > -1);
 
