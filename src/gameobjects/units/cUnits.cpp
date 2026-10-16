@@ -258,7 +258,7 @@ void cUnits::move_to(int icell)
     // Implementation for moving units to a specific cell
     for (auto& unit : m_units) {
         if (unit.isValid() && unit.isSelected()) {
-            unit.move_to(icell);
+            unit.move_to_and_stay(icell);
         }
     }
 }

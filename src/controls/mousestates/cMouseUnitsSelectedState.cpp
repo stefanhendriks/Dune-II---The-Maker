@@ -194,7 +194,7 @@ void cMouseUnitsSelectedState::onMouseLeftButtonClicked()
                         infantryAcknowledged = true;
                     }
                     unitAcknowledged = true;
-                    pUnit->move_to(mouseCell);
+                    pUnit->move_to_and_stay(mouseCell);
                 }
             }
             spawnParticle(D2TM_PARTICLE_MOVE);
