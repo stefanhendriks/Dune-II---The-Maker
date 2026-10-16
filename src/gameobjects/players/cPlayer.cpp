@@ -959,10 +959,10 @@ int cPlayer::getPowerUsage() const
  */
 void cPlayer::dumpCredits(int amount)
 {
-    giveCredits(amount);
-    if (credits > maxCredits_) {
-        credits = maxCredits_;
-    }
+    // only harvested spice needs storage; credits above capacity (ie starting credits) are kept
+    float storageLeft = maxCredits_ - credits;
+    if (storageLeft <= 0) return;
+    giveCredits(std::min(static_cast<float>(amount), storageLeft));
 }
 
 /**
