@@ -79,9 +79,9 @@ private:
 
     void drawBox() const;
     void onMouseMovedTo(const s_MouseEvent &event);
-    void onMouseRightButtonPressed(const s_MouseEvent &);
-    void onMouseLeftButtonPressed(const s_MouseEvent &event);
-    void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    void onMouseRightButtonPressed();
+    void onMouseLeftButtonPressed();
+    void onMouseLeftButtonClicked();
 };
 
 
