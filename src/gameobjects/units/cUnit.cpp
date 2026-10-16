@@ -1676,6 +1676,13 @@ void cUnit::setPosY(float newVal)
 
 void cUnit::forgetAboutUnitToPickUp()  // forget about this
 {
+    if (iUnitID > -1) {
+        // let the unit know it should no longer wait for us
+        cUnit *pUnit = m_objects->getUnit(iUnitID);
+        if (pUnit->isValid() && pUnit->willBePickedUpBy == iID) {
+            pUnit->willBePickedUpBy = -1;
+        }
+    }
     setGoalCell(position.iCell);
     m_transferType = eTransferType::NONE;
     iUnitID = -1;
