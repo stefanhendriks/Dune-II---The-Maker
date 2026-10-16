@@ -287,6 +287,19 @@ bool cKeyBindings::matches(const std::bitset<SDL_SCANCODE_COUNT> &keys, const s_
     return false;
 }
 
+bool cKeyBindings::containsActionKey(const std::bitset<SDL_SCANCODE_COUNT> &keys, eKeyAction action) const
+{
+    auto it = m_bindings.find(action);
+    if (it == m_bindings.end()) return false;
+
+    for (SDL_Scancode sc : it->second.keys) {
+        if (sc >= 0 && sc < SDL_SCANCODE_COUNT && keys.test(static_cast<size_t>(sc))) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void cKeyBindings::bind(eKeyAction action, std::initializer_list<SDL_Scancode> keys,
                         bool requireCtrl, bool requireAlt, bool requireShift)
 {
