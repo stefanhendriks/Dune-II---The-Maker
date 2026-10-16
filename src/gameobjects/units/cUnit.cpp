@@ -848,13 +848,14 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
  * longer want to be picked up. Ie, we died, or we wanted to move away ourselves and the carry-all should not
  * interfere.
  */
-void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe() const
+void cUnit::tellCarryAllThatWouldPickMeUpToForgetAboutMe()
 {
     if (willBePickedUpBy > -1) {
         cUnit *pUnit = m_objects->getUnit(willBePickedUpBy);
         if (pUnit->isValid()) {
             pUnit->forgetAboutUnitToPickUp();
         }
+        willBePickedUpBy = -1;
     }
 }
 
@@ -3250,6 +3251,9 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
 bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell)
 {
+    // a carry-all may still be on its way with an older transfer (ie, back to the spice field)
+    tellCarryAllThatWouldPickMeUpToForgetAboutMe();
+
     int r = cUnit::carryallFreeForTransfer(iPlayer, m_objects);
     if (r < 0) {
         return false;
