@@ -641,6 +641,8 @@ private:
     int iStructureUpgradeLevel[MAX_STRUCTURETYPES] = {}; // remember the upgrade level for each structure type
     bool m_appliedUpgrades[MAX_UPGRADETYPES] = {}; // tracks which independent upgrades have been applied
 
+    int m_enemyWarningCooldown = 0; // seconds before the "enemy unit approaching" / wormsign voice may play again
+
     int powerUsage_ = 0;      // total amount of power usage
     int powerProduce_ = 0;      // total amount of power generated
 
