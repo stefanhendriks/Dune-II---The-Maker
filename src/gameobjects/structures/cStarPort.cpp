@@ -95,12 +95,18 @@ void cStarPort::think_deploy()
             cBuildingListItem *item = orderProcesser->getItemToDeploy();
             if (item) {
                 int cellToDeployTo = getNonOccupiedCellAroundStructure();
+                int id = -1;
+                if (cellToDeployTo >= 0) {
+                    id = cUnits::unitCreate(m_objects, m_info, m_interface, cellToDeployTo, item->getBuildId(), iPlayer, true);
+                    // all unit slots taken, keep the order and try again next second
+                    if (id < 0) return;
+                }
+
                 orderProcesser->markOrderAsDeployed(item);
                 item->decreaseTimesOrdered();
                 int rallyPoint = getRallyPoint();
 
                 if (cellToDeployTo >= 0) {
-                    int id = cUnits::unitCreate(m_objects, m_info, m_interface, cellToDeployTo, item->getBuildId(), iPlayer, true);
                     if (rallyPoint > -1) {
                         m_objects->getUnit(id)->move_to(rallyPoint, -1, -1);
                     }
