@@ -1178,8 +1178,11 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
             const s_PlaceResult &placeResult = player->canPlaceStructureAt(iCll, pItem->getBuildId());
 
             if (placeResult.success) {
-                player->placeItem(iCll, pItem);
-                matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
+                // no structure slot free: keep the order, so placing is retried once a slot frees up
+                if (!player->isStructureLimitReached(pItem->getBuildId())) {
+                    player->placeItem(iCll, pItem);
+                    matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
+                }
             }
             else {
                 findNewLocationOrMoveAnyBlockingUnitsOrCancelBuild(matchingOrder, pItem, placeResult);

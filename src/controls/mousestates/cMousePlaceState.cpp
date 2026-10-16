@@ -82,12 +82,12 @@ void cMousePlaceState::onMouseLeftButtonClicked()
         return;
     }
 
-    if (m_player->isStructureLimitReached(itemToPlace->getBuildId())) {
-        m_context->getDrawManager()->setMessage("Unable to create more.");
-        return;
-    }
-
     if (mayPlaceIt(itemToPlace, m_context->getMouseCell())) {
+        if (m_player->isStructureLimitReached(itemToPlace->getBuildId())) {
+            m_context->getDrawManager()->setMessage("Unable to create more.");
+            return;
+        }
+
         m_context->getAudioContext()->playSound(SOUND_PLACE);
         m_player->placeItem(mouseCell, itemToPlace);
         m_context->toPreviousState();
