@@ -1376,11 +1376,6 @@ bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
     return m_audioContext->playMusicByType(iType, playerId, triggerWithVoice, isState(GAME_PLAYING), m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 }
 
-int cGame::getMaxVolume()
-{
-    return m_audioContext->getMaxVolume();
-}
-
 void cGame::thinkNormal()
 {
     if (m_currentState) {
