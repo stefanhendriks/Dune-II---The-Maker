@@ -140,8 +140,6 @@ public:
     void playMusicByTypeForStateTransition(int iType);
     bool playMusicByType(int iType, int playerId = HUMAN, bool triggerWithVoice = false);
 
-    int getMaxVolume();
-
     void setPlayerToInteractFor(cPlayer *pPlayer);
     void setMousePosition(int w, int h);
 
