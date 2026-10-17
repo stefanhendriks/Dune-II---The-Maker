@@ -6,4 +6,4 @@ cmake --build . --target all -- -j 6
 ctest --output-on-failure
 cd ..
 
-copy build\d2tm.exe binbin\
+copy build\d2tm.exe bin\
