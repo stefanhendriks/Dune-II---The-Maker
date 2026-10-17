@@ -482,7 +482,7 @@ private:
     int m_iScrollSpeed;
 
     // sizes of the map (outer limits, including the invisible map boundaries)
-    int m_height, m_width;
+    // int m_height, m_width;
 
     int m_maxCells;
 
