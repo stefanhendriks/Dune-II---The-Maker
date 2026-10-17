@@ -876,7 +876,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
             }
         }
 
-        // check when Y = map_height (bottom)
+        // check when Y = height (bottom)
         tDistance = m_mapGeometry->distance(iX, m_mapGeometry->getHeight() - 1, iCllX, iCllY);
 
         if (tDistance < lDistance) {
@@ -905,7 +905,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
             }
         }
 
-        // check when XY = map_m_mapGeometry->getWidth() (bottom)
+        // check when XY = width() (bottom)
         tDistance = m_mapGeometry->distance(m_mapGeometry->getWidth() - 1, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
