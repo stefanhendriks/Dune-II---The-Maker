@@ -47,7 +47,7 @@ locally, configure with `-DD2TM_WERROR=ON`:
     cmake .. -DD2TM_WERROR=ON
 ```
 
-## Windows (MinGW64)
+## Windows (MSYS2 UCRT64)
 It depends on a MinGW 64-bit UCRT environment (UCRT64), via [MSYS2](https://www.msys2.org/). From
 an MSYS2 UCRT64 shell, install the same packages CI installs (see the
 `install:` line of the "Install MSYS2 with MinGW 64-bit" step in
