@@ -16,13 +16,9 @@
 #pragma once
 
 #include "definitions.h"
-//#include "gameobjects/structures/cAbstractStructure.h"
-// #include "gameobjects/units/cUnit.h"
 #include "gameobjects/map/cCell.h"
 #include "observers/cScenarioObserver.h"
 #include "sGameEvent.h"
-// #include "utils/d2tm_math.h"
-#include "utils/cPoint.h"
 #include <map>
 #include <vector>
 #include <memory>
@@ -70,9 +66,6 @@ public:
     bool occupied(int iCll, int iUnitID);
     bool occupiedInDimension(int iCell, int dimension);
     bool occupiedByWallOrMountain(int iCell);
-
-    // void setGameContext(GameContext* ctx);
-
     int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
     // Drawing
@@ -404,8 +397,6 @@ public:
     int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
     int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);
 
-    // int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
-
     int findRandomCellToMoveToForSandworm();
     bool isCellPassableForWorm(int cell);
 
@@ -471,11 +462,6 @@ private:
     int m_TIMER_scroll;
     int m_iScrollSpeed;
 
-    // sizes of the map (outer limits, including the invisible map boundaries)
-    // int m_height, m_width;
-
-    // int m_maxCells;
-
     void drawUnitDebug(cUnit *pUnit) const;
 
     // thinking related
@@ -485,12 +471,8 @@ private:
 
     // event related
     void onEntityDestroyed(const s_GameEvent &event);
-
     void onEntityCreated(const s_GameEvent &event);
 
     void setSandwormRespawnTimer();
-
     void evaluateIfWeShouldSetTimerToRespawnWorm();
-
-    
 };
