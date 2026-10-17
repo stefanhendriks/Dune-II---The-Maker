@@ -40,6 +40,7 @@ class cScreenFader;
 class cMapCamera;
 class cGameConditionChecker;
 class GuiButton;
+class GuiWindow;
 
 struct s_DataCampaign;
 
@@ -103,7 +104,6 @@ private:
     int techLevel;
 
     // Colors
-    Color colorDarkishBackground;
     Color colorLightBackground;
     Color colorDarkishBorder;
     Color colorDarkerYellow;
@@ -147,6 +147,9 @@ private:
     std::unique_ptr<GuiButton> surpriseMeButton;
     std::unique_ptr<GuiButton> nextMapButton;
     std::unique_ptr<GuiButton> previousMapButton;
+
+    std::vector<std::unique_ptr<GuiWindow>> m_panels; // frames of the screen, drawn in this order
+    std::unique_ptr<GuiWindow> m_bottomBar;           // drawn after the player list
 
     // Functions
     void prepareSkirmishGameToPlayAndTransitionToCombatState(int iSkirmishMap);
