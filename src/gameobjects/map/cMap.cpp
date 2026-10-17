@@ -153,10 +153,8 @@ void cMap::init(int width, int height)
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;
 
-    m_width = width;
-    m_height = height;
-    m_mapGeometry->resize(m_width, m_height);
-    m_pathFinder->resize(m_maxCells, m_width, m_height);
+    m_mapGeometry->resize(width, height);
+    m_pathFinder->resize(m_maxCells, width, height);
 }
 
 void cMap::smudge_increase(SmudgeType iType, int iCell)
@@ -509,8 +507,8 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
     int totalSpiceBloomsCount = blooms.size();
 
     // When no blooms are detected, we must 'spawn' one
-    // @mira: do better than m_width*m_height>64*64
-    int desiredAmountOfSpiceBloomsInMap = (m_width*m_height>64*64) ? 6 : 3;
+    // @mira: do better than m_mapGeometry->getWidth()*m_mapGeometry->getHeight()>64*64
+    int desiredAmountOfSpiceBloomsInMap = (m_mapGeometry->getWidth()*m_mapGeometry->getHeight()>64*64) ? 6 : 3;
 
     if (totalSpiceBloomsCount < desiredAmountOfSpiceBloomsInMap) {
         // randomly create a new spice bloom somewhere on the map
@@ -859,7 +857,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     int cll = -1;
 
     // HORIZONTAL cells
-    for (int iX = 0; iX < m_width; iX++) {
+    for (int iX = 0; iX < m_mapGeometry->getWidth(); iX++) {
         // check when Y = 0 (top)
         tDistance = m_mapGeometry->distance(iX, 0, iCllX, iCllY);
 
@@ -874,12 +872,12 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         }
 
         // check when Y = map_height (bottom)
-        tDistance = m_mapGeometry->distance(iX, m_height - 1, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(iX, m_mapGeometry->getHeight() - 1, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = m_mapGeometry->makeCell(iX, m_height - 1);
+            cll = m_mapGeometry->makeCell(iX, m_mapGeometry->getHeight() - 1);
 
             if (occupied(cll) == false) {
                 iStartCell = cll;
@@ -888,7 +886,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     }
 
     // VERTICAL cells
-    for (int iY = 0; iY < m_height; iY++) {
+    for (int iY = 0; iY < m_mapGeometry->getHeight(); iY++) {
         // check when X = 0 (left)
         tDistance = m_mapGeometry->distance(0, iY, iCllX, iCllY);
 
@@ -902,12 +900,12 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
             }
         }
 
-        // check when XY = map_m_width (bottom)
-        tDistance = m_mapGeometry->distance(m_width - 1, iY, iCllX, iCllY);
+        // check when XY = map_m_mapGeometry->getWidth() (bottom)
+        tDistance = m_mapGeometry->distance(m_mapGeometry->getWidth() - 1, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
-            cll = m_mapGeometry->makeCell(m_width - 1, iY);
+            cll = m_mapGeometry->makeCell(m_mapGeometry->getWidth() - 1, iY);
 
             if (occupied(cll) == false) {
                 iStartCell = cll;
