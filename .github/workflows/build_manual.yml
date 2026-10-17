@@ -236,7 +236,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   Ubuntu:
-    name: Ubuntu (x86)
+    name: Ubuntu (x64)
     needs: [Prepare, MSYS2]
     runs-on: [ ubuntu-latest ]
     steps:
@@ -244,7 +244,7 @@ jobs:
         uses: egor-tensin/setup-gcc@v1
         with:
           version: 14
-          platform: x86
+          platform: x64
       - name: Checkout
         uses: actions/checkout@v6
         with:
