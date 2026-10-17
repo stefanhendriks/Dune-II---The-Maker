@@ -31,6 +31,7 @@ struct s_KeyBinding {
     bool requireCtrl  = false;
     bool requireAlt   = false;
     bool requireShift = false;
+    bool requireTab   = false;
 };
 
 class cKeyBindings {
@@ -48,7 +49,8 @@ private:
     std::map<eKeyAction, s_KeyBinding> m_bindings;
 
     void bind(eKeyAction action, std::initializer_list<SDL_Scancode> keys,
-              bool requireCtrl = false, bool requireAlt = false, bool requireShift = false);
+              bool requireCtrl = false, bool requireAlt = false, bool requireShift = false,
+              bool requireTab = false);
 
     static s_KeyBinding parseBinding(const std::string &value);
     static const std::vector<std::pair<std::string, eKeyAction>>& getActionTable();
