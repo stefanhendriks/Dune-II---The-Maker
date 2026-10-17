@@ -111,17 +111,9 @@ public:
      * @param cellNr
      * @return
      */
-    tCell *getCell(int cellNr) {
-        if (cellNr < 0) return nullptr;
-        if (cellNr >= m_maxCells) return nullptr;
-        return &m_cell[cellNr];
-    }
+    tCell *getCell(int cellNr);
 
-    int getCellType(int cellNr) {
-        tCell *pCell = getCell(cellNr);
-        if (pCell) return pCell->type;
-        return -1;
-    }
+    int getCellType(int cellNr);
 
     std::vector<int> getAllCellsOfType(int cellType);
 
@@ -378,9 +370,7 @@ public:
      */
     int getCellSlowDown(int i);
 
-    int getMaxCells() const {
-        return m_maxCells;
-    }
+    int getMaxCells() const;
 
     void createCell(int cell, int terrainType, int tile);
 
@@ -484,7 +474,7 @@ private:
     // sizes of the map (outer limits, including the invisible map boundaries)
     // int m_height, m_width;
 
-    int m_maxCells;
+    // int m_maxCells;
 
     void drawUnitDebug(cUnit *pUnit) const;
 
