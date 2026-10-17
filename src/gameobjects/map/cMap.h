@@ -119,11 +119,11 @@ public:
      * @param cellNr
      * @return
      */
-    tCell *getCell(int cellNr);
+    [[nodiscard]] tCell *getCell(int cellNr);
 
-    int getCellType(int cellNr);
+    [[nodiscard]] int getCellType(int cellNr);
 
-    std::vector<int> getAllCellsOfType(int cellType);
+    [[nodiscard]] std::vector<int> getAllCellsOfType(int cellType);
 
     /**
      * Returns ID at layer on cell. Returns -1 when layer or cell is not valid.
@@ -131,7 +131,7 @@ public:
      * @param idLayer
      * @return
      */
-    int cellGetIdFromLayer(int cellNr, int idLayer) {
+    [[nodiscard]] int cellGetIdFromLayer(int cellNr, int idLayer) {
         if (idLayer < 0 || idLayer >= 4) return -1; // safeguard layers
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->id[idLayer];
@@ -152,19 +152,19 @@ public:
         pCell->id[idLayer] = -1;
     }
 
-    int getCellTile(int cellNr) {
+    [[nodiscard]] int getCellTile(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->tile;
         return -1;
     }
 
-    int getCellHealth(int cellNr) {
+    [[nodiscard]] int getCellHealth(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->health;
         return -1;
     }
 
-    int getCellCredits(int cellNr) {
+    [[nodiscard]] int getCellCredits(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->credits;
         return -1;
@@ -175,7 +175,7 @@ public:
      * @param cellNr
      * @return
      */
-    bool isCellPassable(int cellNr) {
+    [[nodiscard]] bool isCellPassable(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->passable;
         return false;
@@ -186,7 +186,7 @@ public:
      * @param cellNr
      * @return
      */
-    bool isCellPassableFoot(int cellNr) {
+    [[nodiscard]] bool isCellPassableFoot(int cellNr) {
         tCell *pCell = getCell(cellNr);
         if (pCell) return pCell->passableFoot;
         return false;
@@ -197,7 +197,7 @@ public:
      * @param cellNr
      * @return
      */
-    int getCellIdUnitLayer(int cellNr) {
+    [[nodiscard]] int getCellIdUnitLayer(int cellNr) {
         return cellGetIdFromLayer(cellNr, MAPID_UNITS);
     }
 
@@ -206,7 +206,7 @@ public:
      * @param cellNr
      * @return
      */
-    int getCellIdAirUnitLayer(int cellNr) {
+    [[nodiscard]] int getCellIdAirUnitLayer(int cellNr) {
         return cellGetIdFromLayer(cellNr, MAPID_AIR);
     }
 
@@ -215,7 +215,7 @@ public:
      * @param cellNr
      * @return
      */
-    int getCellIdWormsLayer(int cellNr) {
+    [[nodiscard]] int getCellIdWormsLayer(int cellNr) {
         return cellGetIdFromLayer(cellNr, MAPID_WORMS);
     }
 
@@ -224,11 +224,11 @@ public:
      * @param cellNr
      * @return
      */
-    int getCellIdStructuresLayer(int cellNr) {
+    [[nodiscard]] int getCellIdStructuresLayer(int cellNr) {
         return cellGetIdFromLayer(cellNr, MAPID_STRUCTURES);
     }
 
-    bool isCellPassableForFootUnits(int cellNr) {
+    [[nodiscard]] bool isCellPassableForFootUnits(int cellNr) {
         bool isPassable = isCellPassableFoot(cellNr); // -> this will block for ALL units, so don't do this
         int unitId = getCellIdUnitLayer(cellNr);
         int strucId = getCellIdStructuresLayer(cellNr);
@@ -243,7 +243,7 @@ public:
      *
      * @return pointer to cAbstractStructure
      */
-    cAbstractStructure *findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer *pPlayer);
+    [[nodiscard]] cAbstractStructure *findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int cell, int structureType, cPlayer *pPlayer);
 
     /**
      * Finds the closest structure (compared to cell param) of required type, for player.
@@ -253,7 +253,7 @@ public:
      *
      * @return pointer to cAbstractStructure
      */
-    cAbstractStructure *findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer);
+    [[nodiscard]] cAbstractStructure *findClosestAvailableStructureType(int cell, int structureType, cPlayer *pPlayer);
 
     /**
      * Finds the closest structure (compared to cell param) of required type, for player.
@@ -263,7 +263,7 @@ public:
      *
      * @return pointer to cAbstractStructure
      */
-    cAbstractStructure *findClosestStructureType(int cell, int structureType, cPlayer *player);
+    [[nodiscard]] cAbstractStructure *findClosestStructureType(int cell, int structureType, cPlayer *player);
 
     void cellTakeDamage(int cellNr, int damage);
 
@@ -325,14 +325,14 @@ public:
 
     // Tracks what each player can currently see.
     // It updates fog-of-war and discovery state when units, buildings, or terrain change.
-    bool isVisible(int iCell, int iPlayer);
+    [[nodiscard]] bool isVisible(int iCell, int iPlayer);
 
     /**
      * is Cell visible for player?
      * @param iCell
      * @param
      */
-    bool isVisible(int iCell, cPlayer *thePlayer);
+    [[nodiscard]] bool isVisible(int iCell, cPlayer *thePlayer);
 
     /**
      * Is cell within sight range of any unit/structure of player right now? When false, but the cell
@@ -340,14 +340,14 @@ public:
      * @param iCell
      * @param iPlayer
      */
-    bool isSeen(int iCell, int iPlayer);
+    [[nodiscard]] bool isSeen(int iCell, int iPlayer);
 
     /**
      * Is this unit hidden from the human player because it stands in the fog of war? Units of the
      * human player (and its allies) are never hidden.
      * @param pUnit
      */
-    bool isHiddenByFogOfWar(cUnit *pUnit);
+    [[nodiscard]] bool isHiddenByFogOfWar(cUnit *pUnit);
 
     /**
      * Makes cell visible for player (ID)
@@ -370,7 +370,7 @@ public:
      * @param cellType
      * @return
      */
-    int getTotalCountCellType(int cellType);
+    [[nodiscard]] int getTotalCountCellType(int cellType);
 
     /**
      * Depending on terrain type, return amount of 'slow down' is experienced by ground unit (this assumes it is about
@@ -378,7 +378,7 @@ public:
      * @param i
      * @return
      */
-    int getCellSlowDown(int i);
+    [[nodiscard]] int getCellSlowDown(int i);
 
     // Finds useful locations on the map for movement, deployment, and resource gathering.
     // This is used for pathing, drop zones, nearest structures, and other gameplay decisions.
@@ -397,7 +397,7 @@ public:
      * @param iCell
      * @return > -1 if found or < 0 upon failure
      */
-    int findNearestSpiceBloom(int iCell);
+    [[nodiscard]] int findNearestSpiceBloom(int iCell);
 
     /**
      * Returns true if a structure may be placed at this cell. This evaluates if terrain type allows placement AND
@@ -407,21 +407,21 @@ public:
      * @param cll
      * @return
      */
-    bool isValidTerrainForStructureAtCell(int cell);
+    [[nodiscard]] bool isValidTerrainForStructureAtCell(int cell);
 
-    int getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType);
+    [[nodiscard]] int getRandomCellFromWithRandomDistanceValidForUnitType(int cell, int minRange, int maxRange, int unitType);
 
-    bool isStructureVisible(cAbstractStructure *pStructure, int iPlayer);
+    [[nodiscard]] bool isStructureVisible(cAbstractStructure *pStructure, int iPlayer);
 
-    bool isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer);
+    [[nodiscard]] bool isStructureVisible(cAbstractStructure *pStructure, cPlayer *thePlayer);
 
-    int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
-    int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);
+    [[nodiscard]] int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
+    [[nodiscard]] int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);
 
-    int findRandomCellToMoveToForSandworm();
-    bool isCellPassableForWorm(int cell);
+    [[nodiscard]] int findRandomCellToMoveToForSandworm();
+    [[nodiscard]] bool isCellPassableForWorm(int cell);
 
-    bool isValidTerrainForConcreteAtCell(int cell);
+    [[nodiscard]] bool isValidTerrainForConcreteAtCell(int cell);
 
     // Controls the evolving terrain and world events.
     // It manages spice bloom growth, detonation, worm behavior, and other dynamic map systems.
