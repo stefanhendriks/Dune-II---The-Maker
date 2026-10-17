@@ -116,6 +116,11 @@ void GuiSlider::onNotifyMouseEvent(const s_MouseEvent &event) {
 
     switch (event.eventType) {
         case MOUSE_LEFT_BUTTON_PRESSED:
+            // PRESSED is sent every frame while held; only the initial press may start a drag
+            if (m_leftButtonHeld) {
+                break;
+            }
+            m_leftButtonHeld = true;
             if (m_rect.isPointWithin(event.coords)) {
                 m_dragging = true;
                 m_visualState = VisualState::Pressed;
@@ -127,6 +132,13 @@ void GuiSlider::onNotifyMouseEvent(const s_MouseEvent &event) {
                 m_onLeftMouseButtonClickedAction();
             }
             m_dragging = false;
+            m_leftButtonHeld = false;
+            m_visualState = VisualState::Normal;
+            break;
+        case MOUSE_LEFT_BUTTON_DOUBLE_CLICKED:
+            // sent instead of CLICKED on a double click
+            m_dragging = false;
+            m_leftButtonHeld = false;
             m_visualState = VisualState::Normal;
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:

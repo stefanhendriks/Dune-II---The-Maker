@@ -57,6 +57,7 @@ private:
     int m_maxValue;
     int m_value;
     bool m_dragging;
+    bool m_leftButtonHeld = false;
     bool m_enabled = true;
     VisualState m_visualState = VisualState::Normal;
     std::function<void(int)> m_onValueChanged;
