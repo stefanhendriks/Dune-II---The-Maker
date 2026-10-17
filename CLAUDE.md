@@ -83,7 +83,7 @@ Raw game assets (sprites, sounds) and the `sdl_*.dat` packer tool live in the si
 ./install_dependencies_macosx.sh   # macOS: cmake, ninja, pkg-config, sdl3 (+ ttf/image/mixer), catch2 via brew
 ./install_dependencies_ubuntu.sh   # Ubuntu/Debian: build tools + catch2 via apt, SDL3 libs built from source
 ```
-On Windows, build in an MSYS2 MINGW64 shell and install the packages from the `install:` line of the
+On Windows, build in an MSYS2 UCRT64 shell and install the packages from the `install:` line of the
 "Install MSYS2 with MinGW 64-bit" step in `.github/workflows/build_pr.yml` with `pacman -S`.
 
 **Build and test:**
@@ -97,7 +97,7 @@ ctest --output-on-failure
 **Quick rebuild:**
 ```sh
 ./rebuildmacos.sh   # macOS/Linux: rm -rf build, cmake + build, ctest, copy build/d2tm to bin/
-rebuildwin.bat      # Windows (from an MSYS2 MINGW64 shell): rm -rf build, cmake + build, ctest
+rebuildwin.bat      # Windows (from an MSYS2 UCRT64 shell): rm -rf build, cmake + build, ctest
 ```
 
 CI builds with `-DCMAKE_BUILD_TYPE=RelWithDebInfo` and treats warnings as errors; locally the default

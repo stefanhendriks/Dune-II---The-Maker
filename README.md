@@ -48,8 +48,8 @@ locally, configure with `-DD2TM_WERROR=ON`:
 ```
 
 ## Windows (MinGW64)
-It depends on a MinGW64 environment, via [MSYS2](https://www.msys2.org/). From
-an MSYS2 MINGW64 shell, install the same packages CI installs (see the
+It depends on a MinGW 64-bit UCRT environment (UCRT64), via [MSYS2](https://www.msys2.org/). From
+an MSYS2 UCRT64 shell, install the same packages CI installs (see the
 `install:` line of the "Install MSYS2 with MinGW 64-bit" step in
 [`build_pr.yml`](.github/workflows/build_pr.yml) for the current list) via
 `pacman -S <packages>`.
@@ -66,7 +66,7 @@ an MSYS2 MINGW64 shell, install the same packages CI installs (see the
 
 If you use `ninja` you can use `cmake .. -G Ninja` instead.
 
-Or run `rebuildwin.bat` from the MSYS2 MINGW64 shell, which does a clean build in `build/` and runs the tests.
+Or run `rebuildwin.bat` from the MSYS2 UCRT64 shell, which does a clean build in `build/` and runs the tests.
 
 Once compilation is done you'll end up with a `d2tm.exe` file. The DLL's it needs are copied into `bin/` together with it by `create_release.bat` (see [Running](#running)).
 
