@@ -894,6 +894,11 @@ void cGame::setState(int newState)
                     pState->refresh(); // rebuilds UI windows, but keeps background
                 }
             }
+            else if (newState == GAME_PLAYING && m_state == GAME_OPTIONS) {
+                // resuming the mission from the options menu: keep the drawers (radar), mission stats
+                // and sidebar selection as they are (#993)
+                m_timeManager->startTimer();
+            }
             else if (newState == GAME_PLAYING) {
                     m_currentState = existingStatePtr;
 
