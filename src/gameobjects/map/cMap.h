@@ -16,13 +16,9 @@
 #pragma once
 
 #include "definitions.h"
-//#include "gameobjects/structures/cAbstractStructure.h"
-// #include "gameobjects/units/cUnit.h"
 #include "gameobjects/map/cCell.h"
 #include "observers/cScenarioObserver.h"
 #include "sGameEvent.h"
-// #include "utils/d2tm_math.h"
-#include "utils/cPoint.h"
 #include <map>
 #include <vector>
 #include <memory>
@@ -70,9 +66,6 @@ public:
     bool occupied(int iCll, int iUnitID);
     bool occupiedInDimension(int iCell, int dimension);
     bool occupiedByWallOrMountain(int iCell);
-
-    // void setGameContext(GameContext* ctx);
-
     int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
     // Drawing
@@ -111,17 +104,9 @@ public:
      * @param cellNr
      * @return
      */
-    tCell *getCell(int cellNr) {
-        if (cellNr < 0) return nullptr;
-        if (cellNr >= m_maxCells) return nullptr;
-        return &m_cell[cellNr];
-    }
+    tCell *getCell(int cellNr);
 
-    int getCellType(int cellNr) {
-        tCell *pCell = getCell(cellNr);
-        if (pCell) return pCell->type;
-        return -1;
-    }
+    int getCellType(int cellNr);
 
     std::vector<int> getAllCellsOfType(int cellType);
 
@@ -378,9 +363,7 @@ public:
      */
     int getCellSlowDown(int i);
 
-    int getMaxCells() const {
-        return m_maxCells;
-    }
+    int getMaxCells() const;
 
     void createCell(int cell, int terrainType, int tile);
 
@@ -413,8 +396,6 @@ public:
 
     int findNearByValidDropLocation(int cell, int range, int unitTypeToDrop);
     int findNearByValidDropLocation(int cell, int minRange, int maxRange, int unitTypeToDrop);
-
-    // int findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop);
 
     int findRandomCellToMoveToForSandworm();
     bool isCellPassableForWorm(int cell);
@@ -481,11 +462,6 @@ private:
     int m_TIMER_scroll;
     int m_iScrollSpeed;
 
-    // sizes of the map (outer limits, including the invisible map boundaries)
-    int m_height, m_width;
-
-    int m_maxCells;
-
     void drawUnitDebug(cUnit *pUnit) const;
 
     // thinking related
@@ -495,12 +471,8 @@ private:
 
     // event related
     void onEntityDestroyed(const s_GameEvent &event);
-
     void onEntityCreated(const s_GameEvent &event);
 
     void setSandwormRespawnTimer();
-
     void evaluateIfWeShouldSetTimerToRespawnWorm();
-
-    
 };

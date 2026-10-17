@@ -54,7 +54,6 @@ cMap::cMap()
 {
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;
-    m_maxCells = 0;
     m_reinforcements = nullptr;
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
@@ -75,11 +74,23 @@ MapGeometry *cMap::getGeometry() const
     return m_mapGeometry.get();
 }
 
-// void cMap::setGameContext(GameContext* ctx)
-// {
-//     m_ctx = ctx;
-//     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
-// }
+int cMap::getMaxCells() const
+{
+    return m_mapGeometry->getMaxCells();
+}
+
+tCell *cMap::getCell(int cellNr)
+{
+    if (cellNr < 0) return nullptr;
+    if (cellNr >= m_mapGeometry->getMaxCells()) return nullptr;
+    return &m_cell[cellNr];
+}
+
+int cMap::getCellType(int cellNr) {
+    tCell *pCell = getCell(cellNr);
+    if (pCell) return pCell->type;
+    return -1;
+}
 
 void cMap::serviceInit(sGameServices* services)
 {
@@ -140,8 +151,8 @@ void cMap::init(int width, int height)
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
 
-    m_maxCells = width * height;
-    m_cell = std::vector<tCell>(m_maxCells, tCell());
+    m_mapGeometry->resize(width, height);
+    m_cell = std::vector<tCell>(m_mapGeometry->getMaxCells(), tCell());
 
     // clear out all cells
     clearAllCells();
@@ -153,10 +164,7 @@ void cMap::init(int width, int height)
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;
 
-    m_width = width;
-    m_height = height;
-    m_mapGeometry->resize(m_width, m_height);
-    m_pathFinder->resize(m_maxCells, m_width, m_height);
+    m_pathFinder->resize(m_mapGeometry->getMaxCells(), width, height);
 }
 
 void cMap::smudge_increase(SmudgeType iType, int iCell)
@@ -193,7 +201,7 @@ void cMap::smudge_increase(SmudgeType iType, int iCell)
  */
 bool cMap::occupiedByWallOrMountain(int iCell)
 {
-    if (iCell < 0 || iCell >= m_maxCells) return false;
+    if (iCell < 0 || iCell >= m_mapGeometry->getMaxCells()) return false;
 
     if (getCellType(iCell) == TERRAIN_WALL) return true;
     if (getCellType(iCell) == TERRAIN_MOUNTAIN) return true;
@@ -222,7 +230,7 @@ bool cMap::occupiedByUnit(int iCell)
  */
 bool cMap::occupied(int iCell)
 {
-    if (iCell < 0 || iCell >= m_maxCells) return false;
+    if (iCell < 0 || iCell >= m_mapGeometry->getMaxCells()) return false;
 
     if (occupiedInDimension(iCell, MAPID_UNITS)) return true;
     if (occupiedInDimension(iCell, MAPID_AIR)) return true;
@@ -394,7 +402,7 @@ void cMap::thinkSlow()
 
 void cMap::updateFogOfWar()
 {
-    for (int c = 0; c < m_maxCells; c++) {
+    for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
         memset(m_cell[c].iSeen, 0, sizeof(m_cell[c].iSeen));
     }
 
@@ -509,8 +517,8 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
     int totalSpiceBloomsCount = blooms.size();
 
     // When no blooms are detected, we must 'spawn' one
-    // @mira: do better than m_width*m_height>64*64
-    int desiredAmountOfSpiceBloomsInMap = (m_width*m_height>64*64) ? 6 : 3;
+    // @mira: do better than m_mapGeometry->getWidth()*m_mapGeometry->getHeight()>64*64
+    int desiredAmountOfSpiceBloomsInMap = (m_mapGeometry->getWidth()*m_mapGeometry->getHeight()>64*64) ? 6 : 3;
 
     if (totalSpiceBloomsCount < desiredAmountOfSpiceBloomsInMap) {
         // randomly create a new spice bloom somewhere on the map
@@ -567,7 +575,7 @@ void cMap::draw_bullets()
 
 void cMap::clear_all(int playerId)
 {
-    for (int c = 0; c < m_maxCells; c++) {
+    for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
         m_cell[c].iVisible[playerId] = true;
     }
 }
@@ -655,7 +663,7 @@ void cMap::clearShroud(int c, int size, int playerId)
 void cMap::remove_id(int iIndex, int iIDType)
 {
     // Search through the entire map and remove the id
-    for (int iCell = 0; iCell < m_maxCells; iCell++) {
+    for (int iCell = 0; iCell < m_mapGeometry->getMaxCells(); iCell++) {
         tCell &tCell = m_cell[iCell];
         if (tCell.id[iIDType] == iIndex) {
             tCell.id[iIDType] = -1;
@@ -666,9 +674,6 @@ void cMap::remove_id(int iIndex, int iIDType)
 void cMap::draw_units()
 {
     auto *mapViewport = m_mapViewport;
-
-    //@Mira SDL2 blender
-    //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
 
     // draw all worms first
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
@@ -773,7 +778,6 @@ void cMap::draw_units_2nd()
                 drawUnitDebug(pUnit);
             }
         }
-
     }
 }
 
@@ -790,7 +794,6 @@ int cMap::mouse_draw_x()
 
 int cMap::mouse_draw_y()
 {
-    //@mira rewrite
     cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
@@ -822,7 +825,7 @@ int cMap::getTotalCountCellType(int cellType)
 std::vector<int> cMap::getAllCellsOfType(int cellType)
 {
     std::vector<int> cellsOfType = std::vector<int>();
-    for (int c = 0; c < m_maxCells; c++) {
+    for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
         if (getCellType(c) == cellType) {
             cellsOfType.push_back(c);
         }
@@ -859,7 +862,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     int cll = -1;
 
     // HORIZONTAL cells
-    for (int iX = 0; iX < m_width; iX++) {
+    for (int iX = 0; iX < m_mapGeometry->getWidth(); iX++) {
         // check when Y = 0 (top)
         tDistance = m_mapGeometry->distance(iX, 0, iCllX, iCllY);
 
@@ -874,12 +877,12 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
         }
 
         // check when Y = map_height (bottom)
-        tDistance = m_mapGeometry->distance(iX, m_height - 1, iCllX, iCllY);
+        tDistance = m_mapGeometry->distance(iX, m_mapGeometry->getHeight() - 1, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
 
-            cll = m_mapGeometry->makeCell(iX, m_height - 1);
+            cll = m_mapGeometry->makeCell(iX, m_mapGeometry->getHeight() - 1);
 
             if (occupied(cll) == false) {
                 iStartCell = cll;
@@ -888,7 +891,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
     }
 
     // VERTICAL cells
-    for (int iY = 0; iY < m_height; iY++) {
+    for (int iY = 0; iY < m_mapGeometry->getHeight(); iY++) {
         // check when X = 0 (left)
         tDistance = m_mapGeometry->distance(0, iY, iCllX, iCllY);
 
@@ -902,12 +905,12 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
             }
         }
 
-        // check when XY = map_m_width (bottom)
-        tDistance = m_mapGeometry->distance(m_width - 1, iY, iCllX, iCllY);
+        // check when XY = map_m_mapGeometry->getWidth() (bottom)
+        tDistance = m_mapGeometry->distance(m_mapGeometry->getWidth() - 1, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
             lDistance = tDistance;
-            cll = m_mapGeometry->makeCell(m_width - 1, iY);
+            cll = m_mapGeometry->makeCell(m_mapGeometry->getWidth() - 1, iY);
 
             if (occupied(cll) == false) {
                 iStartCell = cll;
@@ -1158,37 +1161,6 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
 {
     return findNearByValidDropLocation(cell, 1, range, unitTypeToDrop);
 }
-
-// int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
-// {
-//     auto *mapCamera = m_interface->getMapCamera();
-
-//     // go around 360 fDegrees and calculate new stuff.
-//     for (float dr = 1; dr < range; dr++) { // go outwards
-//         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
-//             // need a smarter way to do this (less CPU intensive).
-
-//             int x = getAbsoluteXPositionFromCellCentered(cell);
-//             int y = getAbsoluteYPositionFromCellCentered(cell);
-
-//             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
-//             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
-
-//             x = (x + dr1);
-//             y = (y + dr2);
-
-//             // convert back
-//             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
-
-//             if (cl < 0) continue;
-
-//             if (canDeployUnitAtCell(cell, unitIDToDrop)) {
-//                 return cell;
-//             }
-//         }
-//     }
-//     return -1;
-// }
 
 /**
  * Scans structures, belonging to player. If it is the same type it will be returned.
