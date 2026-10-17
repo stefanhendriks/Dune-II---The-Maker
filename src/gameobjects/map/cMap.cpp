@@ -74,12 +74,6 @@ MapGeometry *cMap::getGeometry() const
     return m_mapGeometry.get();
 }
 
-// void cMap::setGameContext(GameContext* ctx)
-// {
-//     m_ctx = ctx;
-//     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
-// }
-
 int cMap::getMaxCells() const
 {
     return m_mapGeometry->getMaxCells();
@@ -681,9 +675,6 @@ void cMap::draw_units()
 {
     auto *mapViewport = m_mapViewport;
 
-    //@Mira SDL2 blender
-    //// @Mira fix trasnparency set_trans_blender(0, 0, 0, 160);
-
     // draw all worms first
     for (int i = 0; i < m_objects->getUnitsSize(); i++) {
         cUnit *pUnit = m_objects->getUnit(i);
@@ -787,7 +778,6 @@ void cMap::draw_units_2nd()
                 drawUnitDebug(pUnit);
             }
         }
-
     }
 }
 
@@ -804,7 +794,6 @@ int cMap::mouse_draw_x()
 
 int cMap::mouse_draw_y()
 {
-    //@mira rewrite
     cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
         int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
@@ -1172,37 +1161,6 @@ int cMap::findNearByValidDropLocation(int cell, int range, int unitTypeToDrop)
 {
     return findNearByValidDropLocation(cell, 1, range, unitTypeToDrop);
 }
-
-// int cMap::findNearByValidDropLocationForUnit(int cell, int range, int unitIDToDrop)
-// {
-//     auto *mapCamera = m_interface->getMapCamera();
-
-//     // go around 360 fDegrees and calculate new stuff.
-//     for (float dr = 1; dr < range; dr++) { // go outwards
-//         for (float d = 0; d < 360; d++) { // if we reduce the amount of degrees, we don't get full coverage.
-//             // need a smarter way to do this (less CPU intensive).
-
-//             int x = getAbsoluteXPositionFromCellCentered(cell);
-//             int y = getAbsoluteYPositionFromCellCentered(cell);
-
-//             float dr1 = cos(d) * (dr * TILESIZE_WIDTH_PIXELS);
-//             float dr2 = sin(d) * (dr * TILESIZE_HEIGHT_PIXELS);
-
-//             x = (x + dr1);
-//             y = (y + dr2);
-
-//             // convert back
-//             int cl = mapCamera->getCellFromAbsolutePosition(x, y);
-
-//             if (cl < 0) continue;
-
-//             if (canDeployUnitAtCell(cell, unitIDToDrop)) {
-//                 return cell;
-//             }
-//         }
-//     }
-//     return -1;
-// }
 
 /**
  * Scans structures, belonging to player. If it is the same type it will be returned.
