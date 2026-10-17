@@ -36,6 +36,8 @@
 
 #include <algorithm>
 
+#include "gameobjects/structures/cStructureFactory.h"
+
 namespace brains {
 
 cPlayerBrainSkirmish::cPlayerBrainSkirmish(cPlayer *player) :
@@ -1179,7 +1181,7 @@ void cPlayerBrainSkirmish::thinkState_ProcessBuildOrders()
 
             if (placeResult.success) {
                 // no structure slot free: keep the order, so placing is retried once a slot frees up
-                if (!player->isStructureLimitReached(pItem->getBuildId())) {
+                if (!m_objects->getStructureFactory()->isStructureLimitReached() && !cStructureFactory::isModifyingTerrain(pItem->getBuildId())) {
                     player->placeItem(iCll, pItem);
                     matchingOrder->state = buildOrder::eBuildOrderState::REMOVEME;
                 }

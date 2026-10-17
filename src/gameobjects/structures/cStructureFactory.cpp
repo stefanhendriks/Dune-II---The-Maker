@@ -330,13 +330,14 @@ int cStructureFactory::getFreeSlot()
     return -1; // NONE
 }
 
-bool cStructureFactory::isStructureLimitReached(int iStructureType)
+bool cStructureFactory::isStructureLimitReached()
 {
-    // SLAB and WALL only change terrain, they don't take a structure slot
-    if (iStructureType == SLAB1 || iStructureType == SLAB4 || iStructureType == WALL) {
-        return false;
-    }
     return getFreeSlot() < 0;
+}
+
+bool cStructureFactory::isModifyingTerrain(int buildId)
+{
+   return buildId == SLAB1 || buildId == SLAB4 || buildId == WALL;
 }
 
 /**

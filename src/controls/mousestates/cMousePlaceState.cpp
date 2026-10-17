@@ -33,6 +33,7 @@
 #include "include/cAssert.h"
 
 #include "data/gfxaudio.h"
+#include "gameobjects/structures/cStructureFactory.h"
 
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)
@@ -83,7 +84,7 @@ void cMousePlaceState::onMouseLeftButtonClicked()
     }
 
     if (mayPlaceIt(itemToPlace, m_context->getMouseCell())) {
-        if (m_player->isStructureLimitReached(itemToPlace->getBuildId())) {
+        if (m_context->getObjects()->getStructureFactory()->isStructureLimitReached() && !cStructureFactory::isModifyingTerrain(itemToPlace->getBuildId())) {
             m_context->getDrawManager()->setMessage("Unable to create more.");
             return;
         }
