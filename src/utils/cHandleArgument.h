@@ -21,6 +21,9 @@
 
 class cHandleArgument {
 public:
+    // returned by handleArguments() when usage was printed and the game should not start
+    static constexpr int HELP_REQUESTED = 1;
+
     cHandleArgument() = default;
     ~cHandleArgument() = default;
 
