@@ -34,6 +34,7 @@ void GuiSlider::setEnabled(bool enabled)
 {
     m_enabled = enabled;
     m_dragging = false;
+    m_leftButtonHeld = false;
     if (!m_enabled) {
         m_visualState = VisualState::Disabled;
     } else {
