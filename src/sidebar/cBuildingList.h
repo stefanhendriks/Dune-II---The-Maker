@@ -151,7 +151,12 @@ public:
     * @param value
     */
     eListType getType() {
-        return m_typeOfList;
+        return m_listType;
+    }
+
+    [[nodiscard]] bool isType(const eListType type) const
+    {
+        return m_listType == type;
     }
 
     void removeAllSublistItems(int sublistId);
@@ -204,5 +209,5 @@ private:
 
     int getFreeSlot();
 
-    eListType m_typeOfList;
+    eListType m_listType;
 };

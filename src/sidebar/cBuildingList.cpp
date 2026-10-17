@@ -33,7 +33,7 @@ cBuildingList::cBuildingList(eListType listType)
     m_buttonDrawX = 0;
     m_buttonDrawY = 0;
     memset(m_items, 0, sizeof(m_items));
-    m_typeOfList = listType;
+    m_listType = listType;
     m_maxItems = 0;
     m_itemBuilder = nullptr;
     m_selected = false;
