@@ -59,8 +59,12 @@ void cParticleDrawer::drawTopLayer()
     }
 }
 
-void cParticleDrawer::drawDebugInfo(cTextDrawer* textDrawer)
+size_t cParticleDrawer::getParticlesLowerLayerAmount()
 {
-    textDrawer->drawText(0, 100,
-                        std::format("Visible particles BOTTOM: {}/ TOP: {}", m_particlesLowerLayer.size(), m_particlesTopLayer.size()));
+    return m_particlesLowerLayer.size();
+}
+
+size_t cParticleDrawer::getParticlesTopLayerAmount()
+{
+    return m_particlesTopLayer.size();
 }
