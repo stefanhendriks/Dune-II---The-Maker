@@ -30,6 +30,8 @@
 
 #include <SDL3/SDL.h>
 #include <format>
+
+#include "gameobjects/structures/cStructureFactory.h"
 #include "include/cAssert.h"
 
 cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player) :
@@ -49,6 +51,7 @@ void cBuildingListDrawer::serviceInit(sGameServices* services)
     m_infos = services->info;
     m_settings = services->settings;
     m_mouse = services->mouse;
+    m_objects = services->objects;
 }
 
 void cBuildingListDrawer::drawList(cBuildingList *list, int listIDToDraw)
@@ -152,18 +155,16 @@ int cBuildingListDrawer::getDrawY()
 
 /**
  * Draw the list, start from startId, until the max icons in the list to be drawn.
- *
- * @param startId
  */
-void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructureSize)
+void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStructureSize)
 {
     // starting draw coordinates
     int iDrawX=getDrawX();
     int iDrawY=getDrawY();
 
-    Color selectFadingColor = m_player->getSelectFadingColor();
+    const Color selectFadingColor = m_player->getSelectFadingColor();
 
-    int end = MAX_ITEMS;
+    constexpr int end = MAX_ITEMS;
 
     // is building an item in the list?
     std::array<int, 6> isBuildingItemInList = list->isBuildingItem();
@@ -171,6 +172,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
     // Start drawing the 'icons grid'
     int withOfIcon = 63;
     int heightOfIcon = 47;
+
+    bool structureLimitReached = list->isType(eListType::LIST_CONSTYARD) && m_objects->getStructureFactory()->isStructureLimitReached();
 
     // draw the icons, in rows of 3
     int rowNr = 0;
@@ -184,7 +187,6 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
         int iDrawXEnd = iDrawX + withOfIcon;
         int iDrawYEnd = iDrawY + heightOfIcon;
 
-        // asumes drawing for human player
         bool cannotPayIt = !m_player->hasEnoughCreditsFor(item->getBuildCost());
 
         // icon id must be set , assert it.
@@ -247,32 +249,44 @@ void cBuildingListDrawer::drawList(cBuildingList *list, bool shouldDrawStructure
                 }
             }
 
-            if (!item->isAvailable() || isBuildingSameSubListItem) {
-                m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
+            bool cannotBuildDueStructureLimit = structureLimitReached && !cStructureFactory::isModifyingTerrain(item->getBuildId());
 
-                // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
-                if (item->isPendingUpgrading()) {
+            if (!item->isAvailable() || isBuildingSameSubListItem || cannotBuildDueStructureLimit) {
+
+                if (!cannotBuildDueStructureLimit) {
+                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
+                    // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
+                    if (item->isPendingUpgrading()) {
+                        Color errorFadingColor = m_player->getErrorFadingColor();
+                        m_sdlDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+                        m_sdlDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                        m_sdlDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+
+                        m_smallTextDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, Color::Red);
+                    }
+
+                    // Pending building (ie: a build is progressing, blocking the upgrade)
+                    if (item->isPendingBuilding()) {
+                        Color errorFadingColor = m_player->getErrorFadingColor();
+                        m_sdlDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
+                        m_sdlDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
+                        m_sdlDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
+
+                        int height = heightOfIcon / 3;
+                        m_smallTextDrawer->drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, Color::Red);
+                        m_smallTextDrawer->drawTextCenteredInBox("in", iDrawX, iDrawY + height, withOfIcon, height, Color::Red);
+                        m_smallTextDrawer->drawTextCenteredInBox("progress", iDrawX, iDrawY + (height * 2), withOfIcon, height, Color::Red);
+                    }
+                } else {
+                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
                     Color errorFadingColor = m_player->getErrorFadingColor();
                     m_sdlDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     m_sdlDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
                     m_sdlDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
 
-                    Color red = Color{255, 0, 0,255};
-                    m_smallTextDrawer->drawTextCenteredInBox("Upgrading", iDrawX, iDrawY, withOfIcon, heightOfIcon, red);
-                }
-
-                // Pending building (ie: a build is progressing, blocking the upgrade)
-                if (item->isPendingBuilding()) {
-                    Color errorFadingColor = m_player->getErrorFadingColor();
-                    m_sdlDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
-                    m_sdlDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    m_sdlDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
-
-                    Color red = Color{255, 0, 0, 255};
-                    int height = heightOfIcon / 3;
-                    m_smallTextDrawer->drawTextCenteredInBox("Building", iDrawX, iDrawY, withOfIcon, height, red);
-                    m_smallTextDrawer->drawTextCenteredInBox("in", iDrawX, iDrawY + height, withOfIcon, height, red);
-                    m_smallTextDrawer->drawTextCenteredInBox("progress", iDrawX, iDrawY + (height * 2), withOfIcon, height, red);
+                    int height = heightOfIcon / 2;
+                    m_smallTextDrawer->drawTextCenteredInBox("Max", iDrawX, iDrawY, withOfIcon, height, Color::Red);
+                    m_smallTextDrawer->drawTextCenteredInBox("built", iDrawX, iDrawY + height, withOfIcon, height, Color::Red);
                 }
             }
 

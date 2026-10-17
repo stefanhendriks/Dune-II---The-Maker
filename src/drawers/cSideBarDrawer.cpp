@@ -153,7 +153,7 @@ void cSideBarDrawer::drawBuildingLists()
     int rows = 6;
     if (selectedList && selectedList->getType() == eListType::LIST_STARPORT) {
         rows = 5;
-        endY = m_services->settings->getScreenH() - 50;
+        endY = m_services->settings->getScreenH() - 50; // leave room for button "order" at bottom sidebar
     }
 
     for (int i = 1; i < 3; i++) {

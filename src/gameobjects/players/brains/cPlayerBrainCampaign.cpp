@@ -32,6 +32,7 @@
 #include "include/sDataCampaign.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "gameobjects/structures/cStructureFactory.h"
 #include "utils/Log.h"
 
 namespace brains {
@@ -1731,7 +1732,7 @@ void cPlayerBrainCampaign::thinkState_ProcessBuildOrders()
 
                 cBuildingListItem *pItem = player->getStructureBuildingListItemBeingBuilt();
                 // no structure slot free: keep the order, so placing is retried once a slot frees up
-                if (player->isStructureLimitReached(structureType)) break;
+                if (m_objects->getStructureFactory()->isStructureLimitReached() && !cStructureFactory::isModifyingTerrain(structureType)) break;
 
                 player->placeItem(iCll, pItem);
 

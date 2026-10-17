@@ -1573,7 +1573,7 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
-    if (isStructureLimitReached(iStructureType)) {
+    if (m_objects->getStructureFactory()->isStructureLimitReached() && !cStructureFactory::isModifyingTerrain(iStructureType)) {
         log("canBuildStructure: FALSE, reason STRUCTURE_LIMIT_REACHED");
         return eCantBuildReason::STRUCTURE_LIMIT_REACHED;
     }
@@ -1581,11 +1581,6 @@ eCantBuildReason cPlayer::canBuildStructure(int iStructureType)
     log("canBuildStructure: ALLOWED");
 
     return eCantBuildReason::NONE;
-}
-
-bool cPlayer::isStructureLimitReached(int iStructureType) const
-{
-    return m_objects->getStructureFactory()->isStructureLimitReached(iStructureType);
 }
 
 cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureTypeId, int healthPercentage)
@@ -1596,7 +1591,7 @@ cAbstractStructure *cPlayer::placeStructure(int destinationCell, int iStructureT
         return nullptr;
     }
 
-    if (isStructureLimitReached(iStructureTypeId)) {
+    if (pStructureFactory->isStructureLimitReached() && !cStructureFactory::isModifyingTerrain(iStructureTypeId)) {
         return nullptr;
     }
 
@@ -1624,7 +1619,7 @@ cAbstractStructure *cPlayer::placeItem(int destinationCell, cBuildingListItem *i
     }
 
     // keep the item in 'place it' mode (and the credits spent on it) until a structure slot frees up
-    if (isStructureLimitReached(iStructureTypeId)) {
+    if (m_objects->getStructureFactory()->isStructureLimitReached() && !cStructureFactory::isModifyingTerrain(iStructureTypeId)) {
         return nullptr;
     }
 

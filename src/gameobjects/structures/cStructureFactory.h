@@ -43,8 +43,8 @@ public:
 
     int getFreeSlot();
 
-    // true when a new structure of this type can not be created because all structure slots are in use
-    bool isStructureLimitReached(int iStructureType);
+    bool isStructureLimitReached();
+    static bool isModifyingTerrain(int buildId);
 
     void deleteAllExistingStructures();
 

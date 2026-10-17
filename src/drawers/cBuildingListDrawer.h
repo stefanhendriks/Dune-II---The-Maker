@@ -16,6 +16,7 @@
 #pragma once
 
 #include "cTextDrawer.h"
+#include "context/cGameObjectContext.h"
 #include "observers/cInputObserver.h"
 #include "sidebar/cBuildingList.h"
 
@@ -53,15 +54,16 @@ protected:
 
 private:
     // the list to draw
-    cTextDrawer* m_gameTextDrawer;
-    cTextDrawer* m_smallTextDrawer;
-    Graphics* m_gfxinter;
-    SDLDrawer* m_sdlDrawer;
+    cTextDrawer* m_gameTextDrawer = nullptr;
+    cTextDrawer* m_smallTextDrawer = nullptr;
+    Graphics* m_gfxinter = nullptr;
+    SDLDrawer* m_sdlDrawer = nullptr;
 
     cPlayer *m_player;
     cInfoContext* m_infos = nullptr;
     cGameSettings* m_settings = nullptr;
     cMouse* m_mouse = nullptr;
+    cGameObjectContext *m_objects = nullptr;
 
     bool m_renderListIds;
 
