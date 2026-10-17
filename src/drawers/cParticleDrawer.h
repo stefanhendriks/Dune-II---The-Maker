@@ -28,7 +28,8 @@ public:
     void serviceInit(sGameServices* services);
     void drawLowerLayer();
     void drawTopLayer();
-    void drawDebugInfo(cTextDrawer* textDrawer);
+    size_t getParticlesLowerLayerAmount();
+    size_t getParticlesTopLayerAmount();
 
     void determineParticlesToDraw(const cRectangle &viewport);
 

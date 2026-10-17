@@ -158,7 +158,6 @@ void cDrawManager::drawCombatState()
 
     if (m_gameSettings->isDrawUsages()) {
         drawDebugInfoUsages();
-        m_particleDrawer->drawDebugInfo(m_textDrawer);
     }
 }
 
@@ -196,9 +195,10 @@ void cDrawManager::drawDebugInfoUsages() const
     int startY = 74;
     int height = 14;
     m_textDrawer->drawText(0, startY, std::format("Units {}/{}", unitsUsed, m_objects->getUnitsSize()));
-    m_textDrawer->drawText(0, startY + 1*height, std::format("Structures %d/%d", structuresUsed, MAX_STRUCTURES));
-    m_textDrawer->drawText(0, startY + 2*height, std::format("Bullets %d/%d", bulletsUsed, m_objects->getBullets().size()));
-    m_textDrawer->drawText(0, startY + 3*height, std::format("Particles %d/%d", particlesUsed, m_objects->getParticles().size()));
+    m_textDrawer->drawText(0, startY + (1*height), std::format("Structures {}/{}", structuresUsed, MAX_STRUCTURES));
+    m_textDrawer->drawText(0, startY + (2*height), std::format("Bullets {}/{}", bulletsUsed, m_objects->getBullets().size()));
+    m_textDrawer->drawText(0, startY + (3*height), std::format("Particles {}/{}", particlesUsed, cParticles::size()));
+    m_textDrawer->drawText(0, startY + (4*height), std::format("Visible particles BOTTOM: {}/ TOP: {}", m_particleDrawer->getParticlesLowerLayerAmount(), m_particleDrawer->getParticlesTopLayerAmount()));
 }
 
 void cDrawManager::drawCredits()
