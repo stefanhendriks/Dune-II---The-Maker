@@ -54,7 +54,6 @@ cMap::cMap()
 {
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;
-    m_maxCells = 0;
     m_reinforcements = nullptr;
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
@@ -80,6 +79,24 @@ MapGeometry *cMap::getGeometry() const
 //     m_ctx = ctx;
 //     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
 // }
+
+int cMap::getMaxCells() const
+{
+    return m_mapGeometry->getMaxCells();
+}
+
+tCell *cMap::getCell(int cellNr)
+{
+    if (cellNr < 0) return nullptr;
+    if (cellNr >= m_mapGeometry->getMaxCells()) return nullptr;
+    return &m_cell[cellNr];
+}
+
+int cMap::getCellType(int cellNr) {
+    tCell *pCell = getCell(cellNr);
+    if (pCell) return pCell->type;
+    return -1;
+}
 
 void cMap::serviceInit(sGameServices* services)
 {
@@ -140,8 +157,7 @@ void cMap::init(int width, int height)
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
 
-    m_maxCells = width * height;
-    m_cell = std::vector<tCell>(m_maxCells, tCell());
+    m_cell = std::vector<tCell>(m_mapGeometry->getMaxCells(), tCell());
 
     // clear out all cells
     clearAllCells();
@@ -154,7 +170,7 @@ void cMap::init(int width, int height)
     m_iScrollSpeed = 1;
 
     m_mapGeometry->resize(width, height);
-    m_pathFinder->resize(m_maxCells, width, height);
+    m_pathFinder->resize(m_mapGeometry->getMaxCells(), width, height);
 }
 
 void cMap::smudge_increase(SmudgeType iType, int iCell)
@@ -191,7 +207,7 @@ void cMap::smudge_increase(SmudgeType iType, int iCell)
  */
 bool cMap::occupiedByWallOrMountain(int iCell)
 {
-    if (iCell < 0 || iCell >= m_maxCells) return false;
+    if (iCell < 0 || iCell >= m_mapGeometry->getMaxCells()) return false;
 
     if (getCellType(iCell) == TERRAIN_WALL) return true;
     if (getCellType(iCell) == TERRAIN_MOUNTAIN) return true;
@@ -220,7 +236,7 @@ bool cMap::occupiedByUnit(int iCell)
  */
 bool cMap::occupied(int iCell)
 {
-    if (iCell < 0 || iCell >= m_maxCells) return false;
+    if (iCell < 0 || iCell >= m_mapGeometry->getMaxCells()) return false;
 
     if (occupiedInDimension(iCell, MAPID_UNITS)) return true;
     if (occupiedInDimension(iCell, MAPID_AIR)) return true;
@@ -392,7 +408,7 @@ void cMap::thinkSlow()
 
 void cMap::updateFogOfWar()
 {
-    for (int c = 0; c < m_maxCells; c++) {
+    for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
         memset(m_cell[c].iSeen, 0, sizeof(m_cell[c].iSeen));
     }
 
@@ -565,7 +581,7 @@ void cMap::draw_bullets()
 
 void cMap::clear_all(int playerId)
 {
-    for (int c = 0; c < m_maxCells; c++) {
+    for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
         m_cell[c].iVisible[playerId] = true;
     }
 }
@@ -653,7 +669,7 @@ void cMap::clearShroud(int c, int size, int playerId)
 void cMap::remove_id(int iIndex, int iIDType)
 {
     // Search through the entire map and remove the id
-    for (int iCell = 0; iCell < m_maxCells; iCell++) {
+    for (int iCell = 0; iCell < m_mapGeometry->getMaxCells(); iCell++) {
         tCell &tCell = m_cell[iCell];
         if (tCell.id[iIDType] == iIndex) {
             tCell.id[iIDType] = -1;
@@ -820,7 +836,7 @@ int cMap::getTotalCountCellType(int cellType)
 std::vector<int> cMap::getAllCellsOfType(int cellType)
 {
     std::vector<int> cellsOfType = std::vector<int>();
-    for (int c = 0; c < m_maxCells; c++) {
+    for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
         if (getCellType(c) == cellType) {
             cellsOfType.push_back(c);
         }
