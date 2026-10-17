@@ -415,7 +415,8 @@ void cUnit::createExplosionParticle()
                         // NO HP LEFT, DIE
                         if (pHitUnit->iHitPoints <= 1) {
                             //TODO: make use of takeDamage so that it determines then to call die
-                            pHitUnit->die(true, false);
+                            // credit this unit as origin: still valid until init() at the end of die()
+                            pHitUnit->die(true, false, iID, eBuildType::UNIT);
                         }
                     } // only die when the unit is going to die
                 }
@@ -430,7 +431,8 @@ void cUnit::createExplosionParticle()
                     if (pStructure->getHitPoints() > 0) {
 
                         int iDamage = 150 + RNG::rnd(100);
-                        pStructure->damage(iDamage, -1); // no need to pass unit ID, as it is dead anyway
+                        // credit this unit as origin: still valid until init() at the end of die()
+                        pStructure->damage(iDamage, iID, eBuildType::UNIT);
 
                         int iChance = 10;
 
@@ -2662,7 +2664,7 @@ void cUnit::thinkFast_move()
                     }
                     else if (intent == eUnitActionIntent::INTENT_CAPTURE || intent == eUnitActionIntent::INTENT_MOVE) {
                         if (canAttackOnEnterStructure()) {
-                            pStructure->damage(getUnitInfo().damageOnEnterStructure, -1); // no need to pass ID of unit, as it is dead
+                            pStructure->damage(getUnitInfo().damageOnEnterStructure, iID, eBuildType::UNIT);
                             die(true, false);
                         }
                         else {
@@ -2672,9 +2674,9 @@ void cUnit::thinkFast_move()
                                 die(false, false);
                             }
                             else {
-                                // the unit will die and inflict damage
+                                // damage before die(), so this unit is still valid to credit as origin
+                                pStructure->damage(getUnitInfo().damageOnEnterStructure, iID, eBuildType::UNIT);
                                 die(true, false);
-                                pStructure->damage(getUnitInfo().damageOnEnterStructure, -1); // no need to pass ID of unit, as it is dead
                             }
                         }
                         return; // unit is dead, no need to go further
@@ -2856,7 +2858,7 @@ eUnitMoveToCellResult cUnit::moveToNextCellLogic()
                     takeDamage(potentialDeadUnit->getUnitInfo().damageOnEnterStructure);
                 }
 
-                potentialDeadUnit->die(false, true);
+                potentialDeadUnit->die(false, true, iID, eBuildType::UNIT);
             }
         }
 
