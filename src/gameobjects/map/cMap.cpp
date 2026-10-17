@@ -151,6 +151,7 @@ void cMap::init(int width, int height)
     m_iDesiredAmountOfWorms = 0;
     m_iTIMER_respawnSandworms = -1;
 
+    m_mapGeometry->resize(width, height);
     m_cell = std::vector<tCell>(m_mapGeometry->getMaxCells(), tCell());
 
     // clear out all cells
@@ -163,7 +164,6 @@ void cMap::init(int width, int height)
     m_TIMER_scroll = 0;
     m_iScrollSpeed = 1;
 
-    m_mapGeometry->resize(width, height);
     m_pathFinder->resize(m_mapGeometry->getMaxCells(), width, height);
 }
 
