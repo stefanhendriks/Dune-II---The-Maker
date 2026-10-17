@@ -41,8 +41,8 @@ static void attachParentConsole()
 {
     if (GetStdHandle(STD_OUTPUT_HANDLE) != nullptr) return; // output already redirected
     if (!AttachConsole(ATTACH_PARENT_PROCESS)) return;
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
+    if (freopen("CONOUT$", "w", stdout) == nullptr) return;
+    if (freopen("CONOUT$", "w", stderr) == nullptr) return;
 }
 #endif
 
