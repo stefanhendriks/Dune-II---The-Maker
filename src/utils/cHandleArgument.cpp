@@ -38,7 +38,9 @@ const std::map<std::string, cHandleArgument::Options> cHandleArgument::optionStr
     {"-usages",                 Options::USAGES},
     {"-autopause",              Options::PAUSE_WHEN_LOSING_FOCUS},
     {"-fogofwar",               Options::FOG_OF_WAR},
-    {"--help",                  Options::HELP}
+    {"--help",                  Options::HELP},
+    {"-help",                   Options::HELP},
+    {"-h",                      Options::HELP}
 };
 
 int cHandleArgument::handleArguments(int argc, char *argv[], InitialGameSettings *settings)
@@ -58,7 +60,7 @@ int cHandleArgument::handleArguments(int argc, char *argv[], InitialGameSettings
         switch (itr->second) {
             case Options::HELP:
                 printInstructions();
-                return -2;
+                return HELP_REQUESTED;
             case Options::GAME:
                 if ((i + 1) < argc) {
                     i++;

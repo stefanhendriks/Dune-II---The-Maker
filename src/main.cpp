@@ -29,8 +29,28 @@
 #include <SDL3/SDL_main.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#include <cstdio>
+#endif
+
+#ifdef _WIN32
+// The game is a GUI subsystem executable (-mwindows), so it has no console of its own.
+// Attach to the console of the terminal that started it, so --help and errors can be seen.
+static void attachParentConsole()
+{
+    if (GetStdHandle(STD_OUTPUT_HANDLE) != nullptr) return; // output already redirected
+    if (!AttachConsole(ATTACH_PARENT_PROCESS)) return;
+    freopen("CONOUT$", "w", stdout);
+    freopen("CONOUT$", "w", stderr);
+}
+#endif
+
 int main(int argc, char **argv)
 {
+#ifdef _WIN32
+    attachParentConsole();
+#endif
     std::unique_ptr<cLog> m_log = std::make_unique<cLog>("nlog.txt");
     Logger::init(m_log.get());
     Logger::info(COMP_NONE, "main", "=== Dune II - The Maker ===");
@@ -45,6 +65,9 @@ int main(int argc, char **argv)
     cHandleArgument handleArg;
     try {
         int parseResult = handleArg.handleArguments(argc, argv, settings.get());
+        if (parseResult == cHandleArgument::HELP_REQUESTED) {
+            return 0;
+        }
         if (parseResult < 0) {
             m_log->error(COMP_GAMERULES, "HandleArgument", "Incorrect arguments");
             return 1;
