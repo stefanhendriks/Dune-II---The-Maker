@@ -31,6 +31,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
+    cTextDrawer* m_smallTextDrawer = nullptr;
     cMouse* m_mouse = nullptr;
     cScreenFader* m_screenFader = nullptr;
     MissionStats m_stats;

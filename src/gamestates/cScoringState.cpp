@@ -21,12 +21,14 @@ cScoringState::cScoringState(sGameServices* services) :
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
+    m_smallTextDrawer(m_ctx->getTextContext()->getSmallTextDrawer()),
     m_mouse(services->mouse),
     m_screenFader(services->screenFader)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_smallTextDrawer != nullptr);
     d2tm_assert(m_screenFader != nullptr);
 
     m_stats = services->missionStatsCollector->snapshot(m_ctx->getTimeManager()->getElapsedSeconds());
@@ -51,6 +53,7 @@ void cScoringState::draw() const
     m_sdlDrawer->renderClearToColor();
 
     int lineHeight = m_textDrawer->getFontHeight() + 4;
+    int statLineHeight = m_smallTextDrawer->getFontHeight() + 2;
     int y = 40;
 
     m_textDrawer->drawTextCentered("MISSION REPORT", y, Color::Yellow);
@@ -78,21 +81,21 @@ void cScoringState::draw() const
 
         m_textDrawer->drawTextCentered(playerName, y, nameColor);
         y += lineHeight;
-        m_textDrawer->drawTextCentered(
+        m_smallTextDrawer->drawTextCentered(
             std::format("Units built: {}   lost: {}   destroyed: {}",
                 playerStats.unitsBuilt, playerStats.unitsLost, playerStats.unitsDestroyed),
             y, Color::White);
-        y += lineHeight;
-        m_textDrawer->drawTextCentered(
+        y += statLineHeight;
+        m_smallTextDrawer->drawTextCentered(
             std::format("Structures built: {}   lost: {}   destroyed: {}",
                 playerStats.structuresBuilt, playerStats.structuresLost, playerStats.structuresDestroyed),
             y, Color::White);
-        y += lineHeight;
-        m_textDrawer->drawTextCentered(
+        y += statLineHeight;
+        m_smallTextDrawer->drawTextCentered(
             std::format("Damage dealt: {}   received: {}", playerStats.damageDealt, playerStats.damageReceived),
             y, Color::White);
-        y += lineHeight;
-        m_textDrawer->drawTextCentered(
+        y += statLineHeight;
+        m_smallTextDrawer->drawTextCentered(
             std::format("Spice harvested: {}", playerStats.spiceHarvested),
             y, Color::White);
         y += lineHeight * 2;
