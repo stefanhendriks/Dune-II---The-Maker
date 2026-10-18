@@ -70,6 +70,8 @@ const char *s_GameEvent::toString(const eGameEventType &eventType)
             return "GAME_EVENT_CREATE_UNIT";
         case eGameEventType::GAME_EVENT_NOTIFICATION:
             return "GAME_EVENT_NOTIFICATION";
+        case eGameEventType::GAME_EVENT_SPICE_HARVESTED:
+            return "GAME_EVENT_SPICE_HARVESTED";
         default:
             d2tm_assert(false && "Unknown game event type for toString()");
             break;

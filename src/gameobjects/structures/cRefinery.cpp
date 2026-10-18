@@ -23,6 +23,7 @@
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
 #include "context/AudioContext.hpp"
+#include "game/cEventEmitter.h"
 
 cRefinery::cRefinery()
 {
@@ -80,6 +81,10 @@ void cRefinery::think_unit_occupation()
         }
 
         pPlayer->dumpCredits(iAmount);
+        m_eventEmitter->emit(s_GameEvent {
+            .eventType = eGameEventType::GAME_EVENT_SPICE_HARVESTED,
+            .data = SpiceHarvestedEvent {.player = pPlayer, .amount = iAmount}
+        });
         cUnit->iCredits -= iAmount;
         return;
     }
