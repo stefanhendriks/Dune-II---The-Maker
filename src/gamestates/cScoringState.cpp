@@ -91,6 +91,10 @@ void cScoringState::draw() const
         m_textDrawer->drawTextCentered(
             std::format("Damage dealt: {}   received: {}", playerStats.damageDealt, playerStats.damageReceived),
             y, Color::White);
+        y += lineHeight;
+        m_textDrawer->drawTextCentered(
+            std::format("Spice harvested: {}", playerStats.spiceHarvested),
+            y, Color::White);
         y += lineHeight * 2;
     }
 

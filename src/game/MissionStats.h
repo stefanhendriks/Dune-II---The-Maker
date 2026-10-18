@@ -32,6 +32,7 @@ struct PlayerMissionStats {
     int structuresDestroyed = 0;
     int damageDealt = 0;
     int damageReceived = 0;
+    int spiceHarvested = 0;
 };
 
 struct MissionStats {

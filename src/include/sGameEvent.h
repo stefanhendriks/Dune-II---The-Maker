@@ -106,10 +106,16 @@ struct NotificationEvent {
     cPlayer *player = nullptr;
 };
 
+// GAME_EVENT_SPICE_HARVESTED
+struct SpiceHarvestedEvent {
+    cPlayer *player = nullptr; // player who owns the refinery that received the spice
+    int amount = 0;
+};
+
 struct s_GameEvent {
     eGameEventType eventType = eGameEventType::GAME_EVENT_NONE;
     using GameEventData = std::variant<std::monostate, DeployUnitEvent, LaunchDeathHandEvent, 
-                            DamagedEvent, BuildingEvent, CommonEvent, NotificationEvent>;
+                            DamagedEvent, BuildingEvent, CommonEvent, NotificationEvent, SpiceHarvestedEvent>;
     GameEventData data = std::monostate{};
 
     static const char *toString(const eGameEventType &eventType);

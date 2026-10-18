@@ -83,6 +83,19 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
         return;
     }
 
+    if (event.eventType == eGameEventType::GAME_EVENT_SPICE_HARVESTED) {
+        const auto *harvestedEvent = std::get_if<SpiceHarvestedEvent>(&event.data);
+        if (harvestedEvent == nullptr) {
+            Logger::warn(COMP_GAME, "cMissionStatsCollector::onNotifyGameEvent", "GAME_EVENT_SPICE_HARVESTED did not carry a SpiceHarvestedEvent");
+            return;
+        }
+        const int playerId = harvestedEvent->player != nullptr ? harvestedEvent->player->getId() : -1;
+        if (playerId >= 0 && playerId < MAX_PLAYERS) {
+            m_playerStats[playerId].spiceHarvested += harvestedEvent->amount;
+        }
+        return;
+    }
+
     if (event.eventType != eGameEventType::GAME_EVENT_CREATED &&
         event.eventType != eGameEventType::GAME_EVENT_DESTROYED) {
         return;
