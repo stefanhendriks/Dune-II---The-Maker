@@ -32,6 +32,7 @@
 #include <format>
 
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/units/cUnits.h"
 #include "include/cAssert.h"
 
 cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player) :
@@ -174,6 +175,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
     int heightOfIcon = 47;
 
     bool structureLimitReached = list->isType(eListType::LIST_CONSTYARD) && m_objects->getStructureFactory()->isStructureLimitReached();
+    bool unitLimitReached = (list->isType(eListType::LIST_FOOT_UNITS) || list->isType(eListType::LIST_UNITS)) && m_objects->getUnits()->isUnitLimitReached();
 
     // draw the icons, in rows of 3
     int rowNr = 0;
@@ -250,10 +252,12 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
             }
 
             bool cannotBuildDueStructureLimit = structureLimitReached && !cStructureFactory::isModifyingTerrain(item->getBuildId());
+            bool cannotBuildDueUnitLimit = unitLimitReached && item->isTypeUnit();
+            bool cannotBuildDueLimit = cannotBuildDueStructureLimit || cannotBuildDueUnitLimit;
 
-            if (!item->isAvailable() || isBuildingSameSubListItem || cannotBuildDueStructureLimit) {
+            if (!item->isAvailable() || isBuildingSameSubListItem || cannotBuildDueLimit) {
 
-                if (!cannotBuildDueStructureLimit) {
+                if (!cannotBuildDueLimit) {
                     m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
                     // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                     if (item->isPendingUpgrading()) {

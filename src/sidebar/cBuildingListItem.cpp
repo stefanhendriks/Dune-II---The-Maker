@@ -39,6 +39,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
 
     m_creditsPerProgressTime = 0;
     m_placeIt = false;
+    m_waitingForUnitSlot = false;
     m_deployIt = false;
     m_queuable = queuable;
 
