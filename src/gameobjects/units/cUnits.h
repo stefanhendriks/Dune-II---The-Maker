@@ -84,6 +84,19 @@ public:
     int findAvailableSlot() const;
 
     /**
+     * Are at least `amount` unit slots free?
+     * @param amount Number of slots needed
+     * @return true when enough slots are free
+     */
+    bool hasFreeSlots(int amount) const;
+
+    /**
+     * All unit slots are in use, so no new unit can be created
+     * @return true when no slot is free
+     */
+    bool isUnitLimitReached() const { return !hasFreeSlots(1); }
+
+    /**
      * Count valid units
      * @return Number of valid units
      */
