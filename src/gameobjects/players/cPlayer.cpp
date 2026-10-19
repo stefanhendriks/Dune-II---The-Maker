@@ -1470,7 +1470,9 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType)
 
 bool cPlayer::canBuildUnitBool(int iUnitType)
 {
-    return canBuildUnit(iUnitType, false) == eCantBuildReason::NONE;
+    // a full unit pool is temporary: the unit can be built (it waits for a free slot), so AI planning is not affected
+    eCantBuildReason reason = canBuildUnit(iUnitType, false);
+    return reason == eCantBuildReason::NONE || reason == eCantBuildReason::UNIT_LIMIT_REACHED;
 }
 
 int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
