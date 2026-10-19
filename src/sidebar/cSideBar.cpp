@@ -30,6 +30,7 @@
 #include <format>
 
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/units/cUnits.h"
 #include "include/cAssert.h"
 
 
@@ -99,6 +100,11 @@ bool cSideBar::startBuildingItemIfOk(cBuildingListItem *item) const
 
     if (item->isTypeStructure() &&
         m_player->getObjects()->getStructureFactory()->isStructureLimitReached() && !cStructureFactory::isModifyingTerrain(item->getBuildId())) {
+        m_drawManager->setMessage("Unable to create more.");
+        return false;
+    }
+
+    if (item->isTypeUnit() && !item->getList()->isType(eListType::LIST_STARPORT) && m_player->getObjects()->getUnits()->isUnitLimitReached()) {
         m_drawManager->setMessage("Unable to create more.");
         return false;
     }

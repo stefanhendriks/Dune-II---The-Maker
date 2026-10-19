@@ -1419,6 +1419,11 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
+    if (m_objects->getUnits()->isUnitLimitReached()) {
+        log("canBuildUnit: FALSE, reason UNIT_LIMIT_REACHED");
+        return eCantBuildReason::UNIT_LIMIT_REACHED;
+    }
+
     log("canBuildUnit: ALLOWED");
 
     return eCantBuildReason::NONE;
