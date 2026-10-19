@@ -44,6 +44,11 @@ enum eCantBuildReason {
     STRUCTURE_LIMIT_REACHED,
 
     /**
+     * All unit slots in the game are in use, so no new unit can be created
+     */
+    UNIT_LIMIT_REACHED,
+
+    /**
      * There is no reason we can't build it (ie SUCCESS)
      */
     NONE

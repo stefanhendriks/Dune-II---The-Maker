@@ -165,6 +165,7 @@ public:
     }
     void cancelBuilding() {
         m_state = eBuildingListItemState::AVAILABLE;
+        m_waitingForUnitSlot = false;
         resetProgress();
     }
     void startBuilding() {
@@ -212,6 +213,12 @@ public:
     }
     void setPlaceIt(bool value) {
         m_placeIt = value;
+    }
+    void setWaitingForUnitSlot(bool value) {
+        m_waitingForUnitSlot = value;
+    }
+    bool isWaitingForUnitSlot() const {
+        return m_waitingForUnitSlot;
     }
     void setDeployIt(bool value) {
         m_deployIt = value;
@@ -298,6 +305,7 @@ private:
 
     float m_creditsPerProgressTime; // credits to pay for each progress point. (calculated at creation)
     bool m_placeIt;			// when true, this item is ready for placement
+    bool m_waitingForUnitSlot;	// when true, this unit is done building but waits for a free unit slot
     bool m_deployIt;			// when true, this item is ready for deployment (FYI, super weapons)
     bool m_queuable;			// when true, this item can be ordered multiple times to build
 
