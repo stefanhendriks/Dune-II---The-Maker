@@ -17,6 +17,7 @@
 
 #include "definitions.h"
 #include "gameobjects/map/cCell.h"
+#include "gameobjects/map/MapGeometry.hpp"
 #include "observers/cScenarioObserver.h"
 #include "sGameEvent.h"
 #include <map>
@@ -28,7 +29,6 @@
 
 class cAbstractStructure;
 class cReinforcements;
-class MapGeometry;
 struct s_TerrainInfo;
 class GameContext;
 class cUnit;
@@ -47,29 +47,23 @@ class Graphics;
 class cMapCamera;
 class cRectangle;
 
+/**
+ * Manages the game world grid and the state of every tile: terrain data, occupancy, passability,
+ * visibility and general map state. This is the main world-state container used by the game logic.
+ */
 class cMap : public cScenarioObserver {
 
 public:
 
-    // Manages the game world grid and the state of every tile.
-    // It stores terrain data, occupancy, passability, visibility, and general map state.
-    // This is the main world-state container used by the game logic.
     cMap();
     ~cMap();
 
-    // Connects the map to the rest of the game systems.
-    // It keeps references to the services needed for rendering, world state,
-    // settings, and gameplay logic.
     void serviceInit(sGameServices* services);
 
-    // Resizes the map and resets its internal state for a new game session or map reload.
     void init(int width, int height);
 
-    // Reacts to game events such as creation, destruction, and terrain-triggered updates.
     virtual void onNotifyGameEvent(const s_GameEvent &event) override;
 
-    // Provides the main access layer to the map data.
-    // It allows the rest of the game to read and modify tile state safely.
     bool canDeployUnitAtCell(int iCell, int iUnitId);
     bool canDeployUnitTypeAtCell(int iCell, int iUnitType);
     bool occupiedByUnit(int iCell);
@@ -79,23 +73,18 @@ public:
     bool occupiedByWallOrMountain(int iCell);
     int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
-    // Draws the visible world on the map.
-    // It handles unit rendering order, projectiles, the mouse cursor, and debug overlays.
     int  mouse_draw_x();
     int  mouse_draw_y();
     void draw_units_2nd();
     void draw_units();
     void draw_bullets();
 
-    // Adds a visual terrain effect after damage or destruction.
     void smudge_increase(SmudgeType iType, int iCell);
 
-    // Runs lightweight simulation updates for the world state.
     void thinkFast();
     void thinkNormal();
     void thinkSlow();
 
-    // Clears visibility for a specific player on the map.
     void clear_all(int playerId);
 
     /**
@@ -119,9 +108,17 @@ public:
      * @param cellNr
      * @return
      */
-    [[nodiscard]] tCell *getCell(int cellNr);
+    [[nodiscard]] tCell *getCell(int cellNr) {
+        if (cellNr < 0) return nullptr;
+        if (cellNr >= m_mapGeometry->getMaxCells()) return nullptr;
+        return &m_cell[cellNr];
+    }
 
-    [[nodiscard]] int getCellType(int cellNr);
+    [[nodiscard]] int getCellType(int cellNr) {
+        tCell *pCell = getCell(cellNr);
+        if (pCell) return pCell->type;
+        return -1;
+    }
 
     [[nodiscard]] std::vector<int> getAllCellsOfType(int cellType);
 
@@ -323,8 +320,6 @@ public:
 
     void remove_id(int iIndex, int iIDType);    // removes ID of IDtype (unit/structure), etc
 
-    // Tracks what each player can currently see.
-    // It updates fog-of-war and discovery state when units, buildings, or terrain change.
     [[nodiscard]] bool isVisible(int iCell, int iPlayer);
 
     /**
@@ -380,14 +375,12 @@ public:
      */
     [[nodiscard]] int getCellSlowDown(int i);
 
-    // Finds useful locations on the map for movement, deployment, and resource gathering.
-    // This is used for pathing, drop zones, nearest structures, and other gameplay decisions.
-    int getMaxCells() const;
+    int getMaxCells() const {
+        return m_mapGeometry->getMaxCells();
+    }
 
-    // Creates a terrain cell with the configured type and tile properties.
     void createCell(int cell, int terrainType, int tile);
 
-    // Resets every cell to the default empty terrain state.
     void clearAllCells();
 
     /**
@@ -423,8 +416,6 @@ public:
 
     [[nodiscard]] bool isValidTerrainForConcreteAtCell(int cell);
 
-    // Controls the evolving terrain and world events.
-    // It manages spice bloom growth, detonation, worm behavior, and other dynamic map systems.
     void detonateSpiceBloom(int cell);
 
     void setAutoDetonateSpiceBlooms(bool value) {
