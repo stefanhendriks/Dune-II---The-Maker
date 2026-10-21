@@ -2,7 +2,9 @@ find_package(Catch2 3 REQUIRED)
 
 # Test files
 set(TEST_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyBindings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cHandleArgument.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniFile.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniUtils.cpp
@@ -17,6 +19,8 @@ set(TEST_FILES
 # No SDL runtime linkage required — SDL headers are needed only to compile
 # types like cRectangle (which declares an inline toSDL() helper using SDL_Rect).
 set(TEST_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/controls/cKeyBindings.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/cHandleArgument.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/MapGeometry.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/RNG.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/d2tm_math.cpp
