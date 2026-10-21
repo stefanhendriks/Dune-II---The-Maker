@@ -74,24 +74,6 @@ MapGeometry *cMap::getGeometry() const
     return m_mapGeometry.get();
 }
 
-int cMap::getMaxCells() const
-{
-    return m_mapGeometry->getMaxCells();
-}
-
-tCell *cMap::getCell(int cellNr)
-{
-    if (cellNr < 0) return nullptr;
-    if (cellNr >= m_mapGeometry->getMaxCells()) return nullptr;
-    return &m_cell[cellNr];
-}
-
-int cMap::getCellType(int cellNr) {
-    tCell *pCell = getCell(cellNr);
-    if (pCell) return pCell->type;
-    return -1;
-}
-
 void cMap::serviceInit(sGameServices* services)
 {
     d2tm_assert(services != nullptr);
@@ -517,7 +499,7 @@ void cMap::thinkAboutSpawningNewSpiceBlooms()
     int totalSpiceBloomsCount = blooms.size();
 
     // When no blooms are detected, we must 'spawn' one
-    // @mira: do better than m_mapGeometry->getWidth()*m_mapGeometry->getHeight()>64*64
+    // TODO(#1617) - base the desired amount of spice blooms on something better than a 64*64 map size threshold
     int desiredAmountOfSpiceBloomsInMap = (m_mapGeometry->getWidth()*m_mapGeometry->getHeight()>64*64) ? 6 : 3;
 
     if (totalSpiceBloomsCount < desiredAmountOfSpiceBloomsInMap) {
@@ -905,7 +887,7 @@ int cMap::findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell)
             }
         }
 
-        // check when XY = width() (bottom)
+        // check when X = width - 1 (right)
         tDistance = m_mapGeometry->distance(m_mapGeometry->getWidth() - 1, iY, iCllX, iCllY);
 
         if (tDistance < lDistance) {
