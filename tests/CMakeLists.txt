@@ -50,6 +50,12 @@ target_include_directories(d2tm_tests
 target_link_libraries(d2tm_tests PRIVATE Catch2::Catch2WithMain)
 target_link_libraries(d2tm_tests PRIVATE cpp_stacktrace)
 
+# cKeyBindings calls SDL scancode functions. On Linux/Windows link_libraries() in the root
+# CMakeLists.txt provides SDL3; on macOS (pkg-config) it must be linked explicitly.
+if(APPLE)
+    target_link_libraries(d2tm_tests PRIVATE ${SDL3_LIBRARIES})
+endif()
+
 include(CTest)
 include(Catch)
 catch_discover_tests(d2tm_tests)
