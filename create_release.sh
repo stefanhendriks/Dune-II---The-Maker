@@ -1,3 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+
 echo
 echo "Prepare binary package (./bin) of D2TM."
 echo

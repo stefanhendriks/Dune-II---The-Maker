@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Install for Mac OS
 # Requires homebrew
 
