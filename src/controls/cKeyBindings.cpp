@@ -130,10 +130,10 @@ void cKeyBindings::loadDefaults()
     bind(eKeyAction::DEBUG_SPAWN_ORNITHOPTER,    {SDL_SCANCODE_F8},  false, false, true, true);
     bind(eKeyAction::DEBUG_SPAWN_WORM,           {SDL_SCANCODE_F9},  false, false, true, true);
     bind(eKeyAction::DEBUG_CLEAR_SHROUD_AT_CURSOR, {SDL_SCANCODE_F12}, false, false, true, true);
-    bind(eKeyAction::DEBUG_SWITCH_PLAYER_0,      {SDL_SCANCODE_0});
-    bind(eKeyAction::DEBUG_SWITCH_PLAYER_1,      {SDL_SCANCODE_1});
-    bind(eKeyAction::DEBUG_SWITCH_PLAYER_2,      {SDL_SCANCODE_2});
-    bind(eKeyAction::DEBUG_SWITCH_PLAYER_3,      {SDL_SCANCODE_3});
+    bind(eKeyAction::DEBUG_SWITCH_PLAYER_0,      {SDL_SCANCODE_0}, false, false, false, true);
+    bind(eKeyAction::DEBUG_SWITCH_PLAYER_1,      {SDL_SCANCODE_1}, false, false, false, true);
+    bind(eKeyAction::DEBUG_SWITCH_PLAYER_2,      {SDL_SCANCODE_2}, false, false, false, true);
+    bind(eKeyAction::DEBUG_SWITCH_PLAYER_3,      {SDL_SCANCODE_3}, false, false, false, true);
 }
 
 const std::vector<std::pair<std::string, eKeyAction>>& cKeyBindings::getActionTable()
