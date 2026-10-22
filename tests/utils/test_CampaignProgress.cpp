@@ -94,7 +94,7 @@ TEST_CASE("CampaignProgress rejects invalid progress files without loading parti
     const auto file = directory.path() / "progress.dat";
     {
         std::ofstream output(file);
-        output << "D2TM_CAMPAIGN_PROGRESS 1\n1 99 2\n";
+        output << "D2TM_CAMPAIGN_PROGRESS 1\n1 99 2 0\n";
     }
 
     CampaignProgress progress(file);
@@ -104,4 +104,23 @@ TEST_CASE("CampaignProgress rejects invalid progress files without loading parti
     REQUIRE(progress.nextMission(ATREIDES) == 0);
     REQUIRE(progress.nextMission(HARKONNEN) == 0);
     REQUIRE(progress.nextMission(ORDOS) == 0);
+}
+
+TEST_CASE("CampaignProgress tracks the Sardaukar campaign independently and persists it", "[campaign]")
+{
+    TemporaryDirectory directory;
+    const auto file = directory.path() / "progress.dat";
+    CampaignProgress progress(file);
+
+    REQUIRE(CampaignProgress::supportsHouse(SARDAUKAR));
+    REQUIRE(progress.markStarted(SARDAUKAR));
+    REQUIRE(progress.recordMissionVictory(SARDAUKAR, 2));
+    REQUIRE(progress.nextMission(SARDAUKAR) == 3);
+    REQUIRE(progress.nextMission(ATREIDES) == 0);
+
+    std::string error;
+    REQUIRE(progress.save(error));
+    CampaignProgress loaded(file);
+    REQUIRE(loaded.load(error) == CampaignProgressLoadResult::Loaded);
+    REQUIRE(loaded.nextMission(SARDAUKAR) == 3);
 }

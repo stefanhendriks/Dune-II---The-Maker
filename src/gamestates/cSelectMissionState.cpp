@@ -54,6 +54,8 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
         m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
     } else if (house == ORDOS) {
         m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
+    } else if (house == SARDAUKAR) {
+        m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_SARDAUKAR);
     } else {
         m_houseFlag = humanPlayer->getFlagBitmap();
     }

@@ -53,8 +53,9 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
 
     std::string signature;
     int version = 0;
-    std::array<int, 3> loadedProgress{};
-    if (!(input >> signature >> version >> loadedProgress[0] >> loadedProgress[1] >> loadedProgress[2])) {
+    std::array<int, 4> loadedProgress{};
+    if (!(input >> signature >> version >> loadedProgress[0] >> loadedProgress[1] >> loadedProgress[2] >>
+          loadedProgress[3])) {
         error = "Campaign progress file is incomplete";
         return CampaignProgressLoadResult::Invalid;
     }
@@ -92,7 +93,8 @@ bool CampaignProgress::save(std::string& error) const
     }
 
     output << SAVE_SIGNATURE << ' ' << SAVE_VERSION << '\n'
-           << m_nextMission[0] << ' ' << m_nextMission[1] << ' ' << m_nextMission[2] << '\n';
+           << m_nextMission[0] << ' ' << m_nextMission[1] << ' ' << m_nextMission[2] << ' '
+           << m_nextMission[3] << '\n';
     output.flush();
     if (!output) {
         error = "Could not write campaign progress file";
@@ -114,7 +116,7 @@ int CampaignProgress::highestUnlockedMission(int house) const
 
 bool CampaignProgress::supportsHouse(int house)
 {
-    return house == ATREIDES || house == HARKONNEN || house == ORDOS;
+    return house == ATREIDES || house == HARKONNEN || house == ORDOS || house == SARDAUKAR;
 }
 
 bool CampaignProgress::markStarted(int house)
@@ -153,7 +155,9 @@ std::size_t CampaignProgress::houseIndex(int house)
             return 1;
         case ORDOS:
             return 2;
+        case SARDAUKAR:
+            return 3;
         default:
-            throw std::invalid_argument("Campaign progress is only supported for the three main houses");
+            throw std::invalid_argument("Campaign progress is not supported for this house");
     }
 }
