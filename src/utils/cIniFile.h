@@ -52,6 +52,9 @@ public:
     template<typename T>
     T FromString(std::string value) const;
 
+    // Writes "[name]", all key=value pairs and raw data lines
+    void write(std::ostream &out) const;
+
 private:
     std::string m_sectionName;
     std::vector<std::string> m_dataConfs;
@@ -67,6 +70,12 @@ public:
     ~cIniFile();
 
     bool load(const std::string &configFileName);
+
+    // Saves all sections to the file it was loaded from
+    bool save() const;
+
+    // Saves all sections to the given UTF-8 file name
+    bool save(const std::string &configFileName) const;
 
     std::string getStringValue(const std::string &section, const std::string &key) const;
 
