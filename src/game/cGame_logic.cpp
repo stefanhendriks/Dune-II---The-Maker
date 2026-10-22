@@ -20,6 +20,7 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContextCreator.h"
 #include "game/cGame.h"
+#include "game/CampaignProgress.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "include/eGameState.h"
@@ -94,6 +95,7 @@
 #include <random>
 #include <vector>
 #include <iostream>
+#include <filesystem>
 
 #include "data/gfxaudio.h"
 #include "include/sGameServices.h"
@@ -347,6 +349,14 @@ void cGame::missionInit()
 void cGame::setMissionWon()
 {
     m_missionWasWon = true;
+    if (!m_gameSettings->isSkirmish() && m_campaignProgress &&
+        CampaignProgress::supportsHouse(m_dataCampaign->housePlayer) &&
+        m_campaignProgress->recordMissionVictory(m_dataCampaign->housePlayer, m_dataCampaign->mission)) {
+        std::string error;
+        if (!m_campaignProgress->save(error)) {
+            Logger::error(COMP_GAME, "Campaign progress", "Could not save campaign progress: {}", error);
+        }
+    }
     setState(GAME_WINNING);
 
     m_screenShake->reset();
@@ -606,6 +616,21 @@ bool cGame::setupGame()
         m_Screen->setFullScreenMode();
     }
 
+    char* preferencePath = SDL_GetPrefPath("D2TM", "Dune II - The Maker");
+    if (preferencePath == nullptr) {
+        Logger::error(COMP_INIT, "Campaign progress", "Could not get the user data directory: {}", SDL_GetError());
+        return false;
+    }
+    const std::filesystem::path progressFile = std::filesystem::path(preferencePath) / "campaign-progress.dat";
+    SDL_free(preferencePath);
+    m_campaignProgress = std::make_unique<CampaignProgress>(progressFile);
+    m_services->campaignProgress = m_campaignProgress.get();
+    std::string progressError;
+    const CampaignProgressLoadResult progressLoadResult = m_campaignProgress->load(progressError);
+    if (progressLoadResult == CampaignProgressLoadResult::Invalid) {
+        Logger::warn(COMP_INIT, "Campaign progress", "Ignoring invalid progress file: {}", progressError);
+    }
+
     m_gameSettings->m_screenW = m_Screen->Width();
     m_gameSettings->m_screenH = m_Screen->Height();
     window = m_Screen->getWindows();
@@ -764,6 +789,15 @@ void cGame::setState(int newState)
     if (newState == m_state) {
         // ignore
         return;
+    }
+
+    if (newState == GAME_BRIEFING && m_state == GAME_TELLHOUSE && m_campaignProgress &&
+        CampaignProgress::supportsHouse(m_dataCampaign->housePlayer) &&
+        m_campaignProgress->markStarted(m_dataCampaign->housePlayer)) {
+        std::string error;
+        if (!m_campaignProgress->save(error)) {
+            Logger::error(COMP_GAME, "Campaign progress", "Could not save campaign progress: {}", error);
+        }
     }
 
     auto mapToCreatorState = [](int state, eGameState &mapped) -> bool {
@@ -1069,6 +1103,21 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 {
     m_gameObjectsContext->getPlayer(HUMAN)->setHouse(house);
     m_dataCampaign->housePlayer = house;
+    const int nextMission = m_campaignProgress && CampaignProgress::supportsHouse(house)
+        ? m_campaignProgress->nextMission(house)
+        : 0;
+    if (nextMission == CampaignProgress::COMPLETED) {
+        setNextStateToTransitionTo(GAME_MISSIONSELECT);
+        initiateFadingOut();
+        return;
+    }
+    if (nextMission >= CampaignProgress::FIRST_MISSION) {
+        jumpToSelectYourNextConquestMission(nextMission);
+        setNextStateToTransitionTo(GAME_REGION);
+        initiateFadingOut();
+        return;
+    }
+
     bool stateAlreadyExisted = m_creatorState->hasState(eGameState::TELLHOUSE);
     auto *pState = dynamic_cast<cTellHouseState *>(m_creatorState->getState(eGameState::TELLHOUSE));
     if (!stateAlreadyExisted) {

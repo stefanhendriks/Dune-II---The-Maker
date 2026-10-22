@@ -67,6 +67,7 @@ class Texture;
 class cIni;
 class cEventEmitter;
 class cCreatorState;
+class CampaignProgress;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -265,4 +266,5 @@ private:
     std::unique_ptr<cIni> m_cIni;
     std::unique_ptr<cEventEmitter> m_eventEmitter;
     std::unique_ptr<cCreatorState> m_creatorState;
+    std::unique_ptr<CampaignProgress> m_campaignProgress;
 };
