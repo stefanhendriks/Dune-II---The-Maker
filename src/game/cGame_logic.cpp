@@ -1112,7 +1112,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
     const int nextMission = m_campaignProgress && CampaignProgress::supportsHouse(house)
         ? m_campaignProgress->nextMission(house)
         : 0;
-    if (nextMission == CampaignProgress::COMPLETED) {
+    if (nextMission >= CampaignProgress::FIRST_MISSION + 1) {
         setNextStateToTransitionTo(GAME_MISSIONSELECT);
         initiateFadingOut();
         return;
@@ -1121,12 +1121,6 @@ void cGame::prepareMentatToTellAboutHouse(int house)
         m_dataCampaign->mission = CampaignProgress::FIRST_MISSION;
         m_dataCampaign->region = 1;
         setNextStateToTransitionTo(GAME_BRIEFING);
-        initiateFadingOut();
-        return;
-    }
-    if (nextMission > CampaignProgress::FIRST_MISSION) {
-        jumpToSelectYourNextConquestMission(nextMission);
-        setNextStateToTransitionTo(GAME_REGION);
         initiateFadingOut();
         return;
     }
