@@ -108,7 +108,7 @@ struct NotificationEvent {
 
 // GAME_EVENT_SPICE_HARVESTED
 struct SpiceHarvestedEvent {
-    cPlayer *player = nullptr; // player who owns the refinery that received the spice
+    cPlayer &player; // player who owns the refinery that received the spice (a reference: it cannot be left unset)
     int amount = 0;
 };
 

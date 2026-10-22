@@ -89,7 +89,7 @@ void cMissionStatsCollector::onNotifyGameEvent(const s_GameEvent &event)
             Logger::warn(COMP_GAME, "cMissionStatsCollector::onNotifyGameEvent", "GAME_EVENT_SPICE_HARVESTED did not carry a SpiceHarvestedEvent");
             return;
         }
-        const int playerId = harvestedEvent->player != nullptr ? harvestedEvent->player->getId() : -1;
+        const int playerId = harvestedEvent->player.getId();
         if (playerId >= 0 && playerId < MAX_PLAYERS) {
             m_playerStats[playerId].spiceHarvested += harvestedEvent->amount;
         }
