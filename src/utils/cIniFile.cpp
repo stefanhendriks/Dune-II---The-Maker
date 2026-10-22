@@ -131,6 +131,17 @@ double cSection::getDouble(const std::string &key) const
     return 0;
 }
 
+void cSection::write(std::ostream &out) const
+{
+    out << '[' << m_sectionName << "]\n";
+    for (const auto &[key, value] : m_sectionConf) {
+        out << key << '=' << value << '\n';
+    }
+    for (const auto &line : m_dataConfs) {
+        out << line << '\n';
+    }
+}
+
 
 //
 // cIniFile class
@@ -196,6 +207,31 @@ bool cIniFile::load(const std::string &config)
         Logger::warn(COMP_GAMERULES, "cIniFile::load", "Error {} or no section found", line);
     }
     return true;
+}
+
+bool cIniFile::save() const
+{
+    return save(m_fileName);
+}
+
+bool cIniFile::save(const std::string &configFileName) const
+{
+    Logger::info(COMP_GAMERULES, "cIniFile::save", "Save file {}", configFileName);
+    std::ofstream out(std::filesystem::path(std::u8string(configFileName.begin(), configFileName.end())));
+    if (!out) {
+        Logger::error(COMP_GAMERULES, "cIniFile::save", "Unable to open file {} for writing", configFileName);
+        return false;
+    }
+
+    bool first = true;
+    for (const auto &[name, section] : m_mapConfig) {
+        if (!first) {
+            out << '\n';
+        }
+        first = false;
+        section.write(out);
+    }
+    return static_cast<bool>(out);
 }
 
 bool cIniFile::isSectionName(std::string inputLine)
