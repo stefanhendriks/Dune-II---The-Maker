@@ -400,6 +400,9 @@ void AbstractMentat::onNotifyMouseEvent(const s_MouseEvent &event)
     }
 
     if (state == SPEAKING) {
+        if (m_guiBtnToMissionSelect) {
+            m_guiBtnToMissionSelect->onNotifyMouseEvent(event);
+        }
         if (event.eventType == MOUSE_LEFT_BUTTON_CLICKED) {
             if (TIMER_Speaking > 0) {
                 TIMER_Speaking = 1;

@@ -44,7 +44,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
       m_cIni(cini),
       m_mode(mode),
       m_house(dataCampaign->housePlayer),
-      m_allowMissionSelect(!m_settings->isSkirmish())
+      m_allowMissionSelect(false)
 {
     d2tm_assert(services != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
@@ -66,6 +66,8 @@ eGameStateType cMentatState::getType()
 
 void cMentatState::prepareMentat(int house)
 {
+    // this state is cached, so decide per use (not at construction) whether a skirmish game is active
+    m_allowMissionSelect = !m_settings->isSkirmish();
     auto* humanPlayer = m_objects->getPlayer(HUMAN);
     house = (m_house > GENERALHOUSE) ? m_house : humanPlayer->getHouse();
     switch (m_mode) {
