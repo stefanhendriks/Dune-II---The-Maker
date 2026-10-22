@@ -29,6 +29,7 @@ class GuiWindow;
 class cGameSettings;
 class cGameInterface;
 class cMouse;
+class Texture;
 
 class cSelectMissionState : public cGameState {
 public:
@@ -48,5 +49,10 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     cMouse* m_mouse = nullptr;
+    Texture* m_houseFlag = nullptr;
+    int m_flagX = 0;
+    int m_flagY = 0;
+    int m_flagWidth = 0;
+    int m_flagHeight = 0;
     std::unique_ptr<GuiWindow> gui_window;
 };

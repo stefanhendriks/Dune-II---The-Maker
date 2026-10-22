@@ -27,8 +27,15 @@
 #include "controls/cMouse.h"
 #include "context/cGameObjectContext.h"
 #include "gameobjects/players/cPlayer.h"
+#include "include/Texture.hpp"
+#include "data/gfxinter.h"
+#include "context/GraphicsContext.hpp"
+#include "utils/Graphics.hpp"
 
 #include "include/cAssert.h"
+
+#include <algorithm>
+#include <format>
 
 cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState) :
     cGameState(services),
@@ -38,64 +45,101 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     m_mouse(services->mouse)
 {
     d2tm_assert(services != nullptr);
-    const int house = services->objects->getPlayer(HUMAN)->getHouse();
+    cPlayer* humanPlayer = services->objects->getPlayer(HUMAN);
+    const int house = humanPlayer->getHouse();
+    Graphics* gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
+    if (house == ATREIDES) {
+        m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
+    } else if (house == HARKONNEN) {
+        m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
+    } else if (house == ORDOS) {
+        m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
+    } else {
+        m_houseFlag = humanPlayer->getFlagBitmap();
+    }
     const int highestUnlockedMission = services->campaignProgress && CampaignProgress::supportsHouse(house)
         ? services->campaignProgress->highestUnlockedMission(house)
         : CampaignProgress::LAST_MISSION;
-    int margin = m_settings->getScreenH() * 0.3;
-    int mainMenuFrameX = margin;
-    int mainMenuFrameY = margin;
-    int mainMenuWidth = m_settings->getScreenW() - (margin * 2);
-    int mainMenuHeight = m_settings->getScreenH() - (margin * 2);
+    const bool campaignCompleted = services->campaignProgress &&
+        services->campaignProgress->nextMission(house) == CampaignProgress::COMPLETED;
+    const int mainMenuFrameX = (m_settings->getScreenW() - 640) / 2;
+    const int mainMenuFrameY = (m_settings->getScreenH() - 480) / 2;
+    const int mainMenuWidth = 640;
+    const int mainMenuHeight = 480;
 
-    margin = 4;
-    int buttonHeight = m_textDrawer->getFontHeight() + margin;
-    int buttonWidth = mainMenuWidth - 8;
-
-    const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
+    const cRectangle window(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     gui_window = std::make_unique<GuiWindow>(m_sdlDrawer, window, m_textDrawer);
     gui_window->setTheme(cGuiThemeBuilder().light().build());
 
-    // Title
-    gui_window->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
+    gui_window->setTitle(humanPlayer->getHouseName() + " Campaign");
 
+    constexpr int flagMaxWidth = 270;
+    constexpr int flagMaxHeight = 220;
+    const float flagScale = std::min(
+        static_cast<float>(flagMaxWidth) / static_cast<float>(m_houseFlag->w),
+        static_cast<float>(flagMaxHeight) / static_cast<float>(m_houseFlag->h));
+    m_flagWidth = static_cast<int>(static_cast<float>(m_houseFlag->w) * flagScale);
+    m_flagHeight = static_cast<int>(static_cast<float>(m_houseFlag->h) * flagScale);
+    m_flagX = mainMenuFrameX + (320 - m_flagWidth) / 2;
+    m_flagY = mainMenuFrameY + 65 + (230 - m_flagHeight) / 2;
 
-    // QUIT game
-    int width = buttonWidth;
+    const int buttonHeight = std::max(30, m_textDrawer->getFontHeight() + 12);
+    const int buttonWidth = 270;
+    const int leftButtonX = mainMenuFrameX + 25;
+    const int rightButtonX = mainMenuFrameX + 345;
+    const int missionButtonY = mainMenuFrameY + 62;
+    const int missionButtonHeight = 34;
+    const int missionButtonSpacing = 38;
 
-    int y = 40;
+    auto continueButton = GuiButtonBuilder()
+        .withRect(cRectangle(leftButtonX, mainMenuFrameY + 340, buttonWidth, buttonHeight))
+        .withLabel("CONTINUE")
+        .withTextDrawer(m_textDrawer)
+        .withRenderer(m_sdlDrawer)
+        .withTheme(campaignCompleted
+                       ? cGuiThemeBuilder().inactive().build()
+                       : cGuiThemeBuilder().light().build())
+        .onClick([this, campaignCompleted, highestUnlockedMission]() {
+            if (campaignCompleted) {
+                return;
+            }
+            m_interface->jumpToSelectYourNextConquestMission(highestUnlockedMission);
+            m_interface->setTransitionToWithFadingOut(
+                highestUnlockedMission == CampaignProgress::FIRST_MISSION ? GAME_BRIEFING : GAME_REGION);
+        })
+        .build();
+    gui_window->addGuiObject(std::move(continueButton));
+
     for (int i = 1; i <= highestUnlockedMission; i++) {
-        const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
         auto btnMission = GuiButtonBuilder()
-            .withRect(rect)        
-            .withLabel(std::format("Mission {}", i))
+            .withRect(cRectangle(
+                rightButtonX,
+                missionButtonY + (i - 1) * missionButtonSpacing,
+                buttonWidth,
+                missionButtonHeight))
+            .withLabel(std::format("MISSION {}", i))
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)    
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
-            .onClick([this,i]() {
+            .onClick([this, i]() {
                 m_interface->jumpToSelectYourNextConquestMission(i);
                 m_interface->setTransitionToWithFadingOut(i == CampaignProgress::FIRST_MISSION ? GAME_BRIEFING : GAME_REGION);
             })
-            .build();   
+            .build();
         gui_window->addGuiObject(std::move(btnMission));
-
-        y += buttonHeight + margin;
     }
 
-    // BACK to where we came from
-    int back = mainMenuHeight - (buttonHeight + margin);
-    width = buttonWidth;
-    const cRectangle &backRect = gui_window->getRelativeRect(margin, back, (width - margin), buttonHeight);
+    const cRectangle backRect = gui_window->getRelativeRect(570, 450, 55, 22);
     auto gui_btn_Back = GuiButtonBuilder()
-            .withRect(backRect)        
+            .withRect(backRect)
             .withLabel("Back")
             .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)    
+            .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,prevState]() {
                 m_interface->setNextStateToTransitionTo(prevState);
             })
-            .build();  
+            .build();
     gui_window->addGuiObject(std::move(gui_btn_Back));
 }
 
@@ -111,8 +155,15 @@ void cSelectMissionState::thinkFast()
 
 void cSelectMissionState::draw() const
 {
-    // Mira: draw here screenTexture
     gui_window->draw();
+    m_sdlDrawer->renderTexture(
+        m_houseFlag->tex.get(), m_flagX, m_flagY, m_flagWidth, m_flagHeight);
+    m_textDrawer->drawTextCentered(
+        "REPLAY MISSION",
+        (m_settings->getScreenW() - 640) / 2 + 345,
+        270,
+        (m_settings->getScreenH() - 480) / 2 + 42,
+        Color::Yellow);
 
     // MOUSE
     m_mouse->draw();
