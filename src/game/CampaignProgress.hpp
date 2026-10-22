@@ -47,5 +47,5 @@ private:
     static std::size_t houseIndex(int house);
 
     std::filesystem::path m_filePath;
-    std::array<int, 3> m_nextMission{};
+    std::array<int, 4> m_nextMission{};
 };
