@@ -1144,7 +1144,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 void cGame::loadScenario()
 {
     if (!m_creatorState->hasState(eGameState::BRIEFING)) {
-        Logger::error(COMP_GAME, "cGame::loadScenario", "Failed to load scenario because cMentatState is not yet created. Aborting.");
+        m_creatorState->getState(eGameState::BRIEFING);
         return;
     }
 
