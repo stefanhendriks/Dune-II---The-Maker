@@ -23,7 +23,10 @@
 #include "gui/GuiWindow.h"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
+#include "game/CampaignProgress.hpp"
 #include "controls/cMouse.h"
+#include "context/cGameObjectContext.h"
+#include "gameobjects/players/cPlayer.h"
 
 #include "include/cAssert.h"
 
@@ -35,6 +38,10 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     m_mouse(services->mouse)
 {
     d2tm_assert(services != nullptr);
+    const int house = services->objects->getPlayer(HUMAN)->getHouse();
+    const int highestUnlockedMission = services->campaignProgress && CampaignProgress::supportsHouse(house)
+        ? services->campaignProgress->highestUnlockedMission(house)
+        : CampaignProgress::LAST_MISSION;
     int margin = m_settings->getScreenH() * 0.3;
     int mainMenuFrameX = margin;
     int mainMenuFrameY = margin;
@@ -57,7 +64,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     int width = buttonWidth;
 
     int y = 40;
-    for (int i = 2; i <= 9; i++) {
+    for (int i = 1; i <= highestUnlockedMission; i++) {
         const cRectangle &rect = gui_window->getRelativeRect(margin, y, width, buttonHeight);
         auto btnMission = GuiButtonBuilder()
             .withRect(rect)        
