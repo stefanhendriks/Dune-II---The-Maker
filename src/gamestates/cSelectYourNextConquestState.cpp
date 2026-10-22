@@ -667,7 +667,9 @@ void cSelectYourNextConquestState::onNotifyMouseEvent(const s_MouseEvent &event)
             onMouseMove(event);
             break;
         case MOUSE_LEFT_BUTTON_CLICKED:
-            onMouseLeftButtonClicked(event);
+            if (onMouseLeftButtonClicked(event)) {
+                return;
+            }
             break;
         default:
             break;
@@ -691,15 +693,17 @@ void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event)
     }
 }
 
-void cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &)
+bool cSelectYourNextConquestState::onMouseLeftButtonClicked(const s_MouseEvent &)
 {
     // no interaction unless we select next conquest
-    if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return;
+    if (state != eRegionState::REGSTATE_SELECT_NEXT_CONQUEST) return false;
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
         loadScenarioAndTransitionToNextState(m_dataCampaign->mission);
+        return true;
     }
+    return false;
 }
 
 void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &event)

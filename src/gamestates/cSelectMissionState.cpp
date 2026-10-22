@@ -74,7 +74,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,i]() {
                 m_interface->jumpToSelectYourNextConquestMission(i);
-                m_interface->setTransitionToWithFadingOut(GAME_REGION);
+                m_interface->setTransitionToWithFadingOut(i == CampaignProgress::FIRST_MISSION ? GAME_BRIEFING : GAME_REGION);
             })
             .build();   
         gui_window->addGuiObject(std::move(btnMission));

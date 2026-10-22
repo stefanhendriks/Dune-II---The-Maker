@@ -27,8 +27,6 @@ cGameInterface::cGameInterface(cGame* game)
 void cGameInterface::prepareMentatToTellAboutHouse(int house) const
 {
     m_game->prepareMentatToTellAboutHouse(house);
-    m_game->setNextStateToTransitionTo(GAME_TELLHOUSE);
-    m_game->initiateFadingOut();
 }
 
 void cGameInterface::setTransitionToWithFadingOut(int newState) const
@@ -156,4 +154,3 @@ void cGameInterface::changeStateFromMentat() const
 {
     m_game->changeStateFromMentat();
 }
-
