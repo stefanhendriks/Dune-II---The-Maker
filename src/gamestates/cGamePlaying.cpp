@@ -466,6 +466,17 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
         humanPlayer->markUnitsForGroup(iGroup);
     }
 
+    int bookmarkNumber = event.getSaveViewportBookmarkNumber();
+    if (bookmarkNumber > 0) {
+        m_eventEmitter->emit(s_GameEvent{
+            .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+            .data = NotificationEvent{
+                .message = std::format("Viewport bookmark {} set", bookmarkNumber),
+                .type = eNotificationType::PRIORITY,
+            }
+        });
+    }
+
     if (m_settings->isDebugMode()) { // debug mode has additional keys
         if (event.hasKey(SDL_SCANCODE_TAB)) {
             onKeyDownDebugMode(event);
