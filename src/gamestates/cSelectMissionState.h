@@ -54,5 +54,8 @@ private:
     int m_flagY = 0;
     int m_flagWidth = 0;
     int m_flagHeight = 0;
+    int m_headerX = 0;
+    int m_headerWidth = 0;
+    int m_headerY = 0;
     std::unique_ptr<GuiWindow> gui_window;
 };

@@ -618,17 +618,17 @@ bool cGame::setupGame()
 
     char* preferencePath = SDL_GetPrefPath("D2TM", "Dune II - The Maker");
     if (preferencePath == nullptr) {
-        Logger::error(COMP_INIT, "Campaign progress", "Could not get the user data directory: {}", SDL_GetError());
-        return false;
-    }
-    const std::filesystem::path progressFile = std::filesystem::path(preferencePath) / "campaign-progress.dat";
-    SDL_free(preferencePath);
-    m_campaignProgress = std::make_unique<CampaignProgress>(progressFile);
-    m_services->campaignProgress = m_campaignProgress.get();
-    std::string progressError;
-    const CampaignProgressLoadResult progressLoadResult = m_campaignProgress->load(progressError);
-    if (progressLoadResult == CampaignProgressLoadResult::Invalid) {
-        Logger::warn(COMP_INIT, "Campaign progress", "Ignoring invalid progress file: {}", progressError);
+        Logger::warn(COMP_INIT, "Campaign progress", "Could not get the user data directory, campaign progress is not remembered: {}", SDL_GetError());
+    } else {
+        const std::filesystem::path progressFile = std::filesystem::path(preferencePath) / "campaign-progress.dat";
+        SDL_free(preferencePath);
+        m_campaignProgress = std::make_unique<CampaignProgress>(progressFile);
+        m_services->campaignProgress = m_campaignProgress.get();
+        std::string progressError;
+        const CampaignProgressLoadResult progressLoadResult = m_campaignProgress->load(progressError);
+        if (progressLoadResult == CampaignProgressLoadResult::Invalid) {
+            Logger::warn(COMP_INIT, "Campaign progress", "Ignoring invalid progress file: {}", progressError);
+        }
     }
 
     m_gameSettings->m_screenW = m_Screen->Width();
@@ -1138,6 +1138,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
 void cGame::loadScenario()
 {
     if (!m_creatorState->hasState(eGameState::BRIEFING)) {
+        // creating the state loads the scenario (see cMentatState constructor), loading again would duplicate it
         m_creatorState->getState(eGameState::BRIEFING);
         return;
     }

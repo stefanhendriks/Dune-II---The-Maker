@@ -89,6 +89,9 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     const int buttonWidth = 270;
     const int leftButtonX = mainMenuFrameX + 25;
     const int rightButtonX = mainMenuFrameX + 345;
+    m_headerX = rightButtonX;
+    m_headerWidth = buttonWidth;
+    m_headerY = mainMenuFrameY + 42;
     const int missionButtonY = mainMenuFrameY + 62;
     const int missionButtonHeight = 34;
     const int missionButtonSpacing = 38;
@@ -162,9 +165,9 @@ void cSelectMissionState::draw() const
         m_houseFlag->tex.get(), m_flagX, m_flagY, m_flagWidth, m_flagHeight);
     m_textDrawer->drawTextCentered(
         "REPLAY MISSION",
-        (m_settings->getScreenW() - 640) / 2 + 345,
-        270,
-        (m_settings->getScreenH() - 480) / 2 + 42,
+        m_headerX,
+        m_headerWidth,
+        m_headerY,
         Color::Yellow);
 
     // MOUSE
