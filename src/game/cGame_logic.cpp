@@ -763,6 +763,12 @@ bool cGame::isState(int thisState) const
 
 void cGame::jumpToSelectYourNextConquestMission(int missionNr)
 {
+    if (missionNr == CampaignProgress::FIRST_MISSION) {
+        m_dataCampaign->mission = CampaignProgress::FIRST_MISSION;
+        m_dataCampaign->region = 1;
+        return;
+    }
+
     cGameState *state = m_creatorState->getOrCreateState(eGameState::REGION, true);
     auto *pState = dynamic_cast<cSelectYourNextConquestState *>(state);
     if (!pState) {
@@ -1111,7 +1117,14 @@ void cGame::prepareMentatToTellAboutHouse(int house)
         initiateFadingOut();
         return;
     }
-    if (nextMission >= CampaignProgress::FIRST_MISSION) {
+    if (nextMission == CampaignProgress::FIRST_MISSION) {
+        m_dataCampaign->mission = CampaignProgress::FIRST_MISSION;
+        m_dataCampaign->region = 1;
+        setNextStateToTransitionTo(GAME_BRIEFING);
+        initiateFadingOut();
+        return;
+    }
+    if (nextMission > CampaignProgress::FIRST_MISSION) {
         jumpToSelectYourNextConquestMission(nextMission);
         setNextStateToTransitionTo(GAME_REGION);
         initiateFadingOut();
@@ -1124,6 +1137,8 @@ void cGame::prepareMentatToTellAboutHouse(int house)
         playMusicByTypeForStateTransition(MUSIC_BRIEFING);
     }
     pState->prepareMentat(house);
+    setNextStateToTransitionTo(GAME_TELLHOUSE);
+    initiateFadingOut();
 }
 
 void cGame::loadScenario()

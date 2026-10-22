@@ -166,6 +166,6 @@ private:
 
     void loadScenarioAndTransitionToNextState(int iMission);
 
-    void onMouseLeftButtonClicked(const s_MouseEvent &event);
+    bool onMouseLeftButtonClicked(const s_MouseEvent &event);
     mutable std::array<cRegion, MAX_REGIONS> world;
 };
