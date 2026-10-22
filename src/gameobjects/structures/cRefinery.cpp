@@ -83,7 +83,7 @@ void cRefinery::think_unit_occupation()
         pPlayer->dumpCredits(iAmount);
         m_eventEmitter->emit(s_GameEvent {
             .eventType = eGameEventType::GAME_EVENT_SPICE_HARVESTED,
-            .data = SpiceHarvestedEvent {.player = pPlayer, .amount = iAmount}
+            .data = SpiceHarvestedEvent {.player = *pPlayer, .amount = iAmount}
         });
         cUnit->iCredits -= iAmount;
         return;
