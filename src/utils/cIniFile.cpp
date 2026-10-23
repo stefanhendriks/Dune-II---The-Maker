@@ -191,6 +191,7 @@ bool cIniFile::load(const std::string &config)
                 continue;
             }
             m_mapConfig[m_actualSection] = cSection(m_actualSection);
+            m_sectionOrder.push_back(m_actualSection);
             continue;
         }
         // test if key=value
@@ -224,12 +225,12 @@ bool cIniFile::save(const std::string &configFileName) const
     }
 
     bool first = true;
-    for (const auto &[name, section] : m_mapConfig) {
+    for (const auto &name : m_sectionOrder) {
         if (!first) {
             out << '\n';
         }
         first = false;
-        section.write(out);
+        m_mapConfig.at(name).write(out);
     }
     return static_cast<bool>(out);
 }

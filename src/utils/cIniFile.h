@@ -98,6 +98,7 @@ private:
 
     std::string m_fileName;
     std::map<std::string, cSection> m_mapConfig;
+    std::vector<std::string> m_sectionOrder; // keeps sections in the order they were added, used by save()
 
     std::string m_actualSection, m_actualKey, m_actualValue;
 };
