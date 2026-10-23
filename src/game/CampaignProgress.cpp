@@ -28,6 +28,8 @@ namespace {
 constexpr std::size_t HOUSE_COUNT = 4;
 constexpr std::array<const char*, HOUSE_COUNT> HOUSE_SECTIONS = {"Atreides", "Harkonnen", "Ordos", "Sardaukar"};
 constexpr const char* MISSION_KEY = "mission";
+constexpr const char* SIGNATURE_KEY = "signature";
+constexpr const char* VERSION_KEY = "version";
 constexpr int SAVE_VERSION = 1;
 constexpr const char* SAVE_SIGNATURE = "D2TM_CAMPAIGN_PROGRESS";
 constexpr const char* GENERAL_SECTION = "general";
@@ -87,7 +89,11 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
         return rejectFile("Campaign progress file has no general section");
     }
     const cSection general = ini.getSection(GENERAL_SECTION);
-    if (general.getStringValue("SAVE_SIGNATURE") != SAVE_SIGNATURE || general.getInt("SAVE_VERSION") != SAVE_VERSION) {
+    // files written before the keys became lower case used SAVE_SIGNATURE and SAVE_VERSION
+    const bool legacyKeys = !general.hasValue(SIGNATURE_KEY);
+    const std::string signature = general.getStringValue(legacyKeys ? "SAVE_SIGNATURE" : SIGNATURE_KEY);
+    const int version = general.getInt(legacyKeys ? "SAVE_VERSION" : VERSION_KEY);
+    if (signature != SAVE_SIGNATURE || version != SAVE_VERSION) {
         return rejectFile("Campaign progress file has an invalid signature or version");
     }
 
@@ -125,8 +131,8 @@ bool CampaignProgress::save(std::string& error) const
     }
 
     cIniFile ini;
-    ini.setValue(GENERAL_SECTION, "SAVE_SIGNATURE", SAVE_SIGNATURE);
-    ini.setValue(GENERAL_SECTION, "SAVE_VERSION", std::to_string(SAVE_VERSION));
+    ini.setValue(GENERAL_SECTION, SIGNATURE_KEY, SAVE_SIGNATURE);
+    ini.setValue(GENERAL_SECTION, VERSION_KEY, std::to_string(SAVE_VERSION));
     for (std::size_t i = 0; i < HOUSE_COUNT; i++) {
         ini.setValue(HOUSE_SECTIONS[i], MISSION_KEY, std::to_string(m_nextMission[i]));
     }
