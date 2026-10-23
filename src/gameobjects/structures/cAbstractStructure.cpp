@@ -966,7 +966,7 @@ bool cAbstractStructure::canSpawnUnits() const
 
 /**
  * Returns true, if a rally point can be set for this structure: only for structures that produce units
- * (#1051). Rally points elsewhere (e.g. the hi-tech factory) let units be sent anywhere for free.
+ * (#1051). Repair facilities too: repaired units leave to the rally point. Rally points elsewhere (e.g. the hi-tech factory) let units be sent anywhere for free.
  * @return
  */
 bool cAbstractStructure::canHaveRallyPoint() const
@@ -977,7 +977,8 @@ bool cAbstractStructure::canHaveRallyPoint() const
            getType() == PALACE ||
            getType() == LIGHTFACTORY ||
            getType() == HEAVYFACTORY ||
-           getType() == STARPORT;
+           getType() == STARPORT ||
+           getType() == REPAIR;
 }
 
 eListType cAbstractStructure::getAssociatedListID() const
