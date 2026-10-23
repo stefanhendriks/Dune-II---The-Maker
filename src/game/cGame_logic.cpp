@@ -346,16 +346,21 @@ void cGame::missionInit()
 }
 
 
+void cGame::saveCampaignProgress()
+{
+    std::string error;
+    if (!m_campaignProgress->save(error)) {
+        Logger::error(COMP_GAME, "Campaign progress", "Could not save campaign progress: {}", error);
+    }
+}
+
 void cGame::setMissionWon()
 {
     m_missionWasWon = true;
     if (!m_gameSettings->isSkirmish() && m_campaignProgress &&
         CampaignProgress::supportsHouse(m_dataCampaign->housePlayer) &&
         m_campaignProgress->recordMissionVictory(m_dataCampaign->housePlayer, m_dataCampaign->mission)) {
-        std::string error;
-        if (!m_campaignProgress->save(error)) {
-            Logger::error(COMP_GAME, "Campaign progress", "Could not save campaign progress: {}", error);
-        }
+        saveCampaignProgress();
     }
     setState(GAME_WINNING);
 
@@ -800,10 +805,7 @@ void cGame::setState(int newState)
     if (newState == GAME_BRIEFING && m_state == GAME_TELLHOUSE && m_campaignProgress &&
         CampaignProgress::supportsHouse(m_dataCampaign->housePlayer) &&
         m_campaignProgress->markStarted(m_dataCampaign->housePlayer)) {
-        std::string error;
-        if (!m_campaignProgress->save(error)) {
-            Logger::error(COMP_GAME, "Campaign progress", "Could not save campaign progress: {}", error);
-        }
+        saveCampaignProgress();
     }
 
     auto mapToCreatorState = [](int state, eGameState &mapped) -> bool {
