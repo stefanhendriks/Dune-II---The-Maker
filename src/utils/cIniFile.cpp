@@ -58,6 +58,11 @@ bool cSection::addValue(const std::string &key, const std::string &value)
     return true;
 }
 
+void cSection::setValue(const std::string &key, const std::string &value)
+{
+    m_sectionConf[key] = value;
+}
+
 bool cSection::addData(const std::string &data)
 {
     m_dataConfs.push_back(data);
@@ -303,7 +308,7 @@ void cIniFile::setValue(const std::string &section, const std::string &key, cons
     if (!hasSection(section)) {
         m_sectionOrder.push_back(section);
     }
-    m_mapConfig.try_emplace(section, section).first->second.addValue(key, value);
+    m_mapConfig.try_emplace(section, section).first->second.setValue(key, value);
 }
 
 

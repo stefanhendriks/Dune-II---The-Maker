@@ -33,6 +33,9 @@ public:
 
     bool addValue(const std::string &key, const std::string &value);
 
+    // Sets (or replaces) a value without reporting a duplicate key
+    void setValue(const std::string &key, const std::string &value);
+
     [[nodiscard]] bool hasValue(const std::string &key) const;
 
     bool addData(const std::string &data);
