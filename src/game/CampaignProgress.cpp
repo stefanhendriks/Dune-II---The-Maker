@@ -122,8 +122,16 @@ bool CampaignProgress::save(std::string& error) const
         ini.setValue(HOUSE_SECTIONS[i], MISSION_KEY, std::to_string(m_nextMission[i]));
     }
 
-    if (!ini.save(utf8FileName(m_filePath))) {
+    // write to a temporary file first, so a crash while writing cannot leave a half written progress file
+    std::filesystem::path tempPath = m_filePath;
+    tempPath += ".tmp";
+    if (!ini.save(utf8FileName(tempPath))) {
         error = "Could not write campaign progress file";
+        return false;
+    }
+    std::filesystem::rename(tempPath, m_filePath, filesystemError);
+    if (filesystemError) {
+        error = "Could not replace campaign progress file: " + filesystemError.message();
         return false;
     }
     return true;

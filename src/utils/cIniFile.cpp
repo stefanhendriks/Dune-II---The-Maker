@@ -232,7 +232,8 @@ bool cIniFile::save(const std::string &configFileName) const
         first = false;
         m_mapConfig.at(name).write(out);
     }
-    return static_cast<bool>(out);
+    out.close();
+    return !out.fail();
 }
 
 bool cIniFile::isSectionName(std::string inputLine)
