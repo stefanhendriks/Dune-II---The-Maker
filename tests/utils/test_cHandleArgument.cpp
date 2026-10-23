@@ -9,6 +9,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <stdexcept>
+#include <string>
 #include <vector>
 #include "utils/cHandleArgument.h"
 
@@ -19,15 +20,119 @@ int run(std::vector<const char *> args, InitialGameSettings &settings)
     cHandleArgument handler;
     return handler.handleArguments(static_cast<int>(args.size()), const_cast<char **>(args.data()), &settings);
 }
+
+// names of the fields that differ from a default constructed InitialGameSettings
+std::vector<std::string> changedFields(const InitialGameSettings &s)
+{
+    const InitialGameSettings d;
+    std::vector<std::string> changed;
+    const auto check = [&](const char *name, bool differs) {
+        if (differs) changed.emplace_back(name);
+    };
+    check("screenW", s.screenW != d.screenW);
+    check("screenH", s.screenH != d.screenH);
+    check("windowed", s.windowed != d.windowed);
+    check("scalingMode", s.scalingMode != d.scalingMode);
+    check("playMusic", s.playMusic != d.playMusic);
+    check("playSound", s.playSound != d.playSound);
+    check("debugMode", s.debugMode != d.debugMode);
+    check("drawUnitDebug", s.drawUnitDebug != d.drawUnitDebug);
+    check("disableAI", s.disableAI != d.disableAI);
+    check("oneAi", s.oneAi != d.oneAi);
+    check("disableWormAi", s.disableWormAi != d.disableWormAi);
+    check("disableReinforcements", s.disableReinforcements != d.disableReinforcements);
+    check("noAiRest", s.noAiRest != d.noAiRest);
+    check("drawUsages", s.drawUsages != d.drawUsages);
+    check("fogOfWarEnabled", s.fogOfWarEnabled != d.fogOfWarEnabled);
+    check("pauseWhenLosingFocus", s.pauseWhenLosingFocus != d.pauseWhenLosingFocus);
+    check("gameFilename", s.gameFilename != d.gameFilename);
+    return changed;
+}
 }
 
-TEST_CASE("cHandleArgument - no arguments leaves settings untouched", "[arguments]")
+TEST_CASE("cHandleArgument - no arguments leaves every setting at its default", "[arguments]")
 {
     InitialGameSettings settings;
     REQUIRE(run({}, settings) == 0);
+    REQUIRE(settings.screenW == 800);
+    REQUIRE(settings.screenH == 600);
+    REQUIRE_FALSE(settings.windowed);
+    REQUIRE(settings.scalingMode == eScalingMode::INTEGER_SCALE);
     REQUIRE(settings.playMusic);
     REQUIRE(settings.playSound);
+    REQUIRE_FALSE(settings.debugMode);
+    REQUIRE_FALSE(settings.drawUnitDebug);
+    REQUIRE_FALSE(settings.disableAI);
+    REQUIRE_FALSE(settings.oneAi);
+    REQUIRE_FALSE(settings.disableWormAi);
+    REQUIRE_FALSE(settings.disableReinforcements);
+    REQUIRE_FALSE(settings.noAiRest);
+    REQUIRE_FALSE(settings.drawUsages);
+    REQUIRE_FALSE(settings.fogOfWarEnabled);
+    REQUIRE_FALSE(settings.pauseWhenLosingFocus);
     REQUIRE(settings.gameFilename == "game.ini");
+    REQUIRE(changedFields(settings).empty());
+}
+
+TEST_CASE("cHandleArgument - each boolean flag sets its own setting and nothing else", "[arguments]")
+{
+    InitialGameSettings settings;
+
+    SECTION("-noai") {
+        run({"-noai"}, settings);
+        REQUIRE(settings.disableAI);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"disableAI"});
+    }
+    SECTION("-oneai") {
+        run({"-oneai"}, settings);
+        REQUIRE(settings.oneAi);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"oneAi"});
+    }
+    SECTION("-nowormai") {
+        run({"-nowormai"}, settings);
+        REQUIRE(settings.disableWormAi);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"disableWormAi"});
+    }
+    SECTION("-noreinforcements") {
+        run({"-noreinforcements"}, settings);
+        REQUIRE(settings.disableReinforcements);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"disableReinforcements"});
+    }
+    SECTION("-noairest") {
+        run({"-noairest"}, settings);
+        REQUIRE(settings.noAiRest);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"noAiRest"});
+    }
+    SECTION("-debug") {
+        run({"-debug"}, settings);
+        REQUIRE(settings.debugMode);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"debugMode"});
+    }
+    SECTION("-debug-units") {
+        run({"-debug-units"}, settings);
+        REQUIRE(settings.drawUnitDebug);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"drawUnitDebug"});
+    }
+    SECTION("-usages") {
+        run({"-usages"}, settings);
+        REQUIRE(settings.drawUsages);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"drawUsages"});
+    }
+    SECTION("-autopause") {
+        run({"-autopause"}, settings);
+        REQUIRE(settings.pauseWhenLosingFocus);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"pauseWhenLosingFocus"});
+    }
+    SECTION("-fogofwar") {
+        run({"-fogofwar"}, settings);
+        REQUIRE(settings.fogOfWarEnabled);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"fogOfWarEnabled"});
+    }
+    SECTION("-windowed") {
+        run({"-windowed"}, settings);
+        REQUIRE(settings.windowed);
+        REQUIRE(changedFields(settings) == std::vector<std::string>{"windowed"});
+    }
 }
 
 TEST_CASE("cHandleArgument - -nomusic only disables music", "[arguments]")
@@ -53,6 +158,7 @@ TEST_CASE("cHandleArgument - multiple flags are all applied", "[arguments]")
     REQUIRE(settings.disableAI);
     REQUIRE(settings.windowed);
     REQUIRE(settings.fogOfWarEnabled);
+    REQUIRE(changedFields(settings).size() == 3);
 }
 
 TEST_CASE("cHandleArgument - -windowed and -fullscreen: last one wins", "[arguments]")
