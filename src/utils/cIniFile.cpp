@@ -301,6 +301,14 @@ bool cIniFile::hasSection(const std::string &section) const
     return m_mapConfig.find(section) != m_mapConfig.end();
 }
 
+void cIniFile::setValue(const std::string &section, const std::string &key, const std::string &value)
+{
+    if (!hasSection(section)) {
+        m_sectionOrder.push_back(section);
+    }
+    m_mapConfig.try_emplace(section, section).first->second.addValue(key, value);
+}
+
 
 cSection cIniFile::getSection(const std::string &section) const
 {
