@@ -65,7 +65,8 @@ void cOptionsState::constructWindow(int prevState)
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     m_guiWindow = std::make_unique<GuiWindow>(m_sdlDrawer, window, m_textDrawer);
     m_guiWindow->setTheme(cGuiThemeBuilder().light().build());
-    cSoundPlayer* soundPlayer = m_ctx->getAudioContext()->getSoundPlayer();
+    AudioContext* audioContext = m_ctx->getAudioContext();
+    cSoundPlayer* soundPlayer = audioContext->getSoundPlayer();
 
     // Title
     m_guiWindow->setTitle("Dune II - The Maker - version " + D2TM_VERSION);
@@ -164,11 +165,11 @@ void cOptionsState::constructWindow(int prevState)
     auto gui_MusicCheckLabel = GuiCheckBoxBuilder()
             .withRect(musicCheckRect)
             .withRenderer(m_sdlDrawer)
-            .onCheck([soundPlayer]() {
-                soundPlayer->setMusicEnabled(true);
+            .onCheck([audioContext]() {
+                audioContext->setMusicEnabled(true);
             })
-            .onUnCheck([soundPlayer]() {
-                soundPlayer->setMusicEnabled(false);
+            .onUnCheck([audioContext]() {
+                audioContext->setMusicEnabled(false);
             })
             .build();
     gui_MusicCheckLabel->setChecked(soundPlayer->getMusicEnabled());

@@ -40,6 +40,7 @@ public:
     void thinkFast();
 
     void toggleMusic();
+    void setMusicEnabled(bool enabled);
     void changeMusicVolume(int delta) const;
 
 private:

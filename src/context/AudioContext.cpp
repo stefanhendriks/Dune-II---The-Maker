@@ -189,12 +189,16 @@ void AudioContext::thinkFast()
 
 void AudioContext::toggleMusic()
 {
-    m_settings->setPlayMusic(!m_settings->isPlayMusic());
-    if (!m_settings->isPlayMusic()) {
-        m_soundPlayer->stopMusic();
-    }
-    else {
-        m_soundPlayer->playMusic(m_newMusicSample);
+    setMusicEnabled(!m_settings->isPlayMusic());
+}
+
+void AudioContext::setMusicEnabled(bool enabled)
+{
+    m_settings->setPlayMusic(enabled);
+    m_soundPlayer->setMusicEnabled(enabled);
+    if (enabled) {
+        // let thinkFast() start the music of the current music type; nothing may have been picked yet when booted with -nomusic
+        m_newMusicCountdown = -1;
     }
 }
 
