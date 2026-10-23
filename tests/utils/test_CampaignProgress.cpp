@@ -36,7 +36,7 @@ private:
 TEST_CASE("CampaignProgress tracks independent campaigns and persists unlocked missions", "[campaign]")
 {
     TemporaryDirectory directory;
-    const auto file = directory.path() / "progress.dat";
+    const auto file = directory.path() / "progress.ini";
     CampaignProgress progress(file);
 
     std::string error;
@@ -70,7 +70,7 @@ TEST_CASE("CampaignProgress tracks independent campaigns and persists unlocked m
 TEST_CASE("CampaignProgress keeps unlocked missions when replaying an earlier mission", "[campaign]")
 {
     TemporaryDirectory directory;
-    CampaignProgress progress(directory.path() / "progress.dat");
+    CampaignProgress progress(directory.path() / "progress.ini");
     REQUIRE(progress.markStarted(ORDOS));
     REQUIRE(progress.recordMissionVictory(ORDOS, 3));
 
@@ -81,7 +81,7 @@ TEST_CASE("CampaignProgress keeps unlocked missions when replaying an earlier mi
 TEST_CASE("CampaignProgress marks the campaign complete and unlocks every mission", "[campaign]")
 {
     TemporaryDirectory directory;
-    CampaignProgress progress(directory.path() / "progress.dat");
+    CampaignProgress progress(directory.path() / "progress.ini");
 
     REQUIRE(progress.recordMissionVictory(HARKONNEN, CampaignProgress::LAST_MISSION));
     REQUIRE(progress.nextMission(HARKONNEN) == CampaignProgress::COMPLETED);
@@ -91,10 +91,10 @@ TEST_CASE("CampaignProgress marks the campaign complete and unlocks every missio
 TEST_CASE("CampaignProgress rejects invalid progress files without loading partial data", "[campaign]")
 {
     TemporaryDirectory directory;
-    const auto file = directory.path() / "progress.dat";
+    const auto file = directory.path() / "progress.ini";
     {
         std::ofstream output(file);
-        output << "D2TM_CAMPAIGN_PROGRESS 1\n1 99 2 0\n";
+        output << "[general]\nSAVE_SIGNATURE=D2TM_CAMPAIGN_PROGRESS\nSAVE_VERSION=1\n\n[Atreides]\nmission = 1\n\n[Harkonnen]\nmission = 99\n";
     }
 
     CampaignProgress progress(file);
@@ -109,7 +109,7 @@ TEST_CASE("CampaignProgress rejects invalid progress files without loading parti
 TEST_CASE("CampaignProgress tracks the Sardaukar campaign independently and persists it", "[campaign]")
 {
     TemporaryDirectory directory;
-    const auto file = directory.path() / "progress.dat";
+    const auto file = directory.path() / "progress.ini";
     CampaignProgress progress(file);
 
     REQUIRE(CampaignProgress::supportsHouse(SARDAUKAR));
@@ -123,4 +123,21 @@ TEST_CASE("CampaignProgress tracks the Sardaukar campaign independently and pers
     CampaignProgress loaded(file);
     REQUIRE(loaded.load(error) == CampaignProgressLoadResult::Loaded);
     REQUIRE(loaded.nextMission(SARDAUKAR) == 3);
+}
+
+TEST_CASE("CampaignProgress saves one section per house", "[campaign]")
+{
+    TemporaryDirectory directory;
+    const auto file = directory.path() / "progress.ini";
+    CampaignProgress progress(file);
+    REQUIRE(progress.markStarted(ATREIDES));
+
+    std::string error;
+    REQUIRE(progress.save(error));
+
+    std::ifstream input(file);
+    const std::string content((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+    REQUIRE(content.rfind("[general]\nSAVE_SIGNATURE=D2TM_CAMPAIGN_PROGRESS\nSAVE_VERSION=1\n\n[Atreides]", 0) == 0);
+    REQUIRE(content.find("[Atreides]\nmission=1\n") != std::string::npos);
+    REQUIRE(content.find("[Sardaukar]\nmission=0\n") != std::string::npos);
 }
