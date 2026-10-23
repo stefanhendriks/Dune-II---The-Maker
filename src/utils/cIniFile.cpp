@@ -34,6 +34,13 @@ static void Trim(std::string &str)
     str.erase(0, str.find_first_not_of(" \t\""));       //prefixing spaces
 }
 
+bool sCaseInsensitiveLess::operator()(const std::string &a, const std::string &b) const
+{
+    return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(), [](unsigned char x, unsigned char y) {
+        return std::tolower(x) < std::tolower(y);
+    });
+}
+
 //
 // cSection class
 //
@@ -43,6 +50,7 @@ cSection::cSection() {}
 cSection::~cSection()
 {
     m_sectionConf.clear();
+    m_keyOrder.clear();
     m_dataConfs.clear();
 }
 
@@ -54,13 +62,26 @@ bool cSection::addValue(const std::string &key, const std::string &value)
         // disable multiple values in ini files (to many bug with it)
         Logger::info(COMP_GAMERULES, "cSection::addValue", "Key {} already exist on section {}", key, m_sectionName);
     }
-    m_sectionConf[key] = value;
+    setValue(key, value);
     return true;
 }
 
 void cSection::setValue(const std::string &key, const std::string &value)
 {
-    m_sectionConf[key] = value;
+    if (m_sectionConf.insert_or_assign(key, value).second) {
+        m_keyOrder.push_back(key);
+    }
+}
+
+bool cSection::removeValue(const std::string &key)
+{
+    if (m_sectionConf.erase(key) == 0) {
+        return false;
+    }
+    std::erase_if(m_keyOrder, [&](const std::string &k) {
+        return !sCaseInsensitiveLess()(k, key) && !sCaseInsensitiveLess()(key, k);
+    });
+    return true;
 }
 
 bool cSection::addData(const std::string &data)
@@ -139,8 +160,8 @@ double cSection::getDouble(const std::string &key) const
 void cSection::write(std::ostream &out) const
 {
     out << '[' << m_sectionName << "]\n";
-    for (const auto &[key, value] : m_sectionConf) {
-        out << key << '=' << value << '\n';
+    for (const auto &key : m_keyOrder) {
+        out << key << '=' << m_sectionConf.at(key) << '\n';
     }
     for (const auto &line : m_dataConfs) {
         out << line << '\n';
@@ -301,6 +322,23 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
 bool cIniFile::hasSection(const std::string &section) const
 {
     return m_mapConfig.find(section) != m_mapConfig.end();
+}
+
+bool cIniFile::removeSection(const std::string &section)
+{
+    if (m_mapConfig.erase(section) == 0) {
+        return false;
+    }
+    std::erase_if(m_sectionOrder, [&](const std::string &name) {
+        return !sCaseInsensitiveLess()(name, section) && !sCaseInsensitiveLess()(section, name);
+    });
+    return true;
+}
+
+bool cIniFile::removeValue(const std::string &section, const std::string &key)
+{
+    const auto it = m_mapConfig.find(section);
+    return it != m_mapConfig.end() && it->second.removeValue(key);
 }
 
 void cIniFile::setValue(const std::string &section, const std::string &key, const std::string &value)

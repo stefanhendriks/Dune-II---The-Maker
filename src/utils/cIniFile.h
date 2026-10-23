@@ -23,6 +23,11 @@
 #include <sstream>
 #include <vector>
 
+// Orders strings ignoring ASCII case, so "HitPoints" and "hitpoints" are the same key
+struct sCaseInsensitiveLess {
+    bool operator()(const std::string &a, const std::string &b) const;
+};
+
 class cSection {
 public:
     cSection();
@@ -37,6 +42,14 @@ public:
     void setValue(const std::string &key, const std::string &value);
 
     [[nodiscard]] bool hasValue(const std::string &key) const;
+
+    // Removes a key, returns false when it did not exist
+    bool removeValue(const std::string &key);
+
+    // Keys in the order they were first added (file order)
+    [[nodiscard]] const std::vector<std::string> &getKeys() const {
+        return m_keyOrder;
+    }
 
     bool addData(const std::string &data);
 
@@ -61,7 +74,8 @@ public:
 private:
     std::string m_sectionName;
     std::vector<std::string> m_dataConfs;
-    std::map<std::string, std::string> m_sectionConf;
+    std::map<std::string, std::string, sCaseInsensitiveLess> m_sectionConf;
+    std::vector<std::string> m_keyOrder;
 };
 
 class cIniFile {
@@ -83,6 +97,17 @@ public:
 
     bool hasSection(const std::string &section) const;
 
+    // Removes a section, returns false when it did not exist
+    bool removeSection(const std::string &section);
+
+    // Removes a key from a section, returns false when the section or key did not exist
+    bool removeValue(const std::string &section, const std::string &key);
+
+    // Section names in the order they were added (file order)
+    [[nodiscard]] const std::vector<std::string> &getSectionNames() const {
+        return m_sectionOrder;
+    }
+
     // Sets (or replaces) a key=value, creating the section if needed
     void setValue(const std::string &section, const std::string &key, const std::string &value);
 
@@ -97,7 +122,7 @@ private:
     bool m_loadSuccess = false;
 
     std::string m_fileName;
-    std::map<std::string, cSection> m_mapConfig;
+    std::map<std::string, cSection, sCaseInsensitiveLess> m_mapConfig;
     std::vector<std::string> m_sectionOrder; // keeps sections in the order they were added, used by save()
 
     std::string m_actualSection, m_actualKey, m_actualValue;

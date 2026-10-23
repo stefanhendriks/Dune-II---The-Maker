@@ -125,8 +125,8 @@ TEST_CASE("cIniFile setValue creates sections and replaces existing values", "[i
     REQUIRE(ini.save(file.string()));
     REQUIRE(readFile(file) ==
             "[FIRST]\n"
-            "alpha=updated\n"
             "zeta=last\n"
+            "alpha=updated\n"
             "\n"
             "[SECOND]\n"
             "name=Caladan\n");
@@ -167,4 +167,56 @@ TEST_CASE("cIniFile reports failures to open files for loading or saving", "[ini
 
     REQUIRE_FALSE(ini.isLoadSuccess());
     REQUIRE_FALSE(ini.save(unavailableFile.string()));
+}
+
+TEST_CASE("cIniFile keeps sections and keys in file order", "[ini]")
+{
+    TemporaryDirectory directory;
+    const auto file = directory.path() / "order.ini";
+    writeFile(file, "[ZETA]\nbeta=1\nalpha=2\n[ALPHA]\nmid=3\n");
+
+    cIniFile ini(file.string());
+
+    REQUIRE(ini.getSectionNames() == std::vector<std::string>{ "ZETA", "ALPHA" });
+    REQUIRE(ini.getSection("ZETA").getKeys() == std::vector<std::string>{ "beta", "alpha" });
+
+    REQUIRE(ini.save(file.string()));
+    REQUIRE(readFile(file) == "[ZETA]\nbeta=1\nalpha=2\n\n[ALPHA]\nmid=3\n");
+}
+
+TEST_CASE("cIniFile removes keys and sections", "[ini]")
+{
+    cIniFile ini;
+    ini.setValue("ONE", "a", "1");
+    ini.setValue("ONE", "b", "2");
+    ini.setValue("TWO", "c", "3");
+
+    REQUIRE(ini.removeValue("ONE", "a"));
+    REQUIRE_FALSE(ini.removeValue("ONE", "a"));
+    REQUIRE_FALSE(ini.removeValue("MISSING", "a"));
+    REQUIRE_FALSE(ini.getSection("ONE").hasValue("a"));
+    REQUIRE(ini.getSection("ONE").getKeys() == std::vector<std::string>{ "b" });
+
+    REQUIRE(ini.removeSection("ONE"));
+    REQUIRE_FALSE(ini.removeSection("ONE"));
+    REQUIRE_FALSE(ini.hasSection("ONE"));
+    REQUIRE(ini.getSectionNames() == std::vector<std::string>{ "TWO" });
+}
+
+TEST_CASE("cIniFile lookups ignore case", "[ini]")
+{
+    cIniFile ini;
+    ini.setValue("UNIT: Quad", "HitPoints", "100");
+
+    REQUIRE(ini.hasSection("unit: quad"));
+    REQUIRE(ini.getStringValue("UNIT: QUAD", "hitpoints") == "100");
+
+    ini.setValue("unit: quad", "HITPOINTS", "200");
+    REQUIRE(ini.getSectionNames().size() == 1);
+    REQUIRE(ini.getSection("UNIT: Quad").getKeys().size() == 1);
+    REQUIRE(ini.getStringValue("UNIT: Quad", "HitPoints") == "200");
+
+    REQUIRE(ini.removeValue("unit: QUAD", "hitpoints"));
+    REQUIRE(ini.removeSection("UNIT: QUAD"));
+    REQUIRE(ini.getSectionNames().empty());
 }
