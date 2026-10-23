@@ -71,9 +71,6 @@ public:
 
     bool load(const std::string &configFileName);
 
-    // Saves all sections to the file it was loaded from
-    bool save() const;
-
     // Saves all sections to the given UTF-8 file name
     bool save(const std::string &configFileName) const;
 

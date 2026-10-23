@@ -210,11 +210,6 @@ bool cIniFile::load(const std::string &config)
     return true;
 }
 
-bool cIniFile::save() const
-{
-    return save(m_fileName);
-}
-
 bool cIniFile::save(const std::string &configFileName) const
 {
     Logger::info(COMP_GAMERULES, "cIniFile::save", "Save file {}", configFileName);
