@@ -96,6 +96,7 @@
 #include <vector>
 #include <iostream>
 #include <filesystem>
+#include <string_view>
 
 #include "data/gfxaudio.h"
 #include "include/sGameServices.h"
@@ -625,7 +626,10 @@ bool cGame::setupGame()
     if (preferencePath == nullptr) {
         Logger::warn(COMP_INIT, "Campaign progress", "Could not get the user data directory, campaign progress is not remembered: {}", SDL_GetError());
     } else {
-        const std::filesystem::path progressFile = std::filesystem::path(preferencePath) / "campaign-progress.ini";
+        // SDL_GetPrefPath returns UTF-8, a plain char* path would be read in the ANSI code page on Windows
+        const std::string_view preferencePathUtf8(preferencePath);
+        const std::filesystem::path progressFile =
+            std::filesystem::path(std::u8string(preferencePathUtf8.begin(), preferencePathUtf8.end())) / "campaign-progress.ini";
         SDL_free(preferencePath);
         m_campaignProgress = std::make_unique<CampaignProgress>(progressFile);
         m_services->campaignProgress = m_campaignProgress.get();

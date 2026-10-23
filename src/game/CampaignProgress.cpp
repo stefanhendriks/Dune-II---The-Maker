@@ -30,6 +30,13 @@ constexpr const char* MISSION_KEY = "mission";
 constexpr int SAVE_VERSION = 1;
 constexpr const char* SAVE_SIGNATURE = "D2TM_CAMPAIGN_PROGRESS";
 constexpr const char* GENERAL_SECTION = "general";
+
+// cIniFile expects UTF-8 file names, path::string() would give the ANSI code page on Windows
+std::string utf8FileName(const std::filesystem::path& path)
+{
+    const std::u8string name = path.u8string();
+    return std::string(name.begin(), name.end());
+}
 }
 
 CampaignProgress::CampaignProgress(std::filesystem::path filePath) :
@@ -51,7 +58,7 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
     }
 
     cIniFile ini;
-    if (!ini.load(m_filePath.string())) {
+    if (!ini.load(utf8FileName(m_filePath))) {
         error = "Could not open campaign progress file";
         return CampaignProgressLoadResult::Invalid;
     }
@@ -115,7 +122,7 @@ bool CampaignProgress::save(std::string& error) const
         ini.setValue(HOUSE_SECTIONS[i], MISSION_KEY, std::to_string(m_nextMission[i]));
     }
 
-    if (!ini.save(m_filePath.string())) {
+    if (!ini.save(utf8FileName(m_filePath))) {
         error = "Could not write campaign progress file";
         return false;
     }
