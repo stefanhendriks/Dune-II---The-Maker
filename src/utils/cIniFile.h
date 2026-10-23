@@ -94,7 +94,7 @@ private:
     bool isSectionName(std::string inputLine);
     bool isKeyValue(std::string inputLine);
 
-    bool m_loadSuccess;
+    bool m_loadSuccess = false;
 
     std::string m_fileName;
     std::map<std::string, cSection> m_mapConfig;
