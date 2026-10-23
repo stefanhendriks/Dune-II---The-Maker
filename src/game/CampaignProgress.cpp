@@ -16,15 +16,20 @@
 #include "game/CampaignProgress.hpp"
 
 #include "include/definitions.h"
+#include "utils/cIniFile.h"
 
 #include <algorithm>
-#include <fstream>
+#include <charconv>
 #include <stdexcept>
 #include <utility>
 
 namespace {
+constexpr std::size_t HOUSE_COUNT = 4;
+constexpr std::array<const char*, HOUSE_COUNT> HOUSE_SECTIONS = {"Atreides", "Harkonnen", "Ordos", "Sardaukar"};
+constexpr const char* MISSION_KEY = "mission";
 constexpr int SAVE_VERSION = 1;
 constexpr const char* SAVE_SIGNATURE = "D2TM_CAMPAIGN_PROGRESS";
+constexpr const char* GENERAL_SECTION = "general";
 }
 
 CampaignProgress::CampaignProgress(std::filesystem::path filePath) :
@@ -45,32 +50,37 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
         return CampaignProgressLoadResult::NotFound;
     }
 
-    std::ifstream input(m_filePath);
-    if (!input.is_open()) {
+    cIniFile ini;
+    if (!ini.load(m_filePath.string())) {
         error = "Could not open campaign progress file";
         return CampaignProgressLoadResult::Invalid;
     }
 
-    std::string signature;
-    int version = 0;
-    std::array<int, 4> loadedProgress{};
-    if (!(input >> signature >> version >> loadedProgress[0] >> loadedProgress[1] >> loadedProgress[2] >>
-          loadedProgress[3])) {
-        error = "Campaign progress file is incomplete";
+    if (!ini.hasSection(GENERAL_SECTION)) {
+        error = "Campaign progress file has no general section";
+        return CampaignProgressLoadResult::Invalid;
+    }
+    const cSection general = ini.getSection(GENERAL_SECTION);
+    if (general.getStringValue("SAVE_SIGNATURE") != SAVE_SIGNATURE || general.getInt("SAVE_VERSION") != SAVE_VERSION) {
+        error = "Campaign progress file has an invalid signature or version";
         return CampaignProgressLoadResult::Invalid;
     }
 
-    input >> std::ws;
-    if (!input.eof() || signature != SAVE_SIGNATURE || version != SAVE_VERSION) {
-        error = "Campaign progress file has an invalid signature, version, or trailing data";
-        return CampaignProgressLoadResult::Invalid;
-    }
+    // A missing section or key means no progress yet, so items can be added to the file later on
+    std::array<int, HOUSE_COUNT> loadedProgress{};
+    for (std::size_t i = 0; i < HOUSE_COUNT; i++) {
+        if (!ini.hasSection(HOUSE_SECTIONS[i])) continue;
+        const cSection section = ini.getSection(HOUSE_SECTIONS[i]);
+        if (!section.hasValue(MISSION_KEY)) continue;
 
-    if (std::any_of(loadedProgress.begin(), loadedProgress.end(), [](int mission) {
-            return mission < 0 || mission > COMPLETED;
-        })) {
-        error = "Campaign progress file contains an invalid mission number";
-        return CampaignProgressLoadResult::Invalid;
+        const std::string value = section.getStringValue(MISSION_KEY);
+        int mission = 0;
+        const auto [end, ec] = std::from_chars(value.data(), value.data() + value.size(), mission);
+        if (ec != std::errc() || end != value.data() + value.size() || mission < 0 || mission > COMPLETED) {
+            error = "Campaign progress file contains an invalid mission number";
+            return CampaignProgressLoadResult::Invalid;
+        }
+        loadedProgress[i] = mission;
     }
 
     m_nextMission = loadedProgress;
@@ -86,17 +96,14 @@ bool CampaignProgress::save(std::string& error) const
         return false;
     }
 
-    std::ofstream output(m_filePath, std::ios::trunc);
-    if (!output.is_open()) {
-        error = "Could not open campaign progress file for writing";
-        return false;
+    cIniFile ini;
+    ini.setValue(GENERAL_SECTION, "SAVE_SIGNATURE", SAVE_SIGNATURE);
+    ini.setValue(GENERAL_SECTION, "SAVE_VERSION", std::to_string(SAVE_VERSION));
+    for (std::size_t i = 0; i < HOUSE_COUNT; i++) {
+        ini.setValue(HOUSE_SECTIONS[i], MISSION_KEY, std::to_string(m_nextMission[i]));
     }
 
-    output << SAVE_SIGNATURE << ' ' << SAVE_VERSION << '\n'
-           << m_nextMission[0] << ' ' << m_nextMission[1] << ' ' << m_nextMission[2] << ' '
-           << m_nextMission[3] << '\n';
-    output.flush();
-    if (!output) {
+    if (!ini.save(m_filePath.string())) {
         error = "Could not write campaign progress file";
         return false;
     }

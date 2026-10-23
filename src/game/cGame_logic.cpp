@@ -620,7 +620,7 @@ bool cGame::setupGame()
     if (preferencePath == nullptr) {
         Logger::warn(COMP_INIT, "Campaign progress", "Could not get the user data directory, campaign progress is not remembered: {}", SDL_GetError());
     } else {
-        const std::filesystem::path progressFile = std::filesystem::path(preferencePath) / "campaign-progress.dat";
+        const std::filesystem::path progressFile = std::filesystem::path(preferencePath) / "campaign-progress.ini";
         SDL_free(preferencePath);
         m_campaignProgress = std::make_unique<CampaignProgress>(progressFile);
         m_services->campaignProgress = m_campaignProgress.get();
