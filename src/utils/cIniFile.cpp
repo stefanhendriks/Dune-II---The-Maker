@@ -17,6 +17,7 @@
 
 #include "cIniFile.h"
 #include "utils/Log.h"
+#include <cctype>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
