@@ -17,6 +17,7 @@
 
 #include "include/definitions.h"
 #include "utils/cIniFile.h"
+#include "utils/Log.h"
 
 #include <algorithm>
 #include <charconv>
@@ -60,6 +61,7 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
     cIniFile ini;
     if (!ini.load(utf8FileName(m_filePath))) {
         error = "Could not open campaign progress file";
+        Logger::warn(COMP_GAMERULES, "CampaignProgress::load", "{}, it is left in place and the next save will overwrite it", m_filePath.string());
         return CampaignProgressLoadResult::Invalid;
     }
 
@@ -69,6 +71,9 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
         std::error_code renameError;
         std::filesystem::path backupPath = m_filePath;
         backupPath.replace_extension(".old");
+        if (std::filesystem::exists(backupPath)) {
+            Logger::warn(COMP_GAMERULES, "CampaignProgress::load", "{} already exists and will be replaced", backupPath.string());
+        }
         std::filesystem::rename(m_filePath, backupPath, renameError);
         if (renameError) {
             error += " (could not rename it to " + backupPath.string() + ": " + renameError.message() + ")";
@@ -91,6 +96,10 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
     for (std::size_t i = 0; i < HOUSE_COUNT; i++) {
         if (!ini.hasSection(HOUSE_SECTIONS[i])) continue;
         const cSection section = ini.getSection(HOUSE_SECTIONS[i]);
+        if (!section.getData().empty()) {
+            Logger::warn(COMP_GAMERULES, "CampaignProgress::load", "Ignoring {} unrecognized line(s) in section {}, e.g. a key without a value",
+                         section.getData().size(), HOUSE_SECTIONS[i]);
+        }
         if (!section.hasValue(MISSION_KEY)) continue;
 
         const std::string value = section.getStringValue(MISSION_KEY);
