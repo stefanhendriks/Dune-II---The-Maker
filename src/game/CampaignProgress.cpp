@@ -56,14 +56,27 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
         return CampaignProgressLoadResult::Invalid;
     }
 
-    if (!ini.hasSection(GENERAL_SECTION)) {
-        error = "Campaign progress file has no general section";
+    // Keep the unusable file as .old so the next save does not overwrite it
+    const auto rejectFile = [&](const std::string& reason) {
+        error = reason;
+        std::error_code renameError;
+        std::filesystem::path backupPath = m_filePath;
+        backupPath.replace_extension(".old");
+        std::filesystem::rename(m_filePath, backupPath, renameError);
+        if (renameError) {
+            error += " (could not rename it to " + backupPath.string() + ": " + renameError.message() + ")";
+        } else {
+            error += " (renamed to " + backupPath.string() + ")";
+        }
         return CampaignProgressLoadResult::Invalid;
+    };
+
+    if (!ini.hasSection(GENERAL_SECTION)) {
+        return rejectFile("Campaign progress file has no general section");
     }
     const cSection general = ini.getSection(GENERAL_SECTION);
     if (general.getStringValue("SAVE_SIGNATURE") != SAVE_SIGNATURE || general.getInt("SAVE_VERSION") != SAVE_VERSION) {
-        error = "Campaign progress file has an invalid signature or version";
-        return CampaignProgressLoadResult::Invalid;
+        return rejectFile("Campaign progress file has an invalid signature or version");
     }
 
     // A missing section or key means no progress yet, so items can be added to the file later on
@@ -77,8 +90,7 @@ CampaignProgressLoadResult CampaignProgress::load(std::string& error)
         int mission = 0;
         const auto [end, ec] = std::from_chars(value.data(), value.data() + value.size(), mission);
         if (ec != std::errc() || end != value.data() + value.size() || mission < 0 || mission > COMPLETED) {
-            error = "Campaign progress file contains an invalid mission number";
-            return CampaignProgressLoadResult::Invalid;
+            return rejectFile("Campaign progress file contains an invalid mission number");
         }
         loadedProgress[i] = mission;
     }

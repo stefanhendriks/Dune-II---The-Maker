@@ -104,6 +104,9 @@ TEST_CASE("CampaignProgress rejects invalid progress files without loading parti
     REQUIRE(progress.nextMission(ATREIDES) == 0);
     REQUIRE(progress.nextMission(HARKONNEN) == 0);
     REQUIRE(progress.nextMission(ORDOS) == 0);
+
+    REQUIRE_FALSE(std::filesystem::exists(file));
+    REQUIRE(std::filesystem::exists(directory.path() / "progress.old"));
 }
 
 TEST_CASE("CampaignProgress tracks the Sardaukar campaign independently and persists it", "[campaign]")
