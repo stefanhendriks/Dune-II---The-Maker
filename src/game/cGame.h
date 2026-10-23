@@ -246,6 +246,8 @@ private:
 
     void shakeScreenAndBlitBuffer();
 
+    void saveCampaignProgress();
+
     void saveBmpScreenToDisk();
     void dispatchGameEvent(const s_GameEvent &event);
 
