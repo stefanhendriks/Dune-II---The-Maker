@@ -140,7 +140,22 @@ TEST_CASE("CampaignProgress saves one section per house", "[campaign]")
 
     std::ifstream input(file);
     const std::string content((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
-    REQUIRE(content.rfind("[general]\nSAVE_SIGNATURE=D2TM_CAMPAIGN_PROGRESS\nSAVE_VERSION=1\n\n[Atreides]", 0) == 0);
+    REQUIRE(content.rfind("[general]\nsignature=D2TM_CAMPAIGN_PROGRESS\nversion=1\n\n[Atreides]", 0) == 0);
     REQUIRE(content.find("[Atreides]\nmission=1\n") != std::string::npos);
     REQUIRE(content.find("[Sardaukar]\nmission=0\n") != std::string::npos);
+}
+
+TEST_CASE("CampaignProgress still loads files with the upper case keys of earlier versions", "[campaign]")
+{
+    TemporaryDirectory directory;
+    const auto file = directory.path() / "progress.ini";
+    {
+        std::ofstream output(file);
+        output << "[general]\nSAVE_SIGNATURE=D2TM_CAMPAIGN_PROGRESS\nSAVE_VERSION=1\n\n[Ordos]\nmission=4\n";
+    }
+
+    CampaignProgress progress(file);
+    std::string error;
+    REQUIRE(progress.load(error) == CampaignProgressLoadResult::Loaded);
+    REQUIRE(progress.nextMission(ORDOS) == 4);
 }
