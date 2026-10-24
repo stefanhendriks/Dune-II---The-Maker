@@ -312,14 +312,12 @@ bool cPathFinder::isCellPassableForActiveUnit(int candidateCell) const
         else {
             candidateIsPassable = false;
 
-            if (m_pathCountUnits > 0) {
-                cUnit *blockingUnit = m_objects->getUnit(unitIdAtCandidateCell);
-                if (blockingUnit != nullptr &&
-                    !blockingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer()) &&
-                    blockingUnit->isInfantryUnit() &&
-                    m_activeUnit->canSquishInfantry()) {
-                    candidateIsPassable = true;
-                }
+            cUnit *blockingUnit = m_objects->getUnit(unitIdAtCandidateCell);
+            if (blockingUnit != nullptr &&
+                !blockingUnit->getPlayer()->isSameTeamAs(m_activeUnit->getPlayer()) &&
+                blockingUnit->isInfantryUnit() &&
+                m_activeUnit->canSquishInfantry()) {
+                candidateIsPassable = true;
             }
         }
     }
