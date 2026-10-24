@@ -723,6 +723,14 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         mapEditor.createCell(bloomCell, TERRAIN_BLOOM, 0);
     }
 
+    for (int field : selectedMap->fields) {
+        // field values use a 64 wide grid, like the scenario [MAP] Field= key
+        int fieldCell = m_objects->getMapGeometry()->makeCell(field % 64, field / 64);
+        if (fieldCell < 0) continue;
+        mapEditor.createRandomField(fieldCell, TERRAIN_SPICE, 25 + (RNG::rnd(50)));
+    }
+    mapEditor.smoothMap();
+
     if (m_settings->isDebugMode()) {
         Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Starting positions before shuffling:");
         for (int i = 0; i < startCellsOnSkirmishMap; i++) {
