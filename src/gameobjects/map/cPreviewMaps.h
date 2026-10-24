@@ -33,6 +33,7 @@ struct s_PreviewMap {
     int width, height;              // width & height of map
     std::vector<int> terrainType;   // terrainType per cell (for map creation)
     std::array<int, MAX_SKIRMISHMAP_PLAYERS> iStartCell; // starting locations
+    std::vector<int> blooms;        // terrain bloom cells (empty when the map has none)
     bool validMap = true;           // is this a valid map? (is false, when map can be loaded but has invalid data)
     std::string name;               // name of map
     std::string author;             // author of map

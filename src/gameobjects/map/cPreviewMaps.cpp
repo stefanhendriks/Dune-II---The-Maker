@@ -143,6 +143,22 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
     }
 
+    std::stringstream bloomStream(mapSection.getStringValue("Bloom"));
+    while (std::getline(bloomStream, segment, ',')) {
+        try {
+            int bloomCell = std::stoi(segment);
+            if (bloomCell < 0 || bloomCell >= maxCells) {
+                Logger::warn(COMP_MAP, "cPreviewMaps", "Bloom [{}] invalid. (value must be between range [0-{}]), Map {} - ignoring this bloom", bloomCell, maxCells, filename);
+            } else {
+                previewMap->blooms.push_back(bloomCell);
+            }
+        } catch (const std::invalid_argument& e) {
+            Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert bloom (invalid argument): {}", segment);
+        } catch (const std::out_of_range& e) {
+            Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert bloom (out of bounds): {}", segment);
+        }
+    }
+
     if (validStartCells < 2) {
         previewMap->validMap = false;
         Logger::warn(COMP_MAP, "cPreviewMaps", "Map {} has only {} valid start cell(s); at least 2 are required - map is invalid", filename, validStartCells);
