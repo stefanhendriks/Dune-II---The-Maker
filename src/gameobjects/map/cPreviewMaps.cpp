@@ -143,7 +143,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
     }
 
-    std::stringstream bloomStream(mapSection.getStringValue("Bloom"));
+    std::stringstream bloomStream(section.getStringValue("Bloom"));
     while (std::getline(bloomStream, segment, ',')) {
         try {
             int bloomCell = std::stoi(segment);
