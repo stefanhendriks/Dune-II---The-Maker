@@ -17,6 +17,7 @@
 
 #include "controls/eKeyAction.h"
 #include "controls/cMouse.h"
+#include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
@@ -714,6 +715,13 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         mapEditor.createCell(c, selectedMap->terrainType[c], 0);
     }
     mapEditor.smoothMap();
+
+    for (int bloom : selectedMap->blooms) {
+        // bloom values use a 64 wide grid, like the scenario [MAP] Bloom= key
+        int bloomCell = m_objects->getMapGeometry()->makeCell(bloom % 64, bloom / 64);
+        if (bloomCell < 0) continue;
+        mapEditor.createCell(bloomCell, TERRAIN_BLOOM, 0);
+    }
 
     if (m_settings->isDebugMode()) {
         Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Starting positions before shuffling:");
