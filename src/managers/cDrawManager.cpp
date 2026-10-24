@@ -300,7 +300,12 @@ void cDrawManager::drawTopBarBackground()
 
 void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
 {
+    const bool houseChanged = m_player->getHouse() != playerToDraw->getHouse();
     m_player = playerToDraw;
+    if (houseChanged) {
+        delete m_btnOptions;
+        m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex);
+    }
     m_creditsDrawer->setPlayer(playerToDraw);
     m_sidebarDrawer->setPlayer(playerToDraw);
     m_orderDrawer->setPlayer(playerToDraw);
