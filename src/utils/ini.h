@@ -18,14 +18,12 @@
 #include <span>
 #include <string>
 
-#include "utils/ScenarioData.hpp"
-
 class cRegion;
 class cReinforcements;
 class AbstractMentat;
 class cSelectYourNextConquestState;
 struct s_DataCampaign;
-struct s_PreviewMap;
+struct ScenarioData;
 
 class cGameSettings;
 class cGameObjectContext;
@@ -50,7 +48,6 @@ public:
 
 private:
     void populateScenario(const ScenarioData& data, AbstractMentat *pMentat, cReinforcements *reinforcements, int iHouse);
-    void populateReinforcement(const ScenarioData::Reinforcement& reinforcement, int iHouse, cReinforcements *reinforcements);
     int  findPlayerIdByHouse(int house) const;
     void INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota);
 

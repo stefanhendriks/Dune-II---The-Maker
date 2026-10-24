@@ -811,6 +811,41 @@ void cIni::populateScenario(const ScenarioData& data, AbstractMentat *pMentat, c
         bSetUpPlayers = false;
     };
 
+    auto populateReinforcement = [&](const ScenarioData::Reinforcement& reinforcement) {
+        int playerId = -1;
+        if (reinforcement.house > -1) {
+            playerId = findPlayerIdByHouse(reinforcement.house);
+        }
+
+        int targetCell = -1;
+        switch (reinforcement.location) {
+            case ScenarioData::Reinforcement::Location::HOMEBASE:
+                targetCell = m_objects->getPlayer(playerId)->getFocusCell();
+                break;
+            case ScenarioData::Reinforcement::Location::ENEMYBASE:
+                if (playerId == 0) {
+                    for (int i = 0; i < MAX_PLAYERS; i++) {
+                        if (m_objects->getPlayer(i)->getHouse() == iHouse && i != playerId) {
+                            targetCell = m_objects->getPlayer(i)->getFocusCell();
+                            break;
+                        }
+                    }
+                }
+                else {
+                    targetCell = m_objects->getPlayer(0)->getFocusCell();
+                }
+                break;
+            case ScenarioData::Reinforcement::Location::CELL:
+                targetCell = reinforcement.cell;
+                break;
+            case ScenarioData::Reinforcement::Location::INVALID:
+                break;
+        }
+
+        bool repeat = reinforcement.repeat && m_settings->isAllowRepeatingReinforcements();
+        reinforcements->addReinforcement(playerId, reinforcement.unitType, targetCell, reinforcement.delay, repeat);
+    };
+
     for (const auto& entry : data.entries) {
         if (const auto* unit = std::get_if<ScenarioData::Unit>(&entry)) {
             setupPlayersOnce();
@@ -842,7 +877,7 @@ void cIni::populateScenario(const ScenarioData& data, AbstractMentat *pMentat, c
             }
         }
         else if (const auto* reinforcement = std::get_if<ScenarioData::Reinforcement>(&entry)) {
-            populateReinforcement(*reinforcement, iHouse, reinforcements);
+            populateReinforcement(*reinforcement);
         }
     }
 
@@ -886,42 +921,6 @@ int cIni::findPlayerIdByHouse(int house) const
         }
     }
     return -1;
-}
-
-void cIni::populateReinforcement(const ScenarioData::Reinforcement& reinforcement, int iHouse, cReinforcements *reinforcements)
-{
-    int playerId = -1;
-    if (reinforcement.house > -1) {
-        playerId = findPlayerIdByHouse(reinforcement.house);
-    }
-
-    int targetCell = -1;
-    switch (reinforcement.location) {
-        case ScenarioData::Reinforcement::Location::HOMEBASE:
-            targetCell = m_objects->getPlayer(playerId)->getFocusCell();
-            break;
-        case ScenarioData::Reinforcement::Location::ENEMYBASE:
-            if (playerId == 0) {
-                for (int i = 0; i < MAX_PLAYERS; i++) {
-                    if (m_objects->getPlayer(i)->getHouse() == iHouse && i != playerId) {
-                        targetCell = m_objects->getPlayer(i)->getFocusCell();
-                        break;
-                    }
-                }
-            }
-            else {
-                targetCell = m_objects->getPlayer(0)->getFocusCell();
-            }
-            break;
-        case ScenarioData::Reinforcement::Location::CELL:
-            targetCell = reinforcement.cell;
-            break;
-        case ScenarioData::Reinforcement::Location::INVALID:
-            break;
-    }
-
-    bool repeat = reinforcement.repeat && m_settings->isAllowRepeatingReinforcements();
-    reinforcements->addReinforcement(playerId, reinforcement.unitType, targetCell, reinforcement.delay, repeat);
 }
 
 void cIni::INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota)
