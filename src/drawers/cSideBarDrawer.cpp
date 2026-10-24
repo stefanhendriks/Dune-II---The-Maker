@@ -45,17 +45,8 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices 
     d2tm_assert(ctx != nullptr);
     d2tm_assert(services != nullptr);
 
-    m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), 
-        m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
-    m_candyBarPiece = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),
-        m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
-    m_candyHorizonBar = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),
-        m_player, m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
-
     m_candiBarRenderer = m_sdlDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_services->settings->getScreenH()-40);
-    m_sdlDrawer->beginDrawingToTexture(m_candiBarRenderer);
-    createCandyBar();
-    m_sdlDrawer->endDrawingToTexture();
+    createPlayerCandyBar();
 }
 
 cSideBarDrawer::~cSideBarDrawer()
@@ -99,8 +90,30 @@ void cSideBarDrawer::draw()
 
 void cSideBarDrawer::setPlayer(cPlayer *pPlayer)
 {
+    const bool houseChanged = m_player->getHouse() != pPlayer->getHouse();
     m_player = pPlayer;
     m_buildingListDrawer.setPlayer(pPlayer);
+    if (houseChanged) {
+        createPlayerCandyBar();
+    }
+}
+
+// (re)creates the house-colored candybar textures and renders them into the candybar texture
+void cSideBarDrawer::createPlayerCandyBar()
+{
+    delete m_candyBarBall;
+    delete m_candyBarPiece;
+    delete m_candyHorizonBar;
+    m_candyBarBall = createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer,
+        m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex);
+    m_candyBarPiece = createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer,
+        m_player, m_gfxinter->getSurface(BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex);
+    m_candyHorizonBar = createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer,
+        m_player, m_gfxinter->getSurface(HORIZONTAL_CANDYBAR), TransparentColorIndex);
+
+    m_sdlDrawer->beginDrawingToTexture(m_candiBarRenderer);
+    createCandyBar();
+    m_sdlDrawer->endDrawingToTexture();
 }
 
 void cSideBarDrawer::drawBuildingLists()
