@@ -64,7 +64,7 @@ void cNewMapEditorState::constructWindow()
     m_guiWindow->setTheme(cGuiThemeBuilder().light().build());
 
     // Title
-    m_guiWindow->setTitle("New map editor configuration");
+    m_guiWindow->setTitle("Map editor configuration");
 
     int labelX = 55;
     int labelY = 45;
@@ -73,7 +73,7 @@ void cNewMapEditorState::constructWindow()
     // name
     const cRectangle &nameRect = m_guiWindow->getRelativeRect(labelX, labelY, 75, buttonHeight);
     auto gui_NameLabel = GuiLabelBuilder()
-        .withLabel("Name your new map:")
+        .withLabel("Name your map:")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_sdlDrawer)
         .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
@@ -194,7 +194,7 @@ void cNewMapEditorState::constructWindow()
     
     auto gui_btn_Back = GuiButtonBuilder()
         .withRect(backRect)        
-        .withLabel("Create map !")
+        .withLabel("Create map")
         .withTextDrawer(m_textDrawer)
         .withRenderer(m_sdlDrawer)
         .withTheme(cGuiThemeBuilder().light().build())
