@@ -148,7 +148,9 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         while (std::getline(cellStream, segment, ',')) {
             try {
                 int cell = std::stoi(segment);
-                if (cell < 0 || cell >= maxCells) {
+                if (cell == RANDOM_CELL) {
+                    cells.push_back(cell);
+                } else if (cell < 0 || cell >= maxCells) {
                     Logger::warn(COMP_MAP, "cPreviewMaps", "{} [{}] invalid. (value must be between range [0-{}]), Map {} - ignoring this value", key, cell, maxCells - 1, filename);
                 } else {
                     cells.push_back(cell);

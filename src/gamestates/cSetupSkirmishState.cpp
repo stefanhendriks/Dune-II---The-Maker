@@ -716,16 +716,27 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
     mapEditor.smoothMap();
 
+    // converts a Bloom=/Field= value to a map cell: 64 wide grid like the scenario loader, or a random sand cell for RANDOM_CELL
+    // returns -1 when there is no valid cell
+    auto resolveCell = [&](int value) {
+        if (value == RANDOM_CELL) {
+            const std::vector<int> sandCells = m_objects->getMap()->getAllCellsOfType(TERRAIN_SAND);
+            if (sandCells.empty()) {
+                return -1;
+            }
+            return sandCells[RNG::rnd(static_cast<int>(sandCells.size()))];
+        }
+        return m_objects->getMapGeometry()->makeCell(value % 64, value / 64);
+    };
+
     for (int bloom : selectedMap->blooms) {
-        // bloom values use a 64 wide grid, like the scenario [MAP] Bloom= key
-        int bloomCell = m_objects->getMapGeometry()->makeCell(bloom % 64, bloom / 64);
+        int bloomCell = resolveCell(bloom);
         if (bloomCell < 0) continue;
         mapEditor.createCell(bloomCell, TERRAIN_BLOOM, 0);
     }
 
     for (int field : selectedMap->fields) {
-        // field values use a 64 wide grid, like the scenario [MAP] Field= key
-        int fieldCell = m_objects->getMapGeometry()->makeCell(field % 64, field / 64);
+        int fieldCell = resolveCell(field);
         if (fieldCell < 0) continue;
         mapEditor.createRandomField(fieldCell, TERRAIN_SPICE, 25 + (RNG::rnd(50)));
     }
