@@ -112,5 +112,11 @@ void cOrderDrawer::onNotify(const s_MouseEvent &event)
 
 void cOrderDrawer::setPlayer(cPlayer *pPlayer)
 {
+    const bool houseChanged = m_player->getHouse() != pPlayer->getHouse();
     this->m_player = pPlayer;
+    if (houseChanged) {
+        auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
+        delete m_buttonBitmap;
+        m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, m_player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
+    }
 }
