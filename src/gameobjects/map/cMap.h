@@ -73,8 +73,8 @@ public:
     bool occupiedByWallOrMountain(int iCell);
     int findCloseMapBorderCellRelativelyToDestinationCel(int destinationCell);
 
-    int  mouse_draw_x();
-    int  mouse_draw_y();
+    int  mouse_draw_x(int mouseCell);
+    int  mouse_draw_y(int mouseCell);
     void draw_units_2nd();
     void draw_units();
     void draw_bullets();
