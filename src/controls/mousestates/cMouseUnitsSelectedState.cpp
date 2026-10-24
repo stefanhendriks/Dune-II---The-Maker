@@ -650,12 +650,15 @@ void cMouseUnitsSelectedState::onMouseLeftButtonDoubleClicked()
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
-        if (pUnit->getPlayer() == m_player) {
+        // the hovered id is only updated on mouse movement, the unit may have been removed since
+        if (pUnit->isValid() && pUnit->getPlayer() == m_player) {
             selectSameUnitsOnScreen(pUnit->iType);
         }
     } else if (m_selectedUnits.size() == 1) {
         cUnit *pUnit = m_context->getObjects()->getUnit(m_selectedUnits[0]);
-        selectSameUnitsOnScreen(pUnit->iType);
+        if (pUnit->isValid()) {
+            selectSameUnitsOnScreen(pUnit->iType);
+        }
     }
 }
 
