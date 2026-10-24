@@ -208,9 +208,8 @@ void cDrawManager::drawCredits()
 
 void cDrawManager::drawRallyPoint()
 {
-    cPlayer* humanPlayer = m_objects->getPlayer(HUMAN);
-    if (humanPlayer->selected_structure < 0) return;
-    cAbstractStructure *theStructure = m_objects->getStructures()[humanPlayer->selected_structure];
+    if (m_player->selected_structure < 0) return;
+    cAbstractStructure *theStructure = m_objects->getStructures()[m_player->selected_structure];
     if (!theStructure) return;
     int rallyPointCell = theStructure->getRallyPoint();
     if (rallyPointCell < 0) return;
@@ -235,7 +234,7 @@ void cDrawManager::drawRallyPoint()
     int endX = drawX;
     int endY = drawY;
 
-    m_sdlDrawer->renderLine( startX, startY, endX, endY, m_objects->getPlayer(HUMAN)->getMinimapColor());
+    m_sdlDrawer->renderLine( startX, startY, endX, endY, m_player->getMinimapColor());
 }
 
 void cDrawManager::drawSidebar()
