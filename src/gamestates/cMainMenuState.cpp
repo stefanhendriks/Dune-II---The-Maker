@@ -154,7 +154,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     const cRectangle &editors = cRectangle(buttonsX, editorY, buttonWidth, buttonHeight);
     auto gui_btn_Editor = GuiButtonBuilder()
             .withRect(editors)        
-            .withLabel("New Map Editor")
+            .withLabel("Map Editor")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
