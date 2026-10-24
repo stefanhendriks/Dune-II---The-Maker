@@ -38,7 +38,7 @@ class cPathFinder {
 public:
     cPathFinder();
     ~cPathFinder() = default;
-    int createPath(int unitId, int pathCountUnitsBudget);
+    int createPath(int unitId);
     int returnCloseGoal(int targetCell, int originCell, int unitId);
     void resize(int newSize, int width, int height);
     void serviceInit(sGameServices* services);
@@ -51,7 +51,7 @@ private:
     cMap *m_map = nullptr;
     MapGeometry* m_mapGeometry = nullptr;
     int validateCreatePathInput(int unitId);
-    void initializeCreatePathSearch(int pathCountUnitsBudget);
+    void initializeCreatePathSearch();
     void ensureNeighborCache(int mapWidth, int mapHeight);
     void executeCreatePathSearch();
     bool isCellPassableForActiveUnit(int candidateCell) const;

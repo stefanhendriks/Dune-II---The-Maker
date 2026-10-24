@@ -205,14 +205,13 @@ int cPathFinder::validateCreatePathInput(int unitId)
     return 0;
 }
 
-void cPathFinder::initializeCreatePathSearch(int pathCountUnitsBudget)
+void cPathFinder::initializeCreatePathSearch()
 {
     memset(m_activeUnit->movement.iPath, -1, sizeof(m_activeUnit->movement.iPath));
     m_activeUnit->movement.iPathIndex = -1;
 
     m_goalCell = m_activeUnit->movement.iGoalCell;
     m_controller = m_activeUnit->iPlayer;
-    m_pathCountUnits = pathCountUnitsBudget;
 
     m_success = false;
 
@@ -598,7 +597,7 @@ void cPathFinder::applyTempPathToUnit(int backtracedPathLength)
     }
 }
 
-int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
+int cPathFinder::createPath(int unitId)
 {
     // Full pipeline: validate, search, rebuild, then apply to unit movement.
     int validationStatus = validateCreatePathInput(unitId);
@@ -606,7 +605,7 @@ int cPathFinder::createPath(int unitId, int pathCountUnitsBudget)
         return validationStatus;
     }
 
-    initializeCreatePathSearch(pathCountUnitsBudget);
+    initializeCreatePathSearch();
     executeCreatePathSearch();
     if (!m_success) {
         m_activeUnit->log("CREATE_PATH -- not valid");

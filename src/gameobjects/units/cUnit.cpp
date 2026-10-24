@@ -2392,7 +2392,7 @@ void cUnit::thinkFast_move()
 
             // when we do have a different goal, we should get a path:
             if (movement.iGoalCell != position.iCell) {
-                int iResult = m_pathFinder->createPath(iID, 0); // do not take units into account yet
+                int iResult = m_pathFinder->createPath(iID); // do not take units into account yet
                 log(std::format("Create path ... result = {}", iResult));
 
                 // On fail:
