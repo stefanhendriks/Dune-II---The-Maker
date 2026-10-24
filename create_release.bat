@@ -15,7 +15,6 @@ mkdir bin\campaign\ordos || exit /b 1
 mkdir bin\campaign\harkonnen || exit /b 1
 mkdir bin\campaign\sardaukar || exit /b 1
 mkdir bin\campaign\maps || exit /b 1
-mkdir bin\campaign\maps\seed || exit /b 1
 mkdir bin\campaign\briefings || exit /b 1
 echo 4. Copying campaign files
 copy resources\bin\campaign\atreides\*.* bin\campaign\atreides || exit /b 1
@@ -23,7 +22,6 @@ copy resources\bin\campaign\ordos\*.* bin\campaign\ordos || exit /b 1
 copy resources\bin\campaign\harkonnen\*.* bin\campaign\harkonnen || exit /b 1
 copy resources\bin\campaign\sardaukar\*.* bin\campaign\sardaukar || exit /b 1
 copy resources\bin\campaign\maps\*.* bin\campaign\maps || exit /b 1
-copy resources\bin\campaign\maps\seed\*.* bin\campaign\maps\seed || exit /b 1
 copy resources\bin\campaign\briefings\*.* bin\campaign\briefings || exit /b 1
 copy resources\bin\campaign\info.txt bin\campaign\info.txt || exit /b 1
 echo 5. Creating new data directory
