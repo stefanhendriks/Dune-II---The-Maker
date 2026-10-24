@@ -69,6 +69,7 @@ private:
     Color m_sidebarColor;
 
     void createCandyBar();
+    void createPlayerCandyBar();
 
     void drawPowerUsage() const;
     void drawCreditsUsage();
