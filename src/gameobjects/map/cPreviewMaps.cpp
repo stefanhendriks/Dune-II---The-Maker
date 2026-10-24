@@ -148,13 +148,13 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         try {
             int bloomCell = std::stoi(segment);
             if (bloomCell < 0 || bloomCell >= maxCells) {
-                Logger::warn(COMP_MAP, "cPreviewMaps", "Bloom [{}] invalid. (value must be between range [0-{}]), Map {} - ignoring this bloom", bloomCell, maxCells, filename);
+                Logger::warn(COMP_MAP, "cPreviewMaps", "Bloom [{}] invalid. (value must be between range [0-{}]), Map {} - ignoring this bloom", bloomCell, maxCells - 1, filename);
             } else {
                 previewMap->blooms.push_back(bloomCell);
             }
-        } catch (const std::invalid_argument& e) {
+        } catch (const std::invalid_argument&) {
             Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert bloom (invalid argument): {}", segment);
-        } catch (const std::out_of_range& e) {
+        } catch (const std::out_of_range&) {
             Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert bloom (out of bounds): {}", segment);
         }
     }
