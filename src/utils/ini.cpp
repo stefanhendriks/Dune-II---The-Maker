@@ -14,6 +14,7 @@
  */
 
 #include "utils/ini.h"
+#include "utils/ScenarioData.hpp"
 #include "iniSections.h"
 #include "iniWordsGeneral.h"
 #include "iniWordsHouseSpecific.h"
@@ -500,41 +501,195 @@ int getTechLevelByRegion(int iRegion)
 }
 
 
-void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
+namespace {
+
+void readScenarioHouseLine(ScenarioData& data, int wordtype, int iPlayerID, const std::string& value)
 {
-    m_settings->setSkirmish(false);
-    m_interface->missionInit();
-    int iHouse = dataCampaign->housePlayer;
-    int iRegion = dataCampaign->region;
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, wordtype);
+    if (iPlayerID < 0) return;
 
-    std::string filename = cIniUtils::getScenarioFileName(iHouse, iRegion);
+    if (wordtype == WORD_BRAIN) {
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", value);
+        if (cIniUtils::caseInsCompare(value, "Human")) {
+            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
+            data.humanPlayerId = iPlayerID;
+        } else {
+            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "This brain is not human...");
+        }
+    }
+    else if (wordtype == WORD_CREDITS) {
+        int credits = ToInt(value) - 1;
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Set credits for player id [{}] to [{}]", iPlayerID, credits);
+        data.playerCredits[iPlayerID] = credits;
+    }
+    else if (wordtype == WORD_QUOTA) {
+        data.playerQuota[iPlayerID] = ToInt(value);
+    }
+}
 
-    dataCampaign->mission = getTechLevelByRegion(iRegion);
+void readScenarioMapLine(ScenarioData& data, int wordtype, const std::string& slinefeed)
+{
+    std::optional<int> seed;
+    if (wordtype == WORD_MAPSEED) {
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
+        auto [word, seek] = INI_SplitWord(slinefeed);
+        seed = ToInt(seek);
+    }
+    data.mapLines.push_back(seed);
 
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] '{}' (Mission {})", filename, dataCampaign->mission);
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Opening file");
+    auto parseCells = [&](std::span<int> dest, const char* label) {
+        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] {}=", label);
+        auto [key, values] = INI_SplitWord(slinefeed);
+        int idx = 0;
+        for (const auto& token : splitByComma(values)) {
+            if (idx >= static_cast<int>(dest.size())) break;
+            auto trimmed = ToTrim(token);
+            if (trimmed.empty()) continue;
+            dest[idx++] = ToInt(trimmed);
+        }
+    };
 
-    std::array<int, 30> blooms, fields;
-    blooms.fill(-1);
-    fields.fill(-1);
+    if (wordtype == WORD_MAPBLOOM) {
+        parseCells(data.blooms, "Bloom");
+    }
+    else if (wordtype == WORD_MAPFIELD) {
+        parseCells(data.fields, "Field");
+    }
+}
 
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        Logger::error(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Error, could not open file");
+void readScenarioReinforcementLine(ScenarioData& data, const std::string& slinefeed)
+{
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Reinforcements", "[SCENARIO] -> REINFORCEMENTS");
+
+    auto eqPos = slinefeed.find('=');
+    if (eqPos == std::string::npos) return;
+
+    auto parts = splitByComma(slinefeed.substr(eqPos + 1));
+    if (parts.size() < 4) {
+        Logger::warn(COMP_SCENARIOINI, "INI_Scenario_Section_Reinforcements", "Invalid reinforcement line: '{}'", slinefeed);
         return;
     }
 
+    ScenarioData::Reinforcement reinforcement;
+
+    // Part 0: house
+    reinforcement.house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
+
+    // Part 1: unit type
+    reinforcement.unitType = cIniUtils::getUnitTypeFromString(ToTrim(parts[1]));
+
+    // Part 2: target cell (Homebase / Enemybase / numeric cell)
+    auto location = ToTrim(parts[2]);
+    if (cIniUtils::caseInsCompare(location, "Homebase")) {
+        reinforcement.location = ScenarioData::Reinforcement::Location::HOMEBASE;
+    }
+    else if (cIniUtils::caseInsCompare(location, "enemybase")) {
+        reinforcement.location = ScenarioData::Reinforcement::Location::ENEMYBASE;
+    }
+    else if (!location.empty() &&
+             std::all_of(location.begin(), location.end(), [](unsigned char c) { return std::isdigit(c); })) {
+        reinforcement.location = ScenarioData::Reinforcement::Location::CELL;
+        reinforcement.cell = ToInt(location);
+    }
+    else {
+        Logger::warn(COMP_SCENARIOINI, "INI_Scenario_Section_Reinforcements", "Invalid target cell for reinforcement: '{}'", location);
+    }
+
+    // Part 3: delay in minutes, optional '+' suffix means repeat
+    auto delayStr = ToTrim(parts[3]);
+    if (!delayStr.empty() && delayStr.back() == '+') {
+        reinforcement.repeat = true;
+        delayStr.pop_back();
+    }
+    // D2TM does not interpret the delay as real minutes; multiplier chosen to feel correct in-game
+    reinforcement.delay = ToInt(delayStr) * 20;
+    data.entries.push_back(reinforcement);
+}
+
+void readScenarioStructureLine(ScenarioData& data, const std::string& slinefeed)
+{
+    auto [key, valueStr] = INI_SplitWord(slinefeed);
+    auto parts = splitByComma(valueStr);
+
+    ScenarioData::Structure structure;
+    structure.generated = key.rfind("GEN", 0) == 0; // line is a GENxxx= entry
+
+    if (!structure.generated) {
+        // Format: ID=House,StructureType,HP,Cell
+        if (parts.size() >= 4) {
+            structure.houseName = parts[0];
+            structure.house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
+            structure.type = cIniUtils::getStructureTypeFromString(ToTrim(parts[1]));
+            structure.cell = ToInt(ToTrim(parts[3]));
+        }
+    }
+    else {
+        // Format: GENcell=House,StructureType
+        structure.cell = ToInt(key.substr(3)); // cell number follows "GEN"
+        if (parts.size() >= 2) {
+            structure.houseName = parts[0];
+            structure.house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
+            auto typeName = ToTrim(parts[1]);
+            if (cIniUtils::caseInsCompare(typeName, "Wall"))     structure.type = WALL;
+            if (cIniUtils::caseInsCompare(typeName, "Concrete")) structure.type = SLAB1;
+        }
+    }
+    data.entries.push_back(structure);
+}
+
+void readScenarioUnitLine(ScenarioData& data, const std::string& linefeed)
+{
+    // Format: ID=House,UnitType,HP,Cell,FacingBody,FacingHead
+    auto [key, valueStr] = INI_SplitWord(linefeed);
+    auto parts = splitByComma(valueStr);
+
+    ScenarioData::Unit unit;
+    if (parts.size() > INI_UNITS_PART_CONTROLLER) {
+        unit.houseName = parts[INI_UNITS_PART_CONTROLLER];
+        unit.house = cIniUtils::getHouseFromString(ToTrim(parts[INI_UNITS_PART_CONTROLLER]));
+    }
+    if (parts.size() > INI_UNITS_PART_TYPE) {
+        unit.type = cIniUtils::getUnitTypeFromString(ToTrim(parts[INI_UNITS_PART_TYPE]));
+    }
+    // parts[INI_UNITS_PART_HP] skipped
+    if (parts.size() > INI_UNITS_PART_CELL) {
+        unit.cell = ToInt(ToTrim(parts[INI_UNITS_PART_CELL]));
+    }
+    // parts[INI_UNITS_PART_FACING_BODY] and beyond are not used
+    data.entries.push_back(unit);
+}
+
+void readScenarioBasicLine(ScenarioData& data, int wordtype, const std::string& value)
+{
+    if (wordtype == WORD_BRIEFPICTURE) {
+        std::string scene = cIniUtils::getSceneFileToScene(value);
+        if (!cIniUtils::caseInsCompare(scene, "unknown")) {
+            data.briefScene = scene;
+        }
+    }
+    else if (wordtype == WORD_FOCUS) {
+        data.focusCell = ToInt(value);
+    }
+    else if (wordtype == WORD_WINFLAGS) {
+        data.winFlags = ToInt(value);
+    }
+    else if (wordtype == WORD_LOSEFLAGS) {
+        data.loseFlags = ToInt(value);
+    }
+}
+
+// Reads the scenario file into ScenarioData. Does not touch any game object.
+std::optional<ScenarioData> readScenarioFile(const std::string& filename)
+{
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        Logger::error(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Error, could not open file");
+        return std::nullopt;
+    }
+
+    ScenarioData data;
     int section = INI_NONE;
     int iPlayerID = -1;
-    int iHumanID = -1;
-    bool bSetUpPlayers = true;
-
-    std::array<int, MAX_PLAYERS> iPl_credits{};
-    std::array<int, MAX_PLAYERS> iPl_house;
-    std::array<int, MAX_PLAYERS> iPl_quota{};
-    iPl_house.fill(-1);
-
-    auto mapEditor = cMapEditor(m_objects->getMap());
 
     std::string linefeed;
     while (std::getline(file, linefeed)) {
@@ -562,9 +717,9 @@ void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements
                     if (section == INI_HOUSEFREMEN)   house = FREMEN;
                     if (section == INI_HOUSESARDAUKAR) house = SARDAUKAR;
 
-                    iPl_house[iPlayerID] = house;
+                    data.playerHouse[iPlayerID] = house;
 
-                    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Setting house to [{}] for playerId [{}]", iPl_house[iPlayerID], iPlayerID);
+                    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Setting house to [{}] for playerId [{}]", data.playerHouse[iPlayerID], iPlayerID);
                 }
             }
             continue;
@@ -576,44 +731,144 @@ void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements
         int wordtype = INI_WordType(word_left, section);
 
         if (section == INI_BASIC) {
-            INI_Scenario_Section_Basic(pMentat, wordtype, word_right);
+            readScenarioBasicLine(data, wordtype, word_right);
         }
 
         if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-            int result = INI_Scenario_Section_House(wordtype, iPlayerID, iPl_credits, iPl_quota, word_right);
-            if (result > -1) {
-                iHumanID = result;
-            }
+            readScenarioHouseLine(data, wordtype, iPlayerID, word_right);
         }
 
         if (section == INI_MAP) {
-            INI_Scenario_Section_MAP(blooms, fields, wordtype, linefeed);
+            readScenarioMapLine(data, wordtype, linefeed);
         }
         else if (section == INI_UNITS) {
-            bSetUpPlayers = INI_Scenario_Section_Units(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
+            readScenarioUnitLine(data, linefeed);
         }
         else if (section == INI_STRUCTURES) {
-            bSetUpPlayers = INI_Scenario_Section_Structures(iHumanID, bSetUpPlayers, iPl_credits, iPl_house, iPl_quota, linefeed);
+            readScenarioStructureLine(data, linefeed);
         }
         else if (section == INI_REINFORCEMENTS) {
-            INI_Scenario_Section_Reinforcements(iHouse, linefeed, reinforcements);
+            readScenarioReinforcementLine(data, linefeed);
         }
     }
-    file.close();
+    return data;
+}
+
+} // namespace
+
+void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
+{
+    m_settings->setSkirmish(false);
+    m_interface->missionInit();
+    int iHouse = dataCampaign->housePlayer;
+    int iRegion = dataCampaign->region;
+
+    std::string filename = cIniUtils::getScenarioFileName(iHouse, iRegion);
+
+    dataCampaign->mission = getTechLevelByRegion(iRegion);
+
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] '{}' (Mission {})", filename, dataCampaign->mission);
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Opening file");
+
+    auto data = readScenarioFile(filename);
+    if (!data) return;
+
+    populateScenario(*data, pMentat, reinforcements, iHouse);
+}
+
+void cIni::populateScenario(const ScenarioData& data, AbstractMentat *pMentat, cReinforcements *reinforcements, int iHouse)
+{
+    if (data.briefScene) {
+        pMentat->loadScene(*data.briefScene);
+    }
+    if (data.focusCell) {
+        m_objects->getPlayer(0)->setFocusCell(*data.focusCell);
+        m_services->mapCamera->centerAndJumpViewPortToCell(*data.focusCell);
+    }
+    if (data.winFlags) {
+        m_gameConditionChecker->setWinFlags(*data.winFlags);
+    }
+    if (data.loseFlags) {
+        m_gameConditionChecker->setLoseFlags(*data.loseFlags);
+    }
+
+    auto mapEditor = cMapEditor(m_objects->getMap());
+
+    for (const auto& seed : data.mapLines) {
+        m_objects->getMap()->init(64, 64);
+        if (seed) {
+            SeedMapLoader::loadIntoMap(m_objects->getMap(), m_objects->getMapGeometry(), *seed);
+        }
+    }
+
+    // setupPlayers is required, because we do matching based on name of house, hence, once
+    // we encounter either a UNITS or STRUCTURES entry, the assumption is made that all HOUSE information
+    // has been processed.
+    bool bSetUpPlayers = true;
+    auto setupPlayersOnce = [&]() {
+        if (!bSetUpPlayers) return;
+        INI_Scenario_SetupPlayers(data.humanPlayerId, data.playerCredits, data.playerHouse, data.playerQuota);
+        bSetUpPlayers = false;
+    };
+
+    for (const auto& entry : data.entries) {
+        if (const auto* unit = std::get_if<ScenarioData::Unit>(&entry)) {
+            setupPlayersOnce();
+            int iController = -1;
+            if (unit->house) {
+                iController = findPlayerIdByHouse(*unit->house);
+                if (iController < 0) {
+                    Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Units", "WARNING: Cannot identify house/controller -> STRING '{}'", unit->houseName);
+                }
+            }
+            if (iController > -1) {
+                cUnits::unitCreate(m_objects, m_infos, m_interface, unit->cell, unit->type, iController, true);
+            }
+        }
+        else if (const auto* structure = std::get_if<ScenarioData::Structure>(&entry)) {
+            setupPlayersOnce();
+            int iController = -1;
+            if (structure->house) {
+                iController = findPlayerIdByHouse(*structure->house);
+                if (iController < 0 && !structure->generated) {
+                    Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Structures", "WARNING: Identifying house/controller of structure (typo?): {}", structure->houseName);
+                }
+            }
+            if (iController > -1) {
+                m_objects->getPlayer(iController)->placeStructure(structure->cell, structure->type, 100);
+            }
+            else {
+                Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Structures", "WARNING: Identifying house/controller of structure (typo?)");
+            }
+        }
+        else if (const auto* reinforcement = std::get_if<ScenarioData::Reinforcement>(&entry)) {
+            populateReinforcement(*reinforcement, iHouse, reinforcements);
+        }
+    }
 
     mapEditor.smoothMap();
 
-    for (int iB = 0; iB < 30; iB++) {
-        if (blooms[iB] > -1) {
-            Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice BLOOM at cell : {}", blooms[iB]);
-            mapEditor.createCell(blooms[iB], TERRAIN_BLOOM, 0);
+    auto toMapCell = [&](int original) {
+        return m_objects->getMapGeometry()->makeCell(original % 64, original / 64);
+    };
+
+    for (int bloom : data.blooms) {
+        if (bloom > -1) {
+            int cell = toMapCell(bloom);
+            if (cell > -1) {
+                Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice BLOOM at cell : {}", cell);
+                mapEditor.createCell(cell, TERRAIN_BLOOM, 0);
+            }
         }
     }
 
-    for (int iB = 0; iB < 30; iB++) {
-        if (fields[iB] > -1) {
-            Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice FIELD at cell : {}", fields[iB]);
-            mapEditor.createRandomField(fields[iB], TERRAIN_SPICE, 25 + (RNG::rnd(50)));
+    for (int field : data.fields) {
+        if (field > -1) {
+            int cell = toMapCell(field);
+            if (cell > -1) {
+                Logger::debug(COMP_SCENARIOINI, "[SCENARIO]", "Placing spice FIELD at cell : {}", cell);
+                mapEditor.createRandomField(cell, TERRAIN_SPICE, 25 + (RNG::rnd(50)));
+            }
         }
     }
 
@@ -623,260 +878,50 @@ void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements
     m_objects->getMap()->setDesiredAmountOfWorms(m_objects->getPlayer(AI_WORM)->getAmountOfUnitsForType(SANDWORM));
 }
 
-void cIni::INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& value)
+int cIni::findPlayerIdByHouse(int house) const
 {
-    if (wordtype == WORD_BRIEFPICTURE) {
-        std::string scene = cIniUtils::getSceneFileToScene(value);
-        if (!cIniUtils::caseInsCompare(scene, "unknown")) {
-            pMentat->loadScene(scene);
+    for (int i = 0; i < MAX_PLAYERS; i++) {
+        if (m_objects->getPlayer(i)->getHouse() == house) {
+            return i;
         }
     }
-    else if (wordtype == WORD_FOCUS) {
-        int focusCell = ToInt(value);
-        m_objects->getPlayer(0)->setFocusCell(focusCell);
-        m_services->mapCamera->centerAndJumpViewPortToCell(focusCell);
-    }
-    else if (wordtype == WORD_WINFLAGS) {
-        m_gameConditionChecker->setWinFlags(ToInt(value));
-    }
-    else if (wordtype == WORD_LOSEFLAGS) {
-        m_gameConditionChecker->setLoseFlags(ToInt(value));
-    }
+    return -1;
 }
 
-int cIni::INI_Scenario_Section_House(int wordtype, int iPlayerID, std::span<int> iPl_credits, std::span<int> iPl_quota, const std::string& value)
+void cIni::populateReinforcement(const ScenarioData::Reinforcement& reinforcement, int iHouse, cReinforcements *reinforcements)
 {
-    int iHumanID = -1;
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, wordtype);
-    if (iPlayerID > -1) {
-        if (wordtype == WORD_BRAIN) {
-            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", value);
-            if (cIniUtils::caseInsCompare(value, "Human")) {
-                Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
-                iHumanID = iPlayerID;
-            } else {
-                Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "This brain is not human...");
-            }
-        }
-        else if (wordtype == WORD_CREDITS) {
-            int credits = ToInt(value) - 1;
-            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Set credits for player id [{}] to [{}]", iPlayerID, credits);
-            iPl_credits[iPlayerID] = credits;
-        }
-        else if (wordtype == WORD_QUOTA) {
-            iPl_quota[iPlayerID] = ToInt(value);
-        }
-    }
-    return iHumanID;
-}
-
-void cIni::INI_Scenario_Section_MAP(std::span<int> blooms, std::span<int> fields, int wordtype, const std::string& slinefeed)
-{
-    m_objects->getMap()->init(64, 64);
-
-    if (wordtype == WORD_MAPSEED) {
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
-        auto [word, seek] = INI_SplitWord(slinefeed);
-        SeedMapLoader::loadIntoMap(m_objects->getMap(), m_objects->getMapGeometry(), ToInt(seek));
-    }
-
-    auto parseCells = [&](std::span<int> dest, const char* label) {
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] {}=", label);
-        auto [key, values] = INI_SplitWord(slinefeed);
-        int idx = 0;
-        for (const auto& token : splitByComma(values)) {
-            if (idx >= static_cast<int>(dest.size())) break;
-            auto trimmed = ToTrim(token);
-            if (trimmed.empty()) continue;
-            int original = ToInt(trimmed);
-            int iCellX = original % 64;
-            int iCellY = original / 64;
-            dest[idx++] = m_objects->getMapGeometry()->makeCell(iCellX, iCellY);
-        }
-    };
-
-    if (wordtype == WORD_MAPBLOOM) {
-        parseCells(blooms, "Bloom");
-    }
-    else if (wordtype == WORD_MAPFIELD) {
-        parseCells(fields, "Field");
-    }
-}
-
-void cIni::INI_Scenario_Section_Reinforcements(int iHouse, const std::string& slinefeed, cReinforcements *reinforcements)
-{
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Reinforcements", "[SCENARIO] -> REINFORCEMENTS");
-
-    auto eqPos = slinefeed.find('=');
-    if (eqPos == std::string::npos) return;
-
-    auto parts = splitByComma(slinefeed.substr(eqPos + 1));
-    if (parts.size() < 4) {
-        Logger::warn(COMP_SCENARIOINI, "INI_Scenario_Section_Reinforcements", "Invalid reinforcement line: '{}'", slinefeed);
-        return;
-    }
-
-    // Part 0: house → player id
     int playerId = -1;
-    int reinforcingHouse = cIniUtils::getHouseFromString(ToTrim(parts[0]));
-    if (reinforcingHouse > -1) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            if (m_objects->getPlayer(i)->getHouse() == reinforcingHouse) {
-                playerId = i;
-                break;
-            }
-        }
+    if (reinforcement.house > -1) {
+        playerId = findPlayerIdByHouse(reinforcement.house);
     }
 
-    // Part 1: unit type
-    int unitType = cIniUtils::getUnitTypeFromString(ToTrim(parts[1]));
-
-    // Part 2: target cell (Homebase / Enemybase / numeric cell)
     int targetCell = -1;
-    auto location = ToTrim(parts[2]);
-    if (cIniUtils::caseInsCompare(location, "Homebase")) {
-        targetCell = m_objects->getPlayer(playerId)->getFocusCell();
-    }
-    else if (cIniUtils::caseInsCompare(location, "enemybase")) {
-        if (playerId == 0) {
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                if (m_objects->getPlayer(i)->getHouse() == iHouse && i != playerId) {
-                    targetCell = m_objects->getPlayer(i)->getFocusCell();
-                    break;
+    switch (reinforcement.location) {
+        case ScenarioData::Reinforcement::Location::HOMEBASE:
+            targetCell = m_objects->getPlayer(playerId)->getFocusCell();
+            break;
+        case ScenarioData::Reinforcement::Location::ENEMYBASE:
+            if (playerId == 0) {
+                for (int i = 0; i < MAX_PLAYERS; i++) {
+                    if (m_objects->getPlayer(i)->getHouse() == iHouse && i != playerId) {
+                        targetCell = m_objects->getPlayer(i)->getFocusCell();
+                        break;
+                    }
                 }
             }
-        }
-        else {
-            targetCell = m_objects->getPlayer(0)->getFocusCell();
-        }
-    }
-    else if (!location.empty() &&
-             std::all_of(location.begin(), location.end(), [](unsigned char c) { return std::isdigit(c); })) {
-        targetCell = ToInt(location);
-    }
-    else {
-        Logger::warn(COMP_SCENARIOINI, "INI_Scenario_Section_Reinforcements", "Invalid target cell for reinforcement: '{}'", location);
-    }
-
-    // Part 3: delay in minutes, optional '+' suffix means repeat
-    auto delayStr = ToTrim(parts[3]);
-    bool repeat = false;
-    if (!delayStr.empty() && delayStr.back() == '+') {
-        repeat = m_settings->isAllowRepeatingReinforcements();
-        delayStr.pop_back();
-    }
-    int delayInMinutes = ToInt(delayStr);
-    // D2TM does not interpret the delay as real minutes; multiplier chosen to feel correct in-game
-    int delayD2TM = delayInMinutes * 20;
-    reinforcements->addReinforcement(playerId, unitType, targetCell, delayD2TM, repeat);
-}
-
-bool cIni::INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, std::span<const int> iPl_credits,
-                                            std::span<const int> iPl_house, std::span<const int> iPl_quota,
-                                            const std::string& slinefeed)
-{
-    if (bSetUpPlayers) {
-        INI_Scenario_SetupPlayers(iHumanID, iPl_credits, iPl_house, iPl_quota);
-        bSetUpPlayers = false;
-    }
-
-    auto [key, valueStr] = INI_SplitWord(slinefeed);
-    bool bGen = key.rfind("GEN", 0) == 0; // line is a GENxxx= entry
-
-    auto parts = splitByComma(valueStr);
-
-    int iController = -1;
-    int iType = -1;
-    int iCell = -1;
-
-    if (!bGen) {
-        // Format: ID=House,StructureType,HP,Cell
-        if (parts.size() >= 4) {
-            int house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                if (m_objects->getPlayer(i)->getHouse() == house) {
-                    iController = i;
-                    break;
-                }
+            else {
+                targetCell = m_objects->getPlayer(0)->getFocusCell();
             }
-            if (iController < 0) {
-                Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Structures", "WARNING: Identifying house/controller of structure (typo?): {}", parts[0]);
-            }
-            iType = cIniUtils::getStructureTypeFromString(ToTrim(parts[1]));
-            iCell = ToInt(ToTrim(parts[3]));
-        }
-    }
-    else {
-        // Format: GENcell=House,StructureType
-        iCell = ToInt(key.substr(3)); // cell number follows "GEN"
-        if (parts.size() >= 2) {
-            int house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                if (m_objects->getPlayer(i)->getHouse() == house) {
-                    iController = i;
-                    break;
-                }
-            }
-            auto typeName = ToTrim(parts[1]);
-            if (cIniUtils::caseInsCompare(typeName, "Wall"))     iType = WALL;
-            if (cIniUtils::caseInsCompare(typeName, "Concrete")) iType = SLAB1;
-        }
+            break;
+        case ScenarioData::Reinforcement::Location::CELL:
+            targetCell = reinforcement.cell;
+            break;
+        case ScenarioData::Reinforcement::Location::INVALID:
+            break;
     }
 
-    if (iController > -1) {
-        m_objects->getPlayer(iController)->placeStructure(iCell, iType, 100);
-    }
-    else {
-        Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Structures", "WARNING: Identifying house/controller of structure (typo?)");
-    }
-    return bSetUpPlayers;
-}
-
-bool cIni::INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, std::span<const int> iPl_credits,
-                                       std::span<const int> iPl_house, std::span<const int> iPl_quota,
-                                       const std::string& linefeed)
-{
-    // setupPlayers is required, because we do matching based on name of house, hence, once
-    // we encounter either a UNITS or STRUCTURES section, the assumption is made that all HOUSE information
-    // has been processed.
-    if (bSetUpPlayers) {
-        INI_Scenario_SetupPlayers(iHumanID, iPl_credits, iPl_house, iPl_quota);
-        bSetUpPlayers = false;
-    }
-
-    // Format: ID=House,UnitType,HP,Cell,FacingBody,FacingHead
-    auto [key, valueStr] = INI_SplitWord(linefeed);
-    auto parts = splitByComma(valueStr);
-
-    int iController = -1;
-    int iType = -1;
-    int iCell = -1;
-
-    if (parts.size() > INI_UNITS_PART_CONTROLLER) {
-        int house = cIniUtils::getHouseFromString(ToTrim(parts[INI_UNITS_PART_CONTROLLER]));
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            if (m_objects->getPlayer(i)->getHouse() == house) {
-                iController = i;
-                break;
-            }
-        }
-        if (iController < 0) {
-            Logger::warn(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Units", "WARNING: Cannot identify house/controller -> STRING '{}'", parts[INI_UNITS_PART_CONTROLLER]);
-        }
-    }
-    if (parts.size() > INI_UNITS_PART_TYPE) {
-        iType = cIniUtils::getUnitTypeFromString(ToTrim(parts[INI_UNITS_PART_TYPE]));
-    }
-    // parts[INI_UNITS_PART_HP] skipped
-    if (parts.size() > INI_UNITS_PART_CELL) {
-        iCell = ToInt(ToTrim(parts[INI_UNITS_PART_CELL]));
-    }
-    // parts[INI_UNITS_PART_FACING_BODY] and beyond are not used
-
-    if (iController > -1) {
-        cUnits::unitCreate(m_objects, m_infos, m_interface, iCell, iType, iController, true);
-    }
-    return bSetUpPlayers;
+    bool repeat = reinforcement.repeat && m_settings->isAllowRepeatingReinforcements();
+    reinforcements->addReinforcement(playerId, reinforcement.unitType, targetCell, reinforcement.delay, repeat);
 }
 
 void cIni::INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota)

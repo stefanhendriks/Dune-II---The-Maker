@@ -18,6 +18,8 @@
 #include <span>
 #include <string>
 
+#include "utils/ScenarioData.hpp"
+
 class cRegion;
 class cReinforcements;
 class AbstractMentat;
@@ -47,12 +49,9 @@ public:
 
 
 private:
-    void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& value);
-    int  INI_Scenario_Section_House(int wordtype, int iPlayerID, std::span<int> iPl_credits, std::span<int> iPl_quota, const std::string& value);
-    void INI_Scenario_Section_MAP(std::span<int> blooms, std::span<int> fields, int wordtype, const std::string& linefeed);
-    void INI_Scenario_Section_Reinforcements(int iHouse, const std::string& linefeed, cReinforcements *reinforcements);
-    bool INI_Scenario_Section_Structures(int iHumanID, bool bSetUpPlayers, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota, const std::string& linefeed);
-    bool INI_Scenario_Section_Units(int iHumanID, bool bSetUpPlayers, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota, const std::string& linefeed);
+    void populateScenario(const ScenarioData& data, AbstractMentat *pMentat, cReinforcements *reinforcements, int iHouse);
+    void populateReinforcement(const ScenarioData::Reinforcement& reinforcement, int iHouse, cReinforcements *reinforcements);
+    int  findPlayerIdByHouse(int house) const;
     void INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota);
 
     cGameSettings* m_settings = nullptr;
