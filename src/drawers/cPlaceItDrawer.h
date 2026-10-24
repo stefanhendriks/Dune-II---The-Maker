@@ -33,12 +33,13 @@ public:
 
     ~cPlaceItDrawer();
 
+    void setPlayer(cPlayer *pPlayer) { m_player = pPlayer; }
     void serviceInit(sGameServices* services);
 
     void draw(cBuildingListItem *itemToPlace, int mouseCell);
 
 protected:
-    void drawStructureIdAtMousePos(cBuildingListItem *itemToPlace);
+    void drawStructureIdAtMousePos(cBuildingListItem *itemToPlace, int mouseCell);
 
     void drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace, int mouseCell);
 

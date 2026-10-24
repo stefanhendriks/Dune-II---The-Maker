@@ -763,22 +763,18 @@ void cMap::draw_units_2nd()
     }
 }
 
-int cMap::mouse_draw_x()
+int cMap::mouse_draw_x(int mouseCell)
 {
-    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
-    if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
+    if (mouseCell > -1) {
         int absX = m_mapGeometry->getAbsoluteXPositionFromCell(mouseCell);
         return m_mapCamera->getWindowXPosition(absX);
     }
     return -1;
 }
 
-int cMap::mouse_draw_y()
+int cMap::mouse_draw_y(int mouseCell)
 {
-    cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
-    if (humanPlayer->getGameControlsContext()->getMouseCell() > -1) {
-        int mouseCell = humanPlayer->getGameControlsContext()->getMouseCell();
+    if (mouseCell > -1) {
         int absY = m_mapGeometry->getAbsoluteYPositionFromCell(mouseCell);
         return m_mapCamera->getWindowYPosition(absY);
     }

@@ -308,6 +308,7 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
     m_miniMapDrawer->setPlayer(playerToDraw);
     m_mapDrawer->setPlayer(playerToDraw);
     m_structureDrawer->setPlayer(playerToDraw);
+    m_placeitDrawer->setPlayer(playerToDraw);
 }
 
 void cDrawManager::drawOptionBar()

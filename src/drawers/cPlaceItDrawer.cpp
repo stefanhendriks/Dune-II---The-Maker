@@ -62,7 +62,7 @@ void cPlaceItDrawer::draw(cBuildingListItem *itemToPlace, int mouseCell)
         return;
     }
 
-    drawStructureIdAtMousePos(itemToPlace);
+    drawStructureIdAtMousePos(itemToPlace, mouseCell);
     drawStatusOfStructureAtCell(itemToPlace, mouseCell);
 }
 
@@ -127,8 +127,8 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
         }
     }
 
-    int iDrawX = m_objects->getMap()->mouse_draw_x();
-    int iDrawY = m_objects->getMap()->mouse_draw_y();
+    int iDrawX = m_objects->getMap()->mouse_draw_x(mouseCell);
+    int iDrawY = m_objects->getMap()->mouse_draw_y(mouseCell);
 
     if (!bWithinBuildDistance) {
         itemToPlaceColor = Color::PlaceNeutral;
@@ -183,14 +183,14 @@ void cPlaceItDrawer::drawStatusOfStructureAtCell(cBuildingListItem *itemToPlace,
     }
 }
 
-void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace)
+void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace, int mouseCell)
 {
     d2tm_assert(itemToPlace);
 
     int structureId = itemToPlace->getBuildId();
 
-    int iDrawX = m_objects->getMap()->mouse_draw_x();
-    int iDrawY = m_objects->getMap()->mouse_draw_y();
+    int iDrawX = m_objects->getMap()->mouse_draw_x(mouseCell);
+    int iDrawY = m_objects->getMap()->mouse_draw_y(mouseCell);
 
     int width = m_infos->getStructureInfo(structureId).bmp_width;
     int height = m_infos->getStructureInfo(structureId).bmp_height;
