@@ -729,7 +729,9 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         if (fieldCell < 0) continue;
         mapEditor.createRandomField(fieldCell, TERRAIN_SPICE, 25 + (RNG::rnd(50)));
     }
-    mapEditor.smoothMap();
+    if (!selectedMap->fields.empty()) {
+        mapEditor.smoothMap();
+    }
 
     if (m_settings->isDebugMode()) {
         Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Starting positions before shuffling:");
