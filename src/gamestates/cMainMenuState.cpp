@@ -56,7 +56,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     logoY = (logoHeight/10);
 
     mainMenuWidth = 130;
-    mainMenuHeight = 183;
+    mainMenuHeight = 161;
 
     // adjust x and y according to resolution, we can add because the above values
     // assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
@@ -135,21 +135,8 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Skirmish));
 
-    int multiplayerY = skirmishY+heightBetweenButton;
-    const cRectangle &multiplayer = cRectangle(buttonsX, multiplayerY, buttonWidth, buttonHeight);
-    auto gui_btn_Multiplayer = GuiButtonBuilder()
-            .withRect(multiplayer)        
-            .withLabel("Multiplayer")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().inactive().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_interface->initiateFadingOut();})
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_Multiplayer));
-
     // LOAD
-    int loadY = multiplayerY+heightBetweenButton;
+    int loadY = skirmishY+heightBetweenButton;
     const cRectangle &load = cRectangle(buttonsX, loadY, buttonWidth, buttonHeight);
     auto gui_btn_Load = GuiButtonBuilder()
             .withRect(load)        
