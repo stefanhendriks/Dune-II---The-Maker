@@ -143,21 +143,25 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         }
     }
 
-    std::stringstream bloomStream(section.getStringValue("Bloom"));
-    while (std::getline(bloomStream, segment, ',')) {
-        try {
-            int bloomCell = std::stoi(segment);
-            if (bloomCell < 0 || bloomCell >= maxCells) {
-                Logger::warn(COMP_MAP, "cPreviewMaps", "Bloom [{}] invalid. (value must be between range [0-{}]), Map {} - ignoring this bloom", bloomCell, maxCells - 1, filename);
-            } else {
-                previewMap->blooms.push_back(bloomCell);
+    auto readCells = [&](const std::string &key, std::vector<int> &cells) {
+        std::stringstream cellStream(section.getStringValue(key));
+        while (std::getline(cellStream, segment, ',')) {
+            try {
+                int cell = std::stoi(segment);
+                if (cell < 0 || cell >= maxCells) {
+                    Logger::warn(COMP_MAP, "cPreviewMaps", "{} [{}] invalid. (value must be between range [0-{}]), Map {} - ignoring this value", key, cell, maxCells - 1, filename);
+                } else {
+                    cells.push_back(cell);
+                }
+            } catch (const std::invalid_argument&) {
+                Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert {} (invalid argument): {}", key, segment);
+            } catch (const std::out_of_range&) {
+                Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert {} (out of bounds): {}", key, segment);
             }
-        } catch (const std::invalid_argument&) {
-            Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert bloom (invalid argument): {}", segment);
-        } catch (const std::out_of_range&) {
-            Logger::warn(COMP_MAP, "cPreviewMaps", "Could not convert bloom (out of bounds): {}", segment);
         }
-    }
+    };
+    readCells("Bloom", previewMap->blooms);
+    readCells("Field", previewMap->fields);
 
     if (validStartCells < 2) {
         previewMap->validMap = false;
