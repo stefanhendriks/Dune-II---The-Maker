@@ -18,6 +18,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <version>
 #if defined(__cpp_lib_stacktrace) && !defined(DISABLE_D2TM_STACKTRACE)
 #include <stacktrace>
 #endif
