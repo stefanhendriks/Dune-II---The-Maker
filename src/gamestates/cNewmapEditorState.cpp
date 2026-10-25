@@ -203,6 +203,7 @@ void cNewMapEditorState::constructWindow()
             m_randomChecked = false;
         })
         .build();
+    checkRandom->setChecked(m_randomChecked); // GuiCheckBox starts checked
     m_guiWindow->addGuiObject(std::move(checkRandom));
 
     // Dune 2 seed
