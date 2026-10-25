@@ -1337,8 +1337,6 @@ void cSetupSkirmishState::generateRandomMap()
     s_PreviewMap *randomMap = &randomView->map;
     int randomMapWidth = 128;
     int randomMapHeight = 128;
-    int maxCells = randomMapWidth * randomMapHeight;
-    randomMap->terrainType = std::vector<int>(maxCells, -1);
 
     if (randomView->terrain == nullptr) {
         randomView->terrain = SDL_CreateSurface(randomMapWidth, randomMapHeight, SDL_PIXELFORMAT_RGBA32);
@@ -1347,7 +1345,8 @@ void cSetupSkirmishState::generateRandomMap()
     // delete any preview texture if it exists
     delete randomView->previewTex;
 
-    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomView, m_objects, m_ctx->getSDLDrawer());
+    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomMap, m_objects);
+    randomMapGenerator->drawPreview(*randomMap, randomView->terrain, m_ctx->getSDLDrawer());
 
     spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
 
