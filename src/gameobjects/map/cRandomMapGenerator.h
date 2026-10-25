@@ -23,7 +23,7 @@ class SDLDrawer;
 class cRandomMapGenerator {
 public:
     cRandomMapGenerator();
-    void generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMapEntry, cGameObjectContext* objects, SDLDrawer* renderer);
+    void generateRandomMap(int width, int height, int startingPoints, PreviewMapView &randomMapView, cGameObjectContext* objects, SDLDrawer* renderer);
 
 private:
     //void drawProgress(float progress) const;

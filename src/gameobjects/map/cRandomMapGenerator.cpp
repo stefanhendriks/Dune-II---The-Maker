@@ -29,7 +29,7 @@ cRandomMapGenerator::cRandomMapGenerator()
 {
 }
 
-void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMapEntry, cGameObjectContext* objects, SDLDrawer* renderer)
+void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, PreviewMapView &randomMapView, cGameObjectContext* objects, SDLDrawer* renderer)
 {
     // create random map
     objects->getMap()->init(width, height);
@@ -48,6 +48,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     int iSpot = 0;
     int iFails = 0;
 
+    s_PreviewMap &randomMapEntry = randomMapView.map;
     randomMapEntry.width = width;
     randomMapEntry.height = height;
     // memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));
@@ -132,7 +133,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     // end of map creation
     mapEditor.smoothMap();
 
-    renderer->FillWithColor(randomMapEntry.terrain, Color::Black);
+    renderer->FillWithColor(randomMapView.terrain, Color::Black);
 
     // now put in previewmap 0
     for (int x = 0; x < objects->getMap()->getGeometry()->getWidth(); x++) {
@@ -163,7 +164,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
                 }
             }
 
-            renderer->setPixel(randomMapEntry.terrain, x, y, iColor);
+            renderer->setPixel(randomMapView.terrain, x, y, iColor);
         }
     }
 }
