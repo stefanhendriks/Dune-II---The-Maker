@@ -23,24 +23,10 @@
 #include <array>
 #include <memory>
 
+#include "gameobjects/map/PreviewMap.hpp"
+
 class Texture;
 class SDLDrawer;
-
-static constexpr int MAX_SKIRMISHMAP_PLAYERS = 5;
-static constexpr int RANDOM_CELL = -1; // value in Bloom= / Field= meaning: place at a random cell
-
-// pure map data, no SDL resources
-struct s_PreviewMap {
-    int width, height;              // width & height of map
-    std::vector<int> terrainType;   // terrainType per cell (for map creation)
-    std::array<int, MAX_SKIRMISHMAP_PLAYERS> iStartCell; // starting locations
-    std::vector<int> blooms;        // terrain bloom cells, RANDOM_CELL for a random one (empty when the map has none)
-    std::vector<int> fields;        // spice field cells, RANDOM_CELL for a random one (empty when the map has none)
-    bool validMap = true;           // is this a valid map? (is false, when map can be loaded but has invalid data)
-    std::string name;               // name of map
-    std::string author;             // author of map
-    std::string description;        // description of map
-};
 
 // a preview map plus the SDL resources used to show it as a preview
 struct PreviewMapView {
@@ -54,6 +40,9 @@ public:
     cPreviewMaps();
 
     void setSDLDrawer(SDLDrawer *sdlDrawer);
+
+    // draws the terrain and start cells of a preview map onto a surface of the same size
+    void drawPreview(const s_PreviewMap &previewMap, SDL_Surface *surface) const;
 
     ~cPreviewMaps() = default;
 

@@ -15,18 +15,14 @@
 
 #pragma once
 
-#include "gameobjects/map/cPreviewMaps.h"
+#include "gameobjects/map/PreviewMap.hpp"
 
 class cGameObjectContext;
-class SDLDrawer;
 
 class cRandomMapGenerator {
 public:
     cRandomMapGenerator();
     void generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMap, cGameObjectContext* objects);
-
-    // draws the terrain of a preview map onto a surface of the same size
-    void drawPreview(const s_PreviewMap &previewMap, SDL_Surface *surface, SDLDrawer* renderer);
 
 private:
     //void drawProgress(float progress) const;
