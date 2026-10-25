@@ -154,6 +154,9 @@ void cNewMapEditorState::constructWindow()
         .withTextDrawer( m_textDrawer )
         .withRenderer(m_sdlDrawer)
         .withTheme(cGuiThemeBuilder().light().build())
+        .onChanged([this](int) {
+            updateRandomCheckBox();
+        })
         .build();
     m_cycleWidth = cycleWidth.get();
     m_guiWindow->addGuiObject(std::move(cycleWidth));
@@ -176,6 +179,9 @@ void cNewMapEditorState::constructWindow()
         .withTextDrawer( m_textDrawer )
         .withRenderer(m_sdlDrawer)
         .withTheme( cGuiThemeBuilder().light().build() )
+        .onChanged([this](int) {
+            updateRandomCheckBox();
+        })
         .build();
     m_cycleHeight = cycleHeight.get();
     m_guiWindow->addGuiObject(std::move(cycleHeight));
@@ -204,7 +210,9 @@ void cNewMapEditorState::constructWindow()
         })
         .build();
     checkRandom->setChecked(m_randomChecked); // GuiCheckBox starts checked
+    m_checkRandom = checkRandom.get();
     m_guiWindow->addGuiObject(std::move(checkRandom));
+    updateRandomCheckBox();
 
     // Dune 2 seed
     const cRectangle &seedRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*6, 75, buttonHeight);
@@ -297,6 +305,18 @@ bool cNewMapEditorState::isKeyboardCapturedByUi() const
     return m_guiWindow && m_guiWindow->hasFocusedInput();
 }
 
+
+// random maps need room: only allowed for sizes of minRandomMapSize or bigger
+void cNewMapEditorState::updateRandomCheckBox()
+{
+    bool allowed = m_cycleWidth->getSelectedValue() >= minRandomMapSize &&
+                   m_cycleHeight->getSelectedValue() >= minRandomMapSize;
+    m_checkRandom->setEnabled(allowed);
+    if (!allowed) {
+        m_checkRandom->setChecked(false);
+        m_randomChecked = false;
+    }
+}
 
 void cNewMapEditorState::constructEmptyMap()
 {
