@@ -182,6 +182,11 @@ void AudioContext::thinkFast()
             if (desiredMusicType == MUSIC_ATTACK) {
                 desiredMusicType = MUSIC_PEACE; // set back to peace
             }
+
+            if (desiredMusicType == MUSIC_BRIEFING) {
+                // when briefing music ends, do not loop
+                return;
+            }
             playMusicByType(desiredMusicType, HUMAN, false, false, GENERALHOUSE);
         }
     }
