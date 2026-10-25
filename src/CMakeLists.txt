@@ -54,6 +54,7 @@ set(D2TM_SOURCES
     gameobjects/map/cRandomMapGenerator.cpp
     gameobjects/map/cSeedMap.cpp
     gameobjects/map/cSeedMapGenerator.cpp
+    gameobjects/map/SeedMapLoader.cpp
     gameobjects/map/MapGeometry.cpp
     gameobjects/mentat/AbstractMentat.cpp
     gameobjects/mentat/AtreidesMentat.cpp
