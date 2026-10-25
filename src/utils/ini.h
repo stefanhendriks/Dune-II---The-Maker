@@ -23,6 +23,7 @@ class cReinforcements;
 class AbstractMentat;
 class cSelectYourNextConquestState;
 struct s_DataCampaign;
+struct s_PreviewMap;
 
 class cGameSettings;
 class cGameObjectContext;
@@ -43,6 +44,8 @@ public:
     void loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat);
     // Load regionfile for original scenario
     void loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
+    // Generate the map for a seed as a preview map (terrain only: no surface/texture, no start cells)
+    s_PreviewMap seedToPreviewMap(int seed);
 
 
 private:
