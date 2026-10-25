@@ -1346,7 +1346,7 @@ void cSetupSkirmishState::generateRandomMap()
     delete randomView->previewTex;
 
     randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomMap, m_objects);
-    randomMapGenerator->drawPreview(*randomMap, randomView->terrain, m_ctx->getSDLDrawer());
+    m_previewMaps->drawPreview(*randomMap, randomView->terrain);
 
     spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
 

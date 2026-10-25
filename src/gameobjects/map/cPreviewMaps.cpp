@@ -74,6 +74,33 @@ void cPreviewMaps::setSDLDrawer(SDLDrawer *sdlDrawer)
     m_sdlDrawer = sdlDrawer;
 }
 
+void cPreviewMaps::drawPreview(const s_PreviewMap &previewMap, SDL_Surface *surface) const
+{
+    m_sdlDrawer->FillWithColor(surface, Color::Black);
+
+    for (int y = 0; y < previewMap.height; y++) {
+        for (int x = 0; x < previewMap.width; x++) {
+            int cellType = previewMap.terrainType[(y * previewMap.width) + x];
+            if (cellType < 0) continue; // not part of the map (border), stays black
+
+            Color color = Color{194, 125, 60,255};
+            if (cellType == TERRAIN_ROCK) color = Color{80, 80, 60,255};
+            if (cellType == TERRAIN_MOUNTAIN) color = Color{48, 48, 36,255};
+            if (cellType == TERRAIN_SPICEHILL) color = Color{180, 90, 25,255}; // a bit darker
+            if (cellType == TERRAIN_SPICE) color = Color{186, 93, 32,255};
+            if (cellType == TERRAIN_HILL) color = Color{188, 115, 50,255};
+            m_sdlDrawer->setPixel(surface, x, y, color);
+        }
+    }
+
+    // starting points
+    for (int startCell : previewMap.iStartCell) {
+        if (startCell > -1) {
+            m_sdlDrawer->setPixel(surface, startCell % previewMap.width, startCell / previewMap.width, Color::White);
+        }
+    }
+}
+
 void cPreviewMaps::destroy()
 {
     // std::cout << "Destroying preview maps" << std::endl;
@@ -185,68 +212,58 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (view->terrain == nullptr) {
         view->terrain = SDL_CreateSurface(previewMap->width, previewMap->height, SDL_PIXELFORMAT_RGBA32);
     }
-    m_sdlDrawer->FillWithColor(view->terrain, Color::Black);
 
+    std::vector<int> unknownCells; // cells with a character we could not translate
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
         for (int iX = 0; iX < maxWidth; iX++) {
             int iCll = mapGeom.makeCell((iX + 1), (iY + 1));
             if (iCll < 0) continue; // skip invalid cells
 
-            Color iColor = Color::White;
             int terrainType = -1; // unknown
 
             char letter = mapLine[iX];
             if (letter == ')') {
                 terrainType = TERRAIN_SAND;
-                iColor = Color{194, 125, 60,255};
             }
             // rock
             if (letter == '%' || letter == '^' || letter == '&' || letter == '(') {
                 terrainType = TERRAIN_ROCK;
-                iColor = Color{80, 80, 60,255};
             }
             // mountain
             if (letter == 'R' || letter == 'r') {
                 terrainType = TERRAIN_MOUNTAIN;
-                iColor = Color{48, 48, 36,255};
             }
             // spice hill
             if (letter == '+') {
                 terrainType = TERRAIN_SPICEHILL;
-                iColor = Color{180, 90, 25,255}; // bit darker
             }
             // spice
             if (letter == '-') {
                 terrainType = TERRAIN_SPICE;
-                iColor = Color{186, 93, 32,255};
             }
             // sand hill
             if (letter == 'H' || letter == 'h') {
                 terrainType = TERRAIN_HILL;
-                iColor = Color{188, 115, 50,255};
             }
 
             if (terrainType < 0) {
                 Logger::error(COMP_MAP, "cPreviewMaps", "Could not determine terrain type for char \"{}\", falling back to SAND", letter);
                 terrainType = TERRAIN_SAND;
-                iColor = Color{160, 32, 240, 255}; // show as purple to indicate wrong char
+                unknownCells.push_back(iCll);
             }
 
             previewMap->terrainType[iCll] = terrainType;
-            m_sdlDrawer->setPixel(view->terrain, 1 + iX, 1 + iY, iColor);
         }
     }
 
-    // starting points
-    for (int i = 0; i < MAX_SKIRMISHMAP_PLAYERS; i++) {
-        int startCell = previewMap->iStartCell[i];
-        if (startCell > -1) {
-            int x = mapGeom.getCellX(startCell);
-            int y = mapGeom.getCellY(startCell);
-            m_sdlDrawer->setPixel(view->terrain, 1 + x, 1 + y, Color::White);
-        }
+    drawPreview(*previewMap, view->terrain);
+
+    // show cells with a wrong char as purple
+    for (int cell : unknownCells) {
+        m_sdlDrawer->setPixel(view->terrain, mapGeom.getCellX(cell), mapGeom.getCellY(cell), Color{160, 32, 240, 255});
     }
+
     if (view->terrain!= nullptr){
         SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), view->terrain);
         if (out == nullptr) {

@@ -19,8 +19,6 @@
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
-#include "drawers/SDLDrawer.hpp"
-#include "utils/Graphics.hpp"
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
 #include "context/cGameObjectContext.h"
@@ -136,34 +134,5 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     // copy the generated cells into the preview map
     for (int cll = 0; cll < width * height; cll++) {
         randomMapEntry.terrainType[cll] = objects->getMap()->getCellType(cll);
-    }
-}
-
-void cRandomMapGenerator::drawPreview(const s_PreviewMap &previewMap, SDL_Surface *surface, SDLDrawer* renderer)
-{
-    renderer->FillWithColor(surface, Color::Black);
-
-    for (int x = 0; x < previewMap.width; x++) {
-        for (int y = 0; y < previewMap.height; y++) {
-            int cll = (y * previewMap.width) + x;
-
-            Color iColor = Color{194, 125, 60,255};
-
-            // rock
-            int cellType = previewMap.terrainType[cll];
-            if (cellType == TERRAIN_ROCK) iColor = Color{80, 80, 60,255};
-            if (cellType == TERRAIN_MOUNTAIN) iColor = Color{48, 48, 36,255};
-            if (cellType == TERRAIN_SPICEHILL) iColor = Color{180, 90, 25,255}; // a bit darker
-            if (cellType == TERRAIN_SPICE) iColor = Color{186, 93, 32,255};
-            if (cellType == TERRAIN_HILL) iColor = Color{188, 115, 50,255};
-
-            for (int s = 0; s < 4; s++) {
-                if (previewMap.iStartCell[s] == cll) {
-                    iColor = Color::White;
-                }
-            }
-
-            renderer->setPixel(surface, x, y, iColor);
-        }
     }
 }
