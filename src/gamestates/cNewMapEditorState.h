@@ -30,6 +30,7 @@ class GuiWindow;
 class GuiCycleButton;
 class GuiTextInput;
 class cPreviewMaps;
+class cGameObjectContext;
 class cIni;
 
 
@@ -53,6 +54,7 @@ private:
     cGameInterface* m_interface = nullptr;
     cMouse* m_mouse = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
+    cGameObjectContext* m_objects = nullptr;
     cPreviewMaps* m_previewMap = nullptr;
     cIni* m_cIni = nullptr;
     void constructWindow();
@@ -60,6 +62,7 @@ private:
     GuiTextInput* m_inputAuthor = nullptr;
     GuiTextInput* m_inputDescription = nullptr;
     GuiTextInput* m_inputSeed = nullptr;
+    bool m_randomChecked = false;
     GuiCycleButton* m_cycleWidth = nullptr;
     GuiCycleButton* m_cycleHeight = nullptr;
 

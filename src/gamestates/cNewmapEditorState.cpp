@@ -22,10 +22,12 @@
 #include "gui/GuiLabel.hpp"
 #include "gui/GuiTextInput.h"
 #include "gui/GuiCycleButton.h"
+#include "gui/GuiCheckBox.hpp"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/map/cPreviewMaps.h"
+#include "gameobjects/map/cRandomMapGenerator.h"
 #include "utils/ini.h"
 #include "utils/Log.h"
 
@@ -43,6 +45,7 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services, cIni* ini)
     m_interface(m_ctx->getGameInterface()),
     m_mouse(services->mouse),
     m_guiWindow(nullptr),
+    m_objects(services->objects),
     m_previewMap(services->objects->getPreviewMaps()),
     m_cIni(ini)
 {
@@ -74,7 +77,7 @@ void cNewMapEditorState::constructWindow()
 
     int labelX = 55;
     int labelY = 45;
-    int betweenY =35;
+    int betweenY =30;
 
     // name
     const cRectangle &nameRect = m_guiWindow->getRelativeRect(labelX, labelY, 75, buttonHeight);
@@ -177,8 +180,33 @@ void cNewMapEditorState::constructWindow()
     m_cycleHeight = cycleHeight.get();
     m_guiWindow->addGuiObject(std::move(cycleHeight));
 
+    // random map
+    const cRectangle &randomRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*5, 75, buttonHeight);
+    auto gui_randomLabel = GuiLabelBuilder()
+        .withLabel("Random:")
+        .withTextDrawer(m_textDrawer)
+        .withRenderer(m_sdlDrawer)
+        .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+        .withTextAlign(GuiTextAlignHorizontal::LEFT)
+        .withRect(randomRect)
+        .build();
+    m_guiWindow->addGuiObject(std::move(gui_randomLabel));
+
+    auto checkRandom = GuiCheckBoxBuilder()
+        .withRect(m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*5, buttonHeight, buttonHeight))
+        .withRenderer(m_sdlDrawer)
+        .withTheme(cGuiThemeBuilder().light().build())
+        .onCheck([this]() {
+            m_randomChecked = true;
+        })
+        .onUnCheck([this]() {
+            m_randomChecked = false;
+        })
+        .build();
+    m_guiWindow->addGuiObject(std::move(checkRandom));
+
     // Dune 2 seed
-    const cRectangle &seedRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*5, 75, buttonHeight);
+    const cRectangle &seedRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*6, 75, buttonHeight);
     auto gui_seedLabel = GuiLabelBuilder()
         .withLabel("Dune 2 seed: ")
         .withTextDrawer(m_textDrawer)
@@ -190,7 +218,7 @@ void cNewMapEditorState::constructWindow()
     m_guiWindow->addGuiObject(std::move(gui_seedLabel));
 
     auto inputSeed = std::make_unique<GuiTextInput>(m_sdlDrawer,
-        m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*5-2, 200, m_textDrawer->getFontHeight() + 4),
+        m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*6-2, 200, m_textDrawer->getFontHeight() + 4),
         m_textDrawer);
     inputSeed->setTheme(cGuiThemeBuilder().light().build());
     m_inputSeed = inputSeed.get();
@@ -304,5 +332,22 @@ void cNewMapEditorState::constructEmptyMap()
 
     int width = m_cycleWidth->getSelectedValue()+borderSize;
     int height = m_cycleHeight->getSelectedValue()+borderSize;
+
+    // a valid seed wins over Random, because it is the more specific request
+    if (m_randomChecked) {
+        s_PreviewMap randomMap;
+        randomMap.terrainType = std::vector<int>(width * height, -1);
+        // the generator draws a preview image, which the editor does not need
+        randomMap.terrain = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA32);
+        cRandomMapGenerator().generateRandomMap(width, height, 4, randomMap, m_objects, m_sdlDrawer);
+        SDL_DestroySurface(randomMap.terrain);
+        randomMap.terrain = nullptr;
+        randomMap.validMap = true;
+        randomMap.name = name;
+        randomMap.author = author;
+        randomMap.description = desc;
+        m_previewMap->setEditorMap(std::move(randomMap));
+        return;
+    }
     m_previewMap->createEmptyMap(name, author, desc, width, height);
 }
