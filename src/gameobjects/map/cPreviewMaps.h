@@ -63,6 +63,9 @@ public:
     void createEmptyMap(const std::string &name, const std::string &author,
             const std::string &desciption, int width, int height);
 
+    // replaces the map that loadMapFromEditor(-1) hands to the editor
+    void setEditorMap(s_PreviewMap &&map);
+
     void loadSkirmish(const std::string &filename);
 private:
     void initRandomMap();
