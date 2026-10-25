@@ -26,24 +26,30 @@
 #include "context/cGameObjectContext.h"
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/map/cPreviewMaps.h"
+#include "utils/ini.h"
+#include "utils/Log.h"
 
 #include "include/cAssert.h"
+#include <charconv>
 #include <chrono>
+#include <optional>
 
 static const int borderSize = 2;
 
-cNewMapEditorState::cNewMapEditorState(sGameServices* services)
+cNewMapEditorState::cNewMapEditorState(sGameServices* services, cIni* ini)
     : cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
     m_mouse(services->mouse),
     m_guiWindow(nullptr),
-    m_previewMap(services->objects->getPreviewMaps())
+    m_previewMap(services->objects->getPreviewMaps()),
+    m_cIni(ini)
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_cIni != nullptr);
     constructWindow();
 }
 
@@ -171,6 +177,25 @@ void cNewMapEditorState::constructWindow()
     m_cycleHeight = cycleHeight.get();
     m_guiWindow->addGuiObject(std::move(cycleHeight));
 
+    // Dune 2 seed
+    const cRectangle &seedRect = m_guiWindow->getRelativeRect(labelX, labelY+betweenY*5, 75, buttonHeight);
+    auto gui_seedLabel = GuiLabelBuilder()
+        .withLabel("Dune 2 seed: ")
+        .withTextDrawer(m_textDrawer)
+        .withRenderer(m_sdlDrawer)
+        .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+        .withTextAlign(GuiTextAlignHorizontal::LEFT)
+        .withRect(seedRect)
+        .build();
+    m_guiWindow->addGuiObject(std::move(gui_seedLabel));
+
+    auto inputSeed = std::make_unique<GuiTextInput>(m_sdlDrawer,
+        m_guiWindow->getRelativeRect(labelX+200, labelY+betweenY*5-2, 200, m_textDrawer->getFontHeight() + 4),
+        m_textDrawer);
+    inputSeed->setTheme(cGuiThemeBuilder().light().build());
+    m_inputSeed = inputSeed.get();
+    m_guiWindow->addGuiObject(std::move(inputSeed));
+
     // QUIT game
     int quit = mainMenuHeight - (buttonHeight + margin);// 464
     int width = (buttonWidth / 2);
@@ -260,6 +285,23 @@ void cNewMapEditorState::constructEmptyMap()
     if (desc.empty()) {
         desc = "Made with D2TM: Internal Editor";
     }
+
+    // a seed overrides the width and height settings
+    const std::string &seedText = m_inputSeed->getText();
+    if (!seedText.empty()) {
+        int seed = 0;
+        auto [ptr, ec] = std::from_chars(seedText.data(), seedText.data() + seedText.size(), seed);
+        if (ec == std::errc() && ptr == seedText.data() + seedText.size()) {
+            s_PreviewMap seedMap = m_cIni->seedToPreviewMap(seed);
+            seedMap.name = name;
+            seedMap.author = author;
+            seedMap.description = desc;
+            m_previewMap->setEditorMap(std::move(seedMap));
+            return;
+        }
+        Logger::warn(COMP_MAP, "cNewMapEditorState", "Seed [{}] is not a number, using width and height instead", seedText);
+    }
+
     int width = m_cycleWidth->getSelectedValue()+borderSize;
     int height = m_cycleHeight->getSelectedValue()+borderSize;
     m_previewMap->createEmptyMap(name, author, desc, width, height);

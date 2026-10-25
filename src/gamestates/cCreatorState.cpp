@@ -102,7 +102,7 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
             break;
 
         case eGameState::NEW_MAP_EDITOR:
-            m_states[eGameState::NEW_MAP_EDITOR] = std::make_unique<cNewMapEditorState>(m_services);
+            m_states[eGameState::NEW_MAP_EDITOR] = std::make_unique<cNewMapEditorState>(m_services, m_cIni);
             break;
 
         case eGameState::WINNING:

@@ -30,11 +30,12 @@ class GuiWindow;
 class GuiCycleButton;
 class GuiTextInput;
 class cPreviewMaps;
+class cIni;
 
 
 class cNewMapEditorState : public cGameState {
 public:
-    explicit cNewMapEditorState(sGameServices* services);
+    cNewMapEditorState(sGameServices* services, cIni* ini);
     ~cNewMapEditorState() override;
 
     void thinkFast() override;
@@ -53,10 +54,12 @@ private:
     cMouse* m_mouse = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
     cPreviewMaps* m_previewMap = nullptr;
+    cIni* m_cIni = nullptr;
     void constructWindow();
     GuiTextInput* m_inputName = nullptr;
     GuiTextInput* m_inputAuthor = nullptr;
     GuiTextInput* m_inputDescription = nullptr;
+    GuiTextInput* m_inputSeed = nullptr;
     GuiCycleButton* m_cycleWidth = nullptr;
     GuiCycleButton* m_cycleHeight = nullptr;
 

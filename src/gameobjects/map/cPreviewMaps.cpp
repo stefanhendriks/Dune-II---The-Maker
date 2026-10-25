@@ -348,3 +348,8 @@ void cPreviewMaps::createEmptyMap(const std::string &name, const std::string &au
     m_emptyMap->terrainType = std::vector<int>(width * height, TERRAIN_SAND);
     m_emptyMap->iStartCell.fill(-1);
 }
+
+void cPreviewMaps::setEditorMap(s_PreviewMap &&map)
+{
+    m_emptyMap = std::make_unique<s_PreviewMap>(std::move(map));
+}
