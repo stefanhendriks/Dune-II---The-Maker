@@ -29,6 +29,7 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
+#include "gameobjects/map/cPreviewMaps.h"
 #include "gameobjects/mentat/AbstractMentat.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
@@ -407,6 +408,28 @@ void cIni::INI_Load_seed(int seed)
     }
 
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Seedmap converted into D2TM map.");
+}
+
+s_PreviewMap cIni::seedToPreviewMap(int seed)
+{
+    auto seedMap = cSeedMapGenerator(seed).generateSeedMap();
+
+    // same layout as skirmish previews (cPreviewMaps::loadSkirmish): a 1 cell border around the seed map
+    constexpr int seedMapSize = 64;
+    s_PreviewMap previewMap;
+    previewMap.width = seedMapSize + 2;
+    previewMap.height = seedMapSize + 2;
+    previewMap.name = std::format("Seed {}", seed);
+    previewMap.iStartCell.fill(-1);
+    previewMap.terrainType = std::vector<int>(previewMap.width * previewMap.height, -1);
+
+    MapGeometry mapGeom(previewMap.width, previewMap.height);
+    for (int mapY = 0; mapY < seedMapSize; mapY++) {
+        for (int mapX = 0; mapX < seedMapSize; mapX++) {
+            previewMap.terrainType[mapGeom.makeCell(mapX + 1, mapY + 1)] = seedMap.getCellType(mapX, mapY);
+        }
+    }
+    return previewMap;
 }
 
 bool isCommentLine(const std::string& linefeed)
