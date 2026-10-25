@@ -3,6 +3,7 @@ set -euo pipefail
 
 rm -f bin/d2tm
 mkdir -p build
+mkdir -p bin
 
 cd build
 cmake ..
