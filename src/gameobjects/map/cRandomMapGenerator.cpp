@@ -29,7 +29,7 @@ cRandomMapGenerator::cRandomMapGenerator()
 {
 }
 
-void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, PreviewMapView &randomMapView, cGameObjectContext* objects, SDLDrawer* renderer)
+void cRandomMapGenerator::generateRandomMap(int width, int height, int startingPoints, s_PreviewMap &randomMapEntry, cGameObjectContext* objects)
 {
     // create random map
     objects->getMap()->init(width, height);
@@ -48,9 +48,9 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     int iSpot = 0;
     int iFails = 0;
 
-    s_PreviewMap &randomMapEntry = randomMapView.map;
     randomMapEntry.width = width;
     randomMapEntry.height = height;
+    randomMapEntry.terrainType = std::vector<int>(width * height, -1);
     // memset(randomMapEntry.iStartCell, -1, sizeof(randomMapEntry.iStartCell));
     randomMapEntry.iStartCell.fill(-1); // set all starting cells to -1
 
@@ -133,38 +133,37 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     // end of map creation
     mapEditor.smoothMap();
 
-    renderer->FillWithColor(randomMapView.terrain, Color::Black);
+    // copy the generated cells into the preview map
+    for (int cll = 0; cll < width * height; cll++) {
+        randomMapEntry.terrainType[cll] = objects->getMap()->getCellType(cll);
+    }
+}
 
-    // now put in previewmap 0
-    for (int x = 0; x < objects->getMap()->getGeometry()->getWidth(); x++) {
-        for (int y = 0; y < objects->getMap()->getGeometry()->getHeight(); y++) {
+void cRandomMapGenerator::drawPreview(const s_PreviewMap &previewMap, SDL_Surface *surface, SDLDrawer* renderer)
+{
+    renderer->FillWithColor(surface, Color::Black);
 
-            int cll = objects->getMapGeometry()->getCellWithMapDimensions(x, y);
-            if (cll < 0) continue;
+    for (int x = 0; x < previewMap.width; x++) {
+        for (int y = 0; y < previewMap.height; y++) {
+            int cll = (y * previewMap.width) + x;
 
             Color iColor = Color{194, 125, 60,255};
 
             // rock
-            int cellType = objects->getMap()->getCellType(cll);
+            int cellType = previewMap.terrainType[cll];
             if (cellType == TERRAIN_ROCK) iColor = Color{80, 80, 60,255};
             if (cellType == TERRAIN_MOUNTAIN) iColor = Color{48, 48, 36,255};
             if (cellType == TERRAIN_SPICEHILL) iColor = Color{180, 90, 25,255}; // a bit darker
             if (cellType == TERRAIN_SPICE) iColor = Color{186, 93, 32,255};
             if (cellType == TERRAIN_HILL) iColor = Color{188, 115, 50,255};
 
-            randomMapEntry.terrainType[cll] = cellType;
-
             for (int s = 0; s < 4; s++) {
-                if (randomMapEntry.iStartCell[s] > -1) {
-                    int sx = objects->getMapGeometry()->getCellX(randomMapEntry.iStartCell[s]);
-                    int sy = objects->getMapGeometry()->getCellY(randomMapEntry.iStartCell[s]);
-
-                    if (sx == x && sy == y)
-                        iColor = Color::White;
+                if (previewMap.iStartCell[s] == cll) {
+                    iColor = Color::White;
                 }
             }
 
-            renderer->setPixel(randomMapView.terrain, x, y, iColor);
+            renderer->setPixel(surface, x, y, iColor);
         }
     }
 }
