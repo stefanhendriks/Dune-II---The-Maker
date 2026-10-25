@@ -28,6 +28,7 @@
 #include "drawers/cTextDrawer.h"
 #include "gameobjects/map/cPreviewMaps.h"
 #include "gameobjects/map/cRandomMapGenerator.h"
+#include "gameobjects/map/SeedMapLoader.hpp"
 #include "utils/ini.h"
 #include "utils/Log.h"
 
@@ -341,7 +342,7 @@ void cNewMapEditorState::constructEmptyMap()
         int seed = 0;
         auto [ptr, ec] = std::from_chars(seedText.data(), seedText.data() + seedText.size(), seed);
         if (ec == std::errc() && ptr == seedText.data() + seedText.size()) {
-            s_PreviewMap seedMap = m_cIni->seedToPreviewMap(seed);
+            s_PreviewMap seedMap = SeedMapLoader::toPreviewMap(seed);
             seedMap.name = name;
             seedMap.author = author;
             seedMap.description = desc;

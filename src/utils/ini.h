@@ -44,12 +44,9 @@ public:
     void loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat);
     // Load regionfile for original scenario
     void loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
-    // Generate the map for a seed as a preview map (terrain only: no surface/texture, no start cells)
-    s_PreviewMap seedToPreviewMap(int seed);
 
 
 private:
-    void INI_Load_seed(int seed);
     void INI_Scenario_Section_Basic(AbstractMentat *pMentat, int wordtype, const std::string& value);
     int  INI_Scenario_Section_House(int wordtype, int iPlayerID, std::span<int> iPl_credits, std::span<int> iPl_quota, const std::string& value);
     void INI_Scenario_Section_MAP(std::span<int> blooms, std::span<int> fields, int wordtype, const std::string& linefeed);

@@ -35,7 +35,7 @@
 #include "gameobjects/players/cPlayers.h"
 #include "utils/Log.h"
 #include "utils/common.h"
-#include "gameobjects/map/cSeedMapGenerator.h"
+#include "gameobjects/map/SeedMapLoader.hpp"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/sTerrainInfo.h"
 #include "utils/RNG.hpp"
@@ -390,48 +390,6 @@ cIni::cIni(sGameServices* services)
     m_gameConditionChecker = services->gameConditionChecker;
 }
 
-void cIni::INI_Load_seed(int seed)
-{
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Generating seed map with seed {}.", seed);
-
-    auto seedGenerator = cSeedMapGenerator(seed);
-    auto seedMap = seedGenerator.generateSeedMap();
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Seedmap generated");
-
-    auto mapEditor = cMapEditor(m_objects->getMap());
-    for (int mapY = 0; mapY < 64; mapY++) {
-        for (int mapX = 0; mapX < 64; mapX++) {
-            int type = seedMap.getCellType(mapX, mapY);
-            int iCell = m_objects->getMapGeometry()->makeCell(mapX, mapY);
-            mapEditor.createCell(iCell, type, 0);
-        }
-    }
-
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_seed", "Seedmap converted into D2TM map.");
-}
-
-s_PreviewMap cIni::seedToPreviewMap(int seed)
-{
-    auto seedMap = cSeedMapGenerator(seed).generateSeedMap();
-
-    // same layout as skirmish previews (cPreviewMaps::loadSkirmish): a 1 cell border around the seed map
-    constexpr int seedMapSize = 64;
-    s_PreviewMap previewMap;
-    previewMap.width = seedMapSize + 2;
-    previewMap.height = seedMapSize + 2;
-    previewMap.name = std::format("Seed {}", seed);
-    previewMap.iStartCell.fill(-1);
-    previewMap.terrainType = std::vector<int>(previewMap.width * previewMap.height, -1);
-
-    MapGeometry mapGeom(previewMap.width, previewMap.height);
-    for (int mapY = 0; mapY < seedMapSize; mapY++) {
-        for (int mapX = 0; mapX < seedMapSize; mapX++) {
-            previewMap.terrainType[mapGeom.makeCell(mapX + 1, mapY + 1)] = seedMap.getCellType(mapX, mapY);
-        }
-    }
-    return previewMap;
-}
-
 bool isCommentLine(const std::string& linefeed)
 {
     if (linefeed.empty()) return true;
@@ -719,7 +677,7 @@ void cIni::INI_Scenario_Section_MAP(std::span<int> blooms, std::span<int> fields
     if (wordtype == WORD_MAPSEED) {
         Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
         auto [word, seek] = INI_SplitWord(slinefeed);
-        INI_Load_seed(ToInt(seek));
+        SeedMapLoader::loadIntoMap(m_objects->getMap(), m_objects->getMapGeometry(), ToInt(seek));
     }
 
     auto parseCells = [&](std::span<int> dest, const char* label) {
