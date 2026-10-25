@@ -76,6 +76,9 @@ void cPreviewMaps::setSDLDrawer(SDLDrawer *sdlDrawer)
 
 void cPreviewMaps::drawPreview(const s_PreviewMap &previewMap, SDL_Surface *surface) const
 {
+    if (surface == nullptr || surface->w != previewMap.width || surface->h != previewMap.height) return;
+    if (static_cast<int>(previewMap.terrainType.size()) < previewMap.width * previewMap.height) return;
+
     m_sdlDrawer->FillWithColor(surface, Color::Black);
 
     for (int y = 0; y < previewMap.height; y++) {
