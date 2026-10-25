@@ -339,15 +339,18 @@ void cNewMapEditorState::constructEmptyMap()
         randomMap.terrainType = std::vector<int>(width * height, -1);
         // the generator draws a preview image, which the editor does not need
         randomMap.terrain = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_RGBA32);
-        cRandomMapGenerator().generateRandomMap(width, height, 4, randomMap, m_objects, m_sdlDrawer);
-        SDL_DestroySurface(randomMap.terrain);
-        randomMap.terrain = nullptr;
-        randomMap.validMap = true;
-        randomMap.name = name;
-        randomMap.author = author;
-        randomMap.description = desc;
-        m_previewMap->setEditorMap(std::move(randomMap));
-        return;
+        if (randomMap.terrain != nullptr) {
+            cRandomMapGenerator().generateRandomMap(width, height, 4, randomMap, m_objects, m_sdlDrawer);
+            SDL_DestroySurface(randomMap.terrain);
+            randomMap.terrain = nullptr;
+            randomMap.validMap = true;
+            randomMap.name = name;
+            randomMap.author = author;
+            randomMap.description = desc;
+            m_previewMap->setEditorMap(std::move(randomMap));
+            return;
+        }
+        Logger::warn(COMP_MAP, "cNewMapEditorState", "Could not create surface for random map, creating an empty map instead: {}", SDL_GetError());
     }
     m_previewMap->createEmptyMap(name, author, desc, width, height);
 }
