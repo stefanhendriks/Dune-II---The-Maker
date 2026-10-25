@@ -35,7 +35,7 @@
 #include "gameobjects/players/cPlayers.h"
 #include "utils/Log.h"
 #include "utils/common.h"
-#include "utils/cSeedMapGenerator.h"
+#include "gameobjects/map/cSeedMapGenerator.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/sTerrainInfo.h"
 #include "utils/RNG.hpp"
