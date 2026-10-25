@@ -28,6 +28,7 @@ class cGameInterface;
 class cMouse;
 class GuiWindow;
 class GuiCycleButton;
+class GuiCheckBox;
 class GuiTextInput;
 class cPreviewMaps;
 class cGameObjectContext;
@@ -62,11 +63,14 @@ private:
     GuiTextInput* m_inputAuthor = nullptr;
     GuiTextInput* m_inputDescription = nullptr;
     GuiTextInput* m_inputSeed = nullptr;
+    GuiCheckBox* m_checkRandom = nullptr;
     bool m_randomChecked = false;
     GuiCycleButton* m_cycleWidth = nullptr;
     GuiCycleButton* m_cycleHeight = nullptr;
 
     void constructEmptyMap();
+    void updateRandomCheckBox();
 
+    static constexpr int minRandomMapSize = 64;
     std::vector<int> m_sizesMap = {16, 24, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192};
 };
