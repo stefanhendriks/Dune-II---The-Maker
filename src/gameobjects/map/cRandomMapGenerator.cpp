@@ -22,6 +22,7 @@
 #include "utils/RNG.hpp"
 #include "utils/d2tm_math.h"
 #include "context/cGameObjectContext.h"
+#include <cstring>
 
 cRandomMapGenerator::cRandomMapGenerator()
 {
