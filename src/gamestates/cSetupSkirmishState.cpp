@@ -576,21 +576,22 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
 {
     if (iSkirmishMap > -1) {
         s_PreviewMap *selectedMap = m_previewMaps->getMap(iSkirmishMap);
+        PreviewMapView *selectedView = m_previewMaps->getView(iSkirmishMap);
         // Render skirmish map as-is (pre-loaded map)
         if (iSkirmishMap > 0) {
             if (selectedMap->name[0] != '\0') {
-                if (selectedMap->terrain) {
+                if (selectedView->terrain) {
                     cRectangle dst;
-                    if (selectedMap->previewTex->w > selectedMap->previewTex->h) {
+                    if (selectedView->previewTex->w > selectedView->previewTex->h) {
                         dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
-                                         previewMapRect.getWidth(), previewMapRect.getWidth() * selectedMap->previewTex->h / selectedMap->previewTex->w);
+                                         previewMapRect.getWidth(), previewMapRect.getWidth() * selectedView->previewTex->h / selectedView->previewTex->w);
                     }
                     else {
                         dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),
-                                         previewMapRect.getHeight() * selectedMap->previewTex->w / selectedMap->previewTex->h, previewMapRect.getHeight());
+                                         previewMapRect.getHeight() * selectedView->previewTex->w / selectedView->previewTex->h, previewMapRect.getHeight());
 
                     }
-                    m_sdlDrawer->renderStrechFullSprite(selectedMap->previewTex, dst);
+                    m_sdlDrawer->renderStrechFullSprite(selectedView->previewTex, dst);
                 }
             }
         }
@@ -598,7 +599,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
             // render the 'random generated skirmish map'
             cRectangle dst = cRectangle(previewMapRect.getX(), previewMapRect.getY(),previewMapRect.getWidth(), previewMapRect.getWidth());            // when mouse is hovering, draw it, else do not
             if (previewMapRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
-                    m_sdlDrawer->renderStrechFullSprite(selectedMap->previewTex, dst);
+                    m_sdlDrawer->renderStrechFullSprite(selectedView->previewTex, dst);
             } else {
                 m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(BMP_UNKNOWNMAP), dst);
             }
@@ -1332,33 +1333,34 @@ void cSetupSkirmishState::surpriseMe()
 
 void cSetupSkirmishState::generateRandomMap()
 {
-    s_PreviewMap *randomMap = m_previewMaps->getMap(0);
+    PreviewMapView *randomView = m_previewMaps->getView(0);
+    s_PreviewMap *randomMap = &randomView->map;
     int randomMapWidth = 128;
     int randomMapHeight = 128;
     int maxCells = randomMapWidth * randomMapHeight;
     randomMap->terrainType = std::vector<int>(maxCells, -1);
 
-    if (randomMap->terrain == nullptr) {
-        randomMap->terrain = SDL_CreateSurface(randomMapWidth, randomMapHeight, SDL_PIXELFORMAT_RGBA32);
+    if (randomView->terrain == nullptr) {
+        randomView->terrain = SDL_CreateSurface(randomMapWidth, randomMapHeight, SDL_PIXELFORMAT_RGBA32);
     }
 
     // delete any preview texture if it exists
-    delete randomMap->previewTex;
+    delete randomView->previewTex;
 
-    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomMap, m_objects, m_ctx->getSDLDrawer());
+    randomMapGenerator->generateRandomMap(randomMapWidth, randomMapHeight, iStartingPoints, *randomView, m_objects, m_ctx->getSDLDrawer());
 
     spawnWorms = (randomMapWidth * randomMapHeight > 64 * 64) ? 4 : 2;
 
     randomMap->validMap = true;
     randomMap->author = "D2TM";
 
-    SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), randomMap->terrain);
+    SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), randomView->terrain);
     if (out == nullptr) {
         Logger::error(COMP_SDL2, "cSetupSkirmishState", "Error creating texture from surface: {}", SDL_GetError());
         return;
     }
     SDL_SetTextureScaleMode(out, SDL_SCALEMODE_NEAREST);
-    randomMap->previewTex = new Texture(out, randomMap->terrain->w, randomMap->terrain->h);
+    randomView->previewTex = new Texture(out, randomView->terrain->w, randomView->terrain->h);
 }
 
 void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
@@ -1425,7 +1427,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
             // random map, render the 'random map' texture
             tex = m_gfxinter->getTexture(BMP_UNKNOWNMAP);
         } else {
-            tex = mapToRender->previewTex;
+            tex = m_previewMaps->getView(mapIndexToRender)->previewTex;
         }
 
         // Render preview map on tile

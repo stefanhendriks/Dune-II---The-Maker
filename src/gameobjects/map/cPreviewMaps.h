@@ -29,8 +29,8 @@ class SDLDrawer;
 static constexpr int MAX_SKIRMISHMAP_PLAYERS = 5;
 static constexpr int RANDOM_CELL = -1; // value in Bloom= / Field= meaning: place at a random cell
 
+// pure map data, no SDL resources
 struct s_PreviewMap {
-    SDL_Surface *terrain = nullptr;      // terrain bitmap (for showing preview at top right)
     int width, height;              // width & height of map
     std::vector<int> terrainType;   // terrainType per cell (for map creation)
     std::array<int, MAX_SKIRMISHMAP_PLAYERS> iStartCell; // starting locations
@@ -40,7 +40,13 @@ struct s_PreviewMap {
     std::string name;               // name of map
     std::string author;             // author of map
     std::string description;        // description of map
-    Texture *previewTex = nullptr;  // texture for the map preview
+};
+
+// a preview map plus the SDL resources used to show it as a preview
+struct PreviewMapView {
+    s_PreviewMap map;
+    SDL_Surface *terrain = nullptr;      // terrain bitmap (for showing preview at top right)
+    Texture *previewTex = nullptr;       // texture for the map preview
 };
 
 class cPreviewMaps {
@@ -55,6 +61,7 @@ public:
     void destroy();
 
     s_PreviewMap *getMap(int i);
+    PreviewMapView *getView(int i);
     bool isValidMap(int i) const;
 
     std::string getMapSize(int i) const;
@@ -70,8 +77,8 @@ public:
 private:
     void initRandomMap();
     void initPreviews();
-    std::unique_ptr<s_PreviewMap> m_emptyMap;
+    std::unique_ptr<PreviewMapView> m_emptyMap;
 
-    std::vector<std::unique_ptr<s_PreviewMap>> m_PreviewMap;
+    std::vector<std::unique_ptr<PreviewMapView>> m_PreviewMap;
     SDLDrawer * m_sdlDrawer = nullptr;
 };

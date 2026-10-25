@@ -31,13 +31,18 @@ namespace fs = std::filesystem;
 // #include <iostream>
 
 cPreviewMaps::cPreviewMaps() :
-    m_emptyMap(std::make_unique<s_PreviewMap>()),
+    m_emptyMap(std::make_unique<PreviewMapView>()),
     m_PreviewMap()
 {
     //initPreviews();
 }
 
 s_PreviewMap *cPreviewMaps::getMap(int i)
+{
+    return &getView(i)->map;
+}
+
+PreviewMapView *cPreviewMaps::getView(int i)
 {
     if (i == -1) {
         return m_emptyMap.get();
@@ -56,7 +61,7 @@ bool cPreviewMaps::isValidMap(int i) const
     if (i < 0 || i >= static_cast<int>(m_PreviewMap.size()) || m_PreviewMap[i] == nullptr) {
         return false;
     }
-    return m_PreviewMap[i]->validMap;
+    return m_PreviewMap[i]->map.validMap;
 }
 
 int cPreviewMaps::getMapCount() const
@@ -95,7 +100,8 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         return; // skip this map loading
     }
 
-    std::unique_ptr<s_PreviewMap> previewMap = std::make_unique<s_PreviewMap>();
+    auto view = std::make_unique<PreviewMapView>();
+    s_PreviewMap *previewMap = &view->map;
     const cSection &section = conf.getSection("SKIRMISH");
     previewMap->name = section.getStringValue("Title");
     previewMap->author = section.getStringValue("Author");
@@ -108,7 +114,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     int maxHeight = vecmap.size();
     int maxCells = (maxWidth + 2) * (maxHeight + 2);
 
-    previewMap->terrain = nullptr;
+    view->terrain = nullptr;
     previewMap->iStartCell.fill(-1); // set all starting cells to -1
 
     std::vector<int> numbers;
@@ -176,10 +182,10 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     MapGeometry mapGeom(previewMap->width , previewMap->height);
     previewMap->terrainType = std::vector<int>(maxCells, -1);
 
-    if (previewMap->terrain == nullptr) {
-        previewMap->terrain = SDL_CreateSurface(previewMap->width, previewMap->height, SDL_PIXELFORMAT_RGBA32);
+    if (view->terrain == nullptr) {
+        view->terrain = SDL_CreateSurface(previewMap->width, previewMap->height, SDL_PIXELFORMAT_RGBA32);
     }
-    m_sdlDrawer->FillWithColor(previewMap->terrain, Color::Black);
+    m_sdlDrawer->FillWithColor(view->terrain, Color::Black);
 
     for (int iY = 0; iY < maxHeight; iY++) {
         const char *mapLine = vecmap[iY].c_str();
@@ -228,7 +234,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
             }
 
             previewMap->terrainType[iCll] = terrainType;
-            m_sdlDrawer->setPixel(previewMap->terrain, 1 + iX, 1 + iY, iColor);
+            m_sdlDrawer->setPixel(view->terrain, 1 + iX, 1 + iY, iColor);
         }
     }
 
@@ -238,20 +244,20 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
         if (startCell > -1) {
             int x = mapGeom.getCellX(startCell);
             int y = mapGeom.getCellY(startCell);
-            m_sdlDrawer->setPixel(previewMap->terrain, 1 + x, 1 + y, Color::White);
+            m_sdlDrawer->setPixel(view->terrain, 1 + x, 1 + y, Color::White);
         }
     }
-    if (previewMap->terrain!= nullptr){
-        SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), previewMap->terrain);
+    if (view->terrain!= nullptr){
+        SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), view->terrain);
         if (out == nullptr) {
             Logger::error(COMP_SDL2, "cPreviewMaps", "Error creating texture from surface: {}", SDL_GetError());
             return;
         }
         SDL_SetTextureScaleMode(out, SDL_SCALEMODE_NEAREST);
-        previewMap->previewTex = new Texture(out, previewMap->terrain->w, previewMap->terrain->h);
+        view->previewTex = new Texture(out, view->terrain->w, view->terrain->h);
     }
     Logger::info(COMP_MAP, "cPreviewMaps", "Loaded skirmish map: {}, width: {}, height: {}", previewMap->name, previewMap->width, previewMap->height);
-    m_PreviewMap.push_back(std::move(previewMap));
+    m_PreviewMap.push_back(std::move(view));
 }
 
 /*
@@ -291,11 +297,11 @@ void cPreviewMaps::initPreviews()
 void cPreviewMaps::initRandomMap()
 {
     // std::cout << "Initializing random map" << std::endl;
-    auto firstSkirmishMap = std::make_unique<s_PreviewMap>();
-    firstSkirmishMap->name = "Random map";
-    firstSkirmishMap->validMap = false;
+    auto firstSkirmishMap = std::make_unique<PreviewMapView>();
+    firstSkirmishMap->map.name = "Random map";
+    firstSkirmishMap->map.validMap = false;
 
-    firstSkirmishMap->terrainType = std::vector<int>(1, -1);
+    firstSkirmishMap->map.terrainType = std::vector<int>(1, -1);
     // if (firstSkirmishMap.terrain != nullptr) {
     //     SDL_DestroySurface(firstSkirmishMap.terrain);
     // }
@@ -320,7 +326,7 @@ std::string cPreviewMaps::getMapSize(int i) const
     if (i < 0 || i >= static_cast<int>(m_PreviewMap.size()) || m_PreviewMap[i] == nullptr) {
         return "Invalid";
     }
-    int playableCells = (m_PreviewMap[i]->width-2) * (m_PreviewMap[i]->height-2);
+    int playableCells = (m_PreviewMap[i]->map.width-2) * (m_PreviewMap[i]->map.height-2);
     if (playableCells <= 32 *32) {
         return "SMALL";
     }
@@ -337,19 +343,20 @@ void cPreviewMaps::createEmptyMap(const std::string &name, const std::string &au
             const std::string &desciption, int width, int height)
 {
     if (m_emptyMap == nullptr) {
-        m_emptyMap = std::make_unique<s_PreviewMap>();
+        m_emptyMap = std::make_unique<PreviewMapView>();
     }
-    m_emptyMap->name = name;
-    m_emptyMap->author = author;
-    m_emptyMap->description = desciption;
-    m_emptyMap->width = width;
-    m_emptyMap->height = height;
-    m_emptyMap->validMap = true;
-    m_emptyMap->terrainType = std::vector<int>(width * height, TERRAIN_SAND);
-    m_emptyMap->iStartCell.fill(-1);
+    m_emptyMap->map.name = name;
+    m_emptyMap->map.author = author;
+    m_emptyMap->map.description = desciption;
+    m_emptyMap->map.width = width;
+    m_emptyMap->map.height = height;
+    m_emptyMap->map.validMap = true;
+    m_emptyMap->map.terrainType = std::vector<int>(width * height, TERRAIN_SAND);
+    m_emptyMap->map.iStartCell.fill(-1);
 }
 
 void cPreviewMaps::setEditorMap(s_PreviewMap &&map)
 {
-    m_emptyMap = std::make_unique<s_PreviewMap>(std::move(map));
+    m_emptyMap = std::make_unique<PreviewMapView>();
+    m_emptyMap->map = std::move(map);
 }
