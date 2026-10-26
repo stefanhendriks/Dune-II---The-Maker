@@ -500,9 +500,8 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
             if (m_hasChanged) {
-                if (!saveMap(true)) {
-                    return;
-                }
+                // saveMap() notifies the user when it fails, still leave the editor
+                saveMap(true);
                 m_hasChanged = false;
             }
             m_stateTransitions->setNextState(GAME_OPTIONS);
