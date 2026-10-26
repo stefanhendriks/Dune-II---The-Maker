@@ -76,22 +76,9 @@ cIni::cIni(sGameServices* services)
     m_gameConditionChecker = services->gameConditionChecker;
 }
 
-std::string INI_GetHouseDirectoryName(int iHouse)
-{
-    switch (iHouse) {
-        case ATREIDES:   return "atreides";
-        case HARKONNEN:  return "harkonnen";
-        case SARDAUKAR:  return "sardaukar";
-        case ORDOS:      return "ordos";
-        case FREMEN:     return "fremen";
-        case MERCENARY:  return "mercenary";
-        default:         return "unknown";
-    }
-}
-
 void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState)
 {
-    auto filename = std::format("campaign/{}/mission{}.ini", INI_GetHouseDirectoryName(iHouse), iMission);
+    auto filename = std::format("campaign/{}/mission{}.ini", getHouseDirectoryName(iHouse), iMission);
     Logger::info(COMP_REGIONINI, "cIni::loadRegionfile", "Opening mission file: {}", filename);
 
     std::ifstream file(filename);
@@ -100,342 +87,23 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
         return;
     }
 
-    eIniWord wordtype = eIniWord::NONE;
-    int iRegionIndex = -1;
-    int iRegionNumber = -1;
-    int iRegionConquer = -1;
+    auto data = parseRegionFile(file);
 
-    std::string line;
-    while (std::getline(file, line)) {
-        line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
-        if (line.empty() || isCommentLine(line)) {
-            continue;
-        }
-
-        auto [word_left, word_right] = INI_SplitWord(line);
-        if (word_left.empty() || word_right.empty()) {
-            Logger::warn(COMP_REGIONINI, "cIni::loadRegionfile", "Skipping invalid line: '{}'", line);
-            continue;
-        }
-
-        wordtype = INI_WordType(word_left, eIniSection::REGION);
-
-        if (wordtype == eIniWord::REGION) {
-            iRegionNumber = -1;
-            iRegionConquer = -1;
-            iRegionNumber = ToInt(word_right) - 1;
-        }
-        else if (wordtype == eIniWord::REGIONCONQUER) {
-            iRegionNumber = -1;
-            iRegionConquer = -1;
-            iRegionIndex++;
-            iRegionConquer = ToInt(word_right) - 1;
-            selectYourNextConquestState->setRegionConquer(iRegionIndex, iRegionConquer);
-        }
-
-        if (iRegionIndex > -1 || iRegionNumber > -1) {
-            if (wordtype == eIniWord::REGIONHOUSE) {
-                Logger::info(COMP_REGIONINI, "cIni::loadRegionfile", "Region house");
-                int iH = cIniUtils::getHouseFromString(word_right);
-                if (iRegionNumber > -1) {
-                    world[iRegionNumber].iHouse = iH;
-                    world[iRegionNumber].iAlpha = 255;
-                }
-                if (iRegionConquer > -1) {
-                    selectYourNextConquestState->setRegionHouse(iRegionIndex, iH);
-                }
-            }
-
-            if (wordtype == eIniWord::REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
-                std::string text = removeQuote(word_right);
-                selectYourNextConquestState->setRegionText(iRegionIndex, text.c_str());
-            }
-
-            if (wordtype == eIniWord::REGIONSELECT) {
-                if (iRegionNumber > -1) {
-                    world[iRegionNumber].bSelectable = ToBool(word_right);
-                    world[iRegionNumber].iAlpha = 1;
-                }
-            }
-        }
+    for (const auto& [number, region] : data.worldRegions) {
+        if (number >= static_cast<int>(world.size())) continue;
+        if (region.house) world[number].iHouse = *region.house;
+        if (region.selectable) world[number].bSelectable = *region.selectable;
+        if (region.alpha) world[number].iAlpha = *region.alpha;
     }
-    file.close();
+
+    for (int i = 0; i < static_cast<int>(data.conquests.size()); i++) {
+        const auto& conquest = data.conquests[i];
+        selectYourNextConquestState->setRegionConquer(i, conquest.regionConquer);
+        if (conquest.house) selectYourNextConquestState->setRegionHouse(i, *conquest.house);
+        if (conquest.text) selectYourNextConquestState->setRegionText(i, conquest.text->c_str());
+    }
     Logger::info(COMP_REGIONINI, "cIni::loadRegionfile", "[CAMPAIGN] Done");
 }
-
-int getTechLevelByRegion(int iRegion)
-{
-    if (iRegion == 1) return 1;
-    if (iRegion == 2 || iRegion == 3 || iRegion == 4) return 2;
-    if (iRegion == 5 || iRegion == 6 || iRegion == 7) return 3;
-    if (iRegion == 8 || iRegion == 9 || iRegion == 10) return 4;
-    if (iRegion == 11 || iRegion == 12 || iRegion == 13) return 5;
-    if (iRegion == 14 || iRegion == 15 || iRegion == 16) return 6;
-    if (iRegion == 17 || iRegion == 18 || iRegion == 19) return 7;
-    if (iRegion == 20 || iRegion == 21) return 8;
-    return 9;
-}
-
-
-namespace {
-
-void readScenarioHouseLine(ScenarioData& data, eIniWord wordtype, int iPlayerID, const std::string& value)
-{
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, std::to_underlying(wordtype));
-    if (iPlayerID < 0) return;
-
-    if (wordtype == eIniWord::BRAIN) {
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", value);
-        if (cIniUtils::caseInsCompare(value, "Human")) {
-            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
-            data.humanPlayerId = iPlayerID;
-        } else {
-            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "This brain is not human...");
-        }
-    }
-    else if (wordtype == eIniWord::CREDITS) {
-        int credits = ToInt(value) - 1;
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Set credits for player id [{}] to [{}]", iPlayerID, credits);
-        data.playerCredits[iPlayerID] = credits;
-    }
-    else if (wordtype == eIniWord::QUOTA) {
-        data.playerQuota[iPlayerID] = ToInt(value);
-    }
-}
-
-void readScenarioMapLine(ScenarioData& data, eIniWord wordtype, const std::string& slinefeed)
-{
-    std::optional<int> seed;
-    if (wordtype == eIniWord::MAPSEED) {
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
-        auto [word, seek] = INI_SplitWord(slinefeed);
-        seed = ToInt(seek);
-    }
-    data.mapLines.push_back(seed);
-
-    auto parseCells = [&](std::span<int> dest, const char* label) {
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] {}=", label);
-        auto [key, values] = INI_SplitWord(slinefeed);
-        int idx = 0;
-        for (const auto& token : splitByComma(values)) {
-            if (idx >= static_cast<int>(dest.size())) break;
-            auto trimmed = ToTrim(token);
-            if (trimmed.empty()) continue;
-            dest[idx++] = ToInt(trimmed);
-        }
-    };
-
-    if (wordtype == eIniWord::MAPBLOOM) {
-        parseCells(data.blooms, "Bloom");
-    }
-    else if (wordtype == eIniWord::MAPFIELD) {
-        parseCells(data.fields, "Field");
-    }
-}
-
-void readScenarioReinforcementLine(ScenarioData& data, const std::string& slinefeed)
-{
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Reinforcements", "[SCENARIO] -> REINFORCEMENTS");
-
-    auto eqPos = slinefeed.find('=');
-    if (eqPos == std::string::npos) return;
-
-    auto parts = splitByComma(slinefeed.substr(eqPos + 1));
-    if (parts.size() < 4) {
-        Logger::warn(COMP_SCENARIOINI, "INI_Scenario_Section_Reinforcements", "Invalid reinforcement line: '{}'", slinefeed);
-        return;
-    }
-
-    ScenarioData::Reinforcement reinforcement;
-
-    // Part 0: house
-    reinforcement.house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
-
-    // Part 1: unit type
-    reinforcement.unitType = cIniUtils::getUnitTypeFromString(ToTrim(parts[1]));
-
-    // Part 2: target cell (Homebase / Enemybase / numeric cell)
-    auto location = ToTrim(parts[2]);
-    if (cIniUtils::caseInsCompare(location, "Homebase")) {
-        reinforcement.location = ScenarioData::Reinforcement::Location::HOMEBASE;
-    }
-    else if (cIniUtils::caseInsCompare(location, "enemybase")) {
-        reinforcement.location = ScenarioData::Reinforcement::Location::ENEMYBASE;
-    }
-    else if (!location.empty() &&
-             std::all_of(location.begin(), location.end(), [](unsigned char c) { return std::isdigit(c); })) {
-        reinforcement.location = ScenarioData::Reinforcement::Location::CELL;
-        reinforcement.cell = ToInt(location);
-    }
-    else {
-        Logger::warn(COMP_SCENARIOINI, "INI_Scenario_Section_Reinforcements", "Invalid target cell for reinforcement: '{}'", location);
-    }
-
-    // Part 3: delay in minutes, optional '+' suffix means repeat
-    auto delayStr = ToTrim(parts[3]);
-    if (!delayStr.empty() && delayStr.back() == '+') {
-        reinforcement.repeat = true;
-        delayStr.pop_back();
-    }
-    // D2TM does not interpret the delay as real minutes; multiplier chosen to feel correct in-game
-    reinforcement.delay = ToInt(delayStr) * 20;
-    data.entries.push_back(reinforcement);
-}
-
-void readScenarioStructureLine(ScenarioData& data, const std::string& slinefeed)
-{
-    auto [key, valueStr] = INI_SplitWord(slinefeed);
-    auto parts = splitByComma(valueStr);
-
-    ScenarioData::Structure structure;
-    structure.generated = key.rfind("GEN", 0) == 0; // line is a GENxxx= entry
-
-    if (!structure.generated) {
-        // Format: ID=House,StructureType,HP,Cell
-        if (parts.size() >= 4) {
-            structure.houseName = parts[0];
-            structure.house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
-            structure.type = cIniUtils::getStructureTypeFromString(ToTrim(parts[1]));
-            structure.cell = ToInt(ToTrim(parts[3]));
-        }
-    }
-    else {
-        // Format: GENcell=House,StructureType
-        structure.cell = ToInt(key.substr(3)); // cell number follows "GEN"
-        if (parts.size() >= 2) {
-            structure.houseName = parts[0];
-            structure.house = cIniUtils::getHouseFromString(ToTrim(parts[0]));
-            auto typeName = ToTrim(parts[1]);
-            if (cIniUtils::caseInsCompare(typeName, "Wall"))     structure.type = WALL;
-            if (cIniUtils::caseInsCompare(typeName, "Concrete")) structure.type = SLAB1;
-        }
-    }
-    data.entries.push_back(structure);
-}
-
-void readScenarioUnitLine(ScenarioData& data, const std::string& linefeed)
-{
-    // Format: ID=House,UnitType,HP,Cell,FacingBody,FacingHead
-    auto [key, valueStr] = INI_SplitWord(linefeed);
-    auto parts = splitByComma(valueStr);
-
-    EnumArray<std::optional<std::string>, eIniUnitsPart> fields;
-    for (std::size_t i = 0; i < parts.size() && i < fields.size(); i++) {
-        fields.begin()[i] = parts[i];
-    }
-
-    ScenarioData::Unit unit;
-    if (const auto& controller = fields[eIniUnitsPart::CONTROLLER]) {
-        unit.houseName = *controller;
-        unit.house = cIniUtils::getHouseFromString(ToTrim(*controller));
-    }
-    if (const auto& type = fields[eIniUnitsPart::TYPE]) {
-        unit.type = cIniUtils::getUnitTypeFromString(ToTrim(*type));
-    }
-    // eIniUnitsPart::HP skipped
-    if (const auto& cell = fields[eIniUnitsPart::CELL]) {
-        unit.cell = ToInt(ToTrim(*cell));
-    }
-    // eIniUnitsPart::FACING_BODY and beyond are not used
-    data.entries.push_back(unit);
-}
-
-void readScenarioBasicLine(ScenarioData& data, eIniWord wordtype, const std::string& value)
-{
-    if (wordtype == eIniWord::BRIEFPICTURE) {
-        std::string scene = cIniUtils::getSceneFileToScene(value);
-        if (!cIniUtils::caseInsCompare(scene, "unknown")) {
-            data.briefScene = scene;
-        }
-    }
-    else if (wordtype == eIniWord::FOCUS_POS) {
-        data.focusCell = ToInt(value);
-    }
-    else if (wordtype == eIniWord::WINFLAGS) {
-        data.winFlags = ToInt(value);
-    }
-    else if (wordtype == eIniWord::LOSEFLAGS) {
-        data.loseFlags = ToInt(value);
-    }
-}
-
-// Reads the scenario file into ScenarioData. Does not touch any game object.
-std::optional<ScenarioData> readScenarioFile(const std::string& filename)
-{
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        Logger::error(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Error, could not open file");
-        return std::nullopt;
-    }
-
-    ScenarioData data;
-    eIniSection section = eIniSection::NONE;
-    int iPlayerID = -1;
-
-    std::string linefeed;
-    while (std::getline(file, linefeed)) {
-        linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
-        if (linefeed.empty() || isCommentLine(linefeed)) {
-            continue;
-        }
-
-        auto sectionName = extractSectionName(linefeed);
-        if (!sectionName.empty()) {
-            eIniSection sectionType = SCEN_INI_SectionType(sectionName);
-            if (sectionType != eIniSection::NONE) {
-                section = sectionType;
-
-                Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] found section '{}', resulting in section id [{}]", sectionName, std::to_underlying(section));
-
-                if (isHouseSection(section)) {
-                    iPlayerID = std::min(iPlayerID + 1, MAX_PLAYERS - 1);
-
-                    int house = -1;
-                    if (section == eIniSection::HOUSEATREIDES) house = ATREIDES;
-                    if (section == eIniSection::HOUSEORDOS)    house = ORDOS;
-                    if (section == eIniSection::HOUSEHARKONNEN) house = HARKONNEN;
-                    if (section == eIniSection::HOUSEMERCENARY) house = MERCENARY;
-                    if (section == eIniSection::HOUSEFREMEN)   house = FREMEN;
-                    if (section == eIniSection::HOUSESARDAUKAR) house = SARDAUKAR;
-
-                    data.playerHouse[iPlayerID] = house;
-
-                    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Setting house to [{}] for playerId [{}]", data.playerHouse[iPlayerID], iPlayerID);
-                }
-            }
-            continue;
-        }
-
-        if (section == eIniSection::NONE) continue;
-
-        auto [word_left, word_right] = INI_SplitWord(linefeed);
-        eIniWord wordtype = INI_WordType(word_left, section);
-
-        if (section == eIniSection::BASIC) {
-            readScenarioBasicLine(data, wordtype, word_right);
-        }
-
-        if (isHouseSection(section)) {
-            readScenarioHouseLine(data, wordtype, iPlayerID, word_right);
-        }
-
-        if (section == eIniSection::MAP) {
-            readScenarioMapLine(data, wordtype, linefeed);
-        }
-        else if (section == eIniSection::UNITS) {
-            readScenarioUnitLine(data, linefeed);
-        }
-        else if (section == eIniSection::STRUCTURES) {
-            readScenarioStructureLine(data, linefeed);
-        }
-        else if (section == eIniSection::REINFORCEMENTS) {
-            readScenarioReinforcementLine(data, linefeed);
-        }
-    }
-    return data;
-}
-
-} // namespace
 
 void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
@@ -451,10 +119,14 @@ void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] '{}' (Mission {})", filename, dataCampaign->mission);
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Opening file");
 
-    auto data = readScenarioFile(filename);
-    if (!data) return;
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        Logger::error(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Error, could not open file");
+        return;
+    }
+    auto data = parseScenario(file);
 
-    populateScenario(*data, pMentat, reinforcements, iHouse);
+    populateScenario(data, pMentat, reinforcements, iHouse);
 }
 
 void cIni::populateScenario(const ScenarioData& data, AbstractMentat *pMentat, cReinforcements *reinforcements, int iHouse)
@@ -680,21 +352,11 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, eIniSection iSectionFind,
 {
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] Opening file");
 
-    std::string filename;
-    if (iHouse == ATREIDES)  filename = "mentata.ini";
-    if (iHouse == ORDOS)     filename = "mentato.ini";
-    if (iHouse == HARKONNEN) filename = "mentath.ini";
-    if (iHouse == SARDAUKAR) filename = "mentats.ini";
-
     pMentat->initSentences();
-    auto path = std::string("campaign/briefings/") + filename;
+    auto path = std::string("campaign/briefings/") + getBriefingFileName(iHouse);
 
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "{}", path);
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "Going to find SCEN ID #{} and SectionID {}", iScenarioFind, std::to_underlying(iSectionFind));
-
-    int iScenario = 0;
-    eIniSection iSection = eIniSection::HOUSES;
-    int iLine = 0;
 
     std::ifstream file(path);
     if (!file.is_open()) {
@@ -702,43 +364,10 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, eIniSection iSectionFind,
         return;
     }
 
-    std::string linefeed;
-    while (std::getline(file, linefeed)) {
-        linefeed.erase(std::remove(linefeed.begin(), linefeed.end(), '\r'), linefeed.end());
-        if (linefeed.empty() || isCommentLine(linefeed)) {
-            continue;
-        }
-
-        auto sectionName = extractSectionName(linefeed);
-        if (!sectionName.empty()) {
-            iSection = cIniUtils::getSectionType(sectionName, iSection);
-        }
-
-        if (iSection == eIniSection::SCEN) {
-            auto [word_left, word_right] = INI_SplitWord(linefeed);
-            eIniWord wordtype = INI_WordType(word_left, iSection);
-
-            if (wordtype == eIniWord::NUMBER) {
-                iScenario = ToInt(word_right);
-                continue;
-            }
-        }
-
-        if (iScenario == iScenarioFind) {
-            if (iSection == iSectionFind) {
-                auto [word_left, word_right] = INI_SplitWord(linefeed);
-                eIniWord wordtype = INI_WordType(word_left, iSection);
-
-                if (wordtype == eIniWord::REGIONTEXT) {
-                    word_right = removeQuote(word_right);
-                    pMentat->setSentence(iLine, word_right.c_str());
-                    iLine++;
-                    if (iLine > 9) break;
-                }
-            }
-        }
+    auto sentences = parseBriefing(file, iScenarioFind, iSectionFind);
+    for (int i = 0; i < static_cast<int>(sentences.size()); i++) {
+        pMentat->setSentence(i, sentences[i].c_str());
     }
-    file.close();
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] File opened");
 }
 
