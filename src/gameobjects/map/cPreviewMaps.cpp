@@ -24,6 +24,7 @@
 #include <filesystem>
 #include <fstream>
 #include <cctype>
+#include <string>
 
 namespace fs = std::filesystem;
 
