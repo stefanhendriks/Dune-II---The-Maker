@@ -20,6 +20,7 @@
 #include "iniWordsHouseSpecific.h"
 #include "iniWordsRegionSpecific.h"
 #include "iniUnitsParts.h"
+#include "cEnumArray.h"
 #include "utils/cIniUtils.h"
 
 #include "data/gfxdata.h"
@@ -59,6 +60,7 @@ namespace fs=std::filesystem;
 #include <span>
 #include <string>
 #include <unordered_map>
+#include <optional>
 #include <utility>
 #include <vector>
 #include <platform.h>
@@ -643,19 +645,24 @@ void readScenarioUnitLine(ScenarioData& data, const std::string& linefeed)
     auto [key, valueStr] = INI_SplitWord(linefeed);
     auto parts = splitByComma(valueStr);
 
+    EnumArray<std::optional<std::string>, eIniUnitsPart> fields;
+    for (std::size_t i = 0; i < parts.size() && i < fields.size(); i++) {
+        fields.begin()[i] = parts[i];
+    }
+
     ScenarioData::Unit unit;
-    if (parts.size() > INI_UNITS_PART_CONTROLLER) {
-        unit.houseName = parts[INI_UNITS_PART_CONTROLLER];
-        unit.house = cIniUtils::getHouseFromString(ToTrim(parts[INI_UNITS_PART_CONTROLLER]));
+    if (const auto& controller = fields[eIniUnitsPart::CONTROLLER]) {
+        unit.houseName = *controller;
+        unit.house = cIniUtils::getHouseFromString(ToTrim(*controller));
     }
-    if (parts.size() > INI_UNITS_PART_TYPE) {
-        unit.type = cIniUtils::getUnitTypeFromString(ToTrim(parts[INI_UNITS_PART_TYPE]));
+    if (const auto& type = fields[eIniUnitsPart::TYPE]) {
+        unit.type = cIniUtils::getUnitTypeFromString(ToTrim(*type));
     }
-    // parts[INI_UNITS_PART_HP] skipped
-    if (parts.size() > INI_UNITS_PART_CELL) {
-        unit.cell = ToInt(ToTrim(parts[INI_UNITS_PART_CELL]));
+    // eIniUnitsPart::HP skipped
+    if (const auto& cell = fields[eIniUnitsPart::CELL]) {
+        unit.cell = ToInt(ToTrim(*cell));
     }
-    // parts[INI_UNITS_PART_FACING_BODY] and beyond are not used
+    // eIniUnitsPart::FACING_BODY and beyond are not used
     data.entries.push_back(unit);
 }
 
