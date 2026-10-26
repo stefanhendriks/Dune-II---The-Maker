@@ -183,6 +183,14 @@ else()
             -mwindows
     )
 
+    # std::stacktrace needs libstdc++exp (GCC 14+); disable it if the toolchain doesn't ship it.
+    find_library(LIBSTDCXXEXP stdc++exp)
+    if(LIBSTDCXXEXP)
+        target_link_libraries(cpp_stacktrace INTERFACE ${LIBSTDCXXEXP})
+    else()
+        target_compile_definitions(cpp_stacktrace INTERFACE DISABLE_D2TM_STACKTRACE)
+    endif()
+
     # /DEBUG is MSVC-only; MinGW's ld treats it as an input file. MinGW gets debug info from -g.
     if(MSVC)
         target_link_options(cpp_stacktrace INTERFACE $<$<CONFIG:Debug>:/DEBUG>)
