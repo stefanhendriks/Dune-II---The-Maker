@@ -92,7 +92,7 @@ private:
     void cutSelectionToClipboard();
     void pasteClipboardAtMouseCursor();
 
-    void saveMap(bool backup = false) const;
+    bool saveMap(bool backup = false) const;
     std::unique_ptr<GuiBar> m_selectBar;
     std::unique_ptr<GuiBar> m_topologyBar;
     std::unique_ptr<GuiBar> m_startCellBar;

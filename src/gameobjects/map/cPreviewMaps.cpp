@@ -22,6 +22,8 @@
 #include "utils/Log.h"
 #include "utils/cIniFile.h"
 #include <filesystem>
+#include <fstream>
+#include <cctype>
 
 namespace fs = std::filesystem;
 
@@ -302,6 +304,114 @@ void cPreviewMaps::loadSkirmishMaps()
         }
     }
 }
+
+static std::string normalizeStringForFileName(const std::string& input)
+{
+    std::string output = input;
+    std::replace(output.begin(), output.end(), ' ', '_');
+    output.erase(std::remove_if(output.begin(), output.end(),
+        [](unsigned char c) { return !std::isalnum(c) && c != '_'; }), output.end());
+    if (output.empty()) {
+        output = "custom_map";
+    }
+    return output;
+}
+
+bool cPreviewMaps::saveSkirmishMap(const s_PreviewMap &map, bool backup)
+{
+    const std::string fileName = backup
+        ? "skirmish/backup.ini"
+        : "skirmish/" + normalizeStringForFileName(map.name) + ".ini";
+
+    const size_t requiredTerrainCells = static_cast<size_t>(map.width) * static_cast<size_t>(map.height);
+    if (map.width < 3 || map.height < 3 || map.terrainType.size() < requiredTerrainCells) {
+        Logger::error(COMP_MAP, "cPreviewMaps", "Map terrain data is incomplete: {}", fileName);
+        return false;
+    }
+
+    for (int y = 1; y < map.height - 1; y++) {
+        for (int x = 1; x < map.width - 1; x++) {
+            const size_t index = static_cast<size_t>(y) * static_cast<size_t>(map.width) + static_cast<size_t>(x);
+            switch (map.terrainType[index]) {
+                case TERRAIN_SAND:
+                case TERRAIN_ROCK:
+                case TERRAIN_MOUNTAIN:
+                case TERRAIN_SPICEHILL:
+                case TERRAIN_SPICE:
+                case TERRAIN_HILL:
+                    break;
+                default:
+                    Logger::error(COMP_MAP, "cPreviewMaps", "Unknown terrain value {} in map {}", map.terrainType[index], fileName);
+                    return false;
+            }
+        }
+    }
+
+    std::ofstream saveFile(fileName);
+    if (!saveFile.is_open()) {
+        Logger::error(COMP_MAP, "cPreviewMaps", "Unable to open modified map for saving: {}", fileName);
+        return false;
+    }
+
+    saveFile << "[SKIRMISH]\n";
+    saveFile << "Title = " << map.name << "\n";
+    saveFile << "Author = " << map.author << "\n";
+    saveFile << "Description = " << map.description << "\n\n";
+    saveFile << "Width = " << map.width - 2 << "\nHeight = " << map.height - 2 << "\n";
+    saveFile << "StartCell=";
+    bool firstStartCell = true;
+    for (size_t i = 0; i < map.iStartCell.size(); i++) {
+        if (map.iStartCell[i] != -1) {
+            if (!firstStartCell) {
+                saveFile << ",";
+            }
+            saveFile << map.iStartCell[i];
+            firstStartCell = false;
+        }
+    }
+    saveFile << "\n\n\n[MAP]\n";
+
+    for (int y = 1; y < map.height - 1; y++) {
+        for (int x = 1; x < map.width - 1; x++) {
+            const size_t index = static_cast<size_t>(y) * static_cast<size_t>(map.width) + static_cast<size_t>(x);
+
+            switch (map.terrainType[index]) {
+                case TERRAIN_SAND:
+                    saveFile << ')';
+                    break;
+                case TERRAIN_ROCK:
+                    saveFile << '^';
+                    break;
+                case TERRAIN_MOUNTAIN:
+                    saveFile << 'R';
+                    break;
+                case TERRAIN_SPICEHILL:
+                    saveFile << '+';
+                    break;
+                case TERRAIN_SPICE:
+                    saveFile << '-';
+                    break;
+                case TERRAIN_HILL:
+                    saveFile << 'h';
+                    break;
+                default:
+                    Logger::error(COMP_MAP, "cPreviewMaps", "Unknown terrain value {} in map {}", map.terrainType[index], fileName);
+                    return false;
+            }
+        }
+        saveFile << "\n";
+    }
+
+    saveFile.close();
+    if (!saveFile) {
+        Logger::error(COMP_MAP, "cPreviewMaps", "Failed while writing modified map: {}", fileName);
+        return false;
+    }
+
+    loadSkirmish(fileName);
+    return true;
+}
+
 
 // Skirmish map initialization
 void cPreviewMaps::initPreviews()

@@ -35,10 +35,6 @@
 #include "include/sGameEvent.h"
 
 #include "include/cAssert.h"
-#include <iostream>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
 #include <memory>
 
 const int heightBarSize = 48;
@@ -149,8 +145,9 @@ void cEditorState::populateSelectBar()
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_STRETCHED_TEXTURE)
             .onClick([this]() {
-                saveMap();
-                m_hasChanged = false;
+                if (saveMap()) {
+                    m_hasChanged = false;
+                }
             })
             .build();
     m_selectBar->addGuiObject(std::move(guiIcon));
@@ -500,15 +497,18 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
             if (m_hasChanged) {
-                saveMap(true);
+                if (!saveMap(true)) {
+                    return;
+                }
                 m_hasChanged = false;
             }
             m_interface->setNextStateToTransitionTo(GAME_OPTIONS);
         }
         if (event.isAction(eKeyAction::EDITOR_SAVE)) {
             //std::cout << "Save" << std::endl;
-            saveMap();
-            m_hasChanged = false;
+            if (saveMap()) {
+                m_hasChanged = false;
+            }
         }
         if (event.isAction(eKeyAction::EDITOR_ZOOM_IN)) {
             m_editorCam->zoomAtMapPosition(mapSizeArea.getWidth()/2, mapSizeArea.getHeight()/2, cEditorCam::ZoomDirection::zoomIn, *m_mapData);
@@ -1353,89 +1353,38 @@ void cEditorState::drawStartCells() const
     }
 }
 
-static std::string normalizeStringForFileName(const std::string& input)
+bool cEditorState::saveMap(bool backup) const
 {
-    std::string output = input;
-    // Replace spaces with underscores
-    std::replace(output.begin(), output.end(), ' ', '_');
-    // Remove characters that are not alphanumeric or underscores
-    output.erase(std::remove_if(output.begin(), output.end(),
-        [](unsigned char c) { return !std::isalnum(c) && c != '_'; }), output.end());
-    if (output.empty()) {
-        output = "custom_map";
-        //TODO : log warning about empty name after normalization
+    s_PreviewMap map;
+    map.width = static_cast<int>(m_mapData->getCols());
+    map.height = static_cast<int>(m_mapData->getRows());
+    map.name = m_mapName;
+    map.author = m_mapAuthor;
+    map.description = m_mapDescription;
+    map.iStartCell.fill(-1);
+    map.terrainType.reserve(static_cast<size_t>(map.width * map.height));
+    for (int y = 0; y < map.height; y++) {
+        for (int x = 0; x < map.width; x++) {
+            map.terrainType.push_back((*m_mapData)[y][x]);
+        }
     }
-    return output;
-}
-
-void cEditorState::saveMap(bool backup) const
-{
-    std::string fileName;
-    // creating file
-    if (!backup) {
-        // if no name provided, use map name
-        fileName = "skirmish/"+normalizeStringForFileName(m_mapName)+".ini";
-    } else {
-        fileName = "skirmish/backup.ini";
-    }
-    
-    std::ofstream saveFile(fileName);
-    // file verification
-    if (!saveFile.is_open()){
-        std::cerr << "unable to open modified map for saving " << fileName << std::endl;
-        //TODO : log error about unable to save map
-        return;
-    }
-    //std::cout << "Saving map to " << fileName << std::endl;
-    // map card
-    saveFile << "[SKIRMISH]\n";
-    saveFile << "Title = " << m_mapName << "\n";
-    saveFile << "Author = "<< m_mapAuthor << "\n";
-    saveFile << "Description = "<< m_mapDescription << "\n\n";
-    saveFile << "Width = " << m_mapData->getCols()-2 << "\nHeight = "<< m_mapData->getRows()-2 << "\n";
-    saveFile << "StartCell=";
-    for(size_t i=0; i<startCells.size(); i++) {
+    for (size_t i = 0; i < startCells.size(); i++) {
         if (startCells[i].x != -1 && startCells[i].y != -1) {
-            if (i !=0) {
-                saveFile << ",";
-            }
-            saveFile << startCells[i].y * m_mapData->getCols() + startCells[i].x ;
+            map.iStartCell[i] = startCells[i].y * map.width + startCells[i].x;
         }
     }
-    saveFile << "\n\n\n[MAP]\n";
-    // map data
-    for(size_t j=1; j<m_mapData->getRows()-1; j++) {
-        for(size_t i=1; i<m_mapData->getCols()-1; i++) {
-            switch ((*m_mapData)[j][i]) {
-                case TERRAIN_SAND:
-                    saveFile << ')';
-                    break;
-                case TERRAIN_ROCK:
-                    saveFile << '^';
-                    break;
-                case TERRAIN_MOUNTAIN:
-                    saveFile << 'R';
-                    break;
-                case TERRAIN_SPICEHILL:
-                    saveFile << '+';
-                    break;
-                case TERRAIN_SPICE:
-                    saveFile << '-';
-                    break;
-                case TERRAIN_HILL:
-                    saveFile << 'h';
-                    break;
-                default:
-                    std::cout << "Unknown value " << ((*m_mapData)[j][i]) << std::endl;
-                    break;
+    if (!m_previewMaps->saveSkirmishMap(map, backup)) {
+        const s_GameEvent errorEvent {
+            .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
+            .data = NotificationEvent {
+                .message = "Unable to save map",
+                .type = eNotificationType::PRIORITY,
             }
-        }
-        saveFile << "\n";
+        };
+        m_interface->onNotifyGameEvent(errorEvent);
+        return false;
     }
 
-    saveFile.close();
-    // TODO:  log info about successful map saving
-    m_previewMaps->loadSkirmish(fileName);
     const s_GameEvent newEvent {
         .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
         .data = NotificationEvent {
@@ -1444,4 +1393,5 @@ void cEditorState::saveMap(bool backup) const
         }
     };                
     m_interface->onNotifyGameEvent(newEvent);
+    return true;
 }

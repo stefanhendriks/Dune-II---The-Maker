@@ -63,6 +63,7 @@ public:
     void setEditorMap(s_PreviewMap &&map);
 
     void loadSkirmish(const std::string &filename);
+    bool saveSkirmishMap(const s_PreviewMap &map, bool backup = false);
 private:
     void initRandomMap();
     void initPreviews();
