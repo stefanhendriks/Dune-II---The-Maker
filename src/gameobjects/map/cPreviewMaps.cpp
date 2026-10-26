@@ -24,6 +24,7 @@
 #include <filesystem>
 #include <fstream>
 #include <cctype>
+#include <optional>
 #include <string>
 
 namespace fs = std::filesystem;
@@ -318,6 +319,26 @@ static std::string normalizeStringForFileName(const std::string& input)
     return output;
 }
 
+static std::optional<char> terrainToMapChar(int terrain)
+{
+    switch (terrain) {
+        case TERRAIN_SAND:
+            return ')';
+        case TERRAIN_ROCK:
+            return '^';
+        case TERRAIN_MOUNTAIN:
+            return 'R';
+        case TERRAIN_SPICEHILL:
+            return '+';
+        case TERRAIN_SPICE:
+            return '-';
+        case TERRAIN_HILL:
+            return 'h';
+        default:
+            return std::nullopt;
+    }
+}
+
 bool cPreviewMaps::saveSkirmishMap(const s_PreviewMap &map, bool backup)
 {
     const std::string fileName = backup
@@ -330,22 +351,19 @@ bool cPreviewMaps::saveSkirmishMap(const s_PreviewMap &map, bool backup)
         return false;
     }
 
+    std::string mapRows;
     for (int y = 1; y < map.height - 1; y++) {
         for (int x = 1; x < map.width - 1; x++) {
             const size_t index = static_cast<size_t>(y) * static_cast<size_t>(map.width) + static_cast<size_t>(x);
-            switch (map.terrainType[index]) {
-                case TERRAIN_SAND:
-                case TERRAIN_ROCK:
-                case TERRAIN_MOUNTAIN:
-                case TERRAIN_SPICEHILL:
-                case TERRAIN_SPICE:
-                case TERRAIN_HILL:
-                    break;
-                default:
-                    Logger::error(COMP_MAP, "cPreviewMaps", "Unknown terrain value {} in map {}", map.terrainType[index], fileName);
-                    return false;
+
+            const auto terrainChar = terrainToMapChar(map.terrainType[index]);
+            if (!terrainChar) {
+                Logger::error(COMP_MAP, "cPreviewMaps", "Unknown terrain value {} in map {}", map.terrainType[index], fileName);
+                return false;
             }
+            mapRows += *terrainChar;
         }
+        mapRows += '\n';
     }
 
     std::ofstream saveFile(fileName);
@@ -370,38 +388,7 @@ bool cPreviewMaps::saveSkirmishMap(const s_PreviewMap &map, bool backup)
             firstStartCell = false;
         }
     }
-    saveFile << "\n\n\n[MAP]\n";
-
-    for (int y = 1; y < map.height - 1; y++) {
-        for (int x = 1; x < map.width - 1; x++) {
-            const size_t index = static_cast<size_t>(y) * static_cast<size_t>(map.width) + static_cast<size_t>(x);
-
-            switch (map.terrainType[index]) {
-                case TERRAIN_SAND:
-                    saveFile << ')';
-                    break;
-                case TERRAIN_ROCK:
-                    saveFile << '^';
-                    break;
-                case TERRAIN_MOUNTAIN:
-                    saveFile << 'R';
-                    break;
-                case TERRAIN_SPICEHILL:
-                    saveFile << '+';
-                    break;
-                case TERRAIN_SPICE:
-                    saveFile << '-';
-                    break;
-                case TERRAIN_HILL:
-                    saveFile << 'h';
-                    break;
-                default:
-                    Logger::error(COMP_MAP, "cPreviewMaps", "Unknown terrain value {} in map {}", map.terrainType[index], fileName);
-                    return false;
-            }
-        }
-        saveFile << "\n";
-    }
+    saveFile << "\n\n\n[MAP]\n" << mapRows;
 
     saveFile.close();
     if (!saveFile) {
