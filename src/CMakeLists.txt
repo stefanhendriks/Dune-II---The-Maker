@@ -39,6 +39,7 @@ set(D2TM_SOURCES
     game/cGameInterface.cpp
     game/CampaignProgress.cpp
     game/cMissionStatsCollector.cpp
+    game/GameStateTransitionService.cpp
     game/cNotificationArea.cpp
     game/cSDLSystem.cpp
     game/cScreenFader.cpp

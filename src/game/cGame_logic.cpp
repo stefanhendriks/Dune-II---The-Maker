@@ -202,15 +202,7 @@ cGame::cGame()
             dispatchGameEvent(event);
         }
     );
-    m_stateTransitions = std::make_unique<GameStateTransitionService>(
-        [this](int state) {
-            setNextStateToTransitionTo(state);
-        },
-        [this](int state) {
-            setNextStateToTransitionTo(state);
-            initiateFadingOut();
-        }
-    );
+    m_stateTransitions = std::make_unique<GameStateTransitionService>(*this);
 
     m_services = std::make_unique<sGameServices>();
     m_services->ctx = ctx.get();

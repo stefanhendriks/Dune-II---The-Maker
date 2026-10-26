@@ -15,27 +15,15 @@
 
 #pragma once
 
-#include <functional>
-#include <utility>
+class cGame;
 
 class GameStateTransitionService {
 public:
-    using TransitionCallback = std::function<void(int)>;
+    explicit GameStateTransitionService(cGame &game);
 
-    GameStateTransitionService(TransitionCallback setNextState, TransitionCallback setNextStateWithFade)
-        : m_setNextState(std::move(setNextState)),
-          m_setNextStateWithFade(std::move(setNextStateWithFade)) {
-    }
-
-    void setNextState(int state) const {
-        m_setNextState(state);
-    }
-
-    void setNextStateWithFade(int state) const {
-        m_setNextStateWithFade(state);
-    }
+    void setNextState(int state) const;
+    void setNextStateWithFade(int state) const;
 
 private:
-    TransitionCallback m_setNextState;
-    TransitionCallback m_setNextStateWithFade;
+    cGame &m_game;
 };
