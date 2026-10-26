@@ -34,10 +34,11 @@ class cPreviewMaps;
 class GuiBar;
 class GuiButtonGroup;
 class cTextDrawer;
-class cGameInterface;
 class cMouse;
 class cEditorUndoRedoHistory;
 class cEditorCam;
+class cEventEmitter;
+class GameStateTransitionService;
 
 class cEditorState : public cGameState {
 public:
@@ -58,7 +59,8 @@ private:
     Graphics *m_gfxdata = nullptr;
     Graphics *m_gfxeditor = nullptr;
     cGameSettings *m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
+    cEventEmitter* m_eventEmitter = nullptr;
+    GameStateTransitionService* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
     cPreviewMaps* m_previewMaps = nullptr;
