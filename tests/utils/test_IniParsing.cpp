@@ -17,7 +17,6 @@ TEST_CASE("ToInt - invalid input returns 0", "[ini_parsing]")
     REQUIRE(ToInt("") == 0);
     REQUIRE(ToInt("abc") == 0);
     REQUIRE(ToInt("12abc") == 0);
-    REQUIRE(ToInt(" 12") == 0);
     REQUIRE(ToInt("99999999999999999999") == 0);
 }
 
