@@ -167,6 +167,7 @@ set(D2TM_SOURCES
     utils/d2tm_math.cpp
     utils/Graphics.cpp
     utils/ini.cpp
+    utils/IniParsing.cpp
     utils/Log.cpp
     utils/RNG.cpp
     utils/SfxTrackAllocator.cpp
