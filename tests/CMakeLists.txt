@@ -4,6 +4,7 @@ find_package(Catch2 3 REQUIRED)
 set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyBindings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/map/test_cPreviewMapsSave.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cHandleArgument.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniFile.cpp
@@ -22,6 +23,8 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/controls/cKeyBindings.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cHandleArgument.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/MapGeometry.cpp
+    ${CMAKE_SOURCE_DIR}/src/gameobjects/map/cPreviewMaps.cpp
+    ${CMAKE_SOURCE_DIR}/src/drawers/SDLDrawer.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/RNG.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/d2tm_math.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cPoint.cpp
