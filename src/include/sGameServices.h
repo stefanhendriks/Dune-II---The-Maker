@@ -33,6 +33,7 @@ class cScreenShake;
 class cScreenFader;
 class CampaignProgress;
 class Texture;
+class GameStateTransitionService;
 
 struct sGameServices
 {
@@ -53,4 +54,5 @@ struct sGameServices
     cScreenFader *screenFader = nullptr;
     CampaignProgress *campaignProgress = nullptr;
     Texture *screenTexture = nullptr; // set in cGame::run(), before any state transition
+    GameStateTransitionService *stateTransitions = nullptr;
 };
