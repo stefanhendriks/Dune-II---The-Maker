@@ -202,9 +202,9 @@ std::pair<std::string, std::string> INI_SplitWord(const std::string& input)
 
 
 // Reads out word[], does a string compare and returns type id
-eIniWord INI_WordType(const std::string& word, int section)
+eIniWord INI_WordType(const std::string& word, eIniSection section)
 {
-    if (section == SEC_REGION) {
+    if (section == eIniSection::REGION) {
         if (cIniUtils::caseInsCompare(word, "Region"))            return eIniWord::REGION;
         if (cIniUtils::caseInsCompare(word, "RegionConquer"))     return eIniWord::REGIONCONQUER;
         if (cIniUtils::caseInsCompare(word, "House"))             return eIniWord::REGIONHOUSE;
@@ -213,32 +213,32 @@ eIniWord INI_WordType(const std::string& word, int section)
         return eIniWord::NONE;
     }
 
-    if (section == INI_SCEN ||
-            section == INI_DESCRIPTION ||
-            section == INI_BRIEFING ||
-            section == INI_ADVICE ||
-            section == INI_LOSE ||
-            section == INI_WIN) {
+    if (section == eIniSection::SCEN ||
+            section == eIniSection::DESCRIPTION ||
+            section == eIniSection::BRIEFING ||
+            section == eIniSection::ADVICE ||
+            section == eIniSection::LOSE ||
+            section == eIniSection::WIN) {
         if (cIniUtils::caseInsCompare(word, "Number"))            return eIniWord::NUMBER;
         if (cIniUtils::caseInsCompare(word, "Text"))              return eIniWord::REGIONTEXT;
         return eIniWord::NONE;
     }
 
-    if (section == INI_SKIRMISH) {
+    if (section == eIniSection::SKIRMISH) {
         if (cIniUtils::caseInsCompare(word, "Title"))             return eIniWord::MAPNAME;
         if (cIniUtils::caseInsCompare(word, "StartCell"))         return eIniWord::STARTCELL;
     }
 
-    if (section == INI_GAME) {
+    if (section == eIniSection::GAME) {
         if (cIniUtils::caseInsCompare(word, "ModId"))             return eIniWord::MODID;
     }
-    else if (section == INI_BASIC) {
+    else if (section == eIniSection::BASIC) {
         if (cIniUtils::caseInsCompare(word, "CursorPos"))         return eIniWord::FOCUS_POS;
         if (cIniUtils::caseInsCompare(word, "BriefPicture"))      return eIniWord::BRIEFPICTURE;
         if (cIniUtils::caseInsCompare(word, "WinFlags"))          return eIniWord::WINFLAGS;
         if (cIniUtils::caseInsCompare(word, "LoseFlags"))         return eIniWord::LOSEFLAGS;
     }
-    else if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
+    else if (isHouseSection(section)) {
         if (cIniUtils::caseInsCompare(word, "Team"))              return eIniWord::TEAM;
         if (cIniUtils::caseInsCompare(word, "Credits"))           return eIniWord::CREDITS;
         if (cIniUtils::caseInsCompare(word, "Quota"))             return eIniWord::QUOTA;
@@ -246,14 +246,14 @@ eIniWord INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "House"))             return eIniWord::HOUSE;
         if (cIniUtils::caseInsCompare(word, "Focus"))             return eIniWord::FOCUS_POS;
     }
-    else if (section == INI_MAP) {
+    else if (section == eIniSection::MAP) {
         if (cIniUtils::caseInsCompare(word, "Width"))             return eIniWord::MAPWIDTH;
         if (cIniUtils::caseInsCompare(word, "Height"))            return eIniWord::MAPHEIGHT;
         if (cIniUtils::caseInsCompare(word, "Seed"))              return eIniWord::MAPSEED;
         if (cIniUtils::caseInsCompare(word, "Bloom"))             return eIniWord::MAPBLOOM;
         if (cIniUtils::caseInsCompare(word, "Field"))             return eIniWord::MAPFIELD;
     }
-    else if (section == INI_BULLETS) {
+    else if (section == eIniSection::BULLETS) {
         if (cIniUtils::caseInsCompare(word, "Bitmap"))            return eIniWord::BITMAP;
         if (cIniUtils::caseInsCompare(word, "BitmapExplosion"))   return eIniWord::BITMAP_DEAD;
         if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return eIniWord::BITMAP_WIDTH;
@@ -267,7 +267,7 @@ eIniWord INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "DeviateProbability"))return eIniWord::DEVIATE_PROBABILITY;
         if (cIniUtils::caseInsCompare(word, "GroundBullet"))      return eIniWord::GROUND_BULLET;
     }
-    else if (section == INI_STRUCTURES) {
+    else if (section == eIniSection::STRUCTURES) {
         if (cIniUtils::caseInsCompare(word, "HitPoints"))         return eIniWord::HITPOINTS;
         if (cIniUtils::caseInsCompare(word, "FixPoints"))         return eIniWord::FIXHP;
         if (cIniUtils::caseInsCompare(word, "PowerDrain"))        return eIniWord::POWERDRAIN;
@@ -279,7 +279,7 @@ eIniWord INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMax")) return eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX;
         if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitType"))      return eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_TYPE;
     }
-    else if (section == INI_UNITS) {
+    else if (section == eIniSection::UNITS) {
         if (cIniUtils::caseInsCompare(word, "Bitmap"))            return eIniWord::BITMAP;
         if (cIniUtils::caseInsCompare(word, "BitmapTop"))         return eIniWord::BITMAP_TOP;
         if (cIniUtils::caseInsCompare(word, "Icon"))              return eIniWord::ICON;
@@ -319,7 +319,7 @@ eIniWord INI_WordType(const std::string& word, int section)
         if (cIniUtils::caseInsCompare(word, "AttackIsEnterStructure")) return eIniWord::ATTACK_IS_ENTER_STRUCTURE;
         if (cIniUtils::caseInsCompare(word, "DamageOnEnterStructure")) return eIniWord::DAMAGE_ON_ENTER_STRUCTURE;
     }
-    else if (section == INI_STRUCTURES) {
+    else if (section == eIniSection::STRUCTURES) {
         if (word.length() > 1) {
             if (cIniUtils::caseInsCompare(word, "PreBuild"))      return eIniWord::PREBUILD;
             if (cIniUtils::caseInsCompare(word, "Description"))   return eIniWord::DESCRIPTION;
@@ -331,7 +331,7 @@ eIniWord INI_WordType(const std::string& word, int section)
         else
             return eIniWord::NONE;
     }
-    else if (section == INI_HOUSES) {
+    else if (section == eIniSection::HOUSES) {
         if (cIniUtils::caseInsCompare(word, "ColorR"))            return eIniWord::RED;
         if (cIniUtils::caseInsCompare(word, "ColorG"))            return eIniWord::GREEN;
         if (cIniUtils::caseInsCompare(word, "ColorB"))            return eIniWord::BLUE;
@@ -351,31 +351,31 @@ eIniWord INI_WordType(const std::string& word, int section)
 
 
 // Scenario section types
-int SCEN_INI_SectionType(const std::string& section)
+eIniSection SCEN_INI_SectionType(const std::string& section)
 {
-    if (cIniUtils::caseInsCompare(section, "UNITS"))          return INI_UNITS;
-    if (cIniUtils::caseInsCompare(section, "SKIRMISH"))       return INI_SKIRMISH;
-    if (cIniUtils::caseInsCompare(section, "STRUCTURES"))     return INI_STRUCTURES;
-    if (cIniUtils::caseInsCompare(section, "REINFORCEMENTS")) return INI_REINFORCEMENTS;
-    if (cIniUtils::caseInsCompare(section, "MAP"))            return INI_MAP;
-    if (cIniUtils::caseInsCompare(section, "BASIC"))          return INI_BASIC;
-    if (cIniUtils::caseInsCompare(section, "Atreides"))       return INI_HOUSEATREIDES;
-    if (cIniUtils::caseInsCompare(section, "Ordos"))          return INI_HOUSEORDOS;
-    if (cIniUtils::caseInsCompare(section, "Harkonnen"))      return INI_HOUSEHARKONNEN;
-    if (cIniUtils::caseInsCompare(section, "Sardaukar"))      return INI_HOUSESARDAUKAR;
-    if (cIniUtils::caseInsCompare(section, "Fremen"))         return INI_HOUSEFREMEN;
-    if (cIniUtils::caseInsCompare(section, "Mercenary"))      return INI_HOUSEMERCENARY;
+    if (cIniUtils::caseInsCompare(section, "UNITS"))          return eIniSection::UNITS;
+    if (cIniUtils::caseInsCompare(section, "SKIRMISH"))       return eIniSection::SKIRMISH;
+    if (cIniUtils::caseInsCompare(section, "STRUCTURES"))     return eIniSection::STRUCTURES;
+    if (cIniUtils::caseInsCompare(section, "REINFORCEMENTS")) return eIniSection::REINFORCEMENTS;
+    if (cIniUtils::caseInsCompare(section, "MAP"))            return eIniSection::MAP;
+    if (cIniUtils::caseInsCompare(section, "BASIC"))          return eIniSection::BASIC;
+    if (cIniUtils::caseInsCompare(section, "Atreides"))       return eIniSection::HOUSEATREIDES;
+    if (cIniUtils::caseInsCompare(section, "Ordos"))          return eIniSection::HOUSEORDOS;
+    if (cIniUtils::caseInsCompare(section, "Harkonnen"))      return eIniSection::HOUSEHARKONNEN;
+    if (cIniUtils::caseInsCompare(section, "Sardaukar"))      return eIniSection::HOUSESARDAUKAR;
+    if (cIniUtils::caseInsCompare(section, "Fremen"))         return eIniSection::HOUSEFREMEN;
+    if (cIniUtils::caseInsCompare(section, "Mercenary"))      return eIniSection::HOUSEMERCENARY;
     Logger::warn(COMP_NONE, "SCEN_INI_SectionType", "Could not find section type for [{}]", section);
-    return -1;
+    return eIniSection::NONE;
 }
 
 
-int GAME_INI_SectionType(const std::string& section, int last)
+eIniSection GAME_INI_SectionType(const std::string& section, eIniSection last)
 {
-    if (cIniUtils::caseInsCompare(section, "BULLETS"))    return INI_BULLETS;
-    if (cIniUtils::caseInsCompare(section, "UNITS"))      return INI_UNITS;
-    if (cIniUtils::caseInsCompare(section, "STRUCTURES")) return INI_STRUCTURES;
-    if (cIniUtils::caseInsCompare(section, "TERRAINS"))   return INI_TERRAINS;
+    if (cIniUtils::caseInsCompare(section, "BULLETS"))    return eIniSection::BULLETS;
+    if (cIniUtils::caseInsCompare(section, "UNITS"))      return eIniSection::UNITS;
+    if (cIniUtils::caseInsCompare(section, "STRUCTURES")) return eIniSection::STRUCTURES;
+    if (cIniUtils::caseInsCompare(section, "TERRAINS"))   return eIniSection::TERRAINS;
     // When nothing found; we assume its just a new ID tag for some unit or structure
     // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
     return last;
@@ -442,7 +442,7 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
             continue;
         }
 
-        wordtype = INI_WordType(word_left, SEC_REGION);
+        wordtype = INI_WordType(word_left, eIniSection::REGION);
 
         if (wordtype == eIniWord::REGION) {
             iRegionNumber = -1;
@@ -693,7 +693,7 @@ std::optional<ScenarioData> readScenarioFile(const std::string& filename)
     }
 
     ScenarioData data;
-    int section = INI_NONE;
+    eIniSection section = eIniSection::NONE;
     int iPlayerID = -1;
 
     std::string linefeed;
@@ -705,22 +705,22 @@ std::optional<ScenarioData> readScenarioFile(const std::string& filename)
 
         auto sectionName = extractSectionName(linefeed);
         if (!sectionName.empty()) {
-            int sectionType = SCEN_INI_SectionType(sectionName);
-            if (sectionType > -1) {
+            eIniSection sectionType = SCEN_INI_SectionType(sectionName);
+            if (sectionType != eIniSection::NONE) {
                 section = sectionType;
 
-                Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] found section '{}', resulting in section id [{}]", sectionName, section);
+                Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] found section '{}', resulting in section id [{}]", sectionName, std::to_underlying(section));
 
-                if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
+                if (isHouseSection(section)) {
                     iPlayerID = std::min(iPlayerID + 1, MAX_PLAYERS - 1);
 
                     int house = -1;
-                    if (section == INI_HOUSEATREIDES) house = ATREIDES;
-                    if (section == INI_HOUSEORDOS)    house = ORDOS;
-                    if (section == INI_HOUSEHARKONNEN) house = HARKONNEN;
-                    if (section == INI_HOUSEMERCENARY) house = MERCENARY;
-                    if (section == INI_HOUSEFREMEN)   house = FREMEN;
-                    if (section == INI_HOUSESARDAUKAR) house = SARDAUKAR;
+                    if (section == eIniSection::HOUSEATREIDES) house = ATREIDES;
+                    if (section == eIniSection::HOUSEORDOS)    house = ORDOS;
+                    if (section == eIniSection::HOUSEHARKONNEN) house = HARKONNEN;
+                    if (section == eIniSection::HOUSEMERCENARY) house = MERCENARY;
+                    if (section == eIniSection::HOUSEFREMEN)   house = FREMEN;
+                    if (section == eIniSection::HOUSESARDAUKAR) house = SARDAUKAR;
 
                     data.playerHouse[iPlayerID] = house;
 
@@ -730,29 +730,29 @@ std::optional<ScenarioData> readScenarioFile(const std::string& filename)
             continue;
         }
 
-        if (section == INI_NONE) continue;
+        if (section == eIniSection::NONE) continue;
 
         auto [word_left, word_right] = INI_SplitWord(linefeed);
         eIniWord wordtype = INI_WordType(word_left, section);
 
-        if (section == INI_BASIC) {
+        if (section == eIniSection::BASIC) {
             readScenarioBasicLine(data, wordtype, word_right);
         }
 
-        if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
+        if (isHouseSection(section)) {
             readScenarioHouseLine(data, wordtype, iPlayerID, word_right);
         }
 
-        if (section == INI_MAP) {
+        if (section == eIniSection::MAP) {
             readScenarioMapLine(data, wordtype, linefeed);
         }
-        else if (section == INI_UNITS) {
+        else if (section == eIniSection::UNITS) {
             readScenarioUnitLine(data, linefeed);
         }
-        else if (section == INI_STRUCTURES) {
+        else if (section == eIniSection::STRUCTURES) {
             readScenarioStructureLine(data, linefeed);
         }
-        else if (section == INI_REINFORCEMENTS) {
+        else if (section == eIniSection::REINFORCEMENTS) {
             readScenarioReinforcementLine(data, linefeed);
         }
     }
@@ -1000,7 +1000,7 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_cred
     m_objects->getPlayer(AI_WORM)->setTeam(2); // the WORM player is nobody's ally, ever
 }
 
-void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, AbstractMentat *pMentat)
+void cIni::loadBriefing(int iHouse, int iScenarioFind, eIniSection iSectionFind, AbstractMentat *pMentat)
 {
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] Opening file");
 
@@ -1014,10 +1014,10 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
     auto path = std::string("campaign/briefings/") + filename;
 
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "{}", path);
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "Going to find SCEN ID #{} and SectionID {}", iScenarioFind, iSectionFind);
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "Going to find SCEN ID #{} and SectionID {}", iScenarioFind, std::to_underlying(iSectionFind));
 
     int iScenario = 0;
-    int iSection = 0;
+    eIniSection iSection = eIniSection::HOUSES;
     int iLine = 0;
 
     std::ifstream file(path);
@@ -1038,7 +1038,7 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
             iSection = cIniUtils::getSectionType(sectionName, iSection);
         }
 
-        if (iSection == INI_SCEN) {
+        if (iSection == eIniSection::SCEN) {
             auto [word_left, word_right] = INI_SplitWord(linefeed);
             eIniWord wordtype = INI_WordType(word_left, iSection);
 
@@ -1072,7 +1072,7 @@ void cIni::installGame(const std::string& filename)
 {
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
-    int section = INI_GAME;
+    eIniSection section = eIniSection::GAME;
     eIniWord wordtype = eIniWord::NONE;
     int id = -1;
 
@@ -1095,27 +1095,27 @@ void cIni::installGame(const std::string& filename)
 
         auto sectionName = extractSectionName(linefeed);
         if (!sectionName.empty()) {
-            int last = section;
+            eIniSection last = section;
             section = GAME_INI_SectionType(sectionName, section);
 
             if (last != section) {
                 id = -1;
-                if (section == INI_UNITS)      Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [UNITS]");
-                if (section == INI_STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [STRUCTURES]");
-                if (section == INI_BULLETS)    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [BULLETS]");
+                if (section == eIniSection::UNITS)      Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [UNITS]");
+                if (section == eIniSection::STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [STRUCTURES]");
+                if (section == eIniSection::BULLETS)    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [BULLETS]");
             }
 
-            if (section == INI_UNITS && linefeed.find("[UNIT:") != std::string::npos) {
+            if (section == eIniSection::UNITS && linefeed.find("[UNIT:") != std::string::npos) {
                 id = cIniUtils::getUnitTypeFromString(extractTagValue(linefeed, "[UNIT:"));
                 if (id >= MAX_UNITTYPES) id--;
             }
 
-            if (section == INI_STRUCTURES && linefeed.find("[STRUCTURE:") != std::string::npos) {
+            if (section == eIniSection::STRUCTURES && linefeed.find("[STRUCTURE:") != std::string::npos) {
                 id = cIniUtils::getStructureType(extractTagValue(linefeed, "[STRUCTURE:"));
                 if (id >= MAX_STRUCTURETYPES) id--;
             }
 
-            if (section == INI_BULLETS && linefeed.find("[BULLET:") != std::string::npos) {
+            if (section == eIniSection::BULLETS && linefeed.find("[BULLET:") != std::string::npos) {
                 id = cIniUtils::getBulletTypeFromString(extractTagValue(linefeed, "[BULLET:"));
                 const int bulletInfoCount = m_infos->getBulletInfos()->size();
                 if (id >= 0 && id >= bulletInfoCount) {
@@ -1126,13 +1126,13 @@ void cIni::installGame(const std::string& filename)
             continue;
         }
 
-        if (section == INI_GAME) continue;
+        if (section == eIniSection::GAME) continue;
 
         auto [word_left, word_right] = INI_SplitWord(linefeed);
         wordtype = INI_WordType(word_left, section);
 
         /**** [UNITS] ****/
-        if (section == INI_UNITS && id > -1) {
+        if (section == eIniSection::UNITS && id > -1) {
             s_UnitInfo &unitInfo = m_infos->getUnitInfo(id);
 
             if (wordtype == eIniWord::HITPOINTS)     unitInfo.hp = ToInt(word_right);
@@ -1171,7 +1171,7 @@ void cIni::installGame(const std::string& filename)
             }
         }
 
-        if (section == INI_TERRAINS && id > -1) {
+        if (section == eIniSection::TERRAINS && id > -1) {
             if (wordtype == eIniWord::BLOOMTIMERDURATION)    m_infos->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
             if (wordtype == eIniWord::TERRAIN_MINSPICE)      m_infos->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
             if (wordtype == eIniWord::TERRAIN_MAXSPICE)      m_infos->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
@@ -1180,7 +1180,7 @@ void cIni::installGame(const std::string& filename)
             if (wordtype == eIniWord::TERRAINWALL_HP)        m_infos->getTerrainInfo()->terrainWallHp = ToInt(word_right);
         }
 
-        if (section == INI_STRUCTURES && id > -1) {
+        if (section == eIniSection::STRUCTURES && id > -1) {
             if (wordtype == eIniWord::HITPOINTS)    m_infos->getStructureInfo(id).hp = ToInt(word_right);
             if (wordtype == eIniWord::FIXHP)        m_infos->getStructureInfo(id).fixhp = ToInt(word_right);
             if (wordtype == eIniWord::POWERDRAIN)   m_infos->getStructureInfo(id).power_drain = ToInt(word_right);
@@ -1198,7 +1198,7 @@ void cIni::installGame(const std::string& filename)
             if (wordtype == eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_TYPE)       m_infos->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
         }
 
-        if (section == INI_BULLETS && id > -1) {
+        if (section == eIniSection::BULLETS && id > -1) {
             if (wordtype == eIniWord::DAMAGE_VEHICLE)     m_infos->getBulletInfo(id).damage_vehicles = ToInt(word_right);
             if (wordtype == eIniWord::DAMAGE_INFANTRY)    m_infos->getBulletInfo(id).damage_infantry = ToInt(word_right);
             if (wordtype == eIniWord::DEVIATE_PROBABILITY) m_infos->getBulletInfo(id).deviateProbability = ToInt(word_right);
