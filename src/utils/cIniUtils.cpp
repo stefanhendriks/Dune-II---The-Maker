@@ -22,19 +22,19 @@
 
 #include <format>
 
-const std::unordered_map<std::string, int> cIniUtils::sectionMap = {
-    {"UNITS", INI_UNITS},
-    {"SKIRMISH", INI_SKIRMISH},
-    {"STRUCTURES", INI_STRUCTURES},
-    {"REINFORCEMENTS", INI_REINFORCEMENTS},
-    {"MAP", INI_MAP},
-    {"BASIC", INI_BASIC},
-    {"Atreides", INI_HOUSEATREIDES},
-    {"Ordos", INI_HOUSEORDOS},
-    {"Harkonnen", INI_HOUSEHARKONNEN},
-    {"Sardaukar", INI_HOUSESARDAUKAR},
-    {"Fremen", INI_HOUSEFREMEN},
-    {"Mercenary", INI_HOUSEMERCENARY}
+const std::unordered_map<std::string, eIniSection> cIniUtils::sectionMap = {
+    {"UNITS", eIniSection::UNITS},
+    {"SKIRMISH", eIniSection::SKIRMISH},
+    {"STRUCTURES", eIniSection::STRUCTURES},
+    {"REINFORCEMENTS", eIniSection::REINFORCEMENTS},
+    {"MAP", eIniSection::MAP},
+    {"BASIC", eIniSection::BASIC},
+    {"Atreides", eIniSection::HOUSEATREIDES},
+    {"Ordos", eIniSection::HOUSEORDOS},
+    {"Harkonnen", eIniSection::HOUSEHARKONNEN},
+    {"Sardaukar", eIniSection::HOUSESARDAUKAR},
+    {"Fremen", eIniSection::HOUSEFREMEN},
+    {"Mercenary", eIniSection::HOUSEMERCENARY}
 };
 
 const std::unordered_map<std::string, int> cIniUtils::houseMap = {
@@ -48,18 +48,18 @@ const std::unordered_map<std::string, int> cIniUtils::houseMap = {
     {"General", GENERALHOUSE}
 };
 
-const std::unordered_map<std::string, int> cIniUtils::sectionTypeMap = {
-    {"MAP", INI_MAP},
-    {"SKIRMISH", INI_SKIRMISH},
-    {"DESCRIPTION", INI_DESCRIPTION},
-    {"SCEN", INI_SCEN},
-    {"BRIEFING", INI_BRIEFING},
-    {"WIN", INI_WIN},
-    {"LOSE", INI_LOSE},
-    {"ADVICE", INI_ADVICE},
-    {"HOUSES", INI_HOUSES},
-    {"UNITS", INI_UNITS},
-    {"STRUCTURES", INI_STRUCTURES}
+const std::unordered_map<std::string, eIniSection> cIniUtils::sectionTypeMap = {
+    {"MAP", eIniSection::MAP},
+    {"SKIRMISH", eIniSection::SKIRMISH},
+    {"DESCRIPTION", eIniSection::DESCRIPTION},
+    {"SCEN", eIniSection::SCEN},
+    {"BRIEFING", eIniSection::BRIEFING},
+    {"WIN", eIniSection::WIN},
+    {"LOSE", eIniSection::LOSE},
+    {"ADVICE", eIniSection::ADVICE},
+    {"HOUSES", eIniSection::HOUSES},
+    {"UNITS", eIniSection::UNITS},
+    {"STRUCTURES", eIniSection::STRUCTURES}
 };
 
 const std::unordered_map<std::string, std::string> cIniUtils::sceneFileMap = {
@@ -248,7 +248,7 @@ std::string cIniUtils::getScenarioFileName(int iHouse, int iRegion)
 }
 
 // Reads out section[], does a string compare and returns type id
-int cIniUtils::getSectionType(const std::string& section, int last)
+eIniSection cIniUtils::getSectionType(const std::string& section, eIniSection last)
 {
     for (const auto& [key, value] : sectionTypeMap) {
         if (cIniUtils::caseInsCompare(section, key)) {

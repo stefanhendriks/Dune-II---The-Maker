@@ -87,7 +87,7 @@ void cMentatState::prepareMentat(int house)
             m_interface->missionInit();
             m_interface->setupPlayers();
             m_cIni->loadScenario(m_mentat.get(), m_reinforcements,m_dataCampaign);
-            m_cIni->loadBriefing(house, m_dataCampaign->region, INI_BRIEFING, m_mentat.get());
+            m_cIni->loadBriefing(house, m_dataCampaign->region, eIniSection::BRIEFING, m_mentat.get());
             break;
         case MentatMode::WinBrief:
             if (house == ATREIDES)
@@ -105,7 +105,7 @@ void cMentatState::prepareMentat(int house)
                 m_mentat->loadScene("win01");
             else
                 m_mentat->loadScene("win02");
-            m_cIni->loadBriefing(house, m_dataCampaign->region, INI_WIN, m_mentat.get());
+            m_cIni->loadBriefing(house, m_dataCampaign->region, eIniSection::WIN, m_mentat.get());
             break;
         case MentatMode::LoseBrief:
             if (house == ATREIDES) 
@@ -124,7 +124,7 @@ void cMentatState::prepareMentat(int house)
             else
                 m_mentat->loadScene("lose02");
             
-            m_cIni->loadBriefing(house, m_dataCampaign->region, INI_LOSE, m_mentat.get());
+            m_cIni->loadBriefing(house, m_dataCampaign->region, eIniSection::LOSE, m_mentat.get());
             break;
     }
     m_mentat->speak();
@@ -157,7 +157,7 @@ void cMentatState::loadScenario(cReinforcements *reinforcements)
     m_cIni->loadScenario(m_mentat.get(), reinforcements, m_dataCampaign);
 }
 
-void cMentatState::loadBriefing(int iScenarioFind, int iSectionFind)
+void cMentatState::loadBriefing(int iScenarioFind, eIniSection iSectionFind)
 {
     m_cIni->loadBriefing(m_dataCampaign->housePlayer, iScenarioFind, iSectionFind, m_mentat.get());
 }

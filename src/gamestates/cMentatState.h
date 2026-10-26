@@ -18,6 +18,7 @@
 #include "cGameState.h"
 #include "gameobjects/mentat/AbstractMentat.h"
 #include <memory>
+#include "iniSections.h"
 
 struct s_DataCampaign;
 class cReinforcements;
@@ -46,7 +47,7 @@ public:
 
     eGameStateType getType() override;
     void loadScenario(cReinforcements *reinforcements);
-    void loadBriefing(int iScenarioFind, int iSectionFind);
+    void loadBriefing(int iScenarioFind, eIniSection iSectionFind);
     void prepareMentat(int house);
 private:
     std::unique_ptr<AbstractMentat> m_mentat;
