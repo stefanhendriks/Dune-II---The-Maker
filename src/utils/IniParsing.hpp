@@ -17,7 +17,11 @@
 
 #include "iniSections.h"
 #include "iniWords.h"
+#include "utils/ScenarioData.hpp"
 
+#include <istream>
+#include <map>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -44,3 +48,38 @@ eIniWord INI_WordType(const std::string& word, eIniSection section);
 eIniSection SCEN_INI_SectionType(const std::string& section);
 eIniSection GAME_INI_SectionType(const std::string& section, eIniSection last);
 bool isCommentLine(const std::string& linefeed);
+
+// Name of the directory (below campaign/) that holds the files of the given house
+std::string getHouseDirectoryName(int iHouse);
+// Name of the mentat briefing file of the given house, empty when the house has none
+std::string getBriefingFileName(int iHouse);
+// Mission (tech level) that belongs to a campaign region
+int getTechLevelByRegion(int iRegion);
+
+// Reads a campaign scenario into ScenarioData. Does not touch any game object.
+ScenarioData parseScenario(std::istream& file);
+
+// Returns the text lines (at most 10) of the given section for the given scenario number of a briefing file
+std::vector<std::string> parseBriefing(std::istream& file, int iScenarioFind, eIniSection iSectionFind);
+
+// The content of a campaign missionN.ini file, before any game object is touched
+struct RegionFileData {
+    struct WorldRegion {
+        std::optional<int> house;
+        std::optional<bool> selectable;
+        std::optional<int> alpha;   // follows the last of House= (255) or Select= (1) read for the region
+    };
+
+    struct Conquest {
+        int regionConquer = -1;
+        std::optional<int> house;
+        std::optional<std::string> text;
+    };
+
+    // keyed by region number (0 based)
+    std::map<int, WorldRegion> worldRegions;
+    // in file order
+    std::vector<Conquest> conquests;
+};
+
+RegionFileData parseRegionFile(std::istream& file);
