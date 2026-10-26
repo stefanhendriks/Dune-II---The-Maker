@@ -20,6 +20,7 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContextCreator.h"
 #include "game/cGame.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/CampaignProgress.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
@@ -201,6 +202,15 @@ cGame::cGame()
             dispatchGameEvent(event);
         }
     );
+    m_stateTransitions = std::make_unique<GameStateTransitionService>(
+        [this](int state) {
+            setNextStateToTransitionTo(state);
+        },
+        [this](int state) {
+            setNextStateToTransitionTo(state);
+            initiateFadingOut();
+        }
+    );
 
     m_services = std::make_unique<sGameServices>();
     m_services->ctx = ctx.get();
@@ -213,6 +223,7 @@ cGame::cGame()
     m_services->gameConditionChecker = m_gameConditionChecker.get();
     m_services->screenShake = m_screenShake.get();
     m_services->screenFader = m_cScreenFader.get();
+    m_services->stateTransitions = m_stateTransitions.get();
 
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());
