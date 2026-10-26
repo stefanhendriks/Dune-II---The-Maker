@@ -6,9 +6,12 @@
 
 #pragma once
 
-#define INI_UNITS_PART_CONTROLLER   0
-#define INI_UNITS_PART_TYPE         1
-#define INI_UNITS_PART_HP           2
-#define INI_UNITS_PART_CELL         3
-#define INI_UNITS_PART_FACING_BODY  4
-#define INI_UNITS_PART_FACING_HEAD  5
+enum class eIniUnitsPart {
+    CONTROLLER = 0,
+    TYPE,
+    HP,
+    CELL,
+    FACING_BODY,
+    FACING_HEAD,
+    COUNT
+};
