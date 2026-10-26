@@ -16,9 +16,7 @@
 #include "utils/ini.h"
 #include "utils/ScenarioData.hpp"
 #include "iniSections.h"
-#include "iniWordsGeneral.h"
-#include "iniWordsHouseSpecific.h"
-#include "iniWordsRegionSpecific.h"
+#include "iniWords.h"
 #include "iniUnitsParts.h"
 #include "cEnumArray.h"
 #include "utils/cIniUtils.h"
@@ -204,15 +202,15 @@ std::pair<std::string, std::string> INI_SplitWord(const std::string& input)
 
 
 // Reads out word[], does a string compare and returns type id
-int INI_WordType(const std::string& word, int section)
+eIniWord INI_WordType(const std::string& word, int section)
 {
     if (section == SEC_REGION) {
-        if (cIniUtils::caseInsCompare(word, "Region"))            return WORD_REGION;
-        if (cIniUtils::caseInsCompare(word, "RegionConquer"))     return WORD_REGIONCONQUER;
-        if (cIniUtils::caseInsCompare(word, "House"))             return WORD_REGIONHOUSE;
-        if (cIniUtils::caseInsCompare(word, "Text"))              return WORD_REGIONTEXT;
-        if (cIniUtils::caseInsCompare(word, "Select"))            return WORD_REGIONSELECT;
-        return WORD_NONE;
+        if (cIniUtils::caseInsCompare(word, "Region"))            return eIniWord::REGION;
+        if (cIniUtils::caseInsCompare(word, "RegionConquer"))     return eIniWord::REGIONCONQUER;
+        if (cIniUtils::caseInsCompare(word, "House"))             return eIniWord::REGIONHOUSE;
+        if (cIniUtils::caseInsCompare(word, "Text"))              return eIniWord::REGIONTEXT;
+        if (cIniUtils::caseInsCompare(word, "Select"))            return eIniWord::REGIONSELECT;
+        return eIniWord::NONE;
     }
 
     if (section == INI_SCEN ||
@@ -221,134 +219,134 @@ int INI_WordType(const std::string& word, int section)
             section == INI_ADVICE ||
             section == INI_LOSE ||
             section == INI_WIN) {
-        if (cIniUtils::caseInsCompare(word, "Number"))            return WORD_NUMBER;
-        if (cIniUtils::caseInsCompare(word, "Text"))              return WORD_REGIONTEXT;
-        return WORD_NONE;
+        if (cIniUtils::caseInsCompare(word, "Number"))            return eIniWord::NUMBER;
+        if (cIniUtils::caseInsCompare(word, "Text"))              return eIniWord::REGIONTEXT;
+        return eIniWord::NONE;
     }
 
     if (section == INI_SKIRMISH) {
-        if (cIniUtils::caseInsCompare(word, "Title"))             return WORD_MAPNAME;
-        if (cIniUtils::caseInsCompare(word, "StartCell"))         return WORD_STARTCELL;
+        if (cIniUtils::caseInsCompare(word, "Title"))             return eIniWord::MAPNAME;
+        if (cIniUtils::caseInsCompare(word, "StartCell"))         return eIniWord::STARTCELL;
     }
 
     if (section == INI_GAME) {
-        if (cIniUtils::caseInsCompare(word, "ModId"))             return WORD_MODID;
+        if (cIniUtils::caseInsCompare(word, "ModId"))             return eIniWord::MODID;
     }
     else if (section == INI_BASIC) {
-        if (cIniUtils::caseInsCompare(word, "CursorPos"))         return WORD_FOCUS;
-        if (cIniUtils::caseInsCompare(word, "BriefPicture"))      return WORD_BRIEFPICTURE;
-        if (cIniUtils::caseInsCompare(word, "WinFlags"))          return WORD_WINFLAGS;
-        if (cIniUtils::caseInsCompare(word, "LoseFlags"))         return WORD_LOSEFLAGS;
+        if (cIniUtils::caseInsCompare(word, "CursorPos"))         return eIniWord::FOCUS_POS;
+        if (cIniUtils::caseInsCompare(word, "BriefPicture"))      return eIniWord::BRIEFPICTURE;
+        if (cIniUtils::caseInsCompare(word, "WinFlags"))          return eIniWord::WINFLAGS;
+        if (cIniUtils::caseInsCompare(word, "LoseFlags"))         return eIniWord::LOSEFLAGS;
     }
     else if (section >= INI_HOUSEATREIDES && section <= INI_HOUSEMERCENARY) {
-        if (cIniUtils::caseInsCompare(word, "Team"))              return WORD_TEAM;
-        if (cIniUtils::caseInsCompare(word, "Credits"))           return WORD_CREDITS;
-        if (cIniUtils::caseInsCompare(word, "Quota"))             return WORD_QUOTA;
-        if (cIniUtils::caseInsCompare(word, "Brain"))             return WORD_BRAIN;
-        if (cIniUtils::caseInsCompare(word, "House"))             return WORD_HOUSE;
-        if (cIniUtils::caseInsCompare(word, "Focus"))             return WORD_FOCUS;
+        if (cIniUtils::caseInsCompare(word, "Team"))              return eIniWord::TEAM;
+        if (cIniUtils::caseInsCompare(word, "Credits"))           return eIniWord::CREDITS;
+        if (cIniUtils::caseInsCompare(word, "Quota"))             return eIniWord::QUOTA;
+        if (cIniUtils::caseInsCompare(word, "Brain"))             return eIniWord::BRAIN;
+        if (cIniUtils::caseInsCompare(word, "House"))             return eIniWord::HOUSE;
+        if (cIniUtils::caseInsCompare(word, "Focus"))             return eIniWord::FOCUS_POS;
     }
     else if (section == INI_MAP) {
-        if (cIniUtils::caseInsCompare(word, "Width"))             return WORD_MAPWIDTH;
-        if (cIniUtils::caseInsCompare(word, "Height"))            return WORD_MAPHEIGHT;
-        if (cIniUtils::caseInsCompare(word, "Seed"))              return WORD_MAPSEED;
-        if (cIniUtils::caseInsCompare(word, "Bloom"))             return WORD_MAPBLOOM;
-        if (cIniUtils::caseInsCompare(word, "Field"))             return WORD_MAPFIELD;
+        if (cIniUtils::caseInsCompare(word, "Width"))             return eIniWord::MAPWIDTH;
+        if (cIniUtils::caseInsCompare(word, "Height"))            return eIniWord::MAPHEIGHT;
+        if (cIniUtils::caseInsCompare(word, "Seed"))              return eIniWord::MAPSEED;
+        if (cIniUtils::caseInsCompare(word, "Bloom"))             return eIniWord::MAPBLOOM;
+        if (cIniUtils::caseInsCompare(word, "Field"))             return eIniWord::MAPFIELD;
     }
     else if (section == INI_BULLETS) {
-        if (cIniUtils::caseInsCompare(word, "Bitmap"))            return WORD_BITMAP;
-        if (cIniUtils::caseInsCompare(word, "BitmapExplosion"))   return WORD_BITMAP_DEAD;
-        if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return WORD_BITMAP_WIDTH;
-        if (cIniUtils::caseInsCompare(word, "BitmapFrames"))      return WORD_BITMAP_FRAMES;
-        if (cIniUtils::caseInsCompare(word, "BitmapExplFrames"))  return WORD_BITMAP_DEADFRAMES;
-        if (cIniUtils::caseInsCompare(word, "DamageVehicle"))     return WORD_DAMAGE_VEHICLE;
-        if (cIniUtils::caseInsCompare(word, "DamageInfantry"))    return WORD_DAMAGE_INFANTRY;
-        if (cIniUtils::caseInsCompare(word, "Definition"))        return WORD_DEFINITION;
-        if (cIniUtils::caseInsCompare(word, "Sound"))             return WORD_SOUND;
-        if (cIniUtils::caseInsCompare(word, "ExplosionSize"))     return WORD_EXPLOSION_SIZE;
-        if (cIniUtils::caseInsCompare(word, "DeviateProbability"))return WORD_DEVIATE_PROBABILITY;
-        if (cIniUtils::caseInsCompare(word, "GroundBullet"))      return WORD_GROUND_BULLET;
+        if (cIniUtils::caseInsCompare(word, "Bitmap"))            return eIniWord::BITMAP;
+        if (cIniUtils::caseInsCompare(word, "BitmapExplosion"))   return eIniWord::BITMAP_DEAD;
+        if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return eIniWord::BITMAP_WIDTH;
+        if (cIniUtils::caseInsCompare(word, "BitmapFrames"))      return eIniWord::BITMAP_FRAMES;
+        if (cIniUtils::caseInsCompare(word, "BitmapExplFrames"))  return eIniWord::BITMAP_DEADFRAMES;
+        if (cIniUtils::caseInsCompare(word, "DamageVehicle"))     return eIniWord::DAMAGE_VEHICLE;
+        if (cIniUtils::caseInsCompare(word, "DamageInfantry"))    return eIniWord::DAMAGE_INFANTRY;
+        if (cIniUtils::caseInsCompare(word, "Definition"))        return eIniWord::DEFINITION;
+        if (cIniUtils::caseInsCompare(word, "Sound"))             return eIniWord::SOUND;
+        if (cIniUtils::caseInsCompare(word, "ExplosionSize"))     return eIniWord::EXPLOSION_SIZE;
+        if (cIniUtils::caseInsCompare(word, "DeviateProbability"))return eIniWord::DEVIATE_PROBABILITY;
+        if (cIniUtils::caseInsCompare(word, "GroundBullet"))      return eIniWord::GROUND_BULLET;
     }
     else if (section == INI_STRUCTURES) {
-        if (cIniUtils::caseInsCompare(word, "HitPoints"))         return WORD_HITPOINTS;
-        if (cIniUtils::caseInsCompare(word, "FixPoints"))         return WORD_FIXHP;
-        if (cIniUtils::caseInsCompare(word, "PowerDrain"))        return WORD_POWERDRAIN;
-        if (cIniUtils::caseInsCompare(word, "HasConcrete"))       return WORD_HAS_CONCRETE;
-        if (cIniUtils::caseInsCompare(word, "PowerGive"))         return WORD_POWERGIVE;
-        if (cIniUtils::caseInsCompare(word, "Cost"))              return WORD_COST;
-        if (cIniUtils::caseInsCompare(word, "BuildTime"))         return WORD_BUILDTIME;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMin")) return WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMax")) return WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitType"))      return WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE;
+        if (cIniUtils::caseInsCompare(word, "HitPoints"))         return eIniWord::HITPOINTS;
+        if (cIniUtils::caseInsCompare(word, "FixPoints"))         return eIniWord::FIXHP;
+        if (cIniUtils::caseInsCompare(word, "PowerDrain"))        return eIniWord::POWERDRAIN;
+        if (cIniUtils::caseInsCompare(word, "HasConcrete"))       return eIniWord::HAS_CONCRETE;
+        if (cIniUtils::caseInsCompare(word, "PowerGive"))         return eIniWord::POWERGIVE;
+        if (cIniUtils::caseInsCompare(word, "Cost"))              return eIniWord::COST;
+        if (cIniUtils::caseInsCompare(word, "BuildTime"))         return eIniWord::BUILDTIME;
+        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMin")) return eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN;
+        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMax")) return eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX;
+        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitType"))      return eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_TYPE;
     }
     else if (section == INI_UNITS) {
-        if (cIniUtils::caseInsCompare(word, "Bitmap"))            return WORD_BITMAP;
-        if (cIniUtils::caseInsCompare(word, "BitmapTop"))         return WORD_BITMAP_TOP;
-        if (cIniUtils::caseInsCompare(word, "Icon"))              return WORD_ICON;
-        if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return WORD_BITMAP_WIDTH;
-        if (cIniUtils::caseInsCompare(word, "BitmapHeight"))      return WORD_BITMAP_HEIGHT;
-        if (cIniUtils::caseInsCompare(word, "HitPoints"))         return WORD_HITPOINTS;
-        if (cIniUtils::caseInsCompare(word, "Appetite"))          return WORD_APPETITE;
-        if (cIniUtils::caseInsCompare(word, "Cost"))              return WORD_COST;
-        if (cIniUtils::caseInsCompare(word, "BulletType"))        return WORD_BULLETTYPE;
-        if (cIniUtils::caseInsCompare(word, "MoveSpeed"))         return WORD_MOVESPEED;
-        if (cIniUtils::caseInsCompare(word, "TurnSpeed"))         return WORD_TURNSPEED;
+        if (cIniUtils::caseInsCompare(word, "Bitmap"))            return eIniWord::BITMAP;
+        if (cIniUtils::caseInsCompare(word, "BitmapTop"))         return eIniWord::BITMAP_TOP;
+        if (cIniUtils::caseInsCompare(word, "Icon"))              return eIniWord::ICON;
+        if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return eIniWord::BITMAP_WIDTH;
+        if (cIniUtils::caseInsCompare(word, "BitmapHeight"))      return eIniWord::BITMAP_HEIGHT;
+        if (cIniUtils::caseInsCompare(word, "HitPoints"))         return eIniWord::HITPOINTS;
+        if (cIniUtils::caseInsCompare(word, "Appetite"))          return eIniWord::APPETITE;
+        if (cIniUtils::caseInsCompare(word, "Cost"))              return eIniWord::COST;
+        if (cIniUtils::caseInsCompare(word, "BulletType"))        return eIniWord::BULLETTYPE;
+        if (cIniUtils::caseInsCompare(word, "MoveSpeed"))         return eIniWord::MOVESPEED;
+        if (cIniUtils::caseInsCompare(word, "TurnSpeed"))         return eIniWord::TURNSPEED;
         // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
-        if (cIniUtils::caseInsCompare(word, "AttackFrequency"))   return WORD_ATTACKFREQ;
+        if (cIniUtils::caseInsCompare(word, "AttackFrequency"))   return eIniWord::ATTACKFREQ;
         // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
-        if (cIniUtils::caseInsCompare(word, "NextAttackFrequency")) return WORD_NEXTATTACKFREQ;
-        if (cIniUtils::caseInsCompare(word, "Sight"))             return WORD_SIGHT;
-        if (cIniUtils::caseInsCompare(word, "Range"))             return WORD_RANGE;
-        if (cIniUtils::caseInsCompare(word, "BuildTime"))         return WORD_BUILDTIME;
-        if (cIniUtils::caseInsCompare(word, "Description"))       return WORD_DESCRIPTION;
+        if (cIniUtils::caseInsCompare(word, "NextAttackFrequency")) return eIniWord::NEXTATTACKFREQ;
+        if (cIniUtils::caseInsCompare(word, "Sight"))             return eIniWord::SIGHT;
+        if (cIniUtils::caseInsCompare(word, "Range"))             return eIniWord::RANGE;
+        if (cIniUtils::caseInsCompare(word, "BuildTime"))         return eIniWord::BUILDTIME;
+        if (cIniUtils::caseInsCompare(word, "Description"))       return eIniWord::DESCRIPTION;
         // BOOLEANS
-        if (cIniUtils::caseInsCompare(word, "IsHarvester"))       return WORD_ISHARVESTER;
-        if (cIniUtils::caseInsCompare(word, "FireTwice"))         return WORD_FIRETWICE;
-        if (cIniUtils::caseInsCompare(word, "IsInfantry"))        return WORD_ISINFANTRY;
-        if (cIniUtils::caseInsCompare(word, "Squishable"))        return WORD_ISSQUISHABLE;
-        if (cIniUtils::caseInsCompare(word, "CanSquish"))         return WORD_CANSQUISH;
-        if (cIniUtils::caseInsCompare(word, "IsAirborn"))         return WORD_ISAIRBORN;
-        if (cIniUtils::caseInsCompare(word, "AbleToCarry"))       return WORD_ABLETOCARRY;
-        if (cIniUtils::caseInsCompare(word, "FreeRoam"))          return WORD_FREEROAM;
-        if (cIniUtils::caseInsCompare(word, "Producer"))          return WORD_PRODUCER;
-        if (cIniUtils::caseInsCompare(word, "MaxCredits"))        return WORD_HARVESTLIMIT;
-        if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return WORD_HARVESTSPEED;
-        if (cIniUtils::caseInsCompare(word, "HarvestAmount"))     return WORD_HARVESTAMOUNT;
-        if (cIniUtils::caseInsCompare(word, "squish"))            return WORD_SQUISH;
-        if (cIniUtils::caseInsCompare(word, "SmokeHpFactor"))     return WORD_SMOKEHFACTOR;
-        if (cIniUtils::caseInsCompare(word, "CanAttackAirUnits")) return WORD_CANATTACKAIRUNITS;
-        if (cIniUtils::caseInsCompare(word, "CanAttackUnits"))    return WORD_CANATTACKUNITS;
-        if (cIniUtils::caseInsCompare(word, "AttackIsEnterStructure")) return WORD_ATTACK_IS_ENTER_STRUCTURE;
-        if (cIniUtils::caseInsCompare(word, "DamageOnEnterStructure")) return WORD_DAMAGE_ON_ENTER_STRUCTURE;
+        if (cIniUtils::caseInsCompare(word, "IsHarvester"))       return eIniWord::ISHARVESTER;
+        if (cIniUtils::caseInsCompare(word, "FireTwice"))         return eIniWord::FIRETWICE;
+        if (cIniUtils::caseInsCompare(word, "IsInfantry"))        return eIniWord::ISINFANTRY;
+        if (cIniUtils::caseInsCompare(word, "Squishable"))        return eIniWord::ISSQUISHABLE;
+        if (cIniUtils::caseInsCompare(word, "CanSquish"))         return eIniWord::CANSQUISH;
+        if (cIniUtils::caseInsCompare(word, "IsAirborn"))         return eIniWord::ISAIRBORN;
+        if (cIniUtils::caseInsCompare(word, "AbleToCarry"))       return eIniWord::ABLETOCARRY;
+        if (cIniUtils::caseInsCompare(word, "FreeRoam"))          return eIniWord::FREEROAM;
+        if (cIniUtils::caseInsCompare(word, "Producer"))          return eIniWord::PRODUCER;
+        if (cIniUtils::caseInsCompare(word, "MaxCredits"))        return eIniWord::HARVESTLIMIT;
+        if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return eIniWord::HARVESTSPEED;
+        if (cIniUtils::caseInsCompare(word, "HarvestAmount"))     return eIniWord::HARVESTAMOUNT;
+        if (cIniUtils::caseInsCompare(word, "squish"))            return eIniWord::SQUISH;
+        if (cIniUtils::caseInsCompare(word, "SmokeHpFactor"))     return eIniWord::SMOKEHFACTOR;
+        if (cIniUtils::caseInsCompare(word, "CanAttackAirUnits")) return eIniWord::CANATTACKAIRUNITS;
+        if (cIniUtils::caseInsCompare(word, "CanAttackUnits"))    return eIniWord::CANATTACKUNITS;
+        if (cIniUtils::caseInsCompare(word, "AttackIsEnterStructure")) return eIniWord::ATTACK_IS_ENTER_STRUCTURE;
+        if (cIniUtils::caseInsCompare(word, "DamageOnEnterStructure")) return eIniWord::DAMAGE_ON_ENTER_STRUCTURE;
     }
     else if (section == INI_STRUCTURES) {
         if (word.length() > 1) {
-            if (cIniUtils::caseInsCompare(word, "PreBuild"))      return WORD_PREBUILD;
-            if (cIniUtils::caseInsCompare(word, "Description"))   return WORD_DESCRIPTION;
-            if (cIniUtils::caseInsCompare(word, "Power"))         return WORD_POWER;
-            if (cIniUtils::caseInsCompare(word, "Sight"))         return WORD_SIGHT;
-            if (cIniUtils::caseInsCompare(word, "Range"))         return WORD_RANGE;
-            if (cIniUtils::caseInsCompare(word, "FireRate"))      return WORD_FIRERATE;
+            if (cIniUtils::caseInsCompare(word, "PreBuild"))      return eIniWord::PREBUILD;
+            if (cIniUtils::caseInsCompare(word, "Description"))   return eIniWord::DESCRIPTION;
+            if (cIniUtils::caseInsCompare(word, "Power"))         return eIniWord::POWER;
+            if (cIniUtils::caseInsCompare(word, "Sight"))         return eIniWord::SIGHT;
+            if (cIniUtils::caseInsCompare(word, "Range"))         return eIniWord::RANGE;
+            if (cIniUtils::caseInsCompare(word, "FireRate"))      return eIniWord::FIRERATE;
         }
         else
-            return WORD_NONE;
+            return eIniWord::NONE;
     }
     else if (section == INI_HOUSES) {
-        if (cIniUtils::caseInsCompare(word, "ColorR"))            return WORD_RED;
-        if (cIniUtils::caseInsCompare(word, "ColorG"))            return WORD_GREEN;
-        if (cIniUtils::caseInsCompare(word, "ColorB"))            return WORD_BLUE;
-        if (cIniUtils::caseInsCompare(word, "FirePower"))         return WORD_FIREPOWER;
-        if (cIniUtils::caseInsCompare(word, "FireRate"))          return WORD_FIRERATE;
-        if (cIniUtils::caseInsCompare(word, "StructPrice"))       return WORD_STRUCTPRICE;
-        if (cIniUtils::caseInsCompare(word, "UnitPrice"))         return WORD_UNITPRICE;
-        if (cIniUtils::caseInsCompare(word, "Speed"))             return WORD_SPEED;
-        if (cIniUtils::caseInsCompare(word, "BuildSpeed"))        return WORD_BUILDSPEED;
-        if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return WORD_HARVESTSPEED;
-        if (cIniUtils::caseInsCompare(word, "DumpSpeed"))         return WORD_DUMPSPEED;
+        if (cIniUtils::caseInsCompare(word, "ColorR"))            return eIniWord::RED;
+        if (cIniUtils::caseInsCompare(word, "ColorG"))            return eIniWord::GREEN;
+        if (cIniUtils::caseInsCompare(word, "ColorB"))            return eIniWord::BLUE;
+        if (cIniUtils::caseInsCompare(word, "FirePower"))         return eIniWord::FIREPOWER;
+        if (cIniUtils::caseInsCompare(word, "FireRate"))          return eIniWord::FIRERATE;
+        if (cIniUtils::caseInsCompare(word, "StructPrice"))       return eIniWord::STRUCTPRICE;
+        if (cIniUtils::caseInsCompare(word, "UnitPrice"))         return eIniWord::UNITPRICE;
+        if (cIniUtils::caseInsCompare(word, "Speed"))             return eIniWord::SPEED;
+        if (cIniUtils::caseInsCompare(word, "BuildSpeed"))        return eIniWord::BUILDSPEED;
+        if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return eIniWord::HARVESTSPEED;
+        if (cIniUtils::caseInsCompare(word, "DumpSpeed"))         return eIniWord::DUMPSPEED;
     }
 
     Logger::warn(COMP_NONE, "SCEN_INI_WordType", "Could not find word-type for [{}]", word);
-    return WORD_NONE;
+    return eIniWord::NONE;
 }
 
 
@@ -426,7 +424,7 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
         return;
     }
 
-    int wordtype = WORD_NONE;
+    eIniWord wordtype = eIniWord::NONE;
     int iRegionIndex = -1;
     int iRegionNumber = -1;
     int iRegionConquer = -1;
@@ -446,12 +444,12 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
 
         wordtype = INI_WordType(word_left, SEC_REGION);
 
-        if (wordtype == WORD_REGION) {
+        if (wordtype == eIniWord::REGION) {
             iRegionNumber = -1;
             iRegionConquer = -1;
             iRegionNumber = ToInt(word_right) - 1;
         }
-        else if (wordtype == WORD_REGIONCONQUER) {
+        else if (wordtype == eIniWord::REGIONCONQUER) {
             iRegionNumber = -1;
             iRegionConquer = -1;
             iRegionIndex++;
@@ -460,7 +458,7 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
         }
 
         if (iRegionIndex > -1 || iRegionNumber > -1) {
-            if (wordtype == WORD_REGIONHOUSE) {
+            if (wordtype == eIniWord::REGIONHOUSE) {
                 Logger::info(COMP_REGIONINI, "cIni::loadRegionfile", "Region house");
                 int iH = cIniUtils::getHouseFromString(word_right);
                 if (iRegionNumber > -1) {
@@ -472,12 +470,12 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
                 }
             }
 
-            if (wordtype == WORD_REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
+            if (wordtype == eIniWord::REGIONTEXT && iRegionConquer > -1 && iRegionIndex > -1) {
                 std::string text = removeQuote(word_right);
                 selectYourNextConquestState->setRegionText(iRegionIndex, text.c_str());
             }
 
-            if (wordtype == WORD_REGIONSELECT) {
+            if (wordtype == eIniWord::REGIONSELECT) {
                 if (iRegionNumber > -1) {
                     world[iRegionNumber].bSelectable = ToBool(word_right);
                     world[iRegionNumber].iAlpha = 1;
@@ -505,12 +503,12 @@ int getTechLevelByRegion(int iRegion)
 
 namespace {
 
-void readScenarioHouseLine(ScenarioData& data, int wordtype, int iPlayerID, const std::string& value)
+void readScenarioHouseLine(ScenarioData& data, eIniWord wordtype, int iPlayerID, const std::string& value)
 {
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, wordtype);
+    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, std::to_underlying(wordtype));
     if (iPlayerID < 0) return;
 
-    if (wordtype == WORD_BRAIN) {
+    if (wordtype == eIniWord::BRAIN) {
         Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", value);
         if (cIniUtils::caseInsCompare(value, "Human")) {
             Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
@@ -519,20 +517,20 @@ void readScenarioHouseLine(ScenarioData& data, int wordtype, int iPlayerID, cons
             Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "This brain is not human...");
         }
     }
-    else if (wordtype == WORD_CREDITS) {
+    else if (wordtype == eIniWord::CREDITS) {
         int credits = ToInt(value) - 1;
         Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Set credits for player id [{}] to [{}]", iPlayerID, credits);
         data.playerCredits[iPlayerID] = credits;
     }
-    else if (wordtype == WORD_QUOTA) {
+    else if (wordtype == eIniWord::QUOTA) {
         data.playerQuota[iPlayerID] = ToInt(value);
     }
 }
 
-void readScenarioMapLine(ScenarioData& data, int wordtype, const std::string& slinefeed)
+void readScenarioMapLine(ScenarioData& data, eIniWord wordtype, const std::string& slinefeed)
 {
     std::optional<int> seed;
-    if (wordtype == WORD_MAPSEED) {
+    if (wordtype == eIniWord::MAPSEED) {
         Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
         auto [word, seek] = INI_SplitWord(slinefeed);
         seed = ToInt(seek);
@@ -551,10 +549,10 @@ void readScenarioMapLine(ScenarioData& data, int wordtype, const std::string& sl
         }
     };
 
-    if (wordtype == WORD_MAPBLOOM) {
+    if (wordtype == eIniWord::MAPBLOOM) {
         parseCells(data.blooms, "Bloom");
     }
-    else if (wordtype == WORD_MAPFIELD) {
+    else if (wordtype == eIniWord::MAPFIELD) {
         parseCells(data.fields, "Field");
     }
 }
@@ -666,21 +664,21 @@ void readScenarioUnitLine(ScenarioData& data, const std::string& linefeed)
     data.entries.push_back(unit);
 }
 
-void readScenarioBasicLine(ScenarioData& data, int wordtype, const std::string& value)
+void readScenarioBasicLine(ScenarioData& data, eIniWord wordtype, const std::string& value)
 {
-    if (wordtype == WORD_BRIEFPICTURE) {
+    if (wordtype == eIniWord::BRIEFPICTURE) {
         std::string scene = cIniUtils::getSceneFileToScene(value);
         if (!cIniUtils::caseInsCompare(scene, "unknown")) {
             data.briefScene = scene;
         }
     }
-    else if (wordtype == WORD_FOCUS) {
+    else if (wordtype == eIniWord::FOCUS_POS) {
         data.focusCell = ToInt(value);
     }
-    else if (wordtype == WORD_WINFLAGS) {
+    else if (wordtype == eIniWord::WINFLAGS) {
         data.winFlags = ToInt(value);
     }
-    else if (wordtype == WORD_LOSEFLAGS) {
+    else if (wordtype == eIniWord::LOSEFLAGS) {
         data.loseFlags = ToInt(value);
     }
 }
@@ -735,7 +733,7 @@ std::optional<ScenarioData> readScenarioFile(const std::string& filename)
         if (section == INI_NONE) continue;
 
         auto [word_left, word_right] = INI_SplitWord(linefeed);
-        int wordtype = INI_WordType(word_left, section);
+        eIniWord wordtype = INI_WordType(word_left, section);
 
         if (section == INI_BASIC) {
             readScenarioBasicLine(data, wordtype, word_right);
@@ -1042,9 +1040,9 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
 
         if (iSection == INI_SCEN) {
             auto [word_left, word_right] = INI_SplitWord(linefeed);
-            int wordtype = INI_WordType(word_left, iSection);
+            eIniWord wordtype = INI_WordType(word_left, iSection);
 
-            if (wordtype == WORD_NUMBER) {
+            if (wordtype == eIniWord::NUMBER) {
                 iScenario = ToInt(word_right);
                 continue;
             }
@@ -1053,9 +1051,9 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, int iSectionFind, Abstrac
         if (iScenario == iScenarioFind) {
             if (iSection == iSectionFind) {
                 auto [word_left, word_right] = INI_SplitWord(linefeed);
-                int wordtype = INI_WordType(word_left, iSection);
+                eIniWord wordtype = INI_WordType(word_left, iSection);
 
-                if (wordtype == WORD_REGIONTEXT) {
+                if (wordtype == eIniWord::REGIONTEXT) {
                     word_right = removeQuote(word_right);
                     pMentat->setSentence(iLine, word_right.c_str());
                     iLine++;
@@ -1075,7 +1073,7 @@ void cIni::installGame(const std::string& filename)
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
     int section = INI_GAME;
-    int wordtype = WORD_NONE;
+    eIniWord wordtype = eIniWord::NONE;
     int id = -1;
 
     Logger::info(COMP_GAMERULES, "cIni::installGame", "Opening game settings from : {}", filename);
@@ -1093,7 +1091,7 @@ void cIni::installGame(const std::string& filename)
             continue;
         }
 
-        wordtype = WORD_NONE;
+        wordtype = eIniWord::NONE;
 
         auto sectionName = extractSectionName(linefeed);
         if (!sectionName.empty()) {
@@ -1137,75 +1135,75 @@ void cIni::installGame(const std::string& filename)
         if (section == INI_UNITS && id > -1) {
             s_UnitInfo &unitInfo = m_infos->getUnitInfo(id);
 
-            if (wordtype == WORD_HITPOINTS)     unitInfo.hp = ToInt(word_right);
-            if (wordtype == WORD_APPETITE)      unitInfo.appetite = ToInt(word_right);
-            if (wordtype == WORD_COST)          unitInfo.cost = ToInt(word_right);
-            if (wordtype == WORD_MOVESPEED)     unitInfo.speed = ToInt(word_right);
-            if (wordtype == WORD_TURNSPEED)     unitInfo.turnspeed = ToInt(word_right);
-            if (wordtype == WORD_ATTACKFREQ)    unitInfo.attack_frequency = ToInt(word_right);
-            if (wordtype == WORD_NEXTATTACKFREQ) unitInfo.next_attack_frequency = ToInt(word_right);
-            if (wordtype == WORD_SIGHT)         unitInfo.sight = ToInt(word_right);
-            if (wordtype == WORD_RANGE)         unitInfo.range = ToInt(word_right);
-            if (wordtype == WORD_BUILDTIME)     unitInfo.buildTime = ToInt(word_right);
+            if (wordtype == eIniWord::HITPOINTS)     unitInfo.hp = ToInt(word_right);
+            if (wordtype == eIniWord::APPETITE)      unitInfo.appetite = ToInt(word_right);
+            if (wordtype == eIniWord::COST)          unitInfo.cost = ToInt(word_right);
+            if (wordtype == eIniWord::MOVESPEED)     unitInfo.speed = ToInt(word_right);
+            if (wordtype == eIniWord::TURNSPEED)     unitInfo.turnspeed = ToInt(word_right);
+            if (wordtype == eIniWord::ATTACKFREQ)    unitInfo.attack_frequency = ToInt(word_right);
+            if (wordtype == eIniWord::NEXTATTACKFREQ) unitInfo.next_attack_frequency = ToInt(word_right);
+            if (wordtype == eIniWord::SIGHT)         unitInfo.sight = ToInt(word_right);
+            if (wordtype == eIniWord::RANGE)         unitInfo.range = ToInt(word_right);
+            if (wordtype == eIniWord::BUILDTIME)     unitInfo.buildTime = ToInt(word_right);
 
-            if (wordtype == WORD_DESCRIPTION) {
+            if (wordtype == eIniWord::DESCRIPTION) {
                 // unitInfo.name is a legacy char[] field
                 strncpy(unitInfo.name, word_right.c_str(), sizeof(unitInfo.name) - 1);
                 unitInfo.name[sizeof(unitInfo.name) - 1] = '\0';
             }
 
-            if (wordtype == WORD_FIRETWICE)       unitInfo.fireTwice = ToBool(word_right);
-            if (wordtype == WORD_ISINFANTRY)      unitInfo.infantry = ToBool(word_right);
-            if (wordtype == WORD_ISSQUISHABLE)    unitInfo.canBeSquished = ToBool(word_right);
-            if (wordtype == WORD_CANSQUISH)       unitInfo.canBeSquished = ToBool(word_right);
-            if (wordtype == WORD_FREEROAM)        unitInfo.free_roam = ToBool(word_right);
-            if (wordtype == WORD_ISAIRBORN)       unitInfo.airborn = ToBool(word_right);
-            if (wordtype == WORD_HARVESTLIMIT)    unitInfo.credit_capacity = ToInt(word_right);
-            if (wordtype == WORD_HARVESTSPEED)    unitInfo.harvesting_speed = ToInt(word_right);
-            if (wordtype == WORD_HARVESTAMOUNT)   unitInfo.harvesting_amount = ToInt(word_right);
-            if (wordtype == WORD_SMOKEHFACTOR)    unitInfo.smokeHpFactor = ToFloat(word_right);
-            if (wordtype == WORD_SQUISH)          unitInfo.canBeSquished = ToBool(word_right);
-            if (wordtype == WORD_CANATTACKAIRUNITS) unitInfo.canAttackAirUnits = ToBool(word_right);
-            if (wordtype == WORD_CANATTACKUNITS)  unitInfo.canAttackUnits = ToBool(word_right);
+            if (wordtype == eIniWord::FIRETWICE)       unitInfo.fireTwice = ToBool(word_right);
+            if (wordtype == eIniWord::ISINFANTRY)      unitInfo.infantry = ToBool(word_right);
+            if (wordtype == eIniWord::ISSQUISHABLE)    unitInfo.canBeSquished = ToBool(word_right);
+            if (wordtype == eIniWord::CANSQUISH)       unitInfo.canBeSquished = ToBool(word_right);
+            if (wordtype == eIniWord::FREEROAM)        unitInfo.free_roam = ToBool(word_right);
+            if (wordtype == eIniWord::ISAIRBORN)       unitInfo.airborn = ToBool(word_right);
+            if (wordtype == eIniWord::HARVESTLIMIT)    unitInfo.credit_capacity = ToInt(word_right);
+            if (wordtype == eIniWord::HARVESTSPEED)    unitInfo.harvesting_speed = ToInt(word_right);
+            if (wordtype == eIniWord::HARVESTAMOUNT)   unitInfo.harvesting_amount = ToInt(word_right);
+            if (wordtype == eIniWord::SMOKEHFACTOR)    unitInfo.smokeHpFactor = ToFloat(word_right);
+            if (wordtype == eIniWord::SQUISH)          unitInfo.canBeSquished = ToBool(word_right);
+            if (wordtype == eIniWord::CANATTACKAIRUNITS) unitInfo.canAttackAirUnits = ToBool(word_right);
+            if (wordtype == eIniWord::CANATTACKUNITS)  unitInfo.canAttackUnits = ToBool(word_right);
 
-            if (wordtype == WORD_PRODUCER) {
+            if (wordtype == eIniWord::PRODUCER) {
                 unitInfo.structureTypeItLeavesFrom = cIniUtils::getStructureType(word_right);
             }
         }
 
         if (section == INI_TERRAINS && id > -1) {
-            if (wordtype == WORD_BLOOMTIMERDURATION)    m_infos->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
-            if (wordtype == WORD_TERRAIN_MINSPICE)      m_infos->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
-            if (wordtype == WORD_TERRAIN_MAXSPICE)      m_infos->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
-            if (wordtype == WORD_TERRAINHILL_MINSPICE)  m_infos->getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
-            if (wordtype == WORD_TERRAINHILL_MAXSPICE)  m_infos->getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
-            if (wordtype == WORD_TERRAINWALL_HP)        m_infos->getTerrainInfo()->terrainWallHp = ToInt(word_right);
+            if (wordtype == eIniWord::BLOOMTIMERDURATION)    m_infos->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
+            if (wordtype == eIniWord::TERRAIN_MINSPICE)      m_infos->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
+            if (wordtype == eIniWord::TERRAIN_MAXSPICE)      m_infos->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
+            if (wordtype == eIniWord::TERRAINHILL_MINSPICE)  m_infos->getTerrainInfo()->terrainSpiceHillMinSpice = ToInt(word_right);
+            if (wordtype == eIniWord::TERRAINHILL_MAXSPICE)  m_infos->getTerrainInfo()->terrainSpiceHillMaxSpice = ToInt(word_right);
+            if (wordtype == eIniWord::TERRAINWALL_HP)        m_infos->getTerrainInfo()->terrainWallHp = ToInt(word_right);
         }
 
         if (section == INI_STRUCTURES && id > -1) {
-            if (wordtype == WORD_HITPOINTS)    m_infos->getStructureInfo(id).hp = ToInt(word_right);
-            if (wordtype == WORD_FIXHP)        m_infos->getStructureInfo(id).fixhp = ToInt(word_right);
-            if (wordtype == WORD_POWERDRAIN)   m_infos->getStructureInfo(id).power_drain = ToInt(word_right);
-            if (wordtype == WORD_HAS_CONCRETE) m_infos->getStructureInfo(id).hasConcrete = ToBool(word_right);
-            if (wordtype == WORD_POWERGIVE)    m_infos->getStructureInfo(id).power_give = ToInt(word_right);
-            if (wordtype == WORD_COST)         m_infos->getStructureInfo(id).cost = ToInt(word_right);
-            if (wordtype == WORD_BUILDTIME)    m_infos->getStructureInfo(id).buildTime = ToInt(word_right);
-            if (wordtype == WORD_CANATTACKAIRUNITS) m_infos->getStructureInfo(id).canAttackAirUnits = ToBool(word_right);
-            if (wordtype == WORD_CANATTACKUNITS)    m_infos->getStructureInfo(id).canAttackGroundUnits = ToBool(word_right);
-            if (wordtype == WORD_SIGHT)        m_infos->getStructureInfo(id).sight = ToInt(word_right);
-            if (wordtype == WORD_RANGE)        m_infos->getStructureInfo(id).range = ToInt(word_right);
-            if (wordtype == WORD_FIRERATE)     m_infos->getStructureInfo(id).fireRate = ToInt(word_right);
-            if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMin = ToInt(word_right);
-            if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMax = ToInt(word_right);
-            if (wordtype == WORD_UPON_DESTRUCTION_SPAWN_UNIT_TYPE)       m_infos->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
+            if (wordtype == eIniWord::HITPOINTS)    m_infos->getStructureInfo(id).hp = ToInt(word_right);
+            if (wordtype == eIniWord::FIXHP)        m_infos->getStructureInfo(id).fixhp = ToInt(word_right);
+            if (wordtype == eIniWord::POWERDRAIN)   m_infos->getStructureInfo(id).power_drain = ToInt(word_right);
+            if (wordtype == eIniWord::HAS_CONCRETE) m_infos->getStructureInfo(id).hasConcrete = ToBool(word_right);
+            if (wordtype == eIniWord::POWERGIVE)    m_infos->getStructureInfo(id).power_give = ToInt(word_right);
+            if (wordtype == eIniWord::COST)         m_infos->getStructureInfo(id).cost = ToInt(word_right);
+            if (wordtype == eIniWord::BUILDTIME)    m_infos->getStructureInfo(id).buildTime = ToInt(word_right);
+            if (wordtype == eIniWord::CANATTACKAIRUNITS) m_infos->getStructureInfo(id).canAttackAirUnits = ToBool(word_right);
+            if (wordtype == eIniWord::CANATTACKUNITS)    m_infos->getStructureInfo(id).canAttackGroundUnits = ToBool(word_right);
+            if (wordtype == eIniWord::SIGHT)        m_infos->getStructureInfo(id).sight = ToInt(word_right);
+            if (wordtype == eIniWord::RANGE)        m_infos->getStructureInfo(id).range = ToInt(word_right);
+            if (wordtype == eIniWord::FIRERATE)     m_infos->getStructureInfo(id).fireRate = ToInt(word_right);
+            if (wordtype == eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMin = ToInt(word_right);
+            if (wordtype == eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX) m_infos->getStructureInfo(id).uponDestructionSpawnUnitAmountMax = ToInt(word_right);
+            if (wordtype == eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_TYPE)       m_infos->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
         }
 
         if (section == INI_BULLETS && id > -1) {
-            if (wordtype == WORD_DAMAGE_VEHICLE)     m_infos->getBulletInfo(id).damage_vehicles = ToInt(word_right);
-            if (wordtype == WORD_DAMAGE_INFANTRY)    m_infos->getBulletInfo(id).damage_infantry = ToInt(word_right);
-            if (wordtype == WORD_DEVIATE_PROBABILITY) m_infos->getBulletInfo(id).deviateProbability = ToInt(word_right);
-            if (wordtype == WORD_EXPLOSION_SIZE)     m_infos->getBulletInfo(id).explosionSize = ToInt(word_right);
-            if (wordtype == WORD_GROUND_BULLET)      m_infos->getBulletInfo(id).groundBullet = ToBool(word_right);
+            if (wordtype == eIniWord::DAMAGE_VEHICLE)     m_infos->getBulletInfo(id).damage_vehicles = ToInt(word_right);
+            if (wordtype == eIniWord::DAMAGE_INFANTRY)    m_infos->getBulletInfo(id).damage_infantry = ToInt(word_right);
+            if (wordtype == eIniWord::DEVIATE_PROBABILITY) m_infos->getBulletInfo(id).deviateProbability = ToInt(word_right);
+            if (wordtype == eIniWord::EXPLOSION_SIZE)     m_infos->getBulletInfo(id).explosionSize = ToInt(word_right);
+            if (wordtype == eIniWord::GROUND_BULLET)      m_infos->getBulletInfo(id).groundBullet = ToBool(word_right);
         }
 
     } // while
