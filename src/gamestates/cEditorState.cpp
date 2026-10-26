@@ -28,7 +28,8 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
-#include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
+#include "game/GameStateTransitionService.hpp"
 #include "controls/cMouse.h"
 #include "gameobjects/map/cPreviewMaps.h"
 #include "data/gfxeditor.h"
@@ -55,7 +56,8 @@ cEditorState::cEditorState(sGameServices* services)
     m_gfxdata(m_ctx->getGraphicsContext()->gfxdata.get()),
     m_gfxeditor(m_ctx->getGraphicsContext()->gfxeditor.get()),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface()),
+    m_eventEmitter(services->eventEmitter),
+    m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_previewMaps(services->objects->getPreviewMaps())
@@ -63,7 +65,8 @@ cEditorState::cEditorState(sGameServices* services)
     d2tm_assert(m_gfxdata != nullptr);
     d2tm_assert(m_gfxeditor != nullptr);
     d2tm_assert(m_settings != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_eventEmitter != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
 
@@ -490,7 +493,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (m_mapData == nullptr) {
         if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
-            m_interface->setTransitionToWithFadingOut(GAME_MENU);
+            m_stateTransitions->setNextStateWithFade(GAME_MENU);
         }
         return;
     }
@@ -502,7 +505,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
                 }
                 m_hasChanged = false;
             }
-            m_interface->setNextStateToTransitionTo(GAME_OPTIONS);
+            m_stateTransitions->setNextState(GAME_OPTIONS);
         }
         if (event.isAction(eKeyAction::EDITOR_SAVE)) {
             //std::cout << "Save" << std::endl;
@@ -1215,7 +1218,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
                         .type = eNotificationType::PRIORITY,
                     }
                 };                
-                m_interface->onNotifyGameEvent(newEvent);
+                m_eventEmitter->emit(newEvent);
                 break;
             }
             m_undoRedo->beginRecordGroup();
@@ -1247,7 +1250,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
                         .type = eNotificationType::PRIORITY,
                     }
                 };                
-                m_interface->onNotifyGameEvent(newEvent);
+                m_eventEmitter->emit(newEvent);
                 break;
             }
             m_undoRedo->beginRecordGroup();
@@ -1277,7 +1280,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
                         .type = eNotificationType::PRIORITY,
                     }
                 };                
-                m_interface->onNotifyGameEvent(newEvent);
+                m_eventEmitter->emit(newEvent);
                 break;
             }
             m_undoRedo->beginRecordGroup();
@@ -1307,7 +1310,7 @@ void cEditorState::modifySymmetricArea(Direction dir)
                         .type = eNotificationType::PRIORITY,
                     }
                 };                
-                m_interface->onNotifyGameEvent(newEvent);
+                m_eventEmitter->emit(newEvent);
                 break;
             }
             m_undoRedo->beginRecordGroup();
@@ -1381,7 +1384,7 @@ bool cEditorState::saveMap(bool backup) const
                 .type = eNotificationType::PRIORITY,
             }
         };
-        m_interface->onNotifyGameEvent(errorEvent);
+        m_eventEmitter->emit(errorEvent);
         return false;
     }
 
@@ -1392,6 +1395,6 @@ bool cEditorState::saveMap(bool backup) const
             .type = eNotificationType::NEUTRAL,
         }
     };                
-    m_interface->onNotifyGameEvent(newEvent);
+    m_eventEmitter->emit(newEvent);
     return true;
 }
