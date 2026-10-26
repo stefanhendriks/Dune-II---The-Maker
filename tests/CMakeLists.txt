@@ -61,6 +61,8 @@ target_link_libraries(d2tm_tests PRIVATE cpp_stacktrace)
 # CMakeLists.txt provides SDL3; on macOS (pkg-config) it must be linked explicitly.
 if(APPLE)
     target_link_libraries(d2tm_tests PRIVATE ${SDL3_LIBRARIES})
+    # Same as the game target: Apple libc++ has no float std::from_chars, IniParsing.cpp needs the fallback.
+    target_compile_definitions(d2tm_tests PRIVATE D2TM_CLANG=1)
 endif()
 
 include(CTest)
