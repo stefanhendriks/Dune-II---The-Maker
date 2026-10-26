@@ -10,6 +10,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniFile.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cIniUtils.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_IniParsing.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_IniScenarioParsing.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_CampaignProgress.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPoint.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
