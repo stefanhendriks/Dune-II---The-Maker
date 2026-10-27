@@ -33,8 +33,6 @@ public:
 
     void onNotifyGameEvent(const s_GameEvent &event) const;
 
-    void prepareMentatToTellAboutHouse(int house) const;
-    void prepareMentatForPlayer() const;
     void loadScenario() const;
 
     // void loadSkirmishMaps() const;
@@ -53,7 +51,6 @@ public:
     bool playMusicByType(int iType, int playerId, bool triggerWithVoice) const;
     void playSoundWithDistance(int sampleId, int distance) const;
 
-    void changeStateFromMentat() const;
 private:
     cGame* m_game = nullptr;
 };
