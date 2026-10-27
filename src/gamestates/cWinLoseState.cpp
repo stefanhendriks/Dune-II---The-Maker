@@ -19,6 +19,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 
@@ -35,7 +36,9 @@ cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) :
 
     auto ctx = services->ctx;
     m_interface = ctx->getGameInterface();
+    m_stateTransitions = services->stateTransitions;
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     m_mouse = services->mouse;
     d2tm_assert(m_mouse != nullptr);
     auto gfxinter = ctx->getGraphicsContext()->gfxinter;
@@ -95,7 +98,7 @@ void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &) const
     if (m_statement == Outcome::Lose) {
         m_interface->goingToWinLoseBrief(GAME_LOSEBRIEF);
     } else {
-        m_interface->setNextStateToTransitionTo(GAME_SCORING);
+        m_stateTransitions->setNextState(GAME_SCORING);
     }
     // FADE OUT
     m_interface->initiateFadingOut();

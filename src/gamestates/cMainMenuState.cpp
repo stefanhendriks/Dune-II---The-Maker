@@ -27,6 +27,7 @@
 #include "context/AudioContext.hpp"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 
 #include <SDL3/SDL.h>
@@ -38,11 +39,13 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     m_settings(services->settings),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     bmp_D2TM_Title = gfxinter->getTexture(BMP_D2TM);
@@ -82,7 +85,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_interface->setTransitionToWithFadingOut(GAME_CREDITS);
+                m_stateTransitions->setNextStateWithFade(GAME_CREDITS);
                 })
             .build();
 
@@ -113,7 +116,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_interface->setTransitionToWithFadingOut(GAME_SELECT_HOUSE);
+                m_stateTransitions->setNextStateWithFade(GAME_SELECT_HOUSE);
                 })
             .build();
     gui_window->addGuiObject(std::move(gui_btn_SelectHouse));
@@ -130,7 +133,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .onClick([this]() {
                 // m_interface->loadSkirmishMaps();
                 m_interface->initSkirmish();
-                m_interface->setTransitionToWithFadingOut(GAME_SETUPSKIRMISH);
+                m_stateTransitions->setNextStateWithFade(GAME_SETUPSKIRMISH);
                 })
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Skirmish));
@@ -159,7 +162,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_interface->setTransitionToWithFadingOut(GAME_NEW_MAP_EDITOR);})
+            .onClick([this](){m_stateTransitions->setNextStateWithFade(GAME_NEW_MAP_EDITOR);})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Editor));
 
@@ -173,7 +176,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_interface->setNextStateToTransitionTo(GAME_OPTIONS);})
+            .onClick([this](){m_stateTransitions->setNextState(GAME_OPTIONS);})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Options));
 

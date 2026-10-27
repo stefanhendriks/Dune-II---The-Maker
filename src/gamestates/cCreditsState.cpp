@@ -25,7 +25,7 @@
 #include "drawers/cTextDrawer.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
-#include "game/cGameInterface.h"
+#include "game/GameStateTransitionService.hpp"
 #include "controls/cMouse.h"
 
 #include "include/cAssert.h"
@@ -34,13 +34,13 @@ cCreditsState::cCreditsState(sGameServices* services) :
     cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse),
     m_moveSpeed(0.15f)
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     d2tm_assert(gfxinter != nullptr);
 
@@ -71,7 +71,7 @@ cCreditsState::cCreditsState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_interface->setTransitionToWithFadingOut(GAME_MENU);
+                m_stateTransitions->setNextStateWithFade(GAME_MENU);
             })
             .build();
 
@@ -462,6 +462,6 @@ eGameStateType cCreditsState::getType()
 void cCreditsState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
-        m_interface->setTransitionToWithFadingOut(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(GAME_MENU);
     }
 }

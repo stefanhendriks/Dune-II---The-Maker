@@ -35,6 +35,7 @@
 #include "controls/cGameControlsContext.h"
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
 #include "game/cScreenShake.h"
@@ -76,6 +77,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     //fix others pointers
     m_interface = m_ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_stateTransitions = services->stateTransitions;
+    d2tm_assert(m_stateTransitions != nullptr);
     m_audioContext = m_ctx->getAudioContext();
     d2tm_assert(m_audioContext != nullptr);
     m_screenFader = services->screenFader;
@@ -501,7 +504,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::OPEN_MENU)) {
-        m_interface->setNextStateToTransitionTo(GAME_OPTIONS);
+        m_stateTransitions->setNextState(GAME_OPTIONS);
     }
 
     if (event.isAction(eKeyAction::TOGGLE_FPS)) {

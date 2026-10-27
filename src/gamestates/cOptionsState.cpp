@@ -26,6 +26,7 @@
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 #include "game/cGameSettings.h"
@@ -37,6 +38,7 @@ cOptionsState::cOptionsState(sGameServices* services, int prevState)
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse),
     m_prevState(prevState),
     m_guiWindow(nullptr)
@@ -44,6 +46,7 @@ cOptionsState::cOptionsState(sGameServices* services, int prevState)
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
 
     refresh();
@@ -82,7 +85,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_interface->setTransitionToWithFadingOut(GAME_MENU);
+                m_stateTransitions->setNextStateWithFade(GAME_MENU);
             })
             .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_toMenu));
@@ -128,7 +131,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,prevState](){
-                m_interface->setNextStateToTransitionTo(prevState);
+                m_stateTransitions->setNextState(prevState);
             })
                 .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));
@@ -146,7 +149,7 @@ void cOptionsState::constructWindow(int prevState)
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_interface->setNextStateToTransitionTo(GAME_MISSIONSELECT);
+                m_stateTransitions->setNextState(GAME_MISSIONSELECT);
             })
             .build();
         m_guiWindow->addGuiObject(std::move(gui_btn_toMissionSelect));

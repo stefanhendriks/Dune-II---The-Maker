@@ -32,6 +32,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "drawers/cTextDrawer.h"
 
@@ -67,6 +68,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     cGameState(services),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_objects(services->objects),
     m_dataCampaign(dataCompaign),
@@ -76,6 +78,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_gfxworld != nullptr);
@@ -113,7 +116,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_interface->setNextStateToTransitionTo(GAME_MISSIONSELECT);})
+                m_stateTransitions->setNextState(GAME_MISSIONSELECT);})
             .build();
 }
 
@@ -431,7 +434,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     iNewReg += iReg;
 
     m_interface->missionInit();
-    m_interface->setNextStateToTransitionTo(GAME_BRIEFING);
+    m_stateTransitions->setNextState(GAME_BRIEFING);
     m_dataCampaign->region = iNewReg;
     m_dataCampaign->mission++;                        // FINALLY ADD MISSION NUMBER...
 
@@ -710,7 +713,7 @@ void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &e
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_interface->setNextStateToTransitionTo(GAME_OPTIONS);
+            m_stateTransitions->setNextState(GAME_OPTIONS);
         }
     }
 }

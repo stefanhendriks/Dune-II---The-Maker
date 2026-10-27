@@ -14,6 +14,7 @@
  */
 
 #include "gamestates/cNewMapEditorState.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 
@@ -44,6 +45,7 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services, cIni* ini)
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse),
     m_guiWindow(nullptr),
     m_objects(services->objects),
@@ -53,6 +55,7 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services, cIni* ini)
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_cIni != nullptr);
     constructWindow();
 }
@@ -246,7 +249,7 @@ void cNewMapEditorState::constructWindow()
         .withTextAlign(GuiTextAlignHorizontal::CENTER)
         .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this]() {
-            m_interface->setTransitionToWithFadingOut(GAME_MENU);
+            m_stateTransitions->setNextStateWithFade(GAME_MENU);
         })
         .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Quit));
@@ -264,7 +267,7 @@ void cNewMapEditorState::constructWindow()
         .onClick([this](){
             this->constructEmptyMap();
             m_interface->loadMapFromEditor(-1); // -1 means load the map from the editor, instead of loading a skirmish map
-            m_interface->setTransitionToWithFadingOut(GAME_EDITOR);
+            m_stateTransitions->setNextStateWithFade(GAME_EDITOR);
         })
         .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));

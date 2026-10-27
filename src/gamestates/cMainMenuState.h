@@ -25,6 +25,7 @@
 class Texture;
 class cTextDrawer;
 class cGameInterface;
+class GameStateTransitionService;
 class cMouse;
 class GuiButton;
 class GuiWindow;
@@ -46,6 +47,7 @@ private:
     cGameSettings * m_settings = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cGameInterface* m_interface = nullptr;
+    GameStateTransitionService* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
 
     int logoX;
