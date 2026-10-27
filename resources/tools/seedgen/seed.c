@@ -26,7 +26,19 @@ unsigned long seed=0;
 /* these are offsets used by matrix modifier */
 
 short offsets[21] =
-{ 0,-1,1,-16,16,-17,17,-15,15,-2,2,-32,32,-4,4,-64,64,-30,30,-34,34 };
+{ 0,-1,1,-MATRIX_WIDTH,MATRIX_WIDTH,-(MATRIX_WIDTH+1),MATRIX_WIDTH+1,-(MATRIX_WIDTH-1),MATRIX_WIDTH-1,
+  -2,2,-2*MATRIX_WIDTH,2*MATRIX_WIDTH,-4,4,-4*MATRIX_WIDTH,4*MATRIX_WIDTH,
+  -(2*MATRIX_WIDTH-2),2*MATRIX_WIDTH-2,-(2*MATRIX_WIDTH+2),2*MATRIX_WIDTH+2 };
+
+/* random() has 8 bits, so a range above 256 needs two draws. Up to 256 one draw is used,
+   which for 64 gives the same value as random() & 0x3F, so the 64x64 output does not change. */
+static short randomBelow(short range)
+{
+   if (range <= 256) return random() % range;
+   short high = random(); /* separate statements: the evaluation order of two calls in one expression is not defined */
+   short low = random();
+   return (((high << 8) | low) & 0x7FFF) % range;
+}
 
 /* these is array used to find corresponding points */
 /*
@@ -171,13 +183,14 @@ void addSpiceAt(struct cell map[MAP_HEIGHT][MAP_WIDTH],short x,short y)
 void addSpice(struct cell map[MAP_HEIGHT][MAP_WIDTH])
 {
      short i,x,y,a,b,c,d;
-     short e,j,m,x2,y2,x3,y3;
+     short e,j,m,x3,y3;
+     int x2,y2; /* 8.8 fixed point positions, these exceed a short on maps wider than 128 */
      signed char k;
      
      for(i=random()&0x2F;i>0;i--)
      {  
-        y=random()&0x3F;
-        x=random()&0x3F;              
+        y=randomBelow(MAP_HEIGHT);
+        x=randomBelow(MAP_WIDTH);              
         if(!canAddSpiceTo[map[y][x].w]){
           i++;
           continue;
@@ -193,10 +206,8 @@ void addSpice(struct cell map[MAP_HEIGHT][MAP_WIDTH])
                 else{
                      m=c; 
                      
-                     short d=((x<<6)+y);
-                     
-                     y2=((d & 0x3F)<<8)+0x80;
-                     x2=((d << 2)&0xff00)+0x80;
+                     y2=(y<<8)+0x80;
+                     x2=(x<<8)+0x80;
                      
                      e=random()&0xff;
                      while(e>m)
@@ -211,9 +222,9 @@ void addSpice(struct cell map[MAP_HEIGHT][MAP_WIDTH])
                      k=-k;                        
                      y2=(((k*m)>>7)<<4)+y2;   
                                          
-                     if((x2>=0)&&(x2<=0x4000)&&(y2<=0x4000)&&(y2>=0)){
-                        x3=(x2>>8)&0xff;
-                        y3=(y2>>8)&0xff;
+                     if((x2>=0)&&(x2<=MAP_WIDTH*0x100)&&(y2<=MAP_HEIGHT*0x100)&&(y2>=0)){
+                        x3=x2>>8;
+                        y3=y2>>8;
                      }else{
                         x3=x;
                         y3=y;
@@ -383,7 +394,7 @@ void spreadMatrix(struct cell map[MAP_HEIGHT][MAP_WIDTH])
             bx = x + *(offs);   by = y + *(offs+1);
             ex = x + *(offs+2); ey = y + *(offs+3);
             medx = (ex + bx)/2; medy = (ey + by)/2;
-            bx &= 0x3f; ex &= 0x3f; /* so x position never exceeds 0x3F */
+            bx %= MAP_WIDTH; ex %= MAP_WIDTH; /* so x position never exceeds the map width */
             if (((medy * MAP_WIDTH) +medx) < MAP_WIDTH*MAP_HEIGHT)
                map[medy][medx].w = (map[by][bx].w + map[ey][ex].w + 1)/2;
             offs += 4;
@@ -411,7 +422,7 @@ void copyMatrix(char *matrix, struct cell map[MAP_HEIGHT + 1][MAP_WIDTH])
          map[y][x].w = matrix[i++];
 }
 
-/* the generation of the map begins from creation of the 16x16 matrix
+/* the generation of the map begins from creation of the matrix (16x16 for a 64x64 map)
  * (it actually creates 17th line but don't use it)
  * which can be interpreted as a "shape" of new map
  * Matrix is filled with random numbers (0-10)
@@ -424,7 +435,7 @@ void createMatrix(char *matrix)
    short i; 
    unsigned char num;
 
-   for (i = 0; i < 16*17; i++)
+   for (i = 0; i < MATRIX_SIZE; i++)
    {
       num = random() & 0xF;
       if (num > 10) num = 10;
@@ -445,11 +456,11 @@ void addNoise1(char *matrix)
    while (count >= 0)
    {
       /* 'ncell' is the offset in matrix */
-      ncell = random() & 0xFF;
+      ncell = randomBelow(MATRIX_WIDTH * MATRIX_HEIGHT);
       for (i = 0; i < 21; i++)
       {
          cell = ncell + offsets[i];
-         if (cell < 0) cell = 0; else if (cell > 16*17) cell = 16*17;
+         if (cell < 0) cell = 0; else if (cell > MATRIX_SIZE) cell = MATRIX_SIZE;
          d = random() & 0xF;
          matrix[cell] = (matrix[cell] + d) & 0xF;
       }
@@ -464,11 +475,11 @@ void addNoise2(char *matrix)
    count = random() & 0x3;
    while (count >= 0)
    {
-      ncell = random() & 0xFF;
+      ncell = randomBelow(MATRIX_WIDTH * MATRIX_HEIGHT);
       for (i = 0; i < 21; i++)
       {
          cell = ncell + offsets[i];
-         if (cell < 0) cell = 0; else if (cell > 16*17) cell = 16*17;
+         if (cell < 0) cell = 0; else if (cell > MATRIX_SIZE) cell = MATRIX_SIZE;
          matrix[cell] = random() & 0x3;
       }
       count--;
