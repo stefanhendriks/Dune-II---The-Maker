@@ -70,7 +70,8 @@ include(Catch)
 catch_discover_tests(d2tm_tests)
 
 # seedgen (resources/tools/seedgen): C code of the Dune 2 map generator, with golden master tests.
-# Its globals and function names would clash with the game, so it gets its own test executable.
+# Its globals and function names would clash with the game, so it gets its own test executables:
+# one for the default 64x64 size and one built with another size (the sources use MAP_WIDTH/MAP_HEIGHT).
 set(SEEDGEN_DIR ${CMAKE_SOURCE_DIR}/resources/tools/seedgen)
 set(SEEDGEN_SOURCES ${SEEDGEN_DIR}/seed.c ${SEEDGEN_DIR}/mapio.c ${SEEDGEN_DIR}/rand.c)
 # the .c files use bool without stdbool.h and have narrowing initializers, so they are built as C++
@@ -78,6 +79,7 @@ set_source_files_properties(${SEEDGEN_SOURCES} PROPERTIES LANGUAGE CXX)
 
 # campaign seeds plus a few extra
 set(SEEDGEN_SEEDS_64 "{0, 1, 42, 4242, 65535, 5, 12, 16, 24, 27, 33, 53, 57, 59, 62, 89, 103, 106, 113, 117, 122, 123, 157, 173, 182, 203, 207, 223, 233, 268, 269, 298, 305, 332, 353, 355, 367, 392, 500, 501, 504, 552, 563, 582, 604, 717, 723, 1498, 2106, 2437, 2620, 2674, 3161}")
+set(SEEDGEN_SEEDS_LARGE "{12, 42, 500, 3161}")
 
 function(add_seedgen_tests target expectedDir seeds)
     add_executable(${target} ${CMAKE_CURRENT_SOURCE_DIR}/seedgen/test_seedgen.cpp ${SEEDGEN_SOURCES})
@@ -92,3 +94,5 @@ function(add_seedgen_tests target expectedDir seeds)
 endfunction()
 
 add_seedgen_tests(seedgen_tests expected "${SEEDGEN_SEEDS_64}")
+add_seedgen_tests(seedgen_tests_large expected_large "${SEEDGEN_SEEDS_LARGE}")
+target_compile_definitions(seedgen_tests_large PRIVATE MAP_WIDTH=128 MAP_HEIGHT=96 SEEDGEN_LARGE)
