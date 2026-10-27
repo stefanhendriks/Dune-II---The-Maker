@@ -51,6 +51,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_reinforcements != nullptr);
     d2tm_assert(m_cIni != nullptr);
