@@ -36,7 +36,7 @@ public:
     // Returns the scenario file name for the specified house and region.
     static std::string getScenarioFileName(int iHouse, int iRegion);
     // Returns the section type ID for the given section name or last if not found.
-    static eIniSection getSectionType(const std::string& section, eIniSection last);
+    static eScenarioIniSection getSectionType(const std::string& section, eScenarioIniSection last);
     // Returns the structure type ID for the given structure name string (alternative to getStructureType).
     static int getStructureTypeFromString(const std::string& structureStr); 
     // Returns the bullet type ID for the given bullet name string.
@@ -88,10 +88,10 @@ private:
         };
     }
 
-    static const std::unordered_map<std::string, eIniSection> sectionMap;
+    static const std::unordered_map<std::string, eScenarioIniSection> sectionMap;
     static const std::unordered_map<std::string, int> houseMap;
     static const std::unordered_map<std::string, int> structureMap;
-    static const std::unordered_map<std::string, eIniSection> sectionTypeMap;
+    static const std::unordered_map<std::string, eScenarioIniSection> sectionTypeMap;
     static const std::unordered_map<std::string, std::string> sceneFileMap;
     static const std::unordered_map<std::string, int> structureNameMap;
     static const std::unordered_map<std::string, int> unitNameMap;

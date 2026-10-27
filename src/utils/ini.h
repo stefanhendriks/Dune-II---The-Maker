@@ -42,7 +42,7 @@ public:
     // Load original scenario ini file
     void loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign);
     // Load briefing for original scenario
-    void loadBriefing(int iHouse, int iScenarioFind, eIniSection iSectionFind, AbstractMentat *pMentat);
+    void loadBriefing(int iHouse, int iScenarioFind, eScenarioIniSection iSectionFind, AbstractMentat *pMentat);
     // Load regionfile for original scenario
     void loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
 

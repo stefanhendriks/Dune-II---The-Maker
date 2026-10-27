@@ -65,19 +65,19 @@ void cTellHouseState::prepareMentat(int house)
 
     if (house == ATREIDES) {
         m_audioContext->playSound(SOUND_ATREIDES);
-        m_cIni->loadBriefing(ATREIDES, 0, eIniSection::DESCRIPTION, m_mentat.get());
+        m_cIni->loadBriefing(ATREIDES, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("platr");
     } else if (house == HARKONNEN) {
         m_audioContext->playSound(SOUND_HARKONNEN);
-        m_cIni->loadBriefing(HARKONNEN, 0, eIniSection::DESCRIPTION, m_mentat.get());
+        m_cIni->loadBriefing(HARKONNEN, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plhar");
     } else if (house == ORDOS) {
         m_audioContext->playSound(SOUND_ORDOS);
-        m_cIni->loadBriefing(ORDOS, 0, eIniSection::DESCRIPTION, m_mentat.get());
+        m_cIni->loadBriefing(ORDOS, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plord");
     } else if (house == SARDAUKAR) {
         //m_audioContext->playSound(SOUND_SARDAUKAR);
-        m_cIni->loadBriefing(SARDAUKAR, 0, eIniSection::DESCRIPTION, m_mentat.get());
+        m_cIni->loadBriefing(SARDAUKAR, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
         //m_mentat->loadScene("plsar");
     } else {
         Logger::warn(COMP_GAMERULES, "cTellHouseState::prepareMentat", "called with an invalid house value: {}", house);

@@ -6,16 +6,23 @@
 
 #pragma once
 
-// TODO(#1675) - untangle game.ini vs scenario sections, then rename to eGameIniSection
-enum class eIniSection {
+// Sections of game.ini
+enum class eGameIniSection {
     NONE = -1,
     HOUSES,
     UNITS,
     STRUCTURES,
-    MAP,
     TERRAINS,
     GAME,
-    BULLETS,
+    BULLETS
+};
+
+// Sections of scenario, briefing and region files
+enum class eScenarioIniSection {
+    NONE = -1,
+    UNITS,
+    STRUCTURES,
+    MAP,
     BASIC,
     SKIRMISH,
     HOUSEATREIDES,
@@ -34,7 +41,7 @@ enum class eIniSection {
     REGION
 };
 
-constexpr bool isHouseSection(eIniSection section)
+constexpr bool isHouseSection(eScenarioIniSection section)
 {
-    return section >= eIniSection::HOUSEATREIDES && section <= eIniSection::HOUSEMERCENARY;
+    return section >= eScenarioIniSection::HOUSEATREIDES && section <= eScenarioIniSection::HOUSEMERCENARY;
 }

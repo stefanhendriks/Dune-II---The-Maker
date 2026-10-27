@@ -530,7 +530,7 @@ TEST_CASE("parseScenario - a complete scenario", "[ini_scenario]")
 
 namespace {
 
-std::vector<std::string> briefingFrom(const std::string& text, int scenario, eIniSection section)
+std::vector<std::string> briefingFrom(const std::string& text, int scenario, eScenarioIniSection section)
 {
     std::istringstream stream(text);
     return parseBriefing(stream, scenario, section);
@@ -557,7 +557,7 @@ const char* const BRIEFING_FILE =
 
 TEST_CASE("parseBriefing - reads the lines of the requested scenario and section", "[ini_briefing]")
 {
-    auto lines = briefingFrom(BRIEFING_FILE, 1, eIniSection::BRIEFING);
+    auto lines = briefingFrom(BRIEFING_FILE, 1, eScenarioIniSection::BRIEFING);
     REQUIRE(lines.size() == 2);
     REQUIRE(lines[0] == "First briefing line");
     REQUIRE(lines[1] == "Second briefing line");
@@ -565,31 +565,31 @@ TEST_CASE("parseBriefing - reads the lines of the requested scenario and section
 
 TEST_CASE("parseBriefing - section selects win and lose texts", "[ini_briefing]")
 {
-    auto win = briefingFrom(BRIEFING_FILE, 1, eIniSection::WIN);
+    auto win = briefingFrom(BRIEFING_FILE, 1, eScenarioIniSection::WIN);
     REQUIRE(win.size() == 1);
     REQUIRE(win[0] == "You won the first");
 
-    auto lose = briefingFrom(BRIEFING_FILE, 1, eIniSection::LOSE);
+    auto lose = briefingFrom(BRIEFING_FILE, 1, eScenarioIniSection::LOSE);
     REQUIRE(lose.size() == 1);
     REQUIRE(lose[0] == "You lost the first");
 }
 
 TEST_CASE("parseBriefing - other scenario numbers", "[ini_briefing]")
 {
-    auto briefing = briefingFrom(BRIEFING_FILE, 2, eIniSection::BRIEFING);
+    auto briefing = briefingFrom(BRIEFING_FILE, 2, eScenarioIniSection::BRIEFING);
     REQUIRE(briefing.size() == 1);
     REQUIRE(briefing[0] == "Briefing of the second");
 
-    auto win = briefingFrom(BRIEFING_FILE, 2, eIniSection::WIN);
+    auto win = briefingFrom(BRIEFING_FILE, 2, eScenarioIniSection::WIN);
     REQUIRE(win.size() == 1);
     REQUIRE(win[0] == "You won the second");
 }
 
 TEST_CASE("parseBriefing - unknown scenario or empty section gives nothing", "[ini_briefing]")
 {
-    REQUIRE(briefingFrom(BRIEFING_FILE, 3, eIniSection::BRIEFING).empty());
-    REQUIRE(briefingFrom(BRIEFING_FILE, 2, eIniSection::LOSE).empty());
-    REQUIRE(briefingFrom("", 1, eIniSection::BRIEFING).empty());
+    REQUIRE(briefingFrom(BRIEFING_FILE, 3, eScenarioIniSection::BRIEFING).empty());
+    REQUIRE(briefingFrom(BRIEFING_FILE, 2, eScenarioIniSection::LOSE).empty());
+    REQUIRE(briefingFrom("", 1, eScenarioIniSection::BRIEFING).empty());
 }
 
 TEST_CASE("parseBriefing - CRLF, comments and unquoted text", "[ini_briefing]")
@@ -601,7 +601,7 @@ TEST_CASE("parseBriefing - CRLF, comments and unquoted text", "[ini_briefing]")
         "[BRIEFING]\r\n"
         "Text=Plain text\r\n"
         "Text=\"Quoted text\"\r\n",
-        1, eIniSection::BRIEFING);
+        1, eScenarioIniSection::BRIEFING);
     REQUIRE(lines.size() == 2);
     REQUIRE(lines[0] == "Plain text");
     REQUIRE(lines[1] == "Quoted text");
@@ -614,7 +614,7 @@ TEST_CASE("parseBriefing - description section is read like the others", "[ini_b
         "Number=0\n"
         "[DESCRIPTION]\n"
         "Text=\"House description\"\n",
-        0, eIniSection::DESCRIPTION);
+        0, eScenarioIniSection::DESCRIPTION);
     REQUIRE(lines.size() == 1);
     REQUIRE(lines[0] == "House description");
 }
@@ -625,7 +625,7 @@ TEST_CASE("parseBriefing - stops after ten sentences", "[ini_briefing]")
     for (int i = 0; i < 15; i++) {
         text += "Text=\"line " + std::to_string(i) + "\"\n";
     }
-    auto lines = briefingFrom(text, 1, eIniSection::BRIEFING);
+    auto lines = briefingFrom(text, 1, eScenarioIniSection::BRIEFING);
     REQUIRE(lines.size() == 10);
     REQUIRE(lines[0] == "line 0");
     REQUIRE(lines[9] == "line 9");
@@ -639,7 +639,7 @@ TEST_CASE("parseBriefing - non-text words are ignored", "[ini_briefing]")
         "[BRIEFING]\n"
         "Other=\"ignored\"\n"
         "Text=\"kept\"\n",
-        1, eIniSection::BRIEFING);
+        1, eScenarioIniSection::BRIEFING);
     REQUIRE(lines.size() == 1);
     REQUIRE(lines[0] == "kept");
 }

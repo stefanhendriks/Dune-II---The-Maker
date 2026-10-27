@@ -48,7 +48,7 @@ public:
 
     eGameStateType getType() override;
     void loadScenario(cReinforcements *reinforcements);
-    void loadBriefing(int iScenarioFind, eIniSection iSectionFind);
+    void loadBriefing(int iScenarioFind, eScenarioIniSection iSectionFind);
     void prepareMentat(int house);
 private:
     std::unique_ptr<AbstractMentat> m_mentat;

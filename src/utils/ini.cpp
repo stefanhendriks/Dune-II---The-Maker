@@ -348,7 +348,7 @@ void cIni::INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_cred
     m_objects->getPlayer(AI_WORM)->setTeam(2); // the WORM player is nobody's ally, ever
 }
 
-void cIni::loadBriefing(int iHouse, int iScenarioFind, eIniSection iSectionFind, AbstractMentat *pMentat)
+void cIni::loadBriefing(int iHouse, int iScenarioFind, eScenarioIniSection iSectionFind, AbstractMentat *pMentat)
 {
     Logger::info(COMP_SCENARIOINI, "cIni::INI_Load_Briefing", "[BRIEFING] Opening file");
 
@@ -377,7 +377,7 @@ void cIni::installGame(const std::string& filename)
 {
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
-    eIniSection section = eIniSection::GAME;
+    eGameIniSection section = eGameIniSection::GAME;
     eIniWord wordtype = eIniWord::NONE;
     int id = -1;
 
@@ -400,27 +400,27 @@ void cIni::installGame(const std::string& filename)
 
         auto sectionName = extractSectionName(linefeed);
         if (!sectionName.empty()) {
-            eIniSection last = section;
+            eGameIniSection last = section;
             section = GAME_INI_SectionType(sectionName, section);
 
             if (last != section) {
                 id = -1;
-                if (section == eIniSection::UNITS)      Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [UNITS]");
-                if (section == eIniSection::STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [STRUCTURES]");
-                if (section == eIniSection::BULLETS)    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [BULLETS]");
+                if (section == eGameIniSection::UNITS)      Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [UNITS]");
+                if (section == eGameIniSection::STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [STRUCTURES]");
+                if (section == eGameIniSection::BULLETS)    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [BULLETS]");
             }
 
-            if (section == eIniSection::UNITS && linefeed.find("[UNIT:") != std::string::npos) {
+            if (section == eGameIniSection::UNITS && linefeed.find("[UNIT:") != std::string::npos) {
                 id = cIniUtils::getUnitTypeFromString(extractTagValue(linefeed, "[UNIT:"));
                 if (id >= MAX_UNITTYPES) id--;
             }
 
-            if (section == eIniSection::STRUCTURES && linefeed.find("[STRUCTURE:") != std::string::npos) {
+            if (section == eGameIniSection::STRUCTURES && linefeed.find("[STRUCTURE:") != std::string::npos) {
                 id = cIniUtils::getStructureType(extractTagValue(linefeed, "[STRUCTURE:"));
                 if (id >= MAX_STRUCTURETYPES) id--;
             }
 
-            if (section == eIniSection::BULLETS && linefeed.find("[BULLET:") != std::string::npos) {
+            if (section == eGameIniSection::BULLETS && linefeed.find("[BULLET:") != std::string::npos) {
                 id = cIniUtils::getBulletTypeFromString(extractTagValue(linefeed, "[BULLET:"));
                 const int bulletInfoCount = m_infos->getBulletInfos()->size();
                 if (id >= 0 && id >= bulletInfoCount) {
@@ -431,13 +431,13 @@ void cIni::installGame(const std::string& filename)
             continue;
         }
 
-        if (section == eIniSection::GAME) continue;
+        if (section == eGameIniSection::GAME) continue;
 
         auto [word_left, word_right] = INI_SplitWord(linefeed);
-        wordtype = INI_WordType(word_left, section);
+        wordtype = GameIniWordType(word_left, section);
 
         /**** [UNITS] ****/
-        if (section == eIniSection::UNITS && id > -1) {
+        if (section == eGameIniSection::UNITS && id > -1) {
             s_UnitInfo &unitInfo = m_infos->getUnitInfo(id);
 
             if (wordtype == eIniWord::HITPOINTS)     unitInfo.hp = ToInt(word_right);
@@ -476,7 +476,7 @@ void cIni::installGame(const std::string& filename)
             }
         }
 
-        if (section == eIniSection::TERRAINS && id > -1) {
+        if (section == eGameIniSection::TERRAINS && id > -1) {
             if (wordtype == eIniWord::BLOOMTIMERDURATION)    m_infos->getTerrainInfo()->bloomTimerDuration = ToInt(word_right);
             if (wordtype == eIniWord::TERRAIN_MINSPICE)      m_infos->getTerrainInfo()->terrainSpiceMinSpice = ToInt(word_right);
             if (wordtype == eIniWord::TERRAIN_MAXSPICE)      m_infos->getTerrainInfo()->terrainSpiceMaxSpice = ToInt(word_right);
@@ -485,7 +485,7 @@ void cIni::installGame(const std::string& filename)
             if (wordtype == eIniWord::TERRAINWALL_HP)        m_infos->getTerrainInfo()->terrainWallHp = ToInt(word_right);
         }
 
-        if (section == eIniSection::STRUCTURES && id > -1) {
+        if (section == eGameIniSection::STRUCTURES && id > -1) {
             if (wordtype == eIniWord::HITPOINTS)    m_infos->getStructureInfo(id).hp = ToInt(word_right);
             if (wordtype == eIniWord::FIXHP)        m_infos->getStructureInfo(id).fixhp = ToInt(word_right);
             if (wordtype == eIniWord::POWERDRAIN)   m_infos->getStructureInfo(id).power_drain = ToInt(word_right);
@@ -503,7 +503,7 @@ void cIni::installGame(const std::string& filename)
             if (wordtype == eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_TYPE)       m_infos->getStructureInfo(id).uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(word_right);
         }
 
-        if (section == eIniSection::BULLETS && id > -1) {
+        if (section == eGameIniSection::BULLETS && id > -1) {
             if (wordtype == eIniWord::DAMAGE_VEHICLE)     m_infos->getBulletInfo(id).damage_vehicles = ToInt(word_right);
             if (wordtype == eIniWord::DAMAGE_INFANTRY)    m_infos->getBulletInfo(id).damage_infantry = ToInt(word_right);
             if (wordtype == eIniWord::DEVIATE_PROBABILITY) m_infos->getBulletInfo(id).deviateProbability = ToInt(word_right);
