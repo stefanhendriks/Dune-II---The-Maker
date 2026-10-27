@@ -29,20 +29,9 @@ void cGameInterface::prepareMentatToTellAboutHouse(int house) const
     m_game->prepareMentatToTellAboutHouse(house);
 }
 
-void cGameInterface::setTransitionToWithFadingOut(int newState) const
-{
-        m_game->setNextStateToTransitionTo(newState);
-        m_game->initiateFadingOut();
-}
-
 void cGameInterface::initiateFadingOut() const
 {
     m_game->initiateFadingOut();
-}
-
-void cGameInterface::setNextStateToTransitionTo(int newState) const
-{
-    m_game->setNextStateToTransitionTo(newState);
 }
 
 // void cGameInterface::loadSkirmishMaps() const

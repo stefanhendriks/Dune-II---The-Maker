@@ -37,9 +37,7 @@ public:
     void prepareMentatForPlayer() const;
     void loadScenario() const;
 
-    void setTransitionToWithFadingOut(int newState) const;
     void initiateFadingOut() const;
-    void setNextStateToTransitionTo(int newState) const;
     // void loadSkirmishMaps() const;
     void initSkirmish() const;
     // void loadMapFromEditor(s_PreviewMap *map) const;
