@@ -24,6 +24,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "drawers/cTextDrawer.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 #include "include/cAssert.h"
@@ -33,11 +34,13 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
     m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse)
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
     auto settings =services->settings;
     d2tm_assert(settings != nullptr);
@@ -147,7 +150,7 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
         m_interface->prepareMentatToTellAboutHouse(SARDAUKAR);
     }
     else if (event.coords.isWithinRectangle(backButtonRect)) {
-        m_interface->setTransitionToWithFadingOut(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(GAME_MENU);
     }
 }
 
@@ -160,7 +163,7 @@ void cChooseHouseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_interface->setTransitionToWithFadingOut(GAME_MENU);
+            m_stateTransitions->setNextStateWithFade(GAME_MENU);
         }
     }
 }

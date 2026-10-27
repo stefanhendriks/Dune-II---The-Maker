@@ -21,6 +21,7 @@
 #include "gui/GuiTheme.hpp"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include "game/CampaignProgress.hpp"
@@ -42,6 +43,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse)
 {
     d2tm_assert(services != nullptr);
@@ -109,7 +111,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
                 return;
             }
             m_interface->jumpToSelectYourNextConquestMission(highestUnlockedMission);
-            m_interface->setTransitionToWithFadingOut(
+            m_stateTransitions->setNextStateWithFade(
                 highestUnlockedMission == CampaignProgress::FIRST_MISSION ? GAME_BRIEFING : GAME_REGION);
         })
         .build();
@@ -128,7 +130,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this, i]() {
                 m_interface->jumpToSelectYourNextConquestMission(i);
-                m_interface->setTransitionToWithFadingOut(i == CampaignProgress::FIRST_MISSION ? GAME_BRIEFING : GAME_REGION);
+                m_stateTransitions->setNextStateWithFade(i == CampaignProgress::FIRST_MISSION ? GAME_BRIEFING : GAME_REGION);
             })
             .build();
         gui_window->addGuiObject(std::move(btnMission));
@@ -142,7 +144,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this,prevState]() {
-                m_interface->setNextStateToTransitionTo(prevState);
+                m_stateTransitions->setNextState(prevState);
             })
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Back));

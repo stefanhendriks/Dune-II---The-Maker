@@ -36,6 +36,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "context/cGameObjectContext.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
 #include "game/cGameConditionChecker.h"
@@ -64,6 +65,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_mapCamera(services->mapCamera),
     m_gameConditionChecker(services->gameConditionChecker),
     m_screenFader(services->screenFader),
@@ -76,6 +78,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_screenFader != nullptr);
     d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
@@ -308,7 +311,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
-                m_interface->setTransitionToWithFadingOut(GAME_MENU);
+                m_stateTransitions->setNextStateWithFade(GAME_MENU);
             })
             .build();
 
@@ -360,7 +363,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
-                m_interface->setTransitionToWithFadingOut(GAME_NEW_MAP_EDITOR);
+                m_stateTransitions->setNextStateWithFade(GAME_NEW_MAP_EDITOR);
             })
             .build();
 
@@ -999,7 +1002,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     auto drawManager = m_services->drawManager;
     drawManager->missionInit();
-    m_interface->setTransitionToWithFadingOut(GAME_PLAYING);
+    m_stateTransitions->setNextStateWithFade(GAME_PLAYING);
 }
 
 eGameStateType cSetupSkirmishState::getType()
@@ -1525,7 +1528,7 @@ void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_interface->setTransitionToWithFadingOut(GAME_MENU);
+            m_stateTransitions->setNextStateWithFade(GAME_MENU);
         }
         if (event.isAction(eKeyAction::SCROLL_LEFT)) {
             moveCursor(-1, 0);
