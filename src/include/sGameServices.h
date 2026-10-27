@@ -34,6 +34,7 @@ class cScreenFader;
 class CampaignProgress;
 class Texture;
 class GameStateTransitionService;
+class MentatFlow;
 
 struct sGameServices
 {
@@ -55,4 +56,5 @@ struct sGameServices
     CampaignProgress *campaignProgress = nullptr;
     Texture *screenTexture = nullptr; // set in cGame::run(), before any state transition
     GameStateTransitionService *stateTransitions = nullptr;
+    MentatFlow *mentatFlow = nullptr;
 };

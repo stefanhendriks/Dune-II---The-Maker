@@ -69,6 +69,7 @@ class cEventEmitter;
 class cCreatorState;
 class CampaignProgress;
 class GameStateTransitionService;
+class MentatFlow;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -265,6 +266,7 @@ private:
     std::unique_ptr<cMissionStatsCollector> m_missionStatsCollector;
     std::unique_ptr<cScreenFader> m_cScreenFader;
     std::unique_ptr<GameStateTransitionService> m_stateTransitions;
+    std::unique_ptr<MentatFlow> m_mentatFlow;
 
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
