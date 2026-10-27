@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "SEED.H"
-#include "MAPIO_PROTOS.H"
+#include "seed.h"
+#include "mapio_protos.h"
 
 void printMatrix(char *matrix)
 {

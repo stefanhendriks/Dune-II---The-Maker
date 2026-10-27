@@ -4,19 +4,19 @@ CXX ?= g++
 CXXFLAGS ?= -O2
 override CXXFLAGS += -w -Wno-narrowing -include compat.h
 
-OBJS = MAIN.o MAPIO.o RAND.o SEED.o
+OBJS = main.o mapio.o rand.o seed.o
 TARGET = seed2map
 
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
-%.o: %.C
+%.o: %.c
 	$(CXX) $(CXXFLAGS) -x c++ -c -o $@ $<
 
-MAIN.o MAPIO.o RAND.o SEED.o: compat.h
-MAIN.o MAPIO.o SEED.o: SEED.H
-MAIN.o SEED.o: SEED_PROTOS.H
-MAIN.o MAPIO.o: MAPIO_PROTOS.H
+main.o mapio.o rand.o seed.o: compat.h
+main.o mapio.o seed.o: seed.h
+main.o seed.o: seed_protos.h
+main.o mapio.o: mapio_protos.h
 
 clean:
 	rm -f $(OBJS) $(TARGET) $(TARGET).exe

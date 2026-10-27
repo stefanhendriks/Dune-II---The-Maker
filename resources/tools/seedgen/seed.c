@@ -1,7 +1,7 @@
 
 #include <stdio.h>
-#include "SEED.H"
-#include "SEED_PROTOS.H"
+#include "seed.h"
+#include "seed_protos.h"
 
 #define SAND      0
 #define DUNES     2
