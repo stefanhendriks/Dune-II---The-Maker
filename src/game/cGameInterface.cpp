@@ -29,11 +29,6 @@ void cGameInterface::prepareMentatToTellAboutHouse(int house) const
     m_game->prepareMentatToTellAboutHouse(house);
 }
 
-void cGameInterface::initiateFadingOut() const
-{
-    m_game->initiateFadingOut();
-}
-
 // void cGameInterface::loadSkirmishMaps() const
 // {
 //     m_game->loadSkirmishMaps();
