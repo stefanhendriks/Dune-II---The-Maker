@@ -21,6 +21,7 @@
 #include "context/cGameObjectContextCreator.h"
 #include "game/cGame.h"
 #include "game/GameStateTransitionService.hpp"
+#include "game/MentatFlow.hpp"
 #include "game/CampaignProgress.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
@@ -214,6 +215,17 @@ cGame::cGame()
             initiateFadingOut();
         }
     );
+    m_mentatFlow = std::make_unique<MentatFlow>(
+        [this](int house) {
+            prepareMentatToTellAboutHouse(house);
+        },
+        [this]() {
+            prepareMentatForPlayer();
+        },
+        [this]() {
+            changeStateFromMentat();
+        }
+    );
 
     m_services = std::make_unique<sGameServices>();
     m_services->ctx = ctx.get();
@@ -227,6 +239,7 @@ cGame::cGame()
     m_services->screenShake = m_screenShake.get();
     m_services->screenFader = m_cScreenFader.get();
     m_services->stateTransitions = m_stateTransitions.get();
+    m_services->mentatFlow = m_mentatFlow.get();
 
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());
