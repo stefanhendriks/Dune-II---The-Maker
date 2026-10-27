@@ -6,6 +6,7 @@
 
 #pragma once
 
+// TODO(#1675) - untangle game.ini vs scenario sections, then rename to eGameIniSection
 enum class eIniSection {
     NONE = -1,
     HOUSES,
