@@ -21,7 +21,4 @@ main.o mapio.o: mapio_protos.h
 clean:
 	rm -f $(OBJS) $(TARGET) $(TARGET).exe
 
-test: $(TARGET)
-	sh test.sh
-
-.PHONY: clean test
+.PHONY: clean
