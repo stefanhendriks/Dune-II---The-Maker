@@ -23,7 +23,7 @@
 #include <iostream>
 #include "include/cAssert.h"
 
-AtreidesMentat::AtreidesMentat(GameContext* ctx, cGameSettings* settings, bool allowMissionSelect) : AbstractMentat(ctx, settings, allowMissionSelect)
+AtreidesMentat::AtreidesMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, allowMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
     iBackgroundFrame = MENTATA;

@@ -23,7 +23,7 @@
 #include "context/GameContext.hpp"
 #include "include/cAssert.h"
 
-OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, bool allowMissionSelect) : AbstractMentat(ctx, settings, allowMissionSelect)
+OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, allowMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
     iBackgroundFrame = MENTATO;

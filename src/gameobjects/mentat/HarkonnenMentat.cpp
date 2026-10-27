@@ -24,7 +24,7 @@
 
 #include "include/cAssert.h"
 
-HarkonnenMentat::HarkonnenMentat(GameContext* ctx, cGameSettings* settings, bool allowMissionSelect) : AbstractMentat(ctx, settings, allowMissionSelect)
+HarkonnenMentat::HarkonnenMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, allowMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
     iBackgroundFrame = MENTATH;

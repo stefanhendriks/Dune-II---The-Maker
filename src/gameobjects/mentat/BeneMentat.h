@@ -26,7 +26,7 @@ struct s_DataCampaign;
  */
 class BeneMentat : public AbstractMentat {
 public:
-    BeneMentat(GameContext* ctx, cGameSettings* settings, cPlayer* humanPlayer, s_DataCampaign* dataCampaign);
+    BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, cPlayer* humanPlayer, s_DataCampaign* dataCampaign);
     void think() override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 private:
