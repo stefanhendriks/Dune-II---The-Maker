@@ -1,5 +1,6 @@
 // Golden master tests for the seedgen map generator (resources/tools/seedgen), a reverse engineered
-// Dune 2 algorithm: the 64x64 output must stay byte-identical to the files in resources/tools/seedgen/expected/.
+// Dune 2 algorithm. This file is compiled twice: as seedgen_tests (64x64, must stay byte-identical to the
+// expected/ files) and as seedgen_tests_large (128x96, expected_large/), see tests/CMakeLists.txt.
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
@@ -19,10 +20,7 @@ extern unsigned long seed;
 
 namespace {
 
-constexpr int MAP_WIDTH = 64;
-constexpr int MAP_HEIGHT = 64;
-
-char matrix[16 * 17 + 1];
+char matrix[MATRIX_SIZE + 1];
 struct cell map[MAP_HEIGHT + 1][MAP_WIDTH];
 
 // same steps as main() in resources/tools/seedgen/main.c, the map text is what printMap writes
@@ -38,7 +36,7 @@ std::string generateMap(unsigned long mapSeed)
     createRegions(map);
     addSpice(map);
 
-    const std::filesystem::path path = std::filesystem::temp_directory_path() / "d2tm_seedgen_test.txt";
+    const std::filesystem::path path = std::filesystem::temp_directory_path() / ("d2tm_seedgen_test_" + std::to_string(MAP_WIDTH) + ".txt");
     FILE *f = std::fopen(path.string().c_str(), "w");
     REQUIRE(f != nullptr);
     printMap(map, f);
@@ -75,7 +73,7 @@ TEST_CASE("seedgen - generated maps are identical to the golden master", "[seedg
     }
 }
 
-TEST_CASE("seedgen - map has 64 rows of 64 cells", "[seedgen]")
+TEST_CASE("seedgen - map has the configured size and terrain in every part of it", "[seedgen]")
 {
     const std::vector<unsigned long> seeds = SEEDGEN_SEEDS;
     for (unsigned long s : seeds) {
@@ -91,3 +89,28 @@ TEST_CASE("seedgen - map has 64 rows of 64 cells", "[seedgen]")
         REQUIRE(rows == MAP_HEIGHT);
     }
 }
+
+#ifdef SEEDGEN_LARGE
+TEST_CASE("seedgen - larger map is generated completely, not only the top rows", "[seedgen]")
+{
+    const int band = 24;
+    const int cells = band * MAP_WIDTH;
+    const std::vector<unsigned long> seeds = SEEDGEN_SEEDS;
+    for (unsigned long s : seeds) {
+        CAPTURE(s);
+        const std::string text = generateMap(s);
+        for (int firstRow = 0; firstRow + band <= MAP_HEIGHT; firstRow += band) {
+            int terrain = 0;
+            for (int y = firstRow; y < firstRow + band; y++) {
+                for (int x = 0; x < MAP_WIDTH; x++) {
+                    if (text[y * (MAP_WIDTH + 1) + x] != '.') terrain++;
+                }
+            }
+            CAPTURE(firstRow, terrain);
+            // a band is neither all sand nor almost completely filled
+            REQUIRE(terrain >= 300);
+            REQUIRE(terrain <= cells * 0.88);
+        }
+    }
+}
+#endif
