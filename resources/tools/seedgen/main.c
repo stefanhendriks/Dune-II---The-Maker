@@ -7,7 +7,7 @@
 
 extern unsigned long seed;
 
-char   matrix[MAP_HEIGHT/4*MAP_HEIGHT/4+1];
+char   matrix[MATRIX_SIZE + 1];
 struct cell map[MAP_HEIGHT + 1][MAP_WIDTH];
 
 int main(int argc, char **argv)
