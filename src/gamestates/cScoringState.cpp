@@ -4,6 +4,7 @@
 #include "controls/cMouse.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
 #include "game/cGameSettings.h"
@@ -20,6 +21,7 @@ cScoringState::cScoringState(sGameServices* services) :
     cGameState(services),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_smallTextDrawer(m_ctx->getTextContext()->getSmallTextDrawer()),
     m_mouse(services->mouse),
@@ -27,6 +29,7 @@ cScoringState::cScoringState(sGameServices* services) :
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_smallTextDrawer != nullptr);
     d2tm_assert(m_screenFader != nullptr);
@@ -37,7 +40,7 @@ cScoringState::cScoringState(sGameServices* services) :
 void cScoringState::continueToWinBrief() const
 {
     m_interface->goingToWinLoseBrief(GAME_WINBRIEF);
-    m_interface->initiateFadingOut();
+    m_stateTransitions->fadeOut();
 }
 
 cScoringState::~cScoringState()

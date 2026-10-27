@@ -115,7 +115,7 @@ void cOptionsState::constructWindow(int prevState)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
                 m_settings->setPlaying(false);
-                m_interface->initiateFadingOut();
+                m_stateTransitions->fadeOut();
             })
             .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Quit));

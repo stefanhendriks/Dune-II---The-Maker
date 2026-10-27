@@ -379,7 +379,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
                     m_interface->loadMapFromEditor(iSkirmishMap);
-                    m_interface->initiateFadingOut();
+                    m_stateTransitions->fadeOut();
                 }
             })
             .build();

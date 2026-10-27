@@ -148,7 +148,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_interface->initiateFadingOut();})
+            .onClick([this](){m_stateTransitions->fadeOut();})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Load));
 
@@ -190,7 +190,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_interface->initiateFadingOut();})
+            .onClick([this](){m_stateTransitions->fadeOut();})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Hof));
 
@@ -206,7 +206,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_settings->setPlaying(false);
-                m_interface->initiateFadingOut();})
+                m_stateTransitions->fadeOut();})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Exit));
 

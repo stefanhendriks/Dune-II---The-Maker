@@ -7,6 +7,7 @@
 
 class cGameSettings;
 class cGameInterface;
+class GameStateTransitionService;
 class cTextDrawer;
 class cMouse;
 class cScreenFader;
@@ -30,6 +31,7 @@ private:
 
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    GameStateTransitionService* m_stateTransitions = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cTextDrawer* m_smallTextDrawer = nullptr;
     cMouse* m_mouse = nullptr;

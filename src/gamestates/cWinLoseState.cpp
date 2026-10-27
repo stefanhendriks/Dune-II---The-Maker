@@ -101,5 +101,5 @@ void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &) const
         m_stateTransitions->setNextState(GAME_SCORING);
     }
     // FADE OUT
-    m_interface->initiateFadingOut();
+    m_stateTransitions->fadeOut();
 }
