@@ -447,7 +447,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     m_interface->playMusicByType(MUSIC_BRIEFING);
 
     state = REGSTATE_FADEOUT;
-    m_interface->initiateFadingOut();
+    m_stateTransitions->fadeOut();
 }
 
 cRegion *cSelectYourNextConquestState::getRegionMouseIsOver() const

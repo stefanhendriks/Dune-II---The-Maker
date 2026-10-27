@@ -68,7 +68,7 @@ void BeneMentat::onYesButtonPressed()
     m_gameInterface->missionInit();
     m_humanPlayer->setHouse(this->getHouse());
     m_dataCampaign->housePlayer = this->getHouse();
-    m_gameInterface->initiateFadingOut();
+    m_stateTransitions->fadeOut();
 }
 
 void BeneMentat::onNoButtonPressed()
@@ -77,7 +77,7 @@ void BeneMentat::onNoButtonPressed()
     m_humanPlayer->setHouse(GENERALHOUSE);
     m_dataCampaign->housePlayer = GENERALHOUSE;
     m_stateTransitions->setNextState(GAME_SELECT_HOUSE);
-    m_gameInterface->initiateFadingOut();
+    m_stateTransitions->fadeOut();
 }
 
 void BeneMentat::think()
