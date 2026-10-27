@@ -13,13 +13,13 @@ void printMatrix(char *matrix)
    }
 }
 
-void printMap(struct cell map[64][64], FILE *out)
+void printMap(struct cell map[MAP_HEIGHT][MAP_WIDTH], FILE *out)
 {
    short x, y;
 
-   for (y = 0; y < 64; y++)
+   for (y = 0; y < MAP_HEIGHT; y++)
    {
-      for (x = 0; x < 64; x++)
+      for (x = 0; x < MAP_WIDTH; x++)
       {
 		 switch (map[y][x].w)
 		 {
@@ -73,26 +73,26 @@ int readMatrix(char *matrix, char *name)
    return(0);
 }
 
-void writeMap(struct cell map[64][64], char *name)
+void writeMap(struct cell map[MAP_HEIGHT][MAP_WIDTH], char *name)
 {
    FILE *f;
 
    if (f = fopen(name, "wb"))
    {
-      fwrite(map, sizeof(struct cell), 64*64, f);
+      fwrite(map, sizeof(struct cell), MAP_WIDTH*MAP_HEIGHT, f);
       fclose(f);
    }
    else
       printf("I can't write map ('%s')!\n", name);
 }
 
-int readMap(struct cell map[64][64], char *name)
+int readMap(struct cell map[MAP_HEIGHT][MAP_WIDTH], char *name)
 {
    FILE *f;
 
    if (f = fopen(name, "rb"))
    {
-      fread(map, sizeof(struct cell), 64*64, f);
+      fread(map, sizeof(struct cell), MAP_WIDTH*MAP_HEIGHT, f);
       fclose(f);
       return(1);
    }

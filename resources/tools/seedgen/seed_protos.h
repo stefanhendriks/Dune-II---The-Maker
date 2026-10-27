@@ -5,13 +5,13 @@
 #include "seed.h"
 
 unsigned char random (void);
-void convertMap (struct cell map[64][64], short *iconmap);
-void addSpice(struct cell map[64][64]);
-void scanRegions (struct cell map[64][64]);
-void createRegions (struct cell map[64][64]);
-void balanceMap (struct cell map[64][64]);
-void spreadMatrix (struct cell map[64][64]);
-void copyMatrix (char *matrix, struct cell map[65][64]);
+void convertMap (struct cell map[MAP_HEIGHT][MAP_WIDTH], short *iconmap);
+void addSpice(struct cell map[MAP_HEIGHT][MAP_WIDTH]);
+void scanRegions (struct cell map[MAP_HEIGHT][MAP_WIDTH]);
+void createRegions (struct cell map[MAP_HEIGHT][MAP_WIDTH]);
+void balanceMap (struct cell map[MAP_HEIGHT][MAP_WIDTH]);
+void spreadMatrix (struct cell map[MAP_HEIGHT][MAP_WIDTH]);
+void copyMatrix (char *matrix, struct cell map[MAP_HEIGHT + 1][MAP_WIDTH]);
 void createMatrix (char *matrix);
 void addNoise1 (char *matrix);
 void addNoise2 (char *matrix);

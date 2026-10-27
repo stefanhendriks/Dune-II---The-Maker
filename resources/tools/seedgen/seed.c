@@ -107,14 +107,14 @@ signed char spicemap2[256] = {
  * iconmap must point to this file
  */
 
-void convertMap(struct cell map[64][64], short *iconmap)
+void convertMap(struct cell map[MAP_HEIGHT][MAP_WIDTH], short *iconmap)
 {
    short *icontab, w, x, y;
 
    icontab = iconmap + iconmap[9]; /* get base of convert array */
-   for (y = 0; y < 64; y++)
+   for (y = 0; y < MAP_HEIGHT; y++)
    {
-      for (x = 0; x < 64; x++)
+      for (x = 0; x < MAP_WIDTH; x++)
       {
          w = map[y][x].w;
          w = icontab[w];
@@ -127,7 +127,7 @@ void convertMap(struct cell map[64][64], short *iconmap)
 /*
  * Add spice at specified position
  */
-void addSpiceAt(struct cell map[64][64],short x,short y)
+void addSpiceAt(struct cell map[MAP_HEIGHT][MAP_WIDTH],short x,short y)
 {     
       short dx,dy,d,x2,y2;   
       if(map[y][x].w==SPICE){
@@ -139,12 +139,12 @@ void addSpiceAt(struct cell map[64][64],short x,short y)
              for(dy=-1;dy<=1;dy++) 
              {
               y2=y+dy;
-              if(y2>63) continue;
+              if(y2>MAP_HEIGHT-1) continue;
               if(y2<0) continue;
               for(dx=-1;dx<=1;dx++) 
                {                  
                   x2=x+dx;  
-                  if(x2>63) continue;
+                  if(x2>MAP_WIDTH-1) continue;
                   if(x2<0) continue;             
                   if(canAddSpiceTo[map[y2][x2].w]){
                      if(map[y2][x2].w!=MUCHSPICE){
@@ -168,7 +168,7 @@ void addSpiceAt(struct cell map[64][64],short x,short y)
  * Add spice to the map
  */
 
-void addSpice(struct cell map[64][64])
+void addSpice(struct cell map[MAP_HEIGHT][MAP_WIDTH])
 {
      short i,x,y,a,b,c,d;
      short e,j,m,x2,y2,x3,y3;
@@ -219,7 +219,7 @@ void addSpice(struct cell map[64][64])
                         y3=y;
                      }       
                 }                                                     
-            }while((x3<0)||(y3<0)||(x3>63)||(y3>63));             
+            }while((x3<0)||(y3<0)||(x3>MAP_WIDTH-1)||(y3>MAP_HEIGHT-1));             
             addSpiceAt(map,x3,y3);                     
         }
      }
@@ -231,21 +231,21 @@ void addSpice(struct cell map[64][64])
  * The technique is similiar to --> balanceMap
  */
 
-void scanRegions(struct cell map[64][64])
+void scanRegions(struct cell map[MAP_HEIGHT][MAP_WIDTH])
 {
-   short prevln[64], currln[64];
+   short prevln[MAP_WIDTH], currln[MAP_WIDTH];
    short i, x, y, left, up, right, down, middle, id;
 
-   for (i = 0; i < 64; i++)
+   for (i = 0; i < MAP_WIDTH; i++)
       currln[i] = map[0][i].w;
-   for (y = 0; y < 64; y++)
+   for (y = 0; y < MAP_HEIGHT; y++)
    {
-      for (i = 0; i < 64; i++)
+      for (i = 0; i < MAP_WIDTH; i++)
       {
          prevln[i] = currln[i];
          currln[i] = map[y][i].w;
       }
-      for (x = 0; x < 64; x++)
+      for (x = 0; x < MAP_WIDTH; x++)
       {
          middle = map[y][x].w;
          left   = currln[x-1];
@@ -253,9 +253,9 @@ void scanRegions(struct cell map[64][64])
          right  = currln[x+1];
          down   = map[y+1][x].w;
          if (x == 0)  left  = middle;
-         if (x == 63) right = middle;
+         if (x == MAP_WIDTH - 1) right = middle;
          if (y == 0)  up    = middle;
-         if (y == 63) down  = middle;
+         if (y == MAP_HEIGHT - 1) down  = middle;
          id = 0;
          if (middle == ROCK)
          {
@@ -296,7 +296,7 @@ void scanRegions(struct cell map[64][64])
  * creates terrain regions by replacing numbers within specified range
  */
 
-void createRegions(struct cell map[64][64])
+void createRegions(struct cell map[MAP_HEIGHT][MAP_WIDTH])
 {
    /* variables named like terrains are range limits */
    short x, y, rock, dunes, mountains, num, reg;
@@ -307,9 +307,9 @@ void createRegions(struct cell map[64][64])
    mountains = rock + 4;
    dunes = (random() & 0x3) - 1;
 
-   for (y = 0; y < 64; y++)
+   for (y = 0; y < MAP_HEIGHT; y++)
    {
-      for (x = 0; x < 64; x++)
+      for (x = 0; x < MAP_WIDTH; x++)
       {
          num = map[y][x].w;
          reg = SAND;
@@ -329,31 +329,31 @@ void createRegions(struct cell map[64][64])
  * to 'prevln'.
  */
 
-void balanceMap(struct cell map[64][64])
+void balanceMap(struct cell map[MAP_HEIGHT][MAP_WIDTH])
 {
-   short prevln[64], currln[64];
+   short prevln[MAP_WIDTH], currln[MAP_WIDTH];
    short i, x, y;
    /* these variables store proper numbers (c=center, l=left etc.) */
    short c, u, ru, r, rd, d, ld, l, lu;
 
-   for (i = 0; i < 64; i++)
+   for (i = 0; i < MAP_WIDTH; i++)
       currln[i] = 0;
-   for (y = 0; y < 64; y++)
+   for (y = 0; y < MAP_HEIGHT; y++)
    {
-      for (i = 0; i < 64; i++)
+      for (i = 0; i < MAP_WIDTH; i++)
       {
          prevln[i] = currln[i];
          currln[i] = map[y][i].w;
       }
-      for (x = 0; x < 64; x++)
+      for (x = 0; x < MAP_WIDTH; x++)
       {
          lu = prevln[x-1];      u = prevln[x];     ru = prevln[x+1];
          l  = currln[x-1];      c = currln[x];     r  = currln[x+1];
          rd = map[y+1][x+1].w;  d = map[y+1][x].w; ld = map[y+1][x-1].w;
          if (x==0)  lu = l = ld = c; /* left edge */
          if (y==0)  lu = u = ru = c; /* top edge*/
-         if (x==63) ru = r = rd = c; /* right edge */
-         if (y==63) ld = d = rd = c; /* bottom edge */
+         if (x==MAP_WIDTH-1) ru = r = rd = c; /* right edge */
+         if (y==MAP_HEIGHT-1) ld = d = rd = c; /* bottom edge */
          map[y][x].w = (lu + u + ru + r + rd + d + ld + l + c)/9;
       }
    }
@@ -367,13 +367,13 @@ void balanceMap(struct cell map[64][64])
  * also the right border cells are inproperly calculated.
  */
 
-void spreadMatrix(struct cell map[64][64])
+void spreadMatrix(struct cell map[MAP_HEIGHT][MAP_WIDTH])
 {
    short i, x, y, bx, by, ex, ey, medx, medy, diag=0, *offs;
 
-   for (y = 0; y < 64; y += 4)
+   for (y = 0; y < MAP_HEIGHT; y += 4)
    {
-      for (x = 0; x < 64; x += 4)
+      for (x = 0; x < MAP_WIDTH; x += 4)
       {
          /* 'diag' determines which diagonal to use to fill center cell */
          if (diag) offs = offsets2; else offs = offsets2+(PAIRCOUNT*4);
@@ -384,7 +384,7 @@ void spreadMatrix(struct cell map[64][64])
             ex = x + *(offs+2); ey = y + *(offs+3);
             medx = (ex + bx)/2; medy = (ey + by)/2;
             bx &= 0x3f; ex &= 0x3f; /* so x position never exceeds 0x3F */
-            if (((medy * 64) +medx) < 64*64)
+            if (((medy * MAP_WIDTH) +medx) < MAP_WIDTH*MAP_HEIGHT)
                map[medy][medx].w = (map[by][bx].w + map[ey][ex].w + 1)/2;
             offs += 4;
          }
@@ -398,16 +398,16 @@ void spreadMatrix(struct cell map[64][64])
  * (the generator has a tend to use that extra row in spreadMatrix :)
  */
 
-void copyMatrix(char *matrix, struct cell map[65][64])
+void copyMatrix(char *matrix, struct cell map[MAP_HEIGHT + 1][MAP_WIDTH])
 {
    short x, y, i=0;
 
-   for (y = 0; y < 65; y++)
-      for (x = 0; x < 64; x++)
+   for (y = 0; y < MAP_HEIGHT + 1; y++)
+      for (x = 0; x < MAP_WIDTH; x++)
          map[y][x].w = map[y][x].a = map[y][x].b = 0;
 
-   for (y = 0; y < 64; y += 4)
-      for (x = 0; x < 64; x += 4)
+   for (y = 0; y < MAP_HEIGHT; y += 4)
+      for (x = 0; x < MAP_WIDTH; x += 4)
          map[y][x].w = matrix[i++];
 }
 
