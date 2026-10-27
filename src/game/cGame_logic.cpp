@@ -209,6 +209,9 @@ cGame::cGame()
         [this](int state) {
             setNextStateToTransitionTo(state);
             initiateFadingOut();
+        },
+        [this]() {
+            initiateFadingOut();
         }
     );
 
