@@ -2142,7 +2142,8 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
     bool mayPlayVoice = true;
     if (triggerMusic) {
         if (m_settings->getMusicType() != MUSIC_ATTACK) {
-            mayPlayVoice = m_audioContext->playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay, true, getHouse());
+            // music is only triggered for the human player
+            mayPlayVoice = isHuman() && m_audioContext->playMusicByType(MUSIC_ATTACK, hasVoiceToPlay, true, getHouse());
         }
         else {
             mayPlayVoice = false;

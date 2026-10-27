@@ -453,7 +453,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     // load map
     m_scenarioFlow->loadScenario();
 
-    m_audioContext->playMusicByType(MUSIC_BRIEFING, HUMAN, false, false, m_objects->getPlayer(HUMAN)->getHouse());
+    m_audioContext->playMusicByType(MUSIC_BRIEFING, false, false, m_objects->getPlayer(HUMAN)->getHouse());
 
     state = REGSTATE_FADEOUT;
     m_stateTransitions->fadeOut();
