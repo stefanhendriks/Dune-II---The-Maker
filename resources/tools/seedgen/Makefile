@@ -2,7 +2,8 @@
 # The .C sources use bool without stdbool.h, so they are built as C++.
 CXX ?= g++
 CXXFLAGS ?= -O2
-override CXXFLAGS += -w -Wno-narrowing
+# the tool's own random() (RAND.C) clashes with libc random() on Linux/macOS, so rename it
+override CXXFLAGS += -w -Wno-narrowing -Drandom=seed_random
 
 OBJS = MAIN.o MAPIO.o RAND.o SEED.o
 TARGET = seed2map
