@@ -10,7 +10,9 @@ BIN=./seed2map
 out=$(mktemp)
 fail=0
 for s in $SEEDS; do
-    $BIN "$s" "$out" > /dev/null
+    : > "$out"
+    $BIN "$s" "$out" > /dev/null || { echo "FAIL: seed $s: seed2map failed"; fail=1; continue; }
+    [ -s "$out" ] || { echo "FAIL: seed $s: seed2map wrote no map"; fail=1; continue; }
     if [ "$1" = "update" ]; then
         tr -d '\r' < "$out" > "expected/seed_$s.txt"
     else
