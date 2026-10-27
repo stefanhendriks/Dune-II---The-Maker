@@ -20,6 +20,7 @@
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
 #include "game/GameStateTransitionService.hpp"
+#include "game/MentatFlow.hpp"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include "gui/GuiButton.h"
@@ -38,13 +39,14 @@
 static constexpr int MENTAT_SCREEN_W = 640;
 static constexpr int MENTAT_SCREEN_H = 480;
 
-AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool canMissionSelect)
+AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, MentatFlow* mentatFlow, bool canMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(settings != nullptr);
     m_gameInterface = ctx->getGameInterface();
     m_stateTransitions = stateTransitions;
     d2tm_assert(m_stateTransitions != nullptr);
+    m_mentatFlow = mentatFlow;
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
     m_sdlDrawer = ctx->getSDLDrawer();

@@ -33,6 +33,7 @@ class GameContext;
 class SDLDrawer;
 class cGameInterface;
 class GameStateTransitionService;
+class MentatFlow;
 class cGameSettings;
 class cTextDrawer;
 class cGameObjectContext;
@@ -111,6 +112,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
     GameStateTransitionService* m_stateTransitions = nullptr;
+    MentatFlow* m_mentatFlow = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cGameObjectContext* m_objects = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;

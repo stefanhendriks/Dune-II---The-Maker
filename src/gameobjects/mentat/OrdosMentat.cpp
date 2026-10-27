@@ -21,11 +21,14 @@
 #include "utils/Log.h"
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
+#include "game/GameStateTransitionService.hpp"
+#include "game/MentatFlow.hpp"
 #include "include/cAssert.h"
 
-OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, allowMissionSelect)
+OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, MentatFlow* mentatFlow, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, mentatFlow, allowMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(m_mentatFlow != nullptr);
     iBackgroundFrame = MENTATO;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
@@ -46,7 +49,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTra
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 Logger::info(COMP_GAME, "OrdosMentat", "changing state from mentat"); 
-                m_gameInterface->changeStateFromMentat();})
+                m_mentatFlow->leave();})
             .build();
 }
 

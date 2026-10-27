@@ -33,6 +33,7 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/GameStateTransitionService.hpp"
+#include "game/MentatFlow.hpp"
 #include "game/cGameInterface.h"
 #include "drawers/cTextDrawer.h"
 
@@ -69,6 +70,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
     m_stateTransitions(services->stateTransitions),
+    m_mentatFlow(services->mentatFlow),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_objects(services->objects),
     m_dataCampaign(dataCompaign),
@@ -79,6 +81,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
+    d2tm_assert(m_mentatFlow != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_gfxworld != nullptr);
@@ -439,7 +442,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     m_dataCampaign->mission++;                        // FINALLY ADD MISSION NUMBER...
 
     // set up drawStateMentat
-    m_interface->prepareMentatForPlayer();
+    m_mentatFlow->prepareForPlayer();
 
     // load map
     m_interface->loadScenario();

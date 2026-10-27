@@ -19,7 +19,7 @@
 
 class SardaukarMentat : public AbstractMentat {
 public:
-    SardaukarMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool allowMissionSelect);
+    SardaukarMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, MentatFlow* mentatFlow, bool allowMissionSelect);
     void think();
 private:
     void draw_mouth();
