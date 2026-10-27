@@ -24,11 +24,6 @@ cGameInterface::cGameInterface(cGame* game)
 {
 }
 
-void cGameInterface::prepareMentatToTellAboutHouse(int house) const
-{
-    m_game->prepareMentatToTellAboutHouse(house);
-}
-
 // void cGameInterface::loadSkirmishMaps() const
 // {
 //     m_game->loadSkirmishMaps();
@@ -104,11 +99,6 @@ void cGameInterface::loadMapFromEditor(int iSkirmishMap) const
     m_game->loadMapFromEditor(iSkirmishMap);
 }
 
-void cGameInterface::prepareMentatForPlayer() const
-{
-    m_game->prepareMentatForPlayer();
-}
-
 void cGameInterface::loadScenario() const
 {
     m_game->loadScenario();
@@ -134,7 +124,3 @@ int cGameInterface::getCurrentState() const
     return m_game->getCurrentState();
 }
 
-void cGameInterface::changeStateFromMentat() const
-{
-    m_game->changeStateFromMentat();
-}
