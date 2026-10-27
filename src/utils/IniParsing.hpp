@@ -43,10 +43,11 @@ std::string extractSectionName(const std::string& line);
 // "key=value" -> {"key", "value"}
 std::pair<std::string, std::string> INI_SplitWord(const std::string& input);
 // Reads out word[], does a string compare and returns the word id
-eIniWord INI_WordType(const std::string& word, eIniSection section);
+eIniWord ScenarioIniWordType(const std::string& word, eScenarioIniSection section);
+eIniWord GameIniWordType(const std::string& word, eGameIniSection section);
 // Scenario section types
-eIniSection SCEN_INI_SectionType(const std::string& section);
-eIniSection GAME_INI_SectionType(const std::string& section, eIniSection last);
+eScenarioIniSection SCEN_INI_SectionType(const std::string& section);
+eGameIniSection GAME_INI_SectionType(const std::string& section, eGameIniSection last);
 bool isCommentLine(const std::string& linefeed);
 
 // Name of the directory (below campaign/) that holds the files of the given house
@@ -60,7 +61,7 @@ int getTechLevelByRegion(int iRegion);
 ScenarioData parseScenario(std::istream& file);
 
 // Returns the text lines (at most 10) of the given section for the given scenario number of a briefing file
-std::vector<std::string> parseBriefing(std::istream& file, int iScenarioFind, eIniSection iSectionFind);
+std::vector<std::string> parseBriefing(std::istream& file, int iScenarioFind, eScenarioIniSection iSectionFind);
 
 // The content of a campaign missionN.ini file, before any game object is touched
 struct RegionFileData {
