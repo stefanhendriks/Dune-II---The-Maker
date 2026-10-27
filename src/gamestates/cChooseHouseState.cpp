@@ -25,7 +25,7 @@
 #include "context/GraphicsContext.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/GameStateTransitionService.hpp"
-#include "game/cGameInterface.h"
+#include "game/MentatFlow.hpp"
 #include "controls/cMouse.h"
 #include "include/cAssert.h"
 
@@ -33,14 +33,14 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
-    m_interface(m_ctx->getGameInterface()),
     m_stateTransitions(services->stateTransitions),
+    m_mentatFlow(services->mentatFlow),
     m_mouse(services->mouse)
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
-    d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
+    d2tm_assert(m_mentatFlow != nullptr);
     d2tm_assert(m_mouse != nullptr);
     auto settings =services->settings;
     d2tm_assert(settings != nullptr);
@@ -138,16 +138,16 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
 {
 
     if (event.coords.isWithinRectangle(&houseAtreides)) {
-        m_interface->prepareMentatToTellAboutHouse(ATREIDES);
+        m_mentatFlow->prepareToTellAboutHouse(ATREIDES);
     }
     else if (event.coords.isWithinRectangle(&houseOrdos)) {
-        m_interface->prepareMentatToTellAboutHouse(ORDOS);
+        m_mentatFlow->prepareToTellAboutHouse(ORDOS);
     }
     else if (event.coords.isWithinRectangle(&houseHarkonnen)) {
-        m_interface->prepareMentatToTellAboutHouse(HARKONNEN);
+        m_mentatFlow->prepareToTellAboutHouse(HARKONNEN);
     }
     else if (event.coords.isWithinRectangle(&houseSardaukar)) {
-        m_interface->prepareMentatToTellAboutHouse(SARDAUKAR);
+        m_mentatFlow->prepareToTellAboutHouse(SARDAUKAR);
     }
     else if (event.coords.isWithinRectangle(backButtonRect)) {
         m_stateTransitions->setNextStateWithFade(GAME_MENU);

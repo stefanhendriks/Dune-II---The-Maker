@@ -39,6 +39,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
       m_settings(services->settings),
       m_interface(m_ctx->getGameInterface()),
       m_stateTransitions(services->stateTransitions),
+      m_mentatFlow(services->mentatFlow),
       m_mouse(services->mouse),
       m_objects(services->objects),
       m_reinforcements(services->reinforcements),
@@ -52,6 +53,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
+    d2tm_assert(m_mentatFlow != nullptr);
     d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_reinforcements != nullptr);
     d2tm_assert(m_cIni != nullptr);
@@ -75,13 +77,13 @@ void cMentatState::prepareMentat(int house)
     switch (m_mode) {
         case MentatMode::Briefing:
             if (house == ATREIDES)
-                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == ORDOS)
-                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == SARDAUKAR)
-                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else 
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, m_stateTransitions, humanPlayer, m_dataCampaign);
             m_interface->missionInit();
@@ -91,13 +93,13 @@ void cMentatState::prepareMentat(int house)
             break;
         case MentatMode::WinBrief:
             if (house == ATREIDES)
-                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == ORDOS) 
-                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == SARDAUKAR)
-                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else 
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, m_stateTransitions, humanPlayer, m_dataCampaign);
             
@@ -109,13 +111,13 @@ void cMentatState::prepareMentat(int house)
             break;
         case MentatMode::LoseBrief:
             if (house == ATREIDES) 
-                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<AtreidesMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == HARKONNEN)
-                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<HarkonnenMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == ORDOS)
-                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<OrdosMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else if (house == SARDAUKAR)
-                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_stateTransitions, m_allowMissionSelect);
+                m_mentat = std::make_unique<SardaukarMentat>(m_ctx, m_settings, m_stateTransitions, m_mentatFlow, m_allowMissionSelect);
             else 
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, m_stateTransitions, humanPlayer, m_dataCampaign);
             

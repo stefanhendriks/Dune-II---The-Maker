@@ -22,11 +22,14 @@
 #include "utils/Log.h"
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
+#include "game/GameStateTransitionService.hpp"
+#include "game/MentatFlow.hpp"
 #include "include/cAssert.h"
 
-SardaukarMentat::SardaukarMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, allowMissionSelect)
+SardaukarMentat::SardaukarMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, MentatFlow* mentatFlow, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, mentatFlow, allowMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
+    d2tm_assert(m_mentatFlow != nullptr);
     iBackgroundFrame = MENTATS;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
@@ -47,7 +50,7 @@ SardaukarMentat::SardaukarMentat(GameContext* ctx, cGameSettings* settings, Game
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
                 Logger::info(COMP_NONE, "cYesButtonCommand::changeStateFromMentat", "called");
-                m_gameInterface->changeStateFromMentat();})
+                m_mentatFlow->leave();})
             .build();
 }
 

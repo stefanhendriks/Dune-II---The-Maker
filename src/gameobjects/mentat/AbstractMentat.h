@@ -27,6 +27,7 @@ class GuiButton;
 struct SDL_Surface;
 class Texture;
 class GameContext;
+class MentatFlow;
 class cGameInterface;
 class GameStateTransitionService;
 class cGameSettings;
@@ -42,7 +43,7 @@ enum eMentatState {
 
 class AbstractMentat : public cInputObserver {
 public:
-    AbstractMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool canMissionSelect);
+    AbstractMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, MentatFlow* mentatFlow, bool canMissionSelect);
     virtual ~AbstractMentat();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -123,4 +124,5 @@ protected:
     Graphics* gfxmentat;
     cGameInterface* m_gameInterface = nullptr;
     GameStateTransitionService* m_stateTransitions = nullptr;
+    MentatFlow* m_mentatFlow = nullptr;
 };
