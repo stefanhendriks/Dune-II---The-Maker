@@ -13,7 +13,7 @@ void printMatrix(char *matrix)
    }
 }
 
-void printMap(struct cell map[64][64])
+void printMap(struct cell map[64][64], FILE *out)
 {
    short x, y;
 
@@ -24,20 +24,20 @@ void printMap(struct cell map[64][64])
 		 switch (map[y][x].w)
 		 {
 		 case 0:
-			 putchar('.'); break;
+			 fputc('.', out); break;
 		 case 2:
-			 putchar(':'); break;
+			 fputc(':', out); break;
 		 case 4:
-			 putchar('@'); break;
+			 fputc('@', out); break;
 		 case 6:
-			 putchar('*'); break;		 
+			 fputc('*', out); break;		 
 		 case 8:
-			 putchar('-'); break;
+			 fputc('-', out); break;
 		 case 9:
-			 putchar('+'); break;
+			 fputc('+', out); break;
 		 }
       }
-      putchar('\n');
+      fputc('\n', out);
    }
 }
 

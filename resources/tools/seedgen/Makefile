@@ -1,4 +1,4 @@
-# Builds seed2map, the Dune II seed to map generator. Needs icon.map in the working directory to run.
+# Builds seed2map, the Dune II seed to map generator.
 # The .C sources use bool without stdbool.h, so they are built as C++.
 CXX ?= g++
 CXXFLAGS ?= -O2
