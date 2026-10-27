@@ -21,10 +21,12 @@
 class GameStateTransitionService {
 public:
     using TransitionCallback = std::function<void(int)>;
+    using FadeCallback = std::function<void()>;
 
-    GameStateTransitionService(TransitionCallback setNextState, TransitionCallback setNextStateWithFade)
+    GameStateTransitionService(TransitionCallback setNextState, TransitionCallback setNextStateWithFade, FadeCallback fadeOut)
         : m_setNextState(std::move(setNextState)),
-          m_setNextStateWithFade(std::move(setNextStateWithFade)) {
+          m_setNextStateWithFade(std::move(setNextStateWithFade)),
+          m_fadeOut(std::move(fadeOut)) {
     }
 
     void setNextState(int state) const {
@@ -35,7 +37,12 @@ public:
         m_setNextStateWithFade(state);
     }
 
+    void fadeOut() const {
+        m_fadeOut();
+    }
+
 private:
     TransitionCallback m_setNextState;
     TransitionCallback m_setNextStateWithFade;
+    FadeCallback m_fadeOut;
 };
