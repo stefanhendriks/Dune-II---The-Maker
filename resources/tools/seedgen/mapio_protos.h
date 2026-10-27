@@ -1,7 +1,7 @@
 #ifndef MAPIO_PROTOS_H
 #define MAPIO_PROTOS_H
 
-#include "SEED.H"
+#include "seed.h"
 
 void printMatrix (char *matrix);
 void writeMatrix (char *matrix, char *name);

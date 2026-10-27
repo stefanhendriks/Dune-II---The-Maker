@@ -1,9 +1,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "SEED.H"
-#include "SEED_PROTOS.H"
-#include "MAPIO_PROTOS.H"
+#include "seed.h"
+#include "seed_protos.h"
+#include "mapio_protos.h"
 
 extern unsigned long seed;
 

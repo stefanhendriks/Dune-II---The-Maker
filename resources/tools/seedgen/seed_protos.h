@@ -2,7 +2,7 @@
 #ifndef SEED_PROTOS_H
 #define SEED_PROTOS_H
 
-#include "SEED.H"
+#include "seed.h"
 
 unsigned char random (void);
 void convertMap (struct cell map[64][64], short *iconmap);
