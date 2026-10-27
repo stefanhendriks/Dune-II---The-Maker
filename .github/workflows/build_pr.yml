@@ -17,6 +17,7 @@ jobs:
             relevant:
               - 'src/**'
               - 'tests/**'
+              - 'resources/tools/seedgen/**'
               - 'resources/bin/**'
               - 'resources/dll/**'
               - 'resources/game.ini'
