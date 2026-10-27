@@ -17,6 +17,7 @@
 
 #include "controls/eKeyAction.h"
 #include "data/gfxmentat.h"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "include/eGameState.h"
 #include "include/sDataCampaign.h"
@@ -31,7 +32,7 @@
 #include "context/cInfoContext.h"
 #include <iostream>
 
-BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, false), m_humanPlayer(humanPlayer), m_dataCampaign(dataCampaign)
+BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, stateTransitions, false), m_humanPlayer(humanPlayer), m_dataCampaign(dataCampaign)
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(dataCampaign != nullptr);
@@ -61,7 +62,7 @@ BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, cPlayer* human
 void BeneMentat::onYesButtonPressed()
 {
     Logger::info(COMP_GAME, "BeneMentat::onYesButtonPressed", "Player chose to join house [{}]", cPlayer::getHouseNameForId(this->getHouse()));
-    m_gameInterface->setNextStateToTransitionTo(GAME_BRIEFING);
+    m_stateTransitions->setNextState(GAME_BRIEFING);
     m_dataCampaign->mission = 1; // first mission
     m_dataCampaign->region  = 1; // and the first "region" so to speak
     m_gameInterface->missionInit();
@@ -75,7 +76,7 @@ void BeneMentat::onNoButtonPressed()
     Logger::info(COMP_GAME, "BeneMentat::onNoButtonPressed", "Player chose NOT to join house [{}]", cPlayer::getHouseNameForId(this->getHouse()));
     m_humanPlayer->setHouse(GENERALHOUSE);
     m_dataCampaign->housePlayer = GENERALHOUSE;
-    m_gameInterface->setNextStateToTransitionTo(GAME_SELECT_HOUSE);
+    m_stateTransitions->setNextState(GAME_SELECT_HOUSE);
     m_gameInterface->initiateFadingOut();
 }
 

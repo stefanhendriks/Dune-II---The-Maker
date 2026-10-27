@@ -19,7 +19,7 @@
 
 class OrdosMentat : public AbstractMentat {
 public:
-    OrdosMentat(GameContext* ctx, cGameSettings* settings, bool allowMissionSelect);
+    OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool allowMissionSelect);
     void think();
 private:
     void draw_mouth();

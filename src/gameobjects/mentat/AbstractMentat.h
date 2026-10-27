@@ -28,6 +28,7 @@ struct SDL_Surface;
 class Texture;
 class GameContext;
 class cGameInterface;
+class GameStateTransitionService;
 class cGameSettings;
 class SDLDrawer;
 class cTextDrawer;
@@ -41,7 +42,7 @@ enum eMentatState {
 
 class AbstractMentat : public cInputObserver {
 public:
-    AbstractMentat(GameContext* ctx, cGameSettings* settings, bool canMissionSelect);
+    AbstractMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool canMissionSelect);
     virtual ~AbstractMentat();
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
@@ -121,4 +122,5 @@ protected:
     std::unique_ptr<GuiButton> m_guiBtnToMissionSelect;
     Graphics* gfxmentat;
     cGameInterface* m_gameInterface = nullptr;
+    GameStateTransitionService* m_stateTransitions = nullptr;
 };

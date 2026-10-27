@@ -22,6 +22,7 @@
 struct s_DataCampaign;
 class cReinforcements;
 class cGameInterface;
+class GameStateTransitionService;
 class cGameSettings;
 class cIni;
 class cMouse;
@@ -53,6 +54,7 @@ private:
     s_DataCampaign* m_dataCampaign = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    GameStateTransitionService* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cReinforcements* m_reinforcements = nullptr;

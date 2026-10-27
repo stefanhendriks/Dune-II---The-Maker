@@ -19,7 +19,7 @@
 
 class HarkonnenMentat : public AbstractMentat {
 public:
-    HarkonnenMentat(GameContext* ctx, cGameSettings* settings, bool allowMissionSelect);
+    HarkonnenMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool allowMissionSelect);
     void think();
 private:
     void draw_mouth();

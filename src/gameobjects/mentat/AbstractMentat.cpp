@@ -19,6 +19,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
+#include "game/GameStateTransitionService.hpp"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include "gui/GuiButton.h"
@@ -37,11 +38,13 @@
 static constexpr int MENTAT_SCREEN_W = 640;
 static constexpr int MENTAT_SCREEN_H = 480;
 
-AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, bool canMissionSelect)
+AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, bool canMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(settings != nullptr);
     m_gameInterface = ctx->getGameInterface();
+    m_stateTransitions = stateTransitions;
+    d2tm_assert(m_stateTransitions != nullptr);
     gfxmentat = ctx->getGraphicsContext()->gfxmentat.get();
     m_textDrawer = ctx->getTextContext()->getBeneTextDrawer();
     m_sdlDrawer = ctx->getSDLDrawer();
@@ -85,7 +88,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, bool c
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this] {
-                m_gameInterface->setNextStateToTransitionTo(GAME_MISSIONSELECT);
+                m_stateTransitions->setNextState(GAME_MISSIONSELECT);
             })
             .build();
         m_guiBtnToMissionSelect = std::move(gui_btn_toMissionSelect);

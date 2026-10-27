@@ -18,7 +18,7 @@
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
-#include "game/cGameInterface.h"
+#include "game/GameStateTransitionService.hpp"
 #include "controls/cMouse.h"
 #include "utils/cRectangle.h"
 #include "include/eGameState.h"
@@ -53,7 +53,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     m_sdlDrawer(ctx->getSDLDrawer()),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
-    m_gameInterface(ctx->getGameInterface()),
+    m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse),
     m_mapViewport(services->mapViewport),
     m_objects(services->objects),
@@ -68,7 +68,7 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     d2tm_assert(m_sdlDrawer != nullptr);
     d2tm_assert(m_gfxdata != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
-    d2tm_assert(m_gameInterface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_mapCamera != nullptr);
     d2tm_assert(m_gameSettings != nullptr);
@@ -295,7 +295,7 @@ void cDrawManager::drawTopBarBackground()
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
     if (m_mouse->isLeftButtonClicked() && m_mouse->isOverRectangle(&optionsRect)) {
-        m_gameInterface->setNextStateToTransitionTo(GAME_OPTIONS);
+        m_stateTransitions->setNextState(GAME_OPTIONS);
     }
 }
 
