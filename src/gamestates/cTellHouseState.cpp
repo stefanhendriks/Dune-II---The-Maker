@@ -43,6 +43,7 @@ cTellHouseState::cTellHouseState(sGameServices* services, cIni *ini, s_DataCampa
     m_audioContext = services->ctx->getAudioContext();
     m_settings = services->settings;
     m_stateTransitions = services->stateTransitions;
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_settings != nullptr);
     m_humanPlayer = services->objects->getPlayer(HUMAN);
     prepareMentat(m_house);

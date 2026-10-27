@@ -47,6 +47,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     m_mouse(services->mouse)
 {
     d2tm_assert(services != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     cPlayer* humanPlayer = services->objects->getPlayer(HUMAN);
     const int house = humanPlayer->getHouse();
     Graphics* gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
