@@ -66,18 +66,13 @@ void AudioContext::playMusicByTypeForStateTransition(int iType, int humanHouse)
 {
     if (m_settings->getMusicType() != iType) {
         m_newMusicCountdown = 0;
-        playMusicByType(iType, HUMAN, false, false, humanHouse);
+        playMusicByType(iType, false, false, humanHouse);
     }
 }
 
-bool AudioContext::playMusicByType(int iType, int playerId, bool triggerWithVoice, bool isCurrentlyPlayingMission, int humanHouse)
+bool AudioContext::playMusicByType(int iType, bool triggerWithVoice, bool isCurrentlyPlayingMission, int humanHouse)
 {
-    if (playerId != HUMAN) {
-        // skip music we want to play for non human player
-        return false;
-    }
-
-    Logger::info(COMP_SOUND, "AudioContext::playMusicByType", "iType = {}. playerId = {}, triggerWithVoice = {}", iType, playerId, triggerWithVoice);
+    Logger::info(COMP_SOUND, "AudioContext::playMusicByType", "iType = {}. triggerWithVoice = {}", iType, triggerWithVoice);
 
     if (triggerWithVoice) {
         if (iType == m_settings->getMusicType()) {
@@ -184,10 +179,11 @@ void AudioContext::thinkFast()
             }
 
             if (desiredMusicType == MUSIC_BRIEFING) {
-                // when briefing music ends, do not loop
+                // the briefing track depends on the human house, so replay the sample picked earlier
+                m_soundPlayer->playMusic(m_newMusicSample);
                 return;
             }
-            playMusicByType(desiredMusicType, HUMAN, false, false, GENERALHOUSE);
+            playMusicByType(desiredMusicType, false, false, GENERALHOUSE);
         }
     }
 }

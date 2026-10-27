@@ -35,7 +35,7 @@ public:
     [[nodiscard]] int getMaxVolume() const;
 
     void playMusicByTypeForStateTransition(int iType, int humanHouse);
-    bool playMusicByType(int iType, int playerId, bool triggerWithVoice, bool isCurrentlyPlayingMission, int humanHouse);
+    bool playMusicByType(int iType, bool triggerWithVoice, bool isCurrentlyPlayingMission, int humanHouse);
 
     void thinkFast();
 

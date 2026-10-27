@@ -1524,9 +1524,9 @@ void cGame::playMusicByTypeForStateTransition(int iType)
     m_audioContext->playMusicByTypeForStateTransition(iType, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 }
 
-bool cGame::playMusicByType(int iType, int playerId, bool triggerWithVoice)
+bool cGame::playMusicByType(int iType, bool triggerWithVoice)
 {
-    return m_audioContext->playMusicByType(iType, playerId, triggerWithVoice, isState(GAME_PLAYING), m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
+    return m_audioContext->playMusicByType(iType, triggerWithVoice, isState(GAME_PLAYING), m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 }
 
 int cGame::getMaxVolume()

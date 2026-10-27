@@ -967,7 +967,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     m_gameConditionChecker->setWinFlags(3);
     m_gameConditionChecker->setLoseFlags(1);
 
-    m_audioContext->playMusicByType(MUSIC_PEACE, HUMAN, false, false, m_objects->getPlayer(HUMAN)->getHouse());
+    m_audioContext->playMusicByType(MUSIC_PEACE, false, false, m_objects->getPlayer(HUMAN)->getHouse());
 
     m_objects->getMap()->setAutoSpawnSpiceBlooms(spawnBlooms);
     m_objects->getMap()->setAutoDetonateSpiceBlooms(detonateBlooms);
