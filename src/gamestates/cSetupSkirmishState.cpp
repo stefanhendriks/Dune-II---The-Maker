@@ -36,7 +36,7 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "context/cGameObjectContext.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
 #include "game/cGameConditionChecker.h"

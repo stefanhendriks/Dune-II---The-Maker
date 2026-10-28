@@ -23,7 +23,7 @@
 struct SDL_Surface;
 class Texture;
 class GameContext;
-class GameStateTransitionService;
+class GameStateTransition;
 class MentatFlow;
 class cMouse;
 class cTextDrawer;
@@ -45,7 +45,7 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     Graphics *m_gfxinter = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     MentatFlow* m_mentatFlow = nullptr;
     cMouse* m_mouse = nullptr;
     cRectangle *backButtonRect;

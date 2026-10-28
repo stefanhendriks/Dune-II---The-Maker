@@ -32,7 +32,7 @@
 #include "gamestates/cOptionsState.h"
 #include "gamestates/cSelectMissionState.h"
 #include "gamestates/cSetupSkirmishState.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"

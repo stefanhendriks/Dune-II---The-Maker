@@ -23,7 +23,7 @@ class Texture;
 
 class cGameSettings;
 class cGameInterface;
-class GameStateTransitionService;
+class GameStateTransition;
 class cMouse;
 
 enum class Outcome : char {Win, Lose};
@@ -45,7 +45,7 @@ public:
 private:
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     Texture *m_backgroundTexture = nullptr;
     Texture *m_tex = nullptr;

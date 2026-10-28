@@ -21,7 +21,7 @@
 #include "gui/GuiTheme.hpp"
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include "game/CampaignProgress.hpp"

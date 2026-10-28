@@ -29,7 +29,7 @@ class Texture;
 
 class cTextDrawer;
 class cGameSettings;
-class GameStateTransitionService;
+class GameStateTransition;
 class cMouse;
 
 struct s_CreditLine {
@@ -56,7 +56,7 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
 
     int m_titleX;

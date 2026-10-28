@@ -20,7 +20,7 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContextCreator.h"
 #include "game/cGame.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
 #include "game/CampaignProgress.hpp"
 #include "data/gfxdata.h"
@@ -203,7 +203,7 @@ cGame::cGame()
             dispatchGameEvent(event);
         }
     );
-    m_stateTransitions = std::make_unique<GameStateTransitionService>(
+    m_stateTransitions = std::make_unique<GameStateTransition>(
         [this](int state) {
             setNextStateToTransitionTo(state);
         },

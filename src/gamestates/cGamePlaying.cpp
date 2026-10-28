@@ -35,7 +35,7 @@
 #include "controls/cGameControlsContext.h"
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
 #include "game/cScreenShake.h"

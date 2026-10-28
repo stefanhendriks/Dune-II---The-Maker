@@ -17,7 +17,7 @@
 
 #include "controls/eKeyAction.h"
 #include "data/gfxmentat.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
 #include "include/eGameState.h"
 #include "include/sDataCampaign.h"
@@ -32,7 +32,7 @@
 #include "context/cInfoContext.h"
 #include <iostream>
 
-BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, stateTransitions, nullptr, false), m_humanPlayer(humanPlayer), m_dataCampaign(dataCampaign)
+BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, stateTransitions, nullptr, false), m_humanPlayer(humanPlayer), m_dataCampaign(dataCampaign)
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(dataCampaign != nullptr);

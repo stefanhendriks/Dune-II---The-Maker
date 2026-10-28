@@ -29,7 +29,7 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/cEventEmitter.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "controls/cMouse.h"
 #include "gameobjects/map/cPreviewMaps.h"
 #include "data/gfxeditor.h"

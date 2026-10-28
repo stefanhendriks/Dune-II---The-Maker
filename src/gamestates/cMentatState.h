@@ -23,7 +23,7 @@
 struct s_DataCampaign;
 class cReinforcements;
 class cGameInterface;
-class GameStateTransitionService;
+class GameStateTransition;
 class MentatFlow;
 class cGameSettings;
 class cIni;
@@ -56,7 +56,7 @@ private:
     s_DataCampaign* m_dataCampaign = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     MentatFlow* m_mentatFlow = nullptr;
     cMouse* m_mouse = nullptr;
     cGameObjectContext* m_objects = nullptr;

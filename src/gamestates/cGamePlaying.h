@@ -29,7 +29,7 @@ class cReinforcements;
 class cTextDrawer;
 class cMapCamera;
 class cGameInterface;
-class GameStateTransitionService;
+class GameStateTransition;
 class cStructureFactory;
 class cDrawManager;
 class cPlayer;
@@ -70,7 +70,7 @@ private:
     cStructureUtils *m_structureUtils = nullptr;
     cReinforcements* m_reinforcements = nullptr;
     cGameInterface* m_interface = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     AudioContext* m_audioContext = nullptr;
     cScreenFader* m_screenFader = nullptr;
     cMapCamera* m_mapCamera = nullptr;
