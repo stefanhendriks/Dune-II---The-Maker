@@ -119,8 +119,3 @@ void cGameInterface::playSoundWithDistance(int sampleId, int distance) const
     m_game->playSoundWithDistance(sampleId, distance);
 }
 
-int cGameInterface::getCurrentState() const
-{
-    return m_game->getCurrentState();
-}
-

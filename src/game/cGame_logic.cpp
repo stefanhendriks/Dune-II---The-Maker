@@ -213,6 +213,9 @@ cGame::cGame()
         },
         [this]() {
             initiateFadingOut();
+        },
+        [this]() {
+            return m_state;
         }
     );
     m_mentatFlow = std::make_unique<MentatFlow>(
@@ -1637,11 +1640,6 @@ void cGame::takeBackGroundScreen()
 s_DataCampaign* cGame::getDataCampaign() const
 {
     return m_dataCampaign.get();
-}
-
-int cGame::getCurrentState() const
-{
-    return m_state;
 }
 
 void cGame::drawTextFps() const
