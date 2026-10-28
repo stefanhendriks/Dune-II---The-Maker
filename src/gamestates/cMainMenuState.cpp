@@ -28,7 +28,7 @@
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
+#include "game/MissionFlow.hpp"
 
 #include <SDL3/SDL.h>
 #include <format>
@@ -38,13 +38,13 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     cGameState(services),
     m_settings(services->settings),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
-    m_interface(m_ctx->getGameInterface()),
+    m_missionFlow(services->missionFlow),
     m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_missionFlow != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
@@ -131,8 +131,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                // m_interface->loadSkirmishMaps();
-                m_interface->initSkirmish();
+                m_missionFlow->init();
                 m_stateTransitions->setNextStateWithFade(GAME_SETUPSKIRMISH);
                 })
             .build();

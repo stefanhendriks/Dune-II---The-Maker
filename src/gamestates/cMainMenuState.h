@@ -24,7 +24,7 @@
 
 class Texture;
 class cTextDrawer;
-class cGameInterface;
+class MissionFlow;
 class GameStateTransition;
 class cMouse;
 class GuiButton;
@@ -46,7 +46,7 @@ public:
 private:
     cGameSettings * m_settings = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
-    cGameInterface* m_interface = nullptr;
+    MissionFlow* m_missionFlow = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
 

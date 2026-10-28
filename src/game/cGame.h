@@ -127,7 +127,6 @@ public:
     void setupPlayers();            // initialize players only (combat state initialization)
     bool setupGame();               // only call once, to initialize game object (TODO: in constructor?)
     void shutdown();
-    void initSkirmish();            // initialize combat state to start a skirmish game
     // void loadSkirmishMaps() const;
     void loadScenario();
 

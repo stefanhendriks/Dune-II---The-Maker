@@ -31,7 +31,6 @@ public:
     void loadScenario() const;
 
     // void loadSkirmishMaps() const;
-    void initSkirmish() const;
     // void loadMapFromEditor(s_PreviewMap *map) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
     void loadMapFromEditor(int iSkirmishMap) const;
