@@ -49,7 +49,7 @@ const char *gameStateToString(eGameState state);
 #define GAME_MENU         1      // in a menu
 #define GAME_PLAYING      2      // playing the actual game
 #define GAME_BRIEFING     3      // doing some briefing
-#define GAME_EDITOR       4      // running the editor
+#define GAME_EDITOR      4      // running the editor
 #define GAME_OPTIONS	  5		 // options menu
 #define GAME_REGION		  6		 // select a region / select your next conquest
 #define GAME_SELECT_HOUSE 8		 // pick a house
@@ -61,7 +61,7 @@ const char *gameStateToString(eGameState state);
 #define GAME_LOSING      14      // when losing, do something cool
 #define GAME_SKIRMISH    15      // playing a skirmish mission!
 #define GAME_SETUPSKIRMISH 16    // set up a skirmish game
-#define GAME_CREDITS       17    // credits
+#define GAME_CREDITS     17    // credits
 #define GAME_MISSIONSELECT  18    // mission select
 #define GAME_NEW_MAP_EDITOR 19    // new map editor
 #define GAME_SCORING     20      // crude mission scoring screen, shown after winning

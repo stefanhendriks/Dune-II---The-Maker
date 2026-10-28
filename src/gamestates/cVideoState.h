@@ -1,5 +1,5 @@
 /**
- * @file cWinLoseState.h
+ * @file cVideoState.h
  *
  * Dune 2 - The Maker
  *
@@ -43,10 +43,10 @@ private:
     cGameSettings* m_settings = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
-    std::unique_ptr<Graphics> gfxmovie;
+    std::unique_ptr<Graphics> m_gfxMovie;
     int m_movieFrame = 0;
-    int offsetX;
-    int offsetY;
+    int m_offsetX = 0;
+    int m_offsetY = 0;
     Texture* m_currentFrame = nullptr;
 };
 
