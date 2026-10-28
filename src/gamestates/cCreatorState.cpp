@@ -77,6 +77,10 @@ bool cCreatorState::hasState(eGameState gameState) const {
     return m_states[gameState].has_value();
 }
 
+void cCreatorState::createVideoState(const std::string &filename) {
+    m_states[eGameState::VIDEO] = std::make_unique<cVideoState>(m_services, filename);
+}
+
 void cCreatorState::destroyState(eGameState gameState) {
     m_states[gameState].reset();
 }
@@ -99,10 +103,6 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
 
         case eGameState::EDITOR:
             m_states[eGameState::EDITOR] = std::make_unique<cEditorState>(m_services);
-            break;
-
-        case eGameState::VIDEO:
-            m_states[eGameState::VIDEO] = std::make_unique<cVideoState>(m_services, "intro.pak");
             break;
 
         case eGameState::NEW_MAP_EDITOR:

@@ -24,6 +24,7 @@
 #include "game/MentatFlow.hpp"
 #include "game/MissionFlow.hpp"
 #include "game/ScenarioFlow.hpp"
+#include "game/VideoFlow.hpp"
 #include "game/CampaignProgress.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
@@ -228,6 +229,12 @@ cGame::cGame()
             changeStateFromMentat();
         }
     );
+    m_videoFlow = std::make_unique<VideoFlow>(
+        [this](const std::string &filename) {
+            m_creatorState->createVideoState(filename);
+            setNextStateToTransitionTo(GAME_VIDEO);
+        }
+    );
     m_missionFlow = std::make_unique<MissionFlow>(
         [this]() {
             missionInit();
@@ -278,6 +285,7 @@ cGame::cGame()
     m_services->mentatFlow = m_mentatFlow.get();
     m_services->missionFlow = m_missionFlow.get();
     m_services->scenarioFlow = m_scenarioFlow.get();
+    m_services->videoFlow = m_videoFlow.get();
 
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());

@@ -29,6 +29,7 @@
 #include "utils/cSoundPlayer.h"
 #include "game/GameStateTransition.hpp"
 #include "game/MissionFlow.hpp"
+#include "game/VideoFlow.hpp"
 
 #include <SDL3/SDL.h>
 #include <format>
@@ -39,12 +40,14 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     m_settings(services->settings),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_missionFlow(services->missionFlow),
+    m_videoFlow(services->videoFlow),
     m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_missionFlow != nullptr);
+    d2tm_assert(m_videoFlow != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
@@ -203,7 +206,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_stateTransitions->setNextState(GAME_VIDEO);})
+            .onClick([this](){m_videoFlow->play("intro.pak");})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Intro));
 

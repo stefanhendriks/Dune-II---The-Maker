@@ -72,6 +72,7 @@ class GameStateTransition;
 class MentatFlow;
 class MissionFlow;
 class ScenarioFlow;
+class VideoFlow;
 
 struct s_DataCampaign;
 // struct s_PreviewMap;
@@ -259,6 +260,7 @@ private:
     std::unique_ptr<MentatFlow> m_mentatFlow;
     std::unique_ptr<MissionFlow> m_missionFlow;
     std::unique_ptr<ScenarioFlow> m_scenarioFlow;
+    std::unique_ptr<VideoFlow> m_videoFlow;
 
     std::unique_ptr<sGameServices> m_services;
     std::unique_ptr<cIni> m_cIni;
