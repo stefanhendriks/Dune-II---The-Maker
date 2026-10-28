@@ -1,5 +1,5 @@
 /**
- * @file cWinLoseState.h
+ * @file cVideoState.cpp
  *
  * Dune 2 - The Maker
  *
@@ -48,18 +48,16 @@ cVideoState::cVideoState(sGameServices* services, const std::string &filename)
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
 
-    gfxmovie = std::make_unique<Graphics>(m_sdlDrawer->getRenderer(),filename);
+    m_gfxMovie = std::make_unique<Graphics>(m_sdlDrawer->getRenderer(), filename);
 
-    m_movieFrame=0;
-    if (gfxmovie != nullptr) {
+    // a missing (or invalid) pack has no frames: thinkNormal sends us back to the main menu
+    if (m_gfxMovie->getNumberOfFiles() > 0) {
         Logger::info(COMP_INIT, "video", "Successful loaded video [{}]", filename);
-        m_currentFrame = gfxmovie->getTexture(m_movieFrame);
-        offsetX = (m_settings->getScreenW() - VIDEO_WIDTH) / 2 - VIDEO_CENTER_SHIFT;
-        offsetY = (m_settings->getScreenH() - VIDEO_MAX_HEIGHT) / 2 - VIDEO_CENTER_SHIFT;
-        return;
+        m_currentFrame = m_gfxMovie->getTexture(m_movieFrame);
+        m_offsetX = (m_settings->getScreenW() - VIDEO_WIDTH) / 2 - VIDEO_CENTER_SHIFT;
+        m_offsetY = (m_settings->getScreenH() - VIDEO_MAX_HEIGHT) / 2 - VIDEO_CENTER_SHIFT;
     } else {
-        Logger::error(COMP_INIT, "video", "Failed to load video [{}]", filename);
-        return;
+        Logger::error(COMP_INIT, "video", "Failed to load video [{}], returning to main menu", filename);
     }
 }
 
@@ -79,13 +77,9 @@ void cVideoState::thinkFast()
 void cVideoState::thinkNormal()
 {
     // one frame per call: thinkNormal runs every ~100 ms, so the video plays at 10 fps
-    if (gfxmovie != nullptr) {
-        if (m_movieFrame < gfxmovie->getNumberOfFiles()) {
-            m_currentFrame = gfxmovie->getTexture(m_movieFrame);
-            m_movieFrame++;
-        } else {
-            m_stateTransitions->setNextStateWithFade(GAME_MENU);
-        }
+    if (m_movieFrame < m_gfxMovie->getNumberOfFiles()) {
+        m_currentFrame = m_gfxMovie->getTexture(m_movieFrame);
+        m_movieFrame++;
     } else {
         m_stateTransitions->setNextStateWithFade(GAME_MENU);
     }
@@ -95,7 +89,7 @@ void cVideoState::draw() const
 {
     m_mouse->setTile(MOUSE_NORMAL);
     if (m_currentFrame != nullptr) {
-        cRectangle dest = {offsetX, offsetY, VIDEO_WIDTH + VIDEO_DRAW_EXTRA, VIDEO_MAX_HEIGHT + VIDEO_DRAW_EXTRA};
+        cRectangle dest = {m_offsetX, m_offsetY, VIDEO_WIDTH + VIDEO_DRAW_EXTRA, VIDEO_MAX_HEIGHT + VIDEO_DRAW_EXTRA};
         m_sdlDrawer->renderStrechFullSprite(m_currentFrame, dest);
     }
     m_mouse->draw();
