@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <optional>
+#include <string>
 
 class GameContext;
 class GameStateTransition;
@@ -38,6 +39,9 @@ public:
     cGameState *getOrCreateState(eGameState gameState, bool forceRecreate = false);
 
     [[nodiscard]] bool hasState(eGameState gameState) const;
+
+    // the video state needs to know what to play, so it has no createStateFromScratch case
+    void createVideoState(const std::string &filename);
 
     void destroyState(eGameState gameState);
 
