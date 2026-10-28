@@ -35,6 +35,7 @@ class cGameInterface;
 class AudioContext;
 class GameStateTransition;
 class MentatFlow;
+class MissionFlow;
 class cGameSettings;
 class cTextDrawer;
 class cGameObjectContext;
@@ -115,6 +116,7 @@ private:
     AudioContext* m_audioContext = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     MentatFlow* m_mentatFlow = nullptr;
+    MissionFlow* m_missionFlow = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cGameObjectContext* m_objects = nullptr;
     s_DataCampaign* m_dataCampaign = nullptr;

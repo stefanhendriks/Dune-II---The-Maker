@@ -44,29 +44,9 @@ void cGameInterface::setPlayerToInteractFor(cPlayer *pPlayer) const
     m_game->setPlayerToInteractFor(pPlayer);
 }
 
-void cGameInterface::setMissionWon() const
-{
-    m_game->setMissionWon();
-}
-
-void cGameInterface::setMissionLost() const
-{
-    m_game->setMissionLost();
-}
-
-void cGameInterface::missionInit() const
-{
-    m_game->missionInit();
-}
-
 void cGameInterface::setupPlayers() const
 {
     m_game->setupPlayers();
-}
-
-void cGameInterface::checkMissionWinOrFail() const
-{
-    m_game->checkMissionWinOrFail();
 }
 
 void cGameInterface::drawTextFps() const
@@ -77,16 +57,6 @@ void cGameInterface::drawTextFps() const
 void cGameInterface::drawTextTime() const
 {
     m_game->drawTextTime();
-}
-
-void cGameInterface::goingToWinLoseBrief(int winOrLoseBrief) const
-{
-    m_game->goingToWinLoseBrief(winOrLoseBrief);
-}
-
-void cGameInterface::jumpToSelectYourNextConquestMission(int index) const
-{
-    m_game->jumpToSelectYourNextConquestMission(index);
 }
 
 void cGameInterface::loadMapFromEditor(int iSkirmishMap) const

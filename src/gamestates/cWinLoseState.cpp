@@ -20,7 +20,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
+#include "game/MissionFlow.hpp"
 #include "controls/cMouse.h"
 
 #include <SDL3/SDL.h>
@@ -35,9 +35,9 @@ cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) :
     d2tm_assert(m_settings != nullptr);
 
     auto ctx = services->ctx;
-    m_interface = ctx->getGameInterface();
+    m_missionFlow = services->missionFlow;
     m_stateTransitions = services->stateTransitions;
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_missionFlow != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     m_mouse = services->mouse;
     d2tm_assert(m_mouse != nullptr);
@@ -96,7 +96,7 @@ void cWinLoseState::onNotifyKeyboardEvent(const cKeyboardEvent &)
 void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &) const
 {
     if (m_statement == Outcome::Lose) {
-        m_interface->goingToWinLoseBrief(GAME_LOSEBRIEF);
+        m_missionFlow->goingToWinLoseBrief(GAME_LOSEBRIEF);
     } else {
         m_stateTransitions->setNextState(GAME_SCORING);
     }

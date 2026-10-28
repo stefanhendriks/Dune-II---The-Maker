@@ -22,7 +22,7 @@
 class Texture;
 
 class cGameSettings;
-class cGameInterface;
+class MissionFlow;
 class GameStateTransition;
 class cMouse;
 
@@ -44,7 +44,7 @@ public:
 
 private:
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
+    MissionFlow* m_missionFlow = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     Texture *m_backgroundTexture = nullptr;

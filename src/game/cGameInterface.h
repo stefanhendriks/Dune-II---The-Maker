@@ -26,9 +26,6 @@ public:
     cGameInterface(cGame* game);
     virtual ~cGameInterface() = default;
 
-    void setMissionWon() const;
-    void setMissionLost() const;
-    void missionInit() const;
     void setupPlayers() const;
 
     void loadScenario() const;
@@ -37,10 +34,7 @@ public:
     void initSkirmish() const;
     // void loadMapFromEditor(s_PreviewMap *map) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
-    void jumpToSelectYourNextConquestMission(int index) const;
     void loadMapFromEditor(int iSkirmishMap) const;
-    void checkMissionWinOrFail() const;
-    void goingToWinLoseBrief(int winOrLoseBrief) const;
     void drawTextFps() const;
     void drawTextTime() const;
 

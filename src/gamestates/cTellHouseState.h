@@ -51,5 +51,6 @@ private:
     AudioContext* m_audioContext = nullptr;
     cGameSettings* m_settings = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
+    MissionFlow* m_missionFlow = nullptr;
     cPlayer* m_humanPlayer = nullptr;
 };

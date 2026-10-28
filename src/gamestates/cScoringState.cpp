@@ -5,7 +5,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
+#include "game/MissionFlow.hpp"
 #include "game/cScreenFader.h"
 #include "game/cGameSettings.h"
 #include "game/cMissionStatsCollector.h"
@@ -20,7 +20,7 @@
 cScoringState::cScoringState(sGameServices* services) :
     cGameState(services),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface()),
+    m_missionFlow(services->missionFlow),
     m_stateTransitions(services->stateTransitions),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_smallTextDrawer(m_ctx->getTextContext()->getSmallTextDrawer()),
@@ -28,7 +28,7 @@ cScoringState::cScoringState(sGameServices* services) :
     m_screenFader(services->screenFader)
 {
     d2tm_assert(m_settings != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_missionFlow != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_smallTextDrawer != nullptr);
@@ -39,7 +39,7 @@ cScoringState::cScoringState(sGameServices* services) :
 
 void cScoringState::continueToWinBrief() const
 {
-    m_interface->goingToWinLoseBrief(GAME_WINBRIEF);
+    m_missionFlow->goingToWinLoseBrief(GAME_WINBRIEF);
     m_stateTransitions->fadeOut();
 }
 

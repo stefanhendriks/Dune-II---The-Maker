@@ -22,7 +22,7 @@
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
+#include "game/MissionFlow.hpp"
 #include "game/cGameSettings.h"
 #include "game/CampaignProgress.hpp"
 #include "controls/cMouse.h"
@@ -42,7 +42,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
     cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface()),
+    m_missionFlow(services->missionFlow),
     m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse)
 {
@@ -111,7 +111,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
             if (campaignCompleted) {
                 return;
             }
-            m_interface->jumpToSelectYourNextConquestMission(highestUnlockedMission);
+            m_missionFlow->jumpToSelectYourNextConquest(highestUnlockedMission);
             m_stateTransitions->setNextStateWithFade(
                 highestUnlockedMission == CampaignProgress::FIRST_MISSION ? GAME_BRIEFING : GAME_REGION);
         })
@@ -130,7 +130,7 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, int prevState)
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this, i]() {
-                m_interface->jumpToSelectYourNextConquestMission(i);
+                m_missionFlow->jumpToSelectYourNextConquest(i);
                 m_stateTransitions->setNextStateWithFade(i == CampaignProgress::FIRST_MISSION ? GAME_BRIEFING : GAME_REGION);
             })
             .build();

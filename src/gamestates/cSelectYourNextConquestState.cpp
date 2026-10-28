@@ -35,6 +35,7 @@
 #include "context/cGameObjectContext.h"
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
+#include "game/MissionFlow.hpp"
 #include "game/cGameInterface.h"
 #include "drawers/cTextDrawer.h"
 
@@ -73,6 +74,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     m_audioContext(m_ctx->getAudioContext()),
     m_stateTransitions(services->stateTransitions),
     m_mentatFlow(services->mentatFlow),
+    m_missionFlow(services->missionFlow),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_objects(services->objects),
     m_dataCampaign(dataCompaign),
@@ -85,6 +87,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     d2tm_assert(m_audioContext != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
+    d2tm_assert(m_missionFlow != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_gfxworld != nullptr);
@@ -439,7 +442,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
 
     iNewReg += iReg;
 
-    m_interface->missionInit();
+    m_missionFlow->init();
     m_stateTransitions->setNextState(GAME_BRIEFING);
     m_dataCampaign->region = iNewReg;
     m_dataCampaign->mission++;                        // FINALLY ADD MISSION NUMBER...

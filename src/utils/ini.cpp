@@ -45,7 +45,7 @@
 #include "context/cGameObjectContext.h"
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
-#include "game/cGameInterface.h"
+#include "game/MissionFlow.hpp"
 #include "game/cGameConditionChecker.h"
 #include "game/cGameSettings.h"
 #include <format>
@@ -71,7 +71,7 @@ cIni::cIni(sGameServices* services)
     m_settings = services->settings;
     m_objects = services->objects;
     m_infos = services->info;
-    m_interface = services->ctx->getGameInterface();
+    m_missionFlow = services->missionFlow;
     m_eventEmitter = services->eventEmitter;
     m_services = services;
     m_gameConditionChecker = services->gameConditionChecker;
@@ -109,7 +109,7 @@ void cIni::loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cS
 void cIni::loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign)
 {
     m_settings->setSkirmish(false);
-    m_interface->missionInit();
+    m_missionFlow->init();
     int iHouse = dataCampaign->housePlayer;
     int iRegion = dataCampaign->region;
 
