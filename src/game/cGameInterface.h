@@ -46,7 +46,6 @@ public:
     void drawTextFps() const;
     void drawTextTime() const;
 
-
 private:
     cGame* m_game = nullptr;
 };
