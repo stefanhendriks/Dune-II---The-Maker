@@ -102,7 +102,7 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
             break;
 
         case eGameState::VIDEO:
-            m_states[eGameState::VIDEO] = std::make_unique<cVideoState>(m_services);
+            m_states[eGameState::VIDEO] = std::make_unique<cVideoState>(m_services, "intro.pak");
             break;
 
         case eGameState::NEW_MAP_EDITOR:
