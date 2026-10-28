@@ -66,7 +66,7 @@ if(APPLE)
 endif()
 
 # Opt-in coverage instrumentation (GCC/gcov) for the unit tests: `cmake .. -DD2TM_COVERAGE=ON`.
-# See the "Code coverage" section in CLAUDE.md / the coverage job in .github/workflows/build_pr.yml.
+# Only d2tm_tests is instrumented (not the seedgen tests). CI: the COVERAGE job in .github/workflows/build_pr.yml.
 option(D2TM_COVERAGE "Instrument d2tm_tests with --coverage (gcov)" OFF)
 if(D2TM_COVERAGE)
     target_compile_options(d2tm_tests PRIVATE --coverage -O0 -g)

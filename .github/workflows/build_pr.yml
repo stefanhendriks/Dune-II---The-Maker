@@ -126,9 +126,9 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DD2TM_COVERAGE=ON
       - name: Build tests
-        run: cmake --build build --target d2tm_tests seedgen_tests seedgen_tests_large -j4
+        run: cmake --build build --target d2tm_tests -j4
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: ctest --test-dir build --output-on-failure -E '^seedgen'
       - name: Collect coverage
         run: |
           lcov --capture --directory build --output-file coverage.info --ignore-errors mismatch,gcov,source
@@ -136,6 +136,7 @@ jobs:
           genhtml coverage-src.info --output-directory coverage-html --ignore-errors source
           lcov --summary coverage-src.info 2>&1 | grep -E "lines|functions" | sed 's/^ *//' > coverage-summary.txt
           cat coverage-summary.txt
+          test -s coverage-summary.txt
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
         with:
