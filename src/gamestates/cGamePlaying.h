@@ -65,9 +65,9 @@ public:
     eGameStateType getType() override;
 
     void missionInit();
+private:
     void drawTextFps() const;
     void drawTextTime() const;
-private:
     cGameObjectContext* m_objects = nullptr;
     cInfoContext *m_info = nullptr;
     cGameSettings* m_settings = nullptr;
