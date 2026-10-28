@@ -103,4 +103,3 @@ void cGameInterface::loadScenario() const
 {
     m_game->loadScenario();
 }
-
