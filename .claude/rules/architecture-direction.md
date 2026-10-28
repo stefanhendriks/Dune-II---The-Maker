@@ -4,19 +4,15 @@ Active architectural migrations and the conventions that go with them. Both
 coding agents and the PR review checklist (`.claude/review.md`) should treat
 this as current direction, not just historical trivia.
 
-## Removing cGameInterface (#1476)
+## cGameInterface is removed (#1476)
 
-`cGameInterface` is a legacy facade with no polymorphic purpose — it just
-forwards to `cGame`. The direction is to remove it entirely, migrating each
-dependency onto `sGameServices` (or a more specific narrow service/class)
-instead, one small PR at a time.
+`cGameInterface` was a legacy facade that only forwarded to `cGame`. The
+migration is complete: the class is gone, and its last methods moved into
+narrow services (`MissionFlow`, `ScenarioFlow`, reached via `sGameServices`).
 
-**New code should not add new `cGameInterface` dependencies.** If a class
-needs something `cGameInterface` currently provides, reach for
-`sGameServices` or the specific underlying service/class first. This has not
-been consistently followed so far — e.g. the scoring screen (#1454) added
-several new `cGameInterface` call sites — so flag new usages in review, not
-just migrations of old ones.
+**Do not reintroduce a facade over `cGame`.** If a class needs something
+from the game, reach for `sGameServices` or the specific narrow service/class
+instead, and flag any new catch-all facade in review.
 
 ## Caching sGameServices fields: no "train-wreck" chains
 
