@@ -3,7 +3,8 @@
 #include "controls/cMouse.h"
 #include "data/gfxdata.h"
 #include "utils/Graphics.hpp"
-#include "game/cGameInterface.h"
+#include "game/GameStateTransition.hpp"
+#include "game/cGameSettings.h"
 #include "context/GameContext.hpp"
 #include "drawers/SDLDrawer.hpp"
 
@@ -14,8 +15,11 @@ cVideoState::cVideoState(sGameServices* services)
     : cGameState(services)
 {
     d2tm_assert(services != nullptr);
-    m_interface = services->ctx->getGameInterface();
-    m_mouse = m_interface->getMouse();
+    m_settings = services->settings;
+    m_stateTransitions = services->stateTransitions;
+    m_mouse = services->mouse;
+    d2tm_assert(m_settings != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
 
     const auto filename = "intro.pak";
@@ -25,8 +29,8 @@ cVideoState::cVideoState(sGameServices* services)
     if (gfxmovie != nullptr) {
         Logger::info(COMP_INIT, "video", "Successful loaded video [{}]", filename);
         m_currentFrame = gfxmovie->getTexture(m_movieFrame);
-        offsetX = (m_interface->getGameSettings()->getScreenW() - 640) / 2-75;
-        offsetY = (m_interface->getGameSettings()->getScreenH() - 480) / 2-75;
+        offsetX = (m_settings->getScreenW() - 640) / 2-75;
+        offsetY = (m_settings->getScreenH() - 480) / 2-75;
         return;
     } else {
         Logger::error(COMP_INIT, "video", "Failed to load video [{}]", filename);
@@ -54,10 +58,10 @@ void cVideoState::thinkNormal()
             m_currentFrame = gfxmovie->getTexture(m_movieFrame);
             m_movieFrame++;
         } else {
-            m_interface->setTransitionToWithFadingOut(GAME_MENU);
+            m_stateTransitions->setNextStateWithFade(GAME_MENU);
         }
     } else {
-        m_interface->setTransitionToWithFadingOut(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(GAME_MENU);
     }
 }
 
@@ -74,13 +78,13 @@ void cVideoState::draw() const
 void cVideoState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED) {
-        m_interface->setTransitionToWithFadingOut(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(GAME_MENU);
     }
 }
 
 void cVideoState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
-        m_interface->setTransitionToWithFadingOut(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(GAME_MENU);
     }
 }

@@ -4,8 +4,7 @@
 #include <memory>
 
 class cGameSettings;
-class cGameInterface;
-class cGameObjectContext;
+class GameStateTransition;
 class cMouse;
 class Graphics;
 class Texture;
@@ -26,8 +25,7 @@ public:
 
 private:
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
-    cGameObjectContext* m_objets = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     std::unique_ptr<Graphics> gfxmovie;
     int m_movieFrame = 0;

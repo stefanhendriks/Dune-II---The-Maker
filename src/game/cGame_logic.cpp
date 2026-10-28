@@ -1140,9 +1140,6 @@ void cGame::setState(int newState)
                 newStatePtr = m_creatorState->getState(eGameState::LOSEBRIEF);
                 playMusicByTypeForStateTransition(MUSIC_BRIEFING);
             }
-            else if (newState == GAME_VIDEO) {
-                newStatePtr = m_creatorState->getState(eGameState::VIDEO);
-            }
             m_currentState = newStatePtr;
         }
     }
