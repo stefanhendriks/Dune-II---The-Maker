@@ -463,11 +463,6 @@ void cGame::updateMouseAndKeyboardState()
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
 }
 
-void cGame::initSkirmish()
-{
-    missionInit();
-}
-
 // void cGame::loadSkirmishMaps() const
 // {
 //     m_gameObjectsContext->getPreviewMaps()->loadSkirmishMaps();
@@ -1233,7 +1228,7 @@ void cGame::changeStateFromMentat()
         if (isState(GAME_WINBRIEF) || isState(GAME_LOSEBRIEF)) {
             // regardless of drawStateWinning or drawStateLosing, always go back to main menu
             setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
-            initSkirmish();
+            missionInit();
             initiateFadingOut();
         }
         else {
