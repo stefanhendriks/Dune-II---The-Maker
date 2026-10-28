@@ -35,8 +35,6 @@ public:
     // void loadMapFromEditor(s_PreviewMap *map) const;
     void setPlayerToInteractFor(cPlayer *pPlayer) const;
     void loadMapFromEditor(int iSkirmishMap) const;
-    void drawTextFps() const;
-    void drawTextTime() const;
 
 private:
     cGame* m_game = nullptr;

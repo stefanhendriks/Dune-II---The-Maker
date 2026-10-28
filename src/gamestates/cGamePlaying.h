@@ -27,6 +27,7 @@ class Texture;
 
 class cReinforcements;
 class cTextDrawer;
+class cTimeManager;
 class cMapCamera;
 class cGameInterface;
 class MissionFlow;
@@ -64,6 +65,8 @@ public:
     eGameStateType getType() override;
 
     void missionInit();
+    void drawTextFps() const;
+    void drawTextTime() const;
 private:
     cGameObjectContext* m_objects = nullptr;
     cInfoContext *m_info = nullptr;
@@ -84,6 +87,7 @@ private:
     cDrawManager *m_drawManager = nullptr;
     cPlayer *m_controlledPlayer = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
+    cTimeManager* m_timeManager = nullptr;
     void evaluatePlayerStatus();
     void drawCombatMouse() const;
     int m_TIMER_evaluatePlayerStatus;

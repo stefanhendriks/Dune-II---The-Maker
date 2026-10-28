@@ -49,16 +49,6 @@ void cGameInterface::setupPlayers() const
     m_game->setupPlayers();
 }
 
-void cGameInterface::drawTextFps() const
-{
-    m_game->drawTextFps();
-}
-
-void cGameInterface::drawTextTime() const
-{
-    m_game->drawTextTime();
-}
-
 void cGameInterface::loadMapFromEditor(int iSkirmishMap) const
 {
     m_game->loadMapFromEditor(iSkirmishMap);
