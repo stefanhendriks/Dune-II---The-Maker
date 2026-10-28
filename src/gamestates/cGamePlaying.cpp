@@ -37,6 +37,7 @@
 #include "context/cInfoContext.h"
 #include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
+#include "game/MissionFlow.hpp"
 #include "game/cScreenFader.h"
 #include "game/cScreenShake.h"
 #include "game/cEventEmitter.h"
@@ -77,6 +78,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     //fix others pointers
     m_interface = m_ctx->getGameInterface();
     d2tm_assert(m_interface != nullptr);
+    m_missionFlow = services->missionFlow;
+    d2tm_assert(m_missionFlow != nullptr);
     m_stateTransitions = services->stateTransitions;
     d2tm_assert(m_stateTransitions != nullptr);
     m_audioContext = m_ctx->getAudioContext();
@@ -430,7 +433,7 @@ void cGamePlaying::evaluatePlayerStatus()
         m_TIMER_evaluatePlayerStatus = 5;
     }
 
-    m_interface->checkMissionWinOrFail();
+    m_missionFlow->checkWinOrFail();
 }
 
 void cGamePlaying::drawCombatMouse() const
@@ -688,11 +691,11 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::DEBUG_WIN)) {
-        m_interface->setMissionWon();
+        m_missionFlow->setWon();
     }
 
     if (event.isAction(eKeyAction::DEBUG_LOSE)) {
-        m_interface->setMissionLost();
+        m_missionFlow->setLost();
     }
 
     if (event.isAction(eKeyAction::DEBUG_GIVE_CREDITS)) {

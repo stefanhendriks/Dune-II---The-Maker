@@ -19,6 +19,7 @@
 
 class cTextDrawer;
 class cPlayer;
+class MissionFlow;
 struct s_DataCampaign;
 
 /**
@@ -26,7 +27,7 @@ struct s_DataCampaign;
  */
 class BeneMentat : public AbstractMentat {
 public:
-    BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, cPlayer* humanPlayer, s_DataCampaign* dataCampaign);
+    BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, MissionFlow* missionFlow, cPlayer* humanPlayer, s_DataCampaign* dataCampaign);
     void think() override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
 private:
@@ -38,5 +39,6 @@ private:
     void draw_other() override;
     void draw() override;
     cPlayer* m_humanPlayer;
+    MissionFlow* m_missionFlow = nullptr;
     s_DataCampaign* m_dataCampaign;
 };

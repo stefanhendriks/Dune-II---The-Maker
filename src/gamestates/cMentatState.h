@@ -25,6 +25,7 @@ class cReinforcements;
 class cGameInterface;
 class GameStateTransition;
 class MentatFlow;
+class MissionFlow;
 class cGameSettings;
 class cIni;
 class cMouse;
@@ -58,6 +59,7 @@ private:
     cGameInterface* m_interface = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     MentatFlow* m_mentatFlow = nullptr;
+    MissionFlow* m_missionFlow = nullptr;
     cMouse* m_mouse = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cReinforcements* m_reinforcements = nullptr;

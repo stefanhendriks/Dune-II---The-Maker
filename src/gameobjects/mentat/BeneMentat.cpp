@@ -18,7 +18,7 @@
 #include "controls/eKeyAction.h"
 #include "data/gfxmentat.h"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
+#include "game/MissionFlow.hpp"
 #include "include/eGameState.h"
 #include "include/sDataCampaign.h"
 #include "gameobjects/players/cPlayer.h"
@@ -32,7 +32,7 @@
 #include "context/cInfoContext.h"
 #include <iostream>
 
-BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, stateTransitions, nullptr, false), m_humanPlayer(humanPlayer), m_dataCampaign(dataCampaign)
+BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, MissionFlow* missionFlow, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, stateTransitions, nullptr, false), m_humanPlayer(humanPlayer), m_missionFlow(missionFlow), m_dataCampaign(dataCampaign)
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(dataCampaign != nullptr);
@@ -65,7 +65,7 @@ void BeneMentat::onYesButtonPressed()
     m_stateTransitions->setNextState(GAME_BRIEFING);
     m_dataCampaign->mission = 1; // first mission
     m_dataCampaign->region  = 1; // and the first "region" so to speak
-    m_gameInterface->missionInit();
+    m_missionFlow->init();
     m_humanPlayer->setHouse(this->getHouse());
     m_dataCampaign->housePlayer = this->getHouse();
     m_stateTransitions->fadeOut();

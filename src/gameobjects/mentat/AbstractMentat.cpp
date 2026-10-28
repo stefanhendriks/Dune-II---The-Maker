@@ -21,7 +21,6 @@
 #include "context/GameContext.hpp"
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
-#include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
@@ -43,7 +42,6 @@ AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameSt
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(settings != nullptr);
-    m_gameInterface = ctx->getGameInterface();
     m_stateTransitions = stateTransitions;
     d2tm_assert(m_stateTransitions != nullptr);
     m_mentatFlow = mentatFlow;

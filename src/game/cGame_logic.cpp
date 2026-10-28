@@ -22,6 +22,7 @@
 #include "game/cGame.h"
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
+#include "game/MissionFlow.hpp"
 #include "game/CampaignProgress.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
@@ -229,6 +230,26 @@ cGame::cGame()
             changeStateFromMentat();
         }
     );
+    m_missionFlow = std::make_unique<MissionFlow>(
+        [this]() {
+            missionInit();
+        },
+        [this]() {
+            setMissionWon();
+        },
+        [this]() {
+            setMissionLost();
+        },
+        [this]() {
+            checkMissionWinOrFail();
+        },
+        [this](int missionNr) {
+            jumpToSelectYourNextConquestMission(missionNr);
+        },
+        [this](int winOrLoseBrief) {
+            goingToWinLoseBrief(winOrLoseBrief);
+        }
+    );
 
     m_services = std::make_unique<sGameServices>();
     m_services->ctx = ctx.get();
@@ -243,6 +264,7 @@ cGame::cGame()
     m_services->screenFader = m_cScreenFader.get();
     m_services->stateTransitions = m_stateTransitions.get();
     m_services->mentatFlow = m_mentatFlow.get();
+    m_services->missionFlow = m_missionFlow.get();
 
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());

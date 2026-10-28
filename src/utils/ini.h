@@ -29,7 +29,7 @@ struct ScenarioData;
 class cGameSettings;
 class cGameObjectContext;
 class cInfoContext;
-class cGameInterface;
+class MissionFlow;
 class cEventEmitter;
 class cGameConditionChecker;
 struct sGameServices;
@@ -56,7 +56,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
-    cGameInterface* m_interface = nullptr;
+    MissionFlow* m_missionFlow = nullptr;
     cEventEmitter* m_eventEmitter = nullptr;
     sGameServices* m_services = nullptr;
     cGameConditionChecker* m_gameConditionChecker = nullptr;

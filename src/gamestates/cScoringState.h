@@ -6,7 +6,7 @@
 #include "game/MissionStats.h"
 
 class cGameSettings;
-class cGameInterface;
+class MissionFlow;
 class GameStateTransition;
 class cTextDrawer;
 class cMouse;
@@ -30,7 +30,7 @@ private:
     void continueToWinBrief() const;
 
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
+    MissionFlow* m_missionFlow = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     cTextDrawer* m_textDrawer = nullptr;
     cTextDrawer* m_smallTextDrawer = nullptr;

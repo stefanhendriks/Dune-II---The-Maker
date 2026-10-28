@@ -35,6 +35,7 @@ class CampaignProgress;
 class Texture;
 class GameStateTransition;
 class MentatFlow;
+class MissionFlow;
 
 struct sGameServices
 {
@@ -57,4 +58,5 @@ struct sGameServices
     Texture *screenTexture = nullptr; // set in cGame::run(), before any state transition
     GameStateTransition *stateTransitions = nullptr;
     MentatFlow *mentatFlow = nullptr;
+    MissionFlow *missionFlow = nullptr;
 };
