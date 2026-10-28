@@ -25,7 +25,7 @@
 #include "include/cAssert.h"
 #include "utils/Log.h"
 
-cVideoState::cVideoState(sGameServices* services)
+cVideoState::cVideoState(sGameServices* services, const std::string &filename)
     : cGameState(services)
 {
     d2tm_assert(services != nullptr);
@@ -36,7 +36,6 @@ cVideoState::cVideoState(sGameServices* services)
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
 
-    const auto filename = "intro.pak";
     gfxmovie = std::make_unique<Graphics>(m_sdlDrawer->getRenderer(),filename);
 
     m_movieFrame=0;

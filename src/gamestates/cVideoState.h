@@ -17,6 +17,7 @@
 
 #include "cGameState.h"
 #include <memory>
+#include <string>
 
 class cGameSettings;
 class GameStateTransition;
@@ -26,7 +27,7 @@ class Texture;
 
 class cVideoState : public cGameState {
 public:
-    explicit cVideoState(sGameServices* services);
+    cVideoState(sGameServices* services, const std::string &filename);
     ~cVideoState() override;
 
     void thinkFast() override;
