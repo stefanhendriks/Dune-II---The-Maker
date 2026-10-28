@@ -14,7 +14,6 @@
  */
 
 #include "gamestates/cVideoState.h"
-#include "utils/ini.h"
 #include "controls/cMouse.h"
 #include "data/gfxdata.h"
 #include "utils/Graphics.hpp"
