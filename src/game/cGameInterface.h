@@ -31,7 +31,6 @@ public:
     void missionInit() const;
     void setupPlayers() const;
 
-
     void loadScenario() const;
 
     // void loadSkirmishMaps() const;
