@@ -102,6 +102,10 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
         gameSettings->playSound = section.getBoolean("playSound");
     }
 
+    if (section.hasValue("playCreditsSound")) {
+        gameSettings->playCreditsSound = section.getBoolean("playCreditsSound");
+    }
+
     if (section.hasValue("drawUnitDebug")) {
         gameSettings->drawUnitDebug = section.getBoolean("drawUnitDebug");
     }
