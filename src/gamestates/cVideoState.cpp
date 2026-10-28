@@ -26,13 +26,14 @@
 #include "utils/Log.h"
 
 namespace {
-// Size used to center the video on screen. NOTE: the source frames are reportedly 320x288 (drawn
-// scaled up), so these match neither the source frames nor the size they are drawn at.
-constexpr int VIDEO_CENTER_WIDTH = 640;
-constexpr int VIDEO_CENTER_HEIGHT = 480;
+// Videos are always shown 640 wide; the height may vary but is never more than 480.
+// Centering and drawing currently treat the height as always 480 (the maximum).
+// NOTE: the source frames are reportedly 320x288 (drawn scaled up).
+constexpr int VIDEO_WIDTH = 640;
+constexpr int VIDEO_MAX_HEIGHT = 480;
 // Shifts the video towards the top left of the screen after centering
 constexpr int VIDEO_CENTER_SHIFT = 75;
-// Added to the centering size to get the size the video is drawn at (790x630)
+// Added to width and max height to get the size the video is drawn at (790x630)
 constexpr int VIDEO_DRAW_EXTRA = 150;
 }
 
@@ -53,8 +54,8 @@ cVideoState::cVideoState(sGameServices* services, const std::string &filename)
     if (gfxmovie != nullptr) {
         Logger::info(COMP_INIT, "video", "Successful loaded video [{}]", filename);
         m_currentFrame = gfxmovie->getTexture(m_movieFrame);
-        offsetX = (m_settings->getScreenW() - VIDEO_CENTER_WIDTH) / 2 - VIDEO_CENTER_SHIFT;
-        offsetY = (m_settings->getScreenH() - VIDEO_CENTER_HEIGHT) / 2 - VIDEO_CENTER_SHIFT;
+        offsetX = (m_settings->getScreenW() - VIDEO_WIDTH) / 2 - VIDEO_CENTER_SHIFT;
+        offsetY = (m_settings->getScreenH() - VIDEO_MAX_HEIGHT) / 2 - VIDEO_CENTER_SHIFT;
         return;
     } else {
         Logger::error(COMP_INIT, "video", "Failed to load video [{}]", filename);
@@ -94,7 +95,7 @@ void cVideoState::draw() const
 {
     m_mouse->setTile(MOUSE_NORMAL);
     if (m_currentFrame != nullptr) {
-        cRectangle dest = {offsetX, offsetY, VIDEO_CENTER_WIDTH + VIDEO_DRAW_EXTRA, VIDEO_CENTER_HEIGHT + VIDEO_DRAW_EXTRA};
+        cRectangle dest = {offsetX, offsetY, VIDEO_WIDTH + VIDEO_DRAW_EXTRA, VIDEO_MAX_HEIGHT + VIDEO_DRAW_EXTRA};
         m_sdlDrawer->renderStrechFullSprite(m_currentFrame, dest);
     }
     m_mouse->draw();
