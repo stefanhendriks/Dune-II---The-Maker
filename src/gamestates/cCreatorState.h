@@ -24,7 +24,7 @@
 #include <optional>
 
 class GameContext;
-class cGameInterface;
+class GameStateTransitionService;
 class cIni;
 
 class cCreatorState {
@@ -47,7 +47,7 @@ private:
     EnumArray<std::optional<std::unique_ptr<cGameState> >, eGameState> m_states;
     sGameServices *m_services = nullptr;
     s_DataCampaign *m_dataCampaign = nullptr;
-    cGameInterface *m_interface = nullptr;
+    GameStateTransitionService *m_stateTransitions = nullptr;
     cIni *m_cIni = nullptr;
 
     void createStateFromScratch(eGameState gameState);

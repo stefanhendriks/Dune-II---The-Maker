@@ -32,7 +32,7 @@
 #include "gamestates/cOptionsState.h"
 #include "gamestates/cSelectMissionState.h"
 #include "gamestates/cSetupSkirmishState.h"
-#include "game/cGameInterface.h"
+#include "game/GameStateTransitionService.hpp"
 
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
@@ -41,17 +41,16 @@
 cCreatorState::cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign) :
     m_services(services),
     m_dataCampaign(dataCampaign),
-    m_interface(m_services->ctx->getGameInterface()),
+    m_stateTransitions(m_services->stateTransitions),
     m_cIni(ini)
 {
     d2tm_assert(m_services != nullptr);
     d2tm_assert(m_cIni != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_stateTransitions != nullptr);
 
     m_dataCampaign = dataCampaign;
     m_cIni = ini;
-    m_interface = m_services->ctx->getGameInterface();
 }
 
 cCreatorState::~cCreatorState() {
@@ -150,12 +149,12 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
             break;
 
         case eGameState::OPTIONS:
-            m_states[eGameState::OPTIONS] = std::make_unique<cOptionsState>(m_services, m_interface->getCurrentState());
+            m_states[eGameState::OPTIONS] = std::make_unique<cOptionsState>(m_services, m_stateTransitions->getCurrentState());
             break;
 
         case eGameState::MISSIONSELECT:
             m_states[eGameState::MISSIONSELECT] = std::make_unique<cSelectMissionState>(
-                m_services, m_interface->getCurrentState());
+                m_services, m_stateTransitions->getCurrentState());
             break;
 
         case eGameState::SETUPSKIRMISH:

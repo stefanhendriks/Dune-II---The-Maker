@@ -185,7 +185,6 @@ public:
 
     s_DataCampaign* getDataCampaign() const;
 
-    int getCurrentState() const;
 
     void drawTextFps() const;
     void drawTextTime() const;
