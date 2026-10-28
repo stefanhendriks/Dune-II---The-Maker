@@ -19,7 +19,7 @@
 
 class cGameObjectContext;
 class cInfoContext;
-class cGameInterface;
+class cEventEmitter;
 struct sGameServices;
 
 class cReinforcement {
@@ -33,7 +33,7 @@ public:
     [[nodiscard]] bool isValid() const;
     [[nodiscard]] bool canBeRemoved() const;
     void repeatOrMarkForDeletion();
-    void execute(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface) const;
+    void execute(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter) const;
 
 private:
     int m_delayInSeconds = -1;
@@ -61,16 +61,16 @@ private:
 
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
-    cGameInterface* m_interface = nullptr;
+    cEventEmitter* m_eventEmitter = nullptr;
     std::vector<cReinforcement> reinforcements;
 };
 
 
-void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iPlr, int iTpe, int iCll, int iStart);
-void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, const cReinforcement &reinforcement);
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iPlr, int iTpe, int iCll, int iStart);
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, const cReinforcement &reinforcement);
 
 /**
  * Allows overriding reinforcement flag, ie used when a unit is reinforced by construction or other way, rather
  * than a 'real' reinforcement.
  */
-void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);

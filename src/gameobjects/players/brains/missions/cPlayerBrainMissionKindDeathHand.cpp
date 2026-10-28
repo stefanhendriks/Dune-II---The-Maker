@@ -21,8 +21,8 @@
 #include "utils/cStructureUtils.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
-#include "game/cGameInterface.h"
 #include "include/sGameEvent.h"
+#include "game/cEventEmitter.h"
 #include "utils/Log.h"
 #include "gameobjects/map/cMap.h"
 #include "definitions.h"
@@ -99,7 +99,7 @@ void cPlayerBrainMissionKindDeathHand::think_Execute()
             .playerID = player->getId()
         }
     };
-    player->getInterface()->onNotifyGameEvent(event);
+    player->getEventEmitter()->emit(event);
 
     // clear out item
     itemToLaunch = nullptr;

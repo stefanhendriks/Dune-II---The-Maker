@@ -84,7 +84,7 @@ struct sGameServices;
 class cGameSettings;
 class cInfoContext;
 class cGameObjectContext;
-class cGameInterface;
+class cEventEmitter;
 class AudioContext;
 class cScreenFader;
 class cStructureUtils;
@@ -181,8 +181,8 @@ public:
         return m_settings;
     }
 
-    cGameInterface *getInterface() const {
-        return m_interface;
+    cEventEmitter *getEventEmitter() const {
+        return m_eventEmitter;
     }
 
     cItemBuilder *getItemBuilder() const {
@@ -621,7 +621,7 @@ private:
     cGameSettings *m_settings = nullptr;
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
-    cGameInterface *m_interface = nullptr;
+    cEventEmitter *m_eventEmitter = nullptr;
     AudioContext *m_audioContext = nullptr;
     cScreenFader *m_screenFader = nullptr;
     cStructureUtils *m_structureUtils = nullptr;

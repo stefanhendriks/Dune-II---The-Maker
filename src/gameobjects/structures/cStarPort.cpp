@@ -24,7 +24,6 @@
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
 #include "context/cGameObjectContext.h"
-#include "game/cGameInterface.h"
 #include "context/AudioContext.hpp"
 
 cStarPort::cStarPort()
@@ -97,7 +96,7 @@ void cStarPort::think_deploy()
                 int cellToDeployTo = getNonOccupiedCellAroundStructure();
                 int id = -1;
                 if (cellToDeployTo >= 0) {
-                    id = cUnits::unitCreate(m_objects, m_info, m_interface, cellToDeployTo, item->getBuildId(), iPlayer, true);
+                    id = cUnits::unitCreate(m_objects, m_info, m_eventEmitter, cellToDeployTo, item->getBuildId(), iPlayer, true);
                     // all unit slots taken, keep the order and try again next second
                     if (id < 0) return;
                 }
@@ -124,7 +123,7 @@ void cStarPort::think_deploy()
                         cellToDeployTo = getCell();
                     }
                     int cellAtBorderOfMap = m_objects->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
-                    REINFORCE(m_objects, m_info, m_interface, iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
+                    REINFORCE(m_objects, m_info, m_eventEmitter, iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
                 }
             }
             else {

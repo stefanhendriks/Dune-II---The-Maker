@@ -33,7 +33,6 @@
 #include "context/cGameObjectContext.h"
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
-#include "game/cGameInterface.h"
 #include "context/AudioContext.hpp"
 #include "utils/cStructureUtils.h"
 #include "data/gfxaudio.h"
@@ -62,7 +61,7 @@ void cOrderProcesser::serviceInit(sGameServices *services)
     m_objects = services->objects;
     m_info = services->info;
     m_structureUtils = services->structureUtils;
-    m_interface = services->ctx->getGameInterface();
+    m_eventEmitter = services->eventEmitter;
     m_audioContext = services->ctx->getAudioContext();
     m_drawManager = services->drawManager;
     updatePricesForStarport();
@@ -286,7 +285,7 @@ void cOrderProcesser::sendFrigate()
         }
         else {
             // STEP 2: create frigate
-            int unitId = cUnits::unitCreate(m_objects, m_info, m_interface, iStartCell, FRIGATE, m_player->getId(), true);
+            int unitId = cUnits::unitCreate(m_objects, m_info, m_eventEmitter, iStartCell, FRIGATE, m_player->getId(), true);
             if (unitId < 0) {
                 Logger::warn(COMP_STRUCTURES, "cOrderProcesser::sendFrigate", "unable to spawn frigate, will retry");
                 return;

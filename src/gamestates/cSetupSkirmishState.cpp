@@ -66,6 +66,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_eventEmitter(services->eventEmitter),
     m_audioContext(m_ctx->getAudioContext()),
     m_stateTransitions(services->stateTransitions),
     m_mapCamera(services->mapCamera),
@@ -80,6 +81,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_eventEmitter != nullptr);
     d2tm_assert(m_audioContext != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_screenFader != nullptr);
@@ -876,7 +878,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
         const s_PlaceResult &result = pPlayer->canPlaceStructureAt(pPlayer->getFocusCell(), CONSTYARD);
         if (!result.success) {
             // when failure, create mcv instead
-            cUnits::unitCreate(m_objects, m_services->info, m_interface, pPlayer->getFocusCell(), MCV, p, true);
+            cUnits::unitCreate(m_objects, m_services->info, m_eventEmitter, pPlayer->getFocusCell(), MCV, p, true);
         }
         else {
             pPlayer->placeStructure(pPlayer->getFocusCell(), CONSTYARD, 100);
@@ -924,7 +926,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                        maxRange,
                        iPlayerUnitType);
 
-            cUnits::unitCreate(m_objects, m_services->info, m_interface, cell, iPlayerUnitType, p, true);
+            cUnits::unitCreate(m_objects, m_services->info, m_eventEmitter, cell, iPlayerUnitType, p, true);
 
             Logger::trace(COMP_SKIRMISHSETUP, "Creating units",
                     "{} wants {} amount of units; amount created {}", 
@@ -993,7 +995,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
                 continue;
             }
             Logger::info(COMP_SKIRMISHSETUP, "cSetupSkirmishState", "Spawning sandworm at {}", cell);
-            cUnits::unitCreate(m_objects, m_services->info, m_interface, cell, SANDWORM, AI_WORM, true);
+            cUnits::unitCreate(m_objects, m_services->info, m_eventEmitter, cell, SANDWORM, AI_WORM, true);
             wormCell = cell; // start from here to spawn new worm
             worms--;
             failures = 0; // reset failures

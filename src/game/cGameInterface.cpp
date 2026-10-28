@@ -64,11 +64,6 @@ void cGameInterface::setupPlayers() const
     m_game->setupPlayers();
 }
 
-void cGameInterface::onNotifyGameEvent(const s_GameEvent &event) const
-{
-    m_game->emitGameEvent(event);
-}
-
 void cGameInterface::checkMissionWinOrFail() const
 {
     m_game->checkMissionWinOrFail();

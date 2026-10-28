@@ -22,7 +22,7 @@
 struct sGameServices;
 class cInfoContext;
 class cGameObjectContext;
-class cGameInterface;
+class cEventEmitter;
 class cMap;
 class cLog;
 
@@ -139,7 +139,7 @@ public:
      * @param isReinforement flag to set on event
      * @return
      */
-    static int unitCreate(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage = 1.0f);
+    static int unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage = 1.0f);
 
 
 private:

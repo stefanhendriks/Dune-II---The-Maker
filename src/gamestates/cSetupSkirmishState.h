@@ -36,6 +36,7 @@ class SDLDrawer;
 class cTextDrawer;
 class cGameSettings;
 class cGameInterface;
+class cEventEmitter;
 class AudioContext;
 class GameStateTransition;
 class cScreenFader;
@@ -73,6 +74,7 @@ private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
+    cEventEmitter* m_eventEmitter = nullptr;
     AudioContext* m_audioContext = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     cMapCamera* m_mapCamera = nullptr;

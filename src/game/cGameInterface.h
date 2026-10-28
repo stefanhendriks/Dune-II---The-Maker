@@ -31,7 +31,6 @@ public:
     void missionInit() const;
     void setupPlayers() const;
 
-    void onNotifyGameEvent(const s_GameEvent &event) const;
 
     void loadScenario() const;
 

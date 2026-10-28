@@ -43,7 +43,7 @@ class cMapCamera;
 class cGameSettings;
 class cDrawManager;
 class cRectangle;
-class cGameInterface;
+class cEventEmitter;
 class cStructureUtils;
 class cInfoContext;
 class AudioContext;
@@ -60,7 +60,7 @@ public:
     cMapCamera *getMapCamera() const { return m_mapCamera; }
     cGameSettings *getSettings() const { return m_settings; }
     cDrawManager *getDrawManager() const { return m_drawManager; }
-    cGameInterface *getInterface() const { return m_interface; }
+    cEventEmitter *getEventEmitter() const { return m_eventEmitter; }
     cStructureUtils *getStructureUtils() const { return m_structureUtils; }
     cInfoContext *getInfos() const { return m_infos; }
     AudioContext *getAudioContext() const { return m_audioContext; }
@@ -151,7 +151,7 @@ private:
     cMapCamera *m_mapCamera = nullptr;
     cGameSettings *m_settings = nullptr;
     cDrawManager *m_drawManager = nullptr;
-    cGameInterface *m_interface = nullptr;
+    cEventEmitter *m_eventEmitter = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cInfoContext *m_infos = nullptr;
     AudioContext *m_audioContext = nullptr;

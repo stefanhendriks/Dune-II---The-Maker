@@ -19,7 +19,7 @@
 #include "context/cGameObjectContext.h"
 #include "gameobjects/map/cMap.h"
 #include "utils/common.h"
-#include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
 #include "utils/Log.h"
 #include "utils/RNG.hpp"
 #include "include/sGameServices.h"
@@ -128,7 +128,7 @@ static int unitNewID(cGameObjectContext *objects)
 //     return unitCreate(iCll, unitType, iPlayer, bOnStart, false);
 // }
 
-int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
+int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
     if (!objects->getMapGeometry()->isValidCell(iCll)) {
         Logger::warn(COMP_UNITS, "cUnits::unitCreate", "Invalid cell as param");
         return -1;
@@ -232,7 +232,7 @@ int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cGameIn
             .isReinforce = isReinforcement
         }
     };
-    iface->onNotifyGameEvent(event);
+    eventEmitter->emit(event);
 
     return iNewId;
 }

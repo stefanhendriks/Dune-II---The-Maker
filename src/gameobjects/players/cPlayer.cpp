@@ -16,7 +16,7 @@
 #include "cPlayer.h"
 
 #include "building/cItemBuilder.h"
-#include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
 #include "game/cScreenFader.h"
 #include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
@@ -63,7 +63,7 @@ cPlayer::cPlayer()
     m_settings = nullptr;
     m_infos = nullptr;
     m_objects = nullptr;
-    m_interface = nullptr;
+    m_eventEmitter = nullptr;
     m_gfxdata = nullptr;
 
     itemBuilder = nullptr;
@@ -90,8 +90,8 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_infos != nullptr);
     m_objects = services->objects;
     d2tm_assert(m_objects != nullptr);
-    m_interface = services->ctx->getGameInterface();
-    d2tm_assert(m_interface != nullptr);
+    m_eventEmitter = services->eventEmitter;
+    d2tm_assert(m_eventEmitter != nullptr);
     m_audioContext = services->ctx->getAudioContext();
     d2tm_assert(m_audioContext != nullptr);
     m_screenFader = services->screenFader;
@@ -1672,7 +1672,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                         .type = eNotificationType::BAD,
                     }
                 };                
-                m_interface->onNotifyGameEvent(newEvent);
+                m_eventEmitter->emit(newEvent);
             } else {
                 Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_PLAYER_DEFEATED did not carry a CommonEvent");
             }
@@ -1689,7 +1689,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                         .type = eNotificationType::BAD,
                     }
                 };
-                m_interface->onNotifyGameEvent(newEvent);
+                m_eventEmitter->emit(newEvent);
             } else {
                 Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_SPECIAL_LAUNCHED did not carry a BuildingEvent");
             }
@@ -1708,7 +1708,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                             .type = eNotificationType::PRIORITY,
                         }
                     };
-                    m_interface->onNotifyGameEvent(newEvent);
+                    m_eventEmitter->emit(newEvent);
                 }
             } else {
                 Logger::warn(COMP_PLAYER, "cPlayer::onNotifyGameEvent", "GAME_EVENT_SPECIAL_SELECT_TARGET did not carry a BuildingEvent");
@@ -1765,7 +1765,7 @@ void cPlayer::onNotifyGameEvent(const s_GameEvent &event)
                             .player = this,
                         }
                     };
-                    m_interface->onNotifyGameEvent(newEvent);
+                    m_eventEmitter->emit(newEvent);
                 }
                 if (buildEvent->player == this && cBuildingListItem::isAutoBuild(buildEvent->entityType, buildEvent->entitySpecificType, m_infos)) {
                     startBuilding(buildEvent->entityType, buildEvent->entitySpecificType);
@@ -2245,7 +2245,7 @@ void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
                 .player = this,
             }
         };
-        m_interface->onNotifyGameEvent(newEvent);
+        m_eventEmitter->emit(newEvent);
         const std::vector<int> &refineries = getAllMyStructuresAsIdForType(REFINERY);
 
         int harvesters = getAmountOfUnitsForType(HARVESTER);
@@ -2261,7 +2261,7 @@ void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
                     .player = this,
                 }
             };
-            m_interface->onNotifyGameEvent(newEvent);
+            m_eventEmitter->emit(newEvent);
         }
 
         if (!refineries.empty()) { // and its player still has a refinery
@@ -2283,7 +2283,7 @@ void cPlayer::onMyUnitDestroyed(const CommonEvent &event)
                         .player = this,
                     }
                 };
-                m_interface->onNotifyGameEvent(newEvent);
+                m_eventEmitter->emit(newEvent);
             }
         }
     }
@@ -2313,13 +2313,13 @@ void cPlayer::reinforceHarvesterIfNeeded(int cell)
                     .player = this,
                 }
             };
-            m_interface->onNotifyGameEvent(event);
+            m_eventEmitter->emit(event);
             // deliver
             cAbstractStructure *refinery = m_objects->getMap()->findClosestStructureType(cell, REFINERY, this);
 
             // found a refinery, deliver harvester to that
             if (refinery) {
-                REINFORCE(m_objects, m_infos, m_interface, id, HARVESTER, refinery->getCell(), -1);
+                REINFORCE(m_objects, m_infos, m_eventEmitter, id, HARVESTER, refinery->getCell(), -1);
             }
         }
     }

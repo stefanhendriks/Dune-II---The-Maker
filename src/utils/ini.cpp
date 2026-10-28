@@ -72,6 +72,7 @@ cIni::cIni(sGameServices* services)
     m_objects = services->objects;
     m_infos = services->info;
     m_interface = services->ctx->getGameInterface();
+    m_eventEmitter = services->eventEmitter;
     m_services = services;
     m_gameConditionChecker = services->gameConditionChecker;
 }
@@ -210,7 +211,7 @@ void cIni::populateScenario(const ScenarioData& data, AbstractMentat *pMentat, c
                 }
             }
             if (iController > -1) {
-                cUnits::unitCreate(m_objects, m_infos, m_interface, unit->cell, unit->type, iController, true);
+                cUnits::unitCreate(m_objects, m_infos, m_eventEmitter, unit->cell, unit->type, iController, true);
             }
         }
         else if (const auto* structure = std::get_if<ScenarioData::Structure>(&entry)) {

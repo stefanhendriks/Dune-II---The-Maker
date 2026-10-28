@@ -29,7 +29,6 @@ class Texture;
 class cGameObjectContext;
 class cInfoContext;
 class cMapCamera;
-class cGameInterface;
 class cEventEmitter;
 class cScreenShake;
 class AudioContext;
@@ -64,7 +63,6 @@ protected:
     cGameObjectContext *m_objects = nullptr;
     cInfoContext *m_info = nullptr;
     cMapCamera *m_mapCamera = nullptr;
-    cGameInterface *m_interface = nullptr;
     cGameSettings *m_settings = nullptr;
     cEventEmitter *m_eventEmitter = nullptr;
     cScreenShake *m_screenShake = nullptr;
