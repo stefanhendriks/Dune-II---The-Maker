@@ -105,8 +105,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     d2tm_assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
     m_timeManager = m_ctx->getTimeManager();
-    d2tm_assert(m_timeManager != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
+    d2tm_assert(m_timeManager != nullptr);
 
     m_controlledPlayer = m_objects->getPlayer(HUMAN);
     m_drawManager->setPlayerToDraw(m_controlledPlayer);
