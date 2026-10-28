@@ -26,7 +26,6 @@ struct InitialGameSettings;
 class cGameObjectContext;
 class cMapCamera;
 class cInfoContext;
-class cGameInterface;
 class AudioContext;
 /**
  * returns ticks for desired amount of miliseconds (for slow thinking, 1 tick == 100ms)

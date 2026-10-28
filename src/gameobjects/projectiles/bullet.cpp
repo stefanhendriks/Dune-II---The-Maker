@@ -15,7 +15,6 @@
 
 #include "bullet.h"
 #include "game/cGameSettings.h"
-#include "game/cGameInterface.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenShake.h"
 #include "data/gfxdata.h"

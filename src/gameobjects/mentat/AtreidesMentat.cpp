@@ -15,7 +15,6 @@
 
 #include "AtreidesMentat.h"
 #include "data/gfxmentat.h"
-#include "game/cGameInterface.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"

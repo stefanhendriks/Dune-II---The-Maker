@@ -17,7 +17,6 @@
 
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
-#include "game/cGameInterface.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMap.h"

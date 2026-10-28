@@ -104,7 +104,6 @@
 
 #include "data/gfxaudio.h"
 #include "include/sGameServices.h"
-#include "game/cGameInterface.h"
 #include "game/cNotificationArea.h"
 #include "gamestates/cCreatorState.h"
 
@@ -162,8 +161,6 @@ cGame::cGame()
 
     m_notificationArea = std::make_unique<cNotificationArea>();
 
-    std::unique_ptr<cGameInterface> gameInterface = std::make_unique<cGameInterface>(this);
-
     m_structureUtils = std::make_unique<cStructureUtils>();
 
     // create GameContext
@@ -174,7 +171,6 @@ cGame::cGame()
     m_timeManager = timeManager.get();
     // send to GameContext
     ctx->setTimeManager(std::move(timeManager));
-    ctx->setGameInterface(std::move(gameInterface));
     // focus manager
     m_focusManager = std::make_unique<cFocusManager>(m_timeManager);
 

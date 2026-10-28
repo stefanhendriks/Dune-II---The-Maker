@@ -28,7 +28,6 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
-#include "game/cGameInterface.h"
 #include "game/cEventEmitter.h"
 
 namespace {
