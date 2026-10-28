@@ -22,7 +22,7 @@
 
 struct s_DataCampaign;
 class cReinforcements;
-class cGameInterface;
+class ScenarioFlow;
 class GameStateTransition;
 class MentatFlow;
 class MissionFlow;
@@ -56,7 +56,7 @@ private:
 
     s_DataCampaign* m_dataCampaign = nullptr;
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
+    ScenarioFlow* m_scenarioFlow = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     MentatFlow* m_mentatFlow = nullptr;
     MissionFlow* m_missionFlow = nullptr;

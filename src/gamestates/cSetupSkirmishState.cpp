@@ -38,7 +38,7 @@
 #include "context/GraphicsContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
+#include "game/ScenarioFlow.hpp"
 #include "game/cScreenFader.h"
 #include "game/cGameConditionChecker.h"
 #include "include/sDataCampaign.h"
@@ -65,7 +65,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
     cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface()),
+    m_scenarioFlow(services->scenarioFlow),
     m_eventEmitter(services->eventEmitter),
     m_audioContext(m_ctx->getAudioContext()),
     m_stateTransitions(services->stateTransitions),
@@ -80,7 +80,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_scenarioFlow != nullptr);
     d2tm_assert(m_eventEmitter != nullptr);
     d2tm_assert(m_audioContext != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
@@ -383,7 +383,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
                 if (iSkirmishMap > -1) {
-                    m_interface->loadMapFromEditor(iSkirmishMap);
+                    m_scenarioFlow->loadMapFromEditor(iSkirmishMap);
                     m_stateTransitions->fadeOut();
                 }
             })
@@ -700,7 +700,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     // this needs to be before setupPlayers :/
     m_dataCampaign->mission = techLevel;
 
-    m_interface->setupPlayers();
+    m_scenarioFlow->setupPlayers();
 
     // Starting skirmish mode
     m_settings->setSkirmish(true);

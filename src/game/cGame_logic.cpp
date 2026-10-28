@@ -23,6 +23,7 @@
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
 #include "game/MissionFlow.hpp"
+#include "game/ScenarioFlow.hpp"
 #include "game/CampaignProgress.hpp"
 #include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
@@ -250,6 +251,20 @@ cGame::cGame()
             goingToWinLoseBrief(winOrLoseBrief);
         }
     );
+    m_scenarioFlow = std::make_unique<ScenarioFlow>(
+        [this]() {
+            setupPlayers();
+        },
+        [this]() {
+            loadScenario();
+        },
+        [this](int iSkirmishMap) {
+            loadMapFromEditor(iSkirmishMap);
+        },
+        [this](cPlayer* player) {
+            setPlayerToInteractFor(player);
+        }
+    );
 
     m_services = std::make_unique<sGameServices>();
     m_services->ctx = ctx.get();
@@ -265,6 +280,7 @@ cGame::cGame()
     m_services->stateTransitions = m_stateTransitions.get();
     m_services->mentatFlow = m_mentatFlow.get();
     m_services->missionFlow = m_missionFlow.get();
+    m_services->scenarioFlow = m_scenarioFlow.get();
 
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());

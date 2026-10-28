@@ -36,6 +36,7 @@ class Texture;
 class GameStateTransition;
 class MentatFlow;
 class MissionFlow;
+class ScenarioFlow;
 
 struct sGameServices
 {
@@ -59,4 +60,5 @@ struct sGameServices
     GameStateTransition *stateTransitions = nullptr;
     MentatFlow *mentatFlow = nullptr;
     MissionFlow *missionFlow = nullptr;
+    ScenarioFlow *scenarioFlow = nullptr;
 };

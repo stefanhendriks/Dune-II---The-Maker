@@ -35,7 +35,7 @@ class Graphics;
 class SDLDrawer;
 class cTextDrawer;
 class cGameSettings;
-class cGameInterface;
+class ScenarioFlow;
 class cEventEmitter;
 class AudioContext;
 class GameStateTransition;
@@ -73,7 +73,7 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
+    ScenarioFlow* m_scenarioFlow = nullptr;
     cEventEmitter* m_eventEmitter = nullptr;
     AudioContext* m_audioContext = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;

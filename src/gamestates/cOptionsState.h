@@ -27,7 +27,6 @@ struct SDL_Surface;
 class GameContext;
 class cTextDrawer;
 class GuiWindow;
-class cGameInterface;
 class GameStateTransition;
 class cMouse;
 class cGameSettings;
@@ -51,7 +50,6 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
 

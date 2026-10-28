@@ -31,7 +31,7 @@ class Texture;
 class Graphics;
 class GameContext;
 class SDLDrawer;
-class cGameInterface;
+class ScenarioFlow;
 class AudioContext;
 class GameStateTransition;
 class MentatFlow;
@@ -112,7 +112,7 @@ public:
 
 private:
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
+    ScenarioFlow* m_scenarioFlow = nullptr;
     AudioContext* m_audioContext = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     MentatFlow* m_mentatFlow = nullptr;

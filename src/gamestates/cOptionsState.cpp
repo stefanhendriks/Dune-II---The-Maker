@@ -27,7 +27,6 @@
 #include "utils/cSoundPlayer.h"
 #include "drawers/cTextDrawer.h"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 #include "game/cGameSettings.h"
 
@@ -37,7 +36,6 @@ cOptionsState::cOptionsState(sGameServices* services, int prevState)
     : cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface()),
     m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse),
     m_prevState(prevState),
@@ -45,7 +43,6 @@ cOptionsState::cOptionsState(sGameServices* services, int prevState)
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
-    d2tm_assert(m_interface != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
 
