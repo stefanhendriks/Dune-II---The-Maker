@@ -25,6 +25,17 @@
 #include "include/cAssert.h"
 #include "utils/Log.h"
 
+namespace {
+// Size used to center the video on screen. NOTE: the source frames are reportedly 320x288 (drawn
+// scaled up), so these match neither the source frames nor the size they are drawn at.
+constexpr int VIDEO_CENTER_WIDTH = 640;
+constexpr int VIDEO_CENTER_HEIGHT = 480;
+// Shifts the video towards the top left of the screen after centering
+constexpr int VIDEO_CENTER_SHIFT = 75;
+// Added to the centering size to get the size the video is drawn at (790x630)
+constexpr int VIDEO_DRAW_EXTRA = 150;
+}
+
 cVideoState::cVideoState(sGameServices* services, const std::string &filename)
     : cGameState(services)
 {
@@ -42,8 +53,8 @@ cVideoState::cVideoState(sGameServices* services, const std::string &filename)
     if (gfxmovie != nullptr) {
         Logger::info(COMP_INIT, "video", "Successful loaded video [{}]", filename);
         m_currentFrame = gfxmovie->getTexture(m_movieFrame);
-        offsetX = (m_settings->getScreenW() - 640) / 2-75;
-        offsetY = (m_settings->getScreenH() - 480) / 2-75;
+        offsetX = (m_settings->getScreenW() - VIDEO_CENTER_WIDTH) / 2 - VIDEO_CENTER_SHIFT;
+        offsetY = (m_settings->getScreenH() - VIDEO_CENTER_HEIGHT) / 2 - VIDEO_CENTER_SHIFT;
         return;
     } else {
         Logger::error(COMP_INIT, "video", "Failed to load video [{}]", filename);
@@ -66,6 +77,7 @@ void cVideoState::thinkFast()
 
 void cVideoState::thinkNormal()
 {
+    // one frame per call: thinkNormal runs every ~100 ms, so the video plays at 10 fps
     if (gfxmovie != nullptr) {
         if (m_movieFrame < gfxmovie->getNumberOfFiles()) {
             m_currentFrame = gfxmovie->getTexture(m_movieFrame);
@@ -82,7 +94,7 @@ void cVideoState::draw() const
 {
     m_mouse->setTile(MOUSE_NORMAL);
     if (m_currentFrame != nullptr) {
-        cRectangle dest = {offsetX, offsetY,640+150, 480+150};
+        cRectangle dest = {offsetX, offsetY, VIDEO_CENTER_WIDTH + VIDEO_DRAW_EXTRA, VIDEO_CENTER_HEIGHT + VIDEO_DRAW_EXTRA};
         m_sdlDrawer->renderStrechFullSprite(m_currentFrame, dest);
     }
     m_mouse->draw();
