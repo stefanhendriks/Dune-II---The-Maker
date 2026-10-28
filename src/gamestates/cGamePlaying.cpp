@@ -103,6 +103,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     m_drawManager = services->drawManager;
     d2tm_assert(m_drawManager != nullptr);
     m_textDrawer = m_ctx->getTextContext()->getBeneTextDrawer();
+    m_timeManager = m_ctx->getTimeManager();
+    d2tm_assert(m_timeManager != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
 
     m_controlledPlayer = m_objects->getPlayer(HUMAN);
@@ -286,13 +288,13 @@ void cGamePlaying::draw() const
     m_drawManager->drawCombatState();
     drawTrackingOverlays();
     if (m_settings->shouldDrawFps()) {
-        m_interface->drawTextFps();
+        drawTextFps();
     }
 
     drawCombatMouse();
 
     if (m_settings->shouldDrawTime()) {
-        m_interface->drawTextTime();
+        drawTextTime();
     }
     // MOUSE
     m_drawManager->drawCombatMouse();
@@ -453,6 +455,19 @@ void cGamePlaying::drawCombatMouse() const
         int mouseCell = m_objects->getPlayer(HUMAN)->getGameControlsContext()->getMouseCell();
         m_textDrawer->drawText(0, cSideBar::TopBarHeight + 1, std::format("MouseCell {}", mouseCell));
     }
+}
+
+void cGamePlaying::drawTextFps() const
+{
+    m_textDrawer->drawText(180,8, Color::Black, std::format("FPS/REST: {}/{}", m_timeManager->getFps(), m_timeManager->getWaitingTime()), false);
+}
+
+void cGamePlaying::drawTextTime() const
+{
+    auto time = m_timeManager->getCurrentTime();
+    m_textDrawer->drawText(m_settings->getScreenW() - cSideBar::SidebarWidth - 75, cSideBar::TopBarHeight + 1, Color::White, time);
+    time = m_timeManager->getCurrentTimer();
+    m_textDrawer->drawText(m_settings->getScreenW() - cSideBar::SidebarWidth - 75, cSideBar::TopBarHeight + 1 + 15, Color::White, time);
 }
 
 void cGamePlaying::missionInit()
