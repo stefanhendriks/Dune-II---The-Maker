@@ -36,7 +36,7 @@
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
+#include "game/ScenarioFlow.hpp"
 #include "game/MissionFlow.hpp"
 #include "game/cScreenFader.h"
 #include "game/cScreenShake.h"
@@ -76,8 +76,8 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
     m_TIMER_evaluatePlayerStatus = 5;
 
     //fix others pointers
-    m_interface = m_ctx->getGameInterface();
-    d2tm_assert(m_interface != nullptr);
+    m_scenarioFlow = services->scenarioFlow;
+    d2tm_assert(m_scenarioFlow != nullptr);
     m_missionFlow = services->missionFlow;
     d2tm_assert(m_missionFlow != nullptr);
     m_stateTransitions = services->stateTransitions;
@@ -109,7 +109,7 @@ cGamePlaying::cGamePlaying(sGameServices* services) :
 
     m_controlledPlayer = m_objects->getPlayer(HUMAN);
     m_drawManager->setPlayerToDraw(m_controlledPlayer);
-    m_interface->setPlayerToInteractFor(m_controlledPlayer);
+    m_scenarioFlow->setPlayerToInteractFor(m_controlledPlayer);
 }
 
 cGamePlaying::~cGamePlaying()
@@ -398,7 +398,7 @@ void cGamePlaying::onPlayerDefeated(cPlayer *player)
     if (player == m_controlledPlayer) {
         m_controlledPlayer = m_objects->getPlayer(HUMAN);
         m_drawManager->setPlayerToDraw(m_controlledPlayer);
-        m_interface->setPlayerToInteractFor(m_controlledPlayer);
+        m_scenarioFlow->setPlayerToInteractFor(m_controlledPlayer);
     }
 
     player->setHouse(GENERALHOUSE);
@@ -664,7 +664,7 @@ void cGamePlaying::tryDebugSwitchToPlayer(int playerIndex)
     m_controlledPlayer->selected_structure = -1;
     m_controlledPlayer = targetPlayer;
     m_drawManager->setPlayerToDraw(m_controlledPlayer);
-    m_interface->setPlayerToInteractFor(m_controlledPlayer);
+    m_scenarioFlow->setPlayerToInteractFor(m_controlledPlayer);
 
     const s_GameEvent newEvent {
         .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,

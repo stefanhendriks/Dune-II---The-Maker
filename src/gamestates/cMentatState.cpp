@@ -22,7 +22,7 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/cGameSettings.h"
-#include "game/cGameInterface.h"
+#include "game/ScenarioFlow.hpp"
 #include "game/MissionFlow.hpp"
 #include "controls/cMouse.h"
 #include "utils/ini.h"
@@ -38,7 +38,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
     : cGameState(services),
       m_dataCampaign(dataCampaign),
       m_settings(services->settings),
-      m_interface(m_ctx->getGameInterface()),
+      m_scenarioFlow(services->scenarioFlow),
       m_stateTransitions(services->stateTransitions),
       m_mentatFlow(services->mentatFlow),
       m_missionFlow(services->missionFlow),
@@ -53,7 +53,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
     d2tm_assert(services != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_settings != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_scenarioFlow != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
     d2tm_assert(m_missionFlow != nullptr);
@@ -90,7 +90,7 @@ void cMentatState::prepareMentat(int house)
             else 
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, m_stateTransitions, m_missionFlow, humanPlayer, m_dataCampaign);
             m_missionFlow->init();
-            m_interface->setupPlayers();
+            m_scenarioFlow->setupPlayers();
             m_cIni->loadScenario(m_mentat.get(), m_reinforcements,m_dataCampaign);
             m_cIni->loadBriefing(house, m_dataCampaign->region, eScenarioIniSection::BRIEFING, m_mentat.get());
             break;

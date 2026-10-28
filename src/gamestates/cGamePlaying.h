@@ -29,7 +29,7 @@ class cReinforcements;
 class cTextDrawer;
 class cTimeManager;
 class cMapCamera;
-class cGameInterface;
+class ScenarioFlow;
 class MissionFlow;
 class GameStateTransition;
 class cStructureFactory;
@@ -73,7 +73,7 @@ private:
     cGameSettings* m_settings = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cReinforcements* m_reinforcements = nullptr;
-    cGameInterface* m_interface = nullptr;
+    ScenarioFlow* m_scenarioFlow = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     MissionFlow* m_missionFlow = nullptr;
     AudioContext* m_audioContext = nullptr;

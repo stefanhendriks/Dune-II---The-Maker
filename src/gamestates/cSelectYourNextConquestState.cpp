@@ -36,7 +36,7 @@
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
 #include "game/MissionFlow.hpp"
-#include "game/cGameInterface.h"
+#include "game/ScenarioFlow.hpp"
 #include "drawers/cTextDrawer.h"
 
 #include <SDL3/SDL.h>
@@ -70,7 +70,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
 cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* services, cIni* ini, s_DataCampaign* dataCompaign) :
     cGameState(services),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface()),
+    m_scenarioFlow(services->scenarioFlow),
     m_audioContext(m_ctx->getAudioContext()),
     m_stateTransitions(services->stateTransitions),
     m_mentatFlow(services->mentatFlow),
@@ -83,7 +83,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     m_cIni(ini)
 {
     d2tm_assert(m_settings != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_scenarioFlow != nullptr);
     d2tm_assert(m_audioContext != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
@@ -451,7 +451,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     m_mentatFlow->prepareForPlayer();
 
     // load map
-    m_interface->loadScenario();
+    m_scenarioFlow->loadScenario();
 
     m_audioContext->playMusicByType(MUSIC_BRIEFING, HUMAN, false, false, m_objects->getPlayer(HUMAN)->getHouse());
 

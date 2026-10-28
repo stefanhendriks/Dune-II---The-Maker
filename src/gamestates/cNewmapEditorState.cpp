@@ -15,7 +15,7 @@
 
 #include "gamestates/cNewMapEditorState.h"
 #include "game/GameStateTransition.hpp"
-#include "game/cGameInterface.h"
+#include "game/ScenarioFlow.hpp"
 #include "controls/cMouse.h"
 
 #include "gui/GuiButton.h"
@@ -44,7 +44,7 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services, cIni* ini)
     : cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
-    m_interface(m_ctx->getGameInterface()),
+    m_scenarioFlow(services->scenarioFlow),
     m_stateTransitions(services->stateTransitions),
     m_mouse(services->mouse),
     m_guiWindow(nullptr),
@@ -54,7 +54,7 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services, cIni* ini)
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
-    d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_scenarioFlow != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_cIni != nullptr);
     constructWindow();
@@ -266,7 +266,7 @@ void cNewMapEditorState::constructWindow()
         .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this](){
             this->constructEmptyMap();
-            m_interface->loadMapFromEditor(-1); // -1 means load the map from the editor, instead of loading a skirmish map
+            m_scenarioFlow->loadMapFromEditor(-1); // -1 means load the map from the editor, instead of loading a skirmish map
             m_stateTransitions->setNextStateWithFade(GAME_EDITOR);
         })
         .build();

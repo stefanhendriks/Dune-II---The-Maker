@@ -24,7 +24,7 @@
 
 
 class cTextDrawer;
-class cGameInterface;
+class ScenarioFlow;
 class GameStateTransition;
 class cMouse;
 class GuiWindow;
@@ -53,7 +53,7 @@ public:
 private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
-    cGameInterface* m_interface = nullptr;
+    ScenarioFlow* m_scenarioFlow = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
