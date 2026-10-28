@@ -65,6 +65,14 @@ if(APPLE)
     target_compile_definitions(d2tm_tests PRIVATE D2TM_CLANG=1)
 endif()
 
+# Opt-in coverage instrumentation (GCC/gcov) for the unit tests: `cmake .. -DD2TM_COVERAGE=ON`.
+# See the "Code coverage" section in CLAUDE.md / the coverage job in .github/workflows/build_pr.yml.
+option(D2TM_COVERAGE "Instrument d2tm_tests with --coverage (gcov)" OFF)
+if(D2TM_COVERAGE)
+    target_compile_options(d2tm_tests PRIVATE --coverage -O0 -g)
+    target_link_options(d2tm_tests PRIVATE --coverage)
+endif()
+
 include(CTest)
 include(Catch)
 catch_discover_tests(d2tm_tests)

@@ -105,6 +105,56 @@ jobs:
         run: |
           cd "${{ github.workspace }}/build"
           ctest --output-on-failure
+  COVERAGE:
+    name: Unit test coverage (Ubuntu)
+    needs: [changes]
+    if: needs.changes.outputs.relevant == 'true'
+    runs-on: [ ubuntu-latest ]
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          chmod +x install_dependencies_ubuntu.sh
+          ./install_dependencies_ubuntu.sh
+          sudo apt-get install -y lcov
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DD2TM_COVERAGE=ON
+      - name: Build tests
+        run: cmake --build build --target d2tm_tests seedgen_tests seedgen_tests_large -j4
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Collect coverage
+        run: |
+          lcov --capture --directory build --output-file coverage.info --ignore-errors mismatch,gcov,source
+          lcov --extract coverage.info "$GITHUB_WORKSPACE/src/*" --output-file coverage-src.info --ignore-errors unused
+          genhtml coverage-src.info --output-directory coverage-html --ignore-errors source
+          lcov --summary coverage-src.info 2>&1 | grep -E "lines|functions" | sed 's/^ *//' > coverage-summary.txt
+          cat coverage-summary.txt
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage-html
+      - name: Post summary
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "### Unit test coverage (src/)"
+            echo '```'
+            cat coverage-summary.txt
+            echo '```'
+            echo 'Full HTML report: artifact `coverage-html` of this workflow run.'
+          } > coverage-comment.md
+          cat coverage-comment.md >> "$GITHUB_STEP_SUMMARY"
+          # fork PRs have a read-only token, so the comment is best effort
+          gh pr comment "${{ github.event.pull_request.number }}" --edit-last --create-if-none --body-file coverage-comment.md             || echo "Could not post PR comment (fork PR?)"
   MACOSX:
     name: Mac OS X (Arm64)
     needs: [changes]
