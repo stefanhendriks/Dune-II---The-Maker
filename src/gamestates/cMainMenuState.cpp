@@ -62,7 +62,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     logoY = (logoHeight/10);
 
     mainMenuWidth = 130;
-    mainMenuHeight = 161;
+    mainMenuHeight = 161 + 22; // 22 = one more button (Introduction), same as heightBetweenButton below
 
     // adjust x and y according to resolution, we can add because the above values
     // assume 640x480 resolution, and logoX/logoY are already taking care of > resolutions
