@@ -33,6 +33,7 @@
 
 #include <SDL3/SDL.h>
 #include <format>
+#include <functional>
 #include "include/cAssert.h"
 
 cMainMenuState::cMainMenuState(sGameServices* services) :
@@ -97,134 +98,52 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     //// Beneath title
     ////////////////////////////////
 
-    // Buttons:
-    int buttonsX = mainMenuFrameX + 2;
-    // height
-    const int heightBetweenButton = 22;
-    // PLAY
-    int playY = 323;
-
-    buttonWidth = mainMenuWidth - 8;
-
     const cRectangle &window = cRectangle(mainMenuFrameX, mainMenuFrameY, mainMenuWidth, mainMenuHeight);
     gui_window = std::make_unique<GuiWindow>(m_sdlDrawer, window, m_textDrawer);
     gui_window->setTheme(cGuiThemeBuilder().light().build());
 
-    const cRectangle &campaign = cRectangle(buttonsX, playY, buttonWidth, buttonHeight);
-    auto gui_btn_SelectHouse = GuiButtonBuilder()
-            .withRect(campaign)        
-            .withLabel("Campaign")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() {
-                m_stateTransitions->setNextStateWithFade(GAME_SELECT_HOUSE);
-                })
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_SelectHouse));
+    // Buttons are placed relative to the window, one below the other
+    const int buttonX = 2;
+    const int firstButtonY = 4;
+    const int heightBetweenButton = 22;
+    buttonWidth = mainMenuWidth - 8;
 
-    int skirmishY = playY + heightBetweenButton+1;
-    const cRectangle &skirmish = cRectangle(buttonsX, skirmishY, buttonWidth, buttonHeight);
-    auto gui_btn_Skirmish = GuiButtonBuilder()
-            .withRect(skirmish)        
-            .withLabel("Skirmish")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() {
-                m_missionFlow->init();
-                m_stateTransitions->setNextStateWithFade(GAME_SETUPSKIRMISH);
-                })
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_Skirmish));
+    int buttonY = firstButtonY;
+    auto addButton = [&](const std::string &label, const GuiTheme &theme, std::function<void()> onClick) {
+        auto button = GuiButtonBuilder()
+                .withRect(gui_window->getRelativeRect(buttonX, buttonY, buttonWidth, buttonHeight))
+                .withLabel(label)
+                .withTextDrawer(m_textDrawer)
+                .withRenderer(m_sdlDrawer)
+                .withTheme(theme)
+                .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+                .onClick(std::move(onClick))
+                .build();
+        gui_window->addGuiObject(std::move(button));
+        buttonY += heightBetweenButton;
+    };
+    const GuiTheme light = cGuiThemeBuilder().light().build();
+    const GuiTheme inactive = cGuiThemeBuilder().inactive().build();
 
-    // LOAD
-    int loadY = skirmishY+heightBetweenButton;
-    const cRectangle &load = cRectangle(buttonsX, loadY, buttonWidth, buttonHeight);
-    auto gui_btn_Load = GuiButtonBuilder()
-            .withRect(load)        
-            .withLabel("Load")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().inactive().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_stateTransitions->fadeOut();})
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_Load));
+    addButton("Campaign", light, [this]() {
+        m_stateTransitions->setNextStateWithFade(GAME_SELECT_HOUSE);
+    });
 
-    // Editor
-    int editorY = loadY+heightBetweenButton;
-    const cRectangle &editors = cRectangle(buttonsX, editorY, buttonWidth, buttonHeight);
-    auto gui_btn_Editor = GuiButtonBuilder()
-            .withRect(editors)        
-            .withLabel("Map Editor")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_stateTransitions->setNextStateWithFade(GAME_NEW_MAP_EDITOR);})
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_Editor));
+    buttonY += 1; // Skirmish sits one pixel lower than the rest
+    addButton("Skirmish", light, [this]() {
+        m_missionFlow->init();
+        m_stateTransitions->setNextStateWithFade(GAME_SETUPSKIRMISH);
+    });
 
-    // OPTIONS
-    int optionsY = editorY+heightBetweenButton;
-    const cRectangle &options = cRectangle(buttonsX, optionsY, buttonWidth, buttonHeight);
-    auto gui_btn_Options = GuiButtonBuilder()
-            .withRect(options)        
-            .withLabel("Options")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_stateTransitions->setNextState(GAME_OPTIONS);})
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_Options));
-
-    // HALL OF FAME
-    int hofY = optionsY+heightBetweenButton;
-    const cRectangle &hof = cRectangle(buttonsX, hofY, buttonWidth, buttonHeight);
-    auto gui_btn_Hof = GuiButtonBuilder()
-            .withRect(hof)        
-            .withLabel("Hall of Fame")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().inactive().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_stateTransitions->fadeOut();})
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_Hof));
-
-    // INTRODUCTION
-    int introY = hofY+heightBetweenButton;
-    const cRectangle &intro = cRectangle(buttonsX, introY, buttonWidth, buttonHeight);
-    auto gui_btn_Intro = GuiButtonBuilder()
-            .withRect(intro)
-            .withLabel("Introduction")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_videoFlow->play("intro.pak");})
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_Intro));
-
-    // EXIT
-    int exitY = introY+heightBetweenButton;
-    const cRectangle &exit = cRectangle(buttonsX, exitY, buttonWidth, buttonHeight);
-    auto gui_btn_Exit = GuiButtonBuilder()
-            .withRect(exit)        
-            .withLabel("Exit")
-            .withTextDrawer(m_textDrawer)
-            .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().light().build())
-            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this]() {
-                m_settings->setPlaying(false);
-                m_stateTransitions->fadeOut();})
-            .build();
-    gui_window->addGuiObject(std::move(gui_btn_Exit));
+    addButton("Load", inactive, [this]() { m_stateTransitions->fadeOut(); });
+    addButton("Map Editor", light, [this]() { m_stateTransitions->setNextStateWithFade(GAME_NEW_MAP_EDITOR); });
+    addButton("Options", light, [this]() { m_stateTransitions->setNextState(GAME_OPTIONS); });
+    addButton("Hall of Fame", inactive, [this]() { m_stateTransitions->fadeOut(); });
+    addButton("Introduction", light, [this]() { m_videoFlow->play("intro.pak"); });
+    addButton("Exit", light, [this]() {
+        m_settings->setPlaying(false);
+        m_stateTransitions->fadeOut();
+    });
 
     // prepare to drawing in cache texture
     if (m_settings->isDebugMode()) {
