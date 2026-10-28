@@ -58,6 +58,7 @@ private:
     Graphics* m_gfxinter;
     Graphics* m_gfxdata;
     SDLDrawer* m_sdlDrawer = nullptr;
+    bool m_playCreditsSound = true;
 
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits(int drawX, int drawY);

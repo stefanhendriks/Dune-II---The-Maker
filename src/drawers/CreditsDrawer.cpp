@@ -38,7 +38,8 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer 
     m_ctx(ctx),
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_gfxdata(ctx->getGraphicsContext()->gfxdata.get()),
-    m_sdlDrawer(ctx->getSDLDrawer())
+    m_sdlDrawer(ctx->getSDLDrawer()),
+    m_playCreditsSound(settings->isPlayCreditsSound())
 {
     d2tm_assert(player!= nullptr);
     d2tm_assert(ctx != nullptr);
@@ -178,7 +179,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
         if (m_offset_credit[i] > 18.0F) {
             //m_offset_credit[i] = 18.1F; // so we do not keep matching our IF :)
             m_offset_credit[i] = 0.0F; // so we do not keep matching our IF :)
-            if (m_soundsMade < 7) {
+            if (m_playCreditsSound && m_soundsMade < 7) {
                 playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, m_soundType, 32);
                 m_soundsMade++;
             }
