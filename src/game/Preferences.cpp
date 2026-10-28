@@ -90,6 +90,9 @@ void readSettings(const cSection &section, InitialGameSettings &settings)
     if (section.hasValue("playSound")) {
         settings.playSound = section.getBoolean("playSound");
     }
+    if (section.hasValue("playCreditsSound")) {
+        settings.playCreditsSound = section.getBoolean("playCreditsSound");
+    }
     if (section.hasValue("drawUnitDebug")) {
         settings.drawUnitDebug = section.getBoolean("drawUnitDebug");
     }
@@ -158,6 +161,7 @@ bool save(const std::filesystem::path &file, const InitialGameSettings &settings
     set(ini, "Debug", toText(settings.debugMode));
     set(ini, "playMusic", toText(settings.playMusic));
     set(ini, "playSound", toText(settings.playSound));
+    set(ini, "playCreditsSound", toText(settings.playCreditsSound));
     set(ini, "drawUnitDebug", toText(settings.drawUnitDebug));
     set(ini, "oneAi", toText(settings.oneAi));
     set(ini, "disableWormAi", toText(settings.disableWormAi));

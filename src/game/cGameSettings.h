@@ -110,6 +110,9 @@ public:
     bool isPlaySound() const {
         return m_playSound;
     }
+    bool isPlayCreditsSound() const {
+        return m_playCreditsSound;
+    }
     bool isDebugMode() const {
         return m_debugMode;
     }
@@ -131,6 +134,7 @@ private:
     bool m_disableReinforcements;
     bool m_drawUsages;
     bool m_fogOfWarEnabled = false;
+    bool m_playCreditsSound = true;
     bool m_drawUnitDebug;
     bool m_noAiRest;
     bool m_turretsDownOnLowPower = false;
