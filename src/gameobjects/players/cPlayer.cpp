@@ -2142,7 +2142,7 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
     bool mayPlayVoice = true;
     if (triggerMusic) {
         if (m_settings->getMusicType() != MUSIC_ATTACK) {
-            mayPlayVoice = m_interface->playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay);
+            mayPlayVoice = m_audioContext->playMusicByType(MUSIC_ATTACK, getId(), hasVoiceToPlay, true, getHouse());
         }
         else {
             mayPlayVoice = false;

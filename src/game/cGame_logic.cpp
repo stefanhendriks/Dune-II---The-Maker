@@ -1485,31 +1485,6 @@ void cGame::playSound(int sampleId, int vol)
     m_audioContext->playSound(sampleId, vol);
 }
 
-void cGame::playSoundWithDistance(int sampleId, int iDistance)
-{
-    if (iDistance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
-        playSound(sampleId);
-        return;
-    }
-
-    // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
-    // where when unit is at half map, we can hear it only a bit.
-    float maxDistance = m_mapCamera->divideByZoomLevel(m_gameObjectsContext->getMapGeometry()->getMaxDistanceInPixels() / 2);
-    float distanceNormalized = 1.0 - (iDistance / maxDistance);
-
-    float volume = m_audioContext->getMaxVolume() * distanceNormalized;
-
-    // zoom factor influences volume (more zoomed in means louder)
-    float volumeFactor = m_mapCamera->factorZoomLevel(0.7f);
-    int iVolFactored = volumeFactor * volume;
-
-    Logger::debug(COMP_SOUND, "cGame::playSoundWithDistance", "iDistance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
-        iDistance, distanceNormalized, maxDistance, m_mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored);
-
-    playSound(sampleId, iVolFactored);
-}
-
-
 void cGame::playMusicByTypeForStateTransition(int iType)
 {
     m_audioContext->playMusicByTypeForStateTransition(iType, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());

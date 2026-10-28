@@ -46,9 +46,6 @@ public:
     void drawTextFps() const;
     void drawTextTime() const;
 
-    bool playMusicByType(int iType) const;
-    bool playMusicByType(int iType, int playerId, bool triggerWithVoice) const;
-    void playSoundWithDistance(int sampleId, int distance) const;
 
 private:
     cGame* m_game = nullptr;
