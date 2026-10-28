@@ -19,7 +19,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 

@@ -32,7 +32,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
 #include "game/cGameInterface.h"
 #include "drawers/cTextDrawer.h"

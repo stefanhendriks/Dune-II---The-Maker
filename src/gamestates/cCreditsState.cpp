@@ -25,7 +25,7 @@
 #include "drawers/cTextDrawer.h"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "controls/cMouse.h"
 
 #include "include/cAssert.h"

@@ -22,11 +22,11 @@
 #include "utils/Log.h"
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
 #include "include/cAssert.h"
 
-SardaukarMentat::SardaukarMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, MentatFlow* mentatFlow, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, mentatFlow, allowMissionSelect)
+SardaukarMentat::SardaukarMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, MentatFlow* mentatFlow, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, mentatFlow, allowMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);

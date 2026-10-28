@@ -38,7 +38,7 @@ class cMouse;
 class cEditorUndoRedoHistory;
 class cEditorCam;
 class cEventEmitter;
-class GameStateTransitionService;
+class GameStateTransition;
 
 class cEditorState : public cGameState {
 public:
@@ -60,7 +60,7 @@ private:
     Graphics *m_gfxeditor = nullptr;
     cGameSettings *m_settings = nullptr;
     cEventEmitter* m_eventEmitter = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     cTextDrawer *m_textDrawer = nullptr;
     cPreviewMaps* m_previewMaps = nullptr;

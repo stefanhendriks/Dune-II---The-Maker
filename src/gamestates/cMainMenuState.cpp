@@ -27,7 +27,7 @@
 #include "context/AudioContext.hpp"
 #include "context/GameContext.hpp"
 #include "utils/cSoundPlayer.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
 
 #include <SDL3/SDL.h>

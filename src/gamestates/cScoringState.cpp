@@ -4,7 +4,7 @@
 #include "controls/cMouse.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
 #include "game/cScreenFader.h"
 #include "game/cGameSettings.h"

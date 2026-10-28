@@ -1,5 +1,5 @@
 /**
- * @file GameStateTransitionService.hpp
+ * @file GameStateTransition.hpp
  *
  * Dune 2 - The Maker
  *
@@ -18,13 +18,13 @@
 #include <functional>
 #include <utility>
 
-class GameStateTransitionService {
+class GameStateTransition {
 public:
     using TransitionCallback = std::function<void(int)>;
     using FadeCallback = std::function<void()>;
     using CurrentStateCallback = std::function<int()>;
 
-    GameStateTransitionService(TransitionCallback setNextState, TransitionCallback setNextStateWithFade, FadeCallback fadeOut, CurrentStateCallback getCurrentState)
+    GameStateTransition(TransitionCallback setNextState, TransitionCallback setNextStateWithFade, FadeCallback fadeOut, CurrentStateCallback getCurrentState)
         : m_setNextState(std::move(setNextState)),
           m_setNextStateWithFade(std::move(setNextStateWithFade)),
           m_fadeOut(std::move(fadeOut)),

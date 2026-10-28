@@ -14,7 +14,7 @@
  */
 
 #include "gamestates/cNewMapEditorState.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/cGameInterface.h"
 #include "controls/cMouse.h"
 

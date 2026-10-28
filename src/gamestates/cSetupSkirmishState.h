@@ -36,7 +36,7 @@ class SDLDrawer;
 class cTextDrawer;
 class cGameSettings;
 class cGameInterface;
-class GameStateTransitionService;
+class GameStateTransition;
 class cScreenFader;
 class cMapCamera;
 class cGameConditionChecker;
@@ -72,7 +72,7 @@ private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     cMapCamera* m_mapCamera = nullptr;
     cGameConditionChecker* m_gameConditionChecker = nullptr;
     cScreenFader* m_screenFader = nullptr;

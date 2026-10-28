@@ -18,7 +18,7 @@
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "controls/cMouse.h"
 #include "utils/cRectangle.h"
 #include "include/eGameState.h"

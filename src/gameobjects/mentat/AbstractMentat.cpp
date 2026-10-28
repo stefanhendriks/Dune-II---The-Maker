@@ -19,7 +19,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/RNG.hpp"
 #include "context/GameContext.hpp"
-#include "game/GameStateTransitionService.hpp"
+#include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
 #include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
@@ -39,7 +39,7 @@
 static constexpr int MENTAT_SCREEN_W = 640;
 static constexpr int MENTAT_SCREEN_H = 480;
 
-AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameStateTransitionService* stateTransitions, MentatFlow* mentatFlow, bool canMissionSelect)
+AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, MentatFlow* mentatFlow, bool canMissionSelect)
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(settings != nullptr);

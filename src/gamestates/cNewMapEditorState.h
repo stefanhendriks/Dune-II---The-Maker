@@ -25,7 +25,7 @@
 
 class cTextDrawer;
 class cGameInterface;
-class GameStateTransitionService;
+class GameStateTransition;
 class cMouse;
 class GuiWindow;
 class GuiCycleButton;
@@ -54,7 +54,7 @@ private:
     cTextDrawer* m_textDrawer = nullptr;
     cGameSettings* m_settings = nullptr;
     cGameInterface* m_interface = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     std::unique_ptr<GuiWindow> m_guiWindow;
     cGameObjectContext* m_objects = nullptr;

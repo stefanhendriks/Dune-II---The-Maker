@@ -41,7 +41,7 @@ class Graphics;
 class SDLDrawer;
 class cSideBarDrawer;
 class GameContext;
-class GameStateTransitionService;
+class GameStateTransition;
 class cGameObjectContext;
 class cMapCamera;
 class cMouse;
@@ -151,7 +151,7 @@ private:
     Graphics* m_gfxinter = nullptr;
     Graphics* m_gfxdata = nullptr;
     cMouseDrawer* m_mouseDrawer = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     cRectangle* m_mapViewport = nullptr;
     cGameObjectContext* m_objects = nullptr;

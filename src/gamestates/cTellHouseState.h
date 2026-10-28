@@ -26,7 +26,7 @@ class cIni;
 class AudioContext;
 class cGameSettings;
 class cPlayer;
-class GameStateTransitionService;
+class GameStateTransition;
 
 class cTellHouseState : public cGameState {
 public:
@@ -50,6 +50,6 @@ private:
     cIni* m_cIni = nullptr;
     AudioContext* m_audioContext = nullptr;
     cGameSettings* m_settings = nullptr;
-    GameStateTransitionService* m_stateTransitions = nullptr;
+    GameStateTransition* m_stateTransitions = nullptr;
     cPlayer* m_humanPlayer = nullptr;
 };
