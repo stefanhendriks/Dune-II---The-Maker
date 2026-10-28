@@ -853,7 +853,7 @@ void cGamePlaying::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
                 cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
                 if (pStructure && pStructure->isValid()) {
                     m_audioContext->playSound(SOUND_PLACE);
-                    createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId, m_objects, m_info, m_interface, m_mapCamera);
+                    createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId, m_objects, m_info, m_audioContext, m_mapCamera);
 
                     const s_GameEvent launchedEvent{
                         .eventType = eGameEventType::GAME_EVENT_SPECIAL_LAUNCHED,

@@ -23,7 +23,7 @@ class cPlayer;
 class cGameObjectContext;
 class cInfoContext;
 class cMapCamera;
-class cGameInterface;
+class AudioContext;
 class cGameSettings;
 class cEventEmitter;
 class cScreenShake;
@@ -132,7 +132,7 @@ private:
     cGameObjectContext *m_objects = nullptr;
     cInfoContext *m_info = nullptr;
     cMapCamera *m_mapCamera = nullptr;
-    cGameInterface *m_interface = nullptr;
+    AudioContext *m_audioContext = nullptr;
     cGameSettings *m_settings = nullptr;
     cEventEmitter *m_eventEmitter = nullptr;
     cScreenShake *m_screenShake = nullptr;

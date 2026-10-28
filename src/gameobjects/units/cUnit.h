@@ -38,7 +38,7 @@ struct sGameServices;
 class cGameSettings;
 class cInfoContext;
 class cGameObjectContext;
-class cGameInterface;
+class AudioContext;
 class cScreenShake;
 class cEventEmitter;
 class cMapCamera;
@@ -509,7 +509,7 @@ private:
     cGameSettings *m_settings = nullptr;
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
-    cGameInterface *m_interface = nullptr;
+    AudioContext *m_audioContext = nullptr;
     cScreenShake *m_screenShake = nullptr;
     cEventEmitter *m_eventEmitter = nullptr;
     cMapCamera* m_mapCamera = nullptr;

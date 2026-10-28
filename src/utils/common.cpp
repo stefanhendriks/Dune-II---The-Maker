@@ -34,6 +34,7 @@
 #include "utils/d2tm_math.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
+#include "context/AudioContext.hpp"
 
 #include "data/gfxaudio.h"
 
@@ -184,6 +185,30 @@ int iFindCloseBorderCell(int iCll, cGameObjectContext* objects)
 }
 
 
+void playSoundWithDistance(AudioContext* audioContext, cMapCamera* mapCamera, cGameObjectContext* objects, int sampleId, int distance)
+{
+    if (distance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
+        audioContext->playSound(sampleId);
+        return;
+    }
+
+    // zoom factor influences distance we can 'hear'. The closer up, the less max distance. Unzoomed, this is half the map.
+    // where when unit is at half map, we can hear it only a bit.
+    float maxDistance = mapCamera->divideByZoomLevel(objects->getMapGeometry()->getMaxDistanceInPixels() / 2);
+    float distanceNormalized = 1.0 - (distance / maxDistance);
+
+    float volume = audioContext->getMaxVolume() * distanceNormalized;
+
+    // zoom factor influences volume (more zoomed in means louder)
+    float volumeFactor = mapCamera->factorZoomLevel(0.7f);
+    int iVolFactored = volumeFactor * volume;
+
+    Logger::debug(COMP_SOUND, "playSoundWithDistance", "distance [{}], distanceNormalized [{}] maxDistance [{}], m_zoomLevel [{}], volumeFactor [{}], volume [{}], iVolFactored [{}]",
+        distance, distanceNormalized, maxDistance, mapCamera->getZoomLevel(), volumeFactor, volume, iVolFactored);
+
+    audioContext->playSound(sampleId, iVolFactored);
+}
+
 int distanceBetweenCellAndCenterOfScreen(int iCell, cGameObjectContext* objects, cMapCamera* mapCamera)
 {
     if (objects->getMapGeometry()->isValidCell(iCell)) {
@@ -209,7 +234,7 @@ int distanceBetweenCellAndCenterOfScreen(int iCell, cGameObjectContext* objects,
  * @param structureWhichShoots
  * @return
  */
-int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots, cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, cMapCamera* mapCamera)
+int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, int structureWhichShoots, cGameObjectContext* objects, cInfoContext* infos, AudioContext* audioContext, cMapCamera* mapCamera)
 {
     int new_id = -1;
 
@@ -294,7 +319,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     // play sound (when we have one)
     s_BulletInfo &sBullet = infos->getBulletInfo(type);
     if (sBullet.sound > -1) {
-        iface->playSoundWithDistance(sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell, objects, mapCamera));
+        playSoundWithDistance(audioContext, mapCamera, objects, sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell, objects, mapCamera));
     }
 
     return new_id;

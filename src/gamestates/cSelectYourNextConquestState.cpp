@@ -31,6 +31,7 @@
 #include "gui/GuiButton.h"
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
+#include "context/AudioContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
@@ -69,6 +70,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     cGameState(services),
     m_settings(services->settings),
     m_interface(m_ctx->getGameInterface()),
+    m_audioContext(m_ctx->getAudioContext()),
     m_stateTransitions(services->stateTransitions),
     m_mentatFlow(services->mentatFlow),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
@@ -80,6 +82,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_interface != nullptr);
+    d2tm_assert(m_audioContext != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
     d2tm_assert(m_textDrawer != nullptr);
@@ -447,7 +450,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     // load map
     m_interface->loadScenario();
 
-    m_interface->playMusicByType(MUSIC_BRIEFING);
+    m_audioContext->playMusicByType(MUSIC_BRIEFING, HUMAN, false, false, m_objects->getPlayer(HUMAN)->getHouse());
 
     state = REGSTATE_FADEOUT;
     m_stateTransitions->fadeOut();

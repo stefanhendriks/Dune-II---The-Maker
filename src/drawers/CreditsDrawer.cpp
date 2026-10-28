@@ -15,7 +15,8 @@
 
 #include "CreditsDrawer.h"
 #include "include/sGameServices.h"
-#include "game/cGameInterface.h"
+#include "utils/common.h"
+#include "context/AudioContext.hpp"
 #include "game/cGameSettings.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
@@ -60,7 +61,9 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer 
 
 void CreditsDrawer::serviceInit(sGameServices* services)
 {
-    m_interface = services->ctx->getGameInterface();
+    m_audioContext = services->ctx->getAudioContext();
+    m_mapCamera = services->mapCamera;
+    m_objects = services->objects;
 }
 
 CreditsDrawer::~CreditsDrawer()
@@ -188,7 +191,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
             //m_offset_credit[i] = 18.1F; // so we do not keep matching our IF :)
             m_offset_credit[i] = 0.0F; // so we do not keep matching our IF :)
             if (m_soundsMade < 7) {
-                m_interface->playSoundWithDistance(m_soundType, 32);
+                playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, m_soundType, 32);
                 m_soundsMade++;
             }
             // it is fully 'moved'. Now update the array.
