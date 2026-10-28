@@ -20,7 +20,7 @@
 class cPlayer;
 class cGameObjectContext;
 class cInfoContext;
-class cGameInterface;
+class cEventEmitter;
 class cStructureUtils;
 class cDrawManager;
 class AudioContext;
@@ -100,7 +100,7 @@ private:
     cPlayer *m_player;
     cGameObjectContext *m_objects = nullptr;
     cInfoContext *m_info = nullptr;
-    cGameInterface *m_interface = nullptr;
+    cEventEmitter *m_eventEmitter = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cDrawManager *m_drawManager = nullptr;
     AudioContext *m_audioContext = nullptr;

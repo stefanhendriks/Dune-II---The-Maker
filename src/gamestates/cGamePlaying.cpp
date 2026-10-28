@@ -387,7 +387,7 @@ void cGamePlaying::onPlayerDefeated(cPlayer *player)
             .player = player
         }
     };
-    m_interface->onNotifyGameEvent(event);
+    m_eventEmitter->emit(event);
 
     // player is defeated, if it was the controlling player it is no longer valid to control it
     if (player == m_controlledPlayer) {
@@ -639,7 +639,7 @@ void cGamePlaying::tryDebugSwitchToPlayer(int playerIndex)
                 .type = eNotificationType::NEUTRAL,
             }
         };                
-        m_interface->onNotifyGameEvent(newEvent);
+        m_eventEmitter->emit(newEvent);
         return;
     }
     m_controlledPlayer->deselectAllUnits();
@@ -655,7 +655,7 @@ void cGamePlaying::tryDebugSwitchToPlayer(int playerIndex)
             .type = eNotificationType::NEUTRAL,
         }
     };
-    m_interface->onNotifyGameEvent(newEvent);
+    m_eventEmitter->emit(newEvent);
 }
 
 void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
@@ -747,12 +747,12 @@ void cGamePlaying::onKeyDownDebugMode(const cKeyboardEvent &event)
 
     if (event.isAction(eKeyAction::DEBUG_SPAWN_ORNITHOPTER)) {
         int mc = m_controlledPlayer->getGameControlsContext()->getMouseCell();
-        cUnits::unitCreate(m_objects, m_info, m_interface, mc, ORNITHOPTER, m_controlledPlayer->getId(), false, false);
+        cUnits::unitCreate(m_objects, m_info, m_eventEmitter, mc, ORNITHOPTER, m_controlledPlayer->getId(), false, false);
     }
 
     if (event.isAction(eKeyAction::DEBUG_SPAWN_WORM)) {
         int mc = humanPlayer->getGameControlsContext()->getMouseCell();
-        cUnits::unitCreate(m_objects, m_info, m_interface, mc, SANDWORM, AI_WORM, false, false);
+        cUnits::unitCreate(m_objects, m_info, m_eventEmitter, mc, SANDWORM, AI_WORM, false, false);
     }
 }
 
@@ -783,7 +783,7 @@ void cGamePlaying::onEventEntityDestroyed(const CommonEvent &event)
         int randomX = cellX + RNG::genIntMaxExcl(0, widthInCells);
         int randomY = cellY + RNG::genIntMaxExcl(0, heightInCells);
         cUnits::unitCreate(
-            m_objects, m_info, m_interface,
+            m_objects, m_info, m_eventEmitter,
             m_objects->getMapGeometry()->makeCell(randomX, randomY),
             unitTypeToSpawn,
             event.player->getId(),
@@ -802,7 +802,7 @@ void cGamePlaying::onEventCreateUnit(const DeployUnitEvent &event)
     }
 
     int id = cUnits::unitCreate(
-        m_objects, m_info, m_interface,
+        m_objects, m_info, m_eventEmitter,
         event.iCell,
         event.unitType,
         event.iPlayer,

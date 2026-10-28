@@ -21,7 +21,6 @@
 #include "context/cGameObjectContext.h"
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
-#include "game/cGameInterface.h"
 #include "game/cEventEmitter.h"
 #include "game/cGameSettings.h"
 #include "utils/cStructureUtils.h"
@@ -65,7 +64,6 @@ void cStructureFactory::serviceInit(sGameServices *services)
     m_settings = services->settings;
     m_structureUtils = services->structureUtils;
     m_eventEmitter = services->eventEmitter;
-    m_interface = services->ctx->getGameInterface();
     m_renderer = services->ctx->getSDLDrawer();
 }
 
@@ -204,7 +202,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
 
     // additional forces: (UNITS)
     if (iStructureType == REFINERY) {
-        REINFORCE(m_objects, m_info, m_interface, iPlayer, HARVESTER, iCell, -1);
+        REINFORCE(m_objects, m_info, m_eventEmitter, iPlayer, HARVESTER, iCell, -1);
     }
 
     m_structureUtils->putStructureOnDimension(MAPID_STRUCTURES, str);

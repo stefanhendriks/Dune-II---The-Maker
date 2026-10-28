@@ -1278,18 +1278,12 @@ void cGame::setPlayerToInteractFor(cPlayer *pPlayer)
     m_controlledPlayer = pPlayer;
 }
 
-void cGame::emitGameEvent(const s_GameEvent &event)
-{
-    if (m_eventEmitter) {
-        if (m_gameSettings->isDebugMode()) {
-            Logger::trace(eLogComponent::COMP_NONE, "cGame::emitGameEvent", "event {}", s_GameEvent::toString(event));
-        }
-        m_eventEmitter->emit(event);
-    }
-}
-
 void cGame::dispatchGameEvent(const s_GameEvent &event)
 {
+    if (m_gameSettings->isDebugMode()) {
+        Logger::trace(eLogComponent::COMP_NONE, "cGame::dispatchGameEvent", "event {}", s_GameEvent::toString(event));
+    }
+
     m_gameObjectsContext->getMap()->onNotifyGameEvent(event);
 
     if (m_currentState) {
@@ -1313,7 +1307,7 @@ void cGame::dispatchGameEvent(const s_GameEvent &event)
 
 void cGame::onNotifyGameEvent(const s_GameEvent &event)
 {
-    emitGameEvent(event);
+    m_eventEmitter->emit(event);
 }
 
 void cGame::onNotifyMouseEvent(const s_MouseEvent &event)

@@ -16,7 +16,6 @@
 #include "cAbstractStructure.h"
 
 #include "utils/Log.h"
-#include "game/cGameInterface.h"
 #include "game/cGameSettings.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenShake.h"
@@ -110,7 +109,6 @@ void cAbstractStructure::serviceInit(sGameServices *services)
     m_info = services->info;
     m_mapCamera = services->mapCamera;
     m_settings = services->settings;
-    m_interface = services->ctx->getGameInterface();
     m_eventEmitter = services->eventEmitter;
     m_screenShake = services->screenShake;
     m_audioContext = services->ctx->getAudioContext();

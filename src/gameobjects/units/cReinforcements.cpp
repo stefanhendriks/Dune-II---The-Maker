@@ -25,7 +25,7 @@
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
 #include "context/GameContext.hpp"
-#include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
 #include "include/sGameServices.h"
 #include <algorithm>
 #include <format>
@@ -86,10 +86,10 @@ bool cReinforcement::isReady() const
     return m_delayInSeconds < 0;
 }
 
-void cReinforcement::execute(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface) const
+void cReinforcement::execute(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter) const
 {
     int focusCell = objects->getPlayer(m_playerId)->getFocusCell();
-    REINFORCE(objects, infos, iface, m_playerId, m_unitType, m_cell, focusCell, true);
+    REINFORCE(objects, infos, eventEmitter, m_playerId, m_unitType, m_cell, focusCell, true);
 }
 
 /// Reinforcements container class
@@ -109,7 +109,7 @@ void cReinforcements::serviceInit(sGameServices* services)
 {
     m_objects = services->objects;
     m_infos = services->info;
-    m_interface = services->ctx->getGameInterface();
+    m_eventEmitter = services->eventEmitter;
 }
 
 void cReinforcements::addReinforcement(int playerId, int unitType, int targetCell, int delayInSeconds, bool repeat)
@@ -133,7 +133,7 @@ void cReinforcements::thinkSlow()
     for (auto &reinforcement : reinforcements) {
         if (reinforcement.isReady()) {
             reinforcement.repeatOrMarkForDeletion();
-            REINFORCE(m_objects, m_infos, m_interface, reinforcement);
+            REINFORCE(m_objects, m_infos, m_eventEmitter, reinforcement);
         }
     }
 
@@ -161,24 +161,24 @@ void cReinforcements::thinkSlow()
  * @param iStart where to start from
 
  */
-void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iPlr, int iTpe, int iCll, int iStart)
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iPlr, int iTpe, int iCll, int iStart)
 {
-    REINFORCE(objects, infos, iface, iPlr, iTpe, iCll, iStart, true);
+    REINFORCE(objects, infos, eventEmitter, iPlr, iTpe, iCll, iStart, true);
 }
 
 /**
  * Same as above REINFORCE function, but takes sReinforcement. if iCell is < 0 then it will do nothing.
  */
-void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, const cReinforcement &reinforcement)
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, const cReinforcement &reinforcement)
 {
     if (!reinforcement.isValid()) return; // bail, invalid reinforcement given
-    reinforcement.execute(objects, infos, iface);
+    reinforcement.execute(objects, infos, eventEmitter);
 }
 
 /**
  * Spawns a carryAll that brings a unit (part of a reinforcement) to the map.
  */
-void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface* iface, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
 {
     // handle invalid arguments
     if (iPlr < 0 || iTpe < 0)
@@ -208,7 +208,7 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cGameInterface*
     Logger::info(COMP_UNITS, "cReinforcements", "REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}", iTpe, iPlr, iStartCell, iCll);
 
     // STEP 2: create carryall
-    int iUnit = cUnits::unitCreate(objects, infos, iface, iStartCell, CARRYALL, iPlr, true, isReinforcement);
+    int iUnit = cUnits::unitCreate(objects, infos, eventEmitter, iStartCell, CARRYALL, iPlr, true, isReinforcement);
     if (iUnit < 0) {
         // cannot create carry-all!
         Logger::error(COMP_UNITS, "cReinforcements", "Cannot create CARRYALL unit");

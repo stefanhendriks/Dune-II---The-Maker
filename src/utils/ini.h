@@ -30,6 +30,7 @@ class cGameSettings;
 class cGameObjectContext;
 class cInfoContext;
 class cGameInterface;
+class cEventEmitter;
 class cGameConditionChecker;
 struct sGameServices;
 
@@ -56,6 +57,7 @@ private:
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
     cGameInterface* m_interface = nullptr;
+    cEventEmitter* m_eventEmitter = nullptr;
     sGameServices* m_services = nullptr;
     cGameConditionChecker* m_gameConditionChecker = nullptr;
 };

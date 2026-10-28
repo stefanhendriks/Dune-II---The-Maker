@@ -16,7 +16,7 @@
 #include "cMouseDeployState.h"
 
 #include "data/gfxdata.h"
-#include "game/cGameInterface.h"
+#include "game/cEventEmitter.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/players/cPlayer.h"
 #include "sidebar/cSideBar.h"
@@ -80,7 +80,7 @@ void cMouseDeployState::onMouseLeftButtonClicked()
             .playerID = m_player->getId()
         }
     };
-    m_context->getInterface()->onNotifyGameEvent(event);
+    m_context->getEventEmitter()->emit(event);
 }
 
 void cMouseDeployState::onMouseRightButtonPressed()

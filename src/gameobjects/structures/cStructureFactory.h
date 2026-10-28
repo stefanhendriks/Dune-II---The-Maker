@@ -20,7 +20,6 @@
 class cGameObjectContext;
 class cInfoContext;
 class cMapCamera;
-class cGameInterface;
 class cGameSettings;
 class cStructureUtils;
 class cEventEmitter;
@@ -64,7 +63,6 @@ private:
     cGameObjectContext *m_objects = nullptr;
     cInfoContext *m_info = nullptr;
     cMapCamera *m_mapCamera = nullptr;
-    cGameInterface *m_interface = nullptr;
     cGameSettings *m_settings = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cEventEmitter *m_eventEmitter = nullptr;

@@ -25,7 +25,6 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "include/sGameServices.h"
-#include "game/cGameInterface.h"
 #include "utils/cStructureUtils.h"
 #include "utils/Log.h"
 #include "context/GameContext.hpp"
@@ -75,7 +74,7 @@ void cGameControlsContext::serviceInit(sGameServices *services)
     m_mapCamera = services->mapCamera;
     m_settings = services->settings;
     m_drawManager = services->drawManager;
-    m_interface = services->ctx->getGameInterface();
+    m_eventEmitter = services->eventEmitter;
     m_structureUtils = services->structureUtils;
     m_infos = services->info;
     m_audioContext = services->ctx->getAudioContext();
