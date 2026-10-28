@@ -19,7 +19,6 @@
 #include "gameobjects/particles/cParticles.h"
 #include "gameobjects/structures/cStructures.h"
 #include "game/cGameSettings.h"
-#include "game/cGameInterface.h"
 #include "include/sGameServices.h"
 #include "include/enums/BuildEnums.h"
 #include "gameobjects/map/cMap.h"

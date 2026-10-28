@@ -25,7 +25,6 @@
 class cTimeManager;
 class AudioContext;
 class SDLDrawer;
-class cGameInterface;
 class cLog;
 
 class GameContext {
@@ -48,8 +47,6 @@ public:
     void setSDLDrawer(std::unique_ptr<SDLDrawer> SDLDrawer);
     SDLDrawer* getSDLDrawer() const;
 
-    void setGameInterface(std::unique_ptr<cGameInterface> gameInterface);
-    cGameInterface* getGameInterface() const;
 
     void resetCache() const;
 private:
@@ -58,5 +55,4 @@ private:
     std::unique_ptr<AudioContext> m_audioContext;
     std::unique_ptr<TextContext> m_textContext;
     std::unique_ptr<SDLDrawer> m_SDLDrawer;
-    std::unique_ptr<cGameInterface> m_gameInterface;
 };

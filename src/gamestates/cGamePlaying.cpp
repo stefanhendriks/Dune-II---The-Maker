@@ -38,6 +38,7 @@
 #include "game/GameStateTransition.hpp"
 #include "game/ScenarioFlow.hpp"
 #include "game/MissionFlow.hpp"
+#include "game/cTimeManager.h"
 #include "game/cScreenFader.h"
 #include "game/cScreenShake.h"
 #include "game/cEventEmitter.h"

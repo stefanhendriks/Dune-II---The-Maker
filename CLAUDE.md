@@ -144,7 +144,7 @@ State transitions go through `cGame::setNextStateToTransitionTo()` + `initiateFa
 
 ### GameContext — Dependency Container
 
-`src/context/GameContext.hpp` aggregates shared services passed to states and drawers: `GraphicsContext`, `TextContext`, `cTimeManager`, `AudioContext`, `SDLDrawer` (and, for now, `cGameInterface`). States receive a `GameContext*` and use it instead of reaching into globals.
+`src/context/GameContext.hpp` aggregates shared services passed to states and drawers: `GraphicsContext`, `TextContext`, `cTimeManager`, `AudioContext`, `SDLDrawer`. States receive a `GameContext*` and use it instead of reaching into globals.
 
 This is part of an active, ongoing migration — see `.claude/rules/architecture-direction.md` for the current direction (removing `cGameInterface`, the `sGameServices` caching pattern, construction-order safety, and narrow `*Context` service classes).
 

@@ -40,7 +40,6 @@
 #include "context/GameContext.hpp"
 #include "context/AudioContext.hpp"
 #include "include/sGameServices.h"
-#include "game/cGameInterface.h"
 #include "game/cScreenShake.h"
 #include "game/cEventEmitter.h"
 #include "gameobjects/map/cMap.h"

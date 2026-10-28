@@ -36,7 +36,6 @@ set(D2TM_SOURCES
     drawers/SDLDrawer.cpp
     game/cGame_logic.cpp
     game/cGameConditionChecker.cpp
-    game/cGameInterface.cpp
     game/CampaignProgress.cpp
     game/cMissionStatsCollector.cpp
     game/cNotificationArea.cpp
