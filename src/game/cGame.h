@@ -185,7 +185,6 @@ public:
 
     s_DataCampaign* getDataCampaign() const;
 
-
     void drawTextFps() const;
     void drawTextTime() const;
     void checkMissionWinOrFail();
