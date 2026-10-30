@@ -32,6 +32,7 @@
 #include "game/VideoFlow.hpp"
 
 #include <SDL3/SDL.h>
+#include <filesystem>
 #include <format>
 #include "include/cAssert.h"
 
@@ -199,15 +200,18 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     // INTRODUCTION
     int introY = hofY+heightBetweenButton;
     const cRectangle &intro = cRectangle(buttonsX, introY, buttonWidth, buttonHeight);
+    const std::string introMoviePack = "intro.pak";
+    const bool hasIntroMoviePack = std::filesystem::exists(introMoviePack);
     auto gui_btn_Intro = GuiButtonBuilder()
             .withRect(intro)
             .withLabel("Introduction")
             .withTextDrawer(m_textDrawer)
             .withRenderer(m_sdlDrawer)
-            .withTheme(cGuiThemeBuilder().light().build())
+            .withTheme(hasIntroMoviePack ? cGuiThemeBuilder().light().build() : cGuiThemeBuilder().inactive().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_videoFlow->play("intro.pak");})
+            .onClick([this, introMoviePack](){m_videoFlow->play(introMoviePack);})
             .build();
+    gui_btn_Intro->setEnabled(hasIntroMoviePack);
     gui_window->addGuiObject(std::move(gui_btn_Intro));
 
     // EXIT
