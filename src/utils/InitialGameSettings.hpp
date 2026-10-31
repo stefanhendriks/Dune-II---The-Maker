@@ -31,6 +31,7 @@ struct InitialGameSettings {
     bool rocketTurretsDownOnLowPower = false;
     bool playMusic = true;
     bool playSound = true;
+    bool playCreditsSound = true;
     bool debugMode = false;
     bool drawUnitDebug = false;
     bool disableAI = false;
