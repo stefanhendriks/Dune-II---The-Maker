@@ -125,13 +125,17 @@ jobs:
           sudo apt-get install -y lcov
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DD2TM_COVERAGE=ON
-      - name: Build tests
-        run: cmake --build build --target d2tm_tests -j4
+      - name: Build tests and game
+        run: cmake --build build --target d2tm_tests d2tm -j4
+      - name: Zero baseline
+        # counts every src/ line of the game as 0 hits, so files without tests lower the percentage
+        run: lcov --capture --initial --directory build --output-file baseline.info --ignore-errors mismatch,gcov,source
       - name: Test
         run: ctest --test-dir build --output-on-failure -E '^seedgen'
       - name: Collect coverage
         run: |
-          lcov --capture --directory build --output-file coverage.info --ignore-errors mismatch,gcov,source
+          lcov --capture --directory build --output-file tests.info --ignore-errors mismatch,gcov,source
+          lcov --add-tracefile baseline.info --add-tracefile tests.info --output-file coverage.info --ignore-errors mismatch,source
           lcov --extract coverage.info "$GITHUB_WORKSPACE/src/*" --output-file coverage-src.info --ignore-errors unused
           genhtml coverage-src.info --output-directory coverage-html --ignore-errors source
           lcov --summary coverage-src.info 2>&1 | grep -E "lines|functions" | sed 's/^ *//' > coverage-summary.txt
@@ -147,7 +151,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           {
-            echo "### Unit test coverage (src/)"
+            echo "### Unit test coverage (all of src/)"
             echo '```'
             cat coverage-summary.txt
             echo '```'

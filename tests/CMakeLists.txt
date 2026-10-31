@@ -66,8 +66,8 @@ if(APPLE)
 endif()
 
 # Opt-in coverage instrumentation (GCC/gcov) for the unit tests: `cmake .. -DD2TM_COVERAGE=ON`.
-# Only d2tm_tests is instrumented (not the seedgen tests). CI: the COVERAGE job in .github/workflows/build_pr.yml.
-option(D2TM_COVERAGE "Instrument d2tm_tests with --coverage (gcov)" OFF)
+# d2tm_tests and the game itself (root CMakeLists.txt, for the zero baseline) are instrumented, not the seedgen tests. CI: the COVERAGE job in .github/workflows/build_pr.yml.
+option(D2TM_COVERAGE "Instrument d2tm_tests and the game with --coverage (gcov)" OFF)
 if(D2TM_COVERAGE)
     target_compile_options(d2tm_tests PRIVATE --coverage -O0 -g)
     target_link_options(d2tm_tests PRIVATE --coverage)
