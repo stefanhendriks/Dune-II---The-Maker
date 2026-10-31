@@ -100,19 +100,7 @@ int cUnits::findAvailableSlot() const {
             return i;
         }
     }
-    Logger::warn( eLogComponent::COMP_UNITS , "findAvailableSlot", "No avariable slot");
     return -1; // No available slot
-}
-
-bool cUnits::hasFreeSlots(int amount) const {
-    int free = 0;
-    for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
-        if (m_units[i].isValid()) continue;
-        if (++free >= amount) {
-            return true;
-        }
-    }
-    return amount <= 0;
 }
 
 int cUnits::getValidUnitsCount() const {

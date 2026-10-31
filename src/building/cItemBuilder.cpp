@@ -197,7 +197,7 @@ void cItemBuilder::thinkFast()
         }
 
         // Done building a unit, but no slot to deploy it: keep it at 100% (credits are already paid) and retry next tick
-        if (item->getBuildType() == UNIT && !m_services->objects->getUnits()->hasFreeSlots(1)) {
+        if (item->getBuildType() == UNIT && m_services->objects->getUnits()->isUnitLimitReached()) {
             if (!item->isWaitingForUnitSlot()) {
                 item->setWaitingForUnitSlot(true);
                 if (m_player->isHuman()) {
