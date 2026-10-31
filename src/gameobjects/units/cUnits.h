@@ -94,23 +94,16 @@ public:
     static constexpr int size() { return TOTAL_SLOTS; }
 
     /**
-     * Find the first available (invalid) unit slot
+     * Find the first available (invalid) unit slot (the carry-all reserve is not considered)
      * @return Index of available unit, or -1 if none available
      */
     int findAvailableSlot() const;
 
     /**
-     * Are at least `amount` unit slots free? (the carry-all reserve is not counted)
-     * @param amount Number of slots needed
-     * @return true when enough slots are free
-     */
-    bool hasFreeSlots(int amount) const;
-
-    /**
      * All unit slots are in use, so no new unit can be created
      * @return true when no slot is free
      */
-    bool isUnitLimitReached() const { return !hasFreeSlots(1); }
+    bool isUnitLimitReached() const { return findAvailableSlot() < 0; }
 
     /**
      * Count valid units
