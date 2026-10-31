@@ -1470,6 +1470,9 @@ int cPlayerBrainSkirmish::getStructureToBuild() const
         case STRUCTURE_LIMIT_REACHED:
             // no structure slot left, wait until one frees up
             return -1;
+        case UNIT_LIMIT_REACHED:
+            // only returned for units, never for structures
+            return -1;
     }
 
     return structureIWantToBuild;

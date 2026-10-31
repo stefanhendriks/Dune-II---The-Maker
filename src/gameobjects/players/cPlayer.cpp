@@ -1419,6 +1419,11 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType, bool checkIfAffordable)
         return eCantBuildReason::REQUIRES_UPGRADE;
     }
 
+    if (m_objects->getUnits()->isUnitLimitReached()) {
+        log("canBuildUnit: FALSE, reason UNIT_LIMIT_REACHED");
+        return eCantBuildReason::UNIT_LIMIT_REACHED;
+    }
+
     log("canBuildUnit: ALLOWED");
 
     return eCantBuildReason::NONE;
@@ -1465,7 +1470,9 @@ eCantBuildReason cPlayer::canBuildUnit(int iUnitType)
 
 bool cPlayer::canBuildUnitBool(int iUnitType)
 {
-    return canBuildUnit(iUnitType, false) == eCantBuildReason::NONE;
+    // a full unit pool is temporary: the unit can be built (it waits for a free slot), so AI planning is not affected
+    eCantBuildReason reason = canBuildUnit(iUnitType, false);
+    return reason == eCantBuildReason::NONE || reason == eCantBuildReason::UNIT_LIMIT_REACHED;
 }
 
 int cPlayer::findRandomUnitTarget(int playerIndexToAttack)

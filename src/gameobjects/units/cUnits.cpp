@@ -43,7 +43,7 @@ void cUnits::serviceInit(sGameServices* services)
     d2tm_assert(m_map != nullptr);
 
     d2tm_assert(services != nullptr);
-    for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
+    for (int i = 0; i < TOTAL_SLOTS; i++) {
         m_units[i].serviceInit(services);
     }
 }
@@ -51,40 +51,40 @@ void cUnits::serviceInit(sGameServices* services)
 
 cUnit* cUnits::operator[](int index)
 {
-    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+    if (index < 0 || index >= TOTAL_SLOTS) {
         Logger::fatal( eLogComponent::COMP_UNITS , "operator[]", "Unit index {} is out of range", index);
     }
-    d2tm_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
+    d2tm_assert(index >= 0 && index < TOTAL_SLOTS && "Invalid unit index");
     return &m_units[index];
 }
 
 const cUnit* cUnits::operator[](int index) const
 {
-    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+    if (index < 0 || index >= TOTAL_SLOTS) {
         Logger::fatal( eLogComponent::COMP_UNITS , "operator[] const", "Unit index {} is out of range", index);
     }
-    d2tm_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit index");
+    d2tm_assert(index >= 0 && index < TOTAL_SLOTS && "Invalid unit index");
     return &m_units[index];
 }
 
 cUnit* cUnits::getUnit(int index)
 {
-    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+    if (index < 0 || index >= TOTAL_SLOTS) {
         Logger::fatal( eLogComponent::COMP_UNITS , "getUnit", "Unit index {} is out of range", index);
     }
-    d2tm_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
-    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+    d2tm_assert(index >= 0 && index < TOTAL_SLOTS && "Invalid unit* index");
+    if (index < 0 || index >= TOTAL_SLOTS) {
         return nullptr;
     }
     return &m_units[index];
 }
 
 const cUnit* cUnits::getUnit(int index) const {
-    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+    if (index < 0 || index >= TOTAL_SLOTS) {
         Logger::fatal( eLogComponent::COMP_UNITS , "getUnit const", "Unit index {} is out of range", index);
     }
-    d2tm_assert(index >= 0 && index < MAX_UNITS_CAPACITY && "Invalid unit* index");
-    if (index < 0 || index >= MAX_UNITS_CAPACITY) {
+    d2tm_assert(index >= 0 && index < TOTAL_SLOTS && "Invalid unit* index");
+    if (index < 0 || index >= TOTAL_SLOTS) {
         return nullptr;
     }
     return &m_units[index];
@@ -100,13 +100,12 @@ int cUnits::findAvailableSlot() const {
             return i;
         }
     }
-    Logger::warn( eLogComponent::COMP_UNITS , "findAvailableSlot", "No avariable slot");
     return -1; // No available slot
 }
 
 int cUnits::getValidUnitsCount() const {
     int count = 0;
-    for (int i = 0; i < MAX_UNITS_CAPACITY; i++) {
+    for (int i = 0; i < TOTAL_SLOTS; i++) {
         if (m_units[i].isValid()) {
             count++;
         }
@@ -114,9 +113,16 @@ int cUnits::getValidUnitsCount() const {
     return count;
 }
 
-static int unitNewID(cGameObjectContext *objects)
+static int unitNewID(cGameObjectContext *objects, bool useCarryAllReserve)
 {
-    for (int i = 0; i < objects->getUnits()->size(); i++)
+    // spawned carry-alls take a slot from the reserve first
+    if (useCarryAllReserve) {
+        for (int i = cUnits::MAX_UNITS_CAPACITY; i < cUnits::TOTAL_SLOTS; i++)
+            if (!objects->getUnit(i)->isValid())
+                return i;
+    }
+
+    for (int i = 0; i < cUnits::MAX_UNITS_CAPACITY; i++)
         if (!objects->getUnit(i)->isValid())
             return i;
 
@@ -128,7 +134,7 @@ static int unitNewID(cGameObjectContext *objects)
 //     return unitCreate(iCll, unitType, iPlayer, bOnStart, false);
 // }
 
-int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage) {
+int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage, bool useCarryAllReserve) {
     if (!objects->getMapGeometry()->isValidCell(iCll)) {
         Logger::warn(COMP_UNITS, "cUnits::unitCreate", "Invalid cell as param");
         return -1;
@@ -166,7 +172,7 @@ int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventE
         return -1;
     }
 
-    int iNewId = unitNewID(objects);
+    int iNewId = unitNewID(objects, useCarryAllReserve);
 
     if (iNewId < 0) {
         Logger::warn(COMP_UNITS, "cUnits::unitCreate", "Could not find new unit index");

@@ -208,7 +208,7 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* 
     Logger::info(COMP_UNITS, "cReinforcements", "REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}", iTpe, iPlr, iStartCell, iCll);
 
     // STEP 2: create carryall
-    int iUnit = cUnits::unitCreate(objects, infos, eventEmitter, iStartCell, CARRYALL, iPlr, true, isReinforcement);
+    int iUnit = cUnits::unitCreate(objects, infos, eventEmitter, iStartCell, CARRYALL, iPlr, true, isReinforcement, 1.0f, true);
     if (iUnit < 0) {
         // cannot create carry-all!
         Logger::error(COMP_UNITS, "cReinforcements", "Cannot create CARRYALL unit");

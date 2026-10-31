@@ -66,22 +66,44 @@ public:
     bool isValidUnit(int index) const;
 
     /**
-     * Get the capacity (maximum number of units)
+     * Maximum number of units that can be in the game (the unit limit)
+     */
+    static constexpr int MAX_UNITS_CAPACITY = 300;
+
+    /**
+     * Extra slots on top of the unit limit, used only by carry-alls that are spawned to deliver a unit. This way
+     * a delivery never competes with regular units for a slot.
+     */
+    static constexpr int CARRYALL_RESERVE = 10;
+
+    /**
+     * Size of the unit array: the unit limit plus the carry-all reserve
+     */
+    static constexpr int TOTAL_SLOTS = MAX_UNITS_CAPACITY + CARRYALL_RESERVE;
+
+    /**
+     * Get the capacity (size of the unit array, including the carry-all reserve)
      * @return The capacity
      */
-    static constexpr int capacity() { return MAX_UNITS_CAPACITY; }
+    static constexpr int capacity() { return TOTAL_SLOTS; }
 
     /**
      * Get the number of units available (returns capacity)
      * @return The size
      */
-    static constexpr int size() { return MAX_UNITS_CAPACITY; }
+    static constexpr int size() { return TOTAL_SLOTS; }
 
     /**
-     * Find the first available (invalid) unit slot
+     * Find the first available (invalid) unit slot (the carry-all reserve is not considered)
      * @return Index of available unit, or -1 if none available
      */
     int findAvailableSlot() const;
+
+    /**
+     * All unit slots are in use, so no new unit can be created
+     * @return true when no slot is free
+     */
+    bool isUnitLimitReached() const { return findAvailableSlot() < 0; }
 
     /**
      * Count valid units
@@ -137,16 +159,15 @@ public:
      * @param bOnStart
      * @param hpPercentage multiplies with hp of unit type for starting hp. 1.0 means 100% health
      * @param isReinforement flag to set on event
+     * @param useCarryAllReserve when true, the unit is placed in the carry-all reserve slots first (for spawned carry-alls)
      * @return
      */
-    static int unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage = 1.0f);
+    static int unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage = 1.0f, bool useCarryAllReserve = false);
 
 
 private:
     cInfoContext *m_infos = nullptr;
     cGameObjectContext *m_objects = nullptr;
     cMap* m_map = nullptr;
-    // Maximum number of units
-    static constexpr int MAX_UNITS_CAPACITY = 300;
-    std::array<cUnit, MAX_UNITS_CAPACITY> m_units;
+    std::array<cUnit, TOTAL_SLOTS> m_units;
 };

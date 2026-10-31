@@ -18,6 +18,7 @@
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
 #include "game/cEventEmitter.h"
+#include "managers/cDrawManager.h"
 #include "context/AudioContext.hpp"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/structures/cAbstractStructure.h"
@@ -194,6 +195,18 @@ void cItemBuilder::thinkFast()
         if (item->getBuildProgressFrame() < 31) {
             continue; // wait
         }
+
+        // Done building a unit, but no slot to deploy it: keep it at 100% (credits are already paid) and retry next tick
+        if (item->getBuildType() == UNIT && m_services->objects->getUnits()->isUnitLimitReached()) {
+            if (!item->isWaitingForUnitSlot()) {
+                item->setWaitingForUnitSlot(true);
+                if (m_player->isHuman()) {
+                    m_services->drawManager->setMessage("Unable to create more.");
+                }
+            }
+            continue;
+        }
+        item->setWaitingForUnitSlot(false);
 
         // DONE building
         itemIsDoneBuildingLogic(item);
