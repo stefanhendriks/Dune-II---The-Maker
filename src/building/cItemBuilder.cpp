@@ -197,7 +197,7 @@ void cItemBuilder::thinkFast()
         }
 
         // Done building a unit, but no slot to deploy it: keep it at 100% (credits are already paid) and retry next tick
-        if (item->getBuildType() == UNIT && !m_services->objects->getUnits()->hasFreeSlots(unitSlotsNeededToDeploy(item))) {
+        if (item->getBuildType() == UNIT && !m_services->objects->getUnits()->hasFreeSlots(1)) {
             if (!item->isWaitingForUnitSlot()) {
                 item->setWaitingForUnitSlot(true);
                 if (m_player->isHuman()) {
@@ -424,19 +424,6 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
             //            list->removeItemFromList(item->getSlotId()); // no need to explicitly remove from list, will be done by onUpgradeCompleted
         }
     }
-}
-
-/**
- * How many unit slots are needed to deploy the finished item: 1 when it leaves the structure directly, 2 when it
- * has to be delivered by a carry-all (which needs a slot itself).
- */
-int cItemBuilder::unitSlotsNeededToDeploy(cBuildingListItem *item) const
-{
-    if (item->getUnitInfo().airborn) return 1;
-
-    int structureTypeByItem = m_services->structureUtils->findStructureTypeByTypeOfList(item);
-    int structureToDeployUnit = m_services->structureUtils->findStructureToDeployUnit(m_player, structureTypeByItem);
-    return structureToDeployUnit > -1 ? 1 : 2;
 }
 
 /**

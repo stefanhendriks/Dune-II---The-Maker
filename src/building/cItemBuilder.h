@@ -96,8 +96,6 @@ private:
 
     void deployUnit(cBuildingListItem *item, int buildId) const;
 
-    int unitSlotsNeededToDeploy(cBuildingListItem *item) const;
-
     void itemIsDoneBuildingLogic(cBuildingListItem *item);
 
     void onKeyHold(const cKeyboardEvent &event);
