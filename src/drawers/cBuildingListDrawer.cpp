@@ -232,6 +232,11 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
                     m_sdlDrawer->renderSprite(m_gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
                 }
             }
+
+            // units being built (or queued) while no unit slot is left: they can only wait
+            if (unitLimitReached && item->isTypeUnit()) {
+                drawMaxBuilt(iDrawX, iDrawY, withOfIcon, heightOfIcon);
+            }
         }
         else {   // not building
             // this item is not being built. So we do not draw a progress indicator.
@@ -282,15 +287,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
                         m_smallTextDrawer->drawTextCenteredInBox("progress", iDrawX, iDrawY + (height * 2), withOfIcon, height, Color::Red);
                     }
                 } else {
-                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
-                    Color errorFadingColor = m_player->getErrorFadingColor();
-                    m_sdlDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
-                    m_sdlDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
-                    m_sdlDrawer->renderLine( iDrawX, iDrawY + heightOfIcon, iDrawX + withOfIcon, iDrawY, errorFadingColor);
-
-                    int height = heightOfIcon / 2;
-                    m_smallTextDrawer->drawTextCenteredInBox("Max", iDrawX, iDrawY, withOfIcon, height, Color::Red);
-                    m_smallTextDrawer->drawTextCenteredInBox("built", iDrawX, iDrawY + height, withOfIcon, height, Color::Red);
+                    drawMaxBuilt(iDrawX, iDrawY, withOfIcon, heightOfIcon);
                 }
             }
 
@@ -372,6 +369,22 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
             iDrawY+=50;
         }
     }
+}
+
+/**
+ * Draws the red cross with "Max built" over an icon, when its item can not be built because a limit is reached.
+ */
+void cBuildingListDrawer::drawMaxBuilt(int x, int y, int width, int height)
+{
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), x, y, 64);
+    Color errorFadingColor = m_player->getErrorFadingColor();
+    m_sdlDrawer->renderRectColor(x, y, width, height, errorFadingColor);
+    m_sdlDrawer->renderLine(x, y, x + width, y + height, errorFadingColor);
+    m_sdlDrawer->renderLine(x, y + height, x + width, y, errorFadingColor);
+
+    int halfHeight = height / 2;
+    m_smallTextDrawer->drawTextCenteredInBox("Max", x, y, width, halfHeight, Color::Red);
+    m_smallTextDrawer->drawTextCenteredInBox("built", x, y + halfHeight, width, halfHeight, Color::Red);
 }
 
 /**

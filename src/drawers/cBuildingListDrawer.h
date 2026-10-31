@@ -68,6 +68,7 @@ private:
     bool m_renderListIds;
 
     void drawStructureSize(int structureId, int x, int y);
+    void drawMaxBuilt(int x, int y, int width, int height);
     void drawList(cBuildingList *list, bool shouldDrawStructureSize);
     void drawListWithStructures(cBuildingList *list);		// used for const yard
     void drawListWithUnitsOrAbilities(cBuildingList *list); // used for units or palace / starport
