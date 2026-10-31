@@ -103,6 +103,13 @@ endif()
 
 add_executable(${PROJECT_NAME} ${D2TM_SRC} ${D2TM_PLATFORM_SOURCES})
 
+# Coverage report (see tests/CMakeLists.txt): compile the game with --coverage too, so lcov can build a zero
+# baseline over all of src/ and the percentage is not limited to the files the unit tests happen to compile.
+if(D2TM_COVERAGE)
+    target_compile_options(${PROJECT_NAME} PRIVATE --coverage -O0 -g)
+    target_link_options(${PROJECT_NAME} PRIVATE --coverage)
+endif()
+
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
