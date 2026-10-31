@@ -295,7 +295,8 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const DamagedEvent &event)
         }
     }
 
-    int unitIdThatAttacks = event.originId;
+    // originId is only a unit id when the attacker is a unit (it is a structure id for turrets)
+    int unitIdThatAttacks = event.originType == eBuildType::UNIT ? event.originId : -1;
     if (unitIdThatAttacks > -1) {
         // respond to something that attacks us
         cUnit *originUnit = m_objects->getUnit(unitIdThatAttacks);
