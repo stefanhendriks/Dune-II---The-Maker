@@ -14,7 +14,7 @@
  */
 
 #include "HarkonnenMentat.h"
-#include "data/gfxmentat.h"
+#include "include/gfxmentat.h"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"
