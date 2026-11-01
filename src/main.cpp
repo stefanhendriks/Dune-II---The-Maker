@@ -54,6 +54,10 @@ int main(int argc, char **argv)
 #endif
     std::unique_ptr<cLog> m_log = std::make_unique<cLog>("nlog.txt");
     Logger::init(m_log.get());
+    // m_log is destroyed when main returns, make sure the crash handlers never write through a dangling pointer
+    struct LoggerReset {
+        ~LoggerReset() { Logger::init(nullptr); }
+    } loggerReset;
     CrashHandler::install();
     Logger::info(COMP_NONE, "main", "=== Dune II - The Maker ===");
     Logger::info(COMP_VERSION, "main", "=== Version information ===");
