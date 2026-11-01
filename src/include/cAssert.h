@@ -25,6 +25,8 @@
 #include <source_location>
 #include <cstdlib>
 
+#include "utils/Log.h"
+
 inline void d2tm_assert(
     bool condition, 
     std::source_location location = std::source_location::current()) noexcept
@@ -60,6 +62,9 @@ inline void d2tm_assert(
     const std::string report_str = report.str();
     std::cerr << "\n" << report_str << std::endl;
     std::cerr.flush();
+
+    // also into nlog.txt (fatal flushes the file), so the cause of a crash is not split over two places
+    Logger::fatal(COMP_NONE, "assert", "{}", report_str);
 
     if (std::ofstream file{"dump.log", std::ios::app}) {
         file << report_str << "\n";
