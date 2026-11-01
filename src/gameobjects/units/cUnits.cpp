@@ -113,18 +113,18 @@ int cUnits::getValidUnitsCount() const {
     return count;
 }
 
-static int unitNewID(cGameObjectContext *objects, bool useCarryAllReserve)
+static int unitNewID(cGameObjectContext *objects, bool canUseCarryAllReserve)
 {
-    // spawned carry-alls take a slot from the reserve first
-    if (useCarryAllReserve) {
+    // regular slots first, a spawned carry-all falls back to the reserve only when they are all taken
+    for (int i = 0; i < cUnits::MAX_UNITS_CAPACITY; i++)
+        if (!objects->getUnit(i)->isValid())
+            return i;
+
+    if (canUseCarryAllReserve) {
         for (int i = cUnits::MAX_UNITS_CAPACITY; i < cUnits::TOTAL_SLOTS; i++)
             if (!objects->getUnit(i)->isValid())
                 return i;
     }
-
-    for (int i = 0; i < cUnits::MAX_UNITS_CAPACITY; i++)
-        if (!objects->getUnit(i)->isValid())
-            return i;
 
     return -1; // NONE
 }
@@ -134,7 +134,7 @@ static int unitNewID(cGameObjectContext *objects, bool useCarryAllReserve)
 //     return unitCreate(iCll, unitType, iPlayer, bOnStart, false);
 // }
 
-int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage, bool useCarryAllReserve) {
+int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement, float hpPercentage, bool canUseCarryAllReserve) {
     if (!objects->getMapGeometry()->isValidCell(iCll)) {
         Logger::warn(COMP_UNITS, "cUnits::unitCreate", "Invalid cell as param");
         return -1;
@@ -172,7 +172,7 @@ int cUnits::unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventE
         return -1;
     }
 
-    int iNewId = unitNewID(objects, useCarryAllReserve);
+    int iNewId = unitNewID(objects, canUseCarryAllReserve);
 
     if (iNewId < 0) {
         Logger::warn(COMP_UNITS, "cUnits::unitCreate", "Could not find new unit index");
