@@ -115,16 +115,24 @@ int cUnits::getValidUnitsCount() const {
 
 static int unitNewID(cGameObjectContext *objects, bool canUseCarryAllReserve)
 {
-    // regular slots first, a spawned carry-all falls back to the reserve only when they are all taken
+    // a spawn that may use the carry-all reserve takes it once the regular slots are 90% used (or more)
+    if (canUseCarryAllReserve) {
+        int used = 0;
+        for (int i = 0; i < cUnits::MAX_UNITS_CAPACITY; i++)
+            if (objects->getUnit(i)->isValid())
+                used++;
+
+        if (used >= cUnits::MAX_UNITS_CAPACITY * 9 / 10) {
+            for (int i = cUnits::MAX_UNITS_CAPACITY; i < cUnits::TOTAL_SLOTS; i++)
+                if (!objects->getUnit(i)->isValid())
+                    return i;
+        }
+    }
+
+    // regular slots (also the fallback when the reserve is full)
     for (int i = 0; i < cUnits::MAX_UNITS_CAPACITY; i++)
         if (!objects->getUnit(i)->isValid())
             return i;
-
-    if (canUseCarryAllReserve) {
-        for (int i = cUnits::MAX_UNITS_CAPACITY; i < cUnits::TOTAL_SLOTS; i++)
-            if (!objects->getUnit(i)->isValid())
-                return i;
-    }
 
     return -1; // NONE
 }
