@@ -71,10 +71,10 @@ public:
     static constexpr int MAX_UNITS_CAPACITY = 300;
 
     /**
-     * Extra slots on top of the unit limit, used only by carry-alls that are spawned to deliver a unit. This way
-     * a delivery never competes with regular units for a slot.
+     * Extra slots on top of the unit limit (5% of it), used by carry-alls that are spawned to deliver a unit, but
+     * only when the regular slots are all taken. The pool is shared by all players.
      */
-    static constexpr int CARRYALL_RESERVE = 10;
+    static constexpr int CARRYALL_RESERVE = MAX_UNITS_CAPACITY / 20;
 
     /**
      * Size of the unit array: the unit limit plus the carry-all reserve
@@ -159,10 +159,10 @@ public:
      * @param bOnStart
      * @param hpPercentage multiplies with hp of unit type for starting hp. 1.0 means 100% health
      * @param isReinforement flag to set on event
-     * @param useCarryAllReserve when true, the unit is placed in the carry-all reserve slots first (for spawned carry-alls)
+     * @param canUseCarryAllReserve when true, the unit may use the carry-all reserve slots once the regular slots are all taken (for spawned carry-alls)
      * @return
      */
-    static int unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage = 1.0f, bool useCarryAllReserve = false);
+    static int unitCreate(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iCll, int unitType, int iPlayer, bool bOnStart, bool isReinforcement = false, float hpPercentage = 1.0f, bool canUseCarryAllReserve = false);
 
 
 private:
