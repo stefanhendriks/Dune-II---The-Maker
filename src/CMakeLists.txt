@@ -168,6 +168,7 @@ set(D2TM_SOURCES
     utils/Graphics.cpp
     utils/ini.cpp
     utils/IniParsing.cpp
+    utils/CrashHandler.cpp
     utils/Log.cpp
     utils/RNG.cpp
     utils/SfxTrackAllocator.cpp

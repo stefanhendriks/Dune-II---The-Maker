@@ -20,6 +20,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/cHandleArgument.h"
+#include "utils/CrashHandler.h"
 #include "utils/common.h"
 
 
@@ -53,6 +54,7 @@ int main(int argc, char **argv)
 #endif
     std::unique_ptr<cLog> m_log = std::make_unique<cLog>("nlog.txt");
     Logger::init(m_log.get());
+    CrashHandler::install();
     Logger::info(COMP_NONE, "main", "=== Dune II - The Maker ===");
     Logger::info(COMP_VERSION, "main", "=== Version information ===");
     Logger::info(COMP_VERSION, "Initializing", "Version {}, Compiled at {} , {}", D2TM_VERSION, __DATE__, __TIME__);
