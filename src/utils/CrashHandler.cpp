@@ -37,13 +37,14 @@ const char *signalName(int sig)
 // Best effort: logging is not async-signal-safe, but the process is dying anyway.
 void onFatalSignal(int sig)
 {
+    std::signal(sig, SIG_DFL); // if logging faults itself, die instead of re-entering
     Logger::fatal(COMP_NONE, "crash", "Fatal signal {}: {}", sig, signalName(sig));
-    std::signal(sig, SIG_DFL);
     std::raise(sig);
 }
 
 void onTerminate()
 {
+    std::set_terminate(nullptr); // if logging throws, do not re-enter
     if (auto eptr = std::current_exception()) {
         try {
             std::rethrow_exception(eptr);
