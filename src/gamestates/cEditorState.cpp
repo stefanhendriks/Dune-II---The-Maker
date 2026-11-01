@@ -32,7 +32,7 @@
 #include "game/GameStateTransition.hpp"
 #include "controls/cMouse.h"
 #include "gameobjects/map/cPreviewMaps.h"
-#include "data/gfxeditor.h"
+#include "include/gfxeditor.h"
 #include "include/sGameEvent.h"
 
 #include "include/cAssert.h"
