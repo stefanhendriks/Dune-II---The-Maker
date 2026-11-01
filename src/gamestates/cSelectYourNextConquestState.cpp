@@ -20,7 +20,7 @@
 #include "controls/cMouse.h"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
-#include "data/gfxworld.h"
+#include "include/gfxworld.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cMessageDrawer.h"
 #include "utils/ini.h"
