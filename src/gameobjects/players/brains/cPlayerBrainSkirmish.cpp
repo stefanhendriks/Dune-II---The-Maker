@@ -318,6 +318,7 @@ void cPlayerBrainSkirmish::onMyStructureAttacked(const DamagedEvent &event)
     if (unitIdThatAttacks > -1) {
         // respond to something that attacks us
         cUnit *originUnit = m_objects->getUnit(unitIdThatAttacks);
+        if (!originUnit->isValid()) return; // attacker died while its bullet was in flight
         if (originUnit->getPlayer()->isSameTeamAs(player)) {
             // friendly fire, ignore
             log(std::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
