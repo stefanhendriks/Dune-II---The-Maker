@@ -31,6 +31,18 @@ struct s_RememberedTerrain {
 };
 
 /**
+ * What the player remembers of a structure on one cell: the slice of the structure that
+ * covers the cell, as it looked when the cell dropped out of sight.
+ */
+struct s_RememberedStructure {
+    int type = 0;
+    int ownerId = 0;
+    int frame = 0;
+    int offsetX = 0; // cell offset within the structure (0,0 = top left cell)
+    int offsetY = 0;
+};
+
+/**
  * Per-cell memory of what was last seen, for one player. Pure data and rules
  * (no SDL, no game objects), so it can be unit tested.
  *
@@ -41,7 +53,7 @@ class FogMemory {
 public:
     FogMemory() = default;
 
-    explicit FogMemory(int maxCells) : m_cells(maxCells) {}
+    explicit FogMemory(int maxCells) : m_cells(maxCells), m_structures(maxCells) {}
 
     /**
      * Apply the rule for one cell after a fog of war update.
@@ -59,6 +71,30 @@ public:
     }
 
     /**
+     * Same rule as update(), for the structure on the cell (nullopt when there is none).
+     * A remembered structure is purely visual: it is not an object and can never be targeted.
+     */
+    void updateStructure(int cell, bool wasSeen, bool isSeen, const std::optional<s_RememberedStructure> &live)
+    {
+        if (cell < 0 || cell >= static_cast<int>(m_structures.size())) return;
+
+        if (isSeen) {
+            m_structures[cell].reset();
+        } else if (wasSeen) {
+            m_structures[cell] = live;
+        }
+    }
+
+    /**
+     * @return the remembered structure slice of this cell, or nullptr when none is remembered
+     */
+    [[nodiscard]] const s_RememberedStructure *getStructure(int cell) const
+    {
+        if (cell < 0 || cell >= static_cast<int>(m_structures.size())) return nullptr;
+        return m_structures[cell].has_value() ? &*m_structures[cell] : nullptr;
+    }
+
+    /**
      * @return what was remembered for this cell, or nullptr when nothing is (draw the live terrain)
      */
     [[nodiscard]] const s_RememberedTerrain *getTerrain(int cell) const
@@ -69,4 +105,5 @@ public:
 
 private:
     std::vector<std::optional<s_RememberedTerrain>> m_cells;
+    std::vector<std::optional<s_RememberedStructure>> m_structures;
 };
