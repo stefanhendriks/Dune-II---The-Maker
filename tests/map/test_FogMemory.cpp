@@ -144,6 +144,7 @@ static s_RememberedUnit tank(int type, int bodyIndex, int headIndex)
 {
     s_RememberedUnit u;
     u.type = type;
+    u.ownerId = 3;
     u.bodyIndex = bodyIndex;
     u.headIndex = headIndex;
     u.frame = 0;
@@ -158,6 +159,7 @@ TEST_CASE("FogMemory - unit on a cell dropping out of sight is remembered with h
     const s_RememberedUnit *remembered = memory.getUnit(3);
     REQUIRE(remembered != nullptr);
     REQUIRE(remembered->type == 9);
+    REQUIRE(remembered->ownerId == 3);
     REQUIRE(remembered->bodyIndex == 2);
     REQUIRE(remembered->headIndex == 5);
 }
