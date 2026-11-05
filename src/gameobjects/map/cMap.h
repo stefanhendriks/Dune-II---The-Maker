@@ -17,6 +17,7 @@
 
 #include "definitions.h"
 #include "gameobjects/map/cCell.h"
+#include "gameobjects/map/FogMemory.hpp"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "observers/cScenarioObserver.h"
 #include "sGameEvent.h"
@@ -338,6 +339,13 @@ public:
     [[nodiscard]] bool isSeen(int iCell, int iPlayer);
 
     /**
+     * What the player remembers of the terrain of a fogged cell (purely visual, never targetable).
+     * Only kept for the human player.
+     * @return nullptr when nothing is remembered: draw the live terrain then
+     */
+    [[nodiscard]] const s_RememberedTerrain *getRememberedTerrain(int iCell, int iPlayer) const;
+
+    /**
      * Is this unit hidden from the human player because it stands in the fog of war? Units of the
      * human player (and its allies) are never hidden.
      * @param pUnit
@@ -441,9 +449,11 @@ private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
     void updateFogOfWar();
+    void updateFogMemory(const std::vector<bool> &wasSeen);
     void markSeen(int cell, int size, int playerId);
 
     std::vector<tCell> m_cell;
+    FogMemory m_fogMemory;  // what the human player last saw of fogged cells
     GameContext *m_ctx = nullptr;
     cGameSettings *m_settings = nullptr;
     cInfoContext *m_infos = nullptr;

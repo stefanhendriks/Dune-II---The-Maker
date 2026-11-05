@@ -135,6 +135,7 @@ void cMap::init(int width, int height)
 
     m_mapGeometry->resize(width, height);
     m_cell = std::vector<tCell>(m_mapGeometry->getMaxCells(), tCell());
+    m_fogMemory = FogMemory(m_mapGeometry->getMaxCells());
 
     // clear out all cells
     clearAllCells();
@@ -384,7 +385,9 @@ void cMap::thinkSlow()
 
 void cMap::updateFogOfWar()
 {
+    std::vector<bool> wasSeen(m_mapGeometry->getMaxCells());
     for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
+        wasSeen[c] = m_cell[c].iSeen[HUMAN];
         memset(m_cell[c].iSeen, 0, sizeof(m_cell[c].iSeen));
     }
 
@@ -401,6 +404,27 @@ void cMap::updateFogOfWar()
 
         markSeen(pStructure->getCell(), pStructure->getSight(), pStructure->getOwner());
     }
+
+    updateFogMemory(wasSeen);
+}
+
+void cMap::updateFogMemory(const std::vector<bool> &wasSeen)
+{
+    for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
+        const tCell &cell = m_cell[c];
+        s_RememberedTerrain live;
+        live.type = cell.type;
+        live.tile = cell.tile;
+        live.smudgetile = cell.smudgetile;
+        live.smudgetype = cell.smudgetype;
+        m_fogMemory.update(c, wasSeen[c], cell.iSeen[HUMAN], live);
+    }
+}
+
+const s_RememberedTerrain *cMap::getRememberedTerrain(int iCell, int iPlayer) const
+{
+    if (iPlayer != HUMAN) return nullptr;
+    return m_fogMemory.getTerrain(iCell);
 }
 
 void cMap::markSeen(int cell, int size, int playerId)
