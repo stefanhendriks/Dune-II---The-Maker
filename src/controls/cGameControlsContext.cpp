@@ -129,7 +129,14 @@ void cGameControlsContext::determineHoveringOverStructureId()
         return; // cell not visible
     }
 
-    m_mouseHoveringOverStructureId = m_objects->getMap()->getCellIdStructuresLayer(m_mouseCell);
+    int structureId = m_objects->getMap()->getCellIdStructuresLayer(m_mouseCell);
+    if (structureId > -1) {
+        cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
+        if (pStructure && m_objects->getMap()->isHiddenByFogOfWar(pStructure)) {
+            return; // hidden in the fog of war, only a remembered (visual) structure is shown there
+        }
+    }
+    m_mouseHoveringOverStructureId = structureId;
 }
 
 void cGameControlsContext::determineHoveringOverUnitId()
