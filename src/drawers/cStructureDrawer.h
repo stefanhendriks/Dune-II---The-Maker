@@ -44,6 +44,7 @@ public:
 protected:
     void drawStructureHealthBar(int iStructure);
     void drawStructuresForLayer(int layer);
+    void drawRememberedStructures();
     void drawRectangleOfStructure(cAbstractStructure *theStructure, Color color);
     void drawStructurePrebuildAnimation(cAbstractStructure *structure);
     void drawStructureAnimation(cAbstractStructure *structure);
