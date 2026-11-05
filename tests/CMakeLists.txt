@@ -4,6 +4,7 @@ find_package(Catch2 3 REQUIRED)
 set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyBindings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/map/test_FogMemory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_cPreviewMapsSave.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cHandleArgument.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
