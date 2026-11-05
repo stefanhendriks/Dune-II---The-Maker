@@ -346,6 +346,13 @@ public:
     [[nodiscard]] const s_RememberedTerrain *getRememberedTerrain(int iCell, int iPlayer) const;
 
     /**
+     * The structure slice the player remembers on a fogged cell (purely visual, never targetable).
+     * Only kept for the human player.
+     * @return nullptr when no structure is remembered
+     */
+    [[nodiscard]] const s_RememberedStructure *getRememberedStructure(int iCell, int iPlayer) const;
+
+    /**
      * Is this unit hidden from the human player because it stands in the fog of war? Units of the
      * human player (and its allies) are never hidden.
      * @param pUnit
@@ -450,6 +457,7 @@ private:
 
     void updateFogOfWar();
     void updateFogMemory();
+    std::optional<s_RememberedStructure> describeStructureOnCell(int iCell);
     void markSeen(int cell, int size, int playerId);
 
     std::vector<tCell> m_cell;

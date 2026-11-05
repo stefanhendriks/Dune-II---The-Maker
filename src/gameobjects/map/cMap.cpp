@@ -420,13 +420,41 @@ void cMap::updateFogMemory()
         // cells default to 'seen', so only a discovered cell can really drop out of sight
         bool dropped = m_wasSeen[c] && cell.iVisible[HUMAN];
         m_fogMemory.update(c, dropped, cell.iSeen[HUMAN], live);
+        m_fogMemory.updateStructure(c, dropped, cell.iSeen[HUMAN], dropped ? describeStructureOnCell(c) : std::nullopt);
     }
+}
+
+std::optional<s_RememberedStructure> cMap::describeStructureOnCell(int iCell)
+{
+    int structureId = getCellIdStructuresLayer(iCell);
+    if (structureId < 0) return std::nullopt;
+
+    cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
+    if (!pStructure || !pStructure->isValid()) return std::nullopt;
+
+    // own and allied structures are never hidden by the fog, so nothing to remember
+    if (m_objects->getPlayer(HUMAN)->isSameTeamAs(pStructure->getPlayer())) return std::nullopt;
+
+    int structureCell = pStructure->getCell();
+    s_RememberedStructure remembered;
+    remembered.type = pStructure->getType();
+    remembered.ownerId = pStructure->getOwner();
+    remembered.frame = pStructure->getFrame();
+    remembered.offsetX = m_mapGeometry->getCellX(iCell) - m_mapGeometry->getCellX(structureCell);
+    remembered.offsetY = m_mapGeometry->getCellY(iCell) - m_mapGeometry->getCellY(structureCell);
+    return remembered;
 }
 
 const s_RememberedTerrain *cMap::getRememberedTerrain(int iCell, int iPlayer) const
 {
     if (iPlayer != HUMAN) return nullptr;
     return m_fogMemory.getTerrain(iCell);
+}
+
+const s_RememberedStructure *cMap::getRememberedStructure(int iCell, int iPlayer) const
+{
+    if (iPlayer != HUMAN) return nullptr;
+    return m_fogMemory.getStructure(iCell);
 }
 
 void cMap::markSeen(int cell, int size, int playerId)
