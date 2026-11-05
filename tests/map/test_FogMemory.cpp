@@ -77,3 +77,65 @@ TEST_CASE("FogMemory - out of range cells are ignored", "[map][fog]")
     REQUIRE(memory.getTerrain(-1) == nullptr);
     REQUIRE(memory.getTerrain(16) == nullptr);
 }
+
+static s_RememberedStructure structureSlice(int type, int offsetX, int offsetY)
+{
+    s_RememberedStructure s;
+    s.type = type;
+    s.ownerId = 2;
+    s.frame = 1;
+    s.offsetX = offsetX;
+    s.offsetY = offsetY;
+    return s;
+}
+
+TEST_CASE("FogMemory - structure on a cell dropping out of sight is remembered", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateStructure(3, true, false, structureSlice(7, 1, 0));
+
+    const s_RememberedStructure *remembered = memory.getStructure(3);
+    REQUIRE(remembered != nullptr);
+    REQUIRE(remembered->type == 7);
+    REQUIRE(remembered->ownerId == 2);
+    REQUIRE(remembered->frame == 1);
+    REQUIRE(remembered->offsetX == 1);
+    REQUIRE(remembered->offsetY == 0);
+}
+
+TEST_CASE("FogMemory - structure destroyed or built while fogged does not change the memory", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateStructure(3, true, false, structureSlice(7, 0, 0));
+    // destroyed while fogged: live has no structure anymore, memory stays
+    memory.updateStructure(3, false, false, std::nullopt);
+    REQUIRE(memory.getStructure(3) != nullptr);
+
+    // built while fogged on a cell without memory: nothing shows up
+    memory.updateStructure(4, false, false, structureSlice(7, 0, 0));
+    REQUIRE(memory.getStructure(4) == nullptr);
+}
+
+TEST_CASE("FogMemory - empty cell dropping out of sight remembers no structure", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateStructure(3, true, false, std::nullopt);
+    REQUIRE(memory.getStructure(3) == nullptr);
+}
+
+TEST_CASE("FogMemory - seeing the cell again forgets the structure", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateStructure(3, true, false, structureSlice(7, 0, 0));
+    memory.updateStructure(3, false, true, std::nullopt);
+    REQUIRE(memory.getStructure(3) == nullptr);
+}
+
+TEST_CASE("FogMemory - out of range structure cells are ignored", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateStructure(-1, true, false, structureSlice(7, 0, 0));
+    memory.updateStructure(16, true, false, structureSlice(7, 0, 0));
+    REQUIRE(memory.getStructure(-1) == nullptr);
+    REQUIRE(memory.getStructure(16) == nullptr);
+}
