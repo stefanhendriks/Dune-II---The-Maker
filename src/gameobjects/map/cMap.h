@@ -449,10 +449,11 @@ private:
     void setVisible(int iCell, int iPlayer, bool flag);
 
     void updateFogOfWar();
-    void updateFogMemory(const std::vector<bool> &wasSeen);
+    void updateFogMemory();
     void markSeen(int cell, int size, int playerId);
 
     std::vector<tCell> m_cell;
+    std::vector<bool> m_wasSeen;  // human iSeen before the latest fog update (reused buffer)
     FogMemory m_fogMemory;  // what the human player last saw of fogged cells
     GameContext *m_ctx = nullptr;
     cGameSettings *m_settings = nullptr;
