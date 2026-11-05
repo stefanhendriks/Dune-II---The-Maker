@@ -385,9 +385,9 @@ void cMap::thinkSlow()
 
 void cMap::updateFogOfWar()
 {
-    std::vector<bool> wasSeen(m_mapGeometry->getMaxCells());
+    m_wasSeen.resize(m_mapGeometry->getMaxCells());
     for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
-        wasSeen[c] = m_cell[c].iSeen[HUMAN];
+        m_wasSeen[c] = m_cell[c].iSeen[HUMAN];
         memset(m_cell[c].iSeen, 0, sizeof(m_cell[c].iSeen));
     }
 
@@ -405,10 +405,10 @@ void cMap::updateFogOfWar()
         markSeen(pStructure->getCell(), pStructure->getSight(), pStructure->getOwner());
     }
 
-    updateFogMemory(wasSeen);
+    updateFogMemory();
 }
 
-void cMap::updateFogMemory(const std::vector<bool> &wasSeen)
+void cMap::updateFogMemory()
 {
     for (int c = 0; c < m_mapGeometry->getMaxCells(); c++) {
         const tCell &cell = m_cell[c];
@@ -417,7 +417,9 @@ void cMap::updateFogMemory(const std::vector<bool> &wasSeen)
         live.tile = cell.tile;
         live.smudgetile = cell.smudgetile;
         live.smudgetype = cell.smudgetype;
-        m_fogMemory.update(c, wasSeen[c], cell.iSeen[HUMAN], live);
+        // cells default to 'seen', so only a discovered cell can really drop out of sight
+        bool dropped = m_wasSeen[c] && cell.iVisible[HUMAN];
+        m_fogMemory.update(c, dropped, cell.iSeen[HUMAN], live);
     }
 }
 
