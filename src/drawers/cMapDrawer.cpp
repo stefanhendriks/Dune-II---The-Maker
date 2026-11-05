@@ -206,22 +206,36 @@ void cMapDrawer::drawTerrain()
             int iDrawX = (int)std::floor(fDrawX);
             int iDrawY = (int)std::floor(fDrawY);
 
+            // fogged cells show what was last seen, not what happens there now
+            int terrainType = cell->type;
+            int terrainTile = cell->tile;
+            int smudgeTile = cell->smudgetile;
+            std::optional<SmudgeType> smudgeTypeToDraw = cell->smudgetype;
+            if (m_settings->isFogOfWarEnabled() && !m_map->isSeen(iCell, iPl)) {
+                if (const s_RememberedTerrain *remembered = m_map->getRememberedTerrain(iCell, iPl)) {
+                    terrainType = remembered->type;
+                    terrainTile = remembered->tile;
+                    smudgeTile = remembered->smudgetile;
+                    smudgeTypeToDraw = remembered->smudgetype;
+                }
+            }
+
             // Draw terrain
-            if (cell->type < TERRAIN_BLOOM || cell->type > TERRAIN_WALL) {
+            if (terrainType < TERRAIN_BLOOM || terrainType > TERRAIN_WALL) {
                 // somehow, invalid type
                 m_sdlDrawer->renderRectFillColor(iDrawX, iDrawY, iTileWidth, iTileHeight, 245,245,245,255);
             }
             else {
                 // valid type
-                const cRectangle src_pos = {cell->tile * 32, 0,32, 32};
+                const cRectangle src_pos = {terrainTile * 32, 0,32, 32};
                 cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(cell->type), src_pos, dest_pos);
+                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(terrainType), src_pos, dest_pos);
             }
 
             // draw Smudge if necessary
-            if (cell->smudgetype.has_value() && cell->smudgetile > -1) {
-                cell->smudgetype.transform([&](const auto &smudgeType) {
-                    const cRectangle src_pos = {cell->smudgetile * 32, static_cast<int>(smudgeType) * 32,32, 32};
+            if (smudgeTypeToDraw.has_value() && smudgeTile > -1) {
+                smudgeTypeToDraw.transform([&](const auto &smudgeType) {
+                    const cRectangle src_pos = {smudgeTile * 32, static_cast<int>(smudgeType) * 32,32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
                     m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
                     return std::monostate{}; // needed with GCC15, with GCC16 not needed to return anything.
