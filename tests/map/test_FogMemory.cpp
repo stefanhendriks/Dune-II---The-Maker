@@ -139,3 +139,61 @@ TEST_CASE("FogMemory - out of range structure cells are ignored", "[map][fog]")
     REQUIRE(memory.getStructure(-1) == nullptr);
     REQUIRE(memory.getStructure(16) == nullptr);
 }
+
+static s_RememberedUnit tank(int type, int bodyIndex, int headIndex)
+{
+    s_RememberedUnit u;
+    u.type = type;
+    u.bodyIndex = bodyIndex;
+    u.headIndex = headIndex;
+    u.frame = 0;
+    return u;
+}
+
+TEST_CASE("FogMemory - unit on a cell dropping out of sight is remembered with hull and turret", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateUnit(3, true, false, tank(9, 2, 5));
+
+    const s_RememberedUnit *remembered = memory.getUnit(3);
+    REQUIRE(remembered != nullptr);
+    REQUIRE(remembered->type == 9);
+    REQUIRE(remembered->bodyIndex == 2);
+    REQUIRE(remembered->headIndex == 5);
+}
+
+TEST_CASE("FogMemory - unit stays at its last seen cell while fogged", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateUnit(3, true, false, tank(9, 2, 5));
+    // unit drove away / arrived elsewhere while fogged: memory of both cells is unchanged
+    memory.updateUnit(3, false, false, std::nullopt);
+    memory.updateUnit(4, false, false, tank(9, 1, 1));
+
+    REQUIRE(memory.getUnit(3) != nullptr);
+    REQUIRE(memory.getUnit(4) == nullptr);
+}
+
+TEST_CASE("FogMemory - empty cell dropping out of sight remembers no unit", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateUnit(3, true, false, std::nullopt);
+    REQUIRE(memory.getUnit(3) == nullptr);
+}
+
+TEST_CASE("FogMemory - seeing the cell again forgets the unit", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateUnit(3, true, false, tank(9, 2, 5));
+    memory.updateUnit(3, false, true, std::nullopt);
+    REQUIRE(memory.getUnit(3) == nullptr);
+}
+
+TEST_CASE("FogMemory - out of range unit cells are ignored", "[map][fog]")
+{
+    FogMemory memory(16);
+    memory.updateUnit(-1, true, false, tank(9, 2, 5));
+    memory.updateUnit(16, true, false, tank(9, 2, 5));
+    REQUIRE(memory.getUnit(-1) == nullptr);
+    REQUIRE(memory.getUnit(16) == nullptr);
+}
