@@ -495,6 +495,21 @@ bool cMap::isHiddenByFogOfWar(cUnit *pUnit)
     return !isSeen(pUnit->getCell(), HUMAN);
 }
 
+bool cMap::isHiddenByFogOfWar(cAbstractStructure *pStructure)
+{
+    if (!m_settings->isFogOfWarEnabled()) return false;
+    if (m_objects->getPlayer(HUMAN)->isSameTeamAs(pStructure->getPlayer())) return false;
+
+    int startX = m_mapGeometry->getCellX(pStructure->getCell());
+    int startY = m_mapGeometry->getCellY(pStructure->getCell());
+    for (int x = startX; x < startX + pStructure->getWidth(); x++) {
+        for (int y = startY; y < startY + pStructure->getHeight(); y++) {
+            if (isSeen(m_mapGeometry->getCellWithMapBorders(x, y), HUMAN)) return false;
+        }
+    }
+    return true;
+}
+
 void cMap::thinkAboutRespawningWorms()
 {
     if (m_iTIMER_respawnSandworms < 0) return;

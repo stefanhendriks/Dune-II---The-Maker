@@ -70,7 +70,45 @@ void cStructureDrawer::serviceInit(sGameServices* services)
 
 void cStructureDrawer::drawStructuresFirstLayer()
 {
+    drawRememberedStructures();
     drawStructuresForLayer(0);
+}
+
+void cStructureDrawer::drawRememberedStructures()
+{
+    int iPl = m_player->getId();
+    if (!m_settings->isFogOfWarEnabled() || iPl != HUMAN) return;
+
+    cMap *map = m_objects->getMap();
+    MapGeometry *geometry = m_objects->getMapGeometry();
+    int iTileWidth = (int)std::ceil(m_mapCamera->getZoomedTileWidth());
+    int iTileHeight = (int)std::ceil(m_mapCamera->getZoomedTileHeight());
+
+    for (int viewportX = m_mapCamera->getViewportStartX(); viewportX < m_mapCamera->getViewportEndX() + 32; viewportX += 32) {
+        for (int viewportY = m_mapCamera->getViewportStartY(); viewportY < m_mapCamera->getViewportEndY() + 32; viewportY += 32) {
+            int iCell = m_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
+            if (iCell < 0) continue;
+            if (!geometry->isWithinBoundaries(iCell)) continue;
+            if (map->isSeen(iCell, iPl)) continue;
+
+            const s_RememberedStructure *remembered = map->getRememberedStructure(iCell, iPl);
+            if (!remembered) continue;
+
+            const s_StructureInfo &info = m_infos->getStructureInfo(remembered->type);
+            Texture *bitmap = m_objects->getPlayer(remembered->ownerId)->getStructureBitmap(remembered->type);
+            if (!bitmap) continue;
+
+            // the slice of the structure bitmap that covers this cell, for the remembered animation frame
+            cRectangle src = {remembered->offsetX * 32, (info.bmp_height * remembered->frame) + (remembered->offsetY * 32), 32, 32};
+            int drawX = (int)std::floor(m_mapCamera->getWindowXPosition(geometry->getAbsoluteXPositionFromCell(iCell)));
+            int drawY = (int)std::floor(m_mapCamera->getWindowYPosition(geometry->getAbsoluteYPositionFromCell(iCell)));
+            cRectangle dest = {drawX, drawY, iTileWidth, iTileHeight};
+            if (info.shadow) {
+                m_sdlDrawer->renderStrechSprite(info.shadow, src, dest, ShadowTrans);
+            }
+            m_sdlDrawer->renderStrechSprite(bitmap, src, dest);
+        }
+    }
 }
 
 void cStructureDrawer::drawStructuresSecondLayer()
@@ -361,6 +399,9 @@ void cStructureDrawer::drawStructuresForLayer(int layer)
         cAbstractStructure *theStructure = m_objects->getStructures()[i];
 
         if (!theStructure) continue;
+
+        // in the fog of war only the remembered structure is shown (see drawRememberedStructures)
+        if (m_player->getId() == HUMAN && m_objects->getMap()->isHiddenByFogOfWar(theStructure)) continue;
 
         if (m_structureUtils->isStructureVisibleOnScreen(theStructure)) {
             // draw

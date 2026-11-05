@@ -360,6 +360,14 @@ public:
     [[nodiscard]] bool isHiddenByFogOfWar(cUnit *pUnit);
 
     /**
+     * Is this structure hidden from the human player because none of its cells is in sight? Structures
+     * of the human player (and its allies) are never hidden. The player only sees the remembered
+     * structure (see getRememberedStructure) then.
+     * @param pStructure
+     */
+    [[nodiscard]] bool isHiddenByFogOfWar(cAbstractStructure *pStructure);
+
+    /**
      * Makes cell visible for player (ID)
      * @param iCell
      * @param iPlayer
