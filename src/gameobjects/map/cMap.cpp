@@ -421,7 +421,28 @@ void cMap::updateFogMemory()
         bool dropped = m_wasSeen[c] && cell.iVisible[HUMAN];
         m_fogMemory.update(c, dropped, cell.iSeen[HUMAN], live);
         m_fogMemory.updateStructure(c, dropped, cell.iSeen[HUMAN], dropped ? describeStructureOnCell(c) : std::nullopt);
+        m_fogMemory.updateUnit(c, dropped, cell.iSeen[HUMAN], dropped ? describeUnitOnCell(c) : std::nullopt);
     }
+}
+
+std::optional<s_RememberedUnit> cMap::describeUnitOnCell(int iCell)
+{
+    int unitId = m_cell[iCell].id[MAPID_UNITS];
+    if (unitId < 0) return std::nullopt;
+
+    cUnit *pUnit = m_objects->getUnit(unitId);
+    if (!pUnit || !pUnit->isValid() || pUnit->isHidden()) return std::nullopt;
+    if (pUnit->isSandworm() || pUnit->isAirbornUnit()) return std::nullopt;
+
+    // the unit that provides the vision leaves the cell, remembering our own units would leave ghosts behind
+    if (m_objects->getPlayer(HUMAN)->isSameTeamAs(pUnit->getPlayer())) return std::nullopt;
+
+    s_RememberedUnit remembered;
+    remembered.type = pUnit->iType;
+    remembered.bodyIndex = convertAngleToDrawIndex(facingToInt(pUnit->rendering.iBodyFacing));
+    remembered.headIndex = convertAngleToDrawIndex(facingToInt(pUnit->rendering.iHeadFacing));
+    remembered.frame = pUnit->rendering.iFrame;
+    return remembered;
 }
 
 std::optional<s_RememberedStructure> cMap::describeStructureOnCell(int iCell)
@@ -449,6 +470,12 @@ const s_RememberedTerrain *cMap::getRememberedTerrain(int iCell, int iPlayer) co
 {
     if (iPlayer != HUMAN) return nullptr;
     return m_fogMemory.getTerrain(iCell);
+}
+
+const s_RememberedUnit *cMap::getRememberedUnit(int iCell, int iPlayer) const
+{
+    if (iPlayer != HUMAN) return nullptr;
+    return m_fogMemory.getUnit(iCell);
 }
 
 const s_RememberedStructure *cMap::getRememberedStructure(int iCell, int iPlayer) const
@@ -722,8 +749,52 @@ void cMap::remove_id(int iIndex, int iIDType)
     }
 }
 
+void cMap::drawRememberedUnits()
+{
+    if (!m_settings->isFogOfWarEnabled()) return;
+
+    cPlayer *human = m_objects->getPlayer(HUMAN);
+    for (int viewportX = m_mapCamera->getViewportStartX(); viewportX < m_mapCamera->getViewportEndX() + 32; viewportX += 32) {
+        for (int viewportY = m_mapCamera->getViewportStartY(); viewportY < m_mapCamera->getViewportEndY() + 32; viewportY += 32) {
+            int iCell = m_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
+            if (iCell < 0 || !m_mapGeometry->isWithinBoundaries(iCell)) continue;
+            if (isSeen(iCell, HUMAN)) continue;
+
+            const s_RememberedUnit *remembered = getRememberedUnit(iCell, HUMAN);
+            if (!remembered) continue;
+
+            // base type only: no house color is remembered, so the bitmap set of the human player is used
+            const s_UnitInfo &info = m_infos->getUnitInfo(remembered->type);
+            Texture *body = human->getUnitBitmap(remembered->type);
+            if (!body) continue;
+
+            int absX = m_mapGeometry->getAbsoluteXPositionFromCell(iCell);
+            int absY = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
+            int drawX = m_mapCamera->getWindowXPositionWithOffset(absX, (TILESIZE_WIDTH_PIXELS - info.bmp_width) / 2);
+            int drawY = m_mapCamera->getWindowYPositionWithOffset(absY, (TILESIZE_HEIGHT_PIXELS - info.bmp_height) / 2);
+            int destWidth = static_cast<int>(round(m_mapCamera->factorZoomLevel(info.bmp_width)));
+            int destHeight = static_cast<int>(round(m_mapCamera->factorZoomLevel(info.bmp_height)));
+            cRectangle dest = {drawX, drawY, destWidth, destHeight};
+            int srcY = info.bmp_height * remembered->frame;
+
+            cRectangle bodySrc = {remembered->bodyIndex * info.bmp_width, srcY, info.bmp_width, info.bmp_height};
+            if (Texture *shadow = human->getUnitShadowBitmap(remembered->type)) {
+                m_sdlDrawer->renderStrechSprite(shadow, bodySrc, dest, ShadowTrans);
+            }
+            m_sdlDrawer->renderStrechSprite(body, bodySrc, dest);
+
+            if (Texture *top = human->getUnitTopBitmap(remembered->type)) {
+                cRectangle topSrc = {remembered->headIndex * info.bmp_width, srcY, info.bmp_width, info.bmp_height};
+                m_sdlDrawer->renderStrechSprite(top, topSrc, dest);
+            }
+        }
+    }
+}
+
 void cMap::draw_units()
 {
+    drawRememberedUnits();
+
     auto *mapViewport = m_mapViewport;
 
     // draw all worms first

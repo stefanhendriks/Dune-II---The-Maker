@@ -353,6 +353,13 @@ public:
     [[nodiscard]] const s_RememberedStructure *getRememberedStructure(int iCell, int iPlayer) const;
 
     /**
+     * The unit (base type, hull and turret) the player remembers on a fogged cell. Purely visual,
+     * never targetable or hoverable. Only kept for the human player.
+     * @return nullptr when no unit is remembered
+     */
+    [[nodiscard]] const s_RememberedUnit *getRememberedUnit(int iCell, int iPlayer) const;
+
+    /**
      * Is this unit hidden from the human player because it stands in the fog of war? Units of the
      * human player (and its allies) are never hidden.
      * @param pUnit
@@ -466,6 +473,8 @@ private:
     void updateFogOfWar();
     void updateFogMemory();
     std::optional<s_RememberedStructure> describeStructureOnCell(int iCell);
+    std::optional<s_RememberedUnit> describeUnitOnCell(int iCell);
+    void drawRememberedUnits();
     void markSeen(int cell, int size, int playerId);
 
     std::vector<tCell> m_cell;
