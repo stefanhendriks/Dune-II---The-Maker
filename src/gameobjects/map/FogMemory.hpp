@@ -43,6 +43,18 @@ struct s_RememberedStructure {
 };
 
 /**
+ * What the player remembers of a unit on one cell: the base unit type only, drawn as
+ * hull plus turret. No unit ID (unit slots get reused), no house color, no position within
+ * the cell: a unit that moved on stays remembered at the cell it was last seen on.
+ */
+struct s_RememberedUnit {
+    int type = 0;
+    int bodyIndex = 0; // draw index (facing) of the hull
+    int headIndex = 0; // draw index (facing) of the turret, ignored for units without one
+    int frame = 0;
+};
+
+/**
  * Per-cell memory of what was last seen, for one player. Pure data and rules
  * (no SDL, no game objects), so it can be unit tested.
  *
@@ -53,7 +65,7 @@ class FogMemory {
 public:
     FogMemory() = default;
 
-    explicit FogMemory(int maxCells) : m_cells(maxCells), m_structures(maxCells) {}
+    explicit FogMemory(int maxCells) : m_cells(maxCells), m_structures(maxCells), m_units(maxCells) {}
 
     /**
      * Apply the rule for one cell after a fog of war update.
@@ -86,6 +98,30 @@ public:
     }
 
     /**
+     * Same rule as update(), for the unit on the cell (nullopt when there is none).
+     * A remembered unit is purely visual: it is not an object and can never be targeted.
+     */
+    void updateUnit(int cell, bool wasSeen, bool isSeen, const std::optional<s_RememberedUnit> &live)
+    {
+        if (cell < 0 || cell >= static_cast<int>(m_units.size())) return;
+
+        if (isSeen) {
+            m_units[cell].reset();
+        } else if (wasSeen) {
+            m_units[cell] = live;
+        }
+    }
+
+    /**
+     * @return the remembered unit of this cell, or nullptr when none is remembered
+     */
+    [[nodiscard]] const s_RememberedUnit *getUnit(int cell) const
+    {
+        if (cell < 0 || cell >= static_cast<int>(m_units.size())) return nullptr;
+        return m_units[cell].has_value() ? &*m_units[cell] : nullptr;
+    }
+
+    /**
      * @return the remembered structure slice of this cell, or nullptr when none is remembered
      */
     [[nodiscard]] const s_RememberedStructure *getStructure(int cell) const
@@ -106,4 +142,5 @@ public:
 private:
     std::vector<std::optional<s_RememberedTerrain>> m_cells;
     std::vector<std::optional<s_RememberedStructure>> m_structures;
+    std::vector<std::optional<s_RememberedUnit>> m_units;
 };
