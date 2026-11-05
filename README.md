@@ -150,3 +150,6 @@ In the code there are several known concepts; see below for extra information
 about them:
 
 - [Angles: how to calculate and use them to draw things](resources/doc/convertAngleToDrawIndex.md)
+
+# Star history
+[![Star History Chart](https://api.star-history.com/svg?repos=stefanhendriks/dune-ii---the-maker&type=Date)](https://www.star-history.com/?repos=stefanhendriks%2Fdune-ii---the-maker&type=date&legend=top-left)
