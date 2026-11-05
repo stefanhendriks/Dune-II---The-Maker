@@ -43,12 +43,13 @@ struct s_RememberedStructure {
 };
 
 /**
- * What the player remembers of a unit on one cell: the base unit type only, drawn as
- * hull plus turret. No unit ID (unit slots get reused), no house color, no position within
+ * What the player remembers of a unit on one cell: the base unit type and owner (for the
+ * house color), drawn as hull plus turret. No unit ID (unit slots get reused), no position within
  * the cell: a unit that moved on stays remembered at the cell it was last seen on.
  */
 struct s_RememberedUnit {
     int type = 0;
+    int ownerId = 0;   // owning player, selects the house color set
     int bodyIndex = 0; // draw index (facing) of the hull
     int headIndex = 0; // draw index (facing) of the turret, ignored for units without one
     int frame = 0;

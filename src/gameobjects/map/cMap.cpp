@@ -439,6 +439,7 @@ std::optional<s_RememberedUnit> cMap::describeUnitOnCell(int iCell)
 
     s_RememberedUnit remembered;
     remembered.type = pUnit->iType;
+    remembered.ownerId = pUnit->iPlayer;
     remembered.bodyIndex = convertAngleToDrawIndex(facingToInt(pUnit->rendering.iBodyFacing));
     remembered.headIndex = convertAngleToDrawIndex(facingToInt(pUnit->rendering.iHeadFacing));
     remembered.frame = pUnit->rendering.iFrame;
@@ -753,7 +754,6 @@ void cMap::drawRememberedUnits()
 {
     if (!m_settings->isFogOfWarEnabled()) return;
 
-    cPlayer *human = m_objects->getPlayer(HUMAN);
     for (int viewportX = m_mapCamera->getViewportStartX(); viewportX < m_mapCamera->getViewportEndX() + 32; viewportX += 32) {
         for (int viewportY = m_mapCamera->getViewportStartY(); viewportY < m_mapCamera->getViewportEndY() + 32; viewportY += 32) {
             int iCell = m_mapCamera->getCellFromAbsolutePosition(viewportX, viewportY);
@@ -763,9 +763,10 @@ void cMap::drawRememberedUnits()
             const s_RememberedUnit *remembered = getRememberedUnit(iCell, HUMAN);
             if (!remembered) continue;
 
-            // base type only: no house color is remembered, so the bitmap set of the human player is used
+            // drawn in the house color of the owner as it was when last seen
             const s_UnitInfo &info = m_infos->getUnitInfo(remembered->type);
-            Texture *body = human->getUnitBitmap(remembered->type);
+            cPlayer *owner = m_objects->getPlayer(remembered->ownerId);
+            Texture *body = owner->getUnitBitmap(remembered->type);
             if (!body) continue;
 
             int absX = m_mapGeometry->getAbsoluteXPositionFromCell(iCell);
@@ -778,12 +779,12 @@ void cMap::drawRememberedUnits()
             int srcY = info.bmp_height * remembered->frame;
 
             cRectangle bodySrc = {remembered->bodyIndex * info.bmp_width, srcY, info.bmp_width, info.bmp_height};
-            if (Texture *shadow = human->getUnitShadowBitmap(remembered->type)) {
+            if (Texture *shadow = owner->getUnitShadowBitmap(remembered->type)) {
                 m_sdlDrawer->renderStrechSprite(shadow, bodySrc, dest, ShadowTrans);
             }
             m_sdlDrawer->renderStrechSprite(body, bodySrc, dest);
 
-            if (Texture *top = human->getUnitTopBitmap(remembered->type)) {
+            if (Texture *top = owner->getUnitTopBitmap(remembered->type)) {
                 cRectangle topSrc = {remembered->headIndex * info.bmp_width, srcY, info.bmp_width, info.bmp_height};
                 m_sdlDrawer->renderStrechSprite(top, topSrc, dest);
             }
