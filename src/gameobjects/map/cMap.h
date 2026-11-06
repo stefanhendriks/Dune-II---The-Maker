@@ -78,6 +78,8 @@ public:
     int  mouse_draw_y(int mouseCell);
     void draw_units_2nd();
     void draw_units();
+    void drawRememberedUnits();
+    void drawRevealedUnitsInFog();
     void draw_bullets();
 
     void smudge_increase(SmudgeType iType, int iCell);
@@ -474,7 +476,6 @@ private:
     void updateFogMemory();
     std::optional<s_RememberedStructure> describeStructureOnCell(int iCell);
     std::optional<s_RememberedUnit> describeUnitOnCell(int iCell);
-    void drawRememberedUnits();
     void markSeen(int cell, int size, int playerId);
 
     std::vector<tCell> m_cell;

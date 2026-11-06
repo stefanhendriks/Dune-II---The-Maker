@@ -42,6 +42,7 @@ public:
     void serviceInit(sGameServices*) {}
 
     void drawTerrain();
+    void drawRememberedTerrain();
     void drawShroud();
 
     void setDrawWithoutShroudTiles(bool value) {
@@ -55,6 +56,7 @@ protected:
 
 
 private:
+    void drawTerrainCells(bool fogged);
     cMap *m_map = nullptr;
     MapGeometry *m_mapGeometry = nullptr;
     cPlayer *m_player = nullptr;

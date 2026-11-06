@@ -157,7 +157,24 @@ void cMapDrawer::drawShroud()
     }
 }
 
+/**
+ * Cells in sight are drawn live, before the units, bullets and particles.
+ */
 void cMapDrawer::drawTerrain()
+{
+    drawTerrainCells(false);
+}
+
+/**
+ * Fogged cells are drawn from memory, on top of whatever is live on them (a bullet or particle
+ * that is not in sight must not show), but below the fog veil.
+ */
+void cMapDrawer::drawRememberedTerrain()
+{
+    drawTerrainCells(true);
+}
+
+void cMapDrawer::drawTerrainCells(bool fogged)
 {
     float tileWidth = m_camera->getZoomedTileWidth();
     float tileHeight = m_camera->getZoomedTileHeight();
@@ -167,11 +184,6 @@ void cMapDrawer::drawTerrain()
 
     int iPl = m_player->getId();
     int mouseCell = m_player->getGameControlsContext()->getMouseCell();
-
-    // cache for invalid terran
-    auto invalidTile = SDL_CreateSurface(32, 32, SDL_PIXELFORMAT_ARGB8888);
-    Uint32 mappedColor = SDL_MapRGBA(SDL_GetPixelFormatDetails(invalidTile->format), SDL_GetSurfacePalette(invalidTile), 245, 245, 245, 255);
-    SDL_FillSurfaceRect(invalidTile, nullptr, mappedColor);
 
     // draw vertical rows..
     for (int viewportX = m_camera->getViewportStartX(); viewportX < m_camera->getViewportEndX() + 32; viewportX += 32) {
@@ -188,6 +200,12 @@ void cMapDrawer::drawTerrain()
 
             // skip outer border cells
             if (!m_mapGeometry->isWithinBoundaries(iCell)) {
+                continue;
+            }
+
+            // fogged cells are not drawn in the live pass, only from memory afterwards
+            const bool isFoggedCell = m_settings->isFogOfWarEnabled() && !m_map->isSeen(iCell, iPl);
+            if (isFoggedCell != fogged) {
                 continue;
             }
 
@@ -211,7 +229,7 @@ void cMapDrawer::drawTerrain()
             int terrainTile = cell->tile;
             int smudgeTile = cell->smudgetile;
             std::optional<SmudgeType> smudgeTypeToDraw = cell->smudgetype;
-            if (m_settings->isFogOfWarEnabled() && !m_map->isSeen(iCell, iPl)) {
+            if (isFoggedCell) {
                 if (const s_RememberedTerrain *remembered = m_map->getRememberedTerrain(iCell, iPl)) {
                     terrainType = remembered->type;
                     terrainTile = remembered->tile;
