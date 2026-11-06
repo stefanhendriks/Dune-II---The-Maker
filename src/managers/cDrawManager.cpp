@@ -131,6 +131,13 @@ void cDrawManager::drawCombatState()
     m_objects->getMap()->draw_units_2nd();
 
     m_particleDrawer->drawTopLayer();
+
+    // what was last seen of fogged cells covers anything live in the fog
+    m_mapDrawer->drawRememberedTerrain();
+    m_structureDrawer->drawRememberedStructures();
+    m_objects->getMap()->drawRememberedUnits();
+    m_objects->getMap()->drawRevealedUnitsInFog();
+
     m_structureDrawer->drawStructuresHealthBars();
 
     m_mapDrawer->drawShroud();

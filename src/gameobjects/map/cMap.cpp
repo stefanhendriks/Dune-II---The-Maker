@@ -793,10 +793,26 @@ void cMap::drawRememberedUnits()
     }
 }
 
+/**
+ * The remembered content of fogged cells is drawn over everything live in the fog, so an attacker
+ * that is revealed there (see cUnit::isRevealedByAttack) has to be drawn again on top of it.
+ */
+void cMap::drawRevealedUnitsInFog()
+{
+    if (!m_settings->isFogOfWarEnabled()) return;
+
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *pUnit = m_objects->getUnit(i);
+        if (!pUnit || !pUnit->isValid() || !pUnit->isRevealedByAttack()) continue;
+        if (isSeen(pUnit->getCell(), HUMAN)) continue; // already drawn live
+        if (!pUnit->isWithinViewport(m_mapViewport) || isHiddenByFogOfWar(pUnit)) continue;
+
+        cUnitDrawer(*pUnit, m_sdlDrawer, m_gfxdata).draw();
+    }
+}
+
 void cMap::draw_units()
 {
-    drawRememberedUnits();
-
     auto *mapViewport = m_mapViewport;
 
     // draw all worms first

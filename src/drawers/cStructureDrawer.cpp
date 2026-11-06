@@ -70,7 +70,6 @@ void cStructureDrawer::serviceInit(sGameServices* services)
 
 void cStructureDrawer::drawStructuresFirstLayer()
 {
-    drawRememberedStructures();
     drawStructuresForLayer(0);
 }
 
