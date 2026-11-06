@@ -149,6 +149,7 @@ void cUnit::init(int i)
     boredTimer.zero();    // how long are we bored?
     attackTimer.zero();
     wormTrailTimer.zero();
+    revealTimer.zero();
     movedelayTimer.zero();
 }
 
@@ -993,6 +994,8 @@ bool cUnit::isSandworm() const
  */
 void cUnit::think()
 {
+    revealTimer.decrementUntil();
+
     thinkActionAgnostic();
 
     // Think attack style
@@ -1826,6 +1829,8 @@ void cUnit::shoot(int iTargetCell)
 
     if (bulletType < 0) return; // no bullet type to spawn
 
+    revealWhenAttackingHumanUnitAt(iTargetCell);
+
     int iBull = createBullet(bulletType, position.iCell, iTargetCell, iID, -1, m_objects, m_infos, m_audioContext, m_mapCamera);
 
     cUnit *attackUnit = nullptr;
@@ -1838,6 +1843,28 @@ void cUnit::shoot(int iTargetCell)
                 m_objects->getBullets()[iBull].TIMER_homing = 200;
             }
         }
+    }
+}
+
+/**
+ * An attacker that fires at a unit of the human player's team shows up in the fog of war for a
+ * few seconds (no permanent reveal, the fog resumes afterwards).
+ */
+void cUnit::revealWhenAttackingHumanUnitAt(int targetCell)
+{
+    constexpr int revealTicks = 30; // think() runs every ~100 ms, so 3 seconds
+
+    cPlayer *human = m_objects->getPlayer(HUMAN);
+    if (human->isSameTeamAs(getPlayer())) return;
+
+    cMap *map = m_objects->getMap();
+    for (int targetId : {map->getCellIdUnitLayer(targetCell), map->getCellIdAirUnitLayer(targetCell)}) {
+        if (targetId < 0) continue;
+        cUnit *target = m_objects->getUnit(targetId);
+        if (!target->isValid() || !human->isSameTeamAs(target->getPlayer())) continue;
+
+        revealTimer.reset(revealTicks);
+        return;
     }
 }
 
