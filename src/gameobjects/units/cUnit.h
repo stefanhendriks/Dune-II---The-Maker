@@ -233,6 +233,7 @@ public:
     bool isValid() const;     // valid unit?
 
     void shoot(int iTargetCell);  // shoot at goalcell
+    void revealWhenAttackingHumanUnitAt(int targetCell);
 
     void die(bool bBlowUp, bool bSquish, int originId = -1, eBuildType originType = eBuildType::UNKNOWN, int killingDamage = 0); // die!
 
@@ -308,6 +309,7 @@ public:
     cTimer boredTimer;        // how long are we bored?
     cTimer attackTimer;       // when to shoot?
     cTimer wormTrailTimer;    // when to spawn a trail when moving
+    cTimer revealTimer;       // think ticks left that this unit shows through the fog of war (it attacked a human unit)
 
     s_UnitInfo &getUnitInfo() const;
 
@@ -355,6 +357,7 @@ public:
      * @deprecated
      */
     bool isSandworm() const;
+    [[nodiscard]] bool isRevealedByAttack() const { return revealTimer.get() > 0; }
 
     /**
      * Can this unit attack air units?

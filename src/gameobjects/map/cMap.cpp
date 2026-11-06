@@ -519,6 +519,7 @@ bool cMap::isHiddenByFogOfWar(cUnit *pUnit)
     // perfect knowledge of unit positions regardless of fog of war.
     cPlayer *humanPlayer = m_objects->getPlayer(HUMAN);
     if (humanPlayer->isSameTeamAs(pUnit->getPlayer())) return false;
+    if (pUnit->isRevealedByAttack()) return false;
 
     return !isSeen(pUnit->getCell(), HUMAN);
 }
