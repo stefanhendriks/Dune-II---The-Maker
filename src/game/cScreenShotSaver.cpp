@@ -36,7 +36,7 @@ bool cScreenShotSaver::saveScreen(SDL_Renderer* renderer, int width, int height)
     try {
         screenCount++;
         std::string filename = std::format("{}_{}x{}_{:0>4}.png", getBaseFileName(), width, height, screenCount);
-        SDL_Surface* surface = SDL_RenderReadPixels(renderer, NULL);
+        SDL_Surface* surface = SDL_RenderReadPixels(renderer, nullptr);
         if (!surface) {
             Logger::error(COMP_SDL2, "saveScreen", "Error reading pixels: {}", SDL_GetError());
             return false;
