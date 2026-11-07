@@ -24,8 +24,8 @@
 class Texture;
 #include <vector>
 
-// STRUCTURES stuff
-#define MAX_STRUCTURETYPES  50    // max of building types
+// STRUCTURES stuff: MAX_STRUCTURETYPES lives in definitions.h
+#include "include/definitions.h"
 
 
 struct s_FlagInfo {

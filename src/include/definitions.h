@@ -21,11 +21,11 @@
 // #define MOUSECELL_SIDEBAR -3
 
 // MAP ID
-#define MAPID_UNITS  0
-#define MAPID_STRUCTURES 1
-#define MAPID_AIR   2
-#define MAPID_WORMS  3
-#define MAPID_MAX	 4 // used for clearing all
+inline constexpr int MAPID_UNITS = 0;
+inline constexpr int MAPID_STRUCTURES = 1;
+inline constexpr int MAPID_AIR = 2;
+inline constexpr int MAPID_WORMS = 3;
+inline constexpr int MAPID_MAX = 4; // used for clearing all
 
 // #define MAX_REGIONS		27			// not more then 27 regions as dune 2 has
 
@@ -65,18 +65,18 @@
 
 // MEMORY USAGE: (units, structures, etc , more info below)
 // #define MAX_UNITS        300     // max of units in the game
-#define MAX_STRUCTURES   200     // max of structures in the game
+inline constexpr int MAX_STRUCTURES = 200; // max of structures in the game
 // #define MAX_SKIRMISHMAPS 100     // max of 100 skirmish maps
 
-#define HUMAN			0  // 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
-#define AI_CPU1         1  // 1 = CPU (Atreides)
-#define AI_CPU2         2  // 2 = CPU (Harkonnen)
-#define AI_CPU3         3  // 3 = CPU (Ordos)
-#define AI_CPU4         4  // 4 = CPU (Sardaukar)	== ALLIES WITH EVERYBODY (EXCEPT PLAYER)
-#define AI_CPU5         5  // 5 = CPU (Fremen)		== ALLIES WITH ATREIDES
-#define AI_CPU6         6  // 6 = WORM
-#define AI_WORM			AI_CPU6
-#define MAX_PLAYERS     7
+inline constexpr int HUMAN = 0; // 0 = HUMAN			== ALLIES WITH FREMEN WHEN ATREIDES
+inline constexpr int AI_CPU1 = 1; // 1 = CPU (Atreides)
+inline constexpr int AI_CPU2 = 2; // 2 = CPU (Harkonnen)
+inline constexpr int AI_CPU3 = 3; // 3 = CPU (Ordos)
+inline constexpr int AI_CPU4 = 4; // 4 = CPU (Sardaukar)	== ALLIES WITH EVERYBODY (EXCEPT PLAYER)
+inline constexpr int AI_CPU5 = 5; // 5 = CPU (Fremen)		== ALLIES WITH ATREIDES
+inline constexpr int AI_CPU6 = 6; // 6 = WORM
+inline constexpr int AI_WORM = AI_CPU6;
+inline constexpr int MAX_PLAYERS = 7;
 
 constexpr int MAX_UNIT_GROUPS = 5;
 
@@ -90,129 +90,129 @@ constexpr int MAX_UNIT_GROUPS = 5;
 //#define MAX_SPECIALTYPES       10    // maximum of specialInfo
 
 // STRUCTURES stuff
-#define MAX_STRUCTURETYPES  50    // max of building types
+inline constexpr int MAX_STRUCTURETYPES = 50; // max of building types
 
 // Lists stuff
-#define MAX_ICONS       30          // max of 30 icons per list
-#define MAX_ITEMS		MAX_ICONS   // because in theory the item builder should be able to build each icon simultaniously
+inline constexpr int MAX_ICONS = 30; // max of 30 icons per list
+inline constexpr int MAX_ITEMS = MAX_ICONS; // because in theory the item builder should be able to build each icon simultaniously
 
 // House id's
-#define GENERALHOUSE   0     // no house at all, general house (gray)
-#define HARKONNEN 1
-#define ATREIDES  2
-#define ORDOS     3
-#define SARDAUKAR 4
-#define FREMEN 	  5
-#define MERCENARY 6
-#define CORRINO   7         // == SARDAUKAR!!!   ---- in this code we use this 'house' for sandworms
-#define SANDHOUSE 9
-#define GREYHOUSE	10
+inline constexpr int GENERALHOUSE = 0; // no house at all, general house (gray)
+inline constexpr int HARKONNEN = 1;
+inline constexpr int ATREIDES = 2;
+inline constexpr int ORDOS = 3;
+inline constexpr int SARDAUKAR = 4;
+inline constexpr int FREMEN = 5;
+inline constexpr int MERCENARY = 6;
+inline constexpr int CORRINO = 7; // == SARDAUKAR!!!   ---- in this code we use this 'house' for sandworms
+inline constexpr int SANDHOUSE = 9;
+inline constexpr int GREYHOUSE = 10;
 
 // Structure types
-#define PALACE            0         // cPalace
-#define WINDTRAP          1         // cWindTrap
-#define HEAVYFACTORY      2         // cHeavyFactory
-#define LIGHTFACTORY      3         // cLightFactory
-#define CONSTYARD         4         // cConstYard
-#define SILO              5         // cSpiceSilo
-#define HIGHTECH          6         // cHighTech
-#define IX                7         // cIX
-#define REPAIR            8         // cRepairFacility
-#define RADAR             9         // = OUTPOST (cOutPost)
-#define REFINERY          10        // cRefinery
-#define WOR               11        // cWor
-#define BARRACKS          12        // cBarracks
-#define STARPORT          13        // cStarPort
-#define TURRET            14        // cGunTurret
-#define RTURRET           15        // cRocketTurret
+inline constexpr int PALACE = 0; // cPalace
+inline constexpr int WINDTRAP = 1; // cWindTrap
+inline constexpr int HEAVYFACTORY = 2; // cHeavyFactory
+inline constexpr int LIGHTFACTORY = 3; // cLightFactory
+inline constexpr int CONSTYARD = 4; // cConstYard
+inline constexpr int SILO = 5; // cSpiceSilo
+inline constexpr int HIGHTECH = 6; // cHighTech
+inline constexpr int IX = 7; // cIX
+inline constexpr int REPAIR = 8; // cRepairFacility
+inline constexpr int RADAR = 9; // = OUTPOST (cOutPost)
+inline constexpr int REFINERY = 10; // cRefinery
+inline constexpr int WOR = 11; // cWor
+inline constexpr int BARRACKS = 12; // cBarracks
+inline constexpr int STARPORT = 13; // cStarPort
+inline constexpr int TURRET = 14; // cGunTurret
+inline constexpr int RTURRET = 15; // cRocketTurret
 
 // SPECIAL! -> These are not actually structures. When they are done with building the
 // cell properties will be changed, this is also done in cStructureFactory::createStructure
-#define SLAB1             24      // 1 single slab
-#define SLAB4             25      // 4 slabs
-#define WALL              26      // 1 wall
+inline constexpr int SLAB1 = 24; // 1 single slab
+inline constexpr int SLAB4 = 25; // 4 slabs
+inline constexpr int WALL = 26; // 1 wall
 
 // Upgrade types
-#define UPGRADE_TYPE_CONSTYARD_SLAB4              0 // 4SLAB upgrade
-#define UPGRADE_TYPE_CONSTYARD_RTURRET            1 // Rturret
-#define UPGRADE_TYPE_LIGHTFCTRY_QUAD              2 // upgrade LightFctry to get Quad
+inline constexpr int UPGRADE_TYPE_CONSTYARD_SLAB4 = 0; // 4SLAB upgrade
+inline constexpr int UPGRADE_TYPE_CONSTYARD_RTURRET = 1; // Rturret
+inline constexpr int UPGRADE_TYPE_LIGHTFCTRY_QUAD = 2; // upgrade LightFctry to get Quad
 // Heavy Factory: harkonnen / atreides / ordos
-#define UPGRADE_TYPE_HEAVYFCTRY_MVC               3 // upgrade HeavyFctry to get MVC
+inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_MVC = 3; // upgrade HeavyFctry to get MVC
 // Heavy Factory: harkonnen / atreides only
-#define UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER          4 // upgrade HeavyFctry to get Rocker Launcher
-#define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK         5 // upgrade HeavyFctry to get Siege Tank
+inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER = 4; // upgrade HeavyFctry to get Rocker Launcher
+inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK = 5; // upgrade HeavyFctry to get Siege Tank
 // Heavy Factory: ordos only (ordos can only access Launcher via Starport)
-#define UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD     6 // upgrade HeavyFctry to get Siege Tank (later techlevel, after MVC)
+inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD = 6; // upgrade HeavyFctry to get Siege Tank (later techlevel, after MVC)
 // Hi-Tech:
-#define UPGRADE_TYPE_HITECH_ORNI                  7 // upgrade HiTech to get Ornithopter
+inline constexpr int UPGRADE_TYPE_HITECH_ORNI = 7; // upgrade HiTech to get Ornithopter
 // WOR (Harkonnen & Ordos)
-#define UPGRADE_TYPE_WOR_TROOPERS                 8 // upgrade WOR to get Troopers
+inline constexpr int UPGRADE_TYPE_WOR_TROOPERS = 8; // upgrade WOR to get Troopers
 // Barracks (Atreides & Ordos)
-#define UPGRADE_TYPE_BARRACKS_INFANTRY            9 // upgrade BARRACKS to get Infantry
+inline constexpr int UPGRADE_TYPE_BARRACKS_INFANTRY = 9; // upgrade BARRACKS to get Infantry
 
 // Heavy Factory: Sardaukar only
-#define UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK     10 // upgrade for Sardaukar to get Sonic Tank
-#define UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR      11 // upgrade for Sardaukar to get Deviator
-#define UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR    12 // upgrade for Sardaukar to get Devastator
+inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK = 10; // upgrade for Sardaukar to get Sonic Tank
+inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR = 11; // upgrade for Sardaukar to get Deviator
+inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR = 12; // upgrade for Sardaukar to get Devastator
 
-#define MUSIC_WIN           0
-#define MUSIC_LOSE          1
-#define MUSIC_ATTACK        2
-#define MUSIC_PEACE         3
-#define MUSIC_MENU          4
-#define MUSIC_CONQUEST      5
-#define MUSIC_BRIEFING      6
+inline constexpr int MUSIC_WIN = 0;
+inline constexpr int MUSIC_LOSE = 1;
+inline constexpr int MUSIC_ATTACK = 2;
+inline constexpr int MUSIC_PEACE = 3;
+inline constexpr int MUSIC_MENU = 4;
+inline constexpr int MUSIC_CONQUEST = 5;
+inline constexpr int MUSIC_BRIEFING = 6;
 
 // Unit types
-#define SOLDIER           0
-#define TROOPER           1
-#define INFANTRY          2
-#define TROOPERS          3
-#define TRIKE             4
-#define RAIDER            5
-#define QUAD              6
-#define TANK              7
-#define LAUNCHER          8
-#define SIEGETANK         9
-#define DEVASTATOR        10
-#define DEVIATOR          11
-#define SONICTANK         12
-#define HARVESTER         13
-#define MCV               14   // Start with 0
-#define CARRYALL          15  // air unit
-#define ORNITHOPTER       16  // air unit
-#define SANDWORM		  17
+inline constexpr int SOLDIER = 0;
+inline constexpr int TROOPER = 1;
+inline constexpr int INFANTRY = 2;
+inline constexpr int TROOPERS = 3;
+inline constexpr int TRIKE = 4;
+inline constexpr int RAIDER = 5;
+inline constexpr int QUAD = 6;
+inline constexpr int TANK = 7;
+inline constexpr int LAUNCHER = 8;
+inline constexpr int SIEGETANK = 9;
+inline constexpr int DEVASTATOR = 10;
+inline constexpr int DEVIATOR = 11;
+inline constexpr int SONICTANK = 12;
+inline constexpr int HARVESTER = 13;
+inline constexpr int MCV = 14; // Start with 0
+inline constexpr int CARRYALL = 15; // air unit
+inline constexpr int ORNITHOPTER = 16; // air unit
+inline constexpr int SANDWORM = 17;
 
 // special units
-#define SABOTEUR		    19
-#define UNIT_FREMEN_ONE     20
-#define UNIT_FREMEN_THREE   21
+inline constexpr int SABOTEUR = 19;
+inline constexpr int UNIT_FREMEN_ONE = 20;
+inline constexpr int UNIT_FREMEN_THREE = 21;
 
 // Frigate
-#define FRIGATE           29  // air unit (should be last!!)
+inline constexpr int FRIGATE = 29; // air unit (should be last!!)
 
 // Specials (super weapons)
-#define SPECIAL_SABOTEUR		0
-#define SPECIAL_FREMEN          1  // special unit(s) for fremen support
-#define SPECIAL_DEATHHAND       2
+inline constexpr int SPECIAL_SABOTEUR = 0;
+inline constexpr int SPECIAL_FREMEN = 1; // special unit(s) for fremen support
+inline constexpr int SPECIAL_DEATHHAND = 2;
 
 // Bullet types
-#define ROCKET_SMALL      0   // small rocket (trooper/troopers)
-#define ROCKET_NORMAL     1   // normal rocket (turret/launcher/deviator)
-#define ROCKET_BIG        2   // big rocket (palace, nuclear/deathhand/missile)
-#define BULLET_SMALL      3   // infantry bullet
-#define BULLET_TRIKE      4   // a trike bullet, looks like infantry but is stronger
-#define BULLET_QUAD       5   // a quad bullet
-#define BULLET_TANK       6   // a normal tank dot
-#define BULLET_SIEGE      7   // a siege tank dot
-#define BULLET_DEVASTATOR 8   // a devastator dot
-#define BULLET_GAS        9   // a deviator shot
-#define BULLET_TURRET     10  // a normal turret dot
-#define BULLET_SHIMMER    11  // EXEPTION: Shimmer effect!
-#define ROCKET_SMALL_ORNI 12   // small rocket ornithopter
-#define ROCKET_RTURRET	  13	// rocket turrets have weaker turrets!
-#define BULLET_SAB        14    // a fake bullet , to make it easier to blow up stuff
-#define ROCKET_SMALL_FREMEN     15   // small rocket (trooper/troopers) - FOR FREMEN
+inline constexpr int ROCKET_SMALL = 0; // small rocket (trooper/troopers)
+inline constexpr int ROCKET_NORMAL = 1; // normal rocket (turret/launcher/deviator)
+inline constexpr int ROCKET_BIG = 2; // big rocket (palace, nuclear/deathhand/missile)
+inline constexpr int BULLET_SMALL = 3; // infantry bullet
+inline constexpr int BULLET_TRIKE = 4; // a trike bullet, looks like infantry but is stronger
+inline constexpr int BULLET_QUAD = 5; // a quad bullet
+inline constexpr int BULLET_TANK = 6; // a normal tank dot
+inline constexpr int BULLET_SIEGE = 7; // a siege tank dot
+inline constexpr int BULLET_DEVASTATOR = 8; // a devastator dot
+inline constexpr int BULLET_GAS = 9; // a deviator shot
+inline constexpr int BULLET_TURRET = 10; // a normal turret dot
+inline constexpr int BULLET_SHIMMER = 11; // EXEPTION: Shimmer effect!
+inline constexpr int ROCKET_SMALL_ORNI = 12; // small rocket ornithopter
+inline constexpr int ROCKET_RTURRET = 13; // rocket turrets have weaker turrets!
+inline constexpr int BULLET_SAB = 14; // a fake bullet , to make it easier to blow up stuff
+inline constexpr int ROCKET_SMALL_FREMEN = 15; // small rocket (trooper/troopers) - FOR FREMEN
 
 // Particle types
 const int D2TM_PARTICLE_MOVE	                = 1; // particle used for indicating when move order has been received
