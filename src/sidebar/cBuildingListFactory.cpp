@@ -35,7 +35,7 @@ int cBuildingListFactory::getButtonDrawXStart()
 
 void cBuildingListFactory::initializeList(cBuildingList *list, eListType listType)
 {
-    d2tm_assert(list != NULL);
+    d2tm_assert(list != nullptr);
 
     // first clear the list
     list->removeAllItems();
