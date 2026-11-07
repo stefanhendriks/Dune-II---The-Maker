@@ -342,6 +342,9 @@ TEST_CASE("INI_WordType - STRUCTURES section", "[ini_parsing][words]")
     REQUIRE(GameIniWordType("FixPoints", eGameIniSection::STRUCTURES) == eIniWord::FIXHP);
     REQUIRE(GameIniWordType("PowerDrain", eGameIniSection::STRUCTURES) == eIniWord::POWERDRAIN);
     REQUIRE(GameIniWordType("HasConcrete", eGameIniSection::STRUCTURES) == eIniWord::HAS_CONCRETE);
+    REQUIRE(GameIniWordType("NeedPowerToWork", eGameIniSection::STRUCTURES) == eIniWord::NEED_POWER_TO_WORK);
+    REQUIRE(GameIniWordType("LowPowerIconX", eGameIniSection::STRUCTURES) == eIniWord::LOW_POWER_ICON_X);
+    REQUIRE(GameIniWordType("LowPowerIconY", eGameIniSection::STRUCTURES) == eIniWord::LOW_POWER_ICON_Y);
     REQUIRE(GameIniWordType("PowerGive", eGameIniSection::STRUCTURES) == eIniWord::POWERGIVE);
     REQUIRE(GameIniWordType("Cost", eGameIniSection::STRUCTURES) == eIniWord::COST);
     REQUIRE(GameIniWordType("BuildTime", eGameIniSection::STRUCTURES) == eIniWord::BUILDTIME);

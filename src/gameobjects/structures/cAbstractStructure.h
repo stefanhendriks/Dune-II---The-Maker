@@ -253,6 +253,9 @@ public:
     void setUnitIdEntering(int unitId);
 
     bool isValid();
+    bool needPowerToWork() const {
+        return getStructureInfo().needPowerToWork;
+    }
     bool canAttackAirUnits() const {
         return getStructureInfo().canAttackAirUnits;
     }

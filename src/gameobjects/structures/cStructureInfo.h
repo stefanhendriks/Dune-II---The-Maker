@@ -77,6 +77,10 @@ struct s_StructureInfo {
     // Slab related
     bool hasConcrete;   // if true, then structure gets pavement (for AI) or needs pavement (impacts health), and can decay
 
+    bool needPowerToWork; // if true, the structure is shown as low on power when its owner lacks power
+    int lowPowerIconX;    // where the low power icon is drawn, relative to the structure top left (pixels)
+    int lowPowerIconY;
+
     // Turret specific:
     bool canAttackAirUnits;
     bool canAttackGroundUnits;
