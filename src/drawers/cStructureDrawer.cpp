@@ -331,7 +331,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
             renderIconThatStructureIsBeingRepaired(structure);
         }
 
-        if (structure->needPowerToWork() && structure->getOwner() == m_player->getId() && !m_player->bEnoughPower()) {
+        if (m_settings->isShowLowPowerIcon() && structure->needPowerToWork() && structure->getOwner() == m_player->getId() && !m_player->bEnoughPower()) {
             renderIconThatPowerIsLow(structure);
         }
     }

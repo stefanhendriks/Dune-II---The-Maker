@@ -311,6 +311,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_gameSettings->m_allowRepeatingReinforcements = gs->allowRepeatingReinforcements;
     m_gameSettings->setTurretsDownOnLowPower(gs->turretsDownOnLowPower);
     m_gameSettings->setRocketTurretsDownOnLowPower(gs->rocketTurretsDownOnLowPower);
+    m_gameSettings->setShowLowPowerIcon(gs->showLowPowerIcon);
 
     m_gameSettings->m_playMusic = gs->playMusic;
 
@@ -349,6 +350,7 @@ InitialGameSettings cGame::currentSettings() const
     gs.allowRepeatingReinforcements = m_gameSettings->m_allowRepeatingReinforcements;
     gs.turretsDownOnLowPower = m_gameSettings->isTurretsDownOnLowPower();
     gs.rocketTurretsDownOnLowPower = m_gameSettings->isRocketTurretsDownOnLowPower();
+    gs.showLowPowerIcon = m_gameSettings->isShowLowPowerIcon();
     gs.playMusic = m_gameSettings->m_playMusic;
     gs.playSound = m_audioContext->getSoundPlayer()->getSoundEnabled();
     gs.debugMode = m_gameSettings->m_debugMode;

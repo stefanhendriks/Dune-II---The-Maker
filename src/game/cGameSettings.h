@@ -66,6 +66,12 @@ public:
     void setRocketTurretsDownOnLowPower(bool value) {
         m_rocketTurretsDownOnLowPower = value;
     }
+    bool isShowLowPowerIcon() const {
+        return m_showLowPowerIcon;
+    }
+    void setShowLowPowerIcon(bool value) {
+        m_showLowPowerIcon = value;
+    }
     bool isPlayMusic() const {
         return m_playMusic;
     }
@@ -139,6 +145,7 @@ private:
     bool m_noAiRest;
     bool m_turretsDownOnLowPower = false;
     bool m_rocketTurretsDownOnLowPower = false;
+    bool m_showLowPowerIcon = false;
     bool m_playMusic;
 
     bool m_playing;

@@ -36,6 +36,7 @@ TEST_CASE("Preferences - saved settings load back identical", "[preferences]")
     saved.allowRepeatingReinforcements = true;
     saved.turretsDownOnLowPower = true;
     saved.rocketTurretsDownOnLowPower = true;
+    saved.showLowPowerIcon = true;
     saved.playMusic = false;
     saved.playSound = false;
     saved.debugMode = true;
@@ -65,6 +66,7 @@ TEST_CASE("Preferences - saved settings load back identical", "[preferences]")
     REQUIRE(loaded.allowRepeatingReinforcements);
     REQUIRE(loaded.turretsDownOnLowPower);
     REQUIRE(loaded.rocketTurretsDownOnLowPower);
+    REQUIRE(loaded.showLowPowerIcon);
     REQUIRE_FALSE(loaded.playMusic);
     REQUIRE_FALSE(loaded.playSound);
     REQUIRE(loaded.debugMode);
@@ -88,4 +90,19 @@ TEST_CASE("Preferences - loading a missing file leaves the settings untouched", 
     REQUIRE_FALSE(Preferences::load(freshDirectory("d2tm_prefs_missing") / "preferences.ini", settings, error));
     REQUIRE_FALSE(error.empty());
     REQUIRE(settings.fogOfWarEnabled);
+}
+
+TEST_CASE("Preferences - the low power icon is off unless the preferences enable it", "[preferences]")
+{
+    REQUIRE_FALSE(InitialGameSettings{}.showLowPowerIcon);
+
+    const auto file = freshDirectory("d2tm_prefs_lowpoweroff") / "preferences.ini";
+    InitialGameSettings saved;
+    std::string error;
+    REQUIRE(Preferences::save(file, saved, error));
+
+    InitialGameSettings loaded;
+    loaded.showLowPowerIcon = true;
+    REQUIRE(Preferences::load(file, loaded, error));
+    REQUIRE_FALSE(loaded.showLowPowerIcon);
 }
