@@ -171,6 +171,8 @@ public:
     void thinkCache();
 
     void applySettings(std::unique_ptr<InitialGameSettings> gs);
+    // the options as they are right now, including changes made while playing (music, fog of war, fullscreen, ...)
+    InitialGameSettings currentSettings() const;
     void changeStateFromMentat();
     void loadMapFromEditor(int map);
 
