@@ -62,8 +62,6 @@ private:
     void thinkAboutIndividualCreditOffsets();
     void drawCurrentCredits(int drawX, int drawY);
     void drawPreviousCredits(int drawX, int drawY);
-    int getCreditDrawId(char c);
-    int getXDrawingOffset(int amount);
 
     int m_TIMER_money;	// timer needed to do logic
 
