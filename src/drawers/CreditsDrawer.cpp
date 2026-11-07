@@ -32,6 +32,7 @@
 
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
+#include <algorithm>
 
 CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer *player) :
     m_player(player),
@@ -45,8 +46,8 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer 
     d2tm_assert(ctx != nullptr);
     d2tm_assert(settings != nullptr);
 
-    memset(m_offset_credit, 0, sizeof(m_offset_credit));
-    memset(m_offset_direction, 0, sizeof(m_offset_direction));
+    std::fill(std::begin(m_offset_credit), std::end(m_offset_credit), 0.0f);
+    std::fill(std::begin(m_offset_direction), std::end(m_offset_direction), 0);
     m_initial = true;
     m_soundType = -1;
     m_rollSpeed = 0.0F;
@@ -83,8 +84,8 @@ void CreditsDrawer::setCredits(int amount)
     m_initial = true;
     m_previousCredits = amount;
     m_currentCredits = amount;
-    memset(m_offset_credit, 0, sizeof(m_offset_credit));
-    memset(m_offset_direction, 0, sizeof(m_offset_direction));
+    std::fill(std::begin(m_offset_credit), std::end(m_offset_credit), 0.0f);
+    std::fill(std::begin(m_offset_direction), std::end(m_offset_direction), 0);
 }
 
 // timer based method
@@ -94,8 +95,8 @@ void CreditsDrawer::thinkFast()
     if (hasDrawnCurrentCredits() || m_initial) {
         m_soundsMade = 0;
 
-        memset(m_offset_credit, 0, sizeof(m_offset_credit));
-        memset(m_offset_direction, 0, sizeof(m_offset_direction));
+        std::fill(std::begin(m_offset_credit), std::end(m_offset_credit), 0.0f);
+        std::fill(std::begin(m_offset_direction), std::end(m_offset_direction), 0);
 
         // determine new m_currentCredits
         // TODO: make it 'roll' instead of 'jump' to the newest credits?
