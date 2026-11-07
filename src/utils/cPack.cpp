@@ -25,6 +25,9 @@
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <array>
+#include <bit>
+#include <string_view>
 #include <memory>
 
 const int fileNameSize = 40;
@@ -62,14 +65,14 @@ void ReaderPack::readFileLines()
 {
     for(int i=0; i<fileInPak; i++ ) {
         // file name
-        char fileID[fileNameSize] {'\0'};
-        if (SDL_ReadIO(rfp.get(), fileID, fileNameSize) != fileNameSize) {
+        std::array<char, fileNameSize> fileID {};
+        if (SDL_ReadIO(rfp.get(), fileID.data(), fileNameSize) != fileNameSize) {
             std::cerr << "Failed to read file ID for file " << i << std::endl;
             return;
         }
         // file extension
-        char rawExt[4] = {0};
-        if (SDL_ReadIO(rfp.get(), rawExt, extensionSize) != extensionSize) {
+        std::array<char, 4> rawExt {};
+        if (SDL_ReadIO(rfp.get(), rawExt.data(), extensionSize) != extensionSize) {
             std::cerr << "Failed to read extension for file " << i << std::endl;
             return;
         }
@@ -88,9 +91,9 @@ void ReaderPack::readFileLines()
         }
 
         FileInPack tmp;
-        tmp.name = std::string(fileID);
-        tmp.fileId = std::string(fileID);
-        tmp.extension = std::string(rawExt);
+        tmp.name = std::string(fileID.data());
+        tmp.fileId = std::string(fileID.data());
+        tmp.extension = std::string(rawExt.data());
         tmp.fileSize = sizeFile;
         tmp.fileOffset = offsetFile;
         fileInPack.push_back(tmp);
@@ -104,8 +107,8 @@ bool ReaderPack::readHeader()
         std::cerr << "Failed to open file: " << fpName << " - " << SDL_GetError() << std::endl;
         return false;
     }
-    char title[4+1]= {'\0'};
-    if (SDL_ReadIO(rfp.get(), &title, 4) != 4 || strcmp(title, "D2TM") != 0) {
+    std::array<char, 4> title {};
+    if (SDL_ReadIO(rfp.get(), title.data(), 4) != 4 || std::string_view(title.data(), title.size()) != "D2TM") {
         std::cerr << "Invalid file format: " << fpName << std::endl;
         rfp.reset();
         return false;
@@ -202,10 +205,9 @@ bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
 
 void WriterPack::writeHeader()
 {
-    const char *str = "D2TM";
-    size_t len = SDL_strlen(str);
-    if (SDL_WriteIO(wfp.get(), str, len) != len) {
-        printf("Couldn't fully write string\n");
+    constexpr std::string_view str = "D2TM";
+    if (SDL_WriteIO(wfp.get(), str.data(), str.size()) != str.size()) {
+        std::cerr << "Couldn't fully write string" << std::endl;
     }
     uint16_t nbFiles = fileInPack.size();
     SDL_WriteIO(wfp.get(), reinterpret_cast<const char *>(&nbFiles), sizeof(uint16_t));
@@ -217,17 +219,19 @@ void WriterPack::writeFileLines()
     uint32_t offset = 0;
     for (const auto &tmp : fileInPack) {
         // Create a temporary buffer to group the data
-        char buffer[fileNameSize + extensionSize + sizeof(uint32_t) + sizeof(uint32_t)] = {0};
+        std::array<char, fileNameSize + extensionSize + sizeof(uint32_t) + sizeof(uint32_t)> buffer {};
         // Copy fileId to buffer (limited to fileNameSize)
-        memcpy(buffer, tmp.fileId.c_str(), fileNameSize);
+        std::copy_n(tmp.fileId.begin(), std::min<size_t>(tmp.fileId.size(), fileNameSize), buffer.begin());
         // Copy extension to buffer (limited to extensionSize)
-        memcpy(buffer + fileNameSize, tmp.extension.c_str(), extensionSize);
+        std::copy_n(tmp.extension.begin(), std::min<size_t>(tmp.extension.size(), extensionSize), buffer.begin() + fileNameSize);
         // Copy offset into buffer
-        memcpy(buffer + fileNameSize + extensionSize, &offset, sizeof(uint32_t));
+        const auto offsetBytes = std::bit_cast<std::array<char, sizeof(uint32_t)>>(offset);
+        std::ranges::copy(offsetBytes, buffer.begin() + fileNameSize + extensionSize);
         // Copy fileSize to buffer
-        memcpy(buffer + fileNameSize + extensionSize + sizeof(uint32_t), &tmp.fileSize, sizeof(uint32_t));
+        const auto fileSizeBytes = std::bit_cast<std::array<char, sizeof(uint32_t)>>(tmp.fileSize);
+        std::ranges::copy(fileSizeBytes, buffer.begin() + fileNameSize + extensionSize + sizeof(uint32_t));
         // Write the buffer in one operation
-        if (SDL_WriteIO(wfp.get(), buffer, sizeof(buffer)) != sizeof(buffer)) {
+        if (SDL_WriteIO(wfp.get(), buffer.data(), buffer.size()) != buffer.size()) {
             std::cerr << "Failed to write file line for: " << tmp.fileId << std::endl;
         }
         // Update the offset for the next file
