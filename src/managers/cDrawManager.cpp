@@ -87,9 +87,8 @@ void cDrawManager::reset()
     m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx, m_services);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx, m_player, m_structureUtils);
     m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx, m_player, m_structureUtils);
-    m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex);
-    delete m_mouseDrawer;
-    m_mouseDrawer = new cMouseDrawer(m_player, m_ctx->getTextContext()->getSmallTextDrawer());
+    m_btnOptions.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex));
+    m_mouseDrawer = std::make_unique<cMouseDrawer>(m_player, m_ctx->getTextContext()->getSmallTextDrawer());
 
     m_sidebarDrawer->serviceInit(m_services);
     m_creditsDrawer->serviceInit(m_services);
@@ -105,9 +104,6 @@ void cDrawManager::reset()
 
 cDrawManager::~cDrawManager()
 {
-    if (m_btnOptions) {
-        delete m_btnOptions;
-    }
 }
 
 void cDrawManager::drawCombatState()
@@ -298,7 +294,7 @@ void cDrawManager::drawTopBarBackground()
         m_sdlDrawer->renderSprite(topbarPiece, x, 0);
     }
 
-    m_sdlDrawer->renderSprite(m_btnOptions, 1, 0);
+    m_sdlDrawer->renderSprite(m_btnOptions.get(), 1, 0);
 
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
@@ -312,8 +308,7 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
     const bool houseChanged = m_player->getHouse() != playerToDraw->getHouse();
     m_player = playerToDraw;
     if (houseChanged) {
-        delete m_btnOptions;
-        m_btnOptions = createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex);
+        m_btnOptions.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex));
     }
     m_creditsDrawer->setPlayer(playerToDraw);
     m_sidebarDrawer->setPlayer(playerToDraw);

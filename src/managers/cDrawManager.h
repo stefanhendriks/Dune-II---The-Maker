@@ -74,7 +74,7 @@ public:
     }
 
     cMouseDrawer *getMouseDrawer() {
-        return m_mouseDrawer;
+        return m_mouseDrawer.get();
     }
 
     cPlaceItDrawer *getPlaceItDrawer() {
@@ -141,7 +141,7 @@ private:
     std::unique_ptr<cPlaceItDrawer> m_placeitDrawer;
     std::unique_ptr<cStructureDrawer> m_structureDrawer;
     Color m_sidebarColor;
-    Texture *m_btnOptions;
+    std::unique_ptr<Texture> m_btnOptions;
     bool m_drawToolTip = false;
     // TODO: bullet/projectile drawer
     cPlayer *m_player = nullptr;
@@ -150,7 +150,7 @@ private:
     SDLDrawer* m_sdlDrawer = nullptr;
     Graphics* m_gfxinter = nullptr;
     Graphics* m_gfxdata = nullptr;
-    cMouseDrawer* m_mouseDrawer = nullptr;
+    std::unique_ptr<cMouseDrawer> m_mouseDrawer;
     GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
     cRectangle* m_mapViewport = nullptr;
