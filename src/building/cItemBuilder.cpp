@@ -44,6 +44,7 @@
 #include "include/cAssert.h"
 
 #include "data/gfxaudio.h"
+#include <algorithm>
 
 cItemBuilder::cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingListUpdater) :
     m_player(thePlayer),
@@ -53,7 +54,7 @@ cItemBuilder::cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingLis
     d2tm_assert(thePlayer!=nullptr);
     d2tm_assert(buildingListUpdater!=nullptr);
     removeAllItems();
-    memset(m_timers, 0, sizeof(m_timers));
+    std::fill(std::begin(m_timers), std::end(m_timers), 0);
 }
 
 cItemBuilder::~cItemBuilder()
