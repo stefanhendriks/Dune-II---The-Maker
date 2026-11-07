@@ -24,6 +24,7 @@
 #include "utils/Log.h"
 
 #include <vector>
+#include <algorithm>
 
 cBuildingList::cBuildingList(eListType listType)
 {
@@ -32,7 +33,7 @@ cBuildingList::cBuildingList(eListType listType)
     m_buttonIconIdPressed = 0;	// the button to draw at the left of the list
     m_buttonDrawX = 0;
     m_buttonDrawY = 0;
-    memset(m_items, 0, sizeof(m_items));
+    std::fill(std::begin(m_items), std::end(m_items), nullptr);
     m_listType = listType;
     m_maxItems = 0;
     m_itemBuilder = nullptr;
