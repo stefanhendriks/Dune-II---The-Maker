@@ -17,9 +17,17 @@
 
 #include "cSeedMap.h"
 
+#include <array>
+
 struct cell {
     short w, a, b;
 };
+
+// The generator works on 64 rows, but spreadMatrix may touch an extra 65th row.
+using SeedCellMap = std::array<std::array<cell, 64>, 65>;
+
+// 16x17 matrix, plus one extra element that noise may write to
+using SeedMatrix = std::array<char, 16*17+1>;
 
 class cSeedMapGenerator {
 
@@ -39,17 +47,17 @@ private:
     */
 
     // methods needed to generate seedmap
-    void convertMap (cell map[64][64], short *iconmap);
-    void addSpice(cell map[64][64]);
-    void scanRegions (cell map[64][64]);
-    void createRegions (cell map[64][64]);
-    void balanceMap (cell map[64][64]);
-    void spreadMatrix (cell map[64][64]);
-    void copyMatrix (char *matrix, cell map[65][64]);
-    void createMatrix (char *matrix);
-    void addNoise1 (char *matrix);
-    void addNoise2 (char *matrix);
-    void addSpiceAt(cell map[64][64],short x,short y);
+    void convertMap (SeedCellMap &map, short *iconmap);
+    void addSpice(SeedCellMap &map);
+    void scanRegions (SeedCellMap &map);
+    void createRegions (SeedCellMap &map);
+    void balanceMap (SeedCellMap &map);
+    void spreadMatrix (SeedCellMap &map);
+    void copyMatrix (const SeedMatrix &matrix, SeedCellMap &map);
+    void createMatrix (SeedMatrix &matrix);
+    void addNoise1 (SeedMatrix &matrix);
+    void addNoise2 (SeedMatrix &matrix);
+    void addSpiceAt(SeedCellMap &map,short x,short y);
 
 public:
     explicit cSeedMapGenerator(unsigned long value);

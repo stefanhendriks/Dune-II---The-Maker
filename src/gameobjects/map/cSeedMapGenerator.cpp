@@ -161,7 +161,7 @@ short cSeedMapGenerator::random()
     return a;
 }
 
-void cSeedMapGenerator::convertMap(cell map[64][64], short *iconmap)
+void cSeedMapGenerator::convertMap(SeedCellMap &map, short *iconmap)
 {
     short *icontab, w, x, y;
 
@@ -179,7 +179,7 @@ void cSeedMapGenerator::convertMap(cell map[64][64], short *iconmap)
 /*
  * Add spice at specified position
  */
-void cSeedMapGenerator::addSpiceAt(cell map[64][64],short x,short y)
+void cSeedMapGenerator::addSpiceAt(SeedCellMap &map,short x,short y)
 {
     short dx,dy,x2,y2;
     if(map[y][x].w==SMG_SPICE) {
@@ -219,7 +219,7 @@ void cSeedMapGenerator::addSpiceAt(cell map[64][64],short x,short y)
  * Add spice to the map
  */
 
-void cSeedMapGenerator::addSpice(cell map[64][64])
+void cSeedMapGenerator::addSpice(SeedCellMap &map)
 {
     short i,x,y,a,b,c;
     short e,j,m,x2,y2,x3,y3;
@@ -283,9 +283,9 @@ void cSeedMapGenerator::addSpice(cell map[64][64])
  * The technique is similiar to --> balanceMap
  */
 
-void cSeedMapGenerator::scanRegions(cell map[64][64])
+void cSeedMapGenerator::scanRegions(SeedCellMap &map)
 {
-    short prevln[64], currln[64];
+    std::array<short, 64> prevln, currln;
     short i, x, y, left, up, right, down, middle, id;
 
     for (i = 0; i < 64; i++)
@@ -376,7 +376,7 @@ void cSeedMapGenerator::scanRegions(cell map[64][64])
  * creates terrain regions by replacing numbers within specified range
  */
 
-void cSeedMapGenerator::createRegions(cell map[64][64])
+void cSeedMapGenerator::createRegions(SeedCellMap &map)
 {
     /* variables named like terrains are range limits */
     short x, y, rock, dunes, mountains, num, reg;
@@ -407,9 +407,9 @@ void cSeedMapGenerator::createRegions(cell map[64][64])
  * to 'prevln'.
  */
 
-void cSeedMapGenerator::balanceMap(cell map[64][64])
+void cSeedMapGenerator::balanceMap(SeedCellMap &map)
 {
-    short prevln[64], currln[64];
+    std::array<short, 64> prevln, currln;
     short i, x, y;
 
     /* these variables store proper numbers (c=center, l=left etc.) */
@@ -459,7 +459,7 @@ void cSeedMapGenerator::balanceMap(cell map[64][64])
  * also the right border cells are inproperly calculated.
  */
 
-void cSeedMapGenerator::spreadMatrix(cell map[64][64])
+void cSeedMapGenerator::spreadMatrix(SeedCellMap &map)
 {
     short x, y, bx, by, ex, ey, medx, medy, diag=0;
 
@@ -490,7 +490,7 @@ void cSeedMapGenerator::spreadMatrix(cell map[64][64])
  * (the generator has a tend to use that extra row in spreadMatrix :)
  */
 
-void cSeedMapGenerator::copyMatrix(char *matrix, cell map[65][64])
+void cSeedMapGenerator::copyMatrix(const SeedMatrix &matrix, SeedCellMap &map)
 {
     short x, y, i=0;
 
@@ -511,7 +511,7 @@ void cSeedMapGenerator::copyMatrix(char *matrix, cell map[65][64])
  * Further the matrix is copied on real map every four column and row
  */
 
-void cSeedMapGenerator::createMatrix(char *matrix)
+void cSeedMapGenerator::createMatrix(SeedMatrix &matrix)
 {
     short i;
     unsigned char num;
@@ -528,7 +528,7 @@ void cSeedMapGenerator::createMatrix(char *matrix)
  * this part modifies matrix a bit by creating "noisy" pools
  */
 
-void cSeedMapGenerator::addNoise1(char *matrix)
+void cSeedMapGenerator::addNoise1(SeedMatrix &matrix)
 {
     short i, count, cell, ncell, d;
 
@@ -547,7 +547,7 @@ void cSeedMapGenerator::addNoise1(char *matrix)
     }
 }
 
-void cSeedMapGenerator::addNoise2(char *matrix)
+void cSeedMapGenerator::addNoise2(SeedMatrix &matrix)
 {
     short i, count, cell, ncell;
 
@@ -572,13 +572,13 @@ void cSeedMapGenerator::addNoise2(char *matrix)
 cSeedMap cSeedMapGenerator::generateSeedMap()
 {
     /* creates the shape of the map */
-    char matrix[16*17+1];
+    SeedMatrix matrix;
     createMatrix(matrix);
     addNoise1(matrix);
     addNoise2(matrix);
 
     /* copies the matrix on the map and spreads the numbers */
-    cell map[65][64];
+    SeedCellMap map;
     copyMatrix(matrix, map);
     spreadMatrix(map);
     /* makes the map more smooth */
