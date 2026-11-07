@@ -253,7 +253,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
     return new_id;
 }
 
-const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId, cInfoContext* infos)
+std::string toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId, cInfoContext* infos)
 {
     if (specificTypeId < 0) {
         return "Unknown";

@@ -178,7 +178,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
 
         unitInfo.configured = false;
 
-        strcpy(unitInfo.name, "\0");
+        unitInfo.name = "";
     }
 
     // Unit        : CarryAll
@@ -194,7 +194,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[CARRYALL].free_roam = true; // may freely roam the air
     unitInfos[CARRYALL].listType = eListType::LIST_UNITS;
     unitInfos[CARRYALL].subListId = SUBLIST_HIGHTECH;
-    strcpy(unitInfos[CARRYALL].name, "Carry-All");
+    unitInfos[CARRYALL].name = "Carry-All";
     unitInfos[CARRYALL].configured = true;
 
     // Unit        : Ornithopter
@@ -214,7 +214,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[ORNITHOPTER].listType = eListType::LIST_UNITS;
     unitInfos[ORNITHOPTER].subListId = SUBLIST_HIGHTECH;
 //    unitInfos[ORNITHOPTER].canAttackAirUnits = true; // orni's can attack other air units
-    strcpy(unitInfos[ORNITHOPTER].name, "Ornithopter");
+    unitInfos[ORNITHOPTER].name = "Ornithopter";
     unitInfos[ORNITHOPTER].configured = true;
 
     // Unit        : Devastator
@@ -234,7 +234,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[DEVASTATOR].smokeHpFactor = 0.5f;
     unitInfos[DEVASTATOR].canGuard = true;
     unitInfos[DEVASTATOR].canAttackUnits = true;
-    strcpy(unitInfos[DEVASTATOR].name, "Devastator");
+    unitInfos[DEVASTATOR].name = "Devastator";
     unitInfos[DEVASTATOR].configured = true;
 
     // Unit        : Harvester
@@ -252,7 +252,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[HARVESTER].subListId = SUBLIST_HEAVYFCTRY;
     unitInfos[HARVESTER].renderSmokeOnUnitWhenThresholdMet = true;
     unitInfos[HARVESTER].smokeHpFactor = 0.5f;
-    strcpy(unitInfos[HARVESTER].name, "Harvester");
+    unitInfos[HARVESTER].name = "Harvester";
     unitInfos[HARVESTER].configured = true;
 
     // Unit        : Combattank
@@ -272,7 +272,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[TANK].smokeHpFactor = 0.5f;
     unitInfos[TANK].canGuard = true;
     unitInfos[TANK].canAttackUnits = true;
-    strcpy(unitInfos[TANK].name, "Tank");
+    unitInfos[TANK].name = "Tank";
     unitInfos[TANK].configured = true;
 
 
@@ -294,7 +294,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SIEGETANK].smokeHpFactor = 0.5f;
     unitInfos[SIEGETANK].canGuard = true;
     unitInfos[SIEGETANK].canAttackUnits = true;
-    strcpy(unitInfos[SIEGETANK].name, "Siege Tank");
+    unitInfos[SIEGETANK].name = "Siege Tank";
     unitInfos[SIEGETANK].configured = true;
 
     // Unit        : MCV
@@ -310,7 +310,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[MCV].subListId = SUBLIST_HEAVYFCTRY;
     unitInfos[MCV].renderSmokeOnUnitWhenThresholdMet = true;
     unitInfos[MCV].smokeHpFactor = 0.5f;
-    strcpy(unitInfos[MCV].name, "MCV");
+    unitInfos[MCV].name = "MCV";
     unitInfos[MCV].configured = true;
 
 
@@ -330,7 +330,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[DEVIATOR].canGuard = true;
     unitInfos[DEVIATOR].canAttackUnits = true;
     unitInfos[DEVIATOR].canDamageStructures = false; // gas warhead only deviates units, does no structural damage
-    strcpy(unitInfos[DEVIATOR].name, "Deviator");
+    unitInfos[DEVIATOR].name = "Deviator";
     unitInfos[DEVIATOR].configured = true;
 
     // Unit        : Launcher
@@ -352,7 +352,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[LAUNCHER].smokeHpFactor = 0.5f;
     unitInfos[LAUNCHER].canGuard = true;
     unitInfos[LAUNCHER].canAttackUnits = true;
-    strcpy(unitInfos[LAUNCHER].name, "Launcher");
+    unitInfos[LAUNCHER].name = "Launcher";
     unitInfos[LAUNCHER].configured = true;
 
     // Unit        : Quad
@@ -373,7 +373,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[QUAD].smokeHpFactor = 0.5f;
     unitInfos[QUAD].canGuard = true;
     unitInfos[QUAD].canAttackUnits = true;
-    strcpy(unitInfos[QUAD].name, "Quad");
+    unitInfos[QUAD].name = "Quad";
     unitInfos[QUAD].configured = true;
 
 
@@ -394,7 +394,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[TRIKE].smokeHpFactor = 0.5f;
     unitInfos[TRIKE].canGuard = true;
     unitInfos[TRIKE].canAttackUnits = true;
-    strcpy(unitInfos[TRIKE].name, "Trike");
+    unitInfos[TRIKE].name = "Trike";
     unitInfos[TRIKE].configured = true;
 
     // Unit        : Raider Trike (Ordos trike)
@@ -405,7 +405,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[RAIDER].bmp_height = 14 * 2;
     unitInfos[RAIDER].bmp_startpixel = 0;
     unitInfos[RAIDER].bmp_frames = 1;
-    strcpy(unitInfos[RAIDER].name, "Raider Trike");
+    unitInfos[RAIDER].name = "Raider Trike";
     unitInfos[RAIDER].icon = ICON_UNIT_RAIDER;
     unitInfos[RAIDER].bulletType = BULLET_TRIKE;
     unitInfos[RAIDER].squish = false;
@@ -432,7 +432,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[FRIGATE].free_roam = true; // Frigate does not roam, yet needed?
     unitInfos[FRIGATE].hp = 9999;
     // frigate has no list
-    strcpy(unitInfos[FRIGATE].name, "Frigate");
+    unitInfos[FRIGATE].name = "Frigate";
 
     /*
     units[FRIGATE].speed     = 0;
@@ -462,7 +462,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SONICTANK].canGuard = true;
     unitInfos[SONICTANK].canAttackUnits = true;
 
-    strcpy(unitInfos[SONICTANK].name, "Sonic Tank");
+    unitInfos[SONICTANK].name = "Sonic Tank";
     unitInfos[SONICTANK].configured = true;
 
 
@@ -485,7 +485,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SOLDIER].damageOnEnterStructure = 10.0f;
     unitInfos[SOLDIER].canGuard = true;
     unitInfos[SOLDIER].canAttackUnits = true;
-    strcpy(unitInfos[SOLDIER].name, "Soldier");
+    unitInfos[SOLDIER].name = "Soldier";
     unitInfos[SOLDIER].configured = true;
 
 
@@ -510,7 +510,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[INFANTRY].damageOnEnterStructure = 25.0f;
     unitInfos[INFANTRY].canGuard = true;
     unitInfos[INFANTRY].canAttackUnits = true;
-    strcpy(unitInfos[INFANTRY].name, "Light Infantry");
+    unitInfos[INFANTRY].name = "Light Infantry";
     unitInfos[INFANTRY].configured = true;
 
     // Unit        : Single Trooper
@@ -520,7 +520,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[TROOPER].bmp_height = 16 * 2;
     unitInfos[TROOPER].bmp_startpixel = 0;
     unitInfos[TROOPER].bmp_frames = 3; // 2 extra frames
-    strcpy(unitInfos[TROOPER].name, "Trooper");
+    unitInfos[TROOPER].name = "Trooper";
     unitInfos[TROOPER].infantry = true;
     unitInfos[TROOPER].bulletType = ROCKET_SMALL;
     unitInfos[TROOPER].icon = ICON_UNIT_TROOPER;
@@ -545,7 +545,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[TROOPERS].bmp_height = 16 * 2;
     unitInfos[TROOPERS].bmp_startpixel = 0;
     unitInfos[TROOPERS].bmp_frames = 3; // 2 extra frames
-    strcpy(unitInfos[TROOPERS].name, "Troopers");
+    unitInfos[TROOPERS].name = "Troopers";
     unitInfos[TROOPERS].icon = ICON_UNIT_TROOPERS;
     unitInfos[TROOPERS].bulletType = ROCKET_SMALL;
     unitInfos[TROOPERS].fireTwice = true;
@@ -571,7 +571,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[UNIT_FREMEN_ONE].bmp_height = 16 * 2;
     unitInfos[UNIT_FREMEN_ONE].bmp_startpixel = 0;
     unitInfos[UNIT_FREMEN_ONE].bmp_frames = 3; // 2 extra frames
-    strcpy(unitInfos[UNIT_FREMEN_ONE].name, "Fremen (1)");
+    unitInfos[UNIT_FREMEN_ONE].name = "Fremen (1)";
     unitInfos[UNIT_FREMEN_ONE].icon = ICON_SPECIAL_FREMEN;
     unitInfos[UNIT_FREMEN_ONE].bulletType = ROCKET_SMALL_FREMEN;
     unitInfos[UNIT_FREMEN_ONE].fireTwice = false;
@@ -593,7 +593,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[UNIT_FREMEN_THREE].bmp_height = 16 * 2;
     unitInfos[UNIT_FREMEN_THREE].bmp_startpixel = 0;
     unitInfos[UNIT_FREMEN_THREE].bmp_frames = 3; // 2 extra frames
-    strcpy(unitInfos[UNIT_FREMEN_THREE].name, "Fremen (3)");
+    unitInfos[UNIT_FREMEN_THREE].name = "Fremen (3)";
     unitInfos[UNIT_FREMEN_THREE].icon = ICON_SPECIAL_FREMEN;
     unitInfos[UNIT_FREMEN_THREE].bulletType = ROCKET_SMALL_FREMEN;
     unitInfos[UNIT_FREMEN_THREE].fireTwice = true;
@@ -622,7 +622,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SABOTEUR].range = 2;
     unitInfos[SABOTEUR].attack_frequency = 0;
     unitInfos[SABOTEUR].turnspeed = 0; // very fast
-    strcpy(unitInfos[SABOTEUR].name, "Saboteur");
+    unitInfos[SABOTEUR].name = "Saboteur";
     unitInfos[SABOTEUR].icon = ICON_SPECIAL_SABOTEUR;
     unitInfos[SABOTEUR].squish = false;
     unitInfos[SABOTEUR].canBeSquished = true;
@@ -644,7 +644,7 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SANDWORM].bmp_height = 48;
     unitInfos[SANDWORM].turnspeed = 0; // very fast
     unitInfos[SANDWORM].sight = 16;
-    strcpy(unitInfos[SANDWORM].name, "Sandworm");
+    unitInfos[SANDWORM].name = "Sandworm";
     unitInfos[SANDWORM].icon = ICON_UNIT_SANDWORM;
     unitInfos[SANDWORM].squish = false;
     unitInfos[SANDWORM].canGuard = true;
@@ -1408,7 +1408,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         structureInfo.uponDestructionSpawnUnitAmountMin = 0;
         structureInfo.uponDestructionSpawnUnitAmountMax = 0;
         structureInfo.uponDestructionSpawnUnitType = -1;
-        strcpy(structureInfo.name, "Unknown");
+        structureInfo.name = "Unknown";
     }
 
     // Single and 4 slabs
@@ -1419,7 +1419,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[SLAB1].bmp_height = 16 * 2;
     structureInfos[SLAB1].configured = true;
     structureInfos[SLAB1].queuable = true;
-    strcpy(structureInfos[SLAB1].name, "Concrete Slab");
+    structureInfos[SLAB1].name = "Concrete Slab";
 
     structureInfos[SLAB4].bmp = m_gfxdata->getSurface(PLACE_SLAB4); // in case an invalid bitmap, we are a windtrap
     structureInfos[SLAB4].icon = ICON_STR_4SLAB;
@@ -1428,7 +1428,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[SLAB4].bmp_height = 32 * 2;
     structureInfos[SLAB4].configured = true;
     structureInfos[SLAB4].queuable = true;
-    strcpy(structureInfos[SLAB4].name, "4 Concrete Slabs");
+    structureInfos[SLAB4].name = "4 Concrete Slabs";
 
 
     // Concrete Wall
@@ -1439,7 +1439,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[WALL].bmp_height = 16 * 2;
     structureInfos[WALL].queuable = true;
     structureInfos[WALL].configured = true;
-    strcpy(structureInfos[WALL].name, "Concrete Wall");
+    structureInfos[WALL].name = "Concrete Wall";
 
     // Structure    : Windtrap
     // Description  : <none>
@@ -1454,7 +1454,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 53,
         .relY = 37
     });
-    strcpy(structureInfos[WINDTRAP].name, "Windtrap");
+    structureInfos[WINDTRAP].name = "Windtrap";
 
     // Structure    : Heavy Factory
     // Description  : <none>
@@ -1471,7 +1471,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 25,
         .relY = 3
     });
-    strcpy(structureInfos[HEAVYFACTORY].name, "Heavy Factory");
+    structureInfos[HEAVYFACTORY].name = "Heavy Factory";
 
     // Structure    : Hight Tech Factory (for aircraft only)
     // Description  : <none>
@@ -1487,7 +1487,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 19,
         .relY = 36
     });
-    strcpy(structureInfos[HIGHTECH].name, "Hi-Tech");
+    structureInfos[HIGHTECH].name = "Hi-Tech";
 
     // Structure    : Repair
     // Description  : <none>
@@ -1503,7 +1503,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 41,
         .relY = 3
     });
-    strcpy(structureInfos[REPAIR].name, "Repair Facility");
+    structureInfos[REPAIR].name = "Repair Facility";
 
     // Structure    : Palace
     // Description  : <none>
@@ -1518,7 +1518,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 28,
         .relY = 14
     });
-    strcpy(structureInfos[PALACE].name, "Palace");
+    structureInfos[PALACE].name = "Palace";
 
     // Structure    : Light Factory
     // Description  : <none>
@@ -1535,7 +1535,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 41,
         .relY = 2
     });
-    strcpy(structureInfos[LIGHTFACTORY].name, "Light Factory");
+    structureInfos[LIGHTFACTORY].name = "Light Factory";
 
     // Structure    : Radar
     // Description  : <none>
@@ -1558,7 +1558,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 12,
         .relY = 46
     });
-    strcpy(structureInfos[RADAR].name, "Outpost");
+    structureInfos[RADAR].name = "Outpost";
 
     // Structure    : Barracks
     // Description  : <none>
@@ -1579,7 +1579,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 51,
         .relY = 50
     });
-    strcpy(structureInfos[BARRACKS].name, "Barracks");
+    structureInfos[BARRACKS].name = "Barracks";
 
     // Structure    : WOR
     // Description  : <none>
@@ -1595,7 +1595,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 21,
         .relY = 31
     });
-    strcpy(structureInfos[WOR].name, "WOR");
+    structureInfos[WOR].name = "WOR";
 
 
     // Structure    : Silo
@@ -1613,7 +1613,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 43,
         .relY = 20
     });
-    strcpy(structureInfos[SILO].name, "Spice Storage Silo");
+    structureInfos[SILO].name = "Spice Storage Silo";
 
     // Structure    : Refinery
     // Description  : <none>
@@ -1629,7 +1629,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 45,
         .relY = 12
     });
-    strcpy(structureInfos[REFINERY].name, "Spice Refinery");
+    structureInfos[REFINERY].name = "Spice Refinery";
 
     // Structure    : Construction Yard
     // Description  : <none>
@@ -1647,7 +1647,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[CONSTYARD].fadecol = -1;
     structureInfos[CONSTYARD].icon = ICON_STR_CONSTYARD;
     structureInfos[CONSTYARD].configured = true;
-    strcpy(structureInfos[CONSTYARD].name, "Construction Yard");
+    structureInfos[CONSTYARD].name = "Construction Yard";
 
     // Structure    : Starport
     // Description  : You can order units from this structure
@@ -1663,7 +1663,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 16,
         .relY = 3
     });
-    strcpy(structureInfos[STARPORT].name, "Starport");
+    structureInfos[STARPORT].name = "Starport";
 
     // Structure    : House of IX
     // Description  : Makes it possible for the player to upgrade its Heavy Factory in order to build their special weapon
@@ -1679,7 +1679,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         .relX = 60, // 60
         .relY = 40  // 40
     });
-    strcpy(structureInfos[IX].name, "House of IX");
+    structureInfos[IX].name = "House of IX";
 
     // Structure    : Normal Turret
     // Description  : defence
@@ -1694,7 +1694,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[TURRET].configured = true;
     structureInfos[TURRET].canAttackGroundUnits = true;
     structureInfos[TURRET].fireRate = 275;
-    strcpy(structureInfos[TURRET].name, "Gun Turret");
+    structureInfos[TURRET].name = "Gun Turret";
 
     // Structure    : Rocket Turret
     // Description  : defence
@@ -1710,7 +1710,7 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
     structureInfos[RTURRET].canAttackAirUnits = true;
     structureInfos[RTURRET].canAttackGroundUnits = true;
     structureInfos[RTURRET].fireRate = 350;
-    strcpy(structureInfos[RTURRET].name, "Rocket Turret");
+    structureInfos[RTURRET].name = "Rocket Turret";
 }
 
 /*****************************
