@@ -1857,14 +1857,28 @@ void cUnit::revealWhenAttackingHumanUnitAt(int targetCell)
     cPlayer *human = m_objects->getPlayer(HUMAN);
     if (human->isSameTeamAs(getPlayer())) return;
 
+    // the shoot cell can be scattered (launchers) or the target may have moved, so also look at
+    // what this unit is actually attacking
+    bool attacksHuman = false;
+    if (combat.iAttackUnit > -1) {
+        cUnit *target = m_objects->getUnit(combat.iAttackUnit);
+        attacksHuman = target && target->isValid() && human->isSameTeamAs(target->getPlayer());
+    }
+    if (!attacksHuman && combat.iAttackStructure > -1) {
+        cAbstractStructure *target = m_objects->getStructure(combat.iAttackStructure);
+        attacksHuman = target && target->isValid() && human->isSameTeamAs(target->getPlayer());
+    }
+
     cMap *map = m_objects->getMap();
     for (int targetId : {map->getCellIdUnitLayer(targetCell), map->getCellIdAirUnitLayer(targetCell)}) {
+        if (attacksHuman) break;
         if (targetId < 0) continue;
         cUnit *target = m_objects->getUnit(targetId);
-        if (!target->isValid() || !human->isSameTeamAs(target->getPlayer())) continue;
+        attacksHuman = target->isValid() && human->isSameTeamAs(target->getPlayer());
+    }
 
+    if (attacksHuman) {
         revealTimer.reset(revealTicks);
-        return;
     }
 }
 

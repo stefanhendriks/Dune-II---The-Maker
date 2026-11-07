@@ -136,11 +136,13 @@ void cDrawManager::drawCombatState()
     m_mapDrawer->drawRememberedTerrain();
     m_structureDrawer->drawRememberedStructures();
     m_objects->getMap()->drawRememberedUnits();
-    m_objects->getMap()->drawRevealedUnitsInFog();
 
     m_structureDrawer->drawStructuresHealthBars();
 
     m_mapDrawer->drawShroud();
+
+    // after the shroud: an attacker on a never explored cell would otherwise be painted over in black
+    m_objects->getMap()->drawRevealedUnitsInFog();
 
     drawRallyPoint();
 
