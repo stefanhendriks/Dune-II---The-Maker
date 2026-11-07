@@ -30,7 +30,7 @@ public:
 
     ~cPlayerBrainMissionKindSaboteur() override;
 
-    cPlayerBrainMissionKind *clone(cPlayer *player, cPlayerBrainMission *mission) override;
+    std::unique_ptr<cPlayerBrainMissionKind> clone(cPlayer *player, cPlayerBrainMission *mission) override;
 
     bool think_SelectTarget() override;
 

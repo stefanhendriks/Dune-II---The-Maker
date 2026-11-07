@@ -19,6 +19,7 @@
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/players/brains/cPlayerBrainData.h"
 
+#include <memory>
 #include <vector>
 
 namespace brains {
@@ -144,7 +145,7 @@ private:
 
     ePlayerBrainMissionKind kind;
 
-    cPlayerBrainMissionKind *missionKind;
+    std::unique_ptr<cPlayerBrainMissionKind> missionKind;
 
     cPlayerBrain *brain;
 
