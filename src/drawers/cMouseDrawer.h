@@ -18,6 +18,7 @@
 #include "controls/sMouseEvent.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gui/cTextWriter.h"
+#include <memory>
 
 class cPlayer;
 class cWindTrap;
@@ -55,7 +56,7 @@ private:
 
     cPlayer *m_player;
     int m_mouseX, m_mouseY;
-    cTextWriter* m_textWriter = nullptr;
+    std::unique_ptr<cTextWriter> m_textWriter;
     cGameSettings* m_settings = nullptr;
     cMouse* m_mouse = nullptr;
     SDLDrawer* m_renderer = nullptr;
