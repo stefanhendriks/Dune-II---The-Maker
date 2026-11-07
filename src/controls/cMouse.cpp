@@ -81,13 +81,13 @@ void cMouse::handleEvent(const SDL_Event &event)
             SDL_RenderCoordinatesFromWindow(renderer, event.button.x, event.button.y, &px, &py);
             if (event.button.button == SDL_BUTTON_LEFT) {
                 m_leftButtonPressed = (event.button.clicks == 1);
-                m_coordsOnClick.x = (int)px;
-                m_coordsOnClick.y = (int)py;
+                m_coordsOnClick.x = static_cast<int>(px);
+                m_coordsOnClick.y = static_cast<int>(py);
             }
             if (event.button.button == SDL_BUTTON_RIGHT) {
                 m_rightButtonPressed = true;
-                m_coordsOnClick.x = (int)px;
-                m_coordsOnClick.y = (int)py;
+                m_coordsOnClick.x = static_cast<int>(px);
+                m_coordsOnClick.y = static_cast<int>(py);
             }
             break;
         }
@@ -97,8 +97,8 @@ void cMouse::handleEvent(const SDL_Event &event)
             if (event.button.button == SDL_BUTTON_LEFT) {
                 m_leftButtonPressed = false;
                 m_leftButtonReleased = true;
-                int dx = m_coordsOnClick.x - (int)px;
-                int dy = m_coordsOnClick.y - (int)py;
+                int dx = m_coordsOnClick.x - static_cast<int>(px);
+                int dy = m_coordsOnClick.y - static_cast<int>(py);
                 if (dx*dx + dy*dy < 16) {
                     if (event.button.clicks == 2) {
                         m_leftButtonDoubleClicked = true;
@@ -110,8 +110,8 @@ void cMouse::handleEvent(const SDL_Event &event)
             if (event.button.button == SDL_BUTTON_RIGHT) {
                 m_rightButtonPressed = false;
                 m_rightButtonReleased = true;
-                int dx = m_coordsOnClick.x - (int)px;
-                int dy = m_coordsOnClick.y - (int)py;
+                int dx = m_coordsOnClick.x - static_cast<int>(px);
+                int dy = m_coordsOnClick.y - static_cast<int>(py);
                 if (dx*dx + dy*dy < 16) {
                     m_rightButtonClicked = true;
                 }
@@ -121,8 +121,8 @@ void cMouse::handleEvent(const SDL_Event &event)
         case SDL_EVENT_MOUSE_MOTION: {
             float px, py;
             SDL_RenderCoordinatesFromWindow(renderer, event.motion.x, event.motion.y, &px, &py);
-            m_coords.x = (int)px;
-            m_coords.y = (int)py;
+            m_coords.x = static_cast<int>(px);
+            m_coords.y = static_cast<int>(py);
             m_didMouseMove = true;
             break;
         }
@@ -208,7 +208,7 @@ void cMouse::updateState()
 void cMouse::setCursorPosition(SDL_Window *_windows, int x, int y)
 {
     float wx, wy;
-    SDL_RenderCoordinatesToWindow(m_sdlDrawer->getRenderer(), (float)x, (float)y, &wx, &wy);
+    SDL_RenderCoordinatesToWindow(m_sdlDrawer->getRenderer(), static_cast<float>(x), static_cast<float>(y), &wx, &wy);
     SDL_WarpMouseInWindow(_windows, wx, wy);
     if (m_mouseObserver) {
         s_MouseEvent event {
