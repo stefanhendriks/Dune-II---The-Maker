@@ -3037,7 +3037,7 @@ void cUnit::thinkFast_position()
 bool cUnit::isMovingBetweenCells()
 {
     // when not perfectly divisible then it is 'between' cells.
-    return ((int)position.posX) % TILESIZE_WIDTH_PIXELS != 0 || ((int)position.posY) % TILESIZE_HEIGHT_PIXELS != 0;
+    return (static_cast<int>(position.posX)) % TILESIZE_WIDTH_PIXELS != 0 || (static_cast<int>(position.posY)) % TILESIZE_HEIGHT_PIXELS != 0;
 }
 
 bool cUnit::isDamaged()
@@ -3816,7 +3816,7 @@ bool cUnit::isSelected() const {
 std::string cUnit::getHarvesterStatusForMessageBar()
 {
     s_UnitInfo &info = getUnitInfo();
-    int harvested = ((float)iCredits/info.credit_capacity)*100;
+    int harvested = (static_cast<float>(iCredits)/info.credit_capacity)*100;
     return std::format("{} at {} percent health and {} percent harvested", info.name, getHealthNormalized()*100, harvested);
 }
 
