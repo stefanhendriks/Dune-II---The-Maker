@@ -17,6 +17,7 @@
 
 #include "cDataPack.hpp"
 #include "cPack.h"
+#include "utils/Log.h"
 #include <iostream>
 #include <iomanip>
 #include <SDL3_image/SDL_image.h>
@@ -66,7 +67,7 @@ SDL_Surface *DataPack::getSurface(int index)
     SDL_IOStream *tmp = reader->getData(index);
     SDL_Surface *out = IMG_Load_IO(tmp, true);
     if (!out) {
-        printf("Failed to load image %i : %s\n", index, SDL_GetError());
+        Logger::error(COMP_SDL2, "getSurface", "Failed to load image {} : {}", index, SDL_GetError());
     }
     surfaceCache[index] = out;
     return out;
@@ -100,7 +101,7 @@ MIX_Audio *DataPack::getAudio(int index)
     MIX_Audio *out = MIX_LoadAudioWithProperties(props);
     SDL_DestroyProperties(props);
     if (!out) {
-        printf("Failed to load audio %i : %s\n", index, SDL_GetError());
+        Logger::error(COMP_SOUND, "getAudio", "Failed to load audio {} : {}", index, SDL_GetError());
     }
     audioCache[index] = out;
     return out;
