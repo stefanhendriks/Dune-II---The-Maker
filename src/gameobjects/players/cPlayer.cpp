@@ -126,9 +126,6 @@ cPlayer::~cPlayer()
     // if (gameControlsContext) {
     //     delete gameControlsContext;
     // }
-    if (difficultySettings) {
-        delete difficultySettings;
-    }
     // if (brain_) {
     //     delete brain_;
     // }
@@ -247,8 +244,7 @@ void cPlayer::init(int id, std::unique_ptr<brains::cPlayerBrain> brain)
      */
     m_Human = (id == HUMAN);
 
-    if (difficultySettings) delete difficultySettings;
-    difficultySettings = new cPlayerDifficultySettings();
+    difficultySettings = std::make_unique<cPlayerDifficultySettings>();
     if (m_infos) {
         difficultySettings->setInfoContext(m_infos);
     }
@@ -284,10 +280,6 @@ void cPlayer::setHouse(int iHouse)
     Logger::info(COMP_PLAYER, "cPlayer::setHouse", "Current house is [{}/{}], setting house to [{}/{}]",
                  currentHouse, getHouseNameForId(currentHouse), iHouse, getHouseNameForId(iHouse));
     house = iHouse; // use rules of this house
-
-    if (difficultySettings) {
-        delete difficultySettings;
-    }
 
     difficultySettings = cPlayerDifficultySettings::createFromHouse(iHouse);
     if (m_infos) {

@@ -166,7 +166,7 @@ public:
     }
 
     cPlayerDifficultySettings *getDifficultySettings() const {
-        return difficultySettings;
+        return difficultySettings.get();
     }
 
     cGameObjectContext *getObjects() const {
@@ -602,7 +602,7 @@ private:
     // TODO: in the end this should be redundant.. perhaps remove it now/soon anyway?
     // TODO: redundant? OBSOLETE. Since we're getting more properties for units and thereby
     // can/should create units specific for houses.
-    cPlayerDifficultySettings *difficultySettings = nullptr;
+    std::unique_ptr<cPlayerDifficultySettings> difficultySettings;
     // these have all state, and need to be recreated for each mission.
     cSideBar *sidebar;            // each player has a sidebar (lists of what it can build)
     std::unique_ptr<cItemBuilder> itemBuilder; // each player can build items
