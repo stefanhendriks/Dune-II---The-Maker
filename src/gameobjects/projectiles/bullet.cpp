@@ -308,7 +308,7 @@ void cBullet::arrivedAtDestinationLogic()
     int x = m_objects->getMapGeometry()->getCellX(iCell);
     int y = m_objects->getMapGeometry()->getCellY(iCell);
 
-    int halfExplosionSize = std::round((float)(sBullet.explosionSize / 2));
+    int halfExplosionSize = std::round(static_cast<float>(sBullet.explosionSize / 2));
     int startX = (x - halfExplosionSize);
     int startY = (y - halfExplosionSize);
     int endX = x + (halfExplosionSize + 1);
@@ -631,8 +631,8 @@ void cBullet::damageWall(int cell, double factor) const
 void cBullet::moveBulletTowardsGoal()
 {
     float angle = fRadians(posX, posY, targetX, targetY);
-    posX += cos(angle) * (float)getMoveSpeed();
-    posY += sin(angle) * (float)getMoveSpeed();
+    posX += cos(angle) * static_cast<float>(getMoveSpeed());
+    posY += sin(angle) * static_cast<float>(getMoveSpeed());
 }
 
 bool cBullet::isGroundBullet() const
