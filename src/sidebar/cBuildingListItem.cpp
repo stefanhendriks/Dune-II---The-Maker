@@ -58,7 +58,7 @@ cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int
 
 cBuildingListItem::~cBuildingListItem()
 {
-    m_myList = NULL;
+    m_myList = nullptr;
 }
 
 void cBuildingListItem::serviceInit(cInfoContext* info, cGameSettings* settings)
