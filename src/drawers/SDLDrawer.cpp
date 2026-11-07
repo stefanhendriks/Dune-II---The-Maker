@@ -35,7 +35,7 @@ SDLDrawer::~SDLDrawer()
 void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
 {
     if (src == nullptr || src->tex.get() == nullptr) return;
-    SDL_FRect tmp = {(float)x, (float)y, (float)src->w, (float)src->h};
+    SDL_FRect tmp = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(src->w), static_cast<float>(src->h)};
     SDL_SetTextureBlendMode(src->tex.get(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     if (!SDL_SetTextureAlphaMod(src->tex.get(), opacity)) {
@@ -47,7 +47,7 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
 void SDLDrawer::renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint8 opacity)
 {
     if (tex == nullptr) return;
-    SDL_FRect tmp = {(float)x, (float)y, (float)w, (float)h};
+    SDL_FRect tmp = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(w), static_cast<float>(h)};
     SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     if (!SDL_SetTextureAlphaMod(tex, opacity)) {
@@ -58,7 +58,7 @@ void SDLDrawer::renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint
 
 void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
 {
-    SDL_FRect tmp = {(float)x, (float)y, (float)src->w, (float)src->h};
+    SDL_FRect tmp = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(src->w), static_cast<float>(src->h)};
     transparentColorKey = SDL_MapRGB(SDL_GetPixelFormatDetails(src->format), SDL_GetSurfacePalette(src), 255, 0, 255);
     SDL_SetSurfaceColorKey(src, true, transparentColorKey);
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, src);
@@ -96,7 +96,7 @@ void SDLDrawer::renderRectFillColor(int x, int y, int width, int height, Uint8 r
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_FRect carre = {(float)x, (float)y, (float)width, (float)height};
+    SDL_FRect carre = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height)};
     SDL_RenderFillRect(renderer, &carre);
 }
 
@@ -109,7 +109,7 @@ void SDLDrawer::renderRectColor(int x, int y, int width, int height, Uint8 r, Ui
 {
     SDL_SetRenderDrawColor(renderer, r,g,b, opacity);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_FRect carre = {(float)x, (float)y, (float)width, (float)height};
+    SDL_FRect carre = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(width), static_cast<float>(height)};
     SDL_RenderRect(renderer, &carre);
 }
 
@@ -152,7 +152,7 @@ void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow,
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
-    SDL_FRect tmp = {(float)x1, (float)y1, (float)width, (float)height};
+    SDL_FRect tmp = {static_cast<float>(x1), static_cast<float>(y1), static_cast<float>(width), static_cast<float>(height)};
     renderChangeColor(gui_colorWindow);
     SDL_RenderFillRect(renderer, &tmp);
     renderChangeColor(gui_colorBorderLight);
@@ -165,9 +165,9 @@ void SDLDrawer::gui_DrawRect(const cRectangle &rectangle, Color gui_colorWindow,
     int endX = (x1 + width) - 1;
     int endY = (y1 + height) - 1;
 
-    SDL_RenderLine(renderer, (float)endX, (float)y1, (float)endX, (float)endY);
+    SDL_RenderLine(renderer, static_cast<float>(endX), static_cast<float>(y1), static_cast<float>(endX), static_cast<float>(endY));
     renderChangeColor(gui_colorBorderDark);
-    SDL_RenderLine(renderer, (float)x1, (float)endY, (float)endX, (float)endY);
+    SDL_RenderLine(renderer, static_cast<float>(x1), static_cast<float>(endY), static_cast<float>(endX), static_cast<float>(endY));
 }
 
 void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorBorderLight, Color gui_colorBorderDark)
@@ -176,7 +176,7 @@ void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorB
     int y1 = rectangle.getY();
     int width = rectangle.getWidth();
     int height = rectangle.getHeight();
-    SDL_FRect tmp = {(float)x1, (float)y1, (float)width, (float)height};
+    SDL_FRect tmp = {static_cast<float>(x1), static_cast<float>(y1), static_cast<float>(width), static_cast<float>(height)};
     renderChangeColor(gui_colorBorderLight);
     SDL_RenderRect(renderer, &tmp);
     renderChangeColor(gui_colorBorderDark);
@@ -185,9 +185,9 @@ void SDLDrawer::gui_DrawRectBorder(const cRectangle &rectangle, Color gui_colorB
     // with the SDL_RenderFillRect and DrawRect functions.
     int endX = (x1 + width) - 1;
     int endY = (y1 + height) - 1;
-    SDL_RenderLine(renderer, (float)endX, (float)y1, (float)endX, (float)endY);
+    SDL_RenderLine(renderer, static_cast<float>(endX), static_cast<float>(y1), static_cast<float>(endX), static_cast<float>(endY));
     renderChangeColor(gui_colorBorderDark);
-    SDL_RenderLine(renderer, (float)x1, (float)endY, (float)endX, (float)endY);
+    SDL_RenderLine(renderer, static_cast<float>(x1), static_cast<float>(endY), static_cast<float>(endX), static_cast<float>(endY));
 }
 
 void SDLDrawer::renderClearToColor(Color color)
@@ -199,7 +199,7 @@ void SDLDrawer::renderClearToColor(Color color)
 void SDLDrawer::renderLine(int x1, int y1, int x2, int y2, Color color)
 {
     renderChangeColor(color);
-    SDL_RenderLine(renderer, (float)x1, (float)y1, (float)x2, (float)y2);
+    SDL_RenderLine(renderer, static_cast<float>(x1), static_cast<float>(y1), static_cast<float>(x2), static_cast<float>(y2));
 }
 
 void SDLDrawer::renderDot(int x, int y, Color color, int size)
@@ -207,7 +207,7 @@ void SDLDrawer::renderDot(int x, int y, Color color, int size)
     if (size < 1) return;
     renderChangeColor(color);
     if (size == 1) {
-        SDL_RenderPoint(renderer, (float)x, (float)y);
+        SDL_RenderPoint(renderer, static_cast<float>(x), static_cast<float>(y));
         return;
     }
 
@@ -215,7 +215,7 @@ void SDLDrawer::renderDot(int x, int y, Color color, int size)
     int endY = y + size;
     for (int sx = x; sx < endX; sx++) {
         for (int sy = y; sy < endY; sy++) {
-            SDL_RenderPoint(renderer, (float)sx, (float)sy);
+            SDL_RenderPoint(renderer, static_cast<float>(sx), static_cast<float>(sy));
         }
     }
 }
@@ -236,29 +236,29 @@ void SDLDrawer::set_pixel(SDL_Surface *surface, int x, int y, Uint32 pixel_color
     }
 
     int bpp = SDL_BYTESPERPIXEL(surface->format);
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch;
+    Uint8 *p = static_cast<Uint8 *>(surface->pixels) + y * surface->pitch;
 
     switch (bpp) {
         case 1:
-            *((Uint8 *)p + x) = (Uint8)pixel_color;
+            *(p + x) = static_cast<Uint8>(pixel_color);
             break;
         case 2:
-            *((Uint16 *)p + x) = (Uint16)pixel_color;
+            *(reinterpret_cast<Uint16 *>(p) + x) = static_cast<Uint16>(pixel_color);
             break;
         case 3:
             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-                *((Uint8 *)p + x * bpp + 0) = (pixel_color >> 16) & 0xFF;
-                *((Uint8 *)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
-                *((Uint8 *)p + x * bpp + 2) = pixel_color & 0xFF;
+                *(p + x * bpp + 0) = (pixel_color >> 16) & 0xFF;
+                *(p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
+                *(p + x * bpp + 2) = pixel_color & 0xFF;
             }
             else {
-                *((Uint8 *)p + x * bpp + 0) = pixel_color & 0xFF;
-                *((Uint8 *)p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
-                *((Uint8 *)p + x * bpp + 2) = (pixel_color >> 16) & 0xFF;
+                *(p + x * bpp + 0) = pixel_color & 0xFF;
+                *(p + x * bpp + 1) = (pixel_color >> 8) & 0xFF;
+                *(p + x * bpp + 2) = (pixel_color >> 16) & 0xFF;
             }
             break;
         case 4:
-            *((Uint32 *)p + x) = pixel_color;
+            *(reinterpret_cast<Uint32 *>(p) + x) = pixel_color;
             break;
     }
 }
