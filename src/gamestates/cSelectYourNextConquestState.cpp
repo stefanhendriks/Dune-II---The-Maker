@@ -43,6 +43,7 @@
 #include <iostream>
 #include <format>
 #include "include/cAssert.h"
+#include <algorithm>
 
 // Return color index from pixel (x, y) in surface
 static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
@@ -102,8 +103,8 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
 	d2tm_assert(m_drawManager != nullptr);
     iRegionSceneAlpha = 0;  // alpha for scene in introduction state
 
-    memset(iRegionConquer, -1, sizeof(iRegionConquer));
-    memset(iRegionHouse, -1, sizeof(iRegionHouse));
+    std::fill(std::begin(iRegionConquer), std::end(iRegionConquer), -1);
+    std::fill(std::begin(iRegionHouse), std::end(iRegionHouse), -1);
     memset(cRegionText, 0, sizeof(cRegionText));
 
     calculateOffset();
@@ -495,8 +496,8 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
     }
 
     // clear conquer stuff
-    memset(iRegionConquer, -1, sizeof(iRegionConquer));
-    memset(iRegionHouse, -1, sizeof(iRegionHouse));
+    std::fill(std::begin(iRegionConquer), std::end(iRegionConquer), -1);
+    std::fill(std::begin(iRegionHouse), std::end(iRegionHouse), -1);
     memset(cRegionText, 0, sizeof(cRegionText));
 
     // Per mission assign:
