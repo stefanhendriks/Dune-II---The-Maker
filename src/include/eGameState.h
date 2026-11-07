@@ -44,29 +44,29 @@ enum class eGameState : char {
 const char *gameStateToString(eGameState state);
 
 // Game states (state machine)
-#define GAME_INITIALIZE  -1      // initialize game
-#define GAME_OVER         0      // game over
-#define GAME_MENU         1      // in a menu
-#define GAME_PLAYING      2      // playing the actual game
-#define GAME_BRIEFING     3      // doing some briefing
-#define GAME_EDITOR      4      // running the editor
-#define GAME_OPTIONS	  5		 // options menu
-#define GAME_REGION		  6		 // select a region / select your next conquest
-#define GAME_SELECT_HOUSE 8		 // pick a house
-#define GAME_INTRO	      9
-#define GAME_TELLHOUSE	 10		 // tell about the house
-#define GAME_WINNING     11      // when winning, do some cool animation
-#define GAME_WINBRIEF    12      // mentat chatter when won the mission
-#define GAME_LOSEBRIEF   13      // briefing when losing
-#define GAME_LOSING      14      // when losing, do something cool
-#define GAME_SKIRMISH    15      // playing a skirmish mission!
-#define GAME_SETUPSKIRMISH 16    // set up a skirmish game
-#define GAME_CREDITS     17    // credits
-#define GAME_MISSIONSELECT  18    // mission select
-#define GAME_NEW_MAP_EDITOR 19    // new map editor
-#define GAME_SCORING     20      // crude mission scoring screen, shown after winning
-#define GAME_VIDEO   21           // playing a video
-#define GAME_MAX_STATES 22
+inline constexpr int GAME_INITIALIZE = -1;      // initialize game
+inline constexpr int GAME_OVER = 0;      // game over
+inline constexpr int GAME_MENU = 1;      // in a menu
+inline constexpr int GAME_PLAYING = 2;      // playing the actual game
+inline constexpr int GAME_BRIEFING = 3;      // doing some briefing
+inline constexpr int GAME_EDITOR = 4;      // running the editor
+inline constexpr int GAME_OPTIONS = 5;		 // options menu
+inline constexpr int GAME_REGION = 6;		 // select a region / select your next conquest
+inline constexpr int GAME_SELECT_HOUSE = 8;		 // pick a house
+inline constexpr int GAME_INTRO = 9;
+inline constexpr int GAME_TELLHOUSE = 10;		 // tell about the house
+inline constexpr int GAME_WINNING = 11;      // when winning, do some cool animation
+inline constexpr int GAME_WINBRIEF = 12;      // mentat chatter when won the mission
+inline constexpr int GAME_LOSEBRIEF = 13;      // briefing when losing
+inline constexpr int GAME_LOSING = 14;      // when losing, do something cool
+inline constexpr int GAME_SKIRMISH = 15;      // playing a skirmish mission!
+inline constexpr int GAME_SETUPSKIRMISH = 16;    // set up a skirmish game
+inline constexpr int GAME_CREDITS = 17;    // credits
+inline constexpr int GAME_MISSIONSELECT = 18;    // mission select
+inline constexpr int GAME_NEW_MAP_EDITOR = 19;    // new map editor
+inline constexpr int GAME_SCORING = 20;      // crude mission scoring screen, shown after winning
+inline constexpr int GAME_VIDEO = 21;           // playing a video
+inline constexpr int GAME_MAX_STATES = 22;
 
 [[deprecated]] // We should start using eGameState enum, get rid of int state
 const char *stateToString(const int &state);
