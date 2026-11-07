@@ -6,6 +6,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/drawers/test_CreditsMath.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_FogMemory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/map/test_cSeedMapGenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_cPreviewMapsSave.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cHandleArgument.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cExpandingRectangle.cpp
@@ -29,6 +30,8 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/controls/cKeyBindings.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cHandleArgument.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/MapGeometry.cpp
+    ${CMAKE_SOURCE_DIR}/src/gameobjects/map/cSeedMap.cpp
+    ${CMAKE_SOURCE_DIR}/src/gameobjects/map/cSeedMapGenerator.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/cPreviewMaps.cpp
     ${CMAKE_SOURCE_DIR}/src/drawers/SDLDrawer.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/RNG.cpp
