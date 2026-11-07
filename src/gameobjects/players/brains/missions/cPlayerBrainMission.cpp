@@ -375,7 +375,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                                                    thingIWant.type);
 
                         if (pItem) {
-                            int msToWaitBeforeGivingUp = ((1+(float)pItem->getTotalBuildTimeInMs()) * 1.25f);
+                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs())) * 1.25f);
                             awaitingResourcesTimeToIncrease = fastThinkMsToTicks(msToWaitBeforeGivingUp);
                         }
                         else {
@@ -386,7 +386,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                         cBuildingListItem *pItem = pSideBar->getBuildingListItem(eListType::LIST_CONSTYARD,
                                                    thingIWant.type);
                         if (pItem) {
-                            int msToWaitBeforeGivingUp = ((1+(float)pItem->getTotalBuildTimeInMs()) * 1.25f);
+                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs())) * 1.25f);
                             awaitingResourcesTimeToIncrease = fastThinkMsToTicks(msToWaitBeforeGivingUp);
                         }
                         else {
@@ -398,7 +398,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                         cBuildingListItem *pItem = pSideBar->getBuildingListItem(eListType::LIST_PALACE,
                                                    thingIWant.type);
                         if (pItem) {
-                            int msToWaitBeforeGivingUp = ((1+(float)pItem->getTotalBuildTimeInMs() * 1.25f));
+                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs()) * 1.25f));
                             awaitingResourcesTimeToIncrease = fastThinkMsToTicks(msToWaitBeforeGivingUp);
                         }
                         else {
