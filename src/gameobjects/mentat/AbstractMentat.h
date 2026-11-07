@@ -19,6 +19,7 @@
 #include "observers/cInputObserver.h"
 #include "utils/Graphics.hpp"
 
+#include <array>
 #include <string>
 #include <memory>
 #include <SDL3_ttf/SDL_ttf.h>
@@ -57,7 +58,7 @@ public:
 
     void initSentences();
     void speak();
-    void setSentence(int i, const char text[256]);
+    void setSentence(int i, const std::string &text);
     void thinkMouth();
     void thinkEyes();
     void thinkMovie();
@@ -90,7 +91,7 @@ protected:
     int iBackgroundFrame;
 
     // draw 2 sentences at once, so 0 1, 2 3, 4 5, 6 7, 8 9
-    char sentence[10][255];
+    std::array<std::string, 10> sentence;
 
     int iMentatSentence;  // = sentence to draw and speak with (-1 = not ready)
 
@@ -103,8 +104,8 @@ protected:
     cTextDrawer* m_textDrawer = nullptr;
     SDLDrawer* m_sdlDrawer;
 
-    cRectangle *leftButton;
-    cRectangle *rightButton;
+    std::unique_ptr<cRectangle> leftButton;
+    std::unique_ptr<cRectangle> rightButton;
 
     Texture *leftButtonBmp;
     Texture *rightButtonBmp;
