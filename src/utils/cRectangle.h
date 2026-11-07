@@ -88,7 +88,7 @@ public:
     }
 
     [[nodiscard]] SDL_FRect toSDLF() const {
-        return SDL_FRect{(float)topLeft.x, (float)topLeft.y, (float)width, (float)height};
+        return SDL_FRect{static_cast<float>(topLeft.x), static_cast<float>(topLeft.y), static_cast<float>(width), static_cast<float>(height)};
     }
 private:
     cPoint topLeft;
