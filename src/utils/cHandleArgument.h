@@ -48,6 +48,7 @@ private:
         USAGES,
         PAUSE_WHEN_LOSING_FOCUS,
         FOG_OF_WAR,
+        PREFERENCES,
         SCREENX,
         SCREENY,
         HELP

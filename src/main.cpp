@@ -26,7 +26,9 @@
 #include "game/PreferencesPath.hpp"
 
 
+#include <algorithm>
 #include <string>
+#include <string_view>
 
 #include <iostream>
 #include <SDL3/SDL_main.h>
@@ -71,6 +73,17 @@ int main(int argc, char **argv)
 
     std::unique_ptr<InitialGameSettings> settings = loadSettingsFromIni("settings.ini");
     
+    // -prefs: start from the options saved at the end of the previous run, the other arguments still override them
+    if (std::any_of(argv + 1, argv + argc, [](const char *arg) { return std::string_view(arg) == "-prefs"; })) {
+        std::string prefsError;
+        const auto prefsFile = PreferencesPath::file(PREFERENCES_FILE);
+        if (!prefsFile) {
+            Logger::warn(COMP_GAMERULES, "Preferences", "Could not get the user data directory, preferences are not loaded");
+        } else if (!Preferences::load(*prefsFile, *settings, prefsError)) {
+            Logger::warn(COMP_GAMERULES, "Preferences", "Preferences are not loaded: {}", prefsError);
+        }
+    }
+
     // read command-line arguments, can override settings.ini
     cHandleArgument handleArg;
     try {

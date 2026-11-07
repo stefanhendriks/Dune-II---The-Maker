@@ -135,6 +135,13 @@ TEST_CASE("cHandleArgument - each boolean flag sets its own setting and nothing 
     }
 }
 
+TEST_CASE("cHandleArgument - -prefs is accepted and changes no setting itself", "[arguments]")
+{
+    InitialGameSettings settings;
+    REQUIRE(run({"-prefs"}, settings) == 0);
+    REQUIRE(changedFields(settings).empty());
+}
+
 TEST_CASE("cHandleArgument - -nomusic only disables music", "[arguments]")
 {
     InitialGameSettings settings;
