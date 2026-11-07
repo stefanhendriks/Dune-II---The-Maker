@@ -37,6 +37,7 @@ set(D2TM_SOURCES
     game/cGame_logic.cpp
     game/cGameConditionChecker.cpp
     game/CampaignProgress.cpp
+    game/Preferences.cpp
     game/PreferencesPath.cpp
     game/cMissionStatsCollector.cpp
     game/cNotificationArea.cpp

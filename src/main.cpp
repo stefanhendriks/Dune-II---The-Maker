@@ -22,6 +22,8 @@
 #include "utils/cHandleArgument.h"
 #include "utils/CrashHandler.h"
 #include "utils/common.h"
+#include "game/Preferences.hpp"
+#include "game/PreferencesPath.hpp"
 
 
 #include <string>
@@ -46,6 +48,8 @@ static void attachParentConsole()
     if (freopen("CONOUT$", "w", stderr) == nullptr) return;
 }
 #endif
+
+constexpr const char *PREFERENCES_FILE = "preferences.ini";
 
 int main(int argc, char **argv)
 {
@@ -92,6 +96,13 @@ int main(int argc, char **argv)
     try {
         if (game.setupGame()) {
             game.run();
+
+            if (const auto prefsFile = PreferencesPath::file(PREFERENCES_FILE)) {
+                std::string prefsError;
+                if (!Preferences::save(*prefsFile, game.currentSettings(), prefsError)) {
+                    Logger::warn(COMP_GAMERULES, "Preferences", "Could not save preferences: {}", prefsError);
+                }
+            }
         }
 
         game.shutdown();
