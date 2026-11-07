@@ -71,7 +71,7 @@ std::unique_ptr<Texture> cMapDrawer::createFogTexture() const
     const SDL_PixelFormatDetails *details = SDL_GetPixelFormatDetails(fogSurface->format);
     SDL_LockSurface(fogSurface);
     for (int y = 0; y < fogSurface->h; y++) {
-        Uint32 *row = (Uint32 *)((Uint8 *)fogSurface->pixels + (y * fogSurface->pitch));
+        Uint32 *row = reinterpret_cast<Uint32 *>(static_cast<Uint8 *>(fogSurface->pixels) + (y * fogSurface->pitch));
         for (int x = 0; x < fogSurface->w; x++) {
             Uint8 r, g, b, a;
             SDL_GetRGBA(row[x], details, nullptr, &r, &g, &b, &a);
