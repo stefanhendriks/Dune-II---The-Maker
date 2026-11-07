@@ -105,7 +105,9 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
 
     std::fill(std::begin(iRegionConquer), std::end(iRegionConquer), -1);
     std::fill(std::begin(iRegionHouse), std::end(iRegionHouse), -1);
-    memset(cRegionText, 0, sizeof(cRegionText));
+    for (auto &text : cRegionText) {
+        text.clear();
+    }
 
     calculateOffset();
 
@@ -222,9 +224,9 @@ void cSelectYourNextConquestState::thinkFast()
 
             // when the region is NOT this house, turn it into this house
             if (region.iHouse != houseThatConquersTheRegion) {
-                const char *regionTextString = cRegionText[i];
-                bool isRegionTextGiven = regionTextString[0] != '\0';
-                bool isRegionTextEmpty = regionTextString[0] == '\0';
+                const std::string &regionTextString = cRegionText[i];
+                bool isRegionTextGiven = !regionTextString.empty();
+                bool isRegionTextEmpty = regionTextString.empty();
 
                 if ((isRegionTextGiven && !m_drawManager->hasMessage()) || isRegionTextEmpty) {
                     // set this up
@@ -498,7 +500,9 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
     // clear conquer stuff
     std::fill(std::begin(iRegionConquer), std::end(iRegionConquer), -1);
     std::fill(std::begin(iRegionHouse), std::end(iRegionHouse), -1);
-    memset(cRegionText, 0, sizeof(cRegionText));
+    for (auto &text : cRegionText) {
+        text.clear();
+    }
 
     // Per mission assign:
     // Every house has a different campaign, so...

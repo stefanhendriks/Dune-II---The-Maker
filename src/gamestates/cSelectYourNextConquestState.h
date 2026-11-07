@@ -20,6 +20,7 @@
 
 #include <array>
 #include <memory>
+#include <string>
 
 
 class GuiButton;
@@ -96,8 +97,8 @@ public:
         iRegionHouse[iRegionIndex] = iHouse;
     }
 
-    void setRegionText(int iRegionIndex, const char *txt) {
-        snprintf(cRegionText[iRegionIndex], sizeof(cRegionText[iRegionIndex]), "%s", txt);
+    void setRegionText(int iRegionIndex, const std::string &txt) {
+        cRegionText[iRegionIndex] = txt.substr(0, 254); // the old char buffer held at most 254 characters
     }
 
     void regionSetupLostMission();
@@ -133,7 +134,7 @@ private:
     int iRegionConquer[MAX_REGIONS];     // INDEX = REGION NR , > -1 means conquered..
     int iRegionHouse[MAX_REGIONS];       // I guess... this is the house that the conquered region will become
 
-    char cRegionText[MAX_REGIONS][255]; // text for this
+    std::array<std::string, MAX_REGIONS> cRegionText; // text for this
 
     int offsetX;
     int offsetY;
