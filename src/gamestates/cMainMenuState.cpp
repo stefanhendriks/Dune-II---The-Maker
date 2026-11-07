@@ -232,8 +232,8 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
 
     // prepare to drawing in cache texture
     if (m_settings->isDebugMode()) {
-        backGroundDebug = m_sdlDrawer->createRenderTargetTexture(m_settings->getScreenW(), m_settings->getScreenH());
-        m_sdlDrawer->beginDrawingToTexture(backGroundDebug);
+        backGroundDebug.reset(m_sdlDrawer->createRenderTargetTexture(m_settings->getScreenW(), m_settings->getScreenH()));
+        m_sdlDrawer->beginDrawingToTexture(backGroundDebug.get());
         for (int x = 0; x < m_settings->getScreenW(); x += 60) {
             for (int y = 0; y < m_settings->getScreenH(); y += 20) {
                 m_textDrawer->drawText(x, y, Color{48, 48, 48,255}, "DEBUG");
@@ -246,9 +246,6 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
 cMainMenuState::~cMainMenuState()
 {
     // Smart pointers handle cleanup
-    if (m_settings->isDebugMode()) {
-        delete backGroundDebug;
-    }
 }
 
 void cMainMenuState::thinkFast()
@@ -258,7 +255,7 @@ void cMainMenuState::thinkFast()
 void cMainMenuState::draw() const
 {
     if (m_settings->isDebugMode()) {
-        m_sdlDrawer->renderSprite(backGroundDebug,0,0);
+        m_sdlDrawer->renderSprite(backGroundDebug.get(),0,0);
     }
 
     m_sdlDrawer->renderSprite(bmp_D2TM_Title, logoX, logoY);
