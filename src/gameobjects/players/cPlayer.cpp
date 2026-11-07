@@ -73,9 +73,6 @@ cPlayer::cPlayer()
     gameControlsContext = nullptr;
     bmp_flag = nullptr;
     bmp_flag_small = nullptr;
-    std::fill(std::begin(bmp_structure), std::end(bmp_structure), nullptr);
-    std::fill(std::begin(bmp_unit), std::end(bmp_unit), nullptr);
-    std::fill(std::begin(bmp_unit_top), std::end(bmp_unit_top), nullptr);
     brain_ = nullptr;
     m_autoSlabStructures = false;
 }
@@ -150,7 +147,7 @@ void cPlayer::clearStructureTypeBitmaps()
 //            char msg[255];
 //            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
 //            log(msg);
-            delete bmp_structure[i];
+            bmp_structure[i].reset();
         }
         else {
 //            char msg[255];
@@ -175,12 +172,12 @@ void cPlayer::clearUnitTypeBitmaps()
 {
     for (int i = 0; i < MAX_UNITTYPES; i++) {
         if (bmp_unit[i]) {
-            delete (bmp_unit[i]);
+            bmp_unit[i].reset();
         }
         bmp_unit[i] = nullptr;
 
         if (bmp_unit_top[i]) {
-            delete (bmp_unit_top[i]);
+            bmp_unit_top[i].reset();
         }
         bmp_unit_top[i] = nullptr;
     }
@@ -302,7 +299,7 @@ void cPlayer::setHouse(int iHouse)
 
             if (!structureType.configured) continue;
 
-            bmp_structure[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, structureType.bmp, TransparentColorIndex);
+            bmp_structure[i].reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, structureType.bmp, TransparentColorIndex));
             if (!bmp_structure[i]) {
                 std::cerr << "Could not create bmp structure bitmap!? - Imminent crash.\n";
             }
@@ -314,7 +311,7 @@ void cPlayer::setHouse(int iHouse)
                 if (!bitmap) {
                     std::cerr << "Could not create FLASH bmp structure bitmap!? - Imminent crash.\n";
                 }
-                bmp_structure[j] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, structureType.flash, TransparentColorIndex);
+                bmp_structure[j].reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, structureType.flash, TransparentColorIndex));
             }
 
         }
@@ -326,13 +323,13 @@ void cPlayer::setHouse(int iHouse)
 
             if (!unitInfo.configured) continue;
 
-            bmp_unit[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitInfo.bmp, TransparentColorIndex);
+            bmp_unit[i].reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitInfo.bmp, TransparentColorIndex));
             if (!bmp_unit[i]) {
                 std::cerr << "Could not create bmp unit bitmap!? - Imminent crash.\n";
             }
             if (unitInfo.top) {
 
-                bmp_unit_top[i] = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitInfo.top, TransparentColorIndex);
+                bmp_unit_top[i].reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, unitInfo.top, TransparentColorIndex));
             }
         }
     }
@@ -609,7 +606,7 @@ Texture *cPlayer::getStructureBitmap(int index)
     }
 
     if (bmp_structure[index]) {
-        return bmp_structure[index];
+        return bmp_structure[index].get();
     }
 
     return nullptr;
@@ -655,7 +652,7 @@ Texture *cPlayer::getUnitBitmap(int index)
     }
 
     if (bmp_unit[index]) {
-        return bmp_unit[index];
+        return bmp_unit[index].get();
     }
 
     return nullptr;
@@ -675,7 +672,7 @@ Texture *cPlayer::getUnitTopBitmap(int index)
     }
 
     if (bmp_unit_top[index]) {
-        return bmp_unit_top[index];
+        return bmp_unit_top[index].get();
     }
 
     return nullptr;

@@ -33,6 +33,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <array>
 #include <memory>
 
 class cItemBuilder;
@@ -629,12 +630,12 @@ private:
     Graphics *m_gfxdata = nullptr;
     SDLDrawer *m_renderer = nullptr;
 
-    Texture *bmp_structure[MAX_STRUCTURE_BMPS];
+    std::array<std::unique_ptr<Texture>, MAX_STRUCTURE_BMPS> bmp_structure;
     Texture *bmp_flag;
     Texture *bmp_flag_small;
 
-    Texture *bmp_unit[MAX_UNITTYPES]; // the body of unit
-    Texture *bmp_unit_top[MAX_UNITTYPES]; // optionally a 'top' of unit (barrel of tank, for example)
+    std::array<std::unique_ptr<Texture>, MAX_UNITTYPES> bmp_unit; // the body of unit
+    std::array<std::unique_ptr<Texture>, MAX_UNITTYPES> bmp_unit_top; // optionally a 'top' of unit (barrel of tank, for example)
 
     int iPrimaryBuilding[MAX_STRUCTURETYPES] = {};    // remember the primary ID (structure id) of each structure type
     int iStructures[MAX_STRUCTURETYPES] = {}; // remember what is built for each type of structure
