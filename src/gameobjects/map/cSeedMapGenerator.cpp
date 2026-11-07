@@ -17,6 +17,8 @@
 
 #include "data/gfxdata.h"
 
+#include <array>
+
 namespace {
 constexpr short SMG_SAND      = 0;
 constexpr short SMG_DUNES     = 2;
@@ -24,19 +26,46 @@ constexpr short SMG_ROCK      = 4;
 constexpr short SMG_MOUNTAINS = 6;
 constexpr short SMG_SPICE     = 8;
 constexpr short SMG_MUCHSPICE = 9;
+
+struct SmgPoint {
+    short x, y;
+};
+
+// a pair of points: the cell between them is filled with the mean of both
+struct SmgSegment {
+    SmgPoint begin, end;
+};
+
+// needed for the spread segments
+constexpr SmgPoint SMG_A{0, 0};
+constexpr SmgPoint SMG_B{2, 0};
+constexpr SmgPoint SMG_C{4, 0};
+constexpr SmgPoint SMG_D{0, 2};
+constexpr SmgPoint SMG_E{2, 2};
+constexpr SmgPoint SMG_F{4, 2};
+constexpr SmgPoint SMG_G{0, 4};
+constexpr SmgPoint SMG_H{2, 4};
+constexpr SmgPoint SMG_I{4, 4};
+constexpr int SMG_PAIRCOUNT = 21;
+
+// Two sets of segments, used alternately (see spreadMatrix): the second set uses the other diagonal.
+constexpr std::array<std::array<SmgSegment, SMG_PAIRCOUNT>, 2> kSpreadSegments = {{
+    {{
+        {SMG_A, SMG_C}, {SMG_C, SMG_I}, {SMG_A, SMG_G}, {SMG_G, SMG_I}, {SMG_A, SMG_D}, {SMG_D, SMG_G},
+        {SMG_A, SMG_B}, {SMG_B, SMG_C}, {SMG_C, SMG_F}, {SMG_F, SMG_I}, {SMG_G, SMG_H}, {SMG_H, SMG_I},
+        {SMG_A, SMG_I}, {SMG_B, SMG_E}, {SMG_A, SMG_E}, {SMG_C, SMG_E}, {SMG_D, SMG_E}, {SMG_E, SMG_F},
+        {SMG_E, SMG_G}, {SMG_E, SMG_I}, {SMG_E, SMG_H}
+    }},
+    {{
+        {SMG_A, SMG_C}, {SMG_C, SMG_I}, {SMG_A, SMG_G}, {SMG_G, SMG_I}, {SMG_A, SMG_D}, {SMG_D, SMG_G},
+        {SMG_A, SMG_B}, {SMG_B, SMG_C}, {SMG_C, SMG_F}, {SMG_F, SMG_I}, {SMG_G, SMG_H}, {SMG_H, SMG_I},
+        {SMG_C, SMG_G}, {SMG_B, SMG_E}, {SMG_A, SMG_E}, {SMG_C, SMG_E}, {SMG_D, SMG_E}, {SMG_E, SMG_F},
+        {SMG_E, SMG_G}, {SMG_E, SMG_I}, {SMG_E, SMG_H}
+    }}
+}};
 }
 
 // static initialize
-short cSeedMapGenerator::offsets2[SMG_OFFSET2_SIZE] = {
-    SMG_A,SMG_C, SMG_C,SMG_I, SMG_A,SMG_G, SMG_G,SMG_I, SMG_A,SMG_D, SMG_D,SMG_G,
-    SMG_A,SMG_B, SMG_B,SMG_C, SMG_C,SMG_F, SMG_F,SMG_I, SMG_G,SMG_H, SMG_H,SMG_I,
-    SMG_A,SMG_I, SMG_B,SMG_E, SMG_A,SMG_E, SMG_C,SMG_E, SMG_D,SMG_E, SMG_E,SMG_F,
-    SMG_E,SMG_G, SMG_E,SMG_I, SMG_E,SMG_H,
-    SMG_A,SMG_C, SMG_C,SMG_I, SMG_A,SMG_G, SMG_G,SMG_I, SMG_A,SMG_D, SMG_D,SMG_G,
-    SMG_A,SMG_B, SMG_B,SMG_C, SMG_C,SMG_F, SMG_F,SMG_I, SMG_G,SMG_H, SMG_H,SMG_I,
-    SMG_C,SMG_G, SMG_B,SMG_E, SMG_A,SMG_E, SMG_C,SMG_E, SMG_D,SMG_E, SMG_E,SMG_F,
-    SMG_E,SMG_G, SMG_E,SMG_I, SMG_E,SMG_H
-};
 
 short cSeedMapGenerator::offsets[21] =
 { 0,-1,1,-16,16,-17,17,-15,15,-2,2,-32,32,-4,4,-64,64,-30,30,-34,34 };
@@ -433,26 +462,24 @@ void cSeedMapGenerator::balanceMap(cell map[64][64])
 
 void cSeedMapGenerator::spreadMatrix(cell map[64][64])
 {
-    short i, x, y, bx, by, ex, ey, medx, medy, diag=0, *offs;
+    short x, y, bx, by, ex, ey, medx, medy, diag=0;
 
     for (y = 0; y < 64; y += 4) {
         for (x = 0; x < 64; x += 4) {
             /* 'diag' determines which diagonal to use to fill center cell */
-            if (diag) offs = offsets2;
-            else offs = offsets2+(SMG_PAIRCOUNT*4);
+            const auto &segments = diag ? kSpreadSegments[0] : kSpreadSegments[1];
             diag = 1 - diag;
-            for (i = 0; i < 21; i++) {
-                bx = x + *(offs);
-                by = y + *(offs+1);
-                ex = x + *(offs+2);
-                ey = y + *(offs+3);
+            for (const SmgSegment &segment : segments) {
+                bx = x + segment.begin.x;
+                by = y + segment.begin.y;
+                ex = x + segment.end.x;
+                ey = y + segment.end.y;
                 medx = (ex + bx)/2;
                 medy = (ey + by)/2;
                 bx &= 0x3f;
                 ex &= 0x3f; /* so x position never exceeds 0x3F */
                 if (((medy * 64) +medx) < 64*64)
                     map[medy][medx].w = (map[by][bx].w + map[ey][ex].w + 1)/2;
-                offs += 4;
             }
         }
     }
