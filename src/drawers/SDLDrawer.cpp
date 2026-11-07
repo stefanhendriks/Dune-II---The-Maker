@@ -353,8 +353,8 @@ Texture *SDLDrawer::createTextureFromIndexedSurfaceWithPalette(SDL_Surface *refe
     // Copy pixels
     SDL_LockSurface(referenceSurface);
     SDL_LockSurface(modifiableSurface);
-    Uint8* src = (Uint8*)referenceSurface->pixels;
-    Uint8* dst = (Uint8*)modifiableSurface->pixels;
+    Uint8* src = static_cast<Uint8*>(referenceSurface->pixels);
+    Uint8* dst = static_cast<Uint8*>(modifiableSurface->pixels);
 
     for (int y = 0; y < referenceSurface->h; y++) {
         memcpy(dst + y * modifiableSurface->pitch,
