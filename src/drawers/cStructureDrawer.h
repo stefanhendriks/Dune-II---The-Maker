@@ -70,4 +70,5 @@ private:
 
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;
     void renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const;
+    void renderIconThatPowerIsLow(cAbstractStructure *structure) const;
 };

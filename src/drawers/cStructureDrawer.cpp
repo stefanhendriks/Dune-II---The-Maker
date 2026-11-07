@@ -38,6 +38,8 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "utils/d2tm_math.h"
+#include "utils/LowPowerBlink.hpp"
+#include "data/gfxinter.h"
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
 
@@ -328,7 +330,28 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
         if (structure->isRepairing()) {
             renderIconThatStructureIsBeingRepaired(structure);
         }
+
+        if (structure->getType() == WINDTRAP && structure->getOwner() == m_player->getId() && !m_player->bEnoughPower()) {
+            renderIconThatPowerIsLow(structure);
+        }
     }
+}
+
+void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) const
+{
+    Texture *icon = m_gfxinter->getTexture(ICON_POWER_LOW);
+    if (!icon) return;
+
+    int offsetX = (structure->getWidthInPixels() - icon->w) / 2;
+    int offsetY = (structure->getHeightInPixels() - icon->h) / 2;
+    cRectangle src = {0, 0, icon->w, icon->h};
+    cRectangle dest = {
+        structure->iDrawX() + m_mapCamera->factorZoomLevel(offsetX),
+        structure->iDrawY() + m_mapCamera->factorZoomLevel(offsetY),
+        m_mapCamera->factorZoomLevel(icon->w),
+        m_mapCamera->factorZoomLevel(icon->h)
+    };
+    m_sdlDrawer->renderStrechSprite(icon, src, dest, static_cast<Uint8>(LowPowerBlink::opacityAt(SDL_GetTicks())));
 }
 
 void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const
