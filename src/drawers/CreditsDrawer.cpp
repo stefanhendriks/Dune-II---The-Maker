@@ -14,6 +14,7 @@
  */
 
 #include "CreditsDrawer.h"
+#include "CreditsMath.hpp"
 #include "include/sGameServices.h"
 #include "utils/common.h"
 #include "context/AudioContext.hpp"
@@ -100,20 +101,7 @@ void CreditsDrawer::thinkFast()
         m_previousCredits = m_currentCredits;
         auto newCurrentCredits = m_player->getCredits();
 
-        if (newCurrentCredits != m_previousCredits) {
-            int diff = newCurrentCredits - m_previousCredits;
-            // when big difference, slice it up in pieces so we
-            // have a more fluent transition
-            if (diff > 200) {
-                m_currentCredits = m_previousCredits + (diff / 8);
-            }
-            else if (diff > 20) {
-                m_currentCredits = m_previousCredits + (diff / 4);
-            }
-            else {
-                m_currentCredits = newCurrentCredits;
-            }
-        }
+        m_currentCredits = CreditsMath::nextDisplayedCredits(m_previousCredits, newCurrentCredits);
 
         // decide what sound to play when done
         if (m_currentCredits > m_previousCredits) {
@@ -160,8 +148,8 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
     snprintf(previous_credits, sizeof(previous_credits), "%d", m_previousCredits);
 
     for (int i = 0; i < 6; i++) {
-        int currentId = getCreditDrawId(current_credits[i]);
-        int previousId = getCreditDrawId(previous_credits[i]);
+        int currentId = CreditsMath::getCreditDrawId(current_credits[i]);
+        int previousId = CreditsMath::getCreditDrawId(previous_credits[i]);
 
         if (m_offset_direction[i] == 0) {
             if (currentId == CREDITS_NONE || previousId == CREDITS_NONE) {
@@ -218,33 +206,6 @@ void CreditsDrawer::draw()
 
 }
 
-int CreditsDrawer::getXDrawingOffset(int amount)
-{
-    int offset = 1;
-    if (amount > 0)		offset =  4;
-    if (amount < 10)	offset =  5;
-    if (amount > 99)	offset =  3;
-    if (amount > 999)	offset =  2;
-    if (amount > 9999) 	offset =  1;
-    if (amount > 99999) offset =  0;
-    return offset;
-}
-
-int CreditsDrawer::getCreditDrawId(char c)
-{
-    if (c == '0') return CREDITS_0;
-    if (c == '1') return CREDITS_1;
-    if (c == '2') return CREDITS_2;
-    if (c == '3') return CREDITS_3;
-    if (c == '4') return CREDITS_4;
-    if (c == '5') return CREDITS_5;
-    if (c == '6') return CREDITS_6;
-    if (c == '7') return CREDITS_7;
-    if (c == '8') return CREDITS_8;
-    if (c == '9') return CREDITS_9;
-    return CREDITS_NONE;
-}
-
 // current credits are either drawn from 'above' or from below. (depending on direction)
 // the offset pushes them more up or down.
 void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
@@ -255,7 +216,7 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
     memset(credits, 0, sizeof(credits));
     snprintf(credits, sizeof(credits), "%d", m_currentCredits);
 
-    int offset = getXDrawingOffset(m_currentCredits);
+    int offset = CreditsMath::getXDrawingOffset(m_currentCredits);
 
     for (int i=0; i < 6; i++) {
         // the actual position to draw on is: ((game.m_screenX - 120) +
@@ -272,7 +233,7 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
             dy = -20 + (int)m_offset_credit[i];
         }
 
-        int nr = getCreditDrawId(credits[i]);
+        int nr = CreditsMath::getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
             m_sdlDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
@@ -290,7 +251,7 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
     memset(credits, 0, sizeof(credits));
     snprintf(credits, sizeof(credits), "%d", m_previousCredits);
 
-    int offset = getXDrawingOffset(m_previousCredits);
+    int offset = CreditsMath::getXDrawingOffset(m_previousCredits);
 
     for (int i=0; i < 6; i++) {
         // the actual position to draw on is: ((game.m_screenX - 120) +
@@ -306,7 +267,7 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
         else if (m_offset_direction[i] == 2) {
             dy = (int)m_offset_credit[i];
         }
-        int nr = getCreditDrawId(credits[i]);
+        int nr = CreditsMath::getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
             m_sdlDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
