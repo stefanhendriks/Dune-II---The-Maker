@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <memory>
 #include "include/cAssert.h"
+#include "utils/Log.h"
 
 
 SDLDrawer::SDLDrawer(SDL_Renderer *_renderer)
@@ -284,7 +285,7 @@ void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, Color color)
                                      color.r, color.g, color.b, color.a);
 
     if (!SDL_LockSurface(bmp)) {
-        fprintf(stderr, "Error locking surface: %s\n", SDL_GetError());
+        Logger::error(COMP_SDL2, "setPixel", "Error locking surface: {}", SDL_GetError());
         return;
     }
     set_pixel(bmp,x,y,mappedColor);
