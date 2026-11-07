@@ -228,10 +228,10 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
         // the Y is per credit direction
         if (m_offset_direction[i] == 1) {
             // up, means it comes from 'below' and the m_offset_credit is the 'coming up' part.
-            dy = 20 - (int)m_offset_credit[i];
+            dy = 20 - static_cast<int>(m_offset_credit[i]);
         }
         else if (m_offset_direction[i] == 2) {
-            dy = -20 + (int)m_offset_credit[i];
+            dy = -20 + static_cast<int>(m_offset_credit[i]);
         }
 
         int nr = CreditsMath::getCreditDrawId(credits[i]);
@@ -263,10 +263,10 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
         // the Y is per credit direction
         if (m_offset_direction[i] == 1) {
             // up, means it comes from 'below' and the m_offset_credit is the 'coming up' part.
-            dy = (int)m_offset_credit[i] * -1;
+            dy = static_cast<int>(m_offset_credit[i]) * -1;
         }
         else if (m_offset_direction[i] == 2) {
-            dy = (int)m_offset_credit[i];
+            dy = static_cast<int>(m_offset_credit[i]);
         }
         int nr = CreditsMath::getCreditDrawId(credits[i]);
 
