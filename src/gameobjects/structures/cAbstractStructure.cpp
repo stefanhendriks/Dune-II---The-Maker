@@ -165,7 +165,7 @@ int cAbstractStructure::getCaptureHP()
 {
     int type = getType();
     // TODO: Capture hp threshold (property in structure)
-    return ((float)m_info->getStructureInfo(type).hp) * 0.30f;
+    return (static_cast<float>(m_info->getStructureInfo(type).hp)) * 0.30f;
 }
 
 int cAbstractStructure::getSight()
