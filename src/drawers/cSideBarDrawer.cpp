@@ -340,8 +340,8 @@ void cSideBarDrawer::drawPowerUsage() const
     // the maximum power (ie a full bar) is 1 + amount windtraps * power_give (100)
     int maxPowerOutageOfWindtrap = m_infos->getStructureInfo(WINDTRAP).power_give;
     float totalPowerOutput = (1 + (m_player->getAmountOfStructuresForType(WINDTRAP))) * maxPowerOutageOfWindtrap;
-    float powerIn = (float)m_player->getPowerProduced() / totalPowerOutput;
-    float powerUse = (float)m_player->getPowerUsage() / totalPowerOutput;
+    float powerIn = static_cast<float>(m_player->getPowerProduced()) / totalPowerOutput;
+    float powerUse = static_cast<float>(m_player->getPowerUsage()) / totalPowerOutput;
 
     float barHeightToDraw = barTotalHeight * powerIn;
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
@@ -353,7 +353,7 @@ void cSideBarDrawer::drawPowerUsage() const
     if (barHeightToDraw > barTotalHeight) barHeightToDraw = barTotalHeight;
     int powerOutY = barY + (barTotalHeight - barHeightToDraw);
 
-    float powerUsageRatio = ((float)m_player->getPowerUsage() + 1) / ((float)m_player->getPowerProduced() + 1);
+    float powerUsageRatio = (static_cast<float>(m_player->getPowerUsage()) + 1) / (static_cast<float>(m_player->getPowerProduced()) + 1);
     int r = powerUsageRatio * 255;
     int g = (1.1 - powerUsageRatio) * 255;
 
@@ -361,7 +361,7 @@ void cSideBarDrawer::drawPowerUsage() const
     if (g > 255) g = 255;
 
     if (m_player->bEnoughPower()) {
-        m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{(Uint8)r, (Uint8)g, 32,255});
+        m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, Color{static_cast<Uint8>(r), static_cast<Uint8>(g), 32,255});
     }
     else {
         m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight-powerOutY, m_player->getErrorFadingColor());
@@ -421,7 +421,7 @@ void cSideBarDrawer::drawCreditsUsage()
     if (g > 255) g = 255;
 
     if (m_player->bEnoughSpiceCapacityToStoreCredits()) {
-        m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, (Uint8)r,(Uint8)g, 32,255);
+        m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, static_cast<Uint8>(r),static_cast<Uint8>(g), 32,255);
     }
     else {
         m_sdlDrawer->renderRectFillColor(barX, powerOutY, barWidth, barY + barTotalHeight - powerOutY, m_player->getErrorFadingColor());
