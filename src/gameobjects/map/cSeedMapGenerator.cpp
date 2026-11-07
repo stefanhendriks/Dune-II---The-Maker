@@ -17,12 +17,14 @@
 
 #include "data/gfxdata.h"
 
-#define SMG_SAND      0
-#define SMG_DUNES     2
-#define SMG_ROCK      4
-#define SMG_MOUNTAINS 6
-#define SMG_SPICE     8
-#define SMG_MUCHSPICE 9
+namespace {
+constexpr short SMG_SAND      = 0;
+constexpr short SMG_DUNES     = 2;
+constexpr short SMG_ROCK      = 4;
+constexpr short SMG_MOUNTAINS = 6;
+constexpr short SMG_SPICE     = 8;
+constexpr short SMG_MUCHSPICE = 9;
+}
 
 // static initialize
 short cSeedMapGenerator::offsets2[SMG_OFFSET2_SIZE] = {
