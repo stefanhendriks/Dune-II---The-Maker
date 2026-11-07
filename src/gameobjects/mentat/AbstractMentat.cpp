@@ -76,7 +76,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameSt
     if (canMissionSelect) {
 
         int length = m_textDrawer->getTextLength("Mission select");
-        const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(settings->getScreenW() - length,
+        const cRectangle &toMissionSelectRect = m_textDrawer->getAsRectangle(settings->getScreenW() - length,
                                                 settings->getScreenH() - m_textDrawer->getFontHeight(),
                                                 "Mission select");
 

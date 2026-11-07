@@ -78,8 +78,6 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
 
 cChooseHouseState::~cChooseHouseState()
 {
-    delete backButtonRect;
-
     // not owner of these
     bmp_Dune = nullptr;
     bmp_SelectYourHouseTitle = nullptr;
@@ -109,7 +107,7 @@ void cChooseHouseState::draw() const
     // BACK (bottom right
     // TODO: Use actual cGuiButton
     Color color = hoversOverBackButton ? Color{255, 0, 0,255} : Color{255, 255, 255,255};
-    m_textDrawer->drawText(backButtonRect->getTopLeft(), color, " Back");
+    m_textDrawer->drawText(backButtonRect.getX(), backButtonRect.getY(), color, " Back");
 
     // MOUSE
     m_mouse->draw();
@@ -149,14 +147,14 @@ void cChooseHouseState::onMouseLeftButtonClicked(const s_MouseEvent &event) cons
     else if (event.coords.isWithinRectangle(&houseSardaukar)) {
         m_mentatFlow->prepareToTellAboutHouse(SARDAUKAR);
     }
-    else if (event.coords.isWithinRectangle(backButtonRect)) {
+    else if (event.coords.isWithinRectangle(&backButtonRect)) {
         m_stateTransitions->setNextStateWithFade(GAME_MENU);
     }
 }
 
 void cChooseHouseState::onMouseMoved(const s_MouseEvent &event)
 {
-    hoversOverBackButton = event.coords.isWithinRectangle(backButtonRect);
+    hoversOverBackButton = event.coords.isWithinRectangle(&backButtonRect);
 }
 
 void cChooseHouseState::onNotifyKeyboardEvent(const cKeyboardEvent &event)

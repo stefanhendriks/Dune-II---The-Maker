@@ -71,7 +71,7 @@ public:
     // Returns a rectangle bounding the text at (x, y)
     [[nodiscard]] cRectangle getRect(int x, int y, const std::string &msg) const;
     // Returns a pointer to a rectangle bounding the text at (x, y)
-    [[nodiscard]] cRectangle *getAsRectangle(int x, int y, const std::string &msg) const;
+    [[nodiscard]] cRectangle getAsRectangle(int x, int y, const std::string &msg) const;
 
 protected:
 
