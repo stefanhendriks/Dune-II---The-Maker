@@ -36,6 +36,7 @@
 #include "context/AudioContext.hpp"
 #include "utils/cStructureUtils.h"
 #include "data/gfxaudio.h"
+#include <algorithm>
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)
 {
@@ -45,7 +46,7 @@ cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)
     m_frigateSent = false;
     m_secondsUntilArrival = -1;
     m_secondsUntilNewPricesWillBeCalculated = 1; // initially randomize prices immediately
-    memset(m_pricePaidForItem, -1, sizeof(m_pricePaidForItem));
+    std::fill(std::begin(m_pricePaidForItem), std::end(m_pricePaidForItem), -1);
     removeAllItems();
     m_unitIdOfFrigateSent = -1;
 }
