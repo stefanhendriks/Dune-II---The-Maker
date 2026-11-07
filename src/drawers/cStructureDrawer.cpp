@@ -82,8 +82,8 @@ void cStructureDrawer::drawRememberedStructures()
 
     cMap *map = m_objects->getMap();
     MapGeometry *geometry = m_objects->getMapGeometry();
-    int iTileWidth = (int)std::ceil(m_mapCamera->getZoomedTileWidth());
-    int iTileHeight = (int)std::ceil(m_mapCamera->getZoomedTileHeight());
+    int iTileWidth = static_cast<int>(std::ceil(m_mapCamera->getZoomedTileWidth()));
+    int iTileHeight = static_cast<int>(std::ceil(m_mapCamera->getZoomedTileHeight()));
 
     for (int viewportX = m_mapCamera->getViewportStartX(); viewportX < m_mapCamera->getViewportEndX() + 32; viewportX += 32) {
         for (int viewportY = m_mapCamera->getViewportStartY(); viewportY < m_mapCamera->getViewportEndY() + 32; viewportY += 32) {
@@ -101,8 +101,8 @@ void cStructureDrawer::drawRememberedStructures()
 
             // the slice of the structure bitmap that covers this cell, for the remembered animation frame
             cRectangle src = {remembered->offsetX * 32, (info.bmp_height * remembered->frame) + (remembered->offsetY * 32), 32, 32};
-            int drawX = (int)std::floor(m_mapCamera->getWindowXPosition(geometry->getAbsoluteXPositionFromCell(iCell)));
-            int drawY = (int)std::floor(m_mapCamera->getWindowYPosition(geometry->getAbsoluteYPositionFromCell(iCell)));
+            int drawX = static_cast<int>(std::floor(m_mapCamera->getWindowXPosition(geometry->getAbsoluteXPositionFromCell(iCell))));
+            int drawY = static_cast<int>(std::floor(m_mapCamera->getWindowYPosition(geometry->getAbsoluteYPositionFromCell(iCell))));
             cRectangle dest = {drawX, drawY, iTileWidth, iTileHeight};
             if (info.shadow) {
                 m_sdlDrawer->renderStrechSprite(info.shadow, src, dest, ShadowTrans);
@@ -474,7 +474,7 @@ void cStructureDrawer::drawStructureHealthBar(int iStructure)
 
     // bar itself
     m_sdlDrawer->renderRectFillColor(draw_x, draw_y, width_x+1, height_y+1, 0,0,0,255);
-    m_sdlDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, (Uint8)r,(Uint8)g,32,255);
+    m_sdlDrawer->renderRectFillColor(draw_x, draw_y, (w-1), height_y, static_cast<Uint8>(r),static_cast<Uint8>(g),32,255);
 
     // bar around it
     m_sdlDrawer->renderRectColor(draw_x, draw_y, width_x, height_y, Color{255, 255, 255,255});
