@@ -519,7 +519,7 @@ void cItemBuilder::removeAllItems()
  */
 void cItemBuilder::addItemToList(cBuildingListItem *item)
 {
-    d2tm_assert(item != NULL);
+    d2tm_assert(item != nullptr);
     int slot = getFreeSlot();
     if (slot < 0) {
         Logger::error(COMP_BUILDER ,"cItemBuilder", "Unable to add item to list because no slots are free!");
@@ -570,7 +570,7 @@ bool cItemBuilder::isItemInList(cBuildingListItem *item)
  */
 cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListItem *item)
 {
-    d2tm_assert(item != NULL);
+    d2tm_assert(item != nullptr);
 
     // get through the build list and find an item that is of the same list.
     for (int i = 0; i < MAX_ITEMS; i++) {
@@ -591,7 +591,7 @@ cBuildingListItem *cItemBuilder::findBuildingListItemOfSameListAs(cBuildingListI
  */
 bool cItemBuilder::isAnotherBuildingListItemInTheSameListBeingBuilt(cBuildingListItem *item)
 {
-    d2tm_assert(item != NULL);
+    d2tm_assert(item != nullptr);
 
     // get through the build list and find an item that is of the same list.
     for (int i = 0; i < MAX_ITEMS; i++) {
