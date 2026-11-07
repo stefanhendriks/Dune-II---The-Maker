@@ -196,7 +196,7 @@ double MapGeometry::distance(int x1, int y1, int x2, int y2) const
 
     int A = abs(x2 - x1) * abs(x2 - x1);
     int B = abs(y2 - y1) * abs(y2 - y1);
-    return sqrt((double) (A + B));
+    return sqrt(static_cast<double>(A + B));
 }
 
 int MapGeometry::getCellWithMapBorders(int x, int y) const
