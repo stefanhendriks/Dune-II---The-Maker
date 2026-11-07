@@ -36,7 +36,7 @@ cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player, sGameServices *ser
     d2tm_assert(ctx != nullptr);
     d2tm_assert(services != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
+    m_buttonBitmap.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex));
     int halfOfButton = m_buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
@@ -57,7 +57,7 @@ void cOrderDrawer::drawOrderButton(cPlayer *thePlayer)
     cOrderProcesser *orderProcesser = thePlayer->getOrderProcesser();
 
     d2tm_assert(orderProcesser);
-    m_sdlDrawer->renderSprite(m_buttonBitmap, m_buttonRect.getX(), m_buttonRect.getY());
+    m_sdlDrawer->renderSprite(m_buttonBitmap.get(), m_buttonRect.getX(), m_buttonRect.getY());
 
     bool canOrder = orderProcesser->canPlaceOrder();
     if (!canOrder) {
@@ -116,7 +116,6 @@ void cOrderDrawer::setPlayer(cPlayer *pPlayer)
     this->m_player = pPlayer;
     if (houseChanged) {
         auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-        delete m_buttonBitmap;
-        m_buttonBitmap = createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, m_player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex);
+        m_buttonBitmap.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, m_player, gfxinter->getSurface(BTN_ORDER), TransparentColorIndex));
     }
 }
