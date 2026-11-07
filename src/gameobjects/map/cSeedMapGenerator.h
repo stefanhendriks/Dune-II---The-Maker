@@ -21,20 +21,6 @@ struct cell {
     short w, a, b;
 };
 
-// needed for offset2
-#define  SMG_A  0,0
-#define  SMG_B  2,0
-#define  SMG_C  4,0
-#define  SMG_D  0,2
-#define  SMG_E  2,2
-#define  SMG_F  4,2
-#define  SMG_G  0,4
-#define  SMG_H  2,4
-#define  SMG_I  4,4
-#define	 SMG_PAIRCOUNT 21
-
-#define SMG_OFFSET2_SIZE SMG_PAIRCOUNT*4*2
-
 class cSeedMapGenerator {
 
 private:
@@ -51,7 +37,6 @@ private:
           .....    ..........
           G.H.I    04..24..44
     */
-    static short offsets2[SMG_OFFSET2_SIZE];
     static short offsets[21];
     static bool canAddSpiceTo[10];
     static unsigned char spicemap[256];
