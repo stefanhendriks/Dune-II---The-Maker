@@ -64,5 +64,5 @@ private:
     std::unique_ptr<GuiButton> gui_btn_credits;
 
     Texture *bmp_D2TM_Title;
-    Texture *backGroundDebug = nullptr;
+    std::unique_ptr<Texture> backGroundDebug;
 };
