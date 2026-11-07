@@ -16,6 +16,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_CampaignProgress.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_Preferences.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPoint.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_LowPowerBlink.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_d2tm_math.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_SfxTrackAllocator.cpp

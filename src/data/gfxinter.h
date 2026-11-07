@@ -163,3 +163,4 @@
 #define ICON_SOLARIS                     142
 #define ICON_SOLARIS_FULL                143
 #define BMP_SELECT_HOUSE_SARDAUKAR       144
+#define ICON_POWER_LOW                   145
