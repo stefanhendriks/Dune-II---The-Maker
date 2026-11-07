@@ -1136,7 +1136,7 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     }
     const int tileX = m_editorCam->screenToTileX(posX);
     const int tileY = m_editorCam->screenToTileY(posY);
-    if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < (int)m_mapData->getCols()-1 && tileY < (int)m_mapData->getRows()-1) {
+    if (m_mapData && tileX >= 1 && tileY >= 1 && tileX < static_cast<int>(m_mapData->getCols())-1 && tileY < static_cast<int>(m_mapData->getRows())-1) {
         cPoint oldPos = startCells[startCellID];
         cPoint newPos = {tileX, tileY};
         if (oldPos.x == newPos.x && oldPos.y == newPos.y) return;
