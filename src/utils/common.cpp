@@ -36,6 +36,7 @@
 #include "context/AudioContext.hpp"
 
 #include "data/gfxaudio.h"
+#include "game/Preferences.hpp"
 
 std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& filename)
 {
@@ -48,84 +49,12 @@ std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& file
     }
 
     const cSection &section = file->getSection("SETTINGS");
+    Preferences::readSettings(section, *gameSettings);
 
-    if (section.hasValue("ScreenWidth")) {
-        gameSettings->screenW = section.getInt("ScreenWidth");
-    }
-    if (section.hasValue("ScreenHeight")) {
-        gameSettings->screenH = section.getInt("ScreenHeight");
-    }
-    if (section.hasValue("CameraDragMoveSpeed")) {
-        gameSettings->cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
-    }
-    if (section.hasValue("CameraBorderOrKeyMoveSpeed")) {
-        gameSettings->cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
-    }
-    if (section.hasValue("FullScreen")) {
-        gameSettings->windowed = !section.getBoolean("FullScreen");
-    }
-    if (section.hasValue("CameraEdgeMove")) {
-        gameSettings->cameraEdgeMove = section.getBoolean("CameraEdgeMove");
-    } else {
+    if (!section.hasValue("CameraEdgeMove")) {
         // no explicit setting: default off when windowed (edge-scrolling fights
         // with normal window interactions), on when fullscreen
         gameSettings->cameraEdgeMove = !gameSettings->windowed;
-    }
-    if (section.hasValue("ScalingMode")) {
-        gameSettings->scalingMode = section.getStringValue("ScalingMode") == "Letterbox"
-            ? eScalingMode::LETTERBOX
-            : eScalingMode::INTEGER_SCALE;
-    }
-    if (section.hasValue("AllowRepeatingReinforcements")) {
-        gameSettings->allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
-    }
-    if (section.hasValue("AllTurretsDownOnLowPower")) {
-        gameSettings->turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
-    }
-    if (section.hasValue("RocketTurretsDownOnLowPower")) {
-        gameSettings->rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
-    }
-    if (section.hasValue("GameRules")) {
-        gameSettings->gameFilename = section.getStringValue("GameRules");
-    }
-    if (section.hasValue("NoAI")) {
-        gameSettings->disableAI = section.getBoolean("NoAI");
-    }
-    if (section.hasValue("Debug")) {
-        gameSettings->debugMode = section.getBoolean("Debug");
-    }
-
-    if (section.hasValue("playMusic")) {
-        gameSettings->playMusic = section.getBoolean("playMusic");
-    }
-    if (section.hasValue("playSound")) {
-        gameSettings->playSound = section.getBoolean("playSound");
-    }
-
-    if (section.hasValue("drawUnitDebug")) {
-        gameSettings->drawUnitDebug = section.getBoolean("drawUnitDebug");
-    }
-    if (section.hasValue("oneAi")) {
-        gameSettings->oneAi = section.getBoolean("oneAi");
-    }
-    if (section.hasValue("disableWormAi")) {
-        gameSettings->disableWormAi = section.getBoolean("disableWormAi");
-    }
-
-    if (section.hasValue("disableReinforcements")) {
-        gameSettings->disableReinforcements = section.getBoolean("disableReinforcements");
-    }
-    if (section.hasValue("noAiRest")) {
-        gameSettings->noAiRest = section.getBoolean("noAiRest");
-    }
-    if (section.hasValue("drawUsages")) {
-        gameSettings->drawUsages = section.getBoolean("drawUsages");
-    }
-    if (section.hasValue("pauseWhenLosingFocus")) {
-        gameSettings->pauseWhenLosingFocus = section.getBoolean("pauseWhenLosingFocus");
-    }
-    if (section.hasValue("fogOfWarEnabled")) {
-        gameSettings->fogOfWarEnabled = section.getBoolean("fogOfWarEnabled");
     }
 
     return gameSettings;

@@ -13,6 +13,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_IniParsing.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_IniScenarioParsing.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_CampaignProgress.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_Preferences.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPoint.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_d2tm_math.cpp
@@ -37,6 +38,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/IniParsing.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cIniUtils.cpp
     ${CMAKE_SOURCE_DIR}/src/game/CampaignProgress.cpp
+    ${CMAKE_SOURCE_DIR}/src/game/Preferences.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/Log.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/SfxTrackAllocator.cpp
 )

@@ -38,6 +38,7 @@ const std::map<std::string, cHandleArgument::Options> cHandleArgument::optionStr
     {"-usages",                 Options::USAGES},
     {"-autopause",              Options::PAUSE_WHEN_LOSING_FOCUS},
     {"-fogofwar",               Options::FOG_OF_WAR},
+    {"-prefs",                  Options::PREFERENCES},
     {"--help",                  Options::HELP},
     {"-help",                   Options::HELP},
     {"-h",                      Options::HELP}
@@ -134,6 +135,9 @@ int cHandleArgument::handleArguments(int argc, char *argv[], InitialGameSettings
             case Options::FOG_OF_WAR:
                 settings->fogOfWarEnabled = true;
                 break;
+            case Options::PREFERENCES:
+                // main loads the preferences before it handles the other arguments, so those win
+                break;
         }
     }
     return 0;
@@ -165,6 +169,7 @@ void cHandleArgument::printInstructions() const
     std::cout << "---------\n\n";
     std::cout << "-autopause             - Pauses game when losing focus\n";
     std::cout << "-fogofwar              - Enable fog of war\n";
+    std::cout << "-prefs                 - Start with the options saved when the game was last closed (other arguments win)\n";
     std::cout << "\n\n";
     std::cout << "Debugging\n";
     std::cout << "---------\n\n";

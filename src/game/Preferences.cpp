@@ -41,6 +41,98 @@ void set(cIniFile &ini, const char *key, const std::string &value)
 }
 }
 
+void readSettings(const cSection &section, InitialGameSettings &settings)
+{
+    if (section.hasValue("ScreenWidth")) {
+        settings.screenW = section.getInt("ScreenWidth");
+    }
+    if (section.hasValue("ScreenHeight")) {
+        settings.screenH = section.getInt("ScreenHeight");
+    }
+    if (section.hasValue("CameraDragMoveSpeed")) {
+        settings.cameraDragMoveSpeed = section.getDouble("CameraDragMoveSpeed");
+    }
+    if (section.hasValue("CameraBorderOrKeyMoveSpeed")) {
+        settings.cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
+    }
+    if (section.hasValue("FullScreen")) {
+        settings.windowed = !section.getBoolean("FullScreen");
+    }
+    if (section.hasValue("CameraEdgeMove")) {
+        settings.cameraEdgeMove = section.getBoolean("CameraEdgeMove");
+    }
+    if (section.hasValue("ScalingMode")) {
+        settings.scalingMode = section.getStringValue("ScalingMode") == "Letterbox"
+            ? eScalingMode::LETTERBOX
+            : eScalingMode::INTEGER_SCALE;
+    }
+    if (section.hasValue("AllowRepeatingReinforcements")) {
+        settings.allowRepeatingReinforcements = section.getBoolean("AllowRepeatingReinforcements");
+    }
+    if (section.hasValue("AllTurretsDownOnLowPower")) {
+        settings.turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
+    }
+    if (section.hasValue("RocketTurretsDownOnLowPower")) {
+        settings.rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
+    }
+    if (section.hasValue("GameRules")) {
+        settings.gameFilename = section.getStringValue("GameRules");
+    }
+    if (section.hasValue("NoAI")) {
+        settings.disableAI = section.getBoolean("NoAI");
+    }
+    if (section.hasValue("Debug")) {
+        settings.debugMode = section.getBoolean("Debug");
+    }
+    if (section.hasValue("playMusic")) {
+        settings.playMusic = section.getBoolean("playMusic");
+    }
+    if (section.hasValue("playSound")) {
+        settings.playSound = section.getBoolean("playSound");
+    }
+    if (section.hasValue("drawUnitDebug")) {
+        settings.drawUnitDebug = section.getBoolean("drawUnitDebug");
+    }
+    if (section.hasValue("oneAi")) {
+        settings.oneAi = section.getBoolean("oneAi");
+    }
+    if (section.hasValue("disableWormAi")) {
+        settings.disableWormAi = section.getBoolean("disableWormAi");
+    }
+    if (section.hasValue("disableReinforcements")) {
+        settings.disableReinforcements = section.getBoolean("disableReinforcements");
+    }
+    if (section.hasValue("noAiRest")) {
+        settings.noAiRest = section.getBoolean("noAiRest");
+    }
+    if (section.hasValue("drawUsages")) {
+        settings.drawUsages = section.getBoolean("drawUsages");
+    }
+    if (section.hasValue("pauseWhenLosingFocus")) {
+        settings.pauseWhenLosingFocus = section.getBoolean("pauseWhenLosingFocus");
+    }
+    if (section.hasValue("fogOfWarEnabled")) {
+        settings.fogOfWarEnabled = section.getBoolean("fogOfWarEnabled");
+    }
+}
+
+bool load(const std::filesystem::path &file, InitialGameSettings &settings, std::string &error)
+{
+    std::error_code filesystemError;
+    if (!std::filesystem::exists(file, filesystemError)) {
+        error = "No preferences file found at " + utf8FileName(file);
+        return false;
+    }
+
+    cIniFile ini;
+    if (!ini.load(utf8FileName(file)) || !ini.hasSection(SECTION)) {
+        error = "Preferences file is unusable: " + utf8FileName(file);
+        return false;
+    }
+    readSettings(ini.getSection(SECTION), settings);
+    return true;
+}
+
 bool save(const std::filesystem::path &file, const InitialGameSettings &settings, std::string &error)
 {
     std::error_code filesystemError;
