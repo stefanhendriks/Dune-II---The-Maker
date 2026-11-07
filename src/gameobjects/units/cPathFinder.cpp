@@ -207,7 +207,7 @@ int cPathFinder::validateCreatePathInput(int unitId)
 
 void cPathFinder::initializeCreatePathSearch()
 {
-    memset(m_activeUnit->movement.iPath, -1, sizeof(m_activeUnit->movement.iPath));
+    std::fill(std::begin(m_activeUnit->movement.iPath), std::end(m_activeUnit->movement.iPath), -1);
     m_activeUnit->movement.iPathIndex = -1;
 
     m_goalCell = m_activeUnit->movement.iGoalCell;
@@ -553,7 +553,7 @@ void cPathFinder::applyTempPathToUnit(int backtracedPathLength)
     }
 
     // Build waypoint memory: keep one waypoint every WAYPOINT_STEP_CELLS path cells.
-    memset(m_activeUnit->movement.waypointCells, -1, sizeof(m_activeUnit->movement.waypointCells));
+    std::fill(std::begin(m_activeUnit->movement.waypointCells), std::end(m_activeUnit->movement.waypointCells), -1);
     int waypointWriteIndex = 0;
     for (int pathIndex = 0; pathIndex < unitPathWriteIndex; pathIndex += WAYPOINT_STEP_CELLS) {
         if (waypointWriteIndex >= MAX_WAYPOINTS_SIZE) {
