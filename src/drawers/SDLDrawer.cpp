@@ -40,7 +40,7 @@ void SDLDrawer::renderSprite(Texture *src,int x, int y,Uint8 opacity)
     if (!SDL_SetTextureAlphaMod(src->tex.get(), opacity)) {
         std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
     }
-    SDL_RenderTexture(renderer, src->tex.get(), NULL, &tmp);
+    SDL_RenderTexture(renderer, src->tex.get(), nullptr, &tmp);
 }
 
 void SDLDrawer::renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint8 opacity)
@@ -52,7 +52,7 @@ void SDLDrawer::renderTexture(SDL_Texture *tex, int x, int y, int w, int h, Uint
     if (!SDL_SetTextureAlphaMod(tex, opacity)) {
         std::cerr << "no alpha mod "<< SDL_GetError() << std::endl;
     }
-    SDL_RenderTexture(renderer, tex, NULL, &tmp);
+    SDL_RenderTexture(renderer, tex, nullptr, &tmp);
 }
 
 void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
@@ -68,7 +68,7 @@ void SDLDrawer::renderFromSurface(SDL_Surface *src, int x, int y,Uint8 opacity)
     SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetTextureAlphaMod(texture, opacity);
-    SDL_RenderTexture(renderer, texture, NULL, &tmp);
+    SDL_RenderTexture(renderer, texture, nullptr, &tmp);
     SDL_DestroyTexture(texture);
 }
 
@@ -270,7 +270,7 @@ void SDLDrawer::FillWithColor(SDL_Surface *src, Color color)
                                      color.g,
                                      color.b,
                                      color.a);
-    bool result = SDL_FillSurfaceRect(src, NULL, mappedColor);
+    bool result = SDL_FillSurfaceRect(src, nullptr, mappedColor);
     if (!result) {
         SDL_Log("SDL_FillRect failed to clear surface: %s", SDL_GetError());
     }
