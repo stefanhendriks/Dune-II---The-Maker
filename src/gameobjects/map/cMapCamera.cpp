@@ -342,8 +342,8 @@ void cMapCamera::onMouseRightButtonPressed(const s_MouseEvent &)
 
         // now calculate the speed in which we want to do this, the further
         // away (greater distance) the faster.
-        float factorX = (float)abs(diffX) / (m_windowWidth / 2);
-        float factorY = (float)abs(diffY) / (m_windowHeight / 2);
+        float factorX = static_cast<float>(abs(diffX)) / (m_windowWidth / 2);
+        float factorY = static_cast<float>(abs(diffY)) / (m_windowHeight / 2);
 
         // now we know factor, we only want to move so fast in pixels, so clamp/keep the diffX/Y between sane
         // values. If we don't do this, the scrolling is too fast. Also take m_zoomLevel into account so when we
