@@ -95,10 +95,10 @@ cSoundPlayer::cSoundPlayer(const std::string &datafile)
         MIX_SetMixerGain(m_mixer, 1.0f);
     }
     for (MIX_Track *track : m_sfxTracks) {
-        MIX_SetTrackGain(track, m_soundVolume / (float)MaxVolume);
+        MIX_SetTrackGain(track, m_soundVolume / static_cast<float>(MaxVolume));
     }
     if (m_musicTrack) {
-        MIX_SetTrackGain(m_musicTrack, m_musicVolume / (float)MaxVolume);
+        MIX_SetTrackGain(m_musicTrack, m_musicVolume / static_cast<float>(MaxVolume));
     }
 }
 
@@ -211,7 +211,7 @@ void cSoundPlayer::setMusicVolume(int _vol)
     int vol = _vol * 128 / 10;
     m_musicVolume = std::clamp(vol, 0, MaxVolume);
     if (m_musicTrack) {
-        MIX_SetTrackGain(m_musicTrack, m_musicVolume / (float)MaxVolume);
+        MIX_SetTrackGain(m_musicTrack, m_musicVolume / static_cast<float>(MaxVolume));
     }
 }
 
@@ -226,7 +226,7 @@ void cSoundPlayer::setSoundVolume(int _vol)
     int vol = _vol * 128 / 10;
     m_soundVolume = std::clamp(vol, 0, MaxVolume);
     for (MIX_Track *track : m_sfxTracks) {
-        MIX_SetTrackGain(track, m_soundVolume / (float)MaxVolume);
+        MIX_SetTrackGain(track, m_soundVolume / static_cast<float>(MaxVolume));
     }
 }
 
