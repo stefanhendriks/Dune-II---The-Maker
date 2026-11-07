@@ -296,6 +296,31 @@ void cOptionsState::constructWindow(int prevState)
             .build();
     gui_FogOfWarCheckLabel->setChecked(m_settings->isFogOfWarEnabled());
     m_guiWindow->addGuiObject(std::move(gui_FogOfWarCheckLabel));
+
+    const cRectangle &lowPowerIconRect = m_guiWindow->getRelativeRect(5, (5+buttonHeight)*5, 70, buttonHeight);
+    auto gui_LowPowerIconLabel = GuiLabelBuilder()
+            .withLabel("Low power icon")
+            .withTextDrawer(m_textDrawer)
+            .withRenderer(m_sdlDrawer)
+            .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
+            .withTextAlign(GuiTextAlignHorizontal::LEFT)
+            .withRect(lowPowerIconRect)
+            .build();
+    m_guiWindow->addGuiObject(std::move(gui_LowPowerIconLabel));
+
+    const cRectangle &lowPowerIconCheckRect = m_guiWindow->getRelativeRect(5+75+50, (5+buttonHeight)*5, buttonHeight, buttonHeight);
+    auto gui_LowPowerIconCheck = GuiCheckBoxBuilder()
+            .withRect(lowPowerIconCheckRect)
+            .withRenderer(m_sdlDrawer)
+            .onCheck([this]() {
+                m_settings->setShowLowPowerIcon(true);
+            })
+            .onUnCheck([this]() {
+                m_settings->setShowLowPowerIcon(false);
+            })
+            .build();
+    gui_LowPowerIconCheck->setChecked(m_settings->isShowLowPowerIcon());
+    m_guiWindow->addGuiObject(std::move(gui_LowPowerIconCheck));
 }
 
 cOptionsState::~cOptionsState()
