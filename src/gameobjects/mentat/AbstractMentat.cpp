@@ -103,7 +103,6 @@ AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameSt
     offsetY = (settings->getScreenH() - MENTAT_SCREEN_H) / 2;
     movieTopleftX = offsetX + 256;
     movieTopleftY = offsetY + 120;
-    memset(sentence, 0, sizeof(sentence));
     Logger::info(COMP_GAME, "AbstractMentat::AbstractMentat", "Initialized AbstractMentat with mission select button: {}", canMissionSelect);
 }
 
@@ -137,8 +136,8 @@ void AbstractMentat::think()
             }
 
             // lentgh calculation of time
-            int iLength = strlen(sentence[iMentatSentence]);
-            iLength += strlen(sentence[iMentatSentence + 1]);
+            int iLength = static_cast<int>(sentence[iMentatSentence].size());
+            iLength += static_cast<int>(sentence[iMentatSentence + 1].size());
 
             // nothing to say, await response
             if (iLength < 2) {
@@ -329,12 +328,14 @@ void AbstractMentat::draw_movie()
 
 void AbstractMentat::initSentences()
 {
-    memset(sentence, 0, sizeof(sentence));
+    for (auto &line : sentence) {
+        line.clear();
+    }
 }
 
-void AbstractMentat::setSentence(int i, const char *text)
+void AbstractMentat::setSentence(int i, const std::string &text)
 {
-    snprintf(sentence[i], sizeof(sentence[i]), "%s", text);
+    sentence[i] = text.substr(0, 254); // the old char buffer held at most 254 characters
     Logger::info(COMP_GAME, "AbstractMentat::setSentence", "Sentence[{}]={}", i, text);
 }
 
@@ -342,8 +343,7 @@ void AbstractMentat::loadScene(const std::string &scene)
 {
     gfxmovie = nullptr;
 
-    char filename[255];
-    snprintf(filename, sizeof(filename), "data/scenes/sdl_%s.dat", scene.c_str());
+    const std::string filename = "data/scenes/sdl_" + scene + ".dat";
 
     gfxmovie = std::make_shared<Graphics>(m_sdlDrawer->getRenderer(),filename);
 
@@ -369,15 +369,13 @@ void AbstractMentat::speak()
 
 void AbstractMentat::buildLeftButton(Texture *bmp, int x, int y)
 {
-    delete leftButton;
-    leftButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
+    leftButton = std::make_unique<cRectangle>(offsetX + x, offsetY + y, bmp->w, bmp->h);
     leftButtonBmp = bmp;
 }
 
 void AbstractMentat::buildRightButton(Texture *bmp, int x, int y)
 {
-    delete rightButton;
-    rightButton = new cRectangle(offsetX + x, offsetY + y, bmp->w, bmp->h);
+    rightButton = std::make_unique<cRectangle>(offsetX + x, offsetY + y, bmp->w, bmp->h);
     rightButtonBmp = bmp;
 }
 
