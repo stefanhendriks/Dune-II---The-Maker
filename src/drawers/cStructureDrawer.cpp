@@ -281,12 +281,6 @@ void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure *struct
     drawStructureAnimation(structure);
 }
 
-// Same set of structures as the old low_power_display branch: everything except slabs, walls and the plain gun turret.
-static bool canShowLowPowerIcon(int structureType)
-{
-    return structureType != SLAB1 && structureType != SLAB4 && structureType != WALL && structureType != TURRET;
-}
-
 void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int layer)
 {
     d2tm_assert(structure);
@@ -337,7 +331,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
             renderIconThatStructureIsBeingRepaired(structure);
         }
 
-        if (canShowLowPowerIcon(structure->getType()) && structure->getOwner() == m_player->getId() && !m_player->bEnoughPower()) {
+        if (structure->needPowerToWork() && structure->getOwner() == m_player->getId() && !m_player->bEnoughPower()) {
             renderIconThatPowerIsLow(structure);
         }
     }
@@ -348,8 +342,9 @@ void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) c
     Texture *icon = m_gfxinter->getTexture(ICON_POWER_LOW);
     if (!icon) return;
 
-    int offsetX = (structure->getWidthInPixels() - icon->w) / 2;
-    int offsetY = (structure->getHeightInPixels() - icon->h) / 2;
+    const s_StructureInfo info = structure->getStructureInfo();
+    int offsetX = info.lowPowerIconX;
+    int offsetY = info.lowPowerIconY;
     cRectangle src = {0, 0, icon->w, icon->h};
     cRectangle dest = {
         static_cast<int>(structure->iDrawX() + m_mapCamera->factorZoomLevel(offsetX)),

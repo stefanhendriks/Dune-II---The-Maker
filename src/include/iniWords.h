@@ -97,6 +97,9 @@ enum class eIniWord {
     POWERDRAIN,  // power
     POWERGIVE,  // power
     HAS_CONCRETE,  // has concrete
+    NEED_POWER_TO_WORK,   // structure shows the low power icon when its owner lacks power
+    LOW_POWER_ICON_X,     // x of the low power icon, relative to the structure
+    LOW_POWER_ICON_Y,     // y of the low power icon, relative to the structure
     FIREPOWER,
     FIRERATE,
     STRUCTPRICE,

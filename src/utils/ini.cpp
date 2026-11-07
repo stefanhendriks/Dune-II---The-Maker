@@ -491,6 +491,9 @@ void cIni::installGame(const std::string& filename)
             if (wordtype == eIniWord::FIXHP)        m_infos->getStructureInfo(id).fixhp = ToInt(word_right);
             if (wordtype == eIniWord::POWERDRAIN)   m_infos->getStructureInfo(id).power_drain = ToInt(word_right);
             if (wordtype == eIniWord::HAS_CONCRETE) m_infos->getStructureInfo(id).hasConcrete = ToBool(word_right);
+            if (wordtype == eIniWord::NEED_POWER_TO_WORK) m_infos->getStructureInfo(id).needPowerToWork = ToBool(word_right);
+            if (wordtype == eIniWord::LOW_POWER_ICON_X)   m_infos->getStructureInfo(id).lowPowerIconX = ToInt(word_right);
+            if (wordtype == eIniWord::LOW_POWER_ICON_Y)   m_infos->getStructureInfo(id).lowPowerIconY = ToInt(word_right);
             if (wordtype == eIniWord::POWERGIVE)    m_infos->getStructureInfo(id).power_give = ToInt(word_right);
             if (wordtype == eIniWord::COST)         m_infos->getStructureInfo(id).cost = ToInt(word_right);
             if (wordtype == eIniWord::BUILDTIME)    m_infos->getStructureInfo(id).buildTime = ToInt(word_right);

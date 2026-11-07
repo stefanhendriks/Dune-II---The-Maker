@@ -1400,6 +1400,9 @@ void cInfoContextCreator::initStructures(cStructureInfos& structureInfos)
         structureInfo.queuable = false;
         structureInfo.hasConcrete = true;
         structureInfo.configured = false;
+        structureInfo.needPowerToWork = false;
+        structureInfo.lowPowerIconX = 0;
+        structureInfo.lowPowerIconY = 0;
         structureInfo.canAttackAirUnits = false;
         structureInfo.canAttackGroundUnits = false;
         structureInfo.uponDestructionSpawnUnitAmountMin = 0;

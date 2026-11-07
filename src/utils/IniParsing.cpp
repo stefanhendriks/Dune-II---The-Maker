@@ -234,6 +234,9 @@ eIniWord GameIniWordType(const std::string& word, eGameIniSection section)
         if (cIniUtils::caseInsCompare(word, "FixPoints"))         return eIniWord::FIXHP;
         if (cIniUtils::caseInsCompare(word, "PowerDrain"))        return eIniWord::POWERDRAIN;
         if (cIniUtils::caseInsCompare(word, "HasConcrete"))       return eIniWord::HAS_CONCRETE;
+        if (cIniUtils::caseInsCompare(word, "NeedPowerToWork"))   return eIniWord::NEED_POWER_TO_WORK;
+        if (cIniUtils::caseInsCompare(word, "LowPowerIconX"))     return eIniWord::LOW_POWER_ICON_X;
+        if (cIniUtils::caseInsCompare(word, "LowPowerIconY"))     return eIniWord::LOW_POWER_ICON_Y;
         if (cIniUtils::caseInsCompare(word, "PowerGive"))         return eIniWord::POWERGIVE;
         if (cIniUtils::caseInsCompare(word, "Cost"))              return eIniWord::COST;
         if (cIniUtils::caseInsCompare(word, "BuildTime"))         return eIniWord::BUILDTIME;

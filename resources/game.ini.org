@@ -569,6 +569,9 @@ DamageOnEnterStructure=9999.99
 ; Structure: Palace
 ; ---------------------
 [STRUCTURE: PALACE]
+NeedPowerToWork=true
+LowPowerIconX=36
+LowPowerIconY=46
 Cost=999
 HitPoints=2000
 FixPoints=1
@@ -583,6 +586,9 @@ UponDestructionSpawnUnitAmountMax=5
 ; Structure: Windtrap
 ; ---------------------
 [STRUCTURE: WINDTRAP]
+NeedPowerToWork=true
+LowPowerIconX=25
+LowPowerIconY=21
 Cost=300
 HitPoints=500
 FixPoints=3
@@ -597,6 +603,9 @@ UponDestructionSpawnUnitAmountMax=2
 ; Structure: Heavy Factory
 ; ---------------------
 [STRUCTURE: HEAVYFACTORY]
+NeedPowerToWork=true
+LowPowerIconX=13
+LowPowerIconY=18
 Cost=600
 HitPoints=700
 FixPoints=2
@@ -611,6 +620,9 @@ UponDestructionSpawnUnitAmountMax=3
 ; Structure: Light Factory
 ; ---------------------
 [STRUCTURE: LIGHTFACTORY]
+NeedPowerToWork=true
+LowPowerIconX=44
+LowPowerIconY=15
 Cost=400
 HitPoints=350
 FixPoints=3
@@ -625,6 +637,9 @@ UponDestructionSpawnUnitAmountMax=2
 ; Structure: Construction Yard
 ; ---------------------
 [STRUCTURE: CONSTYARD]
+NeedPowerToWork=true
+LowPowerIconX=48
+LowPowerIconY=0
 Cost=0
 HitPoints=1000
 FixPoints=3
@@ -640,6 +655,9 @@ UponDestructionSpawnUnitAmountMax=2
 ; Structure: Silo
 ; ---------------------
 [STRUCTURE: SILO]
+NeedPowerToWork=true
+LowPowerIconX=12
+LowPowerIconY=5
 Cost=150
 HitPoints=250
 FixPoints=5
@@ -654,6 +672,9 @@ UponDestructionSpawnUnitAmountMax=2
 ; Structure: High-Tech
 ; ---------------------
 [STRUCTURE: HIGHTECH]
+NeedPowerToWork=true
+LowPowerIconX=43
+LowPowerIconY=26
 Cost=600
 HitPoints=600
 FixPoints=2
@@ -668,6 +689,9 @@ UponDestructionSpawnUnitAmountMax=3
 ; Structure: House of IX
 ; ---------------------
 [STRUCTURE: IX]
+NeedPowerToWork=true
+LowPowerIconX=26
+LowPowerIconY=37
 Cost=700
 HitPoints=700
 FixPoints=2
@@ -682,6 +706,9 @@ UponDestructionSpawnUnitAmountMax=2
 ; Structure: Repair Facility
 ; ---------------------
 [STRUCTURE: REPAIR]
+NeedPowerToWork=true
+LowPowerIconX=62
+LowPowerIconY=4
 Cost=700
 HitPoints=250
 FixPoints=5
@@ -696,6 +723,9 @@ UponDestructionSpawnUnitAmountMax=3
 ; Structure: Radar
 ; ---------------------
 [STRUCTURE: RADAR]
+NeedPowerToWork=true
+LowPowerIconX=14
+LowPowerIconY=10
 Cost=400
 HitPoints=900
 FixPoints=3
@@ -710,6 +740,9 @@ UponDestructionSpawnUnitAmountMax=2
 ; Structure: Spice Refinery
 ; ---------------------
 [STRUCTURE: REFINERY]
+NeedPowerToWork=true
+LowPowerIconX=25
+LowPowerIconY=20
 Cost=400
 HitPoints=800
 FixPoints=3
@@ -724,6 +757,9 @@ UponDestructionSpawnUnitAmountMax=3
 ; Structure: WOR
 ; ---------------------
 [STRUCTURE: WOR]
+NeedPowerToWork=true
+LowPowerIconX=43
+LowPowerIconY=36
 Cost=400
 HitPoints=500
 FixPoints=3
@@ -738,6 +774,9 @@ UponDestructionSpawnUnitAmountMax=2
 ; Structure: Barracks
 ; ---------------------
 [STRUCTURE: BARRACKS]
+NeedPowerToWork=true
+LowPowerIconX=41
+LowPowerIconY=13
 Cost=400
 HitPoints=300
 FixPoints=4
@@ -752,6 +791,9 @@ UponDestructionSpawnUnitAmountMax=2
 ; Structure: Starport
 ; ---------------------
 [STRUCTURE: STARPORT]
+NeedPowerToWork=true
+LowPowerIconX=41
+LowPowerIconY=3
 Cost=500
 HitPoints=800
 FixPoints=3
@@ -780,6 +822,9 @@ FireRate=275
 ; Structure: Rocket Turret
 ; ---------------------
 [STRUCTURE: ROCKETTURRET]
+NeedPowerToWork=true
+LowPowerIconX=8
+LowPowerIconY=7
 Cost=250
 HitPoints=800
 FixPoints=3
