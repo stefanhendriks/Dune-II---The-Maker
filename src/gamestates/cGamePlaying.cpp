@@ -144,7 +144,8 @@ void cGamePlaying::thinkFast()
     }
 
     // structures think
-    for (cAbstractStructure *pStructure : m_objects->getStructures()) {
+    for (const auto &slot : m_objects->getStructures()) {
+        cAbstractStructure *pStructure = slot.get();
         if (pStructure == nullptr) continue;
         if (pStructure->isValid()) {
             pStructure->thinkFast();       // think about actions going on
@@ -156,6 +157,9 @@ void cGamePlaying::thinkFast()
             m_structureFactory->deleteStructureInstance(pStructure);
         }
     }
+
+    // structures that died since the last tick are no longer referenced
+    m_objects->getStructures().destroyDetached();
 
     for (cPlayer* pPlayer : m_objects->getPlayers()) {
         cItemBuilder *itemBuilder = pPlayer->getItemBuilder();

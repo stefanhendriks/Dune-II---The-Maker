@@ -18,6 +18,8 @@
 #include <array>
 #include "include/cAssert.h"
 #include <cstddef>
+#include <memory>
+#include <vector>
 #include "definitions.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 
@@ -29,24 +31,34 @@ class cStructures {
 public:
     cStructures() = default;
 
-    ~cStructures() {
-        for (auto* s : m_values) {
-            delete s;
+    // Read access: the pool owns the structures, callers only borrow them.
+    cAbstractStructure *operator[](std::size_t index) const {
+        d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        return m_values[index].get();
+    }
+
+    // Puts a structure in a slot, the pool takes ownership. The slot index is the structure id.
+    void place(std::size_t index, std::unique_ptr<cAbstractStructure> structure) {
+        d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        m_values[index] = std::move(structure);
+    }
+
+    // Empties a slot and destroys the structure in it.
+    void remove(std::size_t index) {
+        d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        m_values[index].reset();
+    }
+
+    // Empties a slot, but keeps the structure alive until destroyDetached() is called.
+    // Used by a structure that dies: it frees its slot while it is still running its die() code.
+    void detach(std::size_t index) {
+        d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        if (m_values[index]) {
+            m_detached.push_back(std::move(m_values[index]));
         }
     }
 
-    cAbstractStructure* &operator[](std::size_t index) {
-        d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
-        return m_values[index];
-    }
-
-    cAbstractStructure* const &operator[](std::size_t index) const {
-        d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
-        return m_values[index];
-    }
-
-    cAbstractStructure** data() noexcept { return m_values.data(); }
-    const cAbstractStructure* const* data() const noexcept { return m_values.data(); }
+    void destroyDetached() { m_detached.clear(); }
 
     std::size_t size() const noexcept { return m_values.size(); }
 
@@ -57,5 +69,6 @@ public:
 
 private:
     static constexpr std::size_t MAX_STRUCTURES_COUNT = MAX_STRUCTURES;
-    std::array<cAbstractStructure*, MAX_STRUCTURES_COUNT> m_values{};
+    std::array<std::unique_ptr<cAbstractStructure>, MAX_STRUCTURES_COUNT> m_values{};
+    std::vector<std::unique_ptr<cAbstractStructure>> m_detached;
 };

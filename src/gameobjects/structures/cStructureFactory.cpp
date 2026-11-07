@@ -72,34 +72,33 @@ cStructureFactory::~cStructureFactory()
     deleteAllExistingStructures();
 }
 
-cAbstractStructure *cStructureFactory::createStructureInstance(int type)
+std::unique_ptr<cAbstractStructure> cStructureFactory::createStructureInstance(int type)
 {
     // Depending on type, create proper derived class. The constructor
     // will take care of the rest
-    if (type == CONSTYARD)		return new cConstYard;
-    if (type == STARPORT)		return new cStarPort;
-    if (type == WINDTRAP)		return new cWindTrap;
-    if (type == SILO)			return new cSpiceSilo;
-    if (type == REFINERY)		return new cRefinery;
-    if (type == RADAR)			return new cOutPost;
-    if (type == PALACE)			return new cPalace;
-    if (type == HIGHTECH)		return new cHighTech;
-    if (type == LIGHTFACTORY)      return new cLightFactory;
-    if (type == HEAVYFACTORY)      return new cHeavyFactory;
-    if (type == TURRET)      return new cGunTurret;
-    if (type == RTURRET)      return new cRocketTurret;
-    if (type == REPAIR)      return new cRepairFacility;
-    if (type == IX)      return new cIx;
-    if (type == WOR)      return new cWor;
-    if (type == BARRACKS)      return new cBarracks;
+    if (type == CONSTYARD)		return std::make_unique<cConstYard>();
+    if (type == STARPORT)		return std::make_unique<cStarPort>();
+    if (type == WINDTRAP)		return std::make_unique<cWindTrap>();
+    if (type == SILO)			return std::make_unique<cSpiceSilo>();
+    if (type == REFINERY)		return std::make_unique<cRefinery>();
+    if (type == RADAR)			return std::make_unique<cOutPost>();
+    if (type == PALACE)			return std::make_unique<cPalace>();
+    if (type == HIGHTECH)		return std::make_unique<cHighTech>();
+    if (type == LIGHTFACTORY)      return std::make_unique<cLightFactory>();
+    if (type == HEAVYFACTORY)      return std::make_unique<cHeavyFactory>();
+    if (type == TURRET)      return std::make_unique<cGunTurret>();
+    if (type == RTURRET)      return std::make_unique<cRocketTurret>();
+    if (type == REPAIR)      return std::make_unique<cRepairFacility>();
+    if (type == IX)      return std::make_unique<cIx>();
+    if (type == WOR)      return std::make_unique<cWor>();
+    if (type == BARRACKS)      return std::make_unique<cBarracks>();
     return nullptr;
 }
 
 void cStructureFactory::deleteStructureInstance(cAbstractStructure *pStructure)
 {
-    // delete memory acquired
-    m_objects->getStructures()[pStructure->getStructureId()] = nullptr;
-    delete pStructure;
+    // the pool owns the structure, emptying the slot destroys it
+    m_objects->getStructures().remove(pStructure->getStructureId());
 }
 
 /**
@@ -149,12 +148,14 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
         return nullptr;
     }
 
-    cAbstractStructure *str = createStructureInstance(iStructureType);
+    std::unique_ptr<cAbstractStructure> newStructure = createStructureInstance(iStructureType);
 
-    if (str == nullptr) {
+    if (newStructure == nullptr) {
         Logger::info(COMP_STRUCTURES, "create structure", "cannot create structure: createStructureInstance returned nullptr");
         return nullptr; // fail
     }
+
+    cAbstractStructure *str = newStructure.get();
 
     cPoint absTopLeft = m_objects->getMapGeometry()->getAbsolutePositionFromCell(iCell);
     cPlayer *player = m_objects->getPlayer(iPlayer);
@@ -182,7 +183,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
 
     // assign to array
     str->serviceInit(m_services);
-    m_objects->getStructures()[iNewId] = str;
+    m_objects->getStructures().place(iNewId, std::move(newStructure));
 
     // Now set it up for location & player
     str->setCell(iCell);
@@ -410,13 +411,9 @@ void cStructureFactory::deleteAllExistingStructures()
         return;
     for (int i=0; i < MAX_STRUCTURES; i++) {
         // clear out all structures
-        cAbstractStructure *pStructure = m_objects->getStructures()[i];
-        if (pStructure) {
-            delete pStructure;
-        }
-        // clear pointer
-        m_objects->getStructures()[i] = nullptr;
+        m_objects->getStructures().remove(i);
     }
+    m_objects->getStructures().destroyDetached();
 }
 
 void cStructureFactory::slabStructure(int iCll, int iStructureType, int iPlayer)
