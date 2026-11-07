@@ -7,6 +7,7 @@
 #include <array>
 #include <cstdint>
 #include <string>
+#include <utility>
 
 namespace {
 
@@ -100,10 +101,16 @@ TEST_CASE("cSeedMapGenerator - seed 42 exact rows", "[map][seedmap]")
         {20, ".--+----....%.-+-...........%..............-++--..............-+"},
         {40, "--.%%%.............-+-.........%%%%%%%....%%%%.....%%%%%%%...---"},
         {63, ".........HHHH--+-................HHHHHH-++++-+-................."},
-
     }};
     for (const auto &[y, row] : expected) {
         CAPTURE(y);
         REQUIRE(rowOf(map, y) == row);
     }
+}
+
+TEST_CASE("cSeedMapGenerator - seed 0 and seed 4294967295 give the same map", "[map][seedmap]")
+{
+    cSeedMap first = cSeedMapGenerator(0).generateSeedMap();
+    cSeedMap second = cSeedMapGenerator(4294967295UL).generateSeedMap();
+    REQUIRE(hashOf(first) == hashOf(second));
 }
