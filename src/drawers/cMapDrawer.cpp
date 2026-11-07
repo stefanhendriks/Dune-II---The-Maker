@@ -104,8 +104,8 @@ void cMapDrawer::drawShroud()
     float tileWidth = m_camera->getZoomedTileWidth();
     float tileHeight = m_camera->getZoomedTileHeight();
 
-    int iTileHeight = (int)std::ceil(tileHeight);
-    int iTileWidth = (int)std::ceil(tileWidth);
+    int iTileHeight = static_cast<int>(std::ceil(tileHeight));
+    int iTileWidth = static_cast<int>(std::ceil(tileWidth));
     int iPl = m_player->getId();
 
     for (int viewportX = m_camera->getViewportStartX(); viewportX < m_camera->getViewportEndX() + 32; viewportX += 32) {
@@ -121,8 +121,8 @@ void cMapDrawer::drawShroud()
 
             int absoluteYCoordinateOnMap = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = m_camera->getWindowYPosition(absoluteYCoordinateOnMap);
-            int iDrawX = (int)std::floor(fDrawX);
-            int iDrawY = (int)std::floor(fDrawY);
+            int iDrawX = static_cast<int>(std::floor(fDrawX));
+            int iDrawY = static_cast<int>(std::floor(fDrawY));
 
             drawFogVeil(iCell, iPl, iDrawX, iDrawY, iTileWidth, iTileHeight);
 
@@ -179,8 +179,8 @@ void cMapDrawer::drawTerrainCells(bool fogged)
     float tileWidth = m_camera->getZoomedTileWidth();
     float tileHeight = m_camera->getZoomedTileHeight();
 
-    int iTileHeight = (int)std::ceil(tileHeight);
-    int iTileWidth = (int)std::ceil(tileWidth);
+    int iTileHeight = static_cast<int>(std::ceil(tileHeight));
+    int iTileWidth = static_cast<int>(std::ceil(tileWidth));
 
     int iPl = m_player->getId();
     int mouseCell = m_player->getGameControlsContext()->getMouseCell();
@@ -221,8 +221,8 @@ void cMapDrawer::drawTerrainCells(bool fogged)
             int absoluteYCoordinateOnMap = m_mapGeometry->getAbsoluteYPositionFromCell(iCell);
             float fDrawY = m_camera->getWindowYPosition(absoluteYCoordinateOnMap);
 
-            int iDrawX = (int)std::floor(fDrawX);
-            int iDrawY = (int)std::floor(fDrawY);
+            int iDrawX = static_cast<int>(std::floor(fDrawX));
+            int iDrawY = static_cast<int>(std::floor(fDrawY));
 
             // fogged cells show what was last seen, not what happens there now
             int terrainType = cell->type;
