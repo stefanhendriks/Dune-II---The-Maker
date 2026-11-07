@@ -70,13 +70,13 @@ float cPlayerDifficultySettings::getInflictDamage(int iDamageInflicted)
     return std::floor(iDamageInflicted * m_inflictDamageFactor);
 }
 
-cPlayerDifficultySettings *cPlayerDifficultySettings::createFromHouse(int house)
+std::unique_ptr<cPlayerDifficultySettings> cPlayerDifficultySettings::createFromHouse(int house)
 {
     switch (house) {
         case ATREIDES:
-            return new cPlayerDifficultySettings(); // atreides is boring
+            return std::make_unique<cPlayerDifficultySettings>(); // atreides is boring
         case ORDOS:
-            return new cPlayerDifficultySettings(
+            return std::make_unique<cPlayerDifficultySettings>(
                        0.8f,
                        0.8f,
                        0.9f,
@@ -84,7 +84,7 @@ cPlayerDifficultySettings *cPlayerDifficultySettings::createFromHouse(int house)
                        0.8f
                    );
         case HARKONNEN:
-            return new cPlayerDifficultySettings(
+            return std::make_unique<cPlayerDifficultySettings>(
                        1.2f,
                        1.2f,
                        1.1f,
@@ -92,7 +92,7 @@ cPlayerDifficultySettings *cPlayerDifficultySettings::createFromHouse(int house)
                        1.2f
                    );
         case SARDAUKAR:
-            return new cPlayerDifficultySettings(
+            return std::make_unique<cPlayerDifficultySettings>(
                        1.2f,
                        1.25f, // Sardaukar builds even slower than Harkonnen
                        1.1f,
@@ -101,5 +101,5 @@ cPlayerDifficultySettings *cPlayerDifficultySettings::createFromHouse(int house)
                    );
     }
 
-    return new cPlayerDifficultySettings();
+    return std::make_unique<cPlayerDifficultySettings>();
 }

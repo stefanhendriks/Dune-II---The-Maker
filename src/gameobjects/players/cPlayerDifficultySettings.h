@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <memory>
+
 class cInfoContext;
 
 /**
@@ -67,7 +69,7 @@ public:
      * @param house
      * @return
      */
-    static cPlayerDifficultySettings *createFromHouse(int house);
+    static std::unique_ptr<cPlayerDifficultySettings> createFromHouse(int house);
 
 protected:
 
