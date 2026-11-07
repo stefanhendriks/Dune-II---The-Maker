@@ -37,10 +37,6 @@ private:
           .....    ..........
           G.H.I    04..24..44
     */
-    static short offsets[21];
-    static bool canAddSpiceTo[10];
-    static unsigned char spicemap[256];
-    static unsigned char spicemap2[256];
 
     // methods needed to generate seedmap
     void convertMap (cell map[64][64], short *iconmap);
