@@ -281,6 +281,12 @@ void cStructureDrawer::drawStructureAnimationRefinery(cAbstractStructure *struct
     drawStructureAnimation(structure);
 }
 
+// Same set of structures as the old low_power_display branch: everything except slabs, walls and the plain gun turret.
+static bool canShowLowPowerIcon(int structureType)
+{
+    return structureType != SLAB1 && structureType != SLAB4 && structureType != WALL && structureType != TURRET;
+}
+
 void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int layer)
 {
     d2tm_assert(structure);
@@ -331,7 +337,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
             renderIconThatStructureIsBeingRepaired(structure);
         }
 
-        if (structure->getType() == WINDTRAP && structure->getOwner() == m_player->getId() && !m_player->bEnoughPower()) {
+        if (canShowLowPowerIcon(structure->getType()) && structure->getOwner() == m_player->getId() && !m_player->bEnoughPower()) {
             renderIconThatPowerIsLow(structure);
         }
     }
@@ -346,10 +352,10 @@ void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) c
     int offsetY = (structure->getHeightInPixels() - icon->h) / 2;
     cRectangle src = {0, 0, icon->w, icon->h};
     cRectangle dest = {
-        structure->iDrawX() + m_mapCamera->factorZoomLevel(offsetX),
-        structure->iDrawY() + m_mapCamera->factorZoomLevel(offsetY),
-        m_mapCamera->factorZoomLevel(icon->w),
-        m_mapCamera->factorZoomLevel(icon->h)
+        static_cast<int>(structure->iDrawX() + m_mapCamera->factorZoomLevel(offsetX)),
+        static_cast<int>(structure->iDrawY() + m_mapCamera->factorZoomLevel(offsetY)),
+        static_cast<int>(m_mapCamera->factorZoomLevel(icon->w)),
+        static_cast<int>(m_mapCamera->factorZoomLevel(icon->h))
     };
     m_sdlDrawer->renderStrechSprite(icon, src, dest, static_cast<Uint8>(LowPowerBlink::opacityAt(SDL_GetTicks())));
 }
