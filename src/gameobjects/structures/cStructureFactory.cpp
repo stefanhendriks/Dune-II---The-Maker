@@ -132,7 +132,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
         return nullptr;
     }
 
-    float fPercent = (float)iPercent/100; // divide by 100 (to make it 0.x)
+    float fPercent = static_cast<float>(iPercent)/100; // divide by 100 (to make it 0.x)
 
     s_StructureInfo &structureInfo = m_info->getStructureInfo(iStructureType);
     int hp = structureInfo.hp;
@@ -191,7 +191,7 @@ cAbstractStructure *cStructureFactory::createStructure(int iCell, int iStructure
     str->TIMER_prebuild = std::min(structureSize/16, 250); // prebuild timer. A structure of 64x64 will result in 256, bigger structure has longer timer
     str->TIMER_decay = RNG::rnd(1000) + 100;
     str->fConcrete = (1 - fPercent);
-    str->setHitPoints((int)fHealth);
+    str->setHitPoints(static_cast<int>(fHealth));
     str->setFrame(RNG::rnd(1)); // random start frame (flag)
     str->setStructureId(iNewId);
     str->setWidth(structureInfo.bmp_width / TILESIZE_WIDTH_PIXELS);
