@@ -2347,7 +2347,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyUnitsOrderClosestToCell(int cel
         cUnit *aUnit = m_objects->getUnit(unitId);
         double dist = m_objects->getMapGeometry()->distance(aUnit->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
-            .distance = (int)dist,
+            .distance = static_cast<int>(dist),
             .entityId = unitId
         };
         result.push_back(entry);
@@ -2366,7 +2366,7 @@ std::vector<sEntityForDistance> cPlayer::getAllMyStructuresOrderClosestToCell(in
         cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
         double dist = m_objects->getMapGeometry()->distance(pStructure->getCell(), cell);
         const sEntityForDistance &entry = sEntityForDistance{
-            .distance = (int)dist,
+            .distance = static_cast<int>(dist),
             .entityId = structureId
         };
         result.push_back(entry);
