@@ -65,13 +65,12 @@ constexpr std::array<std::array<SmgSegment, SMG_PAIRCOUNT>, 2> kSpreadSegments =
 }};
 }
 
-// static initialize
 
-short cSeedMapGenerator::offsets[21] =
-{ 0,-1,1,-16,16,-17,17,-15,15,-2,2,-32,32,-4,4,-64,64,-30,30,-34,34 };
+namespace {
+constexpr std::array<short, 21> kMatrixOffsets = { 0,-1,1,-16,16,-17,17,-15,15,-2,2,-32,32,-4,4,-64,64,-30,30,-34,34 };
 
 //Which types of terrain can contain spice
-bool cSeedMapGenerator::canAddSpiceTo[10]= {
+constexpr std::array<bool, 10> kCanAddSpiceTo = {
     true, //sand
     false,
     true,//dunes
@@ -85,7 +84,7 @@ bool cSeedMapGenerator::canAddSpiceTo[10]= {
 };
 
 //Offsets for calculating spice positions
-unsigned char cSeedMapGenerator::spicemap[256] = {
+constexpr std::array<unsigned char, 256> kSpiceMap = {
     0x0,0x3,0x6,0x9,0xc,0xf,0x12,0x15,0x18,0x1b,0x1e,0x21,0x24,0x27,0x2a,0x2d,
     0x30,0x33,0x36,0x39,0x3b,0x3e,0x41,0x43,0x46,0x49,0x4b,0x4e,0x50,0x52,0x55,0x57,
     0x59,0x5b,0x5e,0x60,0x62,0x64,0x65,0x67,0x69,0x6b,0x6c,0x6e,0x6f,0x71,0x72,0x74,
@@ -104,7 +103,7 @@ unsigned char cSeedMapGenerator::spicemap[256] = {
     0xd0,0xd3,0xd6,0xd9,0xdc,0xdf,0xe2,0xe5,0xe8,0xeb,0xee,0xf1,0xf4,0xf7,0xfa,0xfd
 };
 
-unsigned char cSeedMapGenerator::spicemap2[256] = {
+constexpr std::array<unsigned char, 256> kSpiceMap2 = {
     0x7f,0x7e,0x7e,0x7e,0x7e,0x7e,0x7d,0x7d,0x7c,0x7b,0x7b,0x7a,0x79,0x78,0x77,0x76,
     0x75,0x74,0x72,0x71,0x70,0x6e,0x6c,0x6b,0x69,0x67,0x66,0x64,0x62,0x60,0x5e,0x5b,
     0x59,0x57,0x55,0x52,0x50,0x4e,0x4b,0x49,0x46,0x43,0x41,0x3e,0x3b,0x39,0x36,0x33,
@@ -122,7 +121,7 @@ unsigned char cSeedMapGenerator::spicemap2[256] = {
     0x59,0x5b,0x5e,0x60,0x62,0x64,0x65,0x67,0x69,0x6b,0x6c,0x6e,0x6f,0x71,0x72,0x74,
     0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7b,0x7c,0x7d,0x7d,0x7e,0x7e,0x7e,0x7e,0x7e
 };
-
+}
 
 cSeedMapGenerator::cSeedMapGenerator(unsigned long value)
 {
@@ -197,7 +196,7 @@ void cSeedMapGenerator::addSpiceAt(cell map[64][64],short x,short y)
                 x2=x+dx;
                 if(x2>63) continue;
                 if(x2<0) continue;
-                if(canAddSpiceTo[map[y2][x2].w]) {
+                if(kCanAddSpiceTo[map[y2][x2].w]) {
                     if(map[y2][x2].w!=SMG_MUCHSPICE) {
                         map[y2][x2].w=SMG_SPICE;
                     }
@@ -209,7 +208,7 @@ void cSeedMapGenerator::addSpiceAt(cell map[64][64],short x,short y)
         }
     }
     else {
-        if(canAddSpiceTo[map[y][x].w]) {
+        if(kCanAddSpiceTo[map[y][x].w]) {
             map[y][x].w=SMG_SPICE;
         }
     }
@@ -229,7 +228,7 @@ void cSeedMapGenerator::addSpice(cell map[64][64])
     for(i=random()&0x2F; i>0; i--) {
         y=random()&0x3F;
         x=random()&0x3F;
-        if(!canAddSpiceTo[map[y][x].w]) {
+        if(!kCanAddSpiceTo[map[y][x].w]) {
             i++;
             continue;
         }
@@ -255,10 +254,10 @@ void cSeedMapGenerator::addSpice(cell map[64][64])
                     m=e;
 
                     j=random()&0xff;
-                    k=spicemap[j];
+                    k=kSpiceMap[j];
                     x2=(((k*m)>>7)<<4)+x2;
 
-                    k=spicemap2[j];
+                    k=kSpiceMap2[j];
                     k=-k;
                     y2=(((k*m)>>7)<<4)+y2;
 
@@ -537,8 +536,8 @@ void cSeedMapGenerator::addNoise1(char *matrix)
     while (count >= 0) {
         /* 'ncell' is the offset in matrix */
         ncell = random() & 0xFF;
-        for (i = 0; i < 21; i++) {
-            cell = ncell + offsets[i];
+        for (i = 0; i < static_cast<short>(kMatrixOffsets.size()); i++) {
+            cell = ncell + kMatrixOffsets[i];
             if (cell < 0) cell = 0;
             else if (cell > 16*17) cell = 16*17;
             d = random() & 0xF;
@@ -555,8 +554,8 @@ void cSeedMapGenerator::addNoise2(char *matrix)
     count = random() & 0x3;
     while (count >= 0) {
         ncell = random() & 0xFF;
-        for (i = 0; i < 21; i++) {
-            cell = ncell + offsets[i];
+        for (i = 0; i < static_cast<short>(kMatrixOffsets.size()); i++) {
+            cell = ncell + kMatrixOffsets[i];
             if (cell < 0) cell = 0;
             else if (cell > 16*17) cell = 16*17;
             matrix[cell] = random() & 0x3;
