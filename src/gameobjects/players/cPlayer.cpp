@@ -73,9 +73,9 @@ cPlayer::cPlayer()
     gameControlsContext = nullptr;
     bmp_flag = nullptr;
     bmp_flag_small = nullptr;
-    memset(bmp_structure, 0, sizeof(bmp_structure));
-    memset(bmp_unit, 0, sizeof(bmp_unit));
-    memset(bmp_unit_top, 0, sizeof(bmp_unit_top));
+    std::fill(std::begin(bmp_structure), std::end(bmp_structure), nullptr);
+    std::fill(std::begin(bmp_unit), std::end(bmp_unit), nullptr);
+    std::fill(std::begin(bmp_unit_top), std::end(bmp_unit_top), nullptr);
     brain_ = nullptr;
     m_autoSlabStructures = false;
 }
@@ -1479,7 +1479,7 @@ int cPlayer::findRandomUnitTarget(int playerIndexToAttack)
 {
     // Randomly assemble list, and then pick one
     int iTargets[100];
-    memset(iTargets, -1, sizeof(iTargets));
+    std::fill(std::begin(iTargets), std::end(iTargets), -1);
 
     int maxTargets = 0;
 
@@ -1516,7 +1516,7 @@ int cPlayer::findRandomStructureTarget(int iAttackPlayer)
 {
     // Randomly assemble list, and then pick one
     int iTargets[100];
-    memset(iTargets, -1, sizeof(iTargets));
+    std::fill(std::begin(iTargets), std::end(iTargets), -1);
 
     int iT = 0;
 
