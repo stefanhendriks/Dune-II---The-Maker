@@ -17,6 +17,7 @@
 
 #include "controls/sMouseEvent.h"
 #include "utils/cRectangle.h"
+#include <memory>
 
 class cPlayer;
 struct SDL_Surface;
@@ -50,5 +51,5 @@ private:
     SDLDrawer *m_sdlDrawer;
     cPlayer *m_player;
     cRectangle m_buttonRect;
-    Texture *m_buttonBitmap;
+    std::unique_ptr<Texture> m_buttonBitmap;
 };
