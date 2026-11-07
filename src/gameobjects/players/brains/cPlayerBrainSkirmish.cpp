@@ -968,7 +968,7 @@ int cPlayerBrainSkirmish::calculateEconomyScore()
 {
     int credits = player->getCredits();
     int idealMoneyCount = 1500;
-    int economyScore = ((credits / (float)idealMoneyCount) * 100);
+    int economyScore = ((credits / static_cast<float>(idealMoneyCount)) * 100);
     if (economyScore > 100) {
         economyScore = 100;
     }
