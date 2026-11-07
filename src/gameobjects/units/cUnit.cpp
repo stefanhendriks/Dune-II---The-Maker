@@ -46,6 +46,7 @@
 #include <cmath>
 
 #include "data/gfxaudio.h"
+#include <algorithm>
 
 
 
@@ -88,8 +89,8 @@ void cUnit::init(int i)
     position.iCellY = -1;
     position.posX = -1;
     position.posY = -1;
-    memset(movement.iPath, -1, sizeof(movement.iPath));    // path of unit
-    memset(movement.waypointCells, -1, sizeof(movement.waypointCells)); // remembered waypoints on path
+    std::fill(std::begin(movement.iPath), std::end(movement.iPath), -1);    // path of unit
+    std::fill(std::begin(movement.waypointCells), std::end(movement.waypointCells), -1); // remembered waypoints on path
     movement.iPathIndex = -1;     // where are we?
     movement.iPathFails = 0;
     movement.bCalculateNewPath = false;
@@ -2984,8 +2985,8 @@ int cUnit::pos_x_centered()
  */
 void cUnit::forgetAboutCurrentPathAndPrepareToCreateNewOne(int timeToWait)
 {
-    memset(movement.iPath, -1, sizeof(movement.iPath));
-    memset(movement.waypointCells, -1, sizeof(movement.waypointCells));
+    std::fill(std::begin(movement.iPath), std::end(movement.iPath), -1);
+    std::fill(std::begin(movement.waypointCells), std::end(movement.waypointCells), -1);
     movement.iPathIndex = -1;
     movewaitTimer.reset(timeToWait);
 }
@@ -4042,7 +4043,7 @@ int cUnit::freeAroundMove(int iUnit, cGameObjectContext* objects)
     iStartY -= iWidth;
 
     int iClls[50];
-    memset(iClls, -1, sizeof(iClls));
+    std::fill(std::begin(iClls), std::end(iClls), -1);
     int foundCoordinates = 0;
 
     for (int x = iStartX; x < iEndX; x++) {
