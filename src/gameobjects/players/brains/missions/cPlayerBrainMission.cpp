@@ -54,20 +54,20 @@ cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMiss
     d2tm_assert(brain != nullptr);
     switch (kind) {
         case PLAYERBRAINMISSION_KIND_ATTACK:
-            missionKind = new cPlayerBrainMissionKindAttack(player, this);
+            missionKind = std::make_unique<cPlayerBrainMissionKindAttack>(player, this);
             break;
         case PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR:
-            missionKind = new cPlayerBrainMissionKindSaboteur(player, this);
+            missionKind = std::make_unique<cPlayerBrainMissionKindSaboteur>(player, this);
             specialEventMakesStateSwitchToSelectTarget = true;
             missionWithUnits = false; // saboteur is like fremen
             break;
         case PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND:
-            missionKind = new cPlayerBrainMissionKindDeathHand(player, this);
+            missionKind = std::make_unique<cPlayerBrainMissionKindDeathHand>(player, this);
             specialEventMakesStateSwitchToSelectTarget = true;
             missionWithUnits = false; // this is a non-unit mission
             break;
         case PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN:
-            missionKind = new cPlayerBrainMissionKindFremen(player, this);
+            missionKind = std::make_unique<cPlayerBrainMissionKindFremen>(player, this);
             specialEventMakesStateSwitchToSelectTarget = true;
             missionWithUnits = false; // this is a non-unit mission , Fremen units are not our own
             break;
@@ -76,7 +76,7 @@ cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMiss
 //                missionKind = new cPlayerBrainMissionKindAttack(player, this);
             break;
         case PLAYERBRAINMISSION_KIND_EXPLORE:
-            missionKind = new cPlayerBrainMissionKindExplore(player, this);
+            missionKind = std::make_unique<cPlayerBrainMissionKindExplore>(player, this);
             break;
         case PLAYERBRAINMISSION_IMPROVE_ECONOMY:
         case PLAYERBRAINMISSION_KIND_FIND_SPICE:
@@ -98,9 +98,6 @@ cPlayerBrainMission::cPlayerBrainMission(cPlayer *player, const ePlayerBrainMiss
 
 cPlayerBrainMission::~cPlayerBrainMission()
 {
-    if (missionKind) {
-        delete missionKind;
-    }
     player = nullptr;
     brain = nullptr;
 }

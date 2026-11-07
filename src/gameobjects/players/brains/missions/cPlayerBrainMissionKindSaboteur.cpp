@@ -120,9 +120,9 @@ void cPlayerBrainMissionKindSaboteur::onEventDestroyed(const CommonEvent &event)
     }
 }
 
-cPlayerBrainMissionKind *cPlayerBrainMissionKindSaboteur::clone(cPlayer *player, cPlayerBrainMission *mission)
+std::unique_ptr<cPlayerBrainMissionKind> cPlayerBrainMissionKindSaboteur::clone(cPlayer *player, cPlayerBrainMission *mission)
 {
-    cPlayerBrainMissionKindSaboteur *copy = new cPlayerBrainMissionKindSaboteur(player, mission);
+    auto copy = std::make_unique<cPlayerBrainMissionKindSaboteur>(player, mission);
     copy->targetStructureID = targetStructureID;
     copy->specificEventTypeToGoToSelectTargetState = specificEventTypeToGoToSelectTargetState;
     copy->specificPlayerForEventToGoToSelectTargetState = specificPlayerForEventToGoToSelectTargetState;

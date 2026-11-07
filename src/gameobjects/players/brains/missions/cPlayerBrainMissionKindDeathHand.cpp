@@ -126,9 +126,9 @@ void cPlayerBrainMissionKindDeathHand::onNotifyGameEvent(const s_GameEvent &even
     }
 }
 
-cPlayerBrainMissionKind *cPlayerBrainMissionKindDeathHand::clone(cPlayer *player, cPlayerBrainMission *mission)
+std::unique_ptr<cPlayerBrainMissionKind> cPlayerBrainMissionKindDeathHand::clone(cPlayer *player, cPlayerBrainMission *mission)
 {
-    cPlayerBrainMissionKindDeathHand *copy = new cPlayerBrainMissionKindDeathHand(player, mission);
+    auto copy = std::make_unique<cPlayerBrainMissionKindDeathHand>(player, mission);
     copy->target = target;
     copy->itemToLaunch = itemToLaunch;
     copy->specificEventTypeToGoToSelectTargetState = specificEventTypeToGoToSelectTargetState;

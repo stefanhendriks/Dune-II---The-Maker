@@ -53,9 +53,9 @@ void cPlayerBrainMissionKindFremen::onNotifyGameEvent(const s_GameEvent &event)
     cPlayerBrainMissionKind::onNotifyGameEvent(event);
 }
 
-cPlayerBrainMissionKind *cPlayerBrainMissionKindFremen::clone(cPlayer *player, cPlayerBrainMission *mission)
+std::unique_ptr<cPlayerBrainMissionKind> cPlayerBrainMissionKindFremen::clone(cPlayer *player, cPlayerBrainMission *mission)
 {
-    cPlayerBrainMissionKindFremen *copy = new cPlayerBrainMissionKindFremen(player, mission);
+    auto copy = std::make_unique<cPlayerBrainMissionKindFremen>(player, mission);
     copy->specificEventTypeToGoToSelectTargetState = specificEventTypeToGoToSelectTargetState;
     copy->specificPlayerForEventToGoToSelectTargetState = specificPlayerForEventToGoToSelectTargetState;
     copy->specificBuildTypeToGoToSelectTargetState = specificBuildTypeToGoToSelectTargetState;

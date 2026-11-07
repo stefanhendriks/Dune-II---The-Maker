@@ -76,9 +76,9 @@ void cPlayerBrainMissionKindExplore::onNotifyGameEvent(const s_GameEvent &event)
     log(std::format("cPlayerBrainMissionKindExplore::onNotifyGameEvent() -> {}", event.toString(event.eventType)).c_str());
 }
 
-cPlayerBrainMissionKind *cPlayerBrainMissionKindExplore::clone(cPlayer *player, cPlayerBrainMission *mission)
+std::unique_ptr<cPlayerBrainMissionKind> cPlayerBrainMissionKindExplore::clone(cPlayer *player, cPlayerBrainMission *mission)
 {
-    cPlayerBrainMissionKindExplore *copy = new cPlayerBrainMissionKindExplore(player, mission);
+    auto copy = std::make_unique<cPlayerBrainMissionKindExplore>(player, mission);
     copy->targetCell = targetCell;
     copy->specificEventTypeToGoToSelectTargetState = specificEventTypeToGoToSelectTargetState;
     copy->specificPlayerForEventToGoToSelectTargetState = specificPlayerForEventToGoToSelectTargetState;

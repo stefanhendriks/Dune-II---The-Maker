@@ -17,6 +17,8 @@
 
 #include "observers/cScenarioObserver.h"
 
+#include <memory>
+
 class cPlayer;
 
 namespace brains {
@@ -90,7 +92,7 @@ public:
 
     virtual void think_Execute() = 0;
 
-    virtual cPlayerBrainMissionKind *clone(cPlayer *player, cPlayerBrainMission *mission) = 0;
+    virtual std::unique_ptr<cPlayerBrainMissionKind> clone(cPlayer *player, cPlayerBrainMission *mission) = 0;
 
     virtual void onNotify_SpecificStateSwitch(const BuildingEvent &event) = 0;
 
