@@ -477,8 +477,11 @@ void cSeedMapGenerator::spreadMatrix(SeedCellMap &map)
                 medy = (ey + by)/2;
                 bx &= 0x3f;
                 ex &= 0x3f; /* so x position never exceeds 0x3F */
-                if (((medy * 64) +medx) < 64*64)
-                    map[medy][medx].w = (map[by][bx].w + map[ey][ex].w + 1)/2;
+                // medx can be 64 here: the original raw array wrapped that into column 0 of the next row,
+                // which the generated maps depend on, so keep that behaviour via a flat index.
+                const int flatIndex = (medy * 64) + medx;
+                if (flatIndex < 64*64)
+                    map[flatIndex / 64][flatIndex % 64].w = (map[by][bx].w + map[ey][ex].w + 1)/2;
             }
         }
     }
