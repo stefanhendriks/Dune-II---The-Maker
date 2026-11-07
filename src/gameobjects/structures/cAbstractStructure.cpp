@@ -191,8 +191,8 @@ void cAbstractStructure::die(int originId, eBuildType originType, int killingDam
         pPlayer->selected_structure = -1;
     }
 
-    // remove from array
-    m_objects->getStructures()[id] = nullptr;
+    // remove from array (stays alive until the pool destroys detached structures)
+    m_objects->getStructures().detach(id);
 
     // Destroy structure, take stuff in effect for the player
     pPlayer->decreaseStructureAmount(getType()); // remove from player building indexes

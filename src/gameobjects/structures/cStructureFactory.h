@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "cAbstractStructure.h"
 
 class cGameObjectContext;
@@ -69,5 +71,5 @@ private:
     sGameServices *m_services = nullptr;
     SDLDrawer *m_renderer = nullptr;
 
-    cAbstractStructure *createStructureInstance(int type);
+    std::unique_ptr<cAbstractStructure> createStructureInstance(int type);
 };
