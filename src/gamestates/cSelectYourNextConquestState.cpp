@@ -117,7 +117,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     isFinishedConqueringRegions = true;
 
     int length = m_textDrawer->getTextLength("Mission select");
-    const cRectangle &toMissionSelectRect = *m_textDrawer->getAsRectangle(m_settings->getScreenW() - length,
+    const cRectangle &toMissionSelectRect = m_textDrawer->getAsRectangle(m_settings->getScreenW() - length,
                                             m_settings->getScreenH() - m_textDrawer->getFontHeight(),
                                             "Mission select");
     m_guiBtnToMissionSelect = GuiButtonBuilder()

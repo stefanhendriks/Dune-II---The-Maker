@@ -157,9 +157,9 @@ cRectangle cTextDrawer::getRect(int x, int y, const std::string &msg) const
     return cRectangle(x, y, getTextLength(msg), getFontHeight());
 }
 
-cRectangle *cTextDrawer::getAsRectangle(int x, int y, const std::string &msg) const
+cRectangle cTextDrawer::getAsRectangle(int x, int y, const std::string &msg) const
 {
-    return new cRectangle(x, y, getTextLength(msg), getFontHeight());
+    return cRectangle(x, y, getTextLength(msg), getFontHeight());
 }
 
 void cTextDrawer::resetCache() const

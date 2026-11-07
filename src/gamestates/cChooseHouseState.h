@@ -48,7 +48,7 @@ private:
     GameStateTransition* m_stateTransitions = nullptr;
     MentatFlow* m_mentatFlow = nullptr;
     cMouse* m_mouse = nullptr;
-    cRectangle *backButtonRect;
+    cRectangle backButtonRect;
 
     Texture *bmp_Dune;
     Texture *bmp_SelectYourHouseTitle;
