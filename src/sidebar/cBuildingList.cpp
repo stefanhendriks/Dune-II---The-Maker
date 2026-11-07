@@ -313,7 +313,7 @@ cBuildingListItem *cBuildingList::getItemToPlace()
             }
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 // TODO: This should be set, not looked up. Ie, the item to place should be set somewhere (instead of setting
@@ -331,7 +331,7 @@ cBuildingListItem *cBuildingList::getItemToDeploy()
             }
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 void cBuildingList::setStatusPendingUpgrade(int subListId)
