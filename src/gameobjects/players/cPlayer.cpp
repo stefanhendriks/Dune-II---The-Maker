@@ -143,18 +143,7 @@ void cPlayer::destroyAllegroBitmaps()
 void cPlayer::clearStructureTypeBitmaps()
 {
     for (int i = 0; i < MAX_STRUCTURE_BMPS; i++) {
-        if (bmp_structure[i]) {
-//            char msg[255];
-//            sprintf(msg, "clearStructureTypeBitmaps: Destroying bmp_structure for index [%d].", i);
-//            log(msg);
-            bmp_structure[i].reset();
-        }
-        else {
-//            char msg[255];
-//            sprintf(msg, "clearStructureTypeBitmaps: Index [%d] is null.", i);
-//            log(msg);
-        }
-        bmp_structure[i] = nullptr;
+        bmp_structure[i].reset();
     }
 }
 
@@ -171,15 +160,8 @@ const HouseColors& cPlayer::getColors() const
 void cPlayer::clearUnitTypeBitmaps()
 {
     for (int i = 0; i < MAX_UNITTYPES; i++) {
-        if (bmp_unit[i]) {
-            bmp_unit[i].reset();
-        }
-        bmp_unit[i] = nullptr;
-
-        if (bmp_unit_top[i]) {
-            bmp_unit_top[i].reset();
-        }
-        bmp_unit_top[i] = nullptr;
+        bmp_unit[i].reset();
+        bmp_unit_top[i].reset();
     }
 }
 
