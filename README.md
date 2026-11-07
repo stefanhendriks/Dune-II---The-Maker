@@ -136,6 +136,16 @@ set SDL_SOUNDFONTS=C:\path\to\FluidR3_GM.sf2    # Windows
 
 Add the `export` line to your shell profile (`~/.zshrc`, `~/.bashrc`) to make it permanent.
 
+# Settings
+Game settings live in `settings.ini` (source: `resources/bin/settings.ini`, copied into `bin/`). Most can be
+changed in the in-game options menu, which saves them back. A few of them:
+
+- `AllTurretsDownOnLowPower` / `RocketTurretsDownOnLowPower`: turrets stop firing when the player is low on power.
+- `ShowLowPowerIcon` (default `false`): when `true`, your structures that need power show a blinking lightning-bolt
+  icon while you are low on power. Also available as the "Low power icon" checkbox in the options menu. Which
+  structures show it, and where, is set per structure in `game.ini` with `NeedPowerToWork`, `LowPowerIconX` and
+  `LowPowerIconY`.
+
 # Project status
 See the [Project Board](https://github.com/stefanhendriks/Dune-II---The-Maker/projects/1) what's going on.
 
