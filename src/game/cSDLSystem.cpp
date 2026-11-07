@@ -58,8 +58,8 @@ void cSDLSystem::applyFullscreenPresentation()
     } else {
         // Fullscreen fills the screen edge to edge instead of adding bars, at the cost of a
         // fractional scale (at 1.5x, one game pixel covers 1 or 2 screen pixels).
-        float scaleToFillScreen = std::min((float)renderW / (float)renderResolution.width,
-                                           (float)renderH / (float)renderResolution.height);
+        float scaleToFillScreen = std::min(static_cast<float>(renderW) / static_cast<float>(renderResolution.width),
+                                           static_cast<float>(renderH) / static_cast<float>(renderResolution.height));
 
         SDL_SetRenderLogicalPresentation(renderer, renderResolution.width, renderResolution.height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
         SDL_RenderClear(renderer);
