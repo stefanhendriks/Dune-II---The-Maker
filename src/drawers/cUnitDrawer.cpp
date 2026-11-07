@@ -83,7 +83,7 @@ void cUnitDrawer::draw_health()
 
     // bar itself
     m_renderer->renderRectFillColor(drawx, drawy, width_x, height_y, 0, 0, 0,ShadowTrans);
-    m_renderer->renderRectFillColor(drawx, drawy, (w - 1), height_y, (Uint8)r,(Uint8)g, 32,ShadowTrans);
+    m_renderer->renderRectFillColor(drawx, drawy, (w - 1), height_y, static_cast<Uint8>(r),static_cast<Uint8>(g), 32,ShadowTrans);
 
     // bar around it (only when it makes sense due zooming)
     if (height_y > 2) {
@@ -120,7 +120,7 @@ void cUnitDrawer::draw_group(cTextDrawer* textDrawer)
 
 void cUnitDrawer::draw_experience()
 {
-    int iStars = (int) m_unit.fExperience;
+    int iStars = static_cast<int>(m_unit.fExperience);
 
     if (iStars < 1)
         return; // no stars to draw!
