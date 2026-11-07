@@ -32,6 +32,7 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cUnits.h"
 #include "include/cAssert.h"
+#include <algorithm>
 
 
 
@@ -40,7 +41,7 @@ cSideBar::cSideBar(cPlayer *thePlayer) : m_player(thePlayer)
     d2tm_assert(thePlayer != nullptr && "Expected player to be not null!");
     m_selectedListID = -1; // nothing is selected
     m_isMouseOverSidebarValue = false;
-    memset(m_lists, 0, sizeof(m_lists));
+    std::fill(std::begin(m_lists), std::end(m_lists), nullptr);
 }
 
 cSideBar::~cSideBar()
