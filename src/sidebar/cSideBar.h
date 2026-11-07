@@ -50,13 +50,13 @@ struct sGameServices;
 //#define LIST_UPGRADES    6 // possible upgrades
 //#define LIST_MAX        7 // max amount of lists
 
-#define SUBLIST_CONSTYARD  0  // structures
-#define SUBLIST_LIGHTFCTRY 1 // quad, trike, etc
-#define SUBLIST_HEAVYFCTRY 2 // tanks
-#define SUBLIST_HIGHTECH   3 // orni, carry-all
+inline constexpr int SUBLIST_CONSTYARD = 0;  // structures
+inline constexpr int SUBLIST_LIGHTFCTRY = 1; // quad, trike, etc
+inline constexpr int SUBLIST_HEAVYFCTRY = 2; // tanks
+inline constexpr int SUBLIST_HIGHTECH = 3; // orni, carry-all
 
-#define SUBLIST_INFANTRY   4 // soldier, infantry
-#define SUBLIST_TROOPERS   5 // trooper, troopers
+inline constexpr int SUBLIST_INFANTRY = 4; // soldier, infantry
+inline constexpr int SUBLIST_TROOPERS = 5; // trooper, troopers
 
 /**
  * Basically a container:
