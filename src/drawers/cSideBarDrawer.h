@@ -21,6 +21,8 @@
 #include "observers/cInputObserver.h"
 #include "controls/sMouseEvent.h"
 
+#include <memory>
+
 class Texture;
 class cPlayer;
 class GameContext;
@@ -73,8 +75,8 @@ private:
 
     void drawPowerUsage() const;
     void drawCreditsUsage();
-    Texture *m_candyBarBall=nullptr;
-    Texture *m_candyBarPiece=nullptr;
-    Texture *m_candyHorizonBar=nullptr;
+    std::unique_ptr<Texture> m_candyBarBall;
+    std::unique_ptr<Texture> m_candyBarPiece;
+    std::unique_ptr<Texture> m_candyHorizonBar;
     Texture *m_candiBarRenderer= nullptr;
 };
