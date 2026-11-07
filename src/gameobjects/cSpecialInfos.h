@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <array>
 #include <cstddef>
 #include <stdexcept>
@@ -35,7 +37,7 @@
  */
 struct s_SpecialInfo {
     int icon;            // icon id
-    char description[64]; // ie: "Upgrade to 4slab"
+    std::string description; // ie: "Upgrade to 4slab"
     int buildTime;     // how long it takes to 'build' (ie wait before ready)
     eBuildType providesType;
     int providesTypeId;   // slot of type it points to (typeId)

@@ -851,7 +851,7 @@ void cInfoContextCreator::initSpecials(cSpecialInfos& specialInfos)
         specialInfos[i].deployTargetPrecision = 0;
         specialInfos[i].listType = eListType::LIST_NONE;
         specialInfos[i].subListId = -1;
-        strcpy(specialInfos[i].description, "\0");
+        specialInfos[i].description = "\0";
     }
 
     // Deploy Saboteur
@@ -866,7 +866,7 @@ void cInfoContextCreator::initSpecials(cSpecialInfos& specialInfos)
     specialInfos[SPECIAL_SABOTEUR].buildTime = 2468; // ~ 6 minutes (but times 1.2 to compensate for faster Ordos building = 2468 to get real 6 minutes)
     specialInfos[SPECIAL_SABOTEUR].listType=eListType::LIST_PALACE;
     specialInfos[SPECIAL_SABOTEUR].subListId=0;
-    strcpy(specialInfos[SPECIAL_SABOTEUR].description, "Saboteur");
+    specialInfos[SPECIAL_SABOTEUR].description = "Saboteur";
 
     // Deploy Fremen
     specialInfos[SPECIAL_FREMEN].icon = ICON_SPECIAL_FREMEN;
@@ -880,7 +880,7 @@ void cInfoContextCreator::initSpecials(cSpecialInfos& specialInfos)
     specialInfos[SPECIAL_FREMEN].buildTime = 1371; // ~ 4 minutes (atreides has baseline build times, ie = real time)
     specialInfos[SPECIAL_FREMEN].listType=eListType::LIST_PALACE;
     specialInfos[SPECIAL_FREMEN].subListId=0;
-    strcpy(specialInfos[SPECIAL_FREMEN].description, "Fremen");
+    specialInfos[SPECIAL_FREMEN].description = "Fremen";
 
     // Launch Death Hand
     specialInfos[SPECIAL_DEATHHAND].icon = ICON_SPECIAL_MISSILE;
@@ -899,7 +899,7 @@ void cInfoContextCreator::initSpecials(cSpecialInfos& specialInfos)
     specialInfos[SPECIAL_DEATHHAND].deployTargetPrecision = 6;
     specialInfos[SPECIAL_DEATHHAND].listType=eListType::LIST_PALACE;
     specialInfos[SPECIAL_DEATHHAND].subListId=0;
-    strcpy(specialInfos[SPECIAL_DEATHHAND].description, "Death Hand");
+    specialInfos[SPECIAL_DEATHHAND].description = "Death Hand";
 
 }
 
@@ -927,7 +927,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
         bulletInfos[i].groundBullet = false; // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
         bulletInfos[i].canDamageAirUnits = false; // if true, then upon impact the bullet can also damage air units
         bulletInfos[i].canDamageGround = false; // if true, then upon impact the bullet can also damage ground (walls, slabs, etc)
-        strcpy(bulletInfos[i].description, "Unknown");
+        bulletInfos[i].description = "Unknown";
     }
 
     // huge rocket/missile
@@ -942,7 +942,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_BIG].canDamageAirUnits = true;
     bulletInfos[ROCKET_BIG].canDamageGround = true;
     bulletInfos[ROCKET_BIG].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(bulletInfos[ROCKET_BIG].description, "ROCKET_BIG");
+    bulletInfos[ROCKET_BIG].description = "ROCKET_BIG";
 
     // small rocket (for ornithopter)
     bulletInfos[ROCKET_SMALL_ORNI].bmp = m_gfxdata->getTexture(BULLET_ROCKET_SMALL);
@@ -956,7 +956,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_SMALL_ORNI].max_deadframes = 1;
     bulletInfos[ROCKET_SMALL_ORNI].canDamageGround = true;
     bulletInfos[ROCKET_SMALL_ORNI].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(bulletInfos[ROCKET_SMALL_ORNI].description, "ROCKET_SMALL_ORNI");
+    bulletInfos[ROCKET_SMALL_ORNI].description = "ROCKET_SMALL_ORNI";
 
     // small rocket
     bulletInfos[ROCKET_SMALL].bmp = m_gfxdata->getTexture(BULLET_ROCKET_SMALL);
@@ -971,7 +971,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_SMALL].max_deadframes = 1;
     bulletInfos[ROCKET_SMALL].canDamageGround = true;
 //    bullets[ROCKET_SMALL].smokeParticle = BULLET_PUF; // small rockets have no smoke trail yet
-    strcpy(bulletInfos[ROCKET_SMALL].description, "ROCKET_SMALL");
+    bulletInfos[ROCKET_SMALL].description = "ROCKET_SMALL";
 
     // small rocket - fremen rocket
     bulletInfos[ROCKET_SMALL_FREMEN].bmp = m_gfxdata->getTexture(BULLET_ROCKET_SMALL);
@@ -986,7 +986,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_SMALL_FREMEN].canDamageAirUnits = true;
     bulletInfos[ROCKET_SMALL_FREMEN].canDamageGround = true;
 //    bullets[ROCKET_SMALL_FREMEN].smokeParticle = true; // not yet
-    strcpy(bulletInfos[ROCKET_SMALL_FREMEN].description, "ROCKET_SMALL_FREMEN");
+    bulletInfos[ROCKET_SMALL_FREMEN].description = "ROCKET_SMALL_FREMEN";
 
     // normal rocket
     bulletInfos[ROCKET_NORMAL].bmp = m_gfxdata->getTexture(BULLET_ROCKET_NORMAL);
@@ -1001,7 +1001,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_NORMAL].canDamageAirUnits = true;
     bulletInfos[ROCKET_NORMAL].canDamageGround = true;
     bulletInfos[ROCKET_NORMAL].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(bulletInfos[ROCKET_NORMAL].description, "ROCKET_NORMAL");
+    bulletInfos[ROCKET_NORMAL].description = "ROCKET_NORMAL";
 
     // soldier shot
     bulletInfos[BULLET_SMALL].bmp = m_gfxdata->getTexture(BULLET_DOT_SMALL);
@@ -1014,7 +1014,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_SMALL].sound = SOUND_GUN;
     bulletInfos[BULLET_SMALL].max_deadframes = 0;
     bulletInfos[BULLET_SMALL].groundBullet = true;
-    strcpy(bulletInfos[BULLET_SMALL].description, "BULLET_SMALL");
+    bulletInfos[BULLET_SMALL].description = "BULLET_SMALL";
 
     // trike shot
     bulletInfos[BULLET_TRIKE].bmp = m_gfxdata->getTexture(BULLET_DOT_SMALL);
@@ -1027,7 +1027,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_TRIKE].sound = SOUND_MACHINEGUN;
     bulletInfos[BULLET_TRIKE].max_deadframes = 0;
     bulletInfos[BULLET_TRIKE].groundBullet = true;
-    strcpy(bulletInfos[BULLET_TRIKE].description, "BULLET_TRIKE");
+    bulletInfos[BULLET_TRIKE].description = "BULLET_TRIKE";
 
     // quad shot
     bulletInfos[BULLET_QUAD].bmp = m_gfxdata->getTexture(BULLET_DOT_SMALL);
@@ -1039,7 +1039,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_QUAD].sound = SOUND_MACHINEGUN;
     bulletInfos[BULLET_QUAD].max_deadframes = 0;
     bulletInfos[BULLET_QUAD].groundBullet = true;
-    strcpy(bulletInfos[BULLET_QUAD].description, "BULLET_QUAD");
+    bulletInfos[BULLET_QUAD].description = "BULLET_QUAD";
 
     // normal tank shot
     bulletInfos[BULLET_TANK].bmp = m_gfxdata->getTexture(BULLET_DOT_MEDIUM);
@@ -1052,7 +1052,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_TANK].max_deadframes = 1;
     bulletInfos[BULLET_TANK].groundBullet = true;
     bulletInfos[BULLET_TANK].canDamageGround = true;
-    strcpy(bulletInfos[BULLET_TANK].description, "BULLET_TANK");
+    bulletInfos[BULLET_TANK].description = "BULLET_TANK";
 
     // siege tank shot
     bulletInfos[BULLET_SIEGE].bmp = m_gfxdata->getTexture(BULLET_DOT_MEDIUM);
@@ -1065,7 +1065,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_SIEGE].max_deadframes = 2;
     bulletInfos[BULLET_SIEGE].groundBullet = true;
     bulletInfos[BULLET_SIEGE].canDamageGround = true;
-    strcpy(bulletInfos[BULLET_SIEGE].description, "BULLET_SIEGE");
+    bulletInfos[BULLET_SIEGE].description = "BULLET_SIEGE";
 
     // devastator shot
     bulletInfos[BULLET_DEVASTATOR].bmp = m_gfxdata->getTexture(BULLET_DOT_LARGE);
@@ -1078,7 +1078,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_DEVASTATOR].max_deadframes = 1;
     bulletInfos[BULLET_DEVASTATOR].groundBullet = true;
     bulletInfos[BULLET_DEVASTATOR].canDamageGround = true;
-    strcpy(bulletInfos[BULLET_DEVASTATOR].description, "BULLET_DEVASTATOR");
+    bulletInfos[BULLET_DEVASTATOR].description = "BULLET_DEVASTATOR";
 
     // Gas rocket of a deviator
     bulletInfos[BULLET_GAS].bmp = m_gfxdata->getTexture(BULLET_ROCKET_NORMAL);
@@ -1091,7 +1091,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_GAS].sound = SOUND_ROCKET;
     bulletInfos[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
     bulletInfos[BULLET_GAS].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(bulletInfos[BULLET_GAS].description, "BULLET_GAS");
+    bulletInfos[BULLET_GAS].description = "BULLET_GAS";
 
     // normal turret shot
     bulletInfos[BULLET_TURRET].bmp = m_gfxdata->getTexture(BULLET_DOT_MEDIUM);
@@ -1104,7 +1104,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_TURRET].sound = SOUND_GUNTURRET;
     bulletInfos[BULLET_TURRET].groundBullet = false; // this can fly over structures, walls, mountains, yes!
     bulletInfos[BULLET_TURRET].canDamageGround = true;
-    strcpy(bulletInfos[BULLET_TURRET].description, "BULLET_TURRET");
+    bulletInfos[BULLET_TURRET].description = "BULLET_TURRET";
 
     // EXEPTION: Shimmer/ Sonic tank
     bulletInfos[BULLET_SHIMMER].bmp = nullptr;
@@ -1115,7 +1115,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_SHIMMER].max_frames = 0;
     bulletInfos[BULLET_SHIMMER].max_deadframes = 0;
     bulletInfos[BULLET_SHIMMER].sound = SOUND_SHIMMER;
-    strcpy(bulletInfos[BULLET_SHIMMER].description, "BULLET_SHIMMER");
+    bulletInfos[BULLET_SHIMMER].description = "BULLET_SHIMMER";
 
     // rocket of rocket turret
     bulletInfos[ROCKET_RTURRET].bmp = m_gfxdata->getTexture(BULLET_ROCKET_NORMAL);
@@ -1129,7 +1129,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_RTURRET].canDamageAirUnits = true;
     bulletInfos[ROCKET_RTURRET].canDamageGround = true;
     bulletInfos[ROCKET_RTURRET].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
-    strcpy(bulletInfos[ROCKET_RTURRET].description, "ROCKET_RTURRET");
+    bulletInfos[ROCKET_RTURRET].description = "ROCKET_RTURRET";
 }
 
 void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings)
@@ -1149,7 +1149,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
         upgradeInfos[i].providesTypeList = eListType::LIST_NONE;
         upgradeInfos[i].providesTypeSubList = -1;
         upgradeInfos[i].buildTime = 5;
-        strcpy(upgradeInfos[i].description, "Upgrade");
+        upgradeInfos[i].description = "Upgrade";
     }
 
     // CONSTYARD UPGRADES
@@ -1167,7 +1167,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeList = eListType::LIST_CONSTYARD;
     upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].providesTypeSubList = SUBLIST_CONSTYARD;
     upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime = 50;
-    strcpy(upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].description, "Build 4 concrete slabs at once");
+    upgradeInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].description = "Build 4 concrete slabs at once";
 
     // Second upgrade Constyard: Rturret
     upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].enabled = true;
@@ -1183,7 +1183,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeList = eListType::LIST_CONSTYARD;
     upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].providesTypeSubList = SUBLIST_CONSTYARD;
     upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].buildTime = 150;
-    strcpy(upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].description, "Build Rocket Turret");
+    upgradeInfos[UPGRADE_TYPE_CONSTYARD_RTURRET].description = "Build Rocket Turret";
 
     // LIGHTFACTORY UPGRADES, only for ATREIDES and ORDOS
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].enabled = true;
@@ -1199,7 +1199,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].providesTypeSubList =  SUBLIST_LIGHTFCTRY;
     upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].buildTime = 150;
-    strcpy(upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description, "Build Quad at Light Factory");
+    upgradeInfos[UPGRADE_TYPE_LIGHTFCTRY_QUAD].description = "Build Quad at Light Factory";
 
     // HEAVYFACTORY UPGRADES:
 
@@ -1217,7 +1217,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].buildTime = 150;
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].description, "Build MCV at Heavy Factory");
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_MVC].description = "Build MCV at Heavy Factory";
 
     // Harkonnen/Atreides only
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].enabled = true;
@@ -1233,7 +1233,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].buildTime = 150;
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description, "Build Rocket Launcher at Heavy Factory");
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_LAUNCHER].description = "Build Rocket Launcher at Heavy Factory";
 
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].enabled = true;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].house = Atreides | Harkonnen | Sardaukar;
@@ -1248,7 +1248,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].buildTime = 150;
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description, "Build Siege Tank at Heavy Factory");
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK].description = "Build Siege Tank at Heavy Factory";
 
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].enabled = true;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].house = Ordos;
@@ -1263,7 +1263,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].providesTypeSubList = SUBLIST_HEAVYFCTRY;
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].buildTime = 150;
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description, "Build Siege Tank at Heavy Factory");
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SIEGETANK_ORD].description = "Build Siege Tank at Heavy Factory";
 
     // HI-TECH UPGRADES (Ordos/Atreides only)
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].enabled = true;
@@ -1278,7 +1278,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesTypeList = eListType::LIST_UNITS;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].providesTypeSubList = SUBLIST_HIGHTECH;
     upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].buildTime = 150;
-    strcpy(upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].description, "Build Ornithopter at Hi-Tech");
+    upgradeInfos[UPGRADE_TYPE_HITECH_ORNI].description = "Build Ornithopter at Hi-Tech";
 
     // WOR (Harkonnen & Ordos)
     upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].enabled = true;
@@ -1295,7 +1295,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].buildTime = 150;
     }
-    strcpy(upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].description, "Build Troopers at WOR");
+    upgradeInfos[UPGRADE_TYPE_WOR_TROOPERS].description = "Build Troopers at WOR";
 
     // BARRACKS (Atreides & Ordos)
     upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].enabled = true;
@@ -1312,7 +1312,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].buildTime = 150;
     }
-    strcpy(upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description, "Build Infantry at Barracks");
+    upgradeInfos[UPGRADE_TYPE_BARRACKS_INFANTRY].description = "Build Infantry at Barracks";
 
     // HEAVY FACTORY: Sardaukar - Allow building Sonic Tank
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].enabled = true;
@@ -1331,7 +1331,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].buildTime = 150;
     }
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].description, "Build SonicTank at Heavy Factory");
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].description = "Build SonicTank at Heavy Factory";
 
     // HEAVY FACTORY: Sardaukar - Allow building Deviator
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].enabled = true;
@@ -1350,7 +1350,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].buildTime = 150;
     }
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].description, "Build Deviator at Heavy Factory");
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR].description = "Build Deviator at Heavy Factory";
 
     // HEAVY FACTORY: Sardaukar - Allow building Devastator
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].enabled = true;
@@ -1369,7 +1369,7 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
     if (!settings->isCheatMode()) {
         upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].buildTime = 150;
     }
-    strcpy(upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].description, "Build Devastator at Heavy Factory");
+    upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].description = "Build Devastator at Heavy Factory";
 }
 
 /*****************************
