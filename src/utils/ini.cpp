@@ -453,9 +453,7 @@ void cIni::installGame(const std::string& filename)
             if (wordtype == eIniWord::BUILDTIME)     unitInfo.buildTime = ToInt(word_right);
 
             if (wordtype == eIniWord::DESCRIPTION) {
-                // unitInfo.name is a legacy char[] field
-                strncpy(unitInfo.name, word_right.c_str(), sizeof(unitInfo.name) - 1);
-                unitInfo.name[sizeof(unitInfo.name) - 1] = '\0';
+                unitInfo.name = word_right.substr(0, 63); // the old char buffer held at most 63 characters
             }
 
             if (wordtype == eIniWord::FIRETWICE)       unitInfo.fireTwice = ToBool(word_right);

@@ -57,6 +57,6 @@ int distanceBetweenCellAndCenterOfScreen(int iCell, cGameObjectContext* objects,
 // plays the sample with volume depending on the distance (in pixels) from the center of the screen
 void playSoundWithDistance(AudioContext* audioContext, cMapCamera* mapCamera, cGameObjectContext* objects, int sampleId, int distance);
 
-const char *toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId, cInfoContext* infos);
+std::string toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId, cInfoContext* infos);
 
 std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& filename);

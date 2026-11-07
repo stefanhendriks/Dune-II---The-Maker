@@ -18,6 +18,7 @@
 #include <array>
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 
 #include "include/enums/ListEnums.h"
 
@@ -70,7 +71,7 @@ struct s_UnitInfo {
     int dieWhenLowerThanHP;   // A unit that 'dies'(disappears) when health < this value. By default this is 1;
     int appetite;     // Amount of units this can eat, before 'dying'
 
-    char name[64];            // name of unit
+    std::string name;         // name of unit
     int structureTypeItLeavesFrom; // the type of structure this unit will 'leave' from when it is built. (ie Quad from Light Factory, etc)
     bool queuable;        // can this item be queued in the buildList? (default = true for units)
 

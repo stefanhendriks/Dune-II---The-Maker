@@ -18,6 +18,7 @@
 #include <array>
 #include <cstddef>
 #include <stdexcept>
+#include <string>
 
 #include <SDL3/SDL.h>
 class Texture;
@@ -68,7 +69,7 @@ struct s_StructureInfo {
 
     int cost;            // price
 
-    char name[64];       // name
+    std::string name;    // name
 
     bool queuable;        // can this item be queued in the buildList? (default = false)
 
