@@ -41,7 +41,7 @@ cMouseDrawer::cMouseDrawer(cPlayer *thePlayer, cTextDrawer *textDrawer) : m_play
     d2tm_assert(thePlayer != nullptr);
     d2tm_assert(textDrawer != nullptr);
     m_mouseX = m_mouseY = 0;
-    m_textWriter = new cTextWriter(textDrawer,12);
+    m_textWriter = std::make_unique<cTextWriter>(textDrawer,12);
 }
 
 void cMouseDrawer::draw()
