@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <array>
 #include <cstddef>
 #include <stdexcept>
@@ -35,7 +37,7 @@ struct s_UpgradeInfo {
     bool enabled;        // set to true to use this upgrade logic
     int icon;            // icon id
     int cost;            // price
-    char description[64]; // ie: "Upgrade to 4slab"
+    std::string description; // ie: "Upgrade to 4slab"
     int buildTime;     // how long it takes to upgrade/build
     unsigned char house; // 8-bit-flag for which house this upgrade applies.
     int techLevel;      // the minimum techlevel required for this upgrade
