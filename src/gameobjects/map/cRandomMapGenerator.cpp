@@ -23,6 +23,7 @@
 #include "utils/d2tm_math.h"
 #include "context/cGameObjectContext.h"
 #include <cstring>
+#include <algorithm>
 
 cRandomMapGenerator::cRandomMapGenerator()
 {
@@ -42,7 +43,7 @@ void cRandomMapGenerator::generateRandomMap(int width, int height, int startingP
     // placed not too near to each other
     int maxRockSpots = 18;
     int iSpotRock[18]; // first 4
-    memset(iSpotRock, -1, sizeof(iSpotRock));
+    std::fill(std::begin(iSpotRock), std::end(iSpotRock), -1);
 
     int iSpot = 0;
     int iFails = 0;
