@@ -33,6 +33,18 @@
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
 #include <algorithm>
+#include <cstdlib>
+#include <string>
+
+namespace {
+// digits of the credits, cut off / padded with '\0' to 8 characters (what the old char[9] buffers held)
+std::string creditsToDigits(int credits)
+{
+    std::string digits = std::to_string(credits);
+    digits.resize(8, '\0');
+    return digits;
+}
+}
 
 CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer *player) :
     m_player(player),
@@ -142,12 +154,8 @@ void CreditsDrawer::thinkFast()
 // it has to go 'up' or 'down'
 void CreditsDrawer::thinkAboutIndividualCreditOffsets()
 {
-    char current_credits[9];
-    char previous_credits[9];
-    memset(current_credits, 0, sizeof(current_credits));
-    memset(previous_credits, 0, sizeof(previous_credits));
-    snprintf(current_credits, sizeof(current_credits), "%d", m_currentCredits);
-    snprintf(previous_credits, sizeof(previous_credits), "%d", m_previousCredits);
+    std::string current_credits = creditsToDigits(m_currentCredits);
+    std::string previous_credits = creditsToDigits(m_previousCredits);
 
     for (int i = 0; i < 6; i++) {
         int currentId = CreditsMath::getCreditDrawId(current_credits[i]);
@@ -186,7 +194,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
             }
             // it is fully 'moved'. Now update the array.
             previous_credits[i] = current_credits[i];
-            m_previousCredits = atoi(previous_credits);
+            m_previousCredits = std::atoi(previous_credits.c_str());
         }
         else {
             m_offset_credit[i] += 1.0F * m_rollSpeed;
@@ -214,9 +222,7 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
 {
     if (m_currentCredits < 0) m_currentCredits = 0;
 
-    char credits[9];
-    memset(credits, 0, sizeof(credits));
-    snprintf(credits, sizeof(credits), "%d", m_currentCredits);
+    std::string credits = creditsToDigits(m_currentCredits);
 
     int offset = CreditsMath::getXDrawingOffset(m_currentCredits);
 
@@ -249,9 +255,7 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
 {
     if (m_previousCredits < 0) m_previousCredits = 0;
 
-    char credits[9];
-    memset(credits, 0, sizeof(credits));
-    snprintf(credits, sizeof(credits), "%d", m_previousCredits);
+    std::string credits = creditsToDigits(m_previousCredits);
 
     int offset = CreditsMath::getXDrawingOffset(m_previousCredits);
 
