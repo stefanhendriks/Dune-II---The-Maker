@@ -20,10 +20,10 @@
 
 #include "include/cAssert.h"
 
-#define WINLOSEFLAGS_AI_NO_BUILDINGS        0x01
-#define WINLOSEFLAGS_HUMAN_HAS_BUILDINGS    0x02
-#define WINLOSEFLAGS_QUOTA                  0x04
-#define WINLOSEFLAGS_TIMEOUT                0x08
+inline constexpr int WINLOSEFLAGS_AI_NO_BUILDINGS = 0x01;
+inline constexpr int WINLOSEFLAGS_HUMAN_HAS_BUILDINGS = 0x02;
+inline constexpr int WINLOSEFLAGS_QUOTA = 0x04;
+inline constexpr int WINLOSEFLAGS_TIMEOUT = 0x08;
 
 cGameConditionChecker::cGameConditionChecker(cGameObjectContext* objects) : m_objects(objects)
 {
