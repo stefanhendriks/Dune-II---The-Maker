@@ -80,7 +80,7 @@ void cWindTrap::think_guard()
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cWindTrap::getPowerOut() const
 {
-    float percentage = ((float) getHitPoints() / (float) m_info->getStructureInfo(getType()).hp);
+    float percentage = (static_cast<float>(getHitPoints()) / static_cast<float>(m_info->getStructureInfo(getType()).hp));
     return getMaxPowerOut() * percentage;
 }
 
@@ -91,6 +91,6 @@ int cWindTrap::getMaxPowerOut() const
 
 std::string cWindTrap::getStatusForMessageBar() const
 {
-    int powerProduction = ((float)getPowerOut() / (float)getMaxPowerOut()) * (float)100;
+    int powerProduction = (static_cast<float>(getPowerOut()) / static_cast<float>(getMaxPowerOut())) * static_cast<float>(100);
     return std::format("{} and producing at {} percent capacity", cAbstractStructure::getDefaultStatusMessageBar(), powerProduction);
 }
