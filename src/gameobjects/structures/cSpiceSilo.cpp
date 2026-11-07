@@ -50,6 +50,6 @@ void cSpiceSilo::think_guard()
 /*  STRUCTURE SPECIFIC FUNCTIONS  */
 int cSpiceSilo::getSpiceSiloCapacity()
 {
-    float percentage = ((float) getHitPoints() / (float) m_info->getStructureInfo(getType()).hp);
+    float percentage = (static_cast<float>(getHitPoints()) / static_cast<float>(m_info->getStructureInfo(getType()).hp));
     return 1000 * percentage;
 }
