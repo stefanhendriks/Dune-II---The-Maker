@@ -68,7 +68,7 @@ void cBuildingListItem::serviceInit(cInfoContext* info, cGameSettings* settings)
     m_timerCap = m_settings->isCheatMode() ? DebugTimerCap : DefaultTimerCap;
     int totalBuildTime = getTotalBuildTime();
     if (m_cost > 0 && totalBuildTime > 0) {
-        m_creditsPerProgressTime = (float)m_cost / (float)totalBuildTime;
+        m_creditsPerProgressTime = static_cast<float>(m_cost) / static_cast<float>(totalBuildTime);
     }
 }
 
