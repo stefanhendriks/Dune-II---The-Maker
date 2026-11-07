@@ -335,6 +335,36 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
 }
 
 
+InitialGameSettings cGame::currentSettings() const
+{
+    InitialGameSettings gs;
+    gs.screenW = m_gameSettings->m_screenW;
+    gs.screenH = m_gameSettings->m_screenH;
+    gs.cameraDragMoveSpeed = m_cameraDragMoveSpeed;
+    gs.cameraBorderOrKeyMoveSpeed = m_cameraBorderOrKeyMoveSpeed;
+    gs.cameraEdgeMove = m_cameraEdgeMove;
+    gs.windowed = m_windowed;
+    gs.scalingMode = m_scalingMode;
+    gs.allowRepeatingReinforcements = m_gameSettings->m_allowRepeatingReinforcements;
+    gs.turretsDownOnLowPower = m_gameSettings->isTurretsDownOnLowPower();
+    gs.rocketTurretsDownOnLowPower = m_gameSettings->isRocketTurretsDownOnLowPower();
+    gs.playMusic = m_gameSettings->m_playMusic;
+    gs.playSound = m_audioContext->getSoundPlayer()->getSoundEnabled();
+    gs.debugMode = m_gameSettings->m_debugMode;
+    gs.drawUnitDebug = m_gameSettings->m_drawUnitDebug;
+    gs.disableAI = m_gameSettings->m_disableAI;
+    gs.oneAi = m_gameSettings->m_oneAi;
+    gs.disableWormAi = m_gameSettings->m_disableWormAi;
+    gs.disableReinforcements = m_gameSettings->m_disableReinforcements;
+    gs.noAiRest = m_gameSettings->m_noAiRest;
+    gs.drawUsages = m_gameSettings->m_drawUsages;
+    gs.fogOfWarEnabled = m_gameSettings->m_fogOfWarEnabled;
+    gs.pauseWhenLosingFocus = m_pauseWhenLosingFocus;
+    gs.gameFilename = m_gameFilename;
+    return gs;
+}
+
+
 void cGame::init()
 {
     m_infoContext->initializeDefaultInfos();
