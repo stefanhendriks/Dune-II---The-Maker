@@ -29,6 +29,7 @@ struct InitialGameSettings {
     bool allowRepeatingReinforcements = false;
     bool turretsDownOnLowPower = false;
     bool rocketTurretsDownOnLowPower = false;
+    bool showLowPowerIcon = false;
     bool playMusic = true;
     bool playSound = true;
     bool playCreditsSound = true;

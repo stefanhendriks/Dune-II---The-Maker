@@ -72,6 +72,9 @@ void readSettings(const cSection &section, InitialGameSettings &settings)
     if (section.hasValue("AllTurretsDownOnLowPower")) {
         settings.turretsDownOnLowPower = section.getBoolean("AllTurretsDownOnLowPower");
     }
+    if (section.hasValue("ShowLowPowerIcon")) {
+        settings.showLowPowerIcon = section.getBoolean("ShowLowPowerIcon");
+    }
     if (section.hasValue("RocketTurretsDownOnLowPower")) {
         settings.rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
     }
@@ -156,6 +159,7 @@ bool save(const std::filesystem::path &file, const InitialGameSettings &settings
     set(ini, "AllowRepeatingReinforcements", toText(settings.allowRepeatingReinforcements));
     set(ini, "AllTurretsDownOnLowPower", toText(settings.turretsDownOnLowPower));
     set(ini, "RocketTurretsDownOnLowPower", toText(settings.rocketTurretsDownOnLowPower));
+    set(ini, "ShowLowPowerIcon", toText(settings.showLowPowerIcon));
     set(ini, "GameRules", settings.gameFilename);
     set(ini, "NoAI", toText(settings.disableAI));
     set(ini, "Debug", toText(settings.debugMode));
