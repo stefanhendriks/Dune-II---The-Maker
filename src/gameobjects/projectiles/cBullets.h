@@ -18,7 +18,6 @@
 #include <array>
 #include "include/cAssert.h"
 #include <cstddef>
-#include "definitions.h"
 #include "gameobjects/projectiles/bullet.h"
 
 struct sGameServices;
