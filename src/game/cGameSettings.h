@@ -15,6 +15,9 @@
 
 #pragma once
 
+#include "include/definitions.h"
+
+#include <optional>
 
 
 class cGameSettings {
@@ -107,10 +110,10 @@ public:
     bool isAllowRepeatingReinforcements() const {
         return m_allowRepeatingReinforcements;
     }
-    int getMusicType() const {
+    std::optional<eMusicType> getMusicType() const {
         return m_musicType;
     }
-    void setMusicType(int value) {
+    void setMusicType(eMusicType value) {
         m_musicType = value;
     }
     bool isPlaySound() const {
@@ -154,7 +157,7 @@ private:
     bool m_drawTime;
     bool m_allowRepeatingReinforcements;
 
-    int m_musicType;
+    std::optional<eMusicType> m_musicType;
 
     //-----------------------
     bool m_playSound;

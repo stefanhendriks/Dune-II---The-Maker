@@ -155,13 +155,15 @@ inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK = 10; // upgrade for 
 inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVIATOR = 11; // upgrade for Sardaukar to get Deviator
 inline constexpr int UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR = 12; // upgrade for Sardaukar to get Devastator
 
-inline constexpr int MUSIC_WIN = 0;
-inline constexpr int MUSIC_LOSE = 1;
-inline constexpr int MUSIC_ATTACK = 2;
-inline constexpr int MUSIC_PEACE = 3;
-inline constexpr int MUSIC_MENU = 4;
-inline constexpr int MUSIC_CONQUEST = 5;
-inline constexpr int MUSIC_BRIEFING = 6;
+enum class eMusicType {
+    WIN,
+    LOSE,
+    ATTACK,
+    PEACE,
+    MENU,
+    CONQUEST,
+    BRIEFING
+};
 
 // Unit types
 inline constexpr int SOLDIER = 0;

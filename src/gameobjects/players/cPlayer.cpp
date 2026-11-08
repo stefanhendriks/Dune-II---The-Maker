@@ -2062,7 +2062,7 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
 //        return;
 //    }
 
-    if (m_settings->getMusicType() != MUSIC_PEACE) {
+    if (m_settings->getMusicType() != eMusicType::PEACE) {
         // nothing to do here music-wise
         return;
     }
@@ -2119,9 +2119,9 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
 
     bool mayPlayVoice = true;
     if (triggerMusic) {
-        if (m_settings->getMusicType() != MUSIC_ATTACK) {
+        if (m_settings->getMusicType() != eMusicType::ATTACK) {
             // music is only triggered for the human player
-            mayPlayVoice = isHuman() && m_audioContext->playMusicByType(MUSIC_ATTACK, hasVoiceToPlay, true, getHouse());
+            mayPlayVoice = isHuman() && m_audioContext->playMusicByType(eMusicType::ATTACK, hasVoiceToPlay, true, getHouse());
         }
         else {
             mayPlayVoice = false;
