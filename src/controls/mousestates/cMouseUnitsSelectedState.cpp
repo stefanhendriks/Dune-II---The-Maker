@@ -36,6 +36,7 @@
 #include "include/cAssert.h"
 
 #include "data/gfxaudio.h"
+#include "gameobjects/structures/cAbstractStructure.h"
 
 namespace {
 

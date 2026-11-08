@@ -17,7 +17,7 @@
 
 #include <memory>
 
-#include "cAbstractStructure.h"
+class cAbstractStructure;
 
 class cGameObjectContext;
 class cInfoContext;
