@@ -21,6 +21,8 @@
 #include <memory>
 #include "include/cAssert.h"
 #include "utils/Log.h"
+#include "include/Texture.hpp"
+#include "utils/cRectangle.h"
 
 
 SDLDrawer::SDLDrawer(SDL_Renderer *_renderer)

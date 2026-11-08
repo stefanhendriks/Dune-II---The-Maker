@@ -30,6 +30,8 @@
 #include <SDL3/SDL.h>
 #include <algorithm>
 #include "include/cAssert.h"
+#include "game/cGameSettings.h"
+#include "include/Texture.hpp"
 
 cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices *services) :
     m_player(player),

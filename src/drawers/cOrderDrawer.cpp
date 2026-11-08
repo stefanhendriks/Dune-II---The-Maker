@@ -26,6 +26,8 @@
 #include "include/sGameServices.h"
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
+#include "game/cGameSettings.h"
+#include "include/Texture.hpp"
 
 cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player, sGameServices *services) :
     m_ctx(ctx),

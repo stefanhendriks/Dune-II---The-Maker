@@ -42,6 +42,10 @@
 #include "data/gfxinter.h"
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
+#include "context/TextContext.hpp"
+#include "game/cGameSettings.h"
+#include "include/Texture.hpp"
+#include "utils/cRectangle.h"
 
 cStructureDrawer::cStructureDrawer(GameContext *ctx, cPlayer *player, cStructureUtils *structureUtils) :
     m_sdlDrawer(ctx->getSDLDrawer()),
