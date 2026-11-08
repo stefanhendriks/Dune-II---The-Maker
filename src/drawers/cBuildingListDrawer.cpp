@@ -34,6 +34,10 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cUnits.h"
 #include "include/cAssert.h"
+#include "context/TextContext.hpp"
+#include "drawers/cTextDrawer.h"
+#include "game/cGameSettings.h"
+#include "gameobjects/structures/cStructureInfo.h"
 
 cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player) :
     m_gameTextDrawer(ctx->getTextContext()->getGameTextDrawer()),
