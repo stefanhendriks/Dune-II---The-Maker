@@ -16,7 +16,7 @@
 #pragma once
 
 #include <array>
-#include <SDL3/SDL.h>
+#include <SDL3/SDL_stdinc.h>
 
 struct HouseColor {
     Uint8 r,g,b;
