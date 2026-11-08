@@ -111,6 +111,7 @@ cSoundPlayer::~cSoundPlayer()
         MIX_StopTrack(m_musicTrack, 0);
         MIX_DestroyTrack(m_musicTrack);
     }
+    releaseMusicFile();
     for (MIX_Track *track : m_sfxTracks) {
         MIX_StopTrack(track, 0);
         MIX_DestroyTrack(track);
@@ -185,10 +186,45 @@ void cSoundPlayer::playMusic(int sampleId)
         m_isMusicEnabled = false;
         return;
     }
+    startMusic(audio);
+    releaseMusicFile();
+}
+
+bool cSoundPlayer::playMusicFile(const std::string &path)
+{
+    if (!m_isMusicEnabled || !m_musicTrack) {
+        return true; // nothing to play, so nothing failed
+    }
+    SDL_IOStream *io = SDL_IOFromFile(path.c_str(), "rb");
+    if (!io) {
+        Logger::error(COMP_SOUND, "playMusicFile", "Could not open [{}]: {}", path, SDL_GetError());
+        return false;
+    }
+    MIX_Audio *audio = MIX_LoadAudio_IO(m_mixer, io, false, true);
+    if (!audio) {
+        Logger::error(COMP_SOUND, "playMusicFile", "Could not load [{}]: {}", path, SDL_GetError());
+        return false;
+    }
+    startMusic(audio);
+    releaseMusicFile();
+    m_musicFileAudio = audio;
+    return true;
+}
+
+void cSoundPlayer::startMusic(MIX_Audio *audio)
+{
     MIX_StopTrack(m_musicTrack, 0);
     MIX_SetTrackAudio(m_musicTrack, audio);
     MIX_SetTrackLoops(m_musicTrack, kNoLoop);
     MIX_PlayTrack(m_musicTrack, 0);
+}
+
+void cSoundPlayer::releaseMusicFile()
+{
+    if (m_musicFileAudio) {
+        MIX_DestroyAudio(m_musicFileAudio);
+        m_musicFileAudio = nullptr;
+    }
 }
 
 bool cSoundPlayer::isMusicPlaying() const

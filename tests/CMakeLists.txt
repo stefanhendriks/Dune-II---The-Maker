@@ -21,6 +21,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_d2tm_math.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_SfxTrackAllocator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_MusicJukeBox.cpp
 )
 
 # Production source files the tests depend on.
@@ -46,6 +47,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/game/Preferences.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/Log.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/SfxTrackAllocator.cpp
+    ${CMAKE_SOURCE_DIR}/src/context/MusicJukeBox.cpp
 )
 
 add_executable(d2tm_tests
