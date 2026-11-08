@@ -146,8 +146,8 @@ public:
     void playSound(int sampleId); // Maximum volume
     void playSound(int sampleId, int vol);
 
-    void playMusicByTypeForStateTransition(int iType);
-    bool playMusicByType(int iType, bool triggerWithVoice = false);
+    void playMusicByTypeForStateTransition(eMusicType iType);
+    bool playMusicByType(eMusicType iType, bool triggerWithVoice = false);
 
     int getMaxVolume();
 

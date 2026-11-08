@@ -393,7 +393,7 @@ void cGame::init()
 
     m_screenShake->reset();
 
-    m_gameSettings->m_musicType = -1;
+    m_gameSettings->m_musicType = std::nullopt;
 
     map->init(64, 64);
 
@@ -477,7 +477,7 @@ void cGame::setMissionWon()
 
     m_audioContext->playVoice(SOUND_VOICE_07_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
-    playMusicByType(MUSIC_WIN);
+    playMusicByType(eMusicType::WIN);
 
     const MissionStats stats = m_missionStatsCollector->snapshot(m_timeManager->getElapsedSeconds());
     Logger::info(COMP_GAME, "cGame::setMissionWon", "Mission stats: elapsedSeconds={}", stats.elapsedSeconds);
@@ -500,7 +500,7 @@ void cGame::setMissionLost()
 
     m_audioContext->playVoice(SOUND_VOICE_08_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
-    playMusicByType(MUSIC_LOSE);
+    playMusicByType(eMusicType::LOSE);
 
     takeBackGroundScreen();
 }
@@ -835,7 +835,7 @@ bool cGame::setupGame()
 
     setupPlayers();
 
-    playMusicByTypeForStateTransition(MUSIC_MENU);
+    playMusicByTypeForStateTransition(eMusicType::MENU);
 
     m_mouse->setMouseObserver(this);
     m_keyboard->setKeyboardObserver(this);
@@ -1013,7 +1013,7 @@ void cGame::setState(int newState)
         if (existingStatePtr) {
             // no need for re-creating state
             if (newState == GAME_REGION) {
-                playMusicByTypeForStateTransition(MUSIC_CONQUEST);
+                playMusicByTypeForStateTransition(eMusicType::CONQUEST);
 
                 // came from a win/lose brief state, so make sure to set up the next state
                 if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
@@ -1086,14 +1086,14 @@ void cGame::setState(int newState)
                 }
                 // first creation
                 pState->regionSetupNextMission(m_dataCampaign->mission, humanPlayer->getHouse());
-                playMusicByTypeForStateTransition(MUSIC_CONQUEST);
+                playMusicByTypeForStateTransition(eMusicType::CONQUEST);
 
                 newStatePtr = pState;
             }
             else if (newState == GAME_SETUPSKIRMISH) {
                 m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get(), m_services.get());
                 newStatePtr = m_creatorState->getState(eGameState::SETUPSKIRMISH);
-                playMusicByTypeForStateTransition(MUSIC_MENU);
+                playMusicByTypeForStateTransition(eMusicType::MENU);
             }
             else if (newState == GAME_CREDITS) {
                 newStatePtr = m_creatorState->getState(eGameState::CREDITS);
@@ -1107,7 +1107,7 @@ void cGame::setState(int newState)
             else if (newState == GAME_MENU) {
                 m_gameSettings->m_cheatMode = false;
                 newStatePtr = m_creatorState->getState(eGameState::MENU);
-                playMusicByTypeForStateTransition(MUSIC_MENU);
+                playMusicByTypeForStateTransition(eMusicType::MENU);
             }
             else if (newState == GAME_NEW_MAP_EDITOR) {
                 newStatePtr = m_creatorState->getState(eGameState::NEW_MAP_EDITOR);
@@ -1164,18 +1164,18 @@ void cGame::setState(int newState)
             else if (newState == GAME_TELLHOUSE) {
                 m_dataCampaign->housePlayer = m_gameObjectsContext->getPlayer(HUMAN)->getHouse();
                 newStatePtr = m_creatorState->getState(eGameState::TELLHOUSE);
-                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+                playMusicByTypeForStateTransition(eMusicType::BRIEFING);
             }
             else if (newState == GAME_BRIEFING) {
                 m_gameSettings->m_cheatMode = false;
                 newStatePtr = m_creatorState->getState(eGameState::BRIEFING);
-                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+                playMusicByTypeForStateTransition(eMusicType::BRIEFING);
             } else if (newState == GAME_WINBRIEF) {
                 newStatePtr = m_creatorState->getState(eGameState::WINBRIEF);
-                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+                playMusicByTypeForStateTransition(eMusicType::BRIEFING);
             } else if (newState == GAME_LOSEBRIEF) {
                 newStatePtr = m_creatorState->getState(eGameState::LOSEBRIEF);
-                playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+                playMusicByTypeForStateTransition(eMusicType::BRIEFING);
             }
             m_currentState = newStatePtr;
         }
@@ -1233,7 +1233,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
     bool stateAlreadyExisted = m_creatorState->hasState(eGameState::TELLHOUSE);
     auto *pState = dynamic_cast<cTellHouseState *>(m_creatorState->getState(eGameState::TELLHOUSE));
     if (!stateAlreadyExisted) {
-        playMusicByTypeForStateTransition(MUSIC_BRIEFING);
+        playMusicByTypeForStateTransition(eMusicType::BRIEFING);
     }
     pState->prepareMentat(house);
     setNextStateToTransitionTo(GAME_TELLHOUSE);
@@ -1272,7 +1272,7 @@ void cGame::changeStateFromMentat()
 
         initiateFadingOut();
 
-        playMusicByType(MUSIC_PEACE);
+        playMusicByType(eMusicType::PEACE);
         return;
     }
 
@@ -1321,7 +1321,7 @@ void cGame::changeStateFromMentat()
             // mission 1 failed, really?..., back to mentat with briefing
             setNextStateToTransitionTo(GAME_BRIEFING);
             prepareMentatForPlayer();
-            playMusicByType(MUSIC_BRIEFING);
+            playMusicByType(eMusicType::BRIEFING);
         }
 
         initiateFadingOut();
@@ -1448,7 +1448,7 @@ void cGame::transitionStateIfRequired()
         setState(m_nextState);
 
         if (m_nextState == GAME_BRIEFING) {
-            playMusicByType(MUSIC_BRIEFING);
+            playMusicByType(eMusicType::BRIEFING);
             prepareMentatForPlayer();
         }
 
@@ -1548,12 +1548,12 @@ void cGame::playSound(int sampleId, int vol)
     m_audioContext->playSound(sampleId, vol);
 }
 
-void cGame::playMusicByTypeForStateTransition(int iType)
+void cGame::playMusicByTypeForStateTransition(eMusicType iType)
 {
     m_audioContext->playMusicByTypeForStateTransition(iType, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 }
 
-bool cGame::playMusicByType(int iType, bool triggerWithVoice)
+bool cGame::playMusicByType(eMusicType iType, bool triggerWithVoice)
 {
     return m_audioContext->playMusicByType(iType, triggerWithVoice, isState(GAME_PLAYING), m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 }

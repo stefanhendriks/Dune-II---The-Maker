@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "definitions.h"
+
 #include <memory>
 
 class cSoundPlayer;
@@ -34,8 +36,8 @@ public:
     void playVoice(int sampleId, int house) const;
     [[nodiscard]] int getMaxVolume() const;
 
-    void playMusicByTypeForStateTransition(int iType, int humanHouse);
-    bool playMusicByType(int iType, bool triggerWithVoice, bool isCurrentlyPlayingMission, int humanHouse);
+    void playMusicByTypeForStateTransition(eMusicType iType, int humanHouse);
+    bool playMusicByType(eMusicType iType, bool triggerWithVoice, bool isCurrentlyPlayingMission, int humanHouse);
 
     void thinkFast();
 

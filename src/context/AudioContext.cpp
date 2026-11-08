@@ -25,10 +25,26 @@
 
 #include <format>
 
+namespace {
+const char* musicTypeName(eMusicType type)
+{
+    switch (type) {
+    case eMusicType::WIN: return "WIN";
+    case eMusicType::LOSE: return "LOSE";
+    case eMusicType::ATTACK: return "ATTACK";
+    case eMusicType::PEACE: return "PEACE";
+    case eMusicType::MENU: return "MENU";
+    case eMusicType::CONQUEST: return "CONQUEST";
+    case eMusicType::BRIEFING: return "BRIEFING";
+    }
+    return "UNKNOWN";
+}
+} // namespace
+
 AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSettings* settings) :
     m_soundPlayer(std::move(soundPlayer)),
     m_settings(settings),
-    m_newMusicSample(MUSIC_MENU),
+    m_newMusicSample(MIDI_MENU),
     m_newMusicCountdown(0)
 {
     d2tm_assert(m_soundPlayer != nullptr);
@@ -62,7 +78,7 @@ int AudioContext::getMaxVolume() const
     return m_soundPlayer->getMaxVolume();
 }
 
-void AudioContext::playMusicByTypeForStateTransition(int iType, int humanHouse)
+void AudioContext::playMusicByTypeForStateTransition(eMusicType iType, int humanHouse)
 {
     if (m_settings->getMusicType() != iType) {
         m_newMusicCountdown = 0;
@@ -70,19 +86,19 @@ void AudioContext::playMusicByTypeForStateTransition(int iType, int humanHouse)
     }
 }
 
-bool AudioContext::playMusicByType(int iType, bool triggerWithVoice, bool isCurrentlyPlayingMission, int humanHouse)
+bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool isCurrentlyPlayingMission, int humanHouse)
 {
-    Logger::info(COMP_SOUND, "AudioContext::playMusicByType", "iType = {}. triggerWithVoice = {}", iType, triggerWithVoice);
+    Logger::info(COMP_SOUND, "AudioContext::playMusicByType", "iType = {}. triggerWithVoice = {}", musicTypeName(iType), triggerWithVoice);
 
     if (triggerWithVoice) {
         if (iType == m_settings->getMusicType()) {
-            Logger::info(COMP_SOUND, "AudioContext::playMusicByType", "m_musicType = {}, iType is {}, so bailing", m_settings->getMusicType(), iType);
+            Logger::info(COMP_SOUND, "AudioContext::playMusicByType", "m_musicType = {}, iType is {}, so bailing", musicTypeName(*m_settings->getMusicType()), musicTypeName(iType));
             return false;
         }
     }
 
     m_settings->setMusicType(iType);
-    Logger::info(COMP_SOUND, "AudioContext::playMusicByType", "m_musicType = {}", m_settings->getMusicType());
+    Logger::info(COMP_SOUND, "AudioContext::playMusicByType", "m_musicType = {}", musicTypeName(iType));
 
     if (!m_settings->isPlayMusic()) {
         return false; // todo: have a 'no-sound soundplayer' instead of doing this :/
@@ -94,25 +110,25 @@ bool AudioContext::playMusicByType(int iType, bool triggerWithVoice, bool isCurr
     }
 
     int sampleId = MIDI_MENU;
-    if (iType == MUSIC_WIN) {
+    if (iType == eMusicType::WIN) {
         sampleId = MIDI_WIN01 + RNG::rnd(3);
     }
-    else if (iType == MUSIC_LOSE) {
+    else if (iType == eMusicType::LOSE) {
         sampleId = MIDI_LOSE01 + RNG::rnd(6);
     }
-    else if (iType == MUSIC_ATTACK) {
+    else if (iType == eMusicType::ATTACK) {
         sampleId = MIDI_ATTACK01 + RNG::rnd(6);
     }
-    else if (iType == MUSIC_PEACE) {
+    else if (iType == eMusicType::PEACE) {
         sampleId = MIDI_BUILDING01 + RNG::rnd(9);
     }
-    else if (iType == MUSIC_MENU) {
+    else if (iType == eMusicType::MENU) {
         sampleId = MIDI_MENU;
     }
-    else if (iType == MUSIC_CONQUEST) {
+    else if (iType == eMusicType::CONQUEST) {
         sampleId = MIDI_SCENARIO;
     }
-    else if (iType == MUSIC_BRIEFING) {
+    else if (iType == eMusicType::BRIEFING) {
         if (humanHouse == ATREIDES) {
             sampleId = MIDI_MENTAT_ATR;
         }
@@ -158,7 +174,7 @@ void AudioContext::thinkFast()
         return;
 
     // all this does is repeating music in the same theme.
-    if (m_settings->getMusicType() < 0)
+    if (!m_settings->getMusicType().has_value())
         return;
 
     if (m_newMusicCountdown > 0) {
@@ -173,12 +189,12 @@ void AudioContext::thinkFast()
     if (m_newMusicCountdown < 0) {
         if (!m_soundPlayer->getMusicEnabled()) return;
         if (!m_soundPlayer->isMusicPlaying()) {
-            int desiredMusicType = m_settings->getMusicType();
-            if (desiredMusicType == MUSIC_ATTACK) {
-                desiredMusicType = MUSIC_PEACE; // set back to peace
+            eMusicType desiredMusicType = *m_settings->getMusicType();
+            if (desiredMusicType == eMusicType::ATTACK) {
+                desiredMusicType = eMusicType::PEACE; // set back to peace
             }
 
-            if (desiredMusicType == MUSIC_BRIEFING) {
+            if (desiredMusicType == eMusicType::BRIEFING) {
                 // the briefing track depends on the human house, so replay the sample picked earlier
                 m_soundPlayer->playMusic(m_newMusicSample);
                 return;
