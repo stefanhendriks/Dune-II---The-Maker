@@ -49,6 +49,7 @@
 #include "gameobjects/players/cPlayers.h"
 #include "utils/Log.h"
 #include "utils/RNG.hpp"
+#include "gameobjects/cFlag.h"
 #include <format>
 
 cStructureFactory::cStructureFactory()
