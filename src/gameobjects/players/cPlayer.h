@@ -22,7 +22,7 @@
 #include "gameobjects/players/brains/cPlayerBrain.h"
 #include "include/enums/CombatEnums.h"
 #include "include/enums/HouseFlags.h"
-#include "utils/cRectangle.h"
+class cRectangle;
 #include "utils/Color.hpp"
 
 
