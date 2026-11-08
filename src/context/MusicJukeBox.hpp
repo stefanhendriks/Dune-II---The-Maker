@@ -35,6 +35,9 @@ class MusicJukeBox {
 public:
     explicit MusicJukeBox(std::filesystem::path root = "audio");
 
+    // Creates the empty directories players can put their music in; failure to do so is harmless.
+    void createRepertoryDirectories() const;
+
     void setCustomMusicEnabled(bool enabled);
 
     [[nodiscard]] MusicChoice choose(eMusicType type, int archiveTrack, int house) const;

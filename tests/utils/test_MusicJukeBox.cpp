@@ -104,3 +104,16 @@ TEST_CASE("MusicJukeBox only looks in the folder of the requested music type", "
     REQUIRE_FALSE(jukeBox.choose(eMusicType::MENU, 1, 0).file.has_value());
     REQUIRE_FALSE(jukeBox.choose(eMusicType::WIN, 1, 0).file.has_value());
 }
+
+TEST_CASE("MusicJukeBox creates the directory for every music type", "[musicjukebox]")
+{
+    TempRepertory dir;
+    MusicJukeBox jukeBox(dir.root);
+
+    jukeBox.createRepertoryDirectories();
+
+    for (const char *sub : {"win", "lose", "attack", "peace", "menu", "conquest",
+                            "briefing/atreides", "briefing/harkonnen", "briefing/ordos", "briefing/sardaukar"}) {
+        REQUIRE(fs::is_directory(dir.root / sub));
+    }
+}
