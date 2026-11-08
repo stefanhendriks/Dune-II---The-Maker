@@ -1,10 +1,10 @@
 #pragma once
 
 #include "cGameState.h"
-#include "controls/cKeyboardEvent.h"
-#include "controls/sMouseEvent.h"
 #include "game/MissionStats.h"
 
+class cKeyboardEvent;
+struct s_MouseEvent;
 class cGameSettings;
 class MissionFlow;
 class GameStateTransition;
