@@ -17,7 +17,7 @@
 
 #include "observers/cInputObserver.h"
 #include "observers/cScenarioObserver.h"
-#include "controls/cMouse.h"
+class cMouse;
 
 class cGameControlsContext;
 class cPlayer;
