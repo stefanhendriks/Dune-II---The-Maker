@@ -15,9 +15,8 @@
 
 #pragma once
 
-#include "gameobjects/map/PreviewMap.hpp"
-
 class cGameObjectContext;
+struct s_PreviewMap;
 
 class cRandomMapGenerator {
 public:
