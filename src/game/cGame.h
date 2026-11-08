@@ -15,13 +15,11 @@
 
 #pragma once
 
-#include "controls/cMouse.h"
+class cMouse;
 #include "controls/cKeyboard.h"
 #include "definitions.h"
-#include "include/eGameState.h"
-#include "utils/cRectangle.h"
+class cRectangle;
 #include "observers/cScenarioObserver.h"
-#include "utils/Log.h"
 #include "game/eScalingMode.h"
 
 #include <memory>

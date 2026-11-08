@@ -14,6 +14,8 @@
 #include "include/cAssert.h"
 #include "include/definitions.h"
 #include "include/sGameServices.h"
+#include "context/TextContext.hpp"
+#include "include/eGameState.h"
 
 #include <format>
 
