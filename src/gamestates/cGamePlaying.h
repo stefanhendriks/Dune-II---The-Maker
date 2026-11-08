@@ -44,6 +44,11 @@ class cEventEmitter;
 class AudioContext;
 class cMouse;
 class cRectangle;
+struct CommonEvent;
+struct DeployUnitEvent;
+struct LaunchDeathHandEvent;
+class cGameObjectContext;
+class cGameSettings;
 
 class cGamePlaying : public cGameState {
 public:
