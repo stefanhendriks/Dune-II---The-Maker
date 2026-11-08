@@ -16,7 +16,7 @@
 #pragma once
 
 #include "utils/cRectangle.h"
-#include "utils/Color.hpp"
+class Color;
 #include <SDL3_ttf/SDL_ttf.h>
 #include <string>
 #include <memory>
