@@ -30,6 +30,8 @@
 #include "utils/common.h"
 #include <format>
 #include "include/cAssert.h"
+#include "gameobjects/cSpecialInfos.h"
+#include "gameobjects/players/brains/cPlayerBrainData.h"
 #include <algorithm>
 
 namespace brains {
