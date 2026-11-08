@@ -17,6 +17,7 @@
 #include "game/Preferences.hpp"
 
 #include "utils/cIniFile.h"
+#include "utils/InitialGameSettings.hpp"
 
 namespace Preferences {
 

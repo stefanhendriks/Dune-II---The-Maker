@@ -16,12 +16,11 @@
 
 #pragma once
 
-#include "utils/InitialGameSettings.hpp"
-
 #include <filesystem>
 #include <string>
 
 class cSection;
+struct InitialGameSettings;
 
 // Saving and loading the player's options, in the same [SETTINGS] format as settings.ini.
 namespace Preferences {
