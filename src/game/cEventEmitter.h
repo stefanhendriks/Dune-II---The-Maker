@@ -15,10 +15,10 @@
 
 #pragma once
 
-#include "include/sGameEvent.h"
-
 #include <functional>
 #include <utility>
+
+struct s_GameEvent;
 
 class cEventEmitter {
 public:
