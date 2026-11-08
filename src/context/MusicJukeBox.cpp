@@ -33,6 +33,28 @@ bool isAudioFile(const std::filesystem::path &path)
     return ext == ".ogg" || ext == ".mp3" || ext == ".wav" || ext == ".flac";
 }
 
+// empty when there is no directory for this type (or house, for briefing music)
+std::filesystem::path repertoryDir(eMusicType type, int house)
+{
+    switch (type) {
+    case eMusicType::WIN: return "win";
+    case eMusicType::LOSE: return "lose";
+    case eMusicType::ATTACK: return "attack";
+    case eMusicType::PEACE: return "peace";
+    case eMusicType::MENU: return "menu";
+    case eMusicType::CONQUEST: return "conquest";
+    case eMusicType::BRIEFING:
+        switch (house) {
+        case ATREIDES: return "briefing/atreides";
+        case HARKONNEN: return "briefing/harkonnen";
+        case ORDOS: return "briefing/ordos";
+        case SARDAUKAR: return "briefing/sardaukar";
+        default: return "";
+        }
+    }
+    return "";
+}
+
 std::vector<std::filesystem::path> listAudioFiles(const std::filesystem::path &dir)
 {
     std::vector<std::filesystem::path> files;
@@ -56,18 +78,18 @@ void MusicJukeBox::setCustomMusicEnabled(bool enabled)
     m_customMusicEnabled = enabled;
 }
 
-MusicChoice MusicJukeBox::choose(eMusicType type, int archiveTrack) const
+MusicChoice MusicJukeBox::choose(eMusicType type, int archiveTrack, int house) const
 {
     MusicChoice choice{archiveTrack, std::nullopt};
     if (!m_customMusicEnabled) {
         return choice;
     }
 
-    if (type != eMusicType::ATTACK && type != eMusicType::PEACE) {
+    const std::filesystem::path subDir = repertoryDir(type, house);
+    if (subDir.empty()) {
         return choice;
     }
 
-    const char *subDir = (type == eMusicType::ATTACK) ? "attack" : "peace";
     std::vector<std::filesystem::path> files = listAudioFiles(m_root / subDir);
     if (files.empty()) {
         return choice;
