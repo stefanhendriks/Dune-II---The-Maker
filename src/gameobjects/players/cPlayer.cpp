@@ -51,6 +51,8 @@
 #include <algorithm>
 
 #include "data/gfxaudio.h"
+#include "context/GraphicsContext.hpp"
+#include "gameobjects/cSpecialInfos.h"
 
 int cPlayer::groupIdToIndex(int groupId)
 {
