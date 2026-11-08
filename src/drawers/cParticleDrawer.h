@@ -17,8 +17,7 @@
 
 #include <vector>
 #include "utils/cRectangle.h"
-#include "gameobjects/particles/cParticle.h"
-
+class cParticle;
 class cTextDrawer;
 class cGameObjectContext;
 struct sGameServices;
