@@ -54,6 +54,11 @@
 #include "include/cAssert.h"
 
 #include "config.h"
+#include "context/TextContext.hpp"
+#include "game/cGameSettings.h"
+#include "gamestates/cGameState.h"
+#include "include/sGameServices.h"
+#include "include/eGameState.h"
 
 static bool mouse_within_rect(cMouse* mouse, int x, int y, int width, int height)
 {

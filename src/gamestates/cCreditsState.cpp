@@ -29,6 +29,9 @@
 #include "controls/cMouse.h"
 
 #include "include/cAssert.h"
+#include "context/TextContext.hpp"
+#include "include/sGameServices.h"
+#include "include/eGameState.h"
 
 cCreditsState::cCreditsState(sGameServices* services) :
     cGameState(services),

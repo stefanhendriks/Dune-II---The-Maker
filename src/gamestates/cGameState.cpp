@@ -18,6 +18,7 @@
 #include "drawers/SDLDrawer.hpp"
 
 #include "include/cAssert.h"
+#include "include/sGameServices.h"
 
 cGameState::cGameState(sGameServices* services) :
     m_ctx(services->ctx),

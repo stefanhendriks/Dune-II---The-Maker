@@ -36,6 +36,12 @@
 #include "include/sGameEvent.h"
 
 #include "include/cAssert.h"
+#include "context/GraphicsContext.hpp"
+#include "context/TextContext.hpp"
+#include "game/cGameSettings.h"
+#include "gamestates/cGameState.h"
+#include "include/sGameServices.h"
+#include "include/eGameState.h"
 #include <memory>
 
 const int heightBarSize = 48;

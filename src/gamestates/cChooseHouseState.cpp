@@ -28,6 +28,9 @@
 #include "game/MentatFlow.hpp"
 #include "controls/cMouse.h"
 #include "include/cAssert.h"
+#include "context/TextContext.hpp"
+#include "include/sGameServices.h"
+#include "include/eGameState.h"
 
 cChooseHouseState::cChooseHouseState(sGameServices* services) :
     cGameState(services),

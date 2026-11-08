@@ -31,6 +31,10 @@
 #include "game/cGameSettings.h"
 
 #include "include/cAssert.h"
+#include "context/TextContext.hpp"
+#include "gamestates/cGameState.h"
+#include "include/sGameServices.h"
+#include "include/eGameState.h"
 
 cOptionsState::cOptionsState(sGameServices* services, int prevState)
     : cGameState(services),
