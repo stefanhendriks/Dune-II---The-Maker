@@ -39,6 +39,7 @@ class cEditorUndoRedoHistory;
 class cEditorCam;
 class cEventEmitter;
 class GameStateTransition;
+class cGameSettings;
 
 class cEditorState : public cGameState {
 public:
