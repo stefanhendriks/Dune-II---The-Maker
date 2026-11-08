@@ -26,6 +26,7 @@
 #include "utils/Log.h"
 #include <format>
 #include "include/cAssert.h"
+#include "gameobjects/cSpecialInfos.h"
 
 namespace brains {
 

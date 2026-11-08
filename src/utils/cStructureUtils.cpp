@@ -29,6 +29,7 @@
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/players/cPlayer.h"
+#include "gameobjects/cSpecialInfos.h"
 
 #include <format>
 

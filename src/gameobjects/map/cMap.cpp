@@ -45,6 +45,8 @@
 #include "drawers/SDLDrawer.hpp"
 #include "context/GraphicsContext.hpp"
 #include "include/sGameServices.h"
+#include "context/TextContext.hpp"
+#include "game/cGameSettings.h"
 
 #include <format>
 #include <algorithm>

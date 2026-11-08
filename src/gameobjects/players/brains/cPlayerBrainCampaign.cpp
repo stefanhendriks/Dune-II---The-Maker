@@ -33,6 +33,7 @@
 #include "context/cGameObjectContext.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "utils/Log.h"
+#include "gameobjects/cSpecialInfos.h"
 
 namespace brains {
 

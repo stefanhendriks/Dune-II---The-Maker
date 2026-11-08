@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "gameobjects/structures/cAbstractStructure.h"
+class cAbstractStructure;
 #include "sidebar/cBuildingListItem.h"
 
 class cPlayer;

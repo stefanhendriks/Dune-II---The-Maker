@@ -28,6 +28,7 @@
 #include <SDL3/SDL.h>
 #include <algorithm>
 #include "include/cAssert.h"
+#include "game/cGameSettings.h"
 
 void cMouseDrawer::serviceInit(sGameServices* services)
 {
