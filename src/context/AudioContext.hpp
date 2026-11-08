@@ -16,6 +16,7 @@
 #pragma once
 
 #include "definitions.h"
+#include "context/MusicJukeBox.hpp"
 
 #include <memory>
 
@@ -46,9 +47,12 @@ public:
     void changeMusicVolume(int delta) const;
 
 private:
+    void startMusic(const MusicChoice &choice) const;
+
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
     cGameSettings* m_settings = nullptr;
 
-    int m_newMusicSample;
+    MusicJukeBox m_jukeBox;
+    MusicChoice m_newMusic;
     int m_newMusicCountdown;
 };

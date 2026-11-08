@@ -44,7 +44,7 @@ const char* musicTypeName(eMusicType type)
 AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSettings* settings) :
     m_soundPlayer(std::move(soundPlayer)),
     m_settings(settings),
-    m_newMusicSample(MIDI_MENU),
+    m_newMusic{MIDI_MENU, std::nullopt},
     m_newMusicCountdown(0)
 {
     d2tm_assert(m_soundPlayer != nullptr);
@@ -164,8 +164,17 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
         m_newMusicCountdown = 0;
     }
 
-    m_newMusicSample = sampleId;
+    m_jukeBox.setCustomMusicEnabled(m_settings->isCustomMusic());
+    m_newMusic = m_jukeBox.choose(iType, sampleId);
     return true;
+}
+
+void AudioContext::startMusic(const MusicChoice &choice) const
+{
+    if (choice.file && m_soundPlayer->playMusicFile(choice.file->string())) {
+        return;
+    }
+    m_soundPlayer->playMusic(choice.archiveTrack);
 }
 
 void AudioContext::thinkFast()
@@ -182,7 +191,7 @@ void AudioContext::thinkFast()
     }
 
     if (m_newMusicCountdown == 0) {
-        m_soundPlayer->playMusic(m_newMusicSample);
+        startMusic(m_newMusic);
         m_newMusicCountdown--; // so we don't keep re-starting music
     }
 
@@ -196,7 +205,7 @@ void AudioContext::thinkFast()
 
             if (desiredMusicType == eMusicType::BRIEFING) {
                 // the briefing track depends on the human house, so replay the sample picked earlier
-                m_soundPlayer->playMusic(m_newMusicSample);
+                startMusic(m_newMusic);
                 return;
             }
             playMusicByType(desiredMusicType, false, false, GENERALHOUSE);

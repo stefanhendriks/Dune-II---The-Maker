@@ -314,6 +314,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_gameSettings->setShowLowPowerIcon(gs->showLowPowerIcon);
 
     m_gameSettings->m_playMusic = gs->playMusic;
+    m_gameSettings->m_customMusic = gs->customMusic;
 
     m_gameSettings->m_debugMode = gs->debugMode;
 
@@ -352,6 +353,7 @@ InitialGameSettings cGame::currentSettings() const
     gs.rocketTurretsDownOnLowPower = m_gameSettings->isRocketTurretsDownOnLowPower();
     gs.showLowPowerIcon = m_gameSettings->isShowLowPowerIcon();
     gs.playMusic = m_gameSettings->m_playMusic;
+    gs.customMusic = m_gameSettings->m_customMusic;
     gs.playSound = m_audioContext->getSoundPlayer()->getSoundEnabled();
     gs.debugMode = m_gameSettings->m_debugMode;
     gs.drawUnitDebug = m_gameSettings->m_drawUnitDebug;

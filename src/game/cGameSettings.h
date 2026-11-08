@@ -119,6 +119,9 @@ public:
     bool isPlaySound() const {
         return m_playSound;
     }
+    bool isCustomMusic() const {
+        return m_customMusic;
+    }
     bool isPlayCreditsSound() const {
         return m_playCreditsSound;
     }
@@ -150,6 +153,7 @@ private:
     bool m_rocketTurretsDownOnLowPower = false;
     bool m_showLowPowerIcon = false;
     bool m_playMusic;
+    bool m_customMusic = false;
 
     bool m_playing;
     bool m_skirmish;

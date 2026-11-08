@@ -16,6 +16,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <vector>
 #include <SDL3_mixer/SDL_mixer.h>
 
@@ -35,6 +36,8 @@ public:
     // Pass the sample ID of the Atreides voice
     void playVoice(int sampleId, int house);
     void playMusic(int sampleId);
+    // Returns false when the file could not be loaded; the caller decides on a fallback.
+    bool playMusicFile(const std::string &path);
 
     void stopMusic();
     bool isMusicPlaying() const;
@@ -65,10 +68,13 @@ private:
     static constexpr int kPriorityVoice = 1;
 
     void playSoundWithPriority(int sampleId, int vol, int priority);
+    void startMusic(MIX_Audio *audio);
+    void releaseMusicFile();
 
     std::unique_ptr<cSoundData> soundData;
     MIX_Mixer *m_mixer = nullptr;
     MIX_Track *m_musicTrack = nullptr;
+    MIX_Audio *m_musicFileAudio = nullptr; // owned, loaded from a file outside the datapack
     std::vector<MIX_Track *> m_sfxTracks;
     std::vector<bool> m_sfxTrackBusy;
     std::vector<int> m_sfxTrackPriority;
