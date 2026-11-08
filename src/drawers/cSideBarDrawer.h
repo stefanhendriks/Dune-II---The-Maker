@@ -17,9 +17,9 @@
 
 #include "cBuildingListDrawer.h"
 #include "cTextDrawer.h"
-#include "controls/cKeyboardEvent.h"
+class cKeyboardEvent;
 #include "observers/cInputObserver.h"
-#include "controls/sMouseEvent.h"
+struct s_MouseEvent;
 
 #include <memory>
 
