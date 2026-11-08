@@ -16,7 +16,7 @@
 #pragma once
 
 #include "GuiObject.h"
-#include "utils/cRectangle.h"
+class cRectangle;
 
 #include <string>
 #include <functional>
