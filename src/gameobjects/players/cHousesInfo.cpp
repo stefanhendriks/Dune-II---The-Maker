@@ -17,6 +17,7 @@
 #include "include/definitions.h"
 #include "utils/cIniUtils.h"
 #include "utils/Log.h"
+#include "utils/cIniFile.h"
 
 namespace {
     struct HouseEntry { int house; const char* section; };
