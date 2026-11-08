@@ -16,7 +16,6 @@
 #pragma once
 
 #include <array>
-#include "definitions.h"
 #include "cUnit.h"
 
 struct sGameServices;
