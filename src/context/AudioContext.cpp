@@ -44,12 +44,13 @@ const char* musicTypeName(eMusicType type)
 AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSettings* settings) :
     m_soundPlayer(std::move(soundPlayer)),
     m_settings(settings),
+    m_jukeBox(std::make_unique<MusicJukeBox>()),
     m_newMusic{MIDI_MENU, std::nullopt},
     m_newMusicCountdown(0)
 {
     d2tm_assert(m_soundPlayer != nullptr);
     d2tm_assert(m_settings != nullptr);
-    m_jukeBox.createRepertoryDirectories();
+    m_jukeBox->createRepertoryDirectories();
 }
 
 AudioContext::~AudioContext() = default;
@@ -165,8 +166,8 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
         m_newMusicCountdown = 0;
     }
 
-    m_jukeBox.setCustomMusicEnabled(m_settings->isCustomMusic());
-    m_newMusic = m_jukeBox.choose(iType, sampleId, humanHouse);
+    m_jukeBox->setCustomMusicEnabled(m_settings->isCustomMusic());
+    m_newMusic = m_jukeBox->choose(iType, sampleId, humanHouse);
     return true;
 }
 

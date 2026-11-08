@@ -52,7 +52,7 @@ private:
     std::unique_ptr<cSoundPlayer> m_soundPlayer;
     cGameSettings* m_settings = nullptr;
 
-    MusicJukeBox m_jukeBox;
+    std::unique_ptr<MusicJukeBox> m_jukeBox;
     MusicChoice m_newMusic;
     int m_newMusicCountdown;
 };
