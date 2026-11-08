@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <string>
 #include "game/Preferences.hpp"
+#include "utils/InitialGameSettings.hpp"
 
 namespace {
 std::filesystem::path freshDirectory(const char *name)
