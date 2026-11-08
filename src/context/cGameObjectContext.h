@@ -18,7 +18,7 @@
 #include <stdexcept>
 #include <cstddef>
 #include <memory>
-#include "gameobjects/map/MapGeometry.hpp"
+class MapGeometry;
 
 class cBullets;
 class cPlayers;
