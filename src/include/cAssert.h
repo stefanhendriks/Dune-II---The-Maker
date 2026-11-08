@@ -21,6 +21,19 @@
 #include <version>
 #if defined(__cpp_lib_stacktrace) && !defined(DISABLE_D2TM_STACKTRACE)
 #include <stacktrace>
+#define D2TM_HAS_STD_STACKTRACE
+#elif defined(__has_include)
+// Fallback for toolchains without std::stacktrace (e.g. Apple clang, glibc without libstdc++exp)
+#if __has_include(<execinfo.h>)
+#include <execinfo.h>
+#define D2TM_HAS_BACKTRACE
+#if __has_include(<cxxabi.h>)
+#include <cxxabi.h>
+#include <memory>
+#include <string>
+#define D2TM_HAS_CXXABI
+#endif
+#endif
 #endif
 #include <source_location>
 #include <cstdlib>
@@ -43,7 +56,7 @@ inline void d2tm_assert(
     report << "Function: " << location.function_name() << "\n";
     report << "----------------------------------------\n";
     report << "Call Stack:\n";
-#if defined(__cpp_lib_stacktrace) && !defined(DISABLE_D2TM_STACKTRACE)
+#if defined(D2TM_HAS_STD_STACKTRACE)
     auto trace = std::stacktrace::current();
     for (size_t i = 1; i < trace.size(); ++i) {
         const auto& entry = trace[i];
@@ -54,6 +67,34 @@ inline void d2tm_assert(
             report << " : address: " << std::showbase << std::hex << entry.native_handle() << std::dec << "\n";
         }
     }
+#elif defined(D2TM_HAS_BACKTRACE)
+    void* frames[64];
+    const int frameCount = backtrace(frames, 64);
+    char** symbols = backtrace_symbols(frames, frameCount);
+    // skip frame 0, that is d2tm_assert itself
+    for (int i = 1; i < frameCount; ++i) {
+        const char* line = symbols ? symbols[i] : "?";
+#if defined(D2TM_HAS_CXXABI)
+        // symbol lines look like "<n> <module> <addr> <mangled> + <offset>" (macOS) or
+        // "<module>(<mangled>+<offset>) [<addr>]" (glibc); demangle the mangled token when found
+        std::string text = line;
+        const auto start = text.find("_Z");
+        if (start != std::string::npos) {
+            const auto end = text.find_first_of(" +)", start);
+            const std::string mangled = text.substr(start, end == std::string::npos ? std::string::npos : end - start);
+            int status = 0;
+            std::unique_ptr<char, decltype(&std::free)> demangled(
+                abi::__cxa_demangle(mangled.c_str(), nullptr, nullptr, &status), &std::free);
+            if (status == 0 && demangled) {
+                text.replace(start, mangled.size(), demangled.get());
+            }
+        }
+        report << i - 1 << "# " << text << "\n";
+#else
+        report << i - 1 << "# " << line << "\n";
+#endif
+    }
+    std::free(symbols);
 #else
     report << "  (stack trace not available on this platform)\n";
 #endif
