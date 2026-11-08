@@ -15,6 +15,7 @@
 
 #include "AudioContext.hpp"
 
+#include "context/MusicJukeBox.hpp"
 #include "game/cGameSettings.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/RNG.hpp"

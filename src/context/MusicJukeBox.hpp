@@ -15,17 +15,11 @@
 
 #pragma once
 
+#include "context/MusicChoice.hpp"
 #include "definitions.h"
 
 #include <filesystem>
 #include <optional>
-
-// What to play for a music request: always an archive track (the fallback),
-// plus a file from the repertory directory when one was picked.
-struct MusicChoice {
-    int archiveTrack = 0;
-    std::optional<std::filesystem::path> file;
-};
 
 // Decides what music to play; it does not play anything itself.
 // Every music type has its own directory below the root: win, lose, attack, peace, menu and conquest.

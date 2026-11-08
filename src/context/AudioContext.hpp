@@ -16,12 +16,13 @@
 #pragma once
 
 #include "definitions.h"
-#include "context/MusicJukeBox.hpp"
+#include "context/MusicChoice.hpp"
 
 #include <memory>
 
 class cSoundPlayer;
 class cGameSettings;
+class MusicJukeBox;
 
 class AudioContext {
 public:
