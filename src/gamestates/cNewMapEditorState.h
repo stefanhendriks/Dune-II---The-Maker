@@ -34,6 +34,7 @@ class GuiTextInput;
 class cPreviewMaps;
 class cGameObjectContext;
 class cIni;
+class cGameSettings;
 
 
 class cNewMapEditorState : public cGameState {
