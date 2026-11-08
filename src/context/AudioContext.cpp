@@ -49,6 +49,7 @@ AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSetti
 {
     d2tm_assert(m_soundPlayer != nullptr);
     d2tm_assert(m_settings != nullptr);
+    m_jukeBox.createRepertoryDirectories();
 }
 
 AudioContext::~AudioContext() = default;

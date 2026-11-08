@@ -73,6 +73,15 @@ MusicJukeBox::MusicJukeBox(std::filesystem::path root) :
 {
 }
 
+void MusicJukeBox::createRepertoryDirectories() const
+{
+    std::error_code ec;
+    for (const char *dir : {"win", "lose", "attack", "peace", "menu", "conquest",
+                            "briefing/atreides", "briefing/harkonnen", "briefing/ordos", "briefing/sardaukar"}) {
+        std::filesystem::create_directories(m_root / dir, ec);
+    }
+}
+
 void MusicJukeBox::setCustomMusicEnabled(bool enabled)
 {
     m_customMusicEnabled = enabled;
