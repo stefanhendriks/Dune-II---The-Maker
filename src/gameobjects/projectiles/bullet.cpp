@@ -41,6 +41,8 @@
 #include "context/cGameObjectContext.h"
 #include "context/GameContext.hpp"
 #include "context/AudioContext.hpp"
+#include "gameobjects/players/cPlayerDifficultySettings.h"
+#include "gameobjects/projectiles/cBulletInfos.h"
 
 static constexpr auto ANIMATION_SPEED = 12;
 
