@@ -150,7 +150,12 @@ void cLog::flushPendingLine(bool forceFlush)
     m_hasPendingLine = false;
 }
 
-void cLog::doLog(eLogLevel level, eLogComponent comp, std::string_view event, std::string_view message, int playerId, int houseId)
+void cLog::logFileOnly(eLogLevel level, eLogComponent component, std::string_view event, std::string_view message)
+{
+    doLog(level, component, event, message, -1, -1, false);
+}
+
+void cLog::doLog(eLogLevel level, eLogComponent comp, std::string_view event, std::string_view message, int playerId, int houseId, bool echoToStdout)
 {
     if (!m_debugMode && (level == LOG_TRACE || level == LOG_DEBUG)) {
         // trace and debug levels are only available in debug mode
@@ -169,7 +174,7 @@ void cLog::doLog(eLogLevel level, eLogComponent comp, std::string_view event, st
         (houseId >= 0 ? getLogHouseString(houseId) : "")
     );
 
-    if (m_debugMode && (level == LOG_ERROR || level == LOG_FATAL) ) {
+    if (echoToStdout && m_debugMode && (level == LOG_ERROR || level == LOG_FATAL) ) {
         std::cout << payload << std::endl;
     }
 

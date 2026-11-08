@@ -77,6 +77,9 @@ public:
 
     void print(eLogLevel level, eLogComponent component, std::string_view event, std::string_view message);
 
+    /** Logs to the log file only, never echoes to stdout (for callers that already printed the message themselves) */
+    void logFileOnly(eLogLevel level, eLogComponent component, std::string_view event, std::string_view message);
+
     template <typename... Args>
     void error(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args);
 
@@ -99,7 +102,7 @@ public:
     void log(eLogLevel level, eLogComponent component, std::string_view event, int playerId, int houseId, std::format_string<Args...> fmt, Args&&... args);
 
 private:
-    void doLog(eLogLevel level, eLogComponent comp, std::string_view event, std::string_view message, int playerId = -1, int houseId = -1);
+    void doLog(eLogLevel level, eLogComponent comp, std::string_view event, std::string_view message, int playerId = -1, int houseId = -1, bool echoToStdout = true);
     void flushPendingLine(bool forceFlush);
 
     std::ofstream m_file;
@@ -207,5 +210,9 @@ namespace Logger {
     template <typename... Args>
     void fatal(eLogComponent comp, std::string_view event, std::format_string<Args...> fmt, Args&&... args) {
         if (g_loggerInstance) g_loggerInstance->fatal(comp, event, fmt, std::forward<Args>(args)...);
+    }
+    /** Fatal message into the log file only, no stdout echo */
+    inline void fatalFileOnly(eLogComponent comp, std::string_view event, std::string_view message) {
+        if (g_loggerInstance) g_loggerInstance->logFileOnly(LOG_FATAL, comp, event, message);
     }
 }
