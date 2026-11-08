@@ -27,6 +27,7 @@ class AudioContext;
 class cGameSettings;
 class cPlayer;
 class GameStateTransition;
+class MissionFlow;
 
 class cTellHouseState : public cGameState {
 public:
