@@ -1175,7 +1175,8 @@ void cGame::setState(int newState)
                 playMusicByTypeForStateTransition(eMusicType::BRIEFING);
             } else if (newState == GAME_LOSEBRIEF) {
                 newStatePtr = m_creatorState->getState(eGameState::LOSEBRIEF);
-                playMusicByTypeForStateTransition(eMusicType::BRIEFING);
+                // the defeated human player is reset to GENERALHOUSE, so use the remembered campaign house
+                m_audioContext->playMusicByTypeForStateTransition(eMusicType::BRIEFING, m_dataCampaign->housePlayer);
             }
             m_currentState = newStatePtr;
         }
