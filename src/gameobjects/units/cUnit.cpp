@@ -46,6 +46,8 @@
 #include <cmath>
 
 #include "data/gfxaudio.h"
+#include "game/cGameSettings.h"
+#include "gameobjects/players/cPlayerDifficultySettings.h"
 #include <algorithm>
 
 

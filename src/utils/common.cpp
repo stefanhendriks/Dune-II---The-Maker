@@ -37,6 +37,9 @@
 
 #include "data/gfxaudio.h"
 #include "game/Preferences.hpp"
+#include "gameobjects/cSpecialInfos.h"
+#include "gameobjects/cUpgradeInfo.h"
+#include "gameobjects/projectiles/cBulletInfos.h"
 
 std::unique_ptr<InitialGameSettings> loadSettingsFromIni(const std::string& filename)
 {

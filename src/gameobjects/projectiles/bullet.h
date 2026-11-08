@@ -15,9 +15,9 @@
 
 #pragma once
 
-#include "gameobjects/units/cUnit.h"
-#include "gameobjects/players/cPlayerDifficultySettings.h"
-#include "gameobjects/projectiles/cBulletInfos.h"
+class cUnit;
+class cPlayerDifficultySettings;
+struct s_BulletInfo;
 
 class cPlayer;
 class cGameObjectContext;

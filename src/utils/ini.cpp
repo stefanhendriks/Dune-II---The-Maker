@@ -48,6 +48,7 @@
 #include "game/MissionFlow.hpp"
 #include "game/cGameConditionChecker.h"
 #include "game/cGameSettings.h"
+#include "gameobjects/projectiles/cBulletInfos.h"
 #include <format>
 #include <filesystem>
 namespace fs=std::filesystem;
