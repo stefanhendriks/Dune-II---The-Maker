@@ -36,6 +36,8 @@
 #include "controls/mousestates/cMouseDeployState.h"
 
 #include "include/cAssert.h"
+#include "drawers/cMiniMapDrawer.h"
+#include "sidebar/cSideBar.h"
 
 cGameControlsContext::cGameControlsContext(cPlayer *player, cMouse *mouse) :
     m_mouseHoveringOverStructureId(-1),

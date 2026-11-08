@@ -44,6 +44,17 @@
 
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
+#include "context/TextContext.hpp"
+#include "drawers/CreditsDrawer.h"
+#include "drawers/cMapDrawer.h"
+#include "drawers/cMessageDrawer.h"
+#include "drawers/cMiniMapDrawer.h"
+#include "drawers/cMouseDrawer.h"
+#include "drawers/cOrderDrawer.h"
+#include "drawers/cParticleDrawer.h"
+#include "drawers/cPlaceItDrawer.h"
+#include "game/cGameSettings.h"
+#include "include/Texture.hpp"
 
 cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *services) :
     m_sidebarColor(Color{214, 149, 20,255}),

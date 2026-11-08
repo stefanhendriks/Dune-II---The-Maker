@@ -62,6 +62,15 @@
 #include <cmath>
 #include <format>
 #include "sidebar/cSideBar.h"
+#include "context/TextContext.hpp"
+#include "drawers/cMiniMapDrawer.h"
+#include "drawers/cOrderDrawer.h"
+#include "game/cGameSettings.h"
+#include "gamestates/cGameState.h"
+#include "include/sGameEvent.h"
+#include "include/sGameServices.h"
+#include "gameobjects/cSpecialInfos.h"
+#include "include/eGameState.h"
 
 cGamePlaying::cGamePlaying(sGameServices* services) :
     cGameState(services),
