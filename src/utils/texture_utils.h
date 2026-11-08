@@ -15,8 +15,7 @@
 
 #pragma once
 
-#include <SDL3/SDL.h>
-
+struct SDL_Surface;
 class Texture;
 class cPlayer;
 class SDLDrawer;
