@@ -23,6 +23,7 @@
 #include <format>
 
 #include "include/cAssert.h"
+#include "utils/cPoint.h"
 
 cMapEditor::cMapEditor(cMap *map) : m_map(map), m_mapGeometry(map->getGeometry())
 {
