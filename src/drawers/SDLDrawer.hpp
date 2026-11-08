@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "utils/cRectangle.h"
+class cRectangle;
 #include "utils/Color.hpp"
 #include "utils/HouseColors.h"
 

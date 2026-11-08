@@ -30,6 +30,8 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 #include "include/cAssert.h"
+#include "context/GraphicsContext.hpp"
+#include "utils/cRectangle.h"
 
 cMouse::cMouse(GameContext *ctx) :
     m_ctx(ctx),
