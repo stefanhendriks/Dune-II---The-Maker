@@ -30,6 +30,7 @@ class GameStateTransition;
 class cMouse;
 class GuiButton;
 class GuiWindow;
+class cGameSettings;
 
 class cMainMenuState : public cGameState {
 public:
