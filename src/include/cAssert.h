@@ -18,6 +18,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <string>
+#include <memory>
 #include <version>
 #if defined(__cpp_lib_stacktrace) && !defined(DISABLE_D2TM_STACKTRACE)
 #include <stacktrace>
@@ -29,8 +31,6 @@
 #define D2TM_HAS_BACKTRACE
 #if __has_include(<cxxabi.h>)
 #include <cxxabi.h>
-#include <memory>
-#include <string>
 #define D2TM_HAS_CXXABI
 #endif
 #endif
