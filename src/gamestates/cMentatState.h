@@ -29,6 +29,7 @@ class MissionFlow;
 class cGameSettings;
 class cIni;
 class cMouse;
+class cGameObjectContext;
 
 enum class MentatMode {
     Briefing,
