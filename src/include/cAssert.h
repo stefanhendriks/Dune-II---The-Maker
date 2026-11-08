@@ -104,8 +104,9 @@ inline void d2tm_assert(
     std::cerr << "\n" << report_str << std::endl;
     std::cerr.flush();
 
-    // also into nlog.txt (fatal flushes the file), so the cause of a crash is not split over two places
-    Logger::fatal(COMP_NONE, "assert", "{}", report_str);
+    // also into nlog.txt (fatal flushes the file), so the cause of a crash is not split over two places.
+    // File only: the report was just printed above, the log must not echo it to stdout a second time
+    Logger::fatalFileOnly(COMP_NONE, "assert", report_str);
 
     if (std::ofstream file{"dump.log", std::ios::app}) {
         file << report_str << "\n";
