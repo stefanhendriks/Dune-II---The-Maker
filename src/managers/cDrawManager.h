@@ -15,21 +15,21 @@
 
 #pragma once
 
-#include "controls/cKeyboardEvent.h"
-#include "drawers/cBuildingListDrawer.h"
-#include "drawers/cMapDrawer.h"
-#include "drawers/cMessageDrawer.h"
-#include "drawers/cMiniMapDrawer.h"
-#include "drawers/cMouseDrawer.h"
-#include "drawers/cOrderDrawer.h"
-#include "drawers/cParticleDrawer.h"
-#include "drawers/cPlaceItDrawer.h"
-#include "drawers/CreditsDrawer.h"
+class cKeyboardEvent;
+class cBuildingListDrawer;
+class cMapDrawer;
+class cMessageDrawer;
+class cMiniMapDrawer;
+class cMouseDrawer;
+class cOrderDrawer;
+class cParticleDrawer;
+class cPlaceItDrawer;
+class CreditsDrawer;
 //#include "drawers/cSideBarDrawer.h"
 #include "drawers/cStructureDrawer.h"
 
 #include "observers/cInputObserver.h"
-#include "controls/sMouseEvent.h"
+struct s_MouseEvent;
 
 #include <memory>
 
