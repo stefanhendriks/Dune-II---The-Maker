@@ -28,6 +28,8 @@
 
 #include "include/cAssert.h"
 #include "utils/Log.h"
+#include "game/MissionFlow.hpp"
+#include "include/sGameServices.h"
 
 cTellHouseState::cTellHouseState(sGameServices* services, cIni *ini, s_DataCampaign* dataCampaign)
     : cGameState(services),

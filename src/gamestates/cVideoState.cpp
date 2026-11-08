@@ -24,6 +24,9 @@
 
 #include "include/cAssert.h"
 #include "utils/Log.h"
+#include "include/sGameServices.h"
+#include "utils/cRectangle.h"
+#include "include/eGameState.h"
 
 namespace {
 // Videos are always shown 640 wide; the height may vary but is never more than 480.

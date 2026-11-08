@@ -34,6 +34,11 @@
 #include "utils/Log.h"
 
 #include "include/cAssert.h"
+#include "context/TextContext.hpp"
+#include "game/cGameSettings.h"
+#include "gamestates/cGameState.h"
+#include "include/sGameServices.h"
+#include "include/eGameState.h"
 #include <charconv>
 #include <chrono>
 #include <optional>

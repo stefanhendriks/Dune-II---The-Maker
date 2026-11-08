@@ -33,6 +33,7 @@
 #include "include/sDataCampaign.h"
 
 #include "include/cAssert.h"
+#include "include/sGameServices.h"
 
 cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini, s_DataCampaign* dataCampaign)
     : cGameState(services),

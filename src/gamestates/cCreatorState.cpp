@@ -38,6 +38,7 @@
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
 #include "include/cAssert.h"
+#include "include/sGameServices.h"
 
 cCreatorState::cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign) :
     m_services(services),

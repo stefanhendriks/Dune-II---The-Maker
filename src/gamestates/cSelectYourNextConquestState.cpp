@@ -43,6 +43,11 @@
 #include <iostream>
 #include <format>
 #include "include/cAssert.h"
+#include "context/GraphicsContext.hpp"
+#include "context/TextContext.hpp"
+#include "game/cGameSettings.h"
+#include "include/sGameServices.h"
+#include "include/eGameState.h"
 #include <algorithm>
 
 // Return color index from pixel (x, y) in surface

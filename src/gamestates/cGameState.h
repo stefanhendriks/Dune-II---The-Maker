@@ -15,12 +15,11 @@
 
 #pragma once
 
-#include "controls/cKeyboardEvent.h"
+class cKeyboardEvent;
 #include "observers/cInputObserver.h"
-#include "controls/sMouseEvent.h"
-#include "include/eGameState.h"
-#include "include/sGameEvent.h"
-#include "include/sGameServices.h"
+struct s_MouseEvent;
+struct s_GameEvent;
+struct sGameServices;
 
 class GameContext;
 class SDLDrawer;
