@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "cTextDrawer.h"
-#include "context/cGameObjectContext.h"
+class cTextDrawer;
+class cGameObjectContext;
 #include "observers/cInputObserver.h"
 #include "sidebar/cBuildingList.h"
 

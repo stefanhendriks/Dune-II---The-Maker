@@ -32,6 +32,9 @@
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/units/cUnits.h"
 #include "include/cAssert.h"
+#include "context/cGameObjectContext.h"
+#include "drawers/cBuildingListDrawer.h"
+#include "drawers/cOrderDrawer.h"
 #include <algorithm>
 
 
