@@ -165,7 +165,7 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
     }
 
     m_jukeBox.setCustomMusicEnabled(m_settings->isCustomMusic());
-    m_newMusic = m_jukeBox.choose(iType, sampleId);
+    m_newMusic = m_jukeBox.choose(iType, sampleId, humanHouse);
     return true;
 }
 

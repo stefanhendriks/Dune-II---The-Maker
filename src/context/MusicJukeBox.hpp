@@ -28,15 +28,16 @@ struct MusicChoice {
 };
 
 // Decides what music to play; it does not play anything itself.
-// ATTACK and PEACE may pick a file from "<root>/attack" or "<root>/peace",
-// but only when custom music is enabled and the directory holds audio files.
+// Every music type has its own directory below the root: win, lose, attack, peace, menu and conquest.
+// BRIEFING has one per house: briefing/atreides, briefing/harkonnen, briefing/ordos and briefing/sardaukar.
+// A file is only picked when custom music is enabled and the directory holds audio files.
 class MusicJukeBox {
 public:
     explicit MusicJukeBox(std::filesystem::path root = "audio");
 
     void setCustomMusicEnabled(bool enabled);
 
-    [[nodiscard]] MusicChoice choose(eMusicType type, int archiveTrack) const;
+    [[nodiscard]] MusicChoice choose(eMusicType type, int archiveTrack, int house) const;
 
 private:
     std::filesystem::path m_root;
