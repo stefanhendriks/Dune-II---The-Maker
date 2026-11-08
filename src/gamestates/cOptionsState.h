@@ -16,8 +16,8 @@
 #pragma once
 
 #include "cGameState.h"
-#include "controls/cKeyboardEvent.h"
-#include "controls/sMouseEvent.h"
+class cKeyboardEvent;
+struct s_MouseEvent;
 #include "include/Texture.hpp"
 
 #include <memory>
