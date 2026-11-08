@@ -15,6 +15,8 @@
 
 #include "context/TextContext.hpp"
 
+#include "drawers/cTextDrawer.h"
+
 TextContext::TextContext(
     std::unique_ptr<cTextDrawer> smallTextDrawer,
     std::unique_ptr<cTextDrawer> beneTextDrawer,
@@ -24,6 +26,8 @@ m_beneTextDrawer(std::move(beneTextDrawer)),
 m_gameTextDrawer(std::move(gameTextDrawer))
 {
 }
+
+TextContext::~TextContext() = default;
 
 void TextContext::resetCache() const {
     m_smallTextDrawer->resetCache();

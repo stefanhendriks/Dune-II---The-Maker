@@ -16,7 +16,6 @@
 #pragma once
 
 #include <memory>
-#include "drawers/cTextDrawer.h"
 class cTextDrawer;
 
 class TextContext {
@@ -27,6 +26,7 @@ public:
         std::unique_ptr<cTextDrawer> beneTextDrawer,
         std::unique_ptr<cTextDrawer> gameTextDrawer
     );
+    ~TextContext();
 
     void resetCache() const;
 
