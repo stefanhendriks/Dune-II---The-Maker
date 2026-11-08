@@ -16,7 +16,7 @@
 #pragma once
 
 #include <memory>
-#include "utils/cIniFile.h"
+class cIniFile;
 #include <SDL3/SDL.h>
 #include "utils/Color.hpp"
 #include "utils/HouseColors.h"
