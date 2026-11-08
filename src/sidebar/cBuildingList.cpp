@@ -21,6 +21,7 @@
 #include "game/cScreenFader.h"
 #include "include/sGameServices.h"
 #include "utils/common.h"
+#include "utils/cRectangle.h"
 #include "utils/Log.h"
 
 #include <vector>
