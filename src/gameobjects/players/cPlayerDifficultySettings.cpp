@@ -16,6 +16,7 @@
 #include "cPlayerDifficultySettings.h"
 #include "context/cInfoContext.h"
 #include "definitions.h"
+#include "gameobjects/units/cUnitInfos.h"
 
 #include <cmath>
 

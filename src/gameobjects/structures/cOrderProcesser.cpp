@@ -36,6 +36,8 @@
 #include "context/AudioContext.hpp"
 #include "utils/cStructureUtils.h"
 #include "data/gfxaudio.h"
+#include "sidebar/cBuildingList.h"
+#include "sidebar/cSideBar.h"
 #include <algorithm>
 
 cOrderProcesser::cOrderProcesser(cPlayer *thePlayer)

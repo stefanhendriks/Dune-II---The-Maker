@@ -19,6 +19,7 @@
 #include "context/AudioContext.hpp"
 #include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
+#include "context/TextContext.hpp"
 
 GameContext::~GameContext() {
 }

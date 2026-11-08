@@ -32,6 +32,7 @@
 #include <SDL3/SDL.h>
 
 #include "include/cAssert.h"
+#include "context/GraphicsContext.hpp"
 
 cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer, cStructureUtils *structureUtils) : m_structureUtils(structureUtils), m_player(thePlayer), m_ctx(ctx), m_sdlDrawer(ctx->getSDLDrawer())
 {

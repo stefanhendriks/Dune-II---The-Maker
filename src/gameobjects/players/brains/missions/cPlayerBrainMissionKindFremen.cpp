@@ -20,6 +20,7 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "include/cAssert.h"
+#include "gameobjects/cSpecialInfos.h"
 
 namespace brains {
 

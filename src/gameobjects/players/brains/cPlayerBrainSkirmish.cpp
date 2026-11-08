@@ -37,6 +37,7 @@
 #include <algorithm>
 
 #include "gameobjects/structures/cStructureFactory.h"
+#include "gameobjects/cSpecialInfos.h"
 
 namespace brains {
 
