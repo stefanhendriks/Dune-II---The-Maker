@@ -17,7 +17,7 @@
 
 #include "utils/cRectangle.h"
 #include "observers/cInputObserver.h"
-#include "utils/Graphics.hpp"
+class Graphics;
 
 #include <array>
 #include <string>
