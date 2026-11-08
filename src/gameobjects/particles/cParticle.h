@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "utils/cRectangle.h"
+class cRectangle;
 #include "utils/common.h"
 #include "gameobjects/particles/cParticleInfos.h"
 
