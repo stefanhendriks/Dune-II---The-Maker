@@ -16,10 +16,10 @@
 #pragma once
 
 #include "cGameState.h"
-#include "controls/cKeyboardEvent.h"
+class cKeyboardEvent;
 #include "gui/GuiButton.h"
-#include "controls/sMouseEvent.h"
-#include "utils/cPoint.h"
+struct s_MouseEvent;
+class cPoint;
 
 #include <string>
 #include <vector>
