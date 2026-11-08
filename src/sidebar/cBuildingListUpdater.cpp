@@ -25,6 +25,7 @@
 
 #include <format>
 #include "include/cAssert.h"
+#include "gameobjects/structures/cStructureInfo.h"
 
 cBuildingListUpdater::cBuildingListUpdater(cPlayer *thePlayer)
 {

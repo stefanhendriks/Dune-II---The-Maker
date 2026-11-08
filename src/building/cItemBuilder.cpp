@@ -44,6 +44,7 @@
 #include "include/cAssert.h"
 
 #include "data/gfxaudio.h"
+#include "gameobjects/cSpecialInfos.h"
 #include <algorithm>
 
 cItemBuilder::cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingListUpdater) :

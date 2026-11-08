@@ -22,6 +22,10 @@
 #include "game/cGameSettings.h"
 #include <format>
 #include "include/cAssert.h"
+#include "gameobjects/cSpecialInfos.h"
+#include "gameobjects/cUpgradeInfo.h"
+#include "gameobjects/structures/cStructureInfo.h"
+#include "gameobjects/units/cUnitInfos.h"
 
 cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable)
 {

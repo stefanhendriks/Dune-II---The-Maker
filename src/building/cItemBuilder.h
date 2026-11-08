@@ -17,13 +17,11 @@
 
 #include "definitions.h"
 #include "include/enums/BuildEnums.h"
-#include "include/enums/CombatEnums.h"
 #include "include/enums/ListEnums.h"
 
 #include "observers/cInputObserver.h"
-#include "gameobjects/structures/cStructureInfo.h"
 
-#include "sidebar/cBuildingListItem.h"
+class cBuildingListItem;
 #include "sidebar/cBuildingListUpdater.h"
 
 class cPlayer;

@@ -23,6 +23,10 @@
 #include "utils/common.h"
 #include "utils/cRectangle.h"
 #include "utils/Log.h"
+#include "gameobjects/cSpecialInfos.h"
+#include "gameobjects/cUpgradeInfo.h"
+#include "gameobjects/structures/cStructureInfo.h"
+#include "gameobjects/units/cUnitInfos.h"
 
 #include <vector>
 #include <algorithm>
