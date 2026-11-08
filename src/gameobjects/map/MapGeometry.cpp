@@ -18,6 +18,7 @@
 #include "utils/d2tm_math.h"
 #include <cmath>
 #include "include/cAssert.h"
+#include "utils/cPoint.h"
 #include <algorithm>
 
 #define TILESIZE_WIDTH_PIXELS 32

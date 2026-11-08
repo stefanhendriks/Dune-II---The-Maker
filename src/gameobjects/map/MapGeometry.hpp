@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "utils/cPoint.h"
+class cPoint;
 
 class MapGeometry
 {
