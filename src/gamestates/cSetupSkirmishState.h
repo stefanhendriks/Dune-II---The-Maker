@@ -46,6 +46,7 @@ class GuiButton;
 class GuiWindow;
 
 struct s_DataCampaign;
+class cGameObjectContext;
 
 struct s_SkirmishPlayer {
     bool bHuman;
