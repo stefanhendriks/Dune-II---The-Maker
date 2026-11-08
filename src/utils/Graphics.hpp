@@ -20,7 +20,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "include/Texture.hpp"
+class Texture;
 
 class DataPack;
 

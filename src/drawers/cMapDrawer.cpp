@@ -30,6 +30,9 @@
 #include <SDL3/SDL.h>
 #include <cmath>
 #include "include/cAssert.h"
+#include "context/GraphicsContext.hpp"
+#include "game/cGameSettings.h"
+#include "include/Texture.hpp"
 
 cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera *camera, sGameServices *services) :
     m_map(map),

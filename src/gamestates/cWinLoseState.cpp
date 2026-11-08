@@ -25,6 +25,12 @@
 
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
+#include "game/cGameSettings.h"
+#include "gamestates/cGameState.h"
+#include "include/Texture.hpp"
+#include "include/sGameServices.h"
+#include "context/GraphicsContext.hpp"
+#include "include/eGameState.h"
 
 cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) : 
     cGameState(services),

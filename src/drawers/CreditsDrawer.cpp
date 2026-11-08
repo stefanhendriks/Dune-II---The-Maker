@@ -32,6 +32,7 @@
 
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
+#include "include/Texture.hpp"
 #include <algorithm>
 #include <cstdlib>
 #include <string>

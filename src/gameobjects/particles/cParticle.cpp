@@ -31,6 +31,8 @@
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "context/GameContext.hpp"
+#include "context/GraphicsContext.hpp"
+#include "include/Texture.hpp"
 
 #include <SDL3/SDL.h>
 #include <iostream>

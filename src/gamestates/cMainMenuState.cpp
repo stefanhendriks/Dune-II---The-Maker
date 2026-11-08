@@ -35,6 +35,13 @@
 #include <filesystem>
 #include <format>
 #include "include/cAssert.h"
+#include "context/GraphicsContext.hpp"
+#include "context/TextContext.hpp"
+#include "game/cGameSettings.h"
+#include "gamestates/cGameState.h"
+#include "include/Texture.hpp"
+#include "include/sGameServices.h"
+#include "include/eGameState.h"
 
 cMainMenuState::cMainMenuState(sGameServices* services) :
     cGameState(services),

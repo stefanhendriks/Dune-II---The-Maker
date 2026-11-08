@@ -15,6 +15,7 @@
 
 #include "Graphics.hpp"
 #include "utils/cDataPack.hpp"
+#include "include/Texture.hpp"
 #include <iostream>
 #include "include/cAssert.h"
 

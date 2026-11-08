@@ -32,6 +32,10 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <format>
 #include "include/cAssert.h"
+#include "context/GraphicsContext.hpp"
+#include "context/TextContext.hpp"
+#include "include/Texture.hpp"
+#include "utils/cRectangle.h"
 
 // The mentat screen artwork was designed for 640x480. On higher resolutions it
 // is centered, so the offset is half the extra pixels on each axis.
