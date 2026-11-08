@@ -41,6 +41,7 @@
 #include <format>
 
 #include "data/gfxaudio.h"
+#include "gameobjects/cFlag.h"
 
 // "default" Constructor
 cAbstractStructure::cAbstractStructure() //:
