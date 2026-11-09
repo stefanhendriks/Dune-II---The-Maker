@@ -31,6 +31,7 @@
 #include <algorithm>
 #include <random>
 #include "include/cAssert.h"
+#include "gameobjects/players/brains/cPlayerBrainData.h"
 
 namespace brains {
 

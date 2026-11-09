@@ -18,6 +18,7 @@
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "include/cAssert.h"
+#include "gameobjects/players/brains/cPlayerBrainData.h"
 
 namespace brains {
 cPlayerBrainSandworm::cPlayerBrainSandworm(cPlayer *player) : cPlayerBrain(player)
