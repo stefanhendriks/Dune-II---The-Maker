@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include "cPlayerBrainData.h"
 #include "observers/cScenarioObserver.h"
 
 class cPlayer;
@@ -34,6 +33,8 @@ constexpr int kScanRadius = 20; // hard-coded for now, make player property late
 
 namespace brains {
 
+struct s_buildOrder;
+
 class cPlayerBrain : public cScenarioObserver {
 
 public:
@@ -42,7 +43,7 @@ public:
 
     explicit cPlayerBrain(cPlayer *player);
 
-    virtual ~cPlayerBrain() = default;
+    virtual ~cPlayerBrain();
 
     virtual void serviceInit(sGameServices* services);
 
