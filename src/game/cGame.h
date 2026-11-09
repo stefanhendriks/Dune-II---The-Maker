@@ -20,6 +20,7 @@ class cMouse;
 #include "definitions.h"
 class cRectangle;
 #include "observers/cScenarioObserver.h"
+#include "game/IStateCallbacks.hpp"
 #include "game/eScalingMode.h"
 #include "include/eGameState.h"
 
@@ -68,6 +69,7 @@ class cIni;
 class cEventEmitter;
 class cCreatorState;
 class CampaignProgress;
+class GameStateMachine;
 class GameStateTransition;
 class MentatFlow;
 class MissionFlow;
@@ -87,7 +89,7 @@ struct s_DataCampaign;
 
 struct sGameServices;
 
-class cGame : public cScenarioObserver, cInputObserver {
+class cGame : public cScenarioObserver, cInputObserver, IStateCallbacks {
 
 public:
     cGame();
@@ -225,13 +227,27 @@ private:
     void thinkFast_fading();
 
 
-    eGameState m_state; // TODO: later even remove with pointer to state
     std::optional<eGameState> m_nextState; // TODO: later even remove with pointer to state
 
-    cGameState *m_currentState;
 
     void transitionStateIfRequired();
     void setState(eGameState newState);
+
+    // IStateCallbacks: the side effects of a state transition
+    void onTransitionStarting(eGameState from, eGameState to) override;
+    void playMusic(eMusicType musicType) override;
+    void setCheatMode(bool enabled) override;
+    void setMouseNormal() override;
+    void takeBackgroundScreen() override;
+    void onTransitionToPlaying(cGameState *state, bool isNew) override;
+    void onTransitionToPlayingFromOptions() override;
+    void onTransitionToOptions(bool fromPlaying) override;
+    void onTransitionToOptionsExisting(cGameState *state, eGameState from) override;
+    void onTransitionToRegionNew(cGameState *state) override;
+    void onTransitionToRegionExisting(cGameState *state, bool fromWinLoseBrief) override;
+    void onTransitionToSkirmish() override;
+    void onEnteringTellHouse() override;
+    void onEnteringLoseBrief() override;
 
     void updateMouseAndKeyboardState();
     bool shouldCaptureTextInput() const;
@@ -267,5 +283,6 @@ private:
     std::unique_ptr<cIni> m_cIni;
     std::unique_ptr<cEventEmitter> m_eventEmitter;
     std::unique_ptr<cCreatorState> m_creatorState;
+    std::unique_ptr<GameStateMachine> m_stateMachine;
     std::unique_ptr<CampaignProgress> m_campaignProgress;
 };
