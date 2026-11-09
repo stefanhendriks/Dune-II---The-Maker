@@ -96,7 +96,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_stateTransitions->setNextStateWithFade(GAME_CREDITS);
+                m_stateTransitions->setNextStateWithFade(eGameState::CREDITS);
                 })
             .build();
 
@@ -127,7 +127,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_stateTransitions->setNextStateWithFade(GAME_SELECT_HOUSE);
+                m_stateTransitions->setNextStateWithFade(eGameState::SELECT_HOUSE);
                 })
             .build();
     gui_window->addGuiObject(std::move(gui_btn_SelectHouse));
@@ -143,7 +143,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
                 m_missionFlow->init();
-                m_stateTransitions->setNextStateWithFade(GAME_SETUPSKIRMISH);
+                m_stateTransitions->setNextStateWithFade(eGameState::SETUPSKIRMISH);
                 })
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Skirmish));
@@ -172,7 +172,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_stateTransitions->setNextStateWithFade(GAME_NEW_MAP_EDITOR);})
+            .onClick([this](){m_stateTransitions->setNextStateWithFade(eGameState::NEW_MAP_EDITOR);})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Editor));
 
@@ -186,7 +186,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
-            .onClick([this](){m_stateTransitions->setNextState(GAME_OPTIONS);})
+            .onClick([this](){m_stateTransitions->setNextState(eGameState::OPTIONS);})
             .build();
     gui_window->addGuiObject(std::move(gui_btn_Options));
 

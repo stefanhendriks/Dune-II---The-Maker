@@ -86,7 +86,7 @@ void cVideoState::thinkNormal()
         m_currentFrame = m_gfxMovie->getTexture(m_movieFrame);
         m_movieFrame++;
     } else {
-        m_stateTransitions->setNextStateWithFade(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(eGameState::MENU);
     }
 }
 
@@ -103,13 +103,13 @@ void cVideoState::draw() const
 void cVideoState::onNotifyMouseEvent(const s_MouseEvent &event)
 {
     if (event.eventType == eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED) {
-        m_stateTransitions->setNextStateWithFade(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(eGameState::MENU);
     }
 }
 
 void cVideoState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
-        m_stateTransitions->setNextStateWithFade(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(eGameState::MENU);
     }
 }

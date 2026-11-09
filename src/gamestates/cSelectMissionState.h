@@ -16,6 +16,7 @@
 #pragma once
 
 #include "cGameState.h"
+#include "include/eGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "controls/sMouseEvent.h"
 
@@ -34,7 +35,7 @@ class Texture;
 
 class cSelectMissionState : public cGameState {
 public:
-    cSelectMissionState(sGameServices* services, int prevState);
+    cSelectMissionState(sGameServices* services, eGameState prevState);
     ~cSelectMissionState() override;
 
     void thinkFast() override;

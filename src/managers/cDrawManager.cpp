@@ -311,7 +311,7 @@ void cDrawManager::drawTopBarBackground()
     //HACK HACK: for now do it like this, instead of using an actual GUI object here
     cRectangle optionsRect = cRectangle(0,0, 162, 30);
     if (m_mouse->isLeftButtonClicked() && m_mouse->isOverRectangle(&optionsRect)) {
-        m_stateTransitions->setNextState(GAME_OPTIONS);
+        m_stateTransitions->setNextState(eGameState::OPTIONS);
     }
 }
 

@@ -21,8 +21,10 @@ class cMouse;
 class cRectangle;
 #include "observers/cScenarioObserver.h"
 #include "game/eScalingMode.h"
+#include "include/eGameState.h"
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <SDL3/SDL.h>
 #include <SDL3_mixer/SDL_mixer.h>
@@ -134,10 +136,10 @@ public:
     void initiateFadingOut();        // fade out with current screen_bmp, this is a little game loop itself!
     void prepareMentatForPlayer();
 
-    bool isState(int thisState) const;
+    bool isState(eGameState thisState) const;
 
     // Use this instead
-    void setNextStateToTransitionTo(int newState);
+    void setNextStateToTransitionTo(eGameState newState);
 
     // Game acts as a facade, delegates to sound player
     void playSound(int sampleId); // Maximum volume
@@ -175,7 +177,7 @@ public:
 
     void takeBackGroundScreen();
 
-    void goingToWinLoseBrief(int value);
+    void goingToWinLoseBrief(eGameState value);
 
     s_DataCampaign* getDataCampaign() const;
 
@@ -223,13 +225,13 @@ private:
     void thinkFast_fading();
 
 
-    int m_state; // TODO: Replace with enum, and later even remove with pointer to state
-    int m_nextState; // TODO: Replace with enum, and later even remove with pointer to state
+    eGameState m_state; // TODO: later even remove with pointer to state
+    std::optional<eGameState> m_nextState; // TODO: later even remove with pointer to state
 
     cGameState *m_currentState;
 
     void transitionStateIfRequired();
-    void setState(int newState);
+    void setState(eGameState newState);
 
     void updateMouseAndKeyboardState();
     bool shouldCaptureTextInput() const;

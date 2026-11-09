@@ -16,6 +16,7 @@
 #pragma once
 
 #include "cGameState.h"
+#include "include/eGameState.h"
 class cKeyboardEvent;
 struct s_MouseEvent;
 #include "include/Texture.hpp"
@@ -33,7 +34,7 @@ class cGameSettings;
 
 class cOptionsState : public cGameState {
 public:
-    explicit cOptionsState(sGameServices* services, int prevState);
+    explicit cOptionsState(sGameServices* services, eGameState prevState);
     ~cOptionsState() override;
 
     void thinkFast() override;
@@ -44,7 +45,7 @@ public:
 
     eGameStateType getType() override;
 
-    void setPrevState(int prevState);
+    void setPrevState(eGameState prevState);
     void refresh();
 
 private:
@@ -53,10 +54,10 @@ private:
     GameStateTransition* m_stateTransitions = nullptr;
     cMouse* m_mouse = nullptr;
 
-    int m_prevState;
+    eGameState m_prevState;
 
     std::unique_ptr<GuiWindow> m_guiWindow;
 
-    void constructWindow(int prevState);
+    void constructWindow(eGameState prevState);
     Texture *m_backgroundTexture = nullptr;
 };

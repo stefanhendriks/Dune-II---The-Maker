@@ -93,7 +93,7 @@ AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameSt
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this] {
-                m_stateTransitions->setNextState(GAME_MISSIONSELECT);
+                m_stateTransitions->setNextState(eGameState::MISSIONSELECT);
             })
             .build();
         m_guiBtnToMissionSelect = std::move(gui_btn_toMissionSelect);

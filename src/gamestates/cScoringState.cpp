@@ -42,7 +42,7 @@ cScoringState::cScoringState(sGameServices* services) :
 
 void cScoringState::continueToWinBrief() const
 {
-    m_missionFlow->goingToWinLoseBrief(GAME_WINBRIEF);
+    m_missionFlow->goingToWinLoseBrief(eGameState::WINBRIEF);
     m_stateTransitions->fadeOut();
 }
 

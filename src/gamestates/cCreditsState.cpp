@@ -76,7 +76,7 @@ cCreditsState::cCreditsState(sGameServices* services) :
             .withTheme(cGuiThemeBuilder().light().build())
             .withKind(GuiRenderKind::TRANSPARENT_WITHOUT_BORDER)
             .onClick([this]() {
-                m_stateTransitions->setNextStateWithFade(GAME_MENU);
+                m_stateTransitions->setNextStateWithFade(eGameState::MENU);
             })
             .build();
 
@@ -467,6 +467,6 @@ eGameStateType cCreditsState::getType()
 void cCreditsState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
-        m_stateTransitions->setNextStateWithFade(GAME_MENU);
+        m_stateTransitions->setNextStateWithFade(eGameState::MENU);
     }
 }

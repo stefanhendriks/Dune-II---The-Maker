@@ -536,7 +536,7 @@ void cGamePlaying::onKeyDownGamePlaying(const cKeyboardEvent &event)
     }
 
     if (event.isAction(eKeyAction::OPEN_MENU)) {
-        m_stateTransitions->setNextState(GAME_OPTIONS);
+        m_stateTransitions->setNextState(eGameState::OPTIONS);
     }
 
     if (event.isAction(eKeyAction::TOGGLE_FPS)) {

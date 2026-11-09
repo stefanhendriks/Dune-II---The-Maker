@@ -149,8 +149,8 @@ void cGame::syncTextInputState() const
 
 cGame::cGame()
 {
-    m_state = -1;
-    m_nextState = -1;
+    m_state = eGameState::INITIALIZE;
+    m_nextState.reset();
     m_currentState = nullptr;
 
     m_windowed = false;
@@ -209,10 +209,10 @@ cGame::cGame()
         }
     );
     m_stateTransitions = std::make_unique<GameStateTransition>(
-        [this](int state) {
+        [this](eGameState state) {
             setNextStateToTransitionTo(state);
         },
-        [this](int state) {
+        [this](eGameState state) {
             setNextStateToTransitionTo(state);
             initiateFadingOut();
         },
@@ -237,7 +237,7 @@ cGame::cGame()
     m_videoFlow = std::make_unique<VideoFlow>(
         [this](const std::string &filename) {
             m_creatorState->createVideoState(filename);
-            setNextStateToTransitionTo(GAME_VIDEO);
+            setNextStateToTransitionTo(eGameState::VIDEO);
         }
     );
     m_missionFlow = std::make_unique<MissionFlow>(
@@ -256,7 +256,7 @@ cGame::cGame()
         [this](int missionNr) {
             jumpToSelectYourNextConquestMission(missionNr);
         },
-        [this](int winOrLoseBrief) {
+        [this](eGameState winOrLoseBrief) {
             goingToWinLoseBrief(winOrLoseBrief);
         }
     );
@@ -382,14 +382,14 @@ void cGame::init()
     map->setTerrainInfo(m_infoContext->getTerrainInfo());
 
     m_gameSettings->m_drawFps = false;
-    m_nextState = -1;
+    m_nextState.reset();
     m_missionWasWon = false;
     m_currentState = nullptr;
     m_gameSettings->m_playing = true;
     m_gameSettings->m_skirmish = false;
     m_notificationArea->clear();
 
-    setState(GAME_INITIALIZE);
+    setState(eGameState::INITIALIZE);
 
     m_cScreenFader->inititialize();
 
@@ -476,7 +476,7 @@ void cGame::setMissionWon()
         m_campaignProgress->recordMissionVictory(m_dataCampaign->housePlayer, m_dataCampaign->mission)) {
         saveCampaignProgress();
     }
-    setState(GAME_WINNING);
+    setState(eGameState::WINNING);
 
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
@@ -499,7 +499,7 @@ void cGame::setMissionWon()
 void cGame::setMissionLost()
 {
     m_missionWasWon = false;
-    setState(GAME_LOSING);
+    setState(eGameState::LOSING);
 
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
@@ -531,7 +531,7 @@ void cGame::updateMouseAndKeyboardState()
 
 void cGame::shakeScreenAndBlitBuffer()
 {
-    m_screenShake->update(m_state, GAME_PLAYING, m_mapCamera.get());
+    m_screenShake->update(m_state, eGameState::PLAYING, m_mapCamera.get());
     fadeOutOrBlitScreenBuffer();
 }
 
@@ -807,7 +807,7 @@ bool cGame::setupGame()
     srand(t);
 
     m_gameSettings->m_playing = true;
-    m_state = GAME_INITIALIZE;
+    m_state = eGameState::INITIALIZE;
 
     Logger::info(COMP_INIT, "cGame::setupGame", "Setup:  HOUSES");
     m_Houses = std::make_unique<cHousesInfo>();
@@ -826,7 +826,7 @@ bool cGame::setupGame()
 
     m_cIni->installGame(m_gameFilename);
     // Now we are ready for the menu state
-    setState(GAME_MENU);
+    setState(eGameState::MENU);
 
     m_focusManager->setEnabled(m_pauseWhenLosingFocus);
 
@@ -868,7 +868,7 @@ void cGame::setupPlayers()
     setPlayerToInteractFor(m_gameObjectsContext->getPlayer(0));
 }
 
-bool cGame::isState(int thisState) const
+bool cGame::isState(eGameState thisState) const
 {
     return (m_state == thisState);
 }
@@ -902,58 +902,29 @@ void cGame::jumpToSelectYourNextConquestMission(int missionNr)
     pState->regionSetupNextMission(missionZeroBased, humanPlayer->getHouse());
 }
 
-void cGame::setState(int newState)
+void cGame::setState(eGameState newState)
 {
     if (newState == m_state) {
         // ignore
         return;
     }
 
-    if (newState == GAME_BRIEFING && m_state == GAME_TELLHOUSE && m_campaignProgress &&
+    if (newState == eGameState::BRIEFING && m_state == eGameState::TELLHOUSE && m_campaignProgress &&
         CampaignProgress::supportsHouse(m_dataCampaign->housePlayer) &&
         m_campaignProgress->markStarted(m_dataCampaign->housePlayer)) {
         saveCampaignProgress();
     }
 
-    auto mapToCreatorState = [](int state, eGameState &mapped) -> bool {
-        switch (state) {
-            case GAME_INITIALIZE: mapped = eGameState::INITIALIZE; return true;
-            case GAME_MENU: mapped = eGameState::MENU; return true;
-            case GAME_PLAYING: mapped = eGameState::PLAYING; return true;
-            case GAME_BRIEFING: mapped = eGameState::BRIEFING; return true;
-            case GAME_EDITOR: mapped = eGameState::EDITOR; return true;
-            case GAME_OPTIONS: mapped = eGameState::OPTIONS; return true;
-            case GAME_REGION: mapped = eGameState::REGION; return true;
-            case GAME_SELECT_HOUSE: mapped = eGameState::SELECT_HOUSE; return true;
-            case GAME_TELLHOUSE: mapped = eGameState::TELLHOUSE; return true;
-            case GAME_WINNING: mapped = eGameState::WINNING; return true;
-            case GAME_SCORING: mapped = eGameState::SCORING; return true;
-            case GAME_WINBRIEF: mapped = eGameState::WINBRIEF; return true;
-            case GAME_LOSEBRIEF: mapped = eGameState::LOSEBRIEF; return true;
-            case GAME_LOSING: mapped = eGameState::LOSING; return true;
-            case GAME_SETUPSKIRMISH: mapped = eGameState::SETUPSKIRMISH; return true;
-            case GAME_CREDITS: mapped = eGameState::CREDITS; return true;
-            case GAME_MISSIONSELECT: mapped = eGameState::MISSIONSELECT; return true;
-            case GAME_NEW_MAP_EDITOR: mapped = eGameState::NEW_MAP_EDITOR; return true;
-            default:
-                return false;
-        }
-    };
+    Logger::info(COMP_GAME, "cGame::setState", "Setting state from {} to {}",
+                 gameStateToString(m_state), gameStateToString(newState));
 
-    eGameState oldStateForLog = eGameState::INITIALIZE;
-    eGameState newStateForLog = eGameState::INITIALIZE;
-    mapToCreatorState(m_state, oldStateForLog);
-    mapToCreatorState(newState, newStateForLog);
-    Logger::info(COMP_GAME, "cGame::setState", "Setting state from {}(={}) to {}(={})",
-                 m_state, gameStateToString(oldStateForLog), newState, gameStateToString(newStateForLog));
+    if (newState != eGameState::INITIALIZE) {
+        bool deleteOldState = (newState != eGameState::REGION &&
+                               newState != eGameState::PLAYING &&
+                               newState != eGameState::EDITOR &&
+                               newState != eGameState::OPTIONS); // don't delete these states, but re-use!
 
-    if (newState > -1) {
-        bool deleteOldState = (newState != GAME_REGION &&
-                               newState != GAME_PLAYING &&
-                               newState != GAME_EDITOR &&
-                               newState != GAME_OPTIONS); // don't delete these states, but re-use!
-
-        if (newState == GAME_PLAYING) {
+        if (newState == eGameState::PLAYING) {
             // make sure to delete options menu now
             cGameState *optionsState = nullptr;
             if (m_creatorState->hasState(eGameState::OPTIONS)) {
@@ -966,7 +937,7 @@ void cGame::setState(int newState)
             m_creatorState->destroyState(eGameState::OPTIONS);
         }
 
-        if (newState == GAME_REGION) {
+        if (newState == eGameState::REGION) {
             // make sure to delete options menu now
             cGameState *optionsState = nullptr;
             if (m_creatorState->hasState(eGameState::OPTIONS)) {
@@ -979,7 +950,7 @@ void cGame::setState(int newState)
             m_creatorState->destroyState(eGameState::OPTIONS);
         }
 
-        if (newState == GAME_SELECT_HOUSE) {
+        if (newState == eGameState::SELECT_HOUSE) {
             // a new campaign starts, so drop the conquest state of the previous one (it would skip the intro)
             if (m_creatorState->hasState(eGameState::REGION) &&
                     m_currentState == m_creatorState->getState(eGameState::REGION)) {
@@ -988,13 +959,13 @@ void cGame::setState(int newState)
             m_creatorState->destroyState(eGameState::REGION);
         }
 
-        if (newState == GAME_MISSIONSELECT) {
+        if (newState == eGameState::MISSIONSELECT) {
             deleteOldState = true; // delete old missionselect state everytime
         }
 
         cPlayer *humanPlayer = m_gameObjectsContext->getPlayer(HUMAN);
 
-        if (newState == GAME_PLAYING && m_state == GAME_OPTIONS) {
+        if (newState == eGameState::PLAYING && m_state == eGameState::OPTIONS) {
             // Options was opened while a mission was in progress; resume it instead of
             // re-running the normal mission-start sequence (which would reset mission stats).
             m_timeManager->restartTimer();
@@ -1006,24 +977,24 @@ void cGame::setState(int newState)
         }
 
         cGameState *existingStatePtr = nullptr;
-        eGameState targetCreatorState = eGameState::MENU;
-        if (mapToCreatorState(newState, targetCreatorState)) {
+        // VIDEO is excluded: its state is created up front (createVideoState) and must be kept as is
+        if (newState != eGameState::VIDEO) {
             if (deleteOldState) {
-                m_creatorState->destroyState(targetCreatorState);
+                m_creatorState->destroyState(newState);
             }
-            if (m_creatorState->hasState(targetCreatorState)) {
-                existingStatePtr = m_creatorState->getState(targetCreatorState);
+            if (m_creatorState->hasState(newState)) {
+                existingStatePtr = m_creatorState->getState(newState);
             }
         }
 
         if (existingStatePtr) {
             // no need for re-creating state
-            if (newState == GAME_REGION) {
+            if (newState == eGameState::REGION) {
                 playMusicByTypeForStateTransition(eMusicType::CONQUEST);
 
                 // came from a win/lose brief state, so make sure to set up the next state
-                if (m_state == GAME_WINBRIEF || m_state == GAME_LOSEBRIEF) {
-                    // because `GAME_REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
+                if (m_state == eGameState::WINBRIEF || m_state == eGameState::LOSEBRIEF) {
+                    // because `eGameState::REGION` == if (existingStatePtr->getType() == GAMESTATE_SELECT_YOUR_NEXT_CONQUEST ||
                     auto *pState = dynamic_cast<cSelectYourNextConquestState *>(existingStatePtr);
 
                     // always reset: a cached state left in REGSTATE_FADEOUT would never accept clicks (losing mission 2)
@@ -1039,25 +1010,25 @@ void cGame::setState(int newState)
                     }
                 }
             }
-            else if (newState == GAME_OPTIONS) {
+            else if (newState == eGameState::OPTIONS) {
                 // This feels awkward. For now, I'll keep it (if it works), but this will change
                 // once we have a proper game playing state and we need to transition properly between states
                 takeBackGroundScreen();
                 auto *pState = dynamic_cast<cOptionsState *>(existingStatePtr);
                 // you cannot 'go back' to mission select
-                if (m_state != GAME_MISSIONSELECT) {
+                if (m_state != eGameState::MISSIONSELECT) {
                     pState->setPrevState(m_state);
                 }
                 else {
                     pState->refresh(); // rebuilds UI windows, but keeps background
                 }
             }
-            else if (newState == GAME_PLAYING && m_state == GAME_OPTIONS) {
+            else if (newState == eGameState::PLAYING && m_state == eGameState::OPTIONS) {
                 // resuming the mission from the options menu: keep the drawers (radar), mission stats
                 // and sidebar selection as they are (#993)
                 m_timeManager->startTimer();
             }
-            else if (newState == GAME_PLAYING) {
+            else if (newState == eGameState::PLAYING) {
                     m_currentState = existingStatePtr;
 
                     m_drawManager->reset();
@@ -1082,7 +1053,7 @@ void cGame::setState(int newState)
         else {
             cGameState *newStatePtr = nullptr;
 
-            if (newState == GAME_REGION) {
+            if (newState == eGameState::REGION) {
                 auto *pState = dynamic_cast<cSelectYourNextConquestState *>(m_creatorState->getState(eGameState::REGION));
                 pState->calculateOffset();
                 Logger::info(COMP_INIT, "cGame::loadScenario", "Setup:  WORLD");
@@ -1096,39 +1067,39 @@ void cGame::setState(int newState)
 
                 newStatePtr = pState;
             }
-            else if (newState == GAME_SETUPSKIRMISH) {
+            else if (newState == eGameState::SETUPSKIRMISH) {
                 m_players->initPlayers(false, m_gameSettings.get(), m_dataCampaign.get(), m_services.get());
                 newStatePtr = m_creatorState->getState(eGameState::SETUPSKIRMISH);
                 playMusicByTypeForStateTransition(eMusicType::MENU);
             }
-            else if (newState == GAME_CREDITS) {
+            else if (newState == eGameState::CREDITS) {
                 newStatePtr = m_creatorState->getState(eGameState::CREDITS);
             }
-            else if (newState == GAME_EDITOR) {
+            else if (newState == eGameState::EDITOR) {
                 newStatePtr = m_creatorState->getState(eGameState::EDITOR);
             }
-            else if (newState == GAME_VIDEO) {
+            else if (newState == eGameState::VIDEO) {
                 newStatePtr = m_creatorState->getState(eGameState::VIDEO);
             }
-            else if (newState == GAME_MENU) {
+            else if (newState == eGameState::MENU) {
                 m_gameSettings->m_cheatMode = false;
                 newStatePtr = m_creatorState->getState(eGameState::MENU);
                 playMusicByTypeForStateTransition(eMusicType::MENU);
             }
-            else if (newState == GAME_NEW_MAP_EDITOR) {
+            else if (newState == eGameState::NEW_MAP_EDITOR) {
                 newStatePtr = m_creatorState->getState(eGameState::NEW_MAP_EDITOR);
             }
-            else if (newState == GAME_SELECT_HOUSE) {
+            else if (newState == eGameState::SELECT_HOUSE) {
                 newStatePtr = m_creatorState->getState(eGameState::SELECT_HOUSE);
             }
-            else if (newState == GAME_MISSIONSELECT) {
+            else if (newState == eGameState::MISSIONSELECT) {
                 m_mouse->setTile(MOUSE_NORMAL);
                 newStatePtr = m_creatorState->getState(eGameState::MISSIONSELECT);
             }
-            else if (newState == GAME_OPTIONS) {
+            else if (newState == eGameState::OPTIONS) {
                 takeBackGroundScreen();
                 m_mouse->setTile(MOUSE_NORMAL);
-                if (m_state == GAME_PLAYING) {
+                if (m_state == eGameState::PLAYING) {
                     // so we don't draw mouse cursor
                     m_drawManager->drawCombatState();
                     m_timeManager->pauseTimer();
@@ -1138,7 +1109,7 @@ void cGame::setState(int newState)
                 }
                 newStatePtr = m_creatorState->getState(eGameState::OPTIONS);
             }
-            else if (newState == GAME_PLAYING) {
+            else if (newState == eGameState::PLAYING) {
                 m_dataCampaign->housePlayer = humanPlayer->getHouse();
                 newStatePtr = m_creatorState->getState(eGameState::PLAYING);
                 m_currentState = newStatePtr;
@@ -1158,28 +1129,28 @@ void cGame::setState(int newState)
                 onNotifyGameEvent(event);
                 m_timeManager->startTimer();
             }
-            else if (newState == GAME_LOSING) {
+            else if (newState == eGameState::LOSING) {
                 newStatePtr = m_creatorState->getState(eGameState::LOSING);
             }
-            else if (newState == GAME_WINNING) {
+            else if (newState == eGameState::WINNING) {
                 newStatePtr = m_creatorState->getState(eGameState::WINNING);
             }
-            else if (newState == GAME_SCORING) {
+            else if (newState == eGameState::SCORING) {
                 newStatePtr = m_creatorState->getState(eGameState::SCORING);
             }
-            else if (newState == GAME_TELLHOUSE) {
+            else if (newState == eGameState::TELLHOUSE) {
                 m_dataCampaign->housePlayer = m_gameObjectsContext->getPlayer(HUMAN)->getHouse();
                 newStatePtr = m_creatorState->getState(eGameState::TELLHOUSE);
                 playMusicByTypeForStateTransition(eMusicType::BRIEFING);
             }
-            else if (newState == GAME_BRIEFING) {
+            else if (newState == eGameState::BRIEFING) {
                 m_gameSettings->m_cheatMode = false;
                 newStatePtr = m_creatorState->getState(eGameState::BRIEFING);
                 playMusicByTypeForStateTransition(eMusicType::BRIEFING);
-            } else if (newState == GAME_WINBRIEF) {
+            } else if (newState == eGameState::WINBRIEF) {
                 newStatePtr = m_creatorState->getState(eGameState::WINBRIEF);
                 playMusicByTypeForStateTransition(eMusicType::BRIEFING);
-            } else if (newState == GAME_LOSEBRIEF) {
+            } else if (newState == eGameState::LOSEBRIEF) {
                 newStatePtr = m_creatorState->getState(eGameState::LOSEBRIEF);
                 // the defeated human player is reset to GENERALHOUSE, so use the remembered campaign house
                 m_audioContext->playMusicByTypeForStateTransition(eMusicType::BRIEFING, m_dataCampaign->housePlayer);
@@ -1201,17 +1172,17 @@ cGame::~cGame()
 
 void cGame::prepareMentatForPlayer()
 {
-    if (m_state == GAME_BRIEFING) {
+    if (m_state == eGameState::BRIEFING) {
         missionInit();
         setupPlayers();
         auto *pState = dynamic_cast<cMentatState *>(m_creatorState->getState(eGameState::BRIEFING));
         pState->prepareMentat(m_dataCampaign->housePlayer);
     }
-    else if (m_state == GAME_WINBRIEF) {
+    else if (m_state == eGameState::WINBRIEF) {
         auto *pState = dynamic_cast<cMentatState *>(m_creatorState->getState(eGameState::WINBRIEF));
         pState->prepareMentat(m_dataCampaign->housePlayer);
     }
-    else if (m_state == GAME_LOSEBRIEF) {
+    else if (m_state == eGameState::LOSEBRIEF) {
         auto *pState = dynamic_cast<cMentatState *>(m_creatorState->getState(eGameState::LOSEBRIEF));
         pState->prepareMentat(m_dataCampaign->housePlayer);
     }
@@ -1225,14 +1196,14 @@ void cGame::prepareMentatToTellAboutHouse(int house)
         ? m_campaignProgress->nextMission(house)
         : 0;
     if (nextMission >= CampaignProgress::FIRST_MISSION + 1) {
-        setNextStateToTransitionTo(GAME_MISSIONSELECT);
+        setNextStateToTransitionTo(eGameState::MISSIONSELECT);
         initiateFadingOut();
         return;
     }
     if (nextMission == CampaignProgress::FIRST_MISSION) {
         m_dataCampaign->mission = CampaignProgress::FIRST_MISSION;
         m_dataCampaign->region = 1;
-        setNextStateToTransitionTo(GAME_BRIEFING);
+        setNextStateToTransitionTo(eGameState::BRIEFING);
         initiateFadingOut();
         return;
     }
@@ -1243,7 +1214,7 @@ void cGame::prepareMentatToTellAboutHouse(int house)
         playMusicByTypeForStateTransition(eMusicType::BRIEFING);
     }
     pState->prepareMentat(house);
-    setNextStateToTransitionTo(GAME_TELLHOUSE);
+    setNextStateToTransitionTo(eGameState::TELLHOUSE);
     initiateFadingOut();
 }
 
@@ -1260,7 +1231,7 @@ void cGame::loadScenario()
     pState->loadScenario(m_reinforcements.get());
 }
 
-void cGame::goingToWinLoseBrief(int value)
+void cGame::goingToWinLoseBrief(eGameState value)
 {
     setState(value);
     prepareMentatForPlayer();
@@ -1269,9 +1240,9 @@ void cGame::goingToWinLoseBrief(int value)
 
 void cGame::changeStateFromMentat()
 {
-    if (isState(GAME_BRIEFING)) {
+    if (isState(eGameState::BRIEFING)) {
         // proceed, play mission (it is already loaded before we got here)
-        setNextStateToTransitionTo(GAME_PLAYING);
+        setNextStateToTransitionTo(eGameState::PLAYING);
         m_drawManager->missionInit();
 
         // CENTER MOUSE
@@ -1284,9 +1255,9 @@ void cGame::changeStateFromMentat()
     }
 
     if (m_gameSettings->isSkirmish()) {
-        if (isState(GAME_WINBRIEF) || isState(GAME_LOSEBRIEF)) {
+        if (isState(eGameState::WINBRIEF) || isState(eGameState::LOSEBRIEF)) {
             // regardless of drawStateWinning or drawStateLosing, always go back to main menu
-            setNextStateToTransitionTo(GAME_SETUPSKIRMISH);
+            setNextStateToTransitionTo(eGameState::SETUPSKIRMISH);
             missionInit();
             initiateFadingOut();
         }
@@ -1297,36 +1268,36 @@ void cGame::changeStateFromMentat()
     }
 
     // NOT a skirmish game
-    Logger::info(COMP_GAME, "cGame::changeStateFromMentat", "state {}, campaign mission {}, region {}", m_state, m_dataCampaign->mission, m_dataCampaign->region);
+    Logger::info(COMP_GAME, "cGame::changeStateFromMentat", "state {}, campaign mission {}, region {}", gameStateToString(m_state), m_dataCampaign->mission, m_dataCampaign->region);
 
     // won the last mission, nothing left to conquer: show the credits (they lead back to the main menu)
-    if (isState(GAME_WINBRIEF) && m_dataCampaign->mission >= LAST_CAMPAIGN_MISSION) {
-        setNextStateToTransitionTo(GAME_CREDITS);
+    if (isState(eGameState::WINBRIEF) && m_dataCampaign->mission >= LAST_CAMPAIGN_MISSION) {
+        setNextStateToTransitionTo(eGameState::CREDITS);
 
         initiateFadingOut();
         return;
     }
 
     // won mission, transition to region selection (Select your next Conquest)
-    if (isState(GAME_WINBRIEF)) {
-        setNextStateToTransitionTo(GAME_REGION);
+    if (isState(eGameState::WINBRIEF)) {
+        setNextStateToTransitionTo(eGameState::REGION);
 
         initiateFadingOut();
         return;
     }
 
     // lost mission
-    if (isState(GAME_LOSEBRIEF)) {
+    if (isState(eGameState::LOSEBRIEF)) {
         missionInit();
         // lost mission > 1, so we go back to region select
         if (m_dataCampaign->mission > 1)   {
-            setNextStateToTransitionTo(GAME_REGION);
+            setNextStateToTransitionTo(eGameState::REGION);
 
             m_dataCampaign->mission--; // we did not win
         }
         else {
             // mission 1 failed, really?..., back to mentat with briefing
-            setNextStateToTransitionTo(GAME_BRIEFING);
+            setNextStateToTransitionTo(eGameState::BRIEFING);
             prepareMentatForPlayer();
             playMusicByType(eMusicType::BRIEFING);
         }
@@ -1451,19 +1422,19 @@ void cGame::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cGame::transitionStateIfRequired()
 {
-    if (m_nextState > -1) {
-        setState(m_nextState);
+    if (m_nextState.has_value()) {
+        setState(*m_nextState);
 
-        if (m_nextState == GAME_BRIEFING) {
+        if (m_nextState == eGameState::BRIEFING) {
             playMusicByType(eMusicType::BRIEFING);
             prepareMentatForPlayer();
         }
 
-        m_nextState = -1;
+        m_nextState.reset();
     }
 }
 
-void cGame::setNextStateToTransitionTo(int newState)
+void cGame::setNextStateToTransitionTo(eGameState newState)
 {
     m_nextState = newState;
 }
@@ -1562,7 +1533,7 @@ void cGame::playMusicByTypeForStateTransition(eMusicType iType)
 
 bool cGame::playMusicByType(eMusicType iType, bool triggerWithVoice)
 {
-    return m_audioContext->playMusicByType(iType, triggerWithVoice, isState(GAME_PLAYING), m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
+    return m_audioContext->playMusicByType(iType, triggerWithVoice, isState(eGameState::PLAYING), m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 }
 
 int cGame::getMaxVolume()
@@ -1702,7 +1673,7 @@ void cGame::checkMissionWinOrFail()
 
 void cGame::loadMapFromEditor(int map)
 {
-    setState(GAME_EDITOR);
+    setState(eGameState::EDITOR);
     auto *pState = dynamic_cast<cEditorState*>(m_creatorState->getState(eGameState::EDITOR));
     pState->loadMap(map);
 }

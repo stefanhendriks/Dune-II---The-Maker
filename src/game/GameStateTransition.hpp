@@ -17,12 +17,15 @@
 
 #include <functional>
 #include <utility>
+#include "include/eGameState.h"
+
+
 
 class GameStateTransition {
 public:
-    using TransitionCallback = std::function<void(int)>;
+    using TransitionCallback = std::function<void(eGameState)>;
     using FadeCallback = std::function<void()>;
-    using CurrentStateCallback = std::function<int()>;
+    using CurrentStateCallback = std::function<eGameState()>;
 
     GameStateTransition(TransitionCallback setNextState, TransitionCallback setNextStateWithFade, FadeCallback fadeOut, CurrentStateCallback getCurrentState)
         : m_setNextState(std::move(setNextState)),
@@ -31,11 +34,11 @@ public:
           m_getCurrentState(std::move(getCurrentState)) {
     }
 
-    void setNextState(int state) const {
+    void setNextState(eGameState state) const {
         m_setNextState(state);
     }
 
-    void setNextStateWithFade(int state) const {
+    void setNextStateWithFade(eGameState state) const {
         m_setNextStateWithFade(state);
     }
 
@@ -43,7 +46,7 @@ public:
         m_fadeOut();
     }
 
-    int getCurrentState() const {
+    eGameState getCurrentState() const {
         return m_getCurrentState();
     }
 
