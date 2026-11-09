@@ -48,13 +48,10 @@ enum eGameStateType {
 
 const char *gameStateTypeToString(eGameStateType state);
 // #define GAME_INITIALIZE  -1      // initialize game
-// #define GAME_OVER         0      // game over
 
 
 
-// #define GAME_INTRO	     9
 
-// #define GAME_SKIRMISH    15      // playing a skirmish mission!
 
 
 class cGameState : cInputObserver {

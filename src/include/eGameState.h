@@ -45,7 +45,6 @@ const char *gameStateToString(eGameState state);
 
 // Game states (state machine)
 inline constexpr int GAME_INITIALIZE = -1;      // initialize game
-inline constexpr int GAME_OVER = 0;      // game over
 inline constexpr int GAME_MENU = 1;      // in a menu
 inline constexpr int GAME_PLAYING = 2;      // playing the actual game
 inline constexpr int GAME_BRIEFING = 3;      // doing some briefing
@@ -53,13 +52,11 @@ inline constexpr int GAME_EDITOR = 4;      // running the editor
 inline constexpr int GAME_OPTIONS = 5;		 // options menu
 inline constexpr int GAME_REGION = 6;		 // select a region / select your next conquest
 inline constexpr int GAME_SELECT_HOUSE = 8;		 // pick a house
-inline constexpr int GAME_INTRO = 9;
 inline constexpr int GAME_TELLHOUSE = 10;		 // tell about the house
 inline constexpr int GAME_WINNING = 11;      // when winning, do some cool animation
 inline constexpr int GAME_WINBRIEF = 12;      // mentat chatter when won the mission
 inline constexpr int GAME_LOSEBRIEF = 13;      // briefing when losing
 inline constexpr int GAME_LOSING = 14;      // when losing, do something cool
-inline constexpr int GAME_SKIRMISH = 15;      // playing a skirmish mission!
 inline constexpr int GAME_SETUPSKIRMISH = 16;    // set up a skirmish game
 inline constexpr int GAME_CREDITS = 17;    // credits
 inline constexpr int GAME_MISSIONSELECT = 18;    // mission select

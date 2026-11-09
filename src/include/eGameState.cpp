@@ -23,8 +23,6 @@ const char *stateToString(const int &state)
     switch (state) {
         case GAME_INITIALIZE:
             return "GAME_INITIALIZE";
-        case GAME_OVER:
-            return "GAME_OVER";
         case GAME_MENU:
             return "GAME_MENU";
         case GAME_PLAYING:
