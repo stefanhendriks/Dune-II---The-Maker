@@ -23,6 +23,12 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_d2tm_math.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_SfxTrackAllocator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_MusicJukeBox.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_Color.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cEnumArray.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cMatrix.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_RNG.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cFileValidator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPack.cpp
 )
 
 # Production source files the tests depend on.
@@ -51,6 +57,8 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/Log.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/SfxTrackAllocator.cpp
     ${CMAKE_SOURCE_DIR}/src/context/MusicJukeBox.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/cFileValidator.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/cPack.cpp
 )
 
 add_executable(d2tm_tests
