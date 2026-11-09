@@ -52,7 +52,7 @@ TEST_CASE("RNG - genIntMaxExcl never returns the upper bound", "[rng]")
     REQUIRE(sawMin);
 }
 
-TEST_CASE("RNG - rnd returns values in [0, max)", "[rng]")
+TEST_CASE("RNG - rnd returns values below max", "[rng]")
 {
     for (int i = 0; i < SAMPLES; i++) {
         int v = RNG::rnd(4);
