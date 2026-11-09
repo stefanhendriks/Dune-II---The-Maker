@@ -50,10 +50,6 @@ const char *gameStateTypeToString(eGameStateType state);
 // #define GAME_INITIALIZE  -1      // initialize game
 
 
-
-
-
-
 class cGameState : cInputObserver {
 
 public:
