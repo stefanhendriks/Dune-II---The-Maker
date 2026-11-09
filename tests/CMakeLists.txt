@@ -3,8 +3,11 @@ find_package(Catch2 3 REQUIRED)
 # Test files
 set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyBindings.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyboardEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/drawers/test_CreditsMath.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/test_GameStateMachine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/test_cTimeCounter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_cPlayerNotification.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_FogMemory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_cSeedMapGenerator.cpp
@@ -36,6 +39,9 @@ set(TEST_FILES
 # types like cRectangle (which declares an inline toSDL() helper using SDL_Rect).
 set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/controls/cKeyBindings.cpp
+    ${CMAKE_SOURCE_DIR}/src/controls/cKeyboardEvent.cpp
+    ${CMAKE_SOURCE_DIR}/src/game/cTimeCounter.cpp
+    ${CMAKE_SOURCE_DIR}/src/gameobjects/players/cPlayerNotification.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cHandleArgument.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/MapGeometry.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/cSeedMap.cpp
