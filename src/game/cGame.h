@@ -82,7 +82,6 @@ struct s_DataCampaign;
 // think()
 // thinkFast_...()
 // thinkSlow_....() --> for now used to distinguish certain speed of "thinking" / invocations
-// state_...() --> because elegible for moving away
 
 struct sGameServices;
 

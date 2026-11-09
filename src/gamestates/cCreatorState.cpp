@@ -50,9 +50,6 @@ cCreatorState::cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign 
     d2tm_assert(m_cIni != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
-
-    m_dataCampaign = dataCampaign;
-    m_cIni = ini;
 }
 
 cCreatorState::~cCreatorState() {
