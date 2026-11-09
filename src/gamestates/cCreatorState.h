@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "game/IStateCreator.hpp"
 #include "include/eGameState.h"
 #include "gamestates/cGameState.h"
 #include "utils/cEnumArray.h"
@@ -28,22 +29,22 @@ class GameContext;
 class GameStateTransition;
 class cIni;
 
-class cCreatorState {
+class cCreatorState : public IStateCreator {
 public:
     explicit cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign);
 
-    ~cCreatorState();
+    ~cCreatorState() override;
 
-    cGameState *getState(eGameState gameState);
+    cGameState *getState(eGameState gameState) override;
 
     cGameState *getOrCreateState(eGameState gameState, bool forceRecreate = false);
 
-    [[nodiscard]] bool hasState(eGameState gameState) const;
+    [[nodiscard]] bool hasState(eGameState gameState) const override;
 
     // the video state needs to know what to play, so it has no createStateFromScratch case
     void createVideoState(const std::string &filename);
 
-    void destroyState(eGameState gameState);
+    void destroyState(eGameState gameState) override;
 
     void destroyAllStates();
 
