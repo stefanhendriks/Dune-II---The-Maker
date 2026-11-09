@@ -24,6 +24,7 @@
 #include "context/cInfoContext.h"
 #include "context/AudioContext.hpp"
 #include "game/cEventEmitter.h"
+#include "include/sGameEvent.h"
 
 cRefinery::cRefinery()
 {

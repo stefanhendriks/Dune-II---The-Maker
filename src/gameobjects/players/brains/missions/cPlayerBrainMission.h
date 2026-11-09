@@ -21,6 +21,8 @@
 #include <memory>
 #include <vector>
 
+struct CommonEvent;
+
 namespace brains {
 
 class cPlayerBrain;

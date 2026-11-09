@@ -37,6 +37,8 @@ class cRectangle;
 #include <memory>
 
 class cItemBuilder;
+class cBuildingListItem;
+struct CommonEvent;
 class cBuildingListUpdater;
 class cHousesInfo;
 class Texture;

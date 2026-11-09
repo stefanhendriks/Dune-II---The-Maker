@@ -21,6 +21,9 @@
 #include "gameobjects/players/brains/missions/cPlayerBrainMission.h"
 
 #include <set>
+
+struct CommonEvent;
+struct DamagedEvent;
 struct s_DataCampaign;
 
 namespace brains {

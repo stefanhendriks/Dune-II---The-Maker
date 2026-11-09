@@ -28,6 +28,7 @@
 #include "utils/RNG.hpp"
 #include <format>
 #include "include/cAssert.h"
+#include "include/sGameEvent.h"
 
 namespace brains {
 

@@ -16,6 +16,7 @@
 #pragma once
 
 #include "observers/cScenarioObserver.h"
+#include "include/sGameEvent.h"
 
 #include <memory>
 

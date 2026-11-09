@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "sGameEvent.h"
+struct s_GameEvent;
 
 class cScenarioObserver {
 public:

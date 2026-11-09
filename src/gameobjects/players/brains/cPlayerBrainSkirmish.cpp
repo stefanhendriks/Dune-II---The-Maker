@@ -38,6 +38,7 @@
 
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/cSpecialInfos.h"
+#include "include/sGameEvent.h"
 
 namespace brains {
 

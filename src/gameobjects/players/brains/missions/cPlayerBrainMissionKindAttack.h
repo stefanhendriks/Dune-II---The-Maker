@@ -17,6 +17,9 @@
 
 #include "cPlayerBrainMissionKind.h"
 
+struct CommonEvent;
+struct BuildingEvent;
+
 namespace brains {
 
 class cPlayerBrainMission;
