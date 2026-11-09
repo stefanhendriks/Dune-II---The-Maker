@@ -14,12 +14,16 @@
  */
 
 #include "context/GameContext.hpp"
+#include "context/GraphicsContext.hpp"
+#include <stdexcept>
 #include "game/cTimeManager.h"
 #include "game/cTimeCounter.h"
 #include "context/AudioContext.hpp"
 #include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "context/TextContext.hpp"
+
+GameContext::GameContext() = default;
 
 GameContext::~GameContext() {
 }

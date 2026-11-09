@@ -15,13 +15,10 @@
 
 #pragma once
 
-#include <stdexcept>
 #include <memory>
 
-#include "context/GraphicsContext.hpp"
-#include "context/TextContext.hpp"
-#include "game/cGameSettings.h"
-
+class GraphicsContext;
+class TextContext;
 class cTimeManager;
 class AudioContext;
 class SDLDrawer;
@@ -29,7 +26,7 @@ class cLog;
 
 class GameContext {
 public:
-    GameContext() = default;
+    GameContext();
     ~GameContext();
 
     void setGraphicsContext(std::unique_ptr<GraphicsContext> graphicsContext);
