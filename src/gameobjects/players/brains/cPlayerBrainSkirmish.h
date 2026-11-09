@@ -22,6 +22,9 @@
 
 #include <set>
 
+struct CommonEvent;
+struct DamagedEvent;
+
 struct s_PlaceResult;
 
 namespace brains {

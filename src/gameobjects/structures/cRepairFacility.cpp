@@ -19,6 +19,7 @@
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/players/cPlayer.h"
 #include "context/cGameObjectContext.h"
+#include "include/sGameEvent.h"
 
 cRepairFacility::cRepairFacility()
     : TIMER_repairunit(0)

@@ -30,6 +30,8 @@
 #include "observers/cInputObserver.h"
 #include "observers/cScenarioObserver.h"
 
+class cPlayer;
+
 // Forward declarations for mouse states
 class cMouseNormalState;
 class cMouseUnitsSelectedState;

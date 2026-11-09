@@ -21,6 +21,7 @@
 #include "context/cGameObjectContext.h"
 #include "include/cAssert.h"
 #include "gameobjects/cSpecialInfos.h"
+#include "include/sGameEvent.h"
 
 namespace brains {
 
