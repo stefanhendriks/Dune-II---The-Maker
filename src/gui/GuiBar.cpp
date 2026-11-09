@@ -17,6 +17,7 @@
 
 #include "drawers/SDLDrawer.hpp"
 #include "include/cAssert.h"
+#include "controls/sMouseEvent.h"
 
 GuiBar::GuiBar(SDLDrawer* drawer, const cRectangle &rect, GuiBarPlacement placement, int heightBarSize) :
     GuiObject(drawer, rect), /*gui_objects(std::vector<GuiObject *>(0)),*/ m_placement(placement), placementPosition(0), heightBarSize(heightBarSize)

@@ -30,6 +30,7 @@
 #include "gui/GuiButton.h"
 #include "context/GameContext.hpp"
 #include "context/cInfoContext.h"
+#include "controls/cKeyboardEvent.h"
 #include <iostream>
 
 BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, MissionFlow* missionFlow, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, stateTransitions, nullptr, false), m_humanPlayer(humanPlayer), m_missionFlow(missionFlow), m_dataCampaign(dataCampaign)

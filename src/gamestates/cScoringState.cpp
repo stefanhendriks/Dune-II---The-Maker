@@ -16,6 +16,7 @@
 #include "include/sGameServices.h"
 #include "context/TextContext.hpp"
 #include "include/eGameState.h"
+#include "controls/sMouseEvent.h"
 
 #include <format>
 

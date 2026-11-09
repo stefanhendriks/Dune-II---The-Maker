@@ -17,6 +17,7 @@
 #include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "include/cAssert.h"
+#include "controls/sMouseEvent.h"
 
 GuiLabel::GuiLabel(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText)
     : GuiObject(drawer, rect)

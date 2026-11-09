@@ -28,6 +28,8 @@
 #include <algorithm>
 #include "include/cAssert.h"
 #include "gameobjects/structures/cAbstractStructure.h"
+#include "controls/sMouseEvent.h"
+#include "controls/cKeyboardEvent.h"
 
 cMouseRepairState::cMouseRepairState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     cMouseState(player, context, mouse)

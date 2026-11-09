@@ -17,6 +17,7 @@
 #include "drawers/cTextDrawer.h"
 #include "drawers/SDLDrawer.hpp"
 #include "include/cAssert.h"
+#include "controls/cKeyboardEvent.h"
 
 GuiWindow::GuiWindow(SDLDrawer* drawer, const cRectangle &rect, cTextDrawer* _textDrawer) :
     GuiObject(drawer,rect),

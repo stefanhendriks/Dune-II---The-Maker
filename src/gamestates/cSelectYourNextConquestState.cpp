@@ -48,6 +48,8 @@
 #include "game/cGameSettings.h"
 #include "include/sGameServices.h"
 #include "include/eGameState.h"
+#include "controls/cKeyboardEvent.h"
+#include "controls/sMouseEvent.h"
 #include <algorithm>
 
 // Return color index from pixel (x, y) in surface

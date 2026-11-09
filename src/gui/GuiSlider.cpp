@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <iostream>
 #include "include/cAssert.h"
+#include "controls/sMouseEvent.h"
 static constexpr auto GUI_KNOB_WIDTH = 12;
 
 GuiSlider::GuiSlider(SDLDrawer* drawer, const cRectangle &rect, int minValue, int maxValue, int initialValue)

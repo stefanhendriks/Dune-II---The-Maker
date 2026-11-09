@@ -45,6 +45,7 @@
 
 #include "data/gfxaudio.h"
 #include "gameobjects/cSpecialInfos.h"
+#include "controls/cKeyboardEvent.h"
 #include <algorithm>
 
 cItemBuilder::cItemBuilder(cPlayer *thePlayer, cBuildingListUpdater *buildingListUpdater) :

@@ -38,6 +38,7 @@
 #include "drawers/cTextDrawer.h"
 #include "game/cGameSettings.h"
 #include "gameobjects/structures/cStructureInfo.h"
+#include "controls/cKeyboardEvent.h"
 
 cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player) :
     m_gameTextDrawer(ctx->getTextContext()->getGameTextDrawer()),

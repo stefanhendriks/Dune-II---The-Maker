@@ -37,6 +37,7 @@
 
 #include "data/gfxaudio.h"
 #include "gameobjects/structures/cAbstractStructure.h"
+#include "controls/cKeyboardEvent.h"
 
 namespace {
 
