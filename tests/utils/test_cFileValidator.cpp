@@ -15,36 +15,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include "utils/cFileValidator.h"
-
-#include <filesystem>
-#include <fstream>
-
-namespace fs = std::filesystem;
-
-namespace {
-// Creates a fresh, empty directory for the lifetime of the object
-struct TempDir {
-    fs::path path;
-
-    explicit TempDir(const std::string &name)
-        : path(fs::temp_directory_path() / name)
-    {
-        fs::remove_all(path);
-        fs::create_directories(path);
-    }
-
-    ~TempDir()
-    {
-        std::error_code ec;
-        fs::remove_all(path, ec);
-    }
-
-    void touch(const std::string &file) const
-    {
-        std::ofstream(path / file) << "x";
-    }
-};
-}
+#include "TempDir.hpp"
 
 TEST_CASE("eGameDirFileNameString - maps every value to its name", "[filevalidator]")
 {
@@ -77,8 +48,8 @@ TEST_CASE("cFileValidator - fileExists is false when the directory is missing", 
 TEST_CASE("cFileValidator - fileExists is true when all configured files exist", "[filevalidator]")
 {
     TempDir dir("d2tm_filevalidator_ok");
-    dir.touch("gfxdata.dat");
-    dir.touch("gfxaudio.dat");
+    dir.write("gfxdata.dat");
+    dir.write("gfxaudio.dat");
 
     cFileValidator validator(dir.path.string());
     validator.addResources({
@@ -98,7 +69,7 @@ TEST_CASE("cFileValidator - fileExists is true for an existing directory without
 TEST_CASE("cFileValidator - fileExists is false when a configured file is missing", "[filevalidator]")
 {
     TempDir dir("d2tm_filevalidator_missing");
-    dir.touch("gfxdata.dat");
+    dir.write("gfxdata.dat");
 
     cFileValidator validator(dir.path.string());
     validator.addResources({

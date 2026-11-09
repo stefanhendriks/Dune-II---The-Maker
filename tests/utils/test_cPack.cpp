@@ -15,45 +15,11 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include "utils/cPack.h"
+#include "TempDir.hpp"
 
-#include <filesystem>
-#include <fstream>
 #include <string>
 
-namespace fs = std::filesystem;
-
 namespace {
-// Fresh, empty directory for the lifetime of the object
-struct TempDir {
-    fs::path path;
-
-    explicit TempDir(const std::string &name)
-        : path(fs::temp_directory_path() / name)
-    {
-        fs::remove_all(path);
-        fs::create_directories(path);
-    }
-
-    ~TempDir()
-    {
-        std::error_code ec;
-        fs::remove_all(path, ec);
-    }
-
-    std::string write(const std::string &file, const std::string &content) const
-    {
-        const fs::path full = path / file;
-        std::ofstream out(full, std::ios::binary);
-        out << content;
-        return full.string();
-    }
-
-    std::string file(const std::string &name) const
-    {
-        return (path / name).string();
-    }
-};
-
 std::string readAll(SDL_IOStream *io)
 {
     std::string result(static_cast<size_t>(SDL_GetIOSize(io)), '\0');
