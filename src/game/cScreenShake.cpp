@@ -52,7 +52,7 @@ int cScreenShake::getY() const
     return m_shakeY;
 }
 
-void cScreenShake::update(int state, int playingState, cMapCamera *mapCamera)
+void cScreenShake::update(eGameState state, eGameState playingState, cMapCamera *mapCamera)
 {
     if (m_timer == 0) {
         m_timer = -1;

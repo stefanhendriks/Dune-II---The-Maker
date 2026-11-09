@@ -102,9 +102,9 @@ void cWinLoseState::onNotifyKeyboardEvent(const cKeyboardEvent &)
 void cWinLoseState::onMouseLeftButtonClicked(const s_MouseEvent &) const
 {
     if (m_statement == Outcome::Lose) {
-        m_missionFlow->goingToWinLoseBrief(GAME_LOSEBRIEF);
+        m_missionFlow->goingToWinLoseBrief(eGameState::LOSEBRIEF);
     } else {
-        m_stateTransitions->setNextState(GAME_SCORING);
+        m_stateTransitions->setNextState(eGameState::SCORING);
     }
     // FADE OUT
     m_stateTransitions->fadeOut();

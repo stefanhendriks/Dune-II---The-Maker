@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "include/eGameState.h"
+
 #include <functional>
 #include <utility>
 
@@ -26,9 +28,10 @@ class MissionFlow {
 public:
     using Callback = std::function<void()>;
     using IntCallback = std::function<void(int)>;
+    using StateCallback = std::function<void(eGameState)>;
 
     MissionFlow(Callback init, Callback setWon, Callback setLost, Callback checkWinOrFail,
-                IntCallback jumpToSelectYourNextConquest, IntCallback goingToWinLoseBrief)
+                IntCallback jumpToSelectYourNextConquest, StateCallback goingToWinLoseBrief)
         : m_init(std::move(init)),
           m_setWon(std::move(setWon)),
           m_setLost(std::move(setLost)),
@@ -57,7 +60,7 @@ public:
         m_jumpToSelectYourNextConquest(mission);
     }
 
-    void goingToWinLoseBrief(int winOrLoseBrief) const {
+    void goingToWinLoseBrief(eGameState winOrLoseBrief) const {
         m_goingToWinLoseBrief(winOrLoseBrief);
     }
 
@@ -67,5 +70,5 @@ private:
     Callback m_setLost;
     Callback m_checkWinOrFail;
     IntCallback m_jumpToSelectYourNextConquest;
-    IntCallback m_goingToWinLoseBrief;
+    StateCallback m_goingToWinLoseBrief;
 };

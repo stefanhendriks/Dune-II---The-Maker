@@ -499,7 +499,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (m_mapData == nullptr) {
         if (event.isType(eKeyEventType::PRESSED) && event.isAction(eKeyAction::MENU_BACK)) {
-            m_stateTransitions->setNextStateWithFade(GAME_MENU);
+            m_stateTransitions->setNextStateWithFade(eGameState::MENU);
         }
         return;
     }
@@ -510,7 +510,7 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
                 saveMap(true);
                 m_hasChanged = false;
             }
-            m_stateTransitions->setNextState(GAME_OPTIONS);
+            m_stateTransitions->setNextState(eGameState::OPTIONS);
         }
         if (event.isAction(eKeyAction::EDITOR_SAVE)) {
             //std::cout << "Save" << std::endl;

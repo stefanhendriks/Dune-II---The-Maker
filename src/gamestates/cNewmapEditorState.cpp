@@ -254,7 +254,7 @@ void cNewMapEditorState::constructWindow()
         .withTextAlign(GuiTextAlignHorizontal::CENTER)
         .withTheme(cGuiThemeBuilder().light().build())
         .onClick([this]() {
-            m_stateTransitions->setNextStateWithFade(GAME_MENU);
+            m_stateTransitions->setNextStateWithFade(eGameState::MENU);
         })
         .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Quit));
@@ -272,7 +272,7 @@ void cNewMapEditorState::constructWindow()
         .onClick([this](){
             this->constructEmptyMap();
             m_scenarioFlow->loadMapFromEditor(-1); // -1 means load the map from the editor, instead of loading a skirmish map
-            m_stateTransitions->setNextStateWithFade(GAME_EDITOR);
+            m_stateTransitions->setNextStateWithFade(eGameState::EDITOR);
         })
         .build();
     m_guiWindow->addGuiObject(std::move(gui_btn_Back));

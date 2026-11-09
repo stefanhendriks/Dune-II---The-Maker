@@ -135,7 +135,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
             .withRenderer(m_sdlDrawer)
             .withTheme(cGuiThemeBuilder().light().build())
             .onClick([this]() {
-                m_stateTransitions->setNextState(GAME_MISSIONSELECT);})
+                m_stateTransitions->setNextState(eGameState::MISSIONSELECT);})
             .build();
 }
 
@@ -301,7 +301,7 @@ void cSelectYourNextConquestState::draw() const
     // 1. Show current conquered regions
     // 2. Show next progress + story (in message bar)
     // 3. Click next region
-    // 4. Set up region and go to GAME_BRIEFING, which will do the rest...-> fade out
+    // 4. Set up region and go to eGameState::BRIEFING, which will do the rest...-> fade out
 
     int iHouse = m_objects->getPlayer(0)->getHouse();
     if (state == eRegionState::REGSTATE_INTRODUCTION) {
@@ -453,7 +453,7 @@ void cSelectYourNextConquestState::loadScenarioAndTransitionToNextState(int iMis
     iNewReg += iReg;
 
     m_missionFlow->init();
-    m_stateTransitions->setNextState(GAME_BRIEFING);
+    m_stateTransitions->setNextState(eGameState::BRIEFING);
     m_dataCampaign->region = iNewReg;
     m_dataCampaign->mission++;                        // FINALLY ADD MISSION NUMBER...
 
@@ -734,7 +734,7 @@ void cSelectYourNextConquestState::onNotifyKeyboardEvent(const cKeyboardEvent &e
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_stateTransitions->setNextState(GAME_OPTIONS);
+            m_stateTransitions->setNextState(eGameState::OPTIONS);
         }
     }
 }

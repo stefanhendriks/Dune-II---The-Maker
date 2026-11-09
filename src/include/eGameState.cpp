@@ -13,59 +13,9 @@
  * This is a non-commercial educational project.
  */
 
-#include "include/cAssert.h"
 #include "include/eGameState.h"
 
-#include "utils/Log.h"
-
-const char *stateToString(const int &state)
-{
-    switch (state) {
-        case GAME_INITIALIZE:
-            return "GAME_INITIALIZE";
-        case GAME_MENU:
-            return "GAME_MENU";
-        case GAME_PLAYING:
-            return "GAME_PLAYING";
-        case GAME_BRIEFING:
-            return "GAME_BRIEFING";
-        case GAME_EDITOR:
-            return "GAME_EDITOR";
-        case GAME_NEW_MAP_EDITOR:
-            return "GAME_NEW_MAP_EDITOR";
-        case GAME_OPTIONS:
-            return "GAME_OPTIONS";
-        case GAME_REGION:
-            return "GAME_REGION";
-        case GAME_SELECT_HOUSE:
-            return "GAME_SELECT_HOUSE";
-        case GAME_TELLHOUSE:
-            return "GAME_TELLHOUSE";
-        case GAME_WINNING:
-            return "GAME_WINNING";
-        case GAME_WINBRIEF:
-            return "GAME_WINBRIEF";
-        case GAME_LOSEBRIEF:
-            return "GAME_LOSEBRIEF";
-        case GAME_LOSING:
-            return "GAME_LOSING";
-        case GAME_SETUPSKIRMISH:
-            return "GAME_SETUPSKIRMISH";
-        case GAME_CREDITS:
-            return "GAME_CREDITS";
-        case GAME_MISSIONSELECT:
-            return "GAME_MISSIONSELECT";
-        case GAME_SCORING:
-            return "GAME_SCORING";
-        case GAME_VIDEO:
-            return "GAME_VIDEO";
-        default:
-            Logger::fatal( eLogComponent::COMP_GAMESTATE , "operator[]", "State index {} is out of range", state);
-            d2tm_assert(false);
-            break;
-    }
-    return "";
-}
+#include <stdexcept>
 
 const char *gameStateToString(eGameState state)
 {

@@ -321,7 +321,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
-                m_stateTransitions->setNextStateWithFade(GAME_MENU);
+                m_stateTransitions->setNextStateWithFade(eGameState::MENU);
             })
             .build();
 
@@ -373,7 +373,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             .withTheme(theme)
             .withKind(GuiRenderKind::OPAQUE_WITH_BORDER)
             .onClick([this]() {
-                m_stateTransitions->setNextStateWithFade(GAME_NEW_MAP_EDITOR);
+                m_stateTransitions->setNextStateWithFade(eGameState::NEW_MAP_EDITOR);
             })
             .build();
 
@@ -1012,7 +1012,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
 
     auto drawManager = m_services->drawManager;
     drawManager->missionInit();
-    m_stateTransitions->setNextStateWithFade(GAME_PLAYING);
+    m_stateTransitions->setNextStateWithFade(eGameState::PLAYING);
 }
 
 eGameStateType cSetupSkirmishState::getType()
@@ -1538,7 +1538,7 @@ void cSetupSkirmishState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 {
     if (event.isType(eKeyEventType::PRESSED)) {
         if (event.isAction(eKeyAction::MENU_BACK)) {
-            m_stateTransitions->setNextStateWithFade(GAME_MENU);
+            m_stateTransitions->setNextStateWithFade(eGameState::MENU);
         }
         if (event.isAction(eKeyAction::SCROLL_LEFT)) {
             moveCursor(-1, 0);

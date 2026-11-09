@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "include/eGameState.h"
+
 class cMapCamera;
 
 /**
@@ -35,7 +37,7 @@ public:
     // Gets the current Y offset for the shake effect.
     int getY() const;
     // Updates the shake offsets based on the current state and camera zoom.
-    void update(int state, int playingState, cMapCamera *mapCamera);
+    void update(eGameState state, eGameState playingState, cMapCamera *mapCamera);
 
 private:
     int m_shakeX;
