@@ -24,6 +24,7 @@
 #include "gameobjects/map/cMap.h"
 #include <algorithm>
 #include "include/cAssert.h"
+#include "controls/cKeyboardEvent.h"
 
 namespace {
 constexpr auto kMapBoundaryScrollSpeed = 5.0f;

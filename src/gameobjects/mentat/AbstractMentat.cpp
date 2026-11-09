@@ -36,6 +36,7 @@
 #include "context/TextContext.hpp"
 #include "include/Texture.hpp"
 #include "utils/cRectangle.h"
+#include "controls/sMouseEvent.h"
 
 // The mentat screen artwork was designed for 640x480. On higher resolutions it
 // is centered, so the offset is half the extra pixels on each axis.

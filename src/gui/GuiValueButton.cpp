@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include "include/cAssert.h"
+#include "controls/sMouseEvent.h"
 
 GuiValueButton::GuiValueButton(SDLDrawer* drawer, const cRectangle& rect, int initialValue, int stepValue, int minValue, int maxValue)
     : GuiObject(drawer, rect)

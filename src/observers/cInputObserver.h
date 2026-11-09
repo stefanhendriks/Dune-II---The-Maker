@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "controls/cKeyboardEvent.h"
-#include "controls/sMouseEvent.h"
+class cKeyboardEvent;
+struct s_MouseEvent;
 
 class cInputObserver {
 public:

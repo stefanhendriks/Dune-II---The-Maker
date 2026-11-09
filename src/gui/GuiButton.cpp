@@ -19,6 +19,7 @@
 #include "drawers/cTextDrawer.h"
 #include "game/cGameSettings.h"
 #include "include/cAssert.h"
+#include "controls/sMouseEvent.h"
 
 GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::string &btnText)
     : GuiObject(drawer, rect)

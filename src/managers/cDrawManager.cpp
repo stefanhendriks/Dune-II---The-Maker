@@ -55,6 +55,7 @@
 #include "drawers/cPlaceItDrawer.h"
 #include "game/cGameSettings.h"
 #include "include/Texture.hpp"
+#include "controls/cKeyboardEvent.h"
 
 cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *services) :
     m_sidebarColor(Color{214, 149, 20,255}),

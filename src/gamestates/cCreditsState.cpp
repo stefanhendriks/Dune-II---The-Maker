@@ -32,6 +32,8 @@
 #include "context/TextContext.hpp"
 #include "include/sGameServices.h"
 #include "include/eGameState.h"
+#include "controls/cKeyboardEvent.h"
+#include "controls/sMouseEvent.h"
 
 cCreditsState::cCreditsState(sGameServices* services) :
     cGameState(services),
