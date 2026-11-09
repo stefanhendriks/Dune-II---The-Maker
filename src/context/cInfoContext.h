@@ -15,23 +15,25 @@
 
 #pragma once
 
-#include <stdexcept>
 #include <memory>
 
-#include "gameobjects/particles/cParticleInfos.h"
-#include "gameobjects/units/cUnitInfos.h"
-#include "gameobjects/structures/cStructureInfo.h"
-#include "gameobjects/projectiles/cBulletInfos.h"
-#include "gameobjects/cSpecialInfos.h"
-#include "gameobjects/cUpgradeInfo.h"
-#include "gameobjects/sTerrainInfo.h"
-#include "context/cInfoContextCreator.h"
-
-class SDLDrawer;
+class cParticleInfos;
+class cStructureInfos;
+class cBulletInfos;
+class cSpecialInfos;
+class cUpgradeInfos;
+class cUnitInfos;
+struct s_TerrainInfo;
+struct s_ParticleInfo;
+struct s_StructureInfo;
+struct s_BulletInfo;
+struct s_SpecialInfo;
+struct s_UpgradeInfo;
+struct s_UnitInfo;
 
 class cInfoContext {
 public:
-    cInfoContext() = default;
+    cInfoContext();
     ~cInfoContext();
 
     void setParticleInfos(std::unique_ptr<cParticleInfos> particleInfos);
