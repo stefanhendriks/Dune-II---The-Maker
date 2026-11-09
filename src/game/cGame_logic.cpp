@@ -111,6 +111,8 @@
 #include "gamestates/cCreatorState.h"
 #include "context/TextContext.hpp"
 #include "drawers/cMouseDrawer.h"
+#include "context/cInfoContextCreator.h"
+#include "context/GraphicsContext.hpp"
 
 namespace {
 bool isConsoleToggleKey(const cKeyboardEvent &event) {

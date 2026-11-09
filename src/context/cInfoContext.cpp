@@ -14,6 +14,9 @@
  */
 
 #include "context/cInfoContext.h"
+
+#include <stdexcept>
+
 #include "gameobjects/projectiles/cBulletInfos.h"
 #include "gameobjects/particles/cParticleInfos.h"
 #include "gameobjects/structures/cStructureInfo.h"
@@ -21,6 +24,8 @@
 #include "gameobjects/cUpgradeInfo.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "gameobjects/sTerrainInfo.h"
+
+cInfoContext::cInfoContext() = default;
 
 cInfoContext::~cInfoContext() {
 }
