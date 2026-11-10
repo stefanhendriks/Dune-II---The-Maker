@@ -176,6 +176,7 @@ set(D2TM_SOURCES
     utils/Log.cpp
     utils/RNG.cpp
     utils/SfxTrackAllocator.cpp
+    utils/AssetNameValidator.cpp
     utils/texture_utils.cpp
 )
 
