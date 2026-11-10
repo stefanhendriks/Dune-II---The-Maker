@@ -19,6 +19,8 @@
 #include "utils/Log.h"
 
 #include "utils/cDataPack.hpp"
+#include "utils/AssetNameValidator.h"
+#include "data/AssetNameTables.h"
 #include "utils/SfxTrackAllocator.h"
 #include <format>
 
@@ -50,6 +52,7 @@ public:
         }
         else {
             Logger::info(COMP_SOUND, "Initialization", "Hooked audiofile: {}", audiofile);
+            AssetNameValidator::validateAndLog("gfxaudio", assetnames::gfxaudio, gfxaudio->getNames());
         }
     }
 

@@ -16,6 +16,8 @@
 #include "context/ContextCreator.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"
+#include "utils/AssetNameValidator.h"
+#include "data/AssetNameTables.h"
 #include "utils/cFileValidator.h"
 #include "context/GraphicsContext.hpp"
 #include "context/TextContext.hpp"
@@ -54,6 +56,7 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
     }
     else {
         Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXINTER));
+        AssetNameValidator::validateAndLog("gfxinter", assetnames::gfxinter, gfxinter->getNames());
     }
 
     gfxdata = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXDATA));
@@ -62,6 +65,7 @@ ContextCreator::ContextCreator(SDL_Renderer *renderer, cFileValidator *settingsV
     }
     else {
         Logger::info(COMP_INIT, "Load data", "Hooked datafile: {}", settingsValidator->getName(eGameDirFileName::GFXDATA));
+        AssetNameValidator::validateAndLog("gfxdata", assetnames::gfxdata, gfxdata->getNames());
     }
 
     gfxeditor = std::make_shared<Graphics>(renderer,settingsValidator->getFullName(eGameDirFileName::GFXEDITOR));
