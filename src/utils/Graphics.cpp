@@ -75,3 +75,8 @@ int Graphics::getNumberOfFiles()
 {
     return dataPack->getNumberOfFile();
 }
+
+std::vector<std::string> Graphics::getNames() const
+{
+    return dataPack->getNames();
+}

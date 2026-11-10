@@ -22,6 +22,7 @@
 #include <memory>
 #include <SDL3/SDL.h>
 #include <unordered_map>
+#include <vector>
 
 // **********************
 //
@@ -64,6 +65,8 @@ public:
     MIX_Audio *getAudio(int index);
     // return audio from his name
     MIX_Audio *getAudio(const std::string &name);
+    // name of every file in the pack, in index order
+    std::vector<std::string> getNames() const;
     // for debug
     void displayPackFile();
     int getNumberOfFile() const;
