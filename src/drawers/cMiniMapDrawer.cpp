@@ -42,8 +42,8 @@
 //#include <iostream>
 
 #include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "gameobjects/particles/cParticle.h"
-#include "utils/RNG.hpp"
 
 cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
@@ -466,10 +466,10 @@ void cMiniMapDrawer::onMouseClickedLeft(const s_MouseEvent &event) {
 
             sSelectedUnitTypes selectedUnitTypes = m_player->getSelectedUnitTypes();
             if (selectedUnitTypes.hasInfantry) {
-                m_audioContext->playSound(SOUND_MOVINGOUT + RNG::rnd(2));
+                m_audioContext->playSound(soundpools::infantryAcknowledge.pick());
             }
             if (selectedUnitTypes.hasVehicles) {
-                m_audioContext->playSound(SOUND_ACKNOWLEDGED + RNG::rnd(3));
+                m_audioContext->playSound(soundpools::vehicleAcknowledge.pick());
             }
         }
     }

@@ -18,10 +18,10 @@
 #include "context/MusicJukeBox.hpp"
 #include "game/cGameSettings.h"
 #include "utils/cSoundPlayer.h"
-#include "utils/RNG.hpp"
 #include "utils/Log.h"
 #include "include/definitions.h"
 #include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "include/cAssert.h"
 
 #include <format>
@@ -114,16 +114,16 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
 
     int sampleId = MIDI_MENU;
     if (iType == eMusicType::WIN) {
-        sampleId = MIDI_WIN01 + RNG::rnd(3);
+        sampleId = soundpools::musicWin.pick();
     }
     else if (iType == eMusicType::LOSE) {
-        sampleId = MIDI_LOSE01 + RNG::rnd(6);
+        sampleId = soundpools::musicLose.pick();
     }
     else if (iType == eMusicType::ATTACK) {
-        sampleId = MIDI_ATTACK01 + RNG::rnd(6);
+        sampleId = soundpools::musicAttack.pick();
     }
     else if (iType == eMusicType::PEACE) {
-        sampleId = MIDI_BUILDING01 + RNG::rnd(9);
+        sampleId = soundpools::musicPeace.pick();
     }
     else if (iType == eMusicType::MENU) {
         sampleId = MIDI_MENU;
