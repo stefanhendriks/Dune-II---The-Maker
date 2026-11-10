@@ -25,6 +25,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_d2tm_math.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_SfxTrackAllocator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_SoundPool.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_MusicJukeBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_Color.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cEnumArray.cpp
