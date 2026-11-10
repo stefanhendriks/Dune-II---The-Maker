@@ -1,0 +1,49 @@
+/**
+ * @file SoundPool.hpp
+ *
+ * Dune 2 - The Maker
+ *
+ * @author Stefan Hendriks & the D2TM Team
+ * @www http://www.dune2themaker.com
+ * @copyright Copyright (c) 2002 - 2026 Stefan Hendriks and contributors
+ * @license This software is released under the MIT License. See LICENSE.md.
+ *
+ * Note: Dune 2 is a trademark of Westwood Studios/Electronic Arts.
+ *
+ * This is a non-commercial educational project.
+ */
+
+#pragma once
+
+#include "utils/RNG.hpp"
+
+#include <span>
+
+/**
+ * A named set of interchangeable sound ids (variants of one sound).
+ * Ids are listed explicitly, so no assumption is made about their adjacency in the pack.
+ */
+class SoundPool
+{
+public:
+    constexpr explicit SoundPool(std::span<const int> ids) : m_ids(ids) {}
+
+    constexpr int size() const {
+        return static_cast<int>(m_ids.size());
+    }
+
+    // the variant at position `index`, wrapped around when index is out of range; -1 when the pool is empty
+    constexpr int at(int index) const {
+        if (m_ids.empty()) return -1;
+        const int count = size();
+        return m_ids[((index % count) + count) % count];
+    }
+
+    // a random variant; -1 when the pool is empty
+    int pick() const {
+        return at(RNG::rnd(size()));
+    }
+
+private:
+    std::span<const int> m_ids;
+};
