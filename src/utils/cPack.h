@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <unordered_map>
 #include <algorithm>
 
 
@@ -55,6 +56,7 @@ public:
     }
 private:
     std::vector<FileInPack> fileInPack;
+    std::unordered_map<std::string, int> nameToIndex; // first index wins on duplicate names
     bool readHeader();
     void readFileLines();
     void readDataIntoMemory();
