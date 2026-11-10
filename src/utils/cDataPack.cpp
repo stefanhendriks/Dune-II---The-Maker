@@ -50,6 +50,11 @@ SDL_Surface *DataPack::getSurface(const std::string &name)
     return this->getSurface(index);
 }
 
+std::vector<std::string> DataPack::getNames() const
+{
+    return reader->getNames();
+}
+
 int DataPack::getIndexFromName(const std::string &name)
 {
     return reader->getIndexFromName(name);

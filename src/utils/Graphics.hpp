@@ -19,6 +19,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 class Texture;
 
@@ -43,6 +44,8 @@ public:
     Texture *getTexture(const std::string &name);
     // return number of file in Pack
     int getNumberOfFiles();
+    // name of every file in the pack, in index order
+    std::vector<std::string> getNames() const;
 private:
     SDL_Renderer *renderer;
     std::unique_ptr<DataPack> dataPack;
