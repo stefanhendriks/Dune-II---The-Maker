@@ -32,6 +32,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_RNG.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cFileValidator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPack.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_AssetNameValidator.cpp
 )
 
 # Production source files the tests depend on.
@@ -65,6 +66,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/context/MusicJukeBox.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cFileValidator.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cPack.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/AssetNameValidator.cpp
 )
 
 add_executable(d2tm_tests
