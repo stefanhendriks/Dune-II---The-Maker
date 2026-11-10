@@ -26,6 +26,7 @@
 class SoundPool
 {
 public:
+    // non-owning: the ids must have static storage duration (e.g. a namespace-scope constexpr array)
     constexpr explicit SoundPool(std::span<const int> ids) : m_ids(ids) {}
 
     constexpr int size() const {
