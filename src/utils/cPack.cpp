@@ -96,6 +96,7 @@ void ReaderPack::readFileLines()
         tmp.extension = std::string(rawExt.data());
         tmp.fileSize = sizeFile;
         tmp.fileOffset = offsetFile;
+        nameToIndex.emplace(tmp.fileId, static_cast<int>(fileInPack.size()));
         fileInPack.push_back(tmp);
     }
 }
@@ -126,14 +127,8 @@ bool ReaderPack::readHeader()
 
 int ReaderPack::getIndexFromName(const std::string &fileId) const
 {
-    auto it = std::find_if( fileInPack.begin(), fileInPack.end(),
-    [&fileId](const FileInPack& element) {
-        return element.fileId == fileId;
-    } );
-    if (it != fileInPack.end())
-        return std::distance(fileInPack.begin(), it);
-    else
-        return -1;
+    auto it = nameToIndex.find(fileId);
+    return it != nameToIndex.end() ? it->second : -1;
 }
 
 SDL_IOStream *ReaderPack::getData(unsigned int index)
