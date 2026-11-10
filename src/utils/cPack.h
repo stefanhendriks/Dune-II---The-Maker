@@ -48,6 +48,8 @@ public:
     SDL_IOStream *getData(unsigned int index);
     //! get index from ressource named fileId
     int getIndexFromName(const std::string &fileId) const;
+    //! get the name of every file in the pack, in index order
+    std::vector<std::string> getNames() const;
     //! print all files in Pack
     void displayPackFile();
     //! get the number of files in the pack
