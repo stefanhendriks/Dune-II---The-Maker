@@ -37,6 +37,7 @@
 #include <cmath>
 
 #include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 #include "context/GameContext.hpp"
@@ -362,7 +363,7 @@ void cBullet::arrivedAtDestinationLogic()
                 // HACK HACK: produce sounds here... should be taken from bullet data structure; or via events
                 // so that elsewhere this can be handled.
                 if (RNG::rnd(100) < 35) {
-                    playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, SOUND_TANKDIE + RNG::rnd(2),
+                    playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, soundpools::tankDie.pick(),
                                                ABS_length(m_mapCamera->getViewportCenterX(), m_mapCamera->getViewportCenterY(),
                                                           m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(cellToDamage),
                                                           m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(cellToDamage)));
