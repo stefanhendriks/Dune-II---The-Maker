@@ -131,6 +131,16 @@ int ReaderPack::getIndexFromName(const std::string &fileId) const
     return it != nameToIndex.end() ? it->second : -1;
 }
 
+std::vector<std::string> ReaderPack::getNames() const
+{
+    std::vector<std::string> names;
+    names.reserve(fileInPack.size());
+    for (const FileInPack &file : fileInPack) {
+        names.push_back(file.fileId);
+    }
+    return names;
+}
+
 SDL_IOStream *ReaderPack::getData(unsigned int index)
 {
     if (index >= fileInPack.size()) {
