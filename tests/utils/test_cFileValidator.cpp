@@ -99,11 +99,13 @@ TEST_CASE("cFileValidator - a datapack is found by its base name", "[filevalidat
     REQUIRE(validator.fileExists());
 }
 
-TEST_CASE("cFileValidator - the exact datapack name still works and wins over longer names", "[filevalidator]")
+TEST_CASE("cFileValidator - the exact datapack name wins over other matches, also those that sort before it", "[filevalidator]")
 {
     TempDir dir("d2tm_filevalidator_exact");
     dir.write("sdl_data.dat");
     dir.write("sdl_data_5741.dat");
+    dir.write("sdl_data (1).dat");
+    dir.write("sdl_data-old.dat");
 
     cFileValidator validator(dir.path.string());
     validator.addResources({{eGameDirFileName::GFXDATA, "sdl_data.dat"}});
