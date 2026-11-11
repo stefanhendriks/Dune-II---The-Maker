@@ -50,7 +50,6 @@
 
 #include <algorithm>
 
-#include "data/Sounds.h"
 #include "data/SoundPools.h"
 #include "context/GraphicsContext.hpp"
 #include "gameobjects/cSpecialInfos.h"
