@@ -53,7 +53,11 @@ AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSetti
     d2tm_assert(m_settings != nullptr);
     m_jukeBox->createRepertoryDirectories();
     const auto lookup = [this](std::string_view name) {
-        return m_soundPlayer->getIndexFromName(std::string(name));
+        const int index = m_soundPlayer->getIndexFromName(std::string(name));
+        if (index < 0) {
+            Logger::error(COMP_SOUND, "AudioContext", "sound '{}' not found in the audio pack", name);
+        }
+        return index;
     };
     const int missing = soundpools::resolve(lookup) + sounds::resolve(lookup);
     if (missing > 0) {
