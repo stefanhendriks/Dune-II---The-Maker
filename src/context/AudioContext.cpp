@@ -52,18 +52,17 @@ AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSetti
     d2tm_assert(m_soundPlayer != nullptr);
     d2tm_assert(m_settings != nullptr);
     m_jukeBox->createRepertoryDirectories();
-    const auto lookup = [this](std::string_view name) {
-        const int index = m_soundPlayer->getIndexFromName(std::string(name));
-        if (index < 0) {
-            Logger::error(COMP_SOUND, "AudioContext", "sound '{}' not found in the audio pack", name);
-        }
-        return index;
-    };
+    const auto lookup = [this](std::string_view name) { return indexOf(name); };
     const int missing = soundpools::resolve(lookup) + sounds::resolve(lookup);
     if (missing > 0) {
         Logger::error(COMP_SOUND, "AudioContext", "{} sound names not found in the audio pack", missing);
     }
-    m_newMusic.archiveTrack = sounds::menuMusic; // only known once resolved
+    m_menuMusic = indexOf("MIDI_MENU");
+    m_scenarioMusic = indexOf("MIDI_SCENARIO");
+    m_mentatMusicAtreides = indexOf("MIDI_MENTAT_ATR");
+    m_mentatMusicHarkonnen = indexOf("MIDI_MENTAT_HAR");
+    m_mentatMusicOrdos = indexOf("MIDI_MENTAT_ORD");
+    m_newMusic.archiveTrack = m_menuMusic; // only known once resolved
 }
 
 AudioContext::~AudioContext() = default;
@@ -71,6 +70,15 @@ AudioContext::~AudioContext() = default;
 cSoundPlayer* AudioContext::getSoundPlayer() const
 {
     return m_soundPlayer.get();
+}
+
+int AudioContext::indexOf(std::string_view name) const
+{
+    const int index = m_soundPlayer->getIndexFromName(std::string(name));
+    if (index < 0) {
+        Logger::error(COMP_SOUND, "AudioContext", "sound '{}' not found in the audio pack", name);
+    }
+    return index;
 }
 
 void AudioContext::playSound(int sampleId) const
@@ -131,7 +139,7 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
         return false;
     }
 
-    int sampleId = sounds::menuMusic;
+    int sampleId = m_menuMusic;
     if (iType == eMusicType::WIN) {
         sampleId = soundpools::musicWin.pick();
     }
@@ -145,23 +153,23 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
         sampleId = soundpools::musicPeace.pick();
     }
     else if (iType == eMusicType::MENU) {
-        sampleId = sounds::menuMusic;
+        sampleId = m_menuMusic;
     }
     else if (iType == eMusicType::CONQUEST) {
-        sampleId = sounds::scenarioMusic;
+        sampleId = m_scenarioMusic;
     }
     else if (iType == eMusicType::BRIEFING) {
         if (humanHouse == ATREIDES) {
-            sampleId = sounds::mentatMusicAtreides;
+            sampleId = m_mentatMusicAtreides;
         }
         else if (humanHouse == HARKONNEN) {
-            sampleId = sounds::mentatMusicHarkonnen;
+            sampleId = m_mentatMusicHarkonnen;
         }
         else if (humanHouse == ORDOS) {
-            sampleId = sounds::mentatMusicOrdos;
+            sampleId = m_mentatMusicOrdos;
         }
         else if (humanHouse == SARDAUKAR) {
-            sampleId = sounds::mentatMusicHarkonnen; // no @SARDAUKAR srd music, so use harkonnen one
+            sampleId = m_mentatMusicHarkonnen; // no @SARDAUKAR srd music, so use harkonnen one
         }
         else {
             d2tm_assert(false && "Undefined house.");

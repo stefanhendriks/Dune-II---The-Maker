@@ -24,11 +24,6 @@
 // -1 means "not resolved / not in the pack": playing it is silently skipped.
 namespace sounds {
 
-inline int menuMusic = -1;
-inline int scenarioMusic = -1;
-inline int mentatMusicAtreides = -1;
-inline int mentatMusicHarkonnen = -1;
-inline int mentatMusicOrdos = -1;
 inline int reporting = -1;
 inline int yesSir = -1;
 inline int place = -1;
@@ -58,12 +53,7 @@ struct Entry {
     int *id;
 };
 
-inline const std::array<Entry, 28> entries = {{
-    {"MIDI_MENU", &menuMusic},
-    {"MIDI_SCENARIO", &scenarioMusic},
-    {"MIDI_MENTAT_ATR", &mentatMusicAtreides},
-    {"MIDI_MENTAT_HAR", &mentatMusicHarkonnen},
-    {"MIDI_MENTAT_ORD", &mentatMusicOrdos},
+inline const std::array<Entry, 23> entries = {{
     {"SOUND_REPORTING", &reporting},
     {"SOUND_YESSIR", &yesSir},
     {"SOUND_PLACE", &place},
