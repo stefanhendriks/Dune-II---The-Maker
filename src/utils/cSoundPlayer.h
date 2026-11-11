@@ -36,8 +36,8 @@ public:
     void playSound(int sampleId); // Maximum volume
     void playSound(int sampleId, int vol);
 
-    // Pass the sample ID of the Atreides voice
-    void playVoice(int sampleId, int house);
+    // Pass the sample ID of the voice line of the house that should be heard
+    void playVoice(int sampleId);
     void playMusic(int sampleId);
     // Returns false when the file could not be loaded; the caller decides on a fallback.
     bool playMusicFile(const std::string &path);

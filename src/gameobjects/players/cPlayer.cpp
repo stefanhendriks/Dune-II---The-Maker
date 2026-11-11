@@ -51,7 +51,7 @@
 #include <algorithm>
 
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "context/GraphicsContext.hpp"
 #include "gameobjects/cSpecialInfos.h"
 
@@ -2072,7 +2072,7 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
 
     bool discoveringPlayerIsSameTeamAsThisPlayer = isSameTeamAs(event.player);
 
-    int voiceId = -1;
+    const SoundPool *voice = nullptr;
 
     // when state of music is not attacking, do attacking stuff and say "Warning enemy unit approaching
     bool triggerMusic = false;
@@ -2086,10 +2086,10 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
             if (discoveringPlayerIsSameTeamAsThisPlayer && !isSameTeamAs(pUnit->getPlayer())) {
                 triggerMusic = true;
                 if (pUnit->iType == SANDWORM) {
-                    voiceId = SOUND_VOICE_10_ATR; // wormsign
+                    voice = &soundpools::voice10; // wormsign
                 }
                 else {
-                    voiceId = SOUND_VOICE_09_ATR; // enemy unit approaching
+                    voice = &soundpools::voice09; // enemy unit approaching
                 }
             }
         }
@@ -2118,7 +2118,7 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
         }
     }
 
-    bool hasVoiceToPlay = isHuman() && voiceId > -1; // don't warn when already in "attack music mode"
+    bool hasVoiceToPlay = isHuman() && voice != nullptr; // don't warn when already in "attack music mode"
 
     bool mayPlayVoice = true;
     if (triggerMusic) {
@@ -2132,7 +2132,7 @@ void cPlayer::onEntityDiscovered(const CommonEvent &event)
     }
 
     if (mayPlayVoice && hasVoiceToPlay) {
-        m_audioContext->playVoice(voiceId, getHouse());
+        m_audioContext->playVoice(*voice, getHouse());
     }
 }
 

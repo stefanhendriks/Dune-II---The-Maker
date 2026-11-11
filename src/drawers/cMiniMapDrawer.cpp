@@ -191,7 +191,7 @@ void cMiniMapDrawer::think()
             // go to state power down (not enough power)
             m_status = eMinimapStatus::POWERDOWN;
             // "Radar de-activated""
-            m_audioContext->playVoice(SOUND_VOICE_04_ATR, m_player->getHouse());
+            m_audioContext->playVoice(soundpools::voice04, m_player->getHouse());
         }
     }
 
@@ -202,7 +202,7 @@ void cMiniMapDrawer::think()
             m_status = eMinimapStatus::POWERUP;
             m_audioContext->playSound(sounds::radar);
             // "Radar activated"
-            m_audioContext->playVoice(SOUND_VOICE_03_ATR, m_player->getHouse());
+            m_audioContext->playVoice(soundpools::voice03, m_player->getHouse());
         }
     }
 

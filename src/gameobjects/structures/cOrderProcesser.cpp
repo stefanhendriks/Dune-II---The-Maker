@@ -35,7 +35,7 @@
 #include "include/sGameServices.h"
 #include "context/AudioContext.hpp"
 #include "utils/cStructureUtils.h"
-#include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "sidebar/cBuildingList.h"
 #include "sidebar/cSideBar.h"
 #include <algorithm>
@@ -111,30 +111,30 @@ void cOrderProcesser::playTMinusSound(int seconds)
 
     if (seconds == 0) {
         if (m_player->getHouse() == ATREIDES) {
-            soundIdToPlay = SOUND_VOICE_06_ATR;
+            soundIdToPlay = soundpools::voice06.at(0);
         }
         else if (m_player->getHouse() == HARKONNEN) {
-            soundIdToPlay = SOUND_VOICE_06_HAR;
+            soundIdToPlay = soundpools::voice06.at(1);
         }
         else if (m_player->getHouse() == SARDAUKAR) {
-            soundIdToPlay = SOUND_VOICE_06_ATR;    // no @SARDAUKAR srd voice yet, matches the atreides fallback used for voice lines elsewhere
+            soundIdToPlay = soundpools::voice06.at(0);    // no @SARDAUKAR srd voice yet, matches the atreides fallback used for voice lines elsewhere
         }
         else if (m_player->getHouse() == ORDOS) {
-            soundIdToPlay = SOUND_VOICE_06_ORD;
+            soundIdToPlay = soundpools::voice06.at(2);
         }
     }
     else {
         if (m_player->getHouse() == ATREIDES) {
-            soundIdToPlay = (SOUND_ATR_S1 + (seconds - 1));
+            soundIdToPlay = soundpools::countdownAtreides.at(seconds - 1);
         }
         else if (m_player->getHouse() == HARKONNEN) {
-            soundIdToPlay = (SOUND_HAR_S1 + (seconds - 1));
+            soundIdToPlay = soundpools::countdownHarkonnen.at(seconds - 1);
         }
         else if (m_player->getHouse() == ORDOS) {
-            soundIdToPlay = (SOUND_ORD_S1 + (seconds - 1));
+            soundIdToPlay = soundpools::countdownOrdos.at(seconds - 1);
         }
         else if (m_player->getHouse() == SARDAUKAR) {
-            soundIdToPlay = (SOUND_ATR_S1 + (seconds - 1));    // no @SARDAUKAR srd voice yet, matches the atreides fallback used for voice lines elsewhere
+            soundIdToPlay = soundpools::countdownAtreides.at(seconds - 1);    // no @SARDAUKAR srd voice yet, matches the atreides fallback used for voice lines elsewhere
         }
     }
 

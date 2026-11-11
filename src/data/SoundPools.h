@@ -38,6 +38,20 @@ inline constexpr std::array<std::string_view, 3> vehicleAcknowledge = {"SOUND_AC
 inline constexpr std::array<std::string_view, 5> infantryDie = {"SOUND_DIE01", "SOUND_DIE02", "SOUND_DIE03", "SOUND_DIE04", "SOUND_DIE05"};
 inline constexpr std::array<std::string_view, 2> tankDie = {"SOUND_TANKDIE1", "SOUND_TANKDIE2"};
 inline constexpr std::array<std::string_view, 2> structureCrumble = {"SOUND_CRUMBLE01", "SOUND_CRUMBLE02"};
+// Voice lines: one entry per house, in the order Atreides, Harkonnen, Ordos (see AudioContext::playVoice).
+inline constexpr std::array<std::string_view, 3> voice01 = {"SOUND_VOICE_01_ATR", "SOUND_VOICE_01_HAR", "SOUND_VOICE_01_ORD"};
+inline constexpr std::array<std::string_view, 3> voice02 = {"SOUND_VOICE_02_ATR", "SOUND_VOICE_02_HAR", "SOUND_VOICE_02_ORD"};
+inline constexpr std::array<std::string_view, 3> voice03 = {"SOUND_VOICE_03_ATR", "SOUND_VOICE_03_HAR", "SOUND_VOICE_03_ORD"};
+inline constexpr std::array<std::string_view, 3> voice04 = {"SOUND_VOICE_04_ATR", "SOUND_VOICE_04_HAR", "SOUND_VOICE_04_ORD"};
+inline constexpr std::array<std::string_view, 3> voice05 = {"SOUND_VOICE_05_ATR", "SOUND_VOICE_05_HAR", "SOUND_VOICE_05_ORD"};
+inline constexpr std::array<std::string_view, 3> voice06 = {"SOUND_VOICE_06_ATR", "SOUND_VOICE_06_HAR", "SOUND_VOICE_06_ORD"};
+inline constexpr std::array<std::string_view, 3> voice07 = {"SOUND_VOICE_07_ATR", "SOUND_VOICE_07_HAR", "SOUND_VOICE_07_ORD"};
+inline constexpr std::array<std::string_view, 3> voice08 = {"SOUND_VOICE_08_ATR", "SOUND_VOICE_08_HAR", "SOUND_VOICE_08_ORD"};
+inline constexpr std::array<std::string_view, 3> voice09 = {"SOUND_VOICE_09_ATR", "SOUND_VOICE_09_HAR", "SOUND_VOICE_09_ORD"};
+inline constexpr std::array<std::string_view, 3> voice10 = {"SOUND_VOICE_10_ATR", "SOUND_VOICE_10_HAR", "SOUND_VOICE_10_ORD"};
+inline constexpr std::array<std::string_view, 5> countdownAtreides = {"SOUND_ATR_S1", "SOUND_ATR_S2", "SOUND_ATR_S3", "SOUND_ATR_S4", "SOUND_ATR_S5"};
+inline constexpr std::array<std::string_view, 5> countdownHarkonnen = {"SOUND_HAR_S1", "SOUND_HAR_S2", "SOUND_HAR_S3", "SOUND_HAR_S4", "SOUND_HAR_S5"};
+inline constexpr std::array<std::string_view, 5> countdownOrdos = {"SOUND_ORD_S1", "SOUND_ORD_S2", "SOUND_ORD_S3", "SOUND_ORD_S4", "SOUND_ORD_S5"};
 } // namespace names
 
 // Pack indices. Written only once, by resolve() from the AudioContext constructor; read-only afterwards.
@@ -51,6 +65,19 @@ inline std::array<int, 3> vehicleAcknowledge{};
 inline std::array<int, 5> infantryDie{};
 inline std::array<int, 2> tankDie{};
 inline std::array<int, 2> structureCrumble{};
+inline std::array<int, 3> voice01{};
+inline std::array<int, 3> voice02{};
+inline std::array<int, 3> voice03{};
+inline std::array<int, 3> voice04{};
+inline std::array<int, 3> voice05{};
+inline std::array<int, 3> voice06{};
+inline std::array<int, 3> voice07{};
+inline std::array<int, 3> voice08{};
+inline std::array<int, 3> voice09{};
+inline std::array<int, 3> voice10{};
+inline std::array<int, 5> countdownAtreides{};
+inline std::array<int, 5> countdownHarkonnen{};
+inline std::array<int, 5> countdownOrdos{};
 } // namespace ids
 
 inline constexpr SoundPool musicWin{ids::musicWin};
@@ -62,6 +89,19 @@ inline constexpr SoundPool vehicleAcknowledge{ids::vehicleAcknowledge};
 inline constexpr SoundPool infantryDie{ids::infantryDie};
 inline constexpr SoundPool tankDie{ids::tankDie};
 inline constexpr SoundPool structureCrumble{ids::structureCrumble};
+inline constexpr SoundPool voice01{ids::voice01};
+inline constexpr SoundPool voice02{ids::voice02};
+inline constexpr SoundPool voice03{ids::voice03};
+inline constexpr SoundPool voice04{ids::voice04};
+inline constexpr SoundPool voice05{ids::voice05};
+inline constexpr SoundPool voice06{ids::voice06};
+inline constexpr SoundPool voice07{ids::voice07};
+inline constexpr SoundPool voice08{ids::voice08};
+inline constexpr SoundPool voice09{ids::voice09};
+inline constexpr SoundPool voice10{ids::voice10};
+inline constexpr SoundPool countdownAtreides{ids::countdownAtreides};
+inline constexpr SoundPool countdownHarkonnen{ids::countdownHarkonnen};
+inline constexpr SoundPool countdownOrdos{ids::countdownOrdos};
 
 // Looks every pool name up in the audio pack. Returns how many names were not found.
 inline int resolve(const std::function<int(std::string_view)> &lookup) {
@@ -75,6 +115,19 @@ inline int resolve(const std::function<int(std::string_view)> &lookup) {
     missing += resolveSoundIds(names::infantryDie, ids::infantryDie, lookup);
     missing += resolveSoundIds(names::tankDie, ids::tankDie, lookup);
     missing += resolveSoundIds(names::structureCrumble, ids::structureCrumble, lookup);
+    missing += resolveSoundIds(names::voice01, ids::voice01, lookup);
+    missing += resolveSoundIds(names::voice02, ids::voice02, lookup);
+    missing += resolveSoundIds(names::voice03, ids::voice03, lookup);
+    missing += resolveSoundIds(names::voice04, ids::voice04, lookup);
+    missing += resolveSoundIds(names::voice05, ids::voice05, lookup);
+    missing += resolveSoundIds(names::voice06, ids::voice06, lookup);
+    missing += resolveSoundIds(names::voice07, ids::voice07, lookup);
+    missing += resolveSoundIds(names::voice08, ids::voice08, lookup);
+    missing += resolveSoundIds(names::voice09, ids::voice09, lookup);
+    missing += resolveSoundIds(names::voice10, ids::voice10, lookup);
+    missing += resolveSoundIds(names::countdownAtreides, ids::countdownAtreides, lookup);
+    missing += resolveSoundIds(names::countdownHarkonnen, ids::countdownHarkonnen, lookup);
+    missing += resolveSoundIds(names::countdownOrdos, ids::countdownOrdos, lookup);
     return missing;
 }
 

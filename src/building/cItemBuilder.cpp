@@ -43,7 +43,7 @@
 
 #include "include/cAssert.h"
 
-#include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "gameobjects/cSpecialInfos.h"
 #include "controls/cKeyboardEvent.h"
 #include <algorithm>
@@ -253,7 +253,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
         // play voice when placeIt is false`
         if (!item->shouldPlaceIt()) {
             if (m_player->isHuman()) {
-                m_audioContext->playVoice(SOUND_VOICE_01_ATR, m_player->getHouse()); // "Construction Complete"
+                m_audioContext->playVoice(soundpools::voice01, m_player->getHouse()); // "Construction Complete"
             }
             item->setPlaceIt(true);
 

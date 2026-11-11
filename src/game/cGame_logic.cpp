@@ -106,7 +106,7 @@
 #include <filesystem>
 #include <string_view>
 
-#include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "include/sGameServices.h"
 #include "game/cNotificationArea.h"
 #include "gamestates/cCreatorState.h"
@@ -482,7 +482,7 @@ void cGame::setMissionWon()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_audioContext->playVoice(SOUND_VOICE_07_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
+    m_audioContext->playVoice(soundpools::voice07, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
     playMusicByType(eMusicType::WIN);
 
@@ -505,7 +505,7 @@ void cGame::setMissionLost()
     m_screenShake->reset();
     m_mouse->setTile(MOUSE_NORMAL);
 
-    m_audioContext->playVoice(SOUND_VOICE_08_ATR, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
+    m_audioContext->playVoice(soundpools::voice08, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
     playMusicByType(eMusicType::LOSE);
 
