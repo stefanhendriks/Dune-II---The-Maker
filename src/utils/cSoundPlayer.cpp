@@ -58,6 +58,11 @@ public:
         return gfxaudio->getAudio(id);
     }
 
+    int getIndexFromName(const std::string &name) const
+    {
+        return gfxaudio->getIndexFromName(name);
+    }
+
 private:
     std::unique_ptr<DataPack> gfxaudio;
 };
@@ -119,6 +124,11 @@ cSoundPlayer::~cSoundPlayer()
     if (m_mixer) {
         MIX_DestroyMixer(m_mixer);
     }
+}
+
+int cSoundPlayer::getIndexFromName(const std::string &name) const
+{
+    return soundData->getIndexFromName(name);
 }
 
 int cSoundPlayer::getMaxVolume()
