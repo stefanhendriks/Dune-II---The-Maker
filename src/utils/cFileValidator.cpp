@@ -38,7 +38,7 @@ cFileValidator::cFileValidator(const std::string &path)
 }
 
 // A configured "<base>.dat" matches every "<base>*.dat" in the directory (so "sdl_data_5741.dat" is found for
-// "sdl_data.dat"). The first match by name wins; the exact name sorts first. Without any match the configured
+// "sdl_data.dat"). The the exact name wins if present, otherwise the first match by name. Without any match the configured
 // name is kept, so fileExists() reports it as missing.
 static std::string resolveDatapackName(const std::string &path, const std::string &configured)
 {
@@ -57,6 +57,17 @@ static std::string resolveDatapackName(const std::string &path, const std::strin
         }
     }
     if (matches.empty()) return configured;
+
+    if (std::ranges::find(matches, configured) != matches.end()) {
+        std::string others;
+        for (const auto &name : matches) {
+            if (name != configured) others += (others.empty() ? "" : ", ") + name;
+        }
+        if (!others.empty()) {
+            Logger::info(COMP_INIT, "Load data", "Datapack '{}': using the exact name, other matching packs exist and are skipped: {}", configured, others);
+        }
+        return configured;
+    }
 
     std::ranges::sort(matches);
     if (matches.size() > 1) {
