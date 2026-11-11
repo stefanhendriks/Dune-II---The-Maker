@@ -94,7 +94,9 @@ inline int resolve(const std::function<int(std::string_view)> &lookup) {
     int missing = 0;
     for (const Entry &entry : entries) {
         *entry.id = lookup(entry.name);
-        if (*entry.id < 0) missing++;
+        if (*entry.id < 0) {
+            missing++;
+        }
     }
     return missing;
 }
