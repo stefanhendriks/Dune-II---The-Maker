@@ -37,6 +37,7 @@
 #include <algorithm>
 #include "include/cAssert.h"
 
+#include "data/Sounds.h"
 #include "data/gfxaudio.h"
 #include "sidebar/cSideBar.h"
 
@@ -153,11 +154,11 @@ void cMouseNormalState::onMouseLeftButtonClicked()
         }
 
         if (unitSelected) {
-            m_context->getAudioContext()->playSound(SOUND_REPORTING);
+            m_context->getAudioContext()->playSound(sounds::reporting);
         }
 
         if (infantrySelected) {
-            m_context->getAudioContext()->playSound(SOUND_YESSIR);
+            m_context->getAudioContext()->playSound(sounds::yesSir);
         }
 
         selectedUnits = unitSelected || infantrySelected;

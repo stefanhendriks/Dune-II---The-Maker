@@ -44,6 +44,7 @@
 #include "game/cEventEmitter.h"
 #include "controls/cMouse.h"
 #include "controls/eKeyAction.h"
+#include "data/Sounds.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/MapGeometry.hpp"
@@ -884,7 +885,7 @@ void cGamePlaying::onEventSpecialLaunch(const LaunchDeathHandEvent &event)
             if (structureId > -1) {
                 cAbstractStructure *pStructure = m_objects->getStructures()[structureId];
                 if (pStructure && pStructure->isValid()) {
-                    m_audioContext->playSound(SOUND_PLACE);
+                    m_audioContext->playSound(sounds::place);
                     createBullet(special.providesTypeId, pStructure->getCell(), deployCell, -1, structureId, m_objects, m_info, m_audioContext, m_mapCamera);
 
                     const s_GameEvent launchedEvent{
