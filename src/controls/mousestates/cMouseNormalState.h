@@ -20,6 +20,7 @@
 #include "controls/sMouseEvent.h"
 #include "controls/cKeyboardEvent.h"
 
+class AudioContext;
 class cPlayer;
 
 enum eMouseNormalState {
@@ -50,6 +51,9 @@ class cMouseNormalState : public cMouseState {
 
 public:
     explicit cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse);
+
+    // looks up the sounds this state plays; called once the audio context is available
+    void resolveSounds(const AudioContext *audioContext);
 
     void onNotifyMouseEvent(const s_MouseEvent &event) override;
     void onNotifyKeyboardEvent(const cKeyboardEvent &event) override;
