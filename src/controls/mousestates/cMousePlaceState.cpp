@@ -40,7 +40,11 @@ cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *contex
     d2tm_assert(player!=nullptr);
     d2tm_assert(context!=nullptr);
     d2tm_assert(mouse!=nullptr);
-    m_placeSound = context->getAudioContext()->indexOf("SOUND_PLACE");
+}
+
+void cMousePlaceState::resolveSounds(const AudioContext *audioContext)
+{
+    m_placeSound = audioContext->indexOf("SOUND_PLACE");
 }
 
 void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event)

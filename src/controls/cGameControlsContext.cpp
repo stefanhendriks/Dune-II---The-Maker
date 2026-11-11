@@ -81,6 +81,8 @@ void cGameControlsContext::serviceInit(sGameServices *services)
     m_infos = services->info;
     m_audioContext = services->ctx->getAudioContext();
     m_mapViewport = services->mapViewport;
+    m_mouseNormalState->resolveSounds(m_audioContext);
+    m_mousePlaceState->resolveSounds(m_audioContext);
 }
 
 void cGameControlsContext::updateMouseCell(const cPoint &coords)

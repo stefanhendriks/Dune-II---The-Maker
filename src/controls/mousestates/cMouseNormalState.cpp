@@ -46,8 +46,12 @@ cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *cont
     d2tm_assert(player!=nullptr);
     d2tm_assert(context!=nullptr);
     d2tm_assert(mouse!=nullptr);
-    m_reportingSound = context->getAudioContext()->indexOf("SOUND_REPORTING");
-    m_yesSirSound = context->getAudioContext()->indexOf("SOUND_YESSIR");
+}
+
+void cMouseNormalState::resolveSounds(const AudioContext *audioContext)
+{
+    m_reportingSound = audioContext->indexOf("SOUND_REPORTING");
+    m_yesSirSound = audioContext->indexOf("SOUND_YESSIR");
 }
 
 void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event)
