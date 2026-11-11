@@ -60,7 +60,9 @@ inline int resolveSoundIds(std::span<const std::string_view> names, std::span<in
     int unresolved = 0;
     for (std::size_t i = 0; i < names.size() && i < ids.size(); i++) {
         ids[i] = lookup(names[i]);
-        if (ids[i] < 0) unresolved++;
+        if (ids[i] < 0) {
+            unresolved++;
+        }
     }
     return unresolved;
 }
