@@ -17,6 +17,7 @@
 
 #include "cPack.h"
 #include "include/cAssert.h"
+#include "utils/Log.h"
 
 
 #include <string>
@@ -96,7 +97,15 @@ void ReaderPack::readFileLines()
         tmp.extension = std::string(rawExt.data());
         tmp.fileSize = sizeFile;
         tmp.fileOffset = offsetFile;
-        nameToIndex.emplace(tmp.fileId, static_cast<int>(fileInPack.size()));
+        const auto inserted = nameToIndex.emplace(tmp.fileId, static_cast<int>(fileInPack.size()));
+        if (!inserted.second) {
+            // lookups by name keep returning the first entry
+            std::cerr << "Warning: duplicate entry name '" << tmp.fileId << "' in " << fpName
+                      << " (index " << fileInPack.size() << " ignored for name lookup, first is index "
+                      << inserted.first->second << ")" << std::endl;
+            Logger::warn(COMP_INIT, "ReaderPack", "Duplicate entry name '{}' in {} (index {} ignored for name lookup, first is index {})",
+                         tmp.fileId, fpName, fileInPack.size(), inserted.first->second);
+        }
         fileInPack.push_back(tmp);
     }
 }

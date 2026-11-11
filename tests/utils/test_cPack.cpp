@@ -17,6 +17,8 @@
 #include "utils/cPack.h"
 #include "TempDir.hpp"
 
+#include <iostream>
+#include <sstream>
 #include <string>
 
 namespace {
@@ -103,4 +105,25 @@ TEST_CASE("ReaderPack - a missing file results in an empty pack", "[pack]")
     TempDir dir("d2tm_pack_missing");
     ReaderPack reader(dir.file("does_not_exist.pak"));
     REQUIRE(reader.getNumberOfFiles() == 0);
+}
+
+TEST_CASE("ReaderPack - a duplicate entry name warns on stderr and name lookup keeps the first", "[pack]")
+{
+    TempDir dir("d2tm_pack_duplicate");
+    const std::string packName = dir.file("dup.pak");
+    {
+        WriterPack writer(packName);
+        REQUIRE(writer.addFile(dir.write("a.txt", "one"), "same_name"));
+        REQUIRE(writer.addFile(dir.write("b.txt", "two"), "same_name"));
+        REQUIRE(writer.writePackFilesOnDisk());
+    }
+
+    std::ostringstream captured;
+    std::streambuf *original = std::cerr.rdbuf(captured.rdbuf());
+    ReaderPack reader(packName);
+    std::cerr.rdbuf(original);
+
+    CHECK(reader.getNumberOfFiles() == 2);
+    CHECK(reader.getIndexFromName("same_name") == 0);
+    CHECK(captured.str().find("duplicate entry name 'same_name'") != std::string::npos);
 }
