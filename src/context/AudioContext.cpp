@@ -52,6 +52,12 @@ AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSetti
     d2tm_assert(m_soundPlayer != nullptr);
     d2tm_assert(m_settings != nullptr);
     m_jukeBox->createRepertoryDirectories();
+    const int missing = soundpools::resolve([this](std::string_view name) {
+        return m_soundPlayer->getIndexFromName(std::string(name));
+    });
+    if (missing > 0) {
+        Logger::error(COMP_SOUND, "AudioContext", "{} sound pool names not found in the audio pack", missing);
+    }
 }
 
 AudioContext::~AudioContext() = default;
