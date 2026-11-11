@@ -25,6 +25,7 @@
 
 
 #include <SDL3/SDL.h>
+#include <optional>
 
 struct FileInPack {
     std::string name;
@@ -50,6 +51,10 @@ public:
     int getIndexFromName(const std::string &fileId) const;
     //! get the name of every file in the pack, in index order
     std::vector<std::string> getNames() const;
+    //! extension of the entry at index ("txt", "wav", ...), empty for an invalid index
+    std::string getExtension(unsigned int index) const;
+    //! contents of a text entry (extension "txt", raw UTF-8 bytes); nullopt for an unknown name or a non-text entry
+    std::optional<std::string> getText(const std::string &fileId) const;
     //! print all files in Pack
     void displayPackFile();
     //! get the number of files in the pack
