@@ -34,26 +34,13 @@ inline int creditDown = -1;
 inline int atreides = -1;
 inline int harkonnen = -1;
 inline int ordos = -1;
-inline int rocket = -1;
-inline int rocketSmall = -1;
-inline int gun = -1;
-inline int machineGun = -1;
-inline int explosionRocket = -1;
-inline int gunTurret = -1;
-inline int shimmer = -1;
-inline int gas = -1;
-inline int squish = -1;
-inline int trikeDie = -1;
-inline int worm = -1;
-inline int tankDie1 = -1;
-inline int tankDie2 = -1;
 
 struct Entry {
     std::string_view name;
     int *id;
 };
 
-inline const std::array<Entry, 23> entries = {{
+inline const std::array<Entry, 10> entries = {{
     {"SOUND_REPORTING", &reporting},
     {"SOUND_YESSIR", &yesSir},
     {"SOUND_PLACE", &place},
@@ -64,19 +51,6 @@ inline const std::array<Entry, 23> entries = {{
     {"SOUND_ATREIDES", &atreides},
     {"SOUND_HARKONNEN", &harkonnen},
     {"SOUND_ORDOS", &ordos},
-    {"SOUND_ROCKET", &rocket},
-    {"SOUND_ROCKET_SMALL", &rocketSmall},
-    {"SOUND_GUN", &gun},
-    {"SOUND_MACHINEGUN", &machineGun},
-    {"SOUND_EXPL_ROCKET", &explosionRocket},
-    {"SOUND_GUNTURRET", &gunTurret},
-    {"SOUND_SHIMMER", &shimmer},
-    {"SOUND_GAS", &gas},
-    {"SOUND_SQUISH", &squish},
-    {"SOUND_TRIKEDIE", &trikeDie},
-    {"SOUND_WORM", &worm},
-    {"SOUND_TANKDIE1", &tankDie1},
-    {"SOUND_TANKDIE2", &tankDie2},
 }};
 
 // Looks every sound name up in the audio pack. Returns how many names were not found.

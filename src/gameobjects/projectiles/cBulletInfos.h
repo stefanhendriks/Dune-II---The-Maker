@@ -39,6 +39,7 @@ struct s_BulletInfo {
     int max_deadframes;     // max dead frames
 
     int sound;              // Sound produced when 'shot' (or explosion sound)
+    int deviateSound;       // Sound produced when the bullet deviates a unit upon impact (-1 = none)
 
     int deviateProbability; // how high probability it deviates a unit (changes sides) (0 = no chance, 100 = 100% chance)
 

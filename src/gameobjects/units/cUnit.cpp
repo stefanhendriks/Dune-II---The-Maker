@@ -45,7 +45,6 @@
 #include "gameobjects/map/cMap.h"
 #include <cmath>
 
-#include "data/Sounds.h"
 #include "data/SoundPools.h"
 #include "game/cGameSettings.h"
 #include "gameobjects/players/cPlayerDifficultySettings.h"
@@ -300,11 +299,11 @@ void cUnit::createSquishedParticle()
     if (iType == SOLDIER || iType == TROOPER || iType == UNIT_FREMEN_ONE) {
         int iType1 = D2TM_PARTICLE_SQUISH01 + RNG::rnd(2);
         cParticle::create(iDieX, iDieY, iType1, iPlayer, rendering.iFrame, m_objects, m_infos);
-        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, sounds::squish, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
+        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, getUnitInfo().deathSound, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
     }
     else if (iType == TROOPERS || iType == INFANTRY || iType == UNIT_FREMEN_THREE) {
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_SQUISH03, iPlayer, rendering.iFrame, m_objects, m_infos);
-        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, sounds::squish, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
+        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, getUnitInfo().deathSound, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
     }
 }
 
@@ -318,7 +317,7 @@ void cUnit::createExplosionParticle()
     if (iType == TRIKE || iType == RAIDER || iType == QUAD) {
         // play quick 'boom' sound and show animation
         cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TRIKE, -1, -1, m_objects, m_infos);
-        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, sounds::trikeDie, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
+        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, getUnitInfo().deathSound, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
 
         if (RNG::rnd(100) < 30) {
             cParticle::create(iDieX, iDieY - 24, D2TM_PARTICLE_SMOKE_WITH_SHADOW, -1, -1, m_objects, m_infos);
@@ -337,11 +336,11 @@ void cUnit::createExplosionParticle()
         // play quick 'boom' sound and show animation
         if (RNG::rnd(100) < 50) {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_ONE, -1, -1, m_objects, m_infos);
-            playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, sounds::tankDie2, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
+            playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, soundpools::tankDie.at(1), distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
         }
         else {
             cParticle::create(iDieX, iDieY, D2TM_PARTICLE_EXPLOSION_TANK_TWO, -1, -1, m_objects, m_infos);
-            playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, sounds::tankDie1, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
+            playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, soundpools::tankDie.at(0), distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
         }
 
         if (RNG::rnd(100) < 30) {
@@ -2248,7 +2247,7 @@ void cUnit::think_attack_sandworm()
         long x = pos_x_centered();
         long y = pos_y_centered();
         cParticle::create(x, y, D2TM_PARTICLE_WORMEAT, -1, -1, m_objects, m_infos);
-        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, sounds::worm, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
+        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, getUnitInfo().eatSound, distanceBetweenCellAndCenterOfScreen(position.iCell, m_objects, m_mapCamera));
         actionGuard();
         movewaitTimer.reset((1000/5) * 4); // wait for 4 seconds before moving again
         guardTimer.reset((1000/5) * 4); // timer guard works other way around..

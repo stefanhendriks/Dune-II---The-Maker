@@ -25,6 +25,7 @@ class cUpgradeInfos;
 class cUnitInfos;
 class cInfoContext;
 class cGameSettings;
+class AudioContext;
 class Graphics;
 class GraphicsContext;
 struct SDL_Renderer;
@@ -32,7 +33,7 @@ struct s_TerrainInfo;
 
 class cInfoContextCreator {
 public:
-    explicit cInfoContextCreator(GraphicsContext* graphicsContext);
+    cInfoContextCreator(GraphicsContext* graphicsContext, const AudioContext* audioContext);
     ~cInfoContextCreator() = default;
 
     std::unique_ptr<cParticleInfos> createParticleInfos();
@@ -55,4 +56,5 @@ private:
     void initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings);
 
     Graphics* m_gfxdata = nullptr;
+    const AudioContext* m_audio = nullptr;
 };
