@@ -221,11 +221,17 @@ WriterPack::~WriterPack()
     fileInPack.clear();
 }
 
-void WriterPack::setHeader(const std::string &packAuthor, unsigned int packVersion)
+bool WriterPack::setHeader(const std::string &packAuthor, unsigned int packVersion)
 {
-    author = packAuthor.substr(0, authorSize - 1);
+    if (packAuthor.size() >= authorSize || packVersion >= 10000) {
+        std::cerr << "Pack header rejected: author '" << packAuthor << "' (max " << authorSize - 1
+                  << " chars) or version " << packVersion << " (max 9999) is out of range" << std::endl;
+        return false;
+    }
+    author = packAuthor;
     version = packVersion;
     hasHeader = true;
+    return true;
 }
 
 bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
@@ -263,7 +269,7 @@ void WriterPack::writeHeader()
     if (hasHeader) {
         std::array<char, authorSize + versionSize> buffer {};
         std::ranges::copy(author, buffer.begin());
-        const std::string versionText = std::to_string(version % 10000);
+        const std::string versionText = std::to_string(version);
         std::ranges::copy(versionText, buffer.begin() + authorSize);
         SDL_WriteIO(wfp.get(), buffer.data(), buffer.size());
     }

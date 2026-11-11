@@ -85,8 +85,8 @@ public:
     //! Create the archive skeleton
     WriterPack(const std::string &packName);
     ~WriterPack();
-    //! write a "D2TH" header with author (max 14 chars) and version (max 4 digits); without it the old "D2TM" format is written
-    void setHeader(const std::string &packAuthor, unsigned int packVersion);
+    //! write a "D2TH" header with author (max 14 chars) and version (max 9999), returns false and writes no header when out of range; without it the old "D2TM" format is written
+    bool setHeader(const std::string &packAuthor, unsigned int packVersion);
     //! add individual file fileName in archive and rename it by fileId (fileId max 39 chars)
     bool addFile(const std::string &fileName, const std::string &fileId);
     //! Create PackFile after add all files in archive

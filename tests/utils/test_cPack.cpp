@@ -151,7 +151,7 @@ TEST_CASE("ReaderPack - author and version are read from the pack header", "[pac
     const std::string packName = dir.file("new.pak");
     {
         WriterPack writer(packName);
-        writer.setHeader("core", 2);
+        REQUIRE(writer.setHeader("core", 2));
         REQUIRE(writer.addFile(dir.write("a.txt", "first"), "file_a"));
         REQUIRE(writer.addFile(dir.write("b.txt", "second"), "file_b"));
         REQUIRE(writer.writePackFilesOnDisk());
@@ -182,4 +182,13 @@ TEST_CASE("WriterPack - addFile rejects entry names over 39 characters", "[pack]
     WriterPack writer(dir.file("test.pak"));
     REQUIRE(writer.addFile(source, std::string(39, 'a')));
     REQUIRE_FALSE(writer.addFile(source, std::string(40, 'a')));
+}
+
+TEST_CASE("WriterPack - setHeader rejects an author or version that does not fit", "[pack]")
+{
+    TempDir dir("d2tm_pack_headerrange");
+    WriterPack writer(dir.file("test.pak"));
+    REQUIRE_FALSE(writer.setHeader(std::string(15, 'a'), 1));
+    REQUIRE_FALSE(writer.setHeader("core", 10000));
+    REQUIRE(writer.setHeader(std::string(14, 'a'), 9999));
 }
