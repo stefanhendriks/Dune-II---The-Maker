@@ -25,6 +25,7 @@
 #include "context/GraphicsContext.hpp"
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
+#include "data/Sounds.h"
 #include "data/gfxaudio.h"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
@@ -937,7 +938,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_BIG].damage_vehicles = 999;
     bulletInfos[ROCKET_BIG].damage_infantry = 999;
     bulletInfos[ROCKET_BIG].max_frames = 1;
-    bulletInfos[ROCKET_BIG].sound = SOUND_ROCKET;
+    bulletInfos[ROCKET_BIG].sound = sounds::rocket;
     bulletInfos[ROCKET_BIG].explosionSize = 7;
     bulletInfos[ROCKET_BIG].canDamageAirUnits = true;
     bulletInfos[ROCKET_BIG].canDamageGround = true;
@@ -951,7 +952,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_SMALL_ORNI].damage_vehicles = 48; // they can do pretty damage
     bulletInfos[ROCKET_SMALL_ORNI].damage_infantry = 24;
     bulletInfos[ROCKET_SMALL_ORNI].max_frames = 1;
-    bulletInfos[ROCKET_SMALL_ORNI].sound = SOUND_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL_ORNI].sound = sounds::rocketSmall;
     bulletInfos[ROCKET_SMALL_ORNI].canDamageAirUnits = true;
     bulletInfos[ROCKET_SMALL_ORNI].max_deadframes = 1;
     bulletInfos[ROCKET_SMALL_ORNI].canDamageGround = true;
@@ -966,7 +967,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_SMALL].damage_infantry = 8; // was 4
     bulletInfos[ROCKET_SMALL].max_frames = 1;
     bulletInfos[ROCKET_SMALL].moveSpeed = 3;
-    bulletInfos[ROCKET_SMALL].sound = SOUND_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL].sound = sounds::rocketSmall;
     bulletInfos[ROCKET_SMALL].canDamageAirUnits = true;
     bulletInfos[ROCKET_SMALL].max_deadframes = 1;
     bulletInfos[ROCKET_SMALL].canDamageGround = true;
@@ -981,7 +982,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_SMALL_FREMEN].damage_infantry = 20;
     bulletInfos[ROCKET_SMALL_FREMEN].max_frames = 1;
     bulletInfos[ROCKET_SMALL_FREMEN].moveSpeed = 4;
-    bulletInfos[ROCKET_SMALL_FREMEN].sound = SOUND_ROCKET_SMALL;
+    bulletInfos[ROCKET_SMALL_FREMEN].sound = sounds::rocketSmall;
     bulletInfos[ROCKET_SMALL_FREMEN].max_deadframes = 1;
     bulletInfos[ROCKET_SMALL_FREMEN].canDamageAirUnits = true;
     bulletInfos[ROCKET_SMALL_FREMEN].canDamageGround = true;
@@ -995,7 +996,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_NORMAL].damage_vehicles = 76;
     bulletInfos[ROCKET_NORMAL].damage_infantry = 36;  // less damage on infantry
     bulletInfos[ROCKET_NORMAL].max_frames = 1;
-    bulletInfos[ROCKET_NORMAL].sound = SOUND_ROCKET;
+    bulletInfos[ROCKET_NORMAL].sound = sounds::rocket;
     bulletInfos[ROCKET_NORMAL].moveSpeed = 3;
     bulletInfos[ROCKET_NORMAL].max_deadframes = 4;
     bulletInfos[ROCKET_NORMAL].canDamageAirUnits = true;
@@ -1011,7 +1012,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_SMALL].damage_infantry = 10; // infantry vs infantry means big time damage
     bulletInfos[BULLET_SMALL].max_frames = 0;
     bulletInfos[BULLET_SMALL].moveSpeed = 4;
-    bulletInfos[BULLET_SMALL].sound = SOUND_GUN;
+    bulletInfos[BULLET_SMALL].sound = sounds::gun;
     bulletInfos[BULLET_SMALL].max_deadframes = 0;
     bulletInfos[BULLET_SMALL].groundBullet = true;
     bulletInfos[BULLET_SMALL].description = "BULLET_SMALL";
@@ -1024,7 +1025,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_TRIKE].damage_infantry = 6; // but more to infantry
     bulletInfos[BULLET_TRIKE].moveSpeed = 4;
     bulletInfos[BULLET_TRIKE].max_frames = 0;
-    bulletInfos[BULLET_TRIKE].sound = SOUND_MACHINEGUN;
+    bulletInfos[BULLET_TRIKE].sound = sounds::machineGun;
     bulletInfos[BULLET_TRIKE].max_deadframes = 0;
     bulletInfos[BULLET_TRIKE].groundBullet = true;
     bulletInfos[BULLET_TRIKE].description = "BULLET_TRIKE";
@@ -1036,7 +1037,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_QUAD].damage_vehicles = 6;
     bulletInfos[BULLET_QUAD].damage_infantry = 8; // bigger impact on infantry
     bulletInfos[BULLET_QUAD].max_frames = 0;
-    bulletInfos[BULLET_QUAD].sound = SOUND_MACHINEGUN;
+    bulletInfos[BULLET_QUAD].sound = sounds::machineGun;
     bulletInfos[BULLET_QUAD].max_deadframes = 0;
     bulletInfos[BULLET_QUAD].groundBullet = true;
     bulletInfos[BULLET_QUAD].description = "BULLET_QUAD";
@@ -1048,7 +1049,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_TANK].damage_vehicles = 12;
     bulletInfos[BULLET_TANK].damage_infantry = 4;  // infantry is not much damaged
     bulletInfos[BULLET_TANK].max_frames = 0;
-    bulletInfos[BULLET_TANK].sound = SOUND_EXPL_ROCKET;
+    bulletInfos[BULLET_TANK].sound = sounds::explosionRocket;
     bulletInfos[BULLET_TANK].max_deadframes = 1;
     bulletInfos[BULLET_TANK].groundBullet = true;
     bulletInfos[BULLET_TANK].canDamageGround = true;
@@ -1061,7 +1062,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_SIEGE].damage_vehicles = 24;
     bulletInfos[BULLET_SIEGE].damage_infantry = 6; // infantry is not as much damaged
     bulletInfos[BULLET_SIEGE].max_frames = 0;
-    bulletInfos[BULLET_SIEGE].sound = SOUND_EXPL_ROCKET;
+    bulletInfos[BULLET_SIEGE].sound = sounds::explosionRocket;
     bulletInfos[BULLET_SIEGE].max_deadframes = 2;
     bulletInfos[BULLET_SIEGE].groundBullet = true;
     bulletInfos[BULLET_SIEGE].canDamageGround = true;
@@ -1074,7 +1075,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_DEVASTATOR].damage_vehicles = 30;
     bulletInfos[BULLET_DEVASTATOR].damage_infantry = 12; // infantry again not much damaged
     bulletInfos[BULLET_DEVASTATOR].max_frames = 0;
-    bulletInfos[BULLET_DEVASTATOR].sound = SOUND_EXPL_ROCKET;
+    bulletInfos[BULLET_DEVASTATOR].sound = sounds::explosionRocket;
     bulletInfos[BULLET_DEVASTATOR].max_deadframes = 1;
     bulletInfos[BULLET_DEVASTATOR].groundBullet = true;
     bulletInfos[BULLET_DEVASTATOR].canDamageGround = true;
@@ -1088,7 +1089,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_GAS].damage_infantry = 1;
     bulletInfos[BULLET_GAS].max_frames = 1;
     bulletInfos[BULLET_GAS].max_deadframes = 4;
-    bulletInfos[BULLET_GAS].sound = SOUND_ROCKET;
+    bulletInfos[BULLET_GAS].sound = sounds::rocket;
     bulletInfos[BULLET_GAS].deviateProbability = 34; // 1 out of 3(ish) should be effective
     bulletInfos[BULLET_GAS].smokeParticle = D2TM_PARTICLE_BULLET_PUF;
     bulletInfos[BULLET_GAS].description = "BULLET_GAS";
@@ -1101,7 +1102,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_TURRET].damage_infantry = 12; // infantry is a hard target
     bulletInfos[BULLET_TURRET].max_frames = 0;
     bulletInfos[BULLET_TURRET].max_deadframes = 1;
-    bulletInfos[BULLET_TURRET].sound = SOUND_GUNTURRET;
+    bulletInfos[BULLET_TURRET].sound = sounds::gunTurret;
     bulletInfos[BULLET_TURRET].groundBullet = false; // this can fly over structures, walls, mountains, yes!
     bulletInfos[BULLET_TURRET].canDamageGround = true;
     bulletInfos[BULLET_TURRET].description = "BULLET_TURRET";
@@ -1114,7 +1115,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[BULLET_SHIMMER].damage_infantry = 70; // infantry cant stand the sound, die very fast
     bulletInfos[BULLET_SHIMMER].max_frames = 0;
     bulletInfos[BULLET_SHIMMER].max_deadframes = 0;
-    bulletInfos[BULLET_SHIMMER].sound = SOUND_SHIMMER;
+    bulletInfos[BULLET_SHIMMER].sound = sounds::shimmer;
     bulletInfos[BULLET_SHIMMER].description = "BULLET_SHIMMER";
 
     // rocket of rocket turret
@@ -1124,7 +1125,7 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
     bulletInfos[ROCKET_RTURRET].damage_vehicles = 25;
     bulletInfos[ROCKET_RTURRET].damage_infantry = 10; // infantry is a bit tougher
     bulletInfos[ROCKET_RTURRET].max_frames = 1;
-    bulletInfos[ROCKET_RTURRET].sound = SOUND_ROCKET;
+    bulletInfos[ROCKET_RTURRET].sound = sounds::rocket;
     bulletInfos[ROCKET_RTURRET].max_deadframes = 4;
     bulletInfos[ROCKET_RTURRET].canDamageAirUnits = true;
     bulletInfos[ROCKET_RTURRET].canDamageGround = true;
