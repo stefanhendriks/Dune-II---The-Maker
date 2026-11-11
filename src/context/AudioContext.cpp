@@ -80,9 +80,16 @@ void AudioContext::playSound(int sampleId, int vol) const
     m_soundPlayer->playSound(sampleId, vol);
 }
 
-void AudioContext::playVoice(int sampleId, int house) const
+void AudioContext::playVoice(const SoundPool &voice, int house) const
 {
-    m_soundPlayer->playVoice(sampleId, house);
+    int variant = 0;
+    if (house == HARKONNEN) {
+        variant = 1;
+    }
+    else if (house == ORDOS) {
+        variant = 2;
+    }
+    m_soundPlayer->playVoice(voice.at(variant));
 }
 
 int AudioContext::getMaxVolume() const

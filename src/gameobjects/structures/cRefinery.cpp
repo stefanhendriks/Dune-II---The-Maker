@@ -16,7 +16,7 @@
 #include "cRefinery.h"
 
 #include "definitions.h"
-#include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayerDifficultySettings.h"
@@ -100,7 +100,7 @@ void cRefinery::think_unit_occupation()
 
     // no spice to go to: let player know the harvester is deployed (idle) next to the refinery
     if (iHarvestCell < 0 && pPlayer->isHuman()) {
-        m_audioContext->playVoice(SOUND_VOICE_02_ATR, pPlayer->getHouse());
+        m_audioContext->playVoice(soundpools::voice02, pPlayer->getHouse());
     }
 
     if (iHarvestCell > -1) {

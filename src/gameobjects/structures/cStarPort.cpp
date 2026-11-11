@@ -18,7 +18,7 @@
 #include "cOrderProcesser.h"
 #include "gameobjects/map/cMap.h"
 #include "definitions.h"
-#include "data/gfxaudio.h"
+#include "data/SoundPools.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "gameobjects/units/cReinforcements.h"
@@ -109,7 +109,7 @@ void cStarPort::think_deploy()
                     if (rallyPoint > -1) {
                         m_objects->getUnit(id)->move_to(rallyPoint, -1, -1);
                     }
-                    m_audioContext->playVoice(SOUND_VOICE_05_ATR, m_objects->getPlayer(iPlayer)->getHouse()); // unit deployed
+                    m_audioContext->playVoice(soundpools::voice05, m_objects->getPlayer(iPlayer)->getHouse()); // unit deployed
                 }
                 else {
                     // could not find cell to deploy to, reinforce it

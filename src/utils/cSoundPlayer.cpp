@@ -169,15 +169,8 @@ void cSoundPlayer::playSoundWithPriority(int sampleId, int vol, int priority)
     }
 }
 
-void cSoundPlayer::playVoice(int sampleId, int house)
+void cSoundPlayer::playVoice(int sampleId)
 {
-    if (house == HARKONNEN) {
-        sampleId += 1;
-    }
-    else if (house == ORDOS) {
-        sampleId += 2;
-    }
-
     if (!m_isSoundEnabled) {
         return;
     }

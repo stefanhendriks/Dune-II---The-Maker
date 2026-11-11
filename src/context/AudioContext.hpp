@@ -16,6 +16,7 @@
 #pragma once
 
 #include "definitions.h"
+#include "utils/SoundPool.hpp"
 #include "context/MusicChoice.hpp"
 
 #include <memory>
@@ -35,7 +36,8 @@ public:
 
     void playSound(int sampleId) const; // Maximum volume
     void playSound(int sampleId, int vol) const;
-    void playVoice(int sampleId, int house) const;
+    // `voice` lists the voice line per house (Atreides, Harkonnen, Ordos); other houses use the Atreides one
+    void playVoice(const SoundPool &voice, int house) const;
     [[nodiscard]] int getMaxVolume() const;
 
     void playMusicByTypeForStateTransition(eMusicType iType, int humanHouse);
