@@ -56,6 +56,14 @@ public:
     int getNumberOfFiles() const {
         return fileInPak;
     }
+    //! author from the pack header, empty for packs without header
+    const std::string &getAuthor() const {
+        return author;
+    }
+    //! pack version from the pack header, 0 for packs without header
+    unsigned int getVersion() const {
+        return version;
+    }
 private:
     std::vector<FileInPack> fileInPack;
     std::unordered_map<std::string, int> nameToIndex; // first index wins on duplicate names
@@ -66,6 +74,9 @@ private:
     std::unique_ptr<SDL_IOStream, decltype(&SDL_CloseIO)> rfp{nullptr, SDL_CloseIO};  //rfp as readFilePack
     std::string fpName;
     int fileInPak = 0;
+    uint32_t headerSize = 0; // bytes before the entry table
+    std::string author;
+    unsigned int version = 0;
     uint64_t sizeInMemory =0;
 };
 
@@ -74,7 +85,9 @@ public:
     //! Create the archive skeleton
     WriterPack(const std::string &packName);
     ~WriterPack();
-    //! add individual file fileName in archive and rename it by fileId
+    //! write a "D2TH" header with author (max 14 chars) and version (max 4 digits); without it the old "D2TM" format is written
+    void setHeader(const std::string &packAuthor, unsigned int packVersion);
+    //! add individual file fileName in archive and rename it by fileId (fileId max 39 chars)
     bool addFile(const std::string &fileName, const std::string &fileId);
     //! Create PackFile after add all files in archive
     bool writePackFilesOnDisk();
@@ -86,5 +99,8 @@ private:
     void copyFile();
     std::unique_ptr<SDL_IOStream, decltype(&SDL_CloseIO)> wfp{nullptr, SDL_CloseIO}; //wfp as writeFilePack
     std::vector<FileInPack> fileInPack;
+    bool hasHeader = false;
+    std::string author;
+    unsigned int version = 0;
 };
 
