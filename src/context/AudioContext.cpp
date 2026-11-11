@@ -22,6 +22,7 @@
 #include "include/definitions.h"
 #include "data/gfxaudio.h"
 #include "data/SoundPools.h"
+#include "data/Sounds.h"
 #include "include/cAssert.h"
 
 #include <format>
@@ -46,18 +47,20 @@ AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSetti
     m_soundPlayer(std::move(soundPlayer)),
     m_settings(settings),
     m_jukeBox(std::make_unique<MusicJukeBox>()),
-    m_newMusic{MIDI_MENU, std::nullopt},
+    m_newMusic{-1, std::nullopt},
     m_newMusicCountdown(0)
 {
     d2tm_assert(m_soundPlayer != nullptr);
     d2tm_assert(m_settings != nullptr);
     m_jukeBox->createRepertoryDirectories();
-    const int missing = soundpools::resolve([this](std::string_view name) {
+    const auto lookup = [this](std::string_view name) {
         return m_soundPlayer->getIndexFromName(std::string(name));
-    });
+    };
+    const int missing = soundpools::resolve(lookup) + sounds::resolve(lookup);
     if (missing > 0) {
         Logger::error(COMP_SOUND, "AudioContext", "{} sound pool names not found in the audio pack", missing);
     }
+    m_newMusic.archiveTrack = sounds::menuMusic; // only known once resolved
 }
 
 AudioContext::~AudioContext() = default;
@@ -118,7 +121,7 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
         return false;
     }
 
-    int sampleId = MIDI_MENU;
+    int sampleId = sounds::menuMusic;
     if (iType == eMusicType::WIN) {
         sampleId = soundpools::musicWin.pick();
     }
@@ -132,23 +135,23 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
         sampleId = soundpools::musicPeace.pick();
     }
     else if (iType == eMusicType::MENU) {
-        sampleId = MIDI_MENU;
+        sampleId = sounds::menuMusic;
     }
     else if (iType == eMusicType::CONQUEST) {
-        sampleId = MIDI_SCENARIO;
+        sampleId = sounds::scenarioMusic;
     }
     else if (iType == eMusicType::BRIEFING) {
         if (humanHouse == ATREIDES) {
-            sampleId = MIDI_MENTAT_ATR;
+            sampleId = sounds::mentatMusicAtreides;
         }
         else if (humanHouse == HARKONNEN) {
-            sampleId = MIDI_MENTAT_HAR;
+            sampleId = sounds::mentatMusicHarkonnen;
         }
         else if (humanHouse == ORDOS) {
-            sampleId = MIDI_MENTAT_ORD;
+            sampleId = sounds::mentatMusicOrdos;
         }
         else if (humanHouse == SARDAUKAR) {
-            sampleId = MIDI_MENTAT_HAR; // no @SARDAUKAR srd music, so use harkonnen one
+            sampleId = sounds::mentatMusicHarkonnen; // no @SARDAUKAR srd music, so use harkonnen one
         }
         else {
             d2tm_assert(false && "Undefined house.");
