@@ -41,7 +41,7 @@ inline constexpr std::array<std::string_view, 2> tankDie = {"SOUND_TANKDIE", "SO
 inline constexpr std::array<std::string_view, 2> structureCrumble = {"SOUND_CRUMBLE01", "SOUND_CRUMBLE02"};
 } // namespace names
 
-// Pack indices, filled by resolve() once the audio pack is loaded.
+// Pack indices. Written only once, by resolve() from the AudioContext constructor; read-only afterwards.
 namespace ids {
 inline std::array<int, 3> musicWin{};
 inline std::array<int, 3> musicLose{};
