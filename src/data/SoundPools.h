@@ -27,7 +27,7 @@ namespace soundpools {
 // Pack names, as stored in the audio pack (sdl_audio.dat). Static storage: SoundPool views the ids below.
 namespace names {
 inline constexpr std::array<std::string_view, 3> musicWin = {"MIDI_WIN01", "MIDI_WIN02", "MIDI_WIN03"};
-inline constexpr std::array<std::string_view, 3> musicLose = {"MIDI_LOSE1", "MIDI_LOSE2", "MIDI_LOSE3"};
+inline constexpr std::array<std::string_view, 3> musicLose = {"MIDI_LOSE01", "MIDI_LOSE02", "MIDI_LOSE03"};
 inline constexpr std::array<std::string_view, 6> musicAttack = {"MIDI_ATTACK01", "MIDI_ATTACK02", "MIDI_ATTACK03",
                                                                 "MIDI_ATTACK04", "MIDI_ATTACK05", "MIDI_ATTACK06"};
 inline constexpr std::array<std::string_view, 9> musicPeace = {"MIDI_BUILDING01", "MIDI_BUILDING02", "MIDI_BUILDING03",
@@ -36,8 +36,7 @@ inline constexpr std::array<std::string_view, 9> musicPeace = {"MIDI_BUILDING01"
 inline constexpr std::array<std::string_view, 2> infantryAcknowledge = {"SOUND_MOVINGOUT", "SOUND_MOVINGOUT2"};
 inline constexpr std::array<std::string_view, 3> vehicleAcknowledge = {"SOUND_ACKNOWLEDGED", "SOUND_AFFIRMATIVE", "SOUND_AFFIRMATIVE2"};
 inline constexpr std::array<std::string_view, 5> infantryDie = {"SOUND_DIE01", "SOUND_DIE02", "SOUND_DIE03", "SOUND_DIE04", "SOUND_DIE05"};
-// "SOUND_TANK" (not "SOUND_TANKDIE2") is what gfxaudio.h's SOUND_TANKDIE2 index points at in the pack.
-inline constexpr std::array<std::string_view, 2> tankDie = {"SOUND_TANKDIE", "SOUND_TANK"};
+inline constexpr std::array<std::string_view, 2> tankDie = {"SOUND_TANKDIE1", "SOUND_TANKDIE2"};
 inline constexpr std::array<std::string_view, 2> structureCrumble = {"SOUND_CRUMBLE01", "SOUND_CRUMBLE02"};
 } // namespace names
 
