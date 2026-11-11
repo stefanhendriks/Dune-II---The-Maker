@@ -45,7 +45,6 @@
 #include "controls/cMouse.h"
 #include "controls/eKeyAction.h"
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/map/cMap.h"

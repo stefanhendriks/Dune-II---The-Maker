@@ -35,7 +35,6 @@
 #include "context/cGameObjectContext.h"
 #include "context/AudioContext.hpp"
 
-#include "data/gfxaudio.h"
 #include "game/Preferences.hpp"
 #include "gameobjects/cSpecialInfos.h"
 #include "gameobjects/cUpgradeInfo.h"

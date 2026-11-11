@@ -33,7 +33,6 @@
 #include "include/cAssert.h"
 
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
 #include "gameobjects/structures/cStructureFactory.h"
 
 cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :

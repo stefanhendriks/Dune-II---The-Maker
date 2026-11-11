@@ -29,7 +29,6 @@
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
 
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"

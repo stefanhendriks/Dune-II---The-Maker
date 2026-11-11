@@ -20,7 +20,6 @@
 #include "utils/cSoundPlayer.h"
 #include "utils/Log.h"
 #include "include/definitions.h"
-#include "data/gfxaudio.h"
 #include "data/SoundPools.h"
 #include "data/Sounds.h"
 #include "include/cAssert.h"

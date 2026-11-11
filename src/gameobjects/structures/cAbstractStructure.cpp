@@ -40,7 +40,6 @@
 #include <SDL3/SDL.h>
 #include <format>
 
-#include "data/gfxaudio.h"
 #include "data/SoundPools.h"
 #include "gameobjects/cFlag.h"
 

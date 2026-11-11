@@ -21,7 +21,6 @@
 #include "include/sDataCampaign.h"
 #include "data/gfxdata.h"
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
 #include "context/AudioContext.hpp"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
