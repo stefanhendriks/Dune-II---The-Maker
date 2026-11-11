@@ -30,6 +30,9 @@ public:
 
     static int getMaxVolume();
 
+    // Index of the named sample in the audio pack (the id to pass to playSound), or -1 when unknown.
+    int getIndexFromName(const std::string &name) const;
+
     void playSound(int sampleId); // Maximum volume
     void playSound(int sampleId, int vol);
 
