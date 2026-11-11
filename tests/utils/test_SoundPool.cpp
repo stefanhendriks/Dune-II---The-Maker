@@ -1,14 +1,13 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "utils/SoundPool.hpp"
-#include "data/gfxaudio.h"
 
 #include <array>
 
 namespace {
 constexpr std::array kIds = {7, 42, 3};
-constexpr std::array kAcks = {SOUND_ACKNOWLEDGED, SOUND_AFFIRMATIVE, SOUND_AFFIRMATIVE2};
-constexpr std::array kLose = {MIDI_LOSE01, MIDI_LOSE02, MIDI_LOSE03};
+constexpr std::array kAcks = {26, 27, 28};
+constexpr std::array kLose = {15, 16, 17};
 }
 
 TEST_CASE("SoundPool at returns the listed ids, not adjacent ones", "[SoundPool]") {
@@ -36,7 +35,7 @@ TEST_CASE("SoundPool pick only returns members", "[SoundPool]") {
     constexpr SoundPool pool{kAcks};
     for (int i = 0; i < 200; i++) {
         int id = pool.pick();
-        CHECK((id == SOUND_ACKNOWLEDGED || id == SOUND_AFFIRMATIVE || id == SOUND_AFFIRMATIVE2));
+        CHECK((id == 26 || id == 27 || id == 28));
     }
 }
 
@@ -45,7 +44,7 @@ TEST_CASE("lose music pool holds only the three lose tracks", "[SoundPool]") {
     CHECK(pool.size() == 3);
     for (int i = 0; i < 200; i++) {
         int id = pool.pick();
-        CHECK((id >= MIDI_LOSE01 && id <= MIDI_LOSE03));
+        CHECK((id >= 15 && id <= 17));
     }
 }
 
