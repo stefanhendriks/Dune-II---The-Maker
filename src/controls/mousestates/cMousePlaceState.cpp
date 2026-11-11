@@ -41,6 +41,7 @@ cMousePlaceState::cMousePlaceState(cPlayer *player, cGameControlsContext *contex
     d2tm_assert(player!=nullptr);
     d2tm_assert(context!=nullptr);
     d2tm_assert(mouse!=nullptr);
+    m_placeSound = context->getAudioContext()->indexOf("SOUND_PLACE");
 }
 
 void cMousePlaceState::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -89,7 +90,7 @@ void cMousePlaceState::onMouseLeftButtonClicked()
             return;
         }
 
-        m_context->getAudioContext()->playSound(sounds::place);
+        m_context->getAudioContext()->playSound(m_placeSound);
         m_player->placeItem(mouseCell, itemToPlace);
         m_context->toPreviousState();
     }

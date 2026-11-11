@@ -53,6 +53,8 @@ private:
     cPlayer *m_player;  //
     GameContext* m_ctx;
     AudioContext* m_audioContext = nullptr;
+    int m_creditUpSound = -1;
+    int m_creditDownSound = -1;
     cMapCamera* m_mapCamera = nullptr;
     cGameObjectContext* m_objects = nullptr;
     Graphics* m_gfxinter;

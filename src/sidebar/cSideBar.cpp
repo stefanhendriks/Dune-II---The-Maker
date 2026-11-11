@@ -83,6 +83,7 @@ void cSideBar::serviceInit(sGameServices* services)
     m_drawManager = services->drawManager;
     m_settings = services->settings;
     m_audioContext = services->ctx->getAudioContext();
+    m_buttonSound = m_audioContext->indexOf("SOUND_BUTTON");
     m_eventEmitter = services->eventEmitter;
 }
 
@@ -210,7 +211,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
         if (list->isOverButton(event.coords.x, event.coords.y)) {
             // clicked on it. Set focus on this one
             setSelectedListId(eListTypeFromInt(i));
-            m_audioContext->playSound(sounds::button); // click sound
+            m_audioContext->playSound(m_buttonSound); // click sound
             break;
         }
     }

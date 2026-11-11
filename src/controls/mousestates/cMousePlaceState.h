@@ -43,6 +43,8 @@ public:
     void onBlur() override;
 
 private:
+    int m_placeSound = -1;
+
     void onMouseLeftButtonClicked();
 
     void onMouseRightButtonPressed();

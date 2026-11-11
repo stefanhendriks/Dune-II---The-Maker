@@ -103,6 +103,7 @@ void cMiniMapDrawer::serviceInit(sGameServices* services)
     m_infos = services->info;
     m_mouse = services->mouse;
     m_audioContext = services->ctx->getAudioContext();
+    m_radarSound = m_audioContext->indexOf("SOUND_RADAR");
 }
 
 void cMiniMapDrawer::draw()
@@ -171,7 +172,7 @@ void cMiniMapDrawer::think()
     if (m_player->hasAtleastOneStructure(RADAR)) {
         if (m_status == eMinimapStatus::NOTAVAILABLE) {
             // Route through POWERDOWN instead of jumping straight to POWERUP, so the
-            // power check below (which plays sounds::radar) always gets a chance to run,
+            // power check below (which plays the radar sound) always gets a chance to run,
             // even when power is already sufficient the instant the radar completes.
             m_status = eMinimapStatus::POWERDOWN;
         }
@@ -199,7 +200,7 @@ void cMiniMapDrawer::think()
         if (hasRadarAndEnoughPower) {
             // go to state power up (enough power)
             m_status = eMinimapStatus::POWERUP;
-            m_audioContext->playSound(sounds::radar);
+            m_audioContext->playSound(m_radarSound);
             // "Radar activated"
             m_audioContext->playVoice(soundpools::voice03, m_player->getHouse());
         }

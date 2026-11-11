@@ -62,6 +62,8 @@ public:
 
 private:
     eMouseNormalState m_state;
+    int m_reportingSound = -1;
+    int m_yesSirSound = -1;
 
     void onMouseLeftButtonClicked();
 

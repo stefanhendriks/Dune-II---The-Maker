@@ -136,6 +136,7 @@ private:
     cDrawManager* m_drawManager = nullptr;
     cGameSettings* m_settings = nullptr;
     AudioContext* m_audioContext = nullptr;
+    int m_buttonSound = -1;
     cEventEmitter* m_eventEmitter = nullptr;
 
     bool m_isMouseOverSidebarValue;
