@@ -182,6 +182,11 @@ void cSoundPlayer::playMusic(int sampleId)
     if (!m_isMusicEnabled || !m_musicTrack) {
         return;
     }
+    if (sampleId < 0) {
+        // a name that is not in the pack: skip this track, but keep music enabled for the others
+        Logger::warn(COMP_SOUND, "playMusic", "Unresolved music sample [{}], not playing.", sampleId);
+        return;
+    }
     MIX_Audio *audio = soundData->getAudio(sampleId);
     if (!audio) {
         Logger::error(COMP_SOUND, "playMusic",
