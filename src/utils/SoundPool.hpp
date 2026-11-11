@@ -17,7 +17,9 @@
 
 #include "utils/RNG.hpp"
 
+#include <functional>
 #include <span>
+#include <string_view>
 
 /**
  * A named set of interchangeable sound ids (variants of one sound).
@@ -48,3 +50,17 @@ public:
 private:
     std::span<const int> m_ids;
 };
+
+/**
+ * Fills `ids` with the pack index of each name, via `lookup` (-1 when a name is unknown).
+ * Returns how many names could not be resolved. `names` and `ids` must have the same size.
+ */
+inline int resolveSoundIds(std::span<const std::string_view> names, std::span<int> ids,
+                           const std::function<int(std::string_view)> &lookup) {
+    int unresolved = 0;
+    for (std::size_t i = 0; i < names.size() && i < ids.size(); i++) {
+        ids[i] = lookup(names[i]);
+        if (ids[i] < 0) unresolved++;
+    }
+    return unresolved;
+}

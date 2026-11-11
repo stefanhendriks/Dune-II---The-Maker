@@ -48,3 +48,22 @@ TEST_CASE("lose music pool holds only the three lose tracks", "[SoundPool]") {
         CHECK((id >= MIDI_LOSE01 && id <= MIDI_LOSE03));
     }
 }
+
+TEST_CASE("resolveSoundIds fills ids from names via the lookup", "[SoundPool]") {
+    constexpr std::array<std::string_view, 3> names = {"A", "B", "C"};
+    std::array<int, 3> ids{};
+    auto lookup = [](std::string_view n) { return n == "A" ? 5 : n == "B" ? 9 : -1; };
+    CHECK(resolveSoundIds(names, ids, lookup) == 1);
+    CHECK(ids[0] == 5);
+    CHECK(ids[1] == 9);
+    CHECK(ids[2] == -1);
+}
+
+TEST_CASE("a SoundPool over resolved ids picks the resolved values", "[SoundPool]") {
+    static std::array<int, 2> ids{};
+    constexpr std::array<std::string_view, 2> names = {"X", "Y"};
+    resolveSoundIds(names, ids, [](std::string_view n) { return n == "X" ? 11 : 12; });
+    SoundPool pool{ids};
+    CHECK(pool.at(0) == 11);
+    CHECK(pool.at(1) == 12);
+}
