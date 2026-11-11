@@ -28,6 +28,7 @@
 #include "utils/Graphics.hpp"
 #include "context/GameContext.hpp"
 #include "context/GraphicsContext.hpp"
+#include "data/Sounds.h"
 #include "data/gfxaudio.h"
 
 #include <SDL3/SDL.h>
@@ -120,10 +121,10 @@ void CreditsDrawer::thinkFast()
 
         // decide what sound to play when done
         if (m_currentCredits > m_previousCredits) {
-            m_soundType = SOUND_CREDITUP;
+            m_soundType = sounds::creditUp;
         }
         else if (m_currentCredits < m_previousCredits) {
-            m_soundType = SOUND_CREDITDOWN;
+            m_soundType = sounds::creditDown;
         }
         else {
             m_soundType = -1;

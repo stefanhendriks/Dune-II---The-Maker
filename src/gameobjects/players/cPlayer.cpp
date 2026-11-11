@@ -50,6 +50,7 @@
 
 #include <algorithm>
 
+#include "data/Sounds.h"
 #include "data/gfxaudio.h"
 #include "context/GraphicsContext.hpp"
 #include "gameobjects/cSpecialInfos.h"
@@ -2608,11 +2609,11 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
     }
 
     if (unitSelected) {
-        m_audioContext->playSound(SOUND_REPORTING);
+        m_audioContext->playSound(sounds::reporting);
     }
 
     if (infantrySelected) {
-        m_audioContext->playSound(SOUND_YESSIR);
+        m_audioContext->playSound(sounds::yesSir);
     }
 
     // return true if we selected any unit

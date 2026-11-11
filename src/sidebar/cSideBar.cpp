@@ -21,6 +21,7 @@
 #include "utils/Log.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
+#include "data/Sounds.h"
 #include "data/gfxaudio.h"
 #include "context/AudioContext.hpp"
 #include "game/cEventEmitter.h"
@@ -210,7 +211,7 @@ void cSideBar::onMouseClickedLeft(const s_MouseEvent &event)
         if (list->isOverButton(event.coords.x, event.coords.y)) {
             // clicked on it. Set focus on this one
             setSelectedListId(eListTypeFromInt(i));
-            m_audioContext->playSound(SOUND_BUTTON); // click sound
+            m_audioContext->playSound(sounds::button); // click sound
             break;
         }
     }

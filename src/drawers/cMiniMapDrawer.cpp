@@ -41,6 +41,7 @@
 #include <cmath>
 //#include <iostream>
 
+#include "data/Sounds.h"
 #include "data/gfxaudio.h"
 #include "data/SoundPools.h"
 #include "gameobjects/particles/cParticle.h"
@@ -171,7 +172,7 @@ void cMiniMapDrawer::think()
     if (m_player->hasAtleastOneStructure(RADAR)) {
         if (m_status == eMinimapStatus::NOTAVAILABLE) {
             // Route through POWERDOWN instead of jumping straight to POWERUP, so the
-            // power check below (which plays SOUND_RADAR) always gets a chance to run,
+            // power check below (which plays sounds::radar) always gets a chance to run,
             // even when power is already sufficient the instant the radar completes.
             m_status = eMinimapStatus::POWERDOWN;
         }
@@ -199,7 +200,7 @@ void cMiniMapDrawer::think()
         if (hasRadarAndEnoughPower) {
             // go to state power up (enough power)
             m_status = eMinimapStatus::POWERUP;
-            m_audioContext->playSound(SOUND_RADAR);
+            m_audioContext->playSound(sounds::radar);
             // "Radar activated"
             m_audioContext->playVoice(SOUND_VOICE_03_ATR, m_player->getHouse());
         }

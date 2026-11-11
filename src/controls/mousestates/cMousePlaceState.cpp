@@ -32,6 +32,7 @@
 #include <algorithm>
 #include "include/cAssert.h"
 
+#include "data/Sounds.h"
 #include "data/gfxaudio.h"
 #include "gameobjects/structures/cStructureFactory.h"
 
@@ -89,7 +90,7 @@ void cMousePlaceState::onMouseLeftButtonClicked()
             return;
         }
 
-        m_context->getAudioContext()->playSound(SOUND_PLACE);
+        m_context->getAudioContext()->playSound(sounds::place);
         m_player->placeItem(mouseCell, itemToPlace);
         m_context->toPreviousState();
     }
