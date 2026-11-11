@@ -108,6 +108,7 @@ private:
     cInfoContext* m_infos = nullptr;
     cMouse* m_mouse = nullptr;
     AudioContext* m_audioContext = nullptr;
+    int m_radarSound = -1;
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
     Texture *m_mipMapTex;

@@ -94,6 +94,8 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_eventEmitter != nullptr);
     m_audioContext = services->ctx->getAudioContext();
     d2tm_assert(m_audioContext != nullptr);
+    m_reportingSound = m_audioContext->indexOf("SOUND_REPORTING");
+    m_yesSirSound = m_audioContext->indexOf("SOUND_YESSIR");
     m_screenFader = services->screenFader;
     d2tm_assert(m_screenFader != nullptr);
     m_structureUtils = services->structureUtils;
@@ -2609,11 +2611,11 @@ bool cPlayer::selectUnits(const std::vector<int> &ids) const
     }
 
     if (unitSelected) {
-        m_audioContext->playSound(sounds::reporting);
+        m_audioContext->playSound(m_reportingSound);
     }
 
     if (infantrySelected) {
-        m_audioContext->playSound(sounds::yesSir);
+        m_audioContext->playSound(m_yesSirSound);
     }
 
     // return true if we selected any unit

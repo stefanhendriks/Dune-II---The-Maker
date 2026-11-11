@@ -47,6 +47,8 @@ cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *cont
     d2tm_assert(player!=nullptr);
     d2tm_assert(context!=nullptr);
     d2tm_assert(mouse!=nullptr);
+    m_reportingSound = context->getAudioContext()->indexOf("SOUND_REPORTING");
+    m_yesSirSound = context->getAudioContext()->indexOf("SOUND_YESSIR");
 }
 
 void cMouseNormalState::onNotifyMouseEvent(const s_MouseEvent &event)
@@ -153,11 +155,11 @@ void cMouseNormalState::onMouseLeftButtonClicked()
         }
 
         if (unitSelected) {
-            m_context->getAudioContext()->playSound(sounds::reporting);
+            m_context->getAudioContext()->playSound(m_reportingSound);
         }
 
         if (infantrySelected) {
-            m_context->getAudioContext()->playSound(sounds::yesSir);
+            m_context->getAudioContext()->playSound(m_yesSirSound);
         }
 
         selectedUnits = unitSelected || infantrySelected;

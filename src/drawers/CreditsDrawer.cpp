@@ -78,6 +78,8 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer 
 void CreditsDrawer::serviceInit(sGameServices* services)
 {
     m_audioContext = services->ctx->getAudioContext();
+    m_creditUpSound = m_audioContext->indexOf("SOUND_CREDIT_UP");
+    m_creditDownSound = m_audioContext->indexOf("SOUND_CREDIT_DOWN");
     m_mapCamera = services->mapCamera;
     m_objects = services->objects;
 }
@@ -120,10 +122,10 @@ void CreditsDrawer::thinkFast()
 
         // decide what sound to play when done
         if (m_currentCredits > m_previousCredits) {
-            m_soundType = sounds::creditUp;
+            m_soundType = m_creditUpSound;
         }
         else if (m_currentCredits < m_previousCredits) {
-            m_soundType = sounds::creditDown;
+            m_soundType = m_creditDownSound;
         }
         else {
             m_soundType = -1;
