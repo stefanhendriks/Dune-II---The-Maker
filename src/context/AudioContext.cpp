@@ -21,7 +21,6 @@
 #include "utils/Log.h"
 #include "include/definitions.h"
 #include "data/SoundPools.h"
-#include "data/Sounds.h"
 #include "include/cAssert.h"
 
 #include <format>
@@ -53,7 +52,7 @@ AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSetti
     d2tm_assert(m_settings != nullptr);
     m_jukeBox->createRepertoryDirectories();
     const auto lookup = [this](std::string_view name) { return indexOf(name); };
-    const int missing = soundpools::resolve(lookup) + sounds::resolve(lookup);
+    const int missing = soundpools::resolve(lookup);
     if (missing > 0) {
         Logger::error(COMP_SOUND, "AudioContext", "{} sound names not found in the audio pack", missing);
     }

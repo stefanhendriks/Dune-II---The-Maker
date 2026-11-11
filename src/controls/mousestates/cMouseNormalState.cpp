@@ -37,7 +37,6 @@
 #include <algorithm>
 #include "include/cAssert.h"
 
-#include "data/Sounds.h"
 #include "sidebar/cSideBar.h"
 
 cMouseNormalState::cMouseNormalState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
