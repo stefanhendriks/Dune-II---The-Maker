@@ -127,3 +127,59 @@ TEST_CASE("ReaderPack - a duplicate entry name warns on stderr and name lookup k
     CHECK(reader.getIndexFromName("same_name") == 0);
     CHECK(captured.str().find("duplicate entry name 'same_name'") != std::string::npos);
 }
+
+TEST_CASE("ReaderPack - a pack without header has no author and version 0", "[pack]")
+{
+    TempDir dir("d2tm_pack_noheader");
+    const std::string packName = dir.file("old.pak");
+    {
+        WriterPack writer(packName);
+        REQUIRE(writer.addFile(dir.write("a.txt", "old"), "file_a"));
+        REQUIRE(writer.writePackFilesOnDisk());
+    }
+
+    ReaderPack reader(packName);
+    REQUIRE(reader.getAuthor().empty());
+    REQUIRE(reader.getVersion() == 0);
+    REQUIRE(reader.getNumberOfFiles() == 1);
+    REQUIRE(readAll(reader.getData(0)) == "old");
+}
+
+TEST_CASE("ReaderPack - author and version are read from the pack header", "[pack]")
+{
+    TempDir dir("d2tm_pack_header");
+    const std::string packName = dir.file("new.pak");
+    {
+        WriterPack writer(packName);
+        writer.setHeader("core", 2);
+        REQUIRE(writer.addFile(dir.write("a.txt", "first"), "file_a"));
+        REQUIRE(writer.addFile(dir.write("b.txt", "second"), "file_b"));
+        REQUIRE(writer.writePackFilesOnDisk());
+    }
+
+    ReaderPack reader(packName);
+    REQUIRE(reader.getAuthor() == "core");
+    REQUIRE(reader.getVersion() == 2);
+    REQUIRE(reader.getNumberOfFiles() == 2);
+    REQUIRE(reader.getIndexFromName("file_b") == 1);
+    REQUIRE(readAll(reader.getData(0)) == "first");
+    REQUIRE(readAll(reader.getData(1)) == "second");
+}
+
+TEST_CASE("ReaderPack - a header that is cut off is rejected", "[pack]")
+{
+    TempDir dir("d2tm_pack_truncated");
+    const std::string truncated = dir.write("cut.pak", "D2THco");
+
+    ReaderPack reader(truncated);
+    REQUIRE(reader.getNumberOfFiles() == 0);
+}
+
+TEST_CASE("WriterPack - addFile rejects entry names over 39 characters", "[pack]")
+{
+    TempDir dir("d2tm_pack_longname");
+    const std::string source = dir.write("a.txt", "x");
+    WriterPack writer(dir.file("test.pak"));
+    REQUIRE(writer.addFile(source, std::string(39, 'a')));
+    REQUIRE_FALSE(writer.addFile(source, std::string(40, 'a')));
+}

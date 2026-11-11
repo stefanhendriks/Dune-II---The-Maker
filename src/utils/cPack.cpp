@@ -21,6 +21,7 @@
 
 
 #include <string>
+#include <cstdlib>
 #include <iostream>
 #include <iomanip>
 #include <map>
@@ -32,7 +33,9 @@
 #include <memory>
 
 const int fileNameSize = 40;
-const int titleSize = 4;    // "D2TM"
+const int titleSize = 4;    // "D2TM" (pack without header) or "D2TH" (pack with author and version)
+const int authorSize = 15;  // NUL padded text, only in "D2TH" packs
+const int versionSize = 5;  // decimal digits, NUL terminated (4+1), only in "D2TH" packs
 const int offsetSize = 4+4; // two uint32_t
 const int nbrFilesSize = 2; // one uint16_t
 const int extensionSize = 4; // "WAV", "JPG", ...
@@ -50,7 +53,7 @@ ReaderPack::ReaderPack(const std::string &filename)
 {
     fpName = filename;
     if (readHeader()) {
-        sizeInMemory = SDL_GetIOSize(rfp.get()) - titleSize - nbrFilesSize - (fileNameSize+offsetSize)*fileInPak;
+        sizeInMemory = SDL_GetIOSize(rfp.get()) - headerSize - (fileNameSize+extensionSize+offsetSize)*fileInPak;
         fileInMemory = std::make_unique<char[]>(sizeInMemory);
         readFileLines();
     }
@@ -118,7 +121,29 @@ bool ReaderPack::readHeader()
         return false;
     }
     std::array<char, 4> title {};
-    if (SDL_ReadIO(rfp.get(), title.data(), 4) != 4 || std::string_view(title.data(), title.size()) != "D2TM") {
+    if (SDL_ReadIO(rfp.get(), title.data(), 4) != 4) {
+        std::cerr << "Invalid file format: " << fpName << std::endl;
+        rfp.reset();
+        return false;
+    }
+    const std::string_view titleView(title.data(), title.size());
+    headerSize = titleSize + nbrFilesSize;
+    if (titleView == "D2TH") {
+        std::array<char, authorSize> rawAuthor {};
+        std::array<char, versionSize> rawVersion {};
+        if (SDL_ReadIO(rfp.get(), rawAuthor.data(), authorSize) != authorSize ||
+                SDL_ReadIO(rfp.get(), rawVersion.data(), versionSize) != versionSize) {
+            std::cerr << "Failed to read pack header: " << fpName << std::endl;
+            rfp.reset();
+            return false;
+        }
+        rawAuthor.back() = '\0';
+        rawVersion.back() = '\0';
+        author = std::string(rawAuthor.data());
+        version = static_cast<unsigned int>(std::strtoul(rawVersion.data(), nullptr, 10));
+        headerSize += authorSize + versionSize;
+    } else if (titleView != "D2TM") {
+        // "D2TM": pack without header, author stays empty and version 0
         std::cerr << "Invalid file format: " << fpName << std::endl;
         rfp.reset();
         return false;
@@ -131,6 +156,7 @@ bool ReaderPack::readHeader()
         return false;
     }
     fileInPak = nbrFiles;
+    Logger::info(COMP_INIT, "ReaderPack", "Pack {}: author '{}', version {}, {} files", fpName, author, version, fileInPak);
     return true;
 }
 
@@ -173,7 +199,7 @@ void ReaderPack::displayPackFile()
 
 void ReaderPack::readDataIntoMemory()
 {
-    uint16_t firstData = titleSize + nbrFilesSize + (fileNameSize+extensionSize+offsetSize) * fileInPak;
+    const uint32_t firstData = headerSize + (fileNameSize+extensionSize+offsetSize) * fileInPak;
     SDL_SeekIO(rfp.get(), firstData, SDL_IO_SEEK_SET );
     SDL_ReadIO(rfp.get(), fileInMemory.get(), sizeInMemory);
 }
@@ -195,8 +221,19 @@ WriterPack::~WriterPack()
     fileInPack.clear();
 }
 
+void WriterPack::setHeader(const std::string &packAuthor, unsigned int packVersion)
+{
+    author = packAuthor.substr(0, authorSize - 1);
+    version = packVersion;
+    hasHeader = true;
+}
+
 bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
 {
+    if (fileId.size() >= fileNameSize) {
+        std::cerr << "Entry name '" << fileId << "' is longer than " << fileNameSize - 1 << " characters" << std::endl;
+        return false;
+    }
     SDL_IOStream *file = SDL_IOFromFile(fileName.c_str(),"rb");
     if (file!=nullptr) {
 
@@ -219,9 +256,16 @@ bool WriterPack::addFile(const std::string &fileName, const std::string &fileId)
 
 void WriterPack::writeHeader()
 {
-    constexpr std::string_view str = "D2TM";
+    const std::string_view str = hasHeader ? "D2TH" : "D2TM";
     if (SDL_WriteIO(wfp.get(), str.data(), str.size()) != str.size()) {
         std::cerr << "Couldn't fully write string" << std::endl;
+    }
+    if (hasHeader) {
+        std::array<char, authorSize + versionSize> buffer {};
+        std::ranges::copy(author, buffer.begin());
+        const std::string versionText = std::to_string(version % 10000);
+        std::ranges::copy(versionText, buffer.begin() + authorSize);
+        SDL_WriteIO(wfp.get(), buffer.data(), buffer.size());
     }
     uint16_t nbFiles = fileInPack.size();
     SDL_WriteIO(wfp.get(), reinterpret_cast<const char *>(&nbFiles), sizeof(uint16_t));
