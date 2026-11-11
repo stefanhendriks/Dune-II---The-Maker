@@ -169,10 +169,26 @@ TEST_CASE("ReaderPack - author and version are read from the pack header", "[pac
 TEST_CASE("ReaderPack - a header that is cut off is rejected", "[pack]")
 {
     TempDir dir("d2tm_pack_truncated");
-    const std::string truncated = dir.write("cut.pak", "D2THco");
+    const std::string truncated = dir.write("cut.pak", "D2TMco");
 
     ReaderPack reader(truncated);
     REQUIRE(reader.getNumberOfFiles() == 0);
+}
+
+TEST_CASE("ReaderPack - an old pack whose first entry name looks like header text is read as old", "[pack]")
+{
+    TempDir dir("d2tm_pack_lookalike");
+    const std::string packName = dir.file("old.pak");
+    {
+        WriterPack writer(packName);
+        REQUIRE(writer.addFile(dir.write("a.txt", "data"), "core"));
+        REQUIRE(writer.writePackFilesOnDisk());
+    }
+
+    ReaderPack reader(packName);
+    REQUIRE(reader.getAuthor().empty());
+    REQUIRE(reader.getIndexFromName("core") == 0);
+    REQUIRE(readAll(reader.getData(0)) == "data");
 }
 
 TEST_CASE("WriterPack - addFile rejects entry names over 39 characters", "[pack]")
