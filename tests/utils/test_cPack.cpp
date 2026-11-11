@@ -208,3 +208,44 @@ TEST_CASE("WriterPack - setHeader rejects an author or version that does not fit
     REQUIRE_FALSE(writer.setHeader("core", 10000));
     REQUIRE(writer.setHeader(std::string(14, 'a'), 9999));
 }
+
+TEST_CASE("ReaderPack - a text entry is read back as UTF-8 text by name", "[pack]")
+{
+    TempDir dir("d2tm_pack_text");
+    const std::string text = "Welcome, Atreides.\nCaf\xC3\xA9 \xE2\x80\x93 line two";
+    const std::string packName = dir.file("test.pak");
+
+    {
+        WriterPack writer(packName);
+        REQUIRE(writer.addFile(dir.write("a.bin", "binary"), "data_a"));
+        REQUIRE(writer.addFile(dir.write("intro.txt", text), "intro"));
+        REQUIRE(writer.writePackFilesOnDisk());
+    }
+
+    ReaderPack reader(packName);
+    REQUIRE(reader.getExtension(1) == "TXT");
+    REQUIRE(reader.getText("intro") == text);
+    // not a text entry, or unknown
+    REQUIRE_FALSE(reader.getText("data_a").has_value());
+    REQUIRE_FALSE(reader.getText("nope").has_value());
+    // the raw bytes are still reachable the usual way
+    REQUIRE(readAll(reader.getData(0)) == "binary");
+}
+
+TEST_CASE("ReaderPack - a pack without text entries loads unchanged", "[pack]")
+{
+    TempDir dir("d2tm_pack_notext");
+    const std::string packName = dir.file("test.pak");
+    {
+        WriterPack writer(packName);
+        REQUIRE(writer.addFile(dir.write("a.dat", "aaa"), "file_a"));
+        REQUIRE(writer.addFile(dir.write("b.dat", "bbbb"), "file_b"));
+        REQUIRE(writer.writePackFilesOnDisk());
+    }
+
+    ReaderPack reader(packName);
+    REQUIRE(reader.getNumberOfFiles() == 2);
+    REQUIRE(readAll(reader.getData(1)) == "bbbb");
+    REQUIRE_FALSE(reader.getText("file_a").has_value());
+    REQUIRE(reader.getExtension(5).empty());
+}

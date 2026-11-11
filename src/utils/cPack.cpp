@@ -21,6 +21,7 @@
 
 
 #include <string>
+#include <cctype>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -211,6 +212,24 @@ SDL_IOStream *ReaderPack::getData(unsigned int index)
         return nullptr;
     }
     return SDL_IOFromConstMem( &fileInMemory[fileInPack[index].fileOffset], fileInPack[index].fileSize );
+}
+
+std::string ReaderPack::getExtension(unsigned int index) const
+{
+    if (index >= fileInPack.size()) return {};
+    return fileInPack[index].extension;
+}
+
+std::optional<std::string> ReaderPack::getText(const std::string &fileId) const
+{
+    const int index = getIndexFromName(fileId);
+    if (index < 0) return std::nullopt;
+    const FileInPack &entry = fileInPack[index];
+    const bool isText = std::ranges::equal(entry.extension, std::string_view("txt"), [](char a, char b) {
+        return std::tolower(static_cast<unsigned char>(a)) == b;
+    });
+    if (!isText) return std::nullopt;
+    return std::string(&fileInMemory[entry.fileOffset], entry.fileSize);
 }
 
 void ReaderPack::displayPackFile()
