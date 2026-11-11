@@ -86,3 +86,51 @@ TEST_CASE("cFileValidator - fileExists is false when a configured filename is em
     validator.addResources({{eGameDirFileName::GFXDATA, ""}});
     REQUIRE_FALSE(validator.fileExists());
 }
+
+TEST_CASE("cFileValidator - a datapack is found by its base name", "[filevalidator]")
+{
+    TempDir dir("d2tm_filevalidator_base");
+    dir.write("sdl_data_5741.dat");
+
+    cFileValidator validator(dir.path.string());
+    validator.addResources({{eGameDirFileName::GFXDATA, "sdl_data.dat"}});
+
+    REQUIRE(validator.getName(eGameDirFileName::GFXDATA) == "sdl_data_5741.dat");
+    REQUIRE(validator.fileExists());
+}
+
+TEST_CASE("cFileValidator - the exact datapack name still works and wins over longer names", "[filevalidator]")
+{
+    TempDir dir("d2tm_filevalidator_exact");
+    dir.write("sdl_data.dat");
+    dir.write("sdl_data_5741.dat");
+
+    cFileValidator validator(dir.path.string());
+    validator.addResources({{eGameDirFileName::GFXDATA, "sdl_data.dat"}});
+
+    REQUIRE(validator.getName(eGameDirFileName::GFXDATA) == "sdl_data.dat");
+}
+
+TEST_CASE("cFileValidator - with several matching datapacks the first by name is used", "[filevalidator]")
+{
+    TempDir dir("d2tm_filevalidator_multi");
+    dir.write("sdl_audio_7.dat");
+    dir.write("sdl_audio_2.dat");
+
+    cFileValidator validator(dir.path.string());
+    validator.addResources({{eGameDirFileName::GFXAUDIO, "sdl_audio.dat"}});
+
+    REQUIRE(validator.getName(eGameDirFileName::GFXAUDIO) == "sdl_audio_2.dat");
+}
+
+TEST_CASE("cFileValidator - non-datapack files are not matched by base name", "[filevalidator]")
+{
+    TempDir dir("d2tm_filevalidator_font");
+    dir.write("arrakeen_other.fon");
+
+    cFileValidator validator(dir.path.string());
+    validator.addResources({{eGameDirFileName::ARRAKEEN, "arrakeen.fon"}});
+
+    REQUIRE(validator.getName(eGameDirFileName::ARRAKEEN) == "arrakeen.fon");
+    REQUIRE_FALSE(validator.fileExists());
+}

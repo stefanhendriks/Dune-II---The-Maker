@@ -15,8 +15,12 @@
 
 #include "cFileValidator.h"
 
+#include "utils/Log.h"
+
+#include <algorithm>
 #include <iostream>
 #include <filesystem>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -33,9 +37,46 @@ cFileValidator::cFileValidator(const std::string &path)
     // m_enumToString[eGameDirFileName::GFXAUDIO] = "gfxaudio.dat";
 }
 
+// A configured "<base>.dat" matches every "<base>*.dat" in the directory (so "sdl_data_5741.dat" is found for
+// "sdl_data.dat"). The first match by name wins; the exact name sorts first. Without any match the configured
+// name is kept, so fileExists() reports it as missing.
+static std::string resolveDatapackName(const std::string &path, const std::string &configured)
+{
+    const fs::path configuredPath(configured);
+    if (configuredPath.extension() != ".dat") return configured;
+
+    const std::string base = configuredPath.stem().string();
+    std::vector<std::string> matches;
+    std::error_code ec;
+    for (const auto &entry : fs::directory_iterator(path, ec)) {
+        if (!entry.is_regular_file(ec)) continue;
+        const fs::path &file = entry.path();
+        const std::string name = file.filename().string();
+        if (file.extension() == ".dat" && name.starts_with(base)) {
+            matches.push_back(name);
+        }
+    }
+    if (matches.empty()) return configured;
+
+    std::ranges::sort(matches);
+    if (matches.size() > 1) {
+        std::string others;
+        for (size_t i = 1; i < matches.size(); i++) {
+            others += (i > 1 ? ", " : "") + matches[i];
+        }
+        Logger::info(COMP_INIT, "Load data", "Datapack base name '{}': using '{}', other matching packs exist and are skipped: {}", base, matches[0], others);
+    } else if (matches[0] != configured) {
+        Logger::info(COMP_INIT, "Load data", "Datapack base name '{}': using '{}'", base, matches[0]);
+    }
+    return matches[0];
+}
+
 void cFileValidator::addResources(std::map<eGameDirFileName, std::string> _transfertMap)
 {
     m_enumToString = _transfertMap;
+    for (auto &[key, value] : m_enumToString) {
+        value = resolveDatapackName(m_path, value);
+    }
 }
 
 cFileValidator::~cFileValidator()
