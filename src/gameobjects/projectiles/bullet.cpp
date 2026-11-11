@@ -36,7 +36,6 @@
 #include <format>
 #include <cmath>
 
-#include "data/Sounds.h"
 #include "data/SoundPools.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
@@ -520,7 +519,7 @@ bool cBullet::damageGroundUnit(int cell, double factor) const
 
         // TODO: Stefan: is this needed?!- aren't we playing sound effects in a more generic way?
         // TODO: impact sound effect should be configured!?
-        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, sounds::gas,
+        playSoundWithDistance(m_audioContext, m_mapCamera, m_objects, gets_Bullet().deviateSound,
                                            ABS_length(m_mapCamera->getViewportCenterX(), m_mapCamera->getViewportCenterY(),
                                                       m_objects->getMapGeometry()->getAbsoluteXPositionFromCell(cell),
                                                       m_objects->getMapGeometry()->getAbsoluteYPositionFromCell(cell)));
