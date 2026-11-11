@@ -46,7 +46,6 @@
 #include <cmath>
 
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
 #include "data/SoundPools.h"
 #include "game/cGameSettings.h"
 #include "gameobjects/players/cPlayerDifficultySettings.h"

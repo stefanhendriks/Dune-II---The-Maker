@@ -34,7 +34,6 @@
 #include <string>
 #include "include/cAssert.h"
 
-#include "data/gfxaudio.h"
 #include "data/SoundPools.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "controls/cKeyboardEvent.h"

@@ -37,7 +37,6 @@
 #include <cmath>
 
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
 #include "data/SoundPools.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"

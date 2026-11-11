@@ -21,7 +21,7 @@
 #include <functional>
 #include <string_view>
 
-// Variant sounds by name. Replaces `SOUND_X + rnd(n)` index math on gfxaudio.h.
+// Variant sounds by name. Replaces `SOUND_X + rnd(n)` index math.
 namespace soundpools {
 
 // Pack names, as stored in the audio pack (sdl_audio.dat). Static storage: SoundPool views the ids below.

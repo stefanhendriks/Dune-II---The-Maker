@@ -26,7 +26,6 @@
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"

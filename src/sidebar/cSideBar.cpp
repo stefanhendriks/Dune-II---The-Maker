@@ -22,7 +22,6 @@
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "data/Sounds.h"
-#include "data/gfxaudio.h"
 #include "context/AudioContext.hpp"
 #include "game/cEventEmitter.h"
 #include "context/GameContext.hpp"
