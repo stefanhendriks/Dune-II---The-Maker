@@ -16,6 +16,7 @@
 #pragma once
 
 
+#include "utils/audioID.h"
 #include "controls/mousestates/eMouseStates.h"
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
@@ -626,8 +627,8 @@ private:
     cGameObjectContext *m_objects = nullptr;
     cEventEmitter *m_eventEmitter = nullptr;
     AudioContext *m_audioContext = nullptr;
-    int m_reportingSound = -1;
-    int m_yesSirSound = -1;
+    audioID m_reportingSound = noAudioID;
+    audioID m_yesSirSound = noAudioID;
     cScreenFader *m_screenFader = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cLog *m_log = nullptr;

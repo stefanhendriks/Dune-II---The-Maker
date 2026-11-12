@@ -71,21 +71,21 @@ cSoundPlayer* AudioContext::getSoundPlayer() const
     return m_soundPlayer.get();
 }
 
-int AudioContext::indexOf(std::string_view name) const
+audioID AudioContext::indexOf(std::string_view name) const
 {
-    const int index = m_soundPlayer->getIndexFromName(std::string(name));
+    const audioID index = m_soundPlayer->getIndexFromName(std::string(name));
     if (index < 0) {
         Logger::error(COMP_SOUND, "AudioContext", "sound '{}' not found in the audio pack", name);
     }
     return index;
 }
 
-void AudioContext::playSound(int sampleId) const
+void AudioContext::playSound(audioID sampleId) const
 {
     m_soundPlayer->playSound(sampleId);
 }
 
-void AudioContext::playSound(int sampleId, int vol) const
+void AudioContext::playSound(audioID sampleId, int vol) const
 {
     m_soundPlayer->playSound(sampleId, vol);
 }
@@ -138,7 +138,7 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
         return false;
     }
 
-    int sampleId = m_menuMusic;
+    audioID sampleId = m_menuMusic;
     if (iType == eMusicType::WIN) {
         sampleId = soundpools::musicWin.pick();
     }

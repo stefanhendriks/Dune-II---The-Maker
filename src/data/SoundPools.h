@@ -56,28 +56,28 @@ inline constexpr std::array<std::string_view, 5> countdownOrdos = {"SOUND_ORD_S1
 
 // Pack indices. Written only once, by resolve() from the AudioContext constructor; read-only afterwards.
 namespace ids {
-inline std::array<int, 3> musicWin{};
-inline std::array<int, 3> musicLose{};
-inline std::array<int, 6> musicAttack{};
-inline std::array<int, 9> musicPeace{};
-inline std::array<int, 2> infantryAcknowledge{};
-inline std::array<int, 3> vehicleAcknowledge{};
-inline std::array<int, 5> infantryDie{};
-inline std::array<int, 2> tankDie{};
-inline std::array<int, 2> structureCrumble{};
-inline std::array<int, 3> voice01{};
-inline std::array<int, 3> voice02{};
-inline std::array<int, 3> voice03{};
-inline std::array<int, 3> voice04{};
-inline std::array<int, 3> voice05{};
-inline std::array<int, 3> voice06{};
-inline std::array<int, 3> voice07{};
-inline std::array<int, 3> voice08{};
-inline std::array<int, 3> voice09{};
-inline std::array<int, 3> voice10{};
-inline std::array<int, 5> countdownAtreides{};
-inline std::array<int, 5> countdownHarkonnen{};
-inline std::array<int, 5> countdownOrdos{};
+inline std::array<audioID, 3> musicWin{};
+inline std::array<audioID, 3> musicLose{};
+inline std::array<audioID, 6> musicAttack{};
+inline std::array<audioID, 9> musicPeace{};
+inline std::array<audioID, 2> infantryAcknowledge{};
+inline std::array<audioID, 3> vehicleAcknowledge{};
+inline std::array<audioID, 5> infantryDie{};
+inline std::array<audioID, 2> tankDie{};
+inline std::array<audioID, 2> structureCrumble{};
+inline std::array<audioID, 3> voice01{};
+inline std::array<audioID, 3> voice02{};
+inline std::array<audioID, 3> voice03{};
+inline std::array<audioID, 3> voice04{};
+inline std::array<audioID, 3> voice05{};
+inline std::array<audioID, 3> voice06{};
+inline std::array<audioID, 3> voice07{};
+inline std::array<audioID, 3> voice08{};
+inline std::array<audioID, 3> voice09{};
+inline std::array<audioID, 3> voice10{};
+inline std::array<audioID, 5> countdownAtreides{};
+inline std::array<audioID, 5> countdownHarkonnen{};
+inline std::array<audioID, 5> countdownOrdos{};
 } // namespace ids
 
 inline constexpr SoundPool musicWin{ids::musicWin};
@@ -104,7 +104,7 @@ inline constexpr SoundPool countdownHarkonnen{ids::countdownHarkonnen};
 inline constexpr SoundPool countdownOrdos{ids::countdownOrdos};
 
 // Looks every pool name up in the audio pack. Returns how many names were not found.
-inline int resolve(const std::function<int(std::string_view)> &lookup) {
+inline int resolve(const std::function<audioID(std::string_view)> &lookup) {
     int missing = 0;
     missing += resolveSoundIds(names::musicWin, ids::musicWin, lookup);
     missing += resolveSoundIds(names::musicLose, ids::musicLose, lookup);

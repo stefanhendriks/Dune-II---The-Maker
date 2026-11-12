@@ -87,7 +87,7 @@ void MusicJukeBox::setCustomMusicEnabled(bool enabled)
     m_customMusicEnabled = enabled;
 }
 
-MusicChoice MusicJukeBox::choose(eMusicType type, int archiveTrack, int house) const
+MusicChoice MusicJukeBox::choose(eMusicType type, audioID archiveTrack, int house) const
 {
     MusicChoice choice{archiveTrack, std::nullopt};
     if (!m_customMusicEnabled) {

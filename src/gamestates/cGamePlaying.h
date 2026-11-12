@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/audioID.h"
 #include "cGameState.h"
 #include "controls/cKeyboardEvent.h"
 #include "controls/eKeyAction.h"
@@ -82,7 +83,7 @@ private:
     GameStateTransition* m_stateTransitions = nullptr;
     MissionFlow* m_missionFlow = nullptr;
     AudioContext* m_audioContext = nullptr;
-    int m_placeSound = -1;
+    audioID m_placeSound = noAudioID;
     cScreenFader* m_screenFader = nullptr;
     cMapCamera* m_mapCamera = nullptr;
     cRectangle* m_mapViewport = nullptr;

@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include "utils/audioID.h"
+
 #include <SDL3_mixer/SDL_mixer.h>
 #include <string>
 #include <memory>
@@ -63,7 +65,7 @@ public:
     // return index of a surface or audio
     int getIndexFromName(const std::string &name) const;
     // return audio from his index in pack (music or sfx)
-    MIX_Audio *getAudio(int index);
+    MIX_Audio *getAudio(audioID index);
     // return audio from his name
     MIX_Audio *getAudio(const std::string &name);
     // contents of a text entry (extension txt, UTF-8) from its name; nullopt if unknown or not a text entry

@@ -16,6 +16,7 @@
 #pragma once
 
 class cMouse;
+#include "utils/audioID.h"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
 class cRectangle;
@@ -144,8 +145,8 @@ public:
     void setNextStateToTransitionTo(eGameState newState);
 
     // Game acts as a facade, delegates to sound player
-    void playSound(int sampleId); // Maximum volume
-    void playSound(int sampleId, int vol);
+    void playSound(audioID sampleId); // Maximum volume
+    void playSound(audioID sampleId, int vol);
 
     void playMusicByTypeForStateTransition(eMusicType iType);
     bool playMusicByType(eMusicType iType, bool triggerWithVoice = false);

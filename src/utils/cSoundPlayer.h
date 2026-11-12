@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "utils/audioID.h"
+
 #include <memory>
 #include <string>
 #include <vector>
@@ -31,14 +33,14 @@ public:
     static int getMaxVolume();
 
     // Index of the named sample in the audio pack (the id to pass to playSound), or -1 when unknown.
-    int getIndexFromName(const std::string &name) const;
+    audioID getIndexFromName(const std::string &name) const;
 
-    void playSound(int sampleId); // Maximum volume
-    void playSound(int sampleId, int vol);
+    void playSound(audioID sampleId); // Maximum volume
+    void playSound(audioID sampleId, int vol);
 
     // Pass the sample ID of the voice line of the house that should be heard
-    void playVoice(int sampleId);
-    void playMusic(int sampleId);
+    void playVoice(audioID sampleId);
+    void playMusic(audioID sampleId);
     // Returns false when the file could not be loaded; the caller decides on a fallback.
     bool playMusicFile(const std::string &path);
 
@@ -70,7 +72,7 @@ private:
     static constexpr int kPriorityNormal = 0;
     static constexpr int kPriorityVoice = 1;
 
-    void playSoundWithPriority(int sampleId, int vol, int priority);
+    void playSoundWithPriority(audioID sampleId, int vol, int priority);
     void startMusic(MIX_Audio *audio);
     void releaseMusicFile();
 
