@@ -29,6 +29,7 @@
 #pragma once
 
 #include "cBuildingList.h"
+#include "utils/AudioID.hpp"
 #include "cBuildingListItem.h"
 #include "sGameEvent.h"
 #include "controls/sMouseEvent.h"
@@ -136,7 +137,7 @@ private:
     cDrawManager* m_drawManager = nullptr;
     cGameSettings* m_settings = nullptr;
     AudioContext* m_audioContext = nullptr;
-    int m_buttonSound = -1;
+    audioID m_buttonSound = audioID::invalid;
     cEventEmitter* m_eventEmitter = nullptr;
 
     bool m_isMouseOverSidebarValue;

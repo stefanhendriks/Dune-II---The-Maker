@@ -107,7 +107,7 @@ bool cOrderProcesser::acceptsOrders()
 
 void cOrderProcesser::playTMinusSound(int seconds)
 {
-    int soundIdToPlay = -1;
+    audioID soundIdToPlay = audioID::invalid;
 
     if (seconds == 0) {
         if (m_player->getHouse() == ATREIDES) {
@@ -138,7 +138,7 @@ void cOrderProcesser::playTMinusSound(int seconds)
         }
     }
 
-    if (soundIdToPlay > -1) {
+    if (soundIdToPlay != audioID::invalid) {
         m_audioContext->playSound(soundIdToPlay);
     }
 }

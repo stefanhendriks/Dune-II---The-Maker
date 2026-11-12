@@ -25,6 +25,7 @@
 // #include "gameobjects/map/cMap.h"
 // #include "gameobjects/map/cMapCamera.h"
 #include "utils/cRectangle.h"
+#include "utils/AudioID.hpp"
 #include "utils/Color.hpp"
 #include "controls/sMouseEvent.h"
 
@@ -108,7 +109,7 @@ private:
     cInfoContext* m_infos = nullptr;
     cMouse* m_mouse = nullptr;
     AudioContext* m_audioContext = nullptr;
-    int m_radarSound = -1;
+    audioID m_radarSound = audioID::invalid;
     cRectangle m_RectMinimap; // the minimap (map) itself
     cRectangle m_RectFullMinimap; // the total space it could take
     Texture *m_mipMapTex;

@@ -16,6 +16,7 @@
 #pragma once
 
 #include <array>
+#include "utils/AudioID.hpp"
 #include <cstddef>
 #include <stdexcept>
 #include <string>
@@ -70,8 +71,8 @@ struct s_UnitInfo {
     bool canBeSquished;       // can this unit be squished (is this a squishable unit)
     int dieWhenLowerThanHP;   // A unit that 'dies'(disappears) when health < this value. By default this is 1;
     int appetite;     // Amount of units this can eat, before 'dying'
-    int deathSound;   // pack index of the sound played when this unit dies (-1 = none)
-    int eatSound;     // pack index of the sound played when this unit eats a unit (-1 = none)
+    audioID deathSound;   // pack index of the sound played when this unit dies (-1 = none)
+    audioID eatSound;     // pack index of the sound played when this unit eats a unit (-1 = none)
 
     std::string name;         // name of unit
     int structureTypeItLeavesFrom; // the type of structure this unit will 'leave' from when it is built. (ie Quad from Light Factory, etc)

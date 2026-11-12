@@ -18,6 +18,7 @@
 #include "definitions.h"
 #include "utils/SoundPool.hpp"
 #include "context/MusicChoice.hpp"
+#include "utils/AudioID.hpp"
 
 #include <memory>
 #include <string_view>
@@ -35,13 +36,13 @@ public:
     // (volume sliders, instant mute) rather than going through game-level music logic.
     [[nodiscard]] cSoundPlayer* getSoundPlayer() const;
 
-    void playSound(int sampleId) const; // Maximum volume
-    void playSound(int sampleId, int vol) const;
+    void playSound(audioID sampleId) const; // Maximum volume
+    void playSound(audioID sampleId, int vol) const;
     // `voice` lists the voice line per house (Atreides, Harkonnen, Ordos); other houses use the Atreides one
     void playVoice(const SoundPool &voice, int house) const;
-    // Index of the named entry in the audio pack, or -1 (and an error in the log) when it is not in the pack.
+    // Index of the named entry in the audio pack, or audioID::invalid (and an error in the log) when it is not in the pack.
     // Owners of a sound look it up once and keep the index.
-    [[nodiscard]] int indexOf(std::string_view name) const;
+    [[nodiscard]] audioID indexOf(std::string_view name) const;
     [[nodiscard]] int getMaxVolume() const;
 
     void playMusicByTypeForStateTransition(eMusicType iType, int humanHouse);
@@ -60,11 +61,11 @@ private:
     cGameSettings* m_settings = nullptr;
 
     std::unique_ptr<MusicJukeBox> m_jukeBox;
-    int m_menuMusic = -1;
-    int m_scenarioMusic = -1;
-    int m_mentatMusicAtreides = -1;
-    int m_mentatMusicHarkonnen = -1;
-    int m_mentatMusicOrdos = -1;
+    audioID m_menuMusic = audioID::invalid;
+    audioID m_scenarioMusic = audioID::invalid;
+    audioID m_mentatMusicAtreides = audioID::invalid;
+    audioID m_mentatMusicHarkonnen = audioID::invalid;
+    audioID m_mentatMusicOrdos = audioID::invalid;
     MusicChoice m_newMusic;
     int m_newMusicCountdown;
 };
