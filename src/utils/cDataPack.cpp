@@ -89,7 +89,7 @@ MIX_Audio *DataPack::getAudio(const std::string &name)
     return this->getAudio(index);
 }
 
-MIX_Audio *DataPack::getAudio(int index)
+MIX_Audio *DataPack::getAudio(audioID index)
 {
     if (index < 0 || index >= reader->getNumberOfFiles()) {
         std::cerr << "Invalid index: " << index << std::endl;

@@ -115,7 +115,7 @@ int iFindCloseBorderCell(int iCll, cGameObjectContext* objects)
 }
 
 
-void playSoundWithDistance(AudioContext* audioContext, cMapCamera* mapCamera, cGameObjectContext* objects, int sampleId, int distance)
+void playSoundWithDistance(AudioContext* audioContext, cMapCamera* mapCamera, cGameObjectContext* objects, audioID sampleId, int distance)
 {
     if (distance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
         audioContext->playSound(sampleId);

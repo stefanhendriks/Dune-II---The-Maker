@@ -53,12 +53,12 @@ public:
         }
     }
 
-    MIX_Audio *getAudio(int id) const
+    MIX_Audio *getAudio(audioID id) const
     {
         return gfxaudio->getAudio(id);
     }
 
-    int getIndexFromName(const std::string &name) const
+    audioID getIndexFromName(const std::string &name) const
     {
         return gfxaudio->getIndexFromName(name);
     }
@@ -126,7 +126,7 @@ cSoundPlayer::~cSoundPlayer()
     }
 }
 
-int cSoundPlayer::getIndexFromName(const std::string &name) const
+audioID cSoundPlayer::getIndexFromName(const std::string &name) const
 {
     return soundData->getIndexFromName(name);
 }
@@ -136,7 +136,7 @@ int cSoundPlayer::getMaxVolume()
     return MaxVolume;
 }
 
-void cSoundPlayer::playSound(int sampleId)
+void cSoundPlayer::playSound(audioID sampleId)
 {
     if (!m_isSoundEnabled) {
         return;
@@ -144,12 +144,12 @@ void cSoundPlayer::playSound(int sampleId)
     playSound(sampleId, m_soundVolume);
 }
 
-void cSoundPlayer::playSound(int sampleId, int vol)
+void cSoundPlayer::playSound(audioID sampleId, int vol)
 {
     playSoundWithPriority(sampleId, vol, kPriorityNormal);
 }
 
-void cSoundPlayer::playSoundWithPriority(int sampleId, int vol, int priority)
+void cSoundPlayer::playSoundWithPriority(audioID sampleId, int vol, int priority)
 {
     if (vol <= 0 || !m_isSoundEnabled || !m_mixer || m_sfxTracks.empty()) {
         return;
@@ -169,7 +169,7 @@ void cSoundPlayer::playSoundWithPriority(int sampleId, int vol, int priority)
     }
 }
 
-void cSoundPlayer::playVoice(int sampleId)
+void cSoundPlayer::playVoice(audioID sampleId)
 {
     if (!m_isSoundEnabled) {
         return;
@@ -177,7 +177,7 @@ void cSoundPlayer::playVoice(int sampleId)
     playSoundWithPriority(sampleId, m_soundVolume, kPriorityVoice);
 }
 
-void cSoundPlayer::playMusic(int sampleId)
+void cSoundPlayer::playMusic(audioID sampleId)
 {
     if (!m_isMusicEnabled || !m_musicTrack) {
         return;
