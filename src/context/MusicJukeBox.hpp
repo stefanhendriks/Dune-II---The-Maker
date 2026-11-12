@@ -34,7 +34,7 @@ public:
 
     void setCustomMusicEnabled(bool enabled);
 
-    [[nodiscard]] MusicChoice choose(eMusicType type, int archiveTrack, int house) const;
+    [[nodiscard]] MusicChoice choose(eMusicType type, audioID archiveTrack, int house) const;
 
 private:
     std::filesystem::path m_root;

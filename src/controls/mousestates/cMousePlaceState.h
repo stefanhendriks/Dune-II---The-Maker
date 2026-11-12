@@ -19,6 +19,7 @@ class cKeyboardEvent;
 class AudioContext;
 class cMouse;
 #include "cMouseState.h"
+#include "utils/AudioID.hpp"
 #include "sGameEvent.h"
 class cBuildingListItem;
 struct s_MouseEvent;
@@ -47,7 +48,7 @@ public:
     void onBlur() override;
 
 private:
-    int m_placeSound = -1;
+    audioID m_placeSound = audioID::invalid;
 
     void onMouseLeftButtonClicked();
 

@@ -45,7 +45,7 @@ AudioContext::AudioContext(std::unique_ptr<cSoundPlayer> soundPlayer, cGameSetti
     m_soundPlayer(std::move(soundPlayer)),
     m_settings(settings),
     m_jukeBox(std::make_unique<MusicJukeBox>()),
-    m_newMusic{-1, std::nullopt},
+    m_newMusic{audioID::invalid, std::nullopt},
     m_newMusicCountdown(0)
 {
     d2tm_assert(m_soundPlayer != nullptr);
@@ -71,23 +71,24 @@ cSoundPlayer* AudioContext::getSoundPlayer() const
     return m_soundPlayer.get();
 }
 
-int AudioContext::indexOf(std::string_view name) const
+audioID AudioContext::indexOf(std::string_view name) const
 {
     const int index = m_soundPlayer->getIndexFromName(std::string(name));
     if (index < 0) {
         Logger::error(COMP_SOUND, "AudioContext", "sound '{}' not found in the audio pack", name);
+        return audioID::invalid;
     }
-    return index;
+    return toAudioID(index);
 }
 
-void AudioContext::playSound(int sampleId) const
+void AudioContext::playSound(audioID sampleId) const
 {
-    m_soundPlayer->playSound(sampleId);
+    m_soundPlayer->playSound(toPackIndex(sampleId));
 }
 
-void AudioContext::playSound(int sampleId, int vol) const
+void AudioContext::playSound(audioID sampleId, int vol) const
 {
-    m_soundPlayer->playSound(sampleId, vol);
+    m_soundPlayer->playSound(toPackIndex(sampleId), vol);
 }
 
 void AudioContext::playVoice(const SoundPool &voice, int house) const
@@ -99,7 +100,7 @@ void AudioContext::playVoice(const SoundPool &voice, int house) const
     else if (house == ORDOS) {
         variant = 2;
     }
-    m_soundPlayer->playVoice(voice.at(variant));
+    m_soundPlayer->playVoice(toPackIndex(voice.at(variant)));
 }
 
 int AudioContext::getMaxVolume() const
@@ -138,7 +139,7 @@ bool AudioContext::playMusicByType(eMusicType iType, bool triggerWithVoice, bool
         return false;
     }
 
-    int sampleId = m_menuMusic;
+    audioID sampleId = m_menuMusic;
     if (iType == eMusicType::WIN) {
         sampleId = soundpools::musicWin.pick();
     }
@@ -203,7 +204,7 @@ void AudioContext::startMusic(const MusicChoice &choice) const
     if (choice.file && m_soundPlayer->playMusicFile(choice.file->string())) {
         return;
     }
-    m_soundPlayer->playMusic(choice.archiveTrack);
+    m_soundPlayer->playMusic(toPackIndex(choice.archiveTrack));
 }
 
 void AudioContext::thinkFast()

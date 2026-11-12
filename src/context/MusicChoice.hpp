@@ -15,12 +15,14 @@
 
 #pragma once
 
+#include "utils/AudioID.hpp"
+
 #include <filesystem>
 #include <optional>
 
 // What to play for a music request: always an archive track (the fallback),
 // plus a file from the repertory directory when one was picked.
 struct MusicChoice {
-    int archiveTrack = 0;
+    audioID archiveTrack = toAudioID(0);
     std::optional<std::filesystem::path> file;
 };
