@@ -17,6 +17,7 @@
 
 
 #include "controls/mousestates/eMouseStates.h"
+#include "utils/AudioID.hpp"
 #include "definitions.h"
 #include "observers/cScenarioObserver.h"
 #include "gameobjects/players/brains/cPlayerBrain.h"
@@ -626,8 +627,8 @@ private:
     cGameObjectContext *m_objects = nullptr;
     cEventEmitter *m_eventEmitter = nullptr;
     AudioContext *m_audioContext = nullptr;
-    int m_reportingSound = -1;
-    int m_yesSirSound = -1;
+    audioID m_reportingSound = audioID::invalid;
+    audioID m_yesSirSound = audioID::invalid;
     cScreenFader *m_screenFader = nullptr;
     cStructureUtils *m_structureUtils = nullptr;
     cLog *m_log = nullptr;

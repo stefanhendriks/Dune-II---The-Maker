@@ -16,6 +16,7 @@
 #pragma once
 
 #include "cMouseState.h"
+#include "utils/AudioID.hpp"
 #include "controls/cMouse.h"
 #include "controls/sMouseEvent.h"
 #include "controls/cKeyboardEvent.h"
@@ -66,8 +67,8 @@ public:
 
 private:
     eMouseNormalState m_state;
-    int m_reportingSound = -1;
-    int m_yesSirSound = -1;
+    audioID m_reportingSound = audioID::invalid;
+    audioID m_yesSirSound = audioID::invalid;
 
     void onMouseLeftButtonClicked();
 

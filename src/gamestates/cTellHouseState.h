@@ -16,6 +16,7 @@
 #pragma once
 
 #include "cGameState.h"
+#include "utils/AudioID.hpp"
 #include "gameobjects/mentat/AbstractMentat.h"
 
 #include <memory>
@@ -50,9 +51,9 @@ private:
     cMouse* m_mouse = nullptr;
     cIni* m_cIni = nullptr;
     AudioContext* m_audioContext = nullptr;
-    int m_atreidesSound = -1;
-    int m_harkonnenSound = -1;
-    int m_ordosSound = -1;
+    audioID m_atreidesSound = audioID::invalid;
+    audioID m_harkonnenSound = audioID::invalid;
+    audioID m_ordosSound = audioID::invalid;
     cGameSettings* m_settings = nullptr;
     GameStateTransition* m_stateTransitions = nullptr;
     MissionFlow* m_missionFlow = nullptr;
