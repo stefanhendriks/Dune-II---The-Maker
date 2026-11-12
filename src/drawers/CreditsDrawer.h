@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "utils/audioID.h"
+
 class GameContext;
 class cGameSettings;
 class Graphics;
@@ -53,8 +55,8 @@ private:
     cPlayer *m_player;  //
     GameContext* m_ctx;
     AudioContext* m_audioContext = nullptr;
-    int m_creditUpSound = -1;
-    int m_creditDownSound = -1;
+    audioID m_creditUpSound = noAudioID;
+    audioID m_creditDownSound = noAudioID;
     cMapCamera* m_mapCamera = nullptr;
     cGameObjectContext* m_objects = nullptr;
     Graphics* m_gfxinter;
@@ -81,7 +83,7 @@ private:
     bool hasDrawnCurrentCredits();	// returns true whenever the new state has been finalized.
 
     bool m_initial;
-    int m_soundType;
+    audioID m_soundType;
     float m_rollSpeed;
     int m_rolled; // how many credits did get rolled over?
     int m_soundsMade; // sounds made per time frame

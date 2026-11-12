@@ -19,6 +19,7 @@
  *  Created on: 8-aug-2010
  *      Author: Stefan
  */
+#include "utils/audioID.h"
 #include "cOrderProcesser.h"
 #include "utils/Log.h"
 #include "utils/RNG.hpp"
@@ -107,7 +108,7 @@ bool cOrderProcesser::acceptsOrders()
 
 void cOrderProcesser::playTMinusSound(int seconds)
 {
-    int soundIdToPlay = -1;
+    audioID soundIdToPlay = noAudioID;
 
     if (seconds == 0) {
         if (m_player->getHouse() == ATREIDES) {

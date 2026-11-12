@@ -61,7 +61,7 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer 
     std::fill(std::begin(m_offset_credit), std::end(m_offset_credit), 0.0f);
     std::fill(std::begin(m_offset_direction), std::end(m_offset_direction), 0);
     m_initial = true;
-    m_soundType = -1;
+    m_soundType = noAudioID;
     m_rollSpeed = 0.0F;
     m_rolled = 0;
     m_soundsMade = 0;
@@ -127,7 +127,7 @@ void CreditsDrawer::thinkFast()
             m_soundType = m_creditDownSound;
         }
         else {
-            m_soundType = -1;
+            m_soundType = noAudioID;
         }
 
         m_TIMER_money++;
