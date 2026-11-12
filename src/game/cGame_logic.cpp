@@ -1398,12 +1398,12 @@ void cGame::onKeyPressedGame(const cKeyboardEvent &event)
     }
 }
 
-void cGame::playSound(int sampleId)
+void cGame::playSound(audioID sampleId)
 {
     m_audioContext->playSound(sampleId);
 }
 
-void cGame::playSound(int sampleId, int vol)
+void cGame::playSound(audioID sampleId, int vol)
 {
     m_audioContext->playSound(sampleId, vol);
 }

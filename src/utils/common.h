@@ -16,6 +16,7 @@
 #pragma once
 
 #include "include/enums/BuildEnums.h"
+#include "utils/AudioID.hpp"
 
 #include <string>
 #include <array>
@@ -55,7 +56,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 int distanceBetweenCellAndCenterOfScreen(int iCell, cGameObjectContext* objects, cMapCamera* mapCamera);
 
 // plays the sample with volume depending on the distance (in pixels) from the center of the screen
-void playSoundWithDistance(AudioContext* audioContext, cMapCamera* mapCamera, cGameObjectContext* objects, int sampleId, int distance);
+void playSoundWithDistance(AudioContext* audioContext, cMapCamera* mapCamera, cGameObjectContext* objects, audioID sampleId, int distance);
 
 std::string toStringBuildTypeSpecificType(const eBuildType &buildType, const int &specificTypeId, cInfoContext* infos);
 

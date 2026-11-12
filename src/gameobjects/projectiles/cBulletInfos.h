@@ -16,6 +16,7 @@
 #pragma once
 
 #include <vector>
+#include "utils/AudioID.hpp"
 #include <string>
 #include <array>
 
@@ -38,8 +39,8 @@ struct s_BulletInfo {
     int max_frames;         // when > 0 it animates automatically so many frames. If you want to flicker between frame 0 and 1, max_frames should be 1
     int max_deadframes;     // max dead frames
 
-    int sound;              // Sound produced when 'shot' (or explosion sound)
-    int deviateSound;       // Sound produced when the bullet deviates a unit upon impact (-1 = none)
+    audioID sound;            // Sound produced when 'shot' (or explosion sound)
+    audioID deviateSound;       // Sound produced when the bullet deviates a unit upon impact (-1 = none)
 
     int deviateProbability; // how high probability it deviates a unit (changes sides) (0 = no chance, 100 = 100% chance)
 

@@ -115,7 +115,7 @@ int iFindCloseBorderCell(int iCll, cGameObjectContext* objects)
 }
 
 
-void playSoundWithDistance(AudioContext* audioContext, cMapCamera* mapCamera, cGameObjectContext* objects, int sampleId, int distance)
+void playSoundWithDistance(AudioContext* audioContext, cMapCamera* mapCamera, cGameObjectContext* objects, audioID sampleId, int distance)
 {
     if (distance <= 1) { // means "on screen" (meaning fixed volume, and no need for panning)
         audioContext->playSound(sampleId);
@@ -248,7 +248,7 @@ int createBullet(int type, int fromCell, int targetCell, int unitWhichShoots, in
 
     // play sound (when we have one)
     s_BulletInfo &sBullet = infos->getBulletInfo(type);
-    if (sBullet.sound > -1) {
+    if (sBullet.sound != audioID::invalid) {
         playSoundWithDistance(audioContext, mapCamera, objects, sBullet.sound, distanceBetweenCellAndCenterOfScreen(fromCell, objects, mapCamera));
     }
 

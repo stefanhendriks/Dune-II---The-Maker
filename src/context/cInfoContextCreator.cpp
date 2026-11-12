@@ -152,8 +152,8 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
         unitInfo.queuable = true;
         unitInfo.dieWhenLowerThanHP = 1; // lower than 1 means dead
         unitInfo.appetite = -1;
-        unitInfo.deathSound = -1;
-        unitInfo.eatSound = -1;
+        unitInfo.deathSound = audioID::invalid;
+        unitInfo.eatSound = audioID::invalid;
 
         // harvester properties
         unitInfo.harvesting_amount = 0;
@@ -657,11 +657,11 @@ void cInfoContextCreator::initUnits(cUnitInfos& unitInfos)
     unitInfos[SANDWORM].configured = true;
 
     // Infantry is squished, light vehicles go "boom" (heavier vehicles pick from soundpools::tankDie)
-    const int squishSound = m_audio->indexOf("SOUND_SQUISH");
+    const audioID squishSound = m_audio->indexOf("SOUND_SQUISH");
     for (const int type : {SOLDIER, TROOPER, UNIT_FREMEN_ONE, TROOPERS, INFANTRY, UNIT_FREMEN_THREE}) {
         unitInfos[type].deathSound = squishSound;
     }
-    const int trikeDieSound = m_audio->indexOf("SOUND_TRIKEDIE");
+    const audioID trikeDieSound = m_audio->indexOf("SOUND_TRIKEDIE");
     for (const int type : {TRIKE, RAIDER, QUAD}) {
         unitInfos[type].deathSound = trikeDieSound;
     }
@@ -936,8 +936,8 @@ void cInfoContextCreator::initBullets(cBulletInfos& bulletInfos)
         bulletInfos[i].max_deadframes = 4; // 4 frame animation
         bulletInfos[i].smokeParticle = -1; // by default no smoke particle is spawned
         bulletInfos[i].bmp_width = 8 * 2;
-        bulletInfos[i].sound = -1;    // no sound
-        bulletInfos[i].deviateSound = -1;
+        bulletInfos[i].sound = audioID::invalid;    // no sound
+        bulletInfos[i].deviateSound = audioID::invalid;
         bulletInfos[i].explosionSize = 1; // 1 tile sized explosion
         bulletInfos[i].deviateProbability = 0; // no probability of deviating a unit
         bulletInfos[i].groundBullet = false; // if true, then it gets blocked by walls, mountains or structures. False == flying bullets, ie, rockets
