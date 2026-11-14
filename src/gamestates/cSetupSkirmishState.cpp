@@ -730,7 +730,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
     }
     mapEditor.smoothMap();
 
-    // converts a Bloom=/Field= value to a map cell: 64 wide grid like the scenario loader, or a random sand cell for RANDOM_CELL
+    // converts a Bloom=/Field= value to a map cell: a raw index into the bordered map (like StartCell), or a random sand cell for RANDOM_CELL
     // returns -1 when there is no valid cell
     auto resolveCell = [&](int value) {
         if (value == RANDOM_CELL) {
@@ -740,7 +740,7 @@ void cSetupSkirmishState::prepareSkirmishGameToPlayAndTransitionToCombatState(in
             }
             return sandCells[RNG::rnd(static_cast<int>(sandCells.size()))];
         }
-        return m_objects->getMapGeometry()->makeCell(value % 64, value / 64);
+        return value;
     };
 
     for (int bloom : selectedMap->blooms) {
