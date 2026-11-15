@@ -27,7 +27,12 @@ void GamepadCursor::update(const Gamepad &gamepad, cMouse &mouse, int screenW, i
     const float dt = m_lastTicks == 0 ? 0.0f : std::min(static_cast<float>(now - m_lastTicks) / 1000.0f, 0.1f);
     m_lastTicks = now;
 
-    if (!gamepad.isConnected()) return;
+    if (!gamepad.isConnected()) {
+        // pad unplugged while a button was held: release, or the game keeps seeing it held
+        mouse.setLeftButton(false);
+        mouse.setRightButton(false);
+        return;
+    }
 
     // the real mouse may have moved the cursor since last frame: continue from where it is
     if (static_cast<int>(m_x) != mouse.getX() || static_cast<int>(m_y) != mouse.getY()) {
