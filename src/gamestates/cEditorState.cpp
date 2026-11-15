@@ -473,6 +473,9 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
         m_isDraggingSelection = false;
     }
 
+    // a quick second click is reported as a double click instead of a click
+    const bool isLeftClick = event.eventType == MOUSE_LEFT_BUTTON_CLICKED || event.eventType == MOUSE_LEFT_BUTTON_DOUBLE_CLICKED;
+
     if (event.coords.isWithinRectangle(&mapSizeArea)) {
         // Zoom centered on the cursor
         int mouseX = event.coords.x;
@@ -501,14 +504,13 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
             if (tryGetTileFromMouseCoords(event.coords, tileX, tileY)) {
                 updateSelectionFromTiles(m_selectionAnchorTileX, m_selectionAnchorTileY, tileX, tileY);
             }
-        } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get()) {
-            if (idTerrainToMapModif == PLACE_BLOOM) {
-                toggleMarkerCell(mouseX, mouseY, m_blooms);
-            } else if (idTerrainToMapModif == PLACE_FIELD) {
-                toggleMarkerCell(mouseX, mouseY, m_fields);
-            } else {
-                modifyTile(mouseX, mouseY, idTerrainToMapModif);
-            }
+        } else if (isLeftClick && m_currentBar == m_topologyBar.get() && idTerrainToMapModif == PLACE_BLOOM) {
+            // toggled on release: PRESSED is emitted every tick while the button is held, which would flip the marker back and forth
+            toggleMarkerCell(mouseX, mouseY, m_blooms);
+        } else if (isLeftClick && m_currentBar == m_topologyBar.get() && idTerrainToMapModif == PLACE_FIELD) {
+            toggleMarkerCell(mouseX, mouseY, m_fields);
+        } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get() && idTerrainToMapModif != PLACE_BLOOM && idTerrainToMapModif != PLACE_FIELD) {
+            modifyTile(mouseX, mouseY, idTerrainToMapModif);
         }else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_startCellBar.get()) {
             modifyStartCell(mouseX, mouseY, idStartCellPlayer);
         }        
