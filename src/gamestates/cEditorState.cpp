@@ -162,6 +162,18 @@ void cEditorState::populateSelectBar()
             })
             .build();
     m_selectBar->addGuiObject(std::move(guiIcon));
+
+    rectGui = cRectangle(m_settings->getScreenW()-heightButtonSize*2, (heightBarSize-heightButtonSize)/2, heightButtonSize, heightButtonSize);
+    auto returnIcon = GuiButtonBuilder()
+            .withRect(rectGui)
+            .withTexture(m_gfxeditor->getTexture("ICORETURN"))
+            .withRenderer(m_sdlDrawer)
+            .withKind(GuiRenderKind::WITH_STRETCHED_TEXTURE)
+            .onClick([this]() {
+                m_stateTransitions->setNextStateWithFade(eGameState::MENU);
+            })
+            .build();
+    m_selectBar->addGuiObject(std::move(returnIcon));
 }
 
 void cEditorState::populateTopologyBar()
