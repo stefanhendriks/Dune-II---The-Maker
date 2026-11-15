@@ -56,6 +56,9 @@ void readSettings(const cSection &section, InitialGameSettings &settings)
     if (section.hasValue("CameraBorderOrKeyMoveSpeed")) {
         settings.cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     }
+    if (section.hasValue("GamepadCursorSpeed")) {
+        settings.gamepadCursorSpeed = section.getDouble("GamepadCursorSpeed");
+    }
     if (section.hasValue("FullScreen")) {
         settings.windowed = !section.getBoolean("FullScreen");
     }

@@ -12,6 +12,7 @@ set(D2TM_SOURCES
     controls/cGameControlsContext.cpp
     controls/cKeyBindings.cpp
     controls/Gamepad.cpp
+    controls/GamepadCursor.cpp
     controls/cKeyboard.cpp
     controls/cKeyboardEvent.cpp
     controls/cMouse.cpp

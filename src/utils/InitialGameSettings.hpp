@@ -24,6 +24,7 @@ struct InitialGameSettings {
     float cameraDragMoveSpeed = 0.5f;
     float cameraBorderOrKeyMoveSpeed = 0.5f;
     bool cameraEdgeMove = true;
+    float gamepadCursorSpeed = 600.0f; // pixels per second at full stick tilt
     bool windowed = false;
     eScalingMode scalingMode = eScalingMode::INTEGER_SCALE;
     bool allowRepeatingReinforcements = false;

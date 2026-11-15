@@ -126,12 +126,87 @@ void cMouse::handleEvent(const SDL_Event &event)
             m_coords.x = static_cast<int>(px);
             m_coords.y = static_cast<int>(py);
             m_didMouseMove = true;
+            m_padDriven = false;
             break;
         }
         case SDL_EVENT_MOUSE_WHEEL:
             if (event.wheel.y > 0) m_mouseScrolledUp = true;
             if (event.wheel.y < 0) m_mouseScrolledDown = true;
             break;
+    }
+}
+
+namespace {
+constexpr Uint64 PAD_DOUBLE_CLICK_MS = 400;
+
+// same movement threshold between press and release as used for real mouse clicks
+bool isWithinClickThreshold(const cPoint &a, const cPoint &b)
+{
+    const int dx = a.x - b.x;
+    const int dy = a.y - b.y;
+    return dx * dx + dy * dy < 16;
+}
+}
+
+void cMouse::moveTo(int x, int y)
+{
+    if (m_coords.x == x && m_coords.y == y) return;
+    m_coords.x = x;
+    m_coords.y = y;
+    m_didMouseMove = true;
+    m_padDriven = true;
+}
+
+void cMouse::setLeftButton(bool down)
+{
+    if (down == m_padLeftHeld) return;
+    m_padLeftHeld = down;
+    const Uint64 now = SDL_GetTicks();
+    if (down) {
+        m_coordsOnClick = m_coords;
+        // like SDL's click count: a second press shortly after a click is a double click
+        m_padLeftIsDoubleClick = m_padLastLeftClickTicks != 0 && (now - m_padLastLeftClickTicks) <= PAD_DOUBLE_CLICK_MS;
+        m_leftButtonPressed = !m_padLeftIsDoubleClick;
+        return;
+    }
+    m_leftButtonPressed = false;
+    m_leftButtonReleased = true;
+    if (isWithinClickThreshold(m_coordsOnClick, m_coords)) {
+        if (m_padLeftIsDoubleClick) {
+            m_leftButtonDoubleClicked = true;
+            m_padLastLeftClickTicks = 0;
+        } else {
+            m_leftButtonClicked = true;
+            m_padLastLeftClickTicks = now;
+        }
+    } else {
+        m_padLastLeftClickTicks = 0;
+    }
+    m_padLeftIsDoubleClick = false;
+}
+
+void cMouse::setRightButton(bool down)
+{
+    if (down == m_padRightHeld) return;
+    m_padRightHeld = down;
+    if (down) {
+        m_rightButtonPressed = true;
+        m_coordsOnClick = m_coords;
+        return;
+    }
+    m_rightButtonPressed = false;
+    m_rightButtonReleased = true;
+    if (isWithinClickThreshold(m_coordsOnClick, m_coords)) {
+        m_rightButtonClicked = true;
+    }
+}
+
+void cMouse::scroll(bool up)
+{
+    if (up) {
+        m_mouseScrolledUp = true;
+    } else {
+        m_mouseScrolledDown = true;
     }
 }
 
