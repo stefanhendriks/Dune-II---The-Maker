@@ -93,3 +93,18 @@
 | ESCAPE | Select Conquest | Return to options |
 | Arrow keys | Setup Skirmish | Move map cursor (wraps rows, changes page at edges) |
 | ENTER | Setup Skirmish | Start game with selected map |
+
+---
+
+## Gamepad (cursor mode)
+
+Active whenever a gamepad is connected. Mouse and keyboard keep working alongside it.
+Speed is set with `GamepadCursorSpeed` in `settings.ini`. Edge scrolling is off while the pad drives the cursor.
+
+| Button | Action |
+|--------|--------|
+| Left stick | Move the cursor |
+| South (A) | Left click (hold and move to box select or drag) |
+| East (B) | Right click |
+| Right shoulder | Mouse wheel up (zoom in) |
+| Left shoulder | Mouse wheel down (zoom out) |

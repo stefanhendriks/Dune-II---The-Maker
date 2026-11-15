@@ -17,6 +17,7 @@
 
 class cMouse;
 #include "controls/Gamepad.hpp"
+#include "controls/GamepadCursor.hpp"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
 #include "utils/AudioID.hpp"
@@ -193,6 +194,7 @@ private:
     bool m_pauseWhenLosingFocus;            // pausing the game when losing focus
     float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
     float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
+    float m_gamepadCursorSpeed = 600.0f;    // pixels per second the pad-driven cursor moves at full stick tilt
     bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
 
     std::string m_gameFilename;
@@ -210,6 +212,7 @@ private:
     std::unique_ptr<cMouse> m_mouse;
     std::unique_ptr<cKeyboard> m_keyboard;
     std::unique_ptr<Gamepad> m_gamepad;
+    GamepadCursor m_gamepadCursor;
     SDL_Window *window;
     SDL_Renderer *renderer;
     Texture *screenTexture=nullptr;

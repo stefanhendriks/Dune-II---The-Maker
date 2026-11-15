@@ -286,11 +286,14 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
         int mouseX = event.coords.x;
         int mouseY = event.coords.y;
 
-        if (mouseX <= 2) {
+        // a pad-driven cursor would constantly hit the edges, the right stick scrolls instead
+        const bool atEdges = !m_mouse->isDrivenByPad();
+
+        if (atEdges && mouseX <= 2) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             m_mouse->setTile(MOUSE_LEFT);
         }
-        else if (mouseX >= (m_gameSettings->getScreenW() - 2)) {
+        else if (atEdges && mouseX >= (m_gameSettings->getScreenW() - 2)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             m_mouse->setTile(MOUSE_RIGHT);
         }
@@ -300,11 +303,11 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
             }
         }
 
-        if (mouseY <= 2) {
+        if (atEdges && mouseY <= 2) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             m_mouse->setTile(MOUSE_UP);
         }
-        else if (mouseY >= (m_gameSettings->getScreenH() - 2)) {
+        else if (atEdges && mouseY >= (m_gameSettings->getScreenH() - 2)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
             m_mouse->setTile(MOUSE_DOWN);
         }

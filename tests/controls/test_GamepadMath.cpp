@@ -70,6 +70,27 @@ TEST_CASE("response curve", "[gamepad]")
     REQUIRE_THAT(applyResponseCurve(0.0f, 2.0f), WithinAbs(0.0, 1e-5));
 }
 
+TEST_CASE("cursor delta scales with speed and frame time", "[gamepad]")
+{
+    const auto d = cursorDelta({1.0f, 0.0f}, 600.0f, 2.0f, 0.1f);
+    REQUIRE_THAT(d.x, WithinAbs(60.0, 1e-3));
+    REQUIRE_THAT(d.y, WithinAbs(0.0, 1e-3));
+}
+
+TEST_CASE("cursor delta is slower near the center and keeps direction", "[gamepad]")
+{
+    const auto d = cursorDelta({-0.3f, -0.4f}, 100.0f, 2.0f, 1.0f); // magnitude 0.5 -> 0.25
+    REQUIRE_THAT(d.x, WithinAbs(-15.0, 1e-3));
+    REQUIRE_THAT(d.y, WithinAbs(-20.0, 1e-3));
+}
+
+TEST_CASE("cursor delta is zero without input", "[gamepad]")
+{
+    const auto d = cursorDelta({0.0f, 0.0f}, 600.0f, 2.0f, 0.1f);
+    REQUIRE(d.x == 0.0f);
+    REQUIRE(d.y == 0.0f);
+}
+
 TEST_CASE("axis normalisation", "[gamepad]")
 {
     REQUIRE_THAT(normalizeAxis(0), WithinAbs(0.0, 1e-6));
