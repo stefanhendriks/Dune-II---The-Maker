@@ -125,7 +125,34 @@ TEST_CASE("ReaderPack - a duplicate entry name warns on stderr and name lookup k
 
     CHECK(reader.getNumberOfFiles() == 2);
     CHECK(reader.getIndexFromName("same_name") == 0);
-    CHECK(captured.str().find("duplicate entry name 'same_name'") != std::string::npos);
+    CHECK(captured.str().find("duplicate entry name 'SAME_NAME'") != std::string::npos);
+}
+
+TEST_CASE("ReaderPack - names are case-insensitive and duplicates after folding keep the first", "[pack]")
+{
+    TempDir dir("d2tm_pack_case");
+    const std::string packName = dir.file("case.pak");
+    {
+        WriterPack writer(packName);
+        REQUIRE(writer.addFile(dir.write("a.txt", "one"), "The"));
+        REQUIRE(writer.addFile(dir.write("b.txt", "two"), "OTHER"));
+        REQUIRE(writer.addFile(dir.write("c.txt", "three"), "the"));
+        REQUIRE(writer.writePackFilesOnDisk());
+    }
+
+    std::ostringstream captured;
+    std::streambuf *original = std::cerr.rdbuf(captured.rdbuf());
+    ReaderPack reader(packName);
+    std::cerr.rdbuf(original);
+
+    CHECK(reader.getIndexFromName("the") == 0);
+    CHECK(reader.getIndexFromName("The") == 0);
+    CHECK(reader.getIndexFromName("THE") == 0);
+    CHECK(reader.getIndexFromName("other") == 1);
+    CHECK(reader.getNumberOfFiles() == 3);
+    CHECK(reader.getNames()[0] == "THE");
+    CHECK(reader.getText("the") == std::optional<std::string>("one"));
+    CHECK(captured.str().find("duplicate entry name 'THE'") != std::string::npos);
 }
 
 TEST_CASE("ReaderPack - a pack without header has no author and version 0", "[pack]")

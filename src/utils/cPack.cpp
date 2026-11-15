@@ -42,11 +42,14 @@ const int offsetSize = 4+4; // two uint32_t
 const int nbrFilesSize = 2; // one uint16_t
 const int extensionSize = 4; // "WAV", "JPG", ...
 
-// **********************
-//
-// struct fileInPack
-//
-// **********************
+// Names in a pack are case-insensitive: they are stored and looked up in uppercase.
+static std::string foldName(std::string name)
+{
+    std::ranges::transform(name, name.begin(), [](unsigned char c) {
+        return static_cast<char>(std::toupper(c));
+    });
+    return name;
+}
 
 
 
@@ -117,8 +120,8 @@ void ReaderPack::readFileLines()
         }
 
         FileInPack tmp;
-        tmp.name = std::string(fileID.data());
-        tmp.fileId = std::string(fileID.data());
+        tmp.name = foldName(std::string(fileID.data()));
+        tmp.fileId = tmp.name;
         tmp.extension = std::string(rawExt.data());
         tmp.fileSize = sizeFile;
         tmp.fileOffset = offsetFile;
@@ -191,7 +194,7 @@ bool ReaderPack::readHeader()
 
 int ReaderPack::getIndexFromName(const std::string &fileId) const
 {
-    auto it = nameToIndex.find(fileId);
+    auto it = nameToIndex.find(foldName(fileId));
     return it != nameToIndex.end() ? it->second : -1;
 }
 
