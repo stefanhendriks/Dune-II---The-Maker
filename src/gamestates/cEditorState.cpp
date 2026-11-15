@@ -1225,6 +1225,18 @@ void cEditorState::mirrorMarkerCells(Direction dir, std::vector<int> &cells) con
             case Direction::left:
                 if (x < cols / 2) return cPoint(cols - 1 - x, y);
                 break;
+            case Direction::topLeft:
+                if (cols == rows && x + y < cols - 1) return cPoint(cols - 1 - y, rows - 1 - x);
+                break;
+            case Direction::bottomRight:
+                if (cols == rows && x + y > cols - 1) return cPoint(cols - 1 - y, rows - 1 - x);
+                break;
+            case Direction::topRight:
+                if (cols == rows && x > y) return cPoint(y, x);
+                break;
+            case Direction::bottomLeft:
+                if (cols == rows && y > x) return cPoint(y, x);
+                break;
             default:
                 break;
         }
