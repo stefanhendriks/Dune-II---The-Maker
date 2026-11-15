@@ -33,6 +33,7 @@
 #include "controls/cMouse.h"
 #include "gameobjects/map/cPreviewMaps.h"
 #include <algorithm>
+#include "utils/Log.h"
 #include "include/gfxeditor.h"
 #include "include/sGameEvent.h"
 
@@ -233,6 +234,26 @@ void cEditorState::populateTopologyBar()
             .build();
     guiButton->setGroup(m_topologyGroup.get());
     m_topologyBar->addAutoGuiObject(std::move(guiButton));
+
+    const auto addMarkerButton = [&](const char *textureName, int placeMode) {
+        Texture *texture = m_gfxeditor->getTexture(textureName);
+        if (texture == nullptr) {
+            Logger::warn(COMP_MAP, "cEditorState", "Editor icon '{}' not found in gfxeditor pack, button skipped", textureName);
+            return;
+        }
+        auto button = GuiStateButtonBuilder()
+                .withRect(rectGui)
+                .withTexture(texture)
+                .withRenderer(m_sdlDrawer)
+                .onClick([this, placeMode]() {
+                    idTerrainToMapModif = placeMode;
+                })
+                .build();
+        button->setGroup(m_topologyGroup.get());
+        m_topologyBar->addAutoGuiObject(std::move(button));
+    };
+    addMarkerButton("bloom", PLACE_BLOOM);
+    addMarkerButton("field", PLACE_FIELD);
 
     auto cursorSizeButton = GuiValueButtonBuilder()
             .withRect(cRectangle(0, 0, heightButtonSize, heightButtonSize))
