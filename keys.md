@@ -108,3 +108,20 @@ Speed is set with `GamepadCursorSpeed` in `settings.ini`. Edge scrolling is off 
 | East (B) | Right click |
 | Right shoulder | Mouse wheel up (zoom in) |
 | Left shoulder | Mouse wheel down (zoom out) |
+
+### Gamepad key actions
+
+A pad button triggers the action of a key, so it does exactly what that key does. Bindings are set in the
+`[PAD]` section of `settings.ini` (action names as in `[KEYS]`, button names as SDL knows them, `none` to unbind).
+
+| Button | Action |
+|--------|--------|
+| Start | MENU_BACK (Escape) |
+| West (X) | MENU_CONFIRM (Enter) |
+| North (Y) | CENTER_ON_HOME |
+| D-pad up / down | EDITOR_ZOOM_IN / EDITOR_ZOOM_OUT |
+| D-pad left / right | EDITOR_UNDO / EDITOR_REDO |
+| Back | EDITOR_SAVE |
+| Left stick click (hold) | Acts as Shift (`MODIFIER_SHIFT`) |
+| Right stick click (hold) | Acts as Ctrl (`MODIFIER_CTRL`) |
+| (unbound) | `MODIFIER_ALT` |
