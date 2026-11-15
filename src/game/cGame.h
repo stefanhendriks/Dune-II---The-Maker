@@ -18,6 +18,7 @@
 class cMouse;
 #include "controls/Gamepad.hpp"
 #include "controls/GamepadCursor.hpp"
+#include "controls/GamepadKeys.hpp"
 #include "controls/cKeyboard.h"
 #include "definitions.h"
 #include "utils/AudioID.hpp"
@@ -213,6 +214,7 @@ private:
     std::unique_ptr<cKeyboard> m_keyboard;
     std::unique_ptr<Gamepad> m_gamepad;
     GamepadCursor m_gamepadCursor;
+    GamepadKeys m_gamepadKeys;
     SDL_Window *window;
     SDL_Renderer *renderer;
     Texture *screenTexture=nullptr;
