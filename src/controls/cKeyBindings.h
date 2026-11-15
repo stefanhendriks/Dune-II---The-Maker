@@ -51,6 +51,12 @@ public:
      */
     bool containsActionKey(const std::bitset<SDL_SCANCODE_COUNT> &keys, eKeyAction action) const;
 
+    // The binding of an action, or nullptr when it has none
+    const s_KeyBinding *getBinding(eKeyAction action) const;
+
+    // Action names as used in the [KEYS] and [PAD] sections of settings.ini
+    static const std::vector<std::pair<std::string, eKeyAction>>& getActionTable();
+
 private:
     std::map<eKeyAction, s_KeyBinding> m_bindings;
 
@@ -59,6 +65,5 @@ private:
               bool requireTab = false);
 
     static s_KeyBinding parseBinding(const std::string &value);
-    static const std::vector<std::pair<std::string, eKeyAction>>& getActionTable();
     void checkForClashes() const;
 };

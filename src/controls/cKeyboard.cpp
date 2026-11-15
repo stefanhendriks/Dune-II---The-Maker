@@ -68,6 +68,15 @@ void cKeyboard::loadKeyBindings(const cSection *section)
     }
 }
 
+void cKeyboard::injectKey(SDL_Scancode scancode, bool down)
+{
+    SDL_Event event{};
+    event.type = down ? SDL_EVENT_KEY_DOWN : SDL_EVENT_KEY_UP;
+    event.key.scancode = scancode;
+    event.key.repeat = false;
+    handleEvent(event);
+}
+
 void cKeyboard::handleEvent(const SDL_Event &event)
 {
     if (event.type == SDL_EVENT_TEXT_INPUT) {
