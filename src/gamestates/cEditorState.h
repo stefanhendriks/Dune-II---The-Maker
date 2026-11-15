@@ -86,6 +86,8 @@ private:
     void getBrushTileBounds(int centerTileX, int centerTileY, int &brushStartTileX, int &brushStartTileY, int &brushEndTileX, int &brushEndTileY) const;
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
+    void toggleMarkerCell(int posX, int posY, std::vector<int> &cells);
+    void drawMarkerCells(const std::vector<int> &cells, const char *textureName) const;
     void normalizeModifications();
     bool tryGetTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const;
     bool tryGetEditableTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const;
@@ -114,6 +116,8 @@ private:
 
     // map modification 
     int idTerrainToMapModif = -1;
+    static constexpr int PLACE_BLOOM = -2; // idTerrainToMapModif values that place a marker instead of terrain
+    static constexpr int PLACE_FIELD = -3;
     int idStartCellPlayer = -1;
     int m_cursorSize = 1;
     int m_topologyCursorSize = 1;
@@ -135,4 +139,7 @@ private:
 
     // startCell positions 
     std::array<cPoint,5> startCells;
+    // bloom and field cells: raw index into the bordered map (as in the skirmish ini), RANDOM_CELL for a random one
+    std::vector<int> m_blooms;
+    std::vector<int> m_fields;
 };
