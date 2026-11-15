@@ -722,7 +722,6 @@ bool cGame::setupGame()
     // INI
     const auto title = std::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
 
-    m_gamepad = std::make_unique<Gamepad>();
     m_keyboard = std::make_unique<cKeyboard>();
     Logger::info(COMP_INIT, "Initializing Keyboard", "install_keyboard()");
 
@@ -735,6 +734,8 @@ bool cGame::setupGame()
     Logger::info(COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section");
 
     m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title, m_windowed, m_scalingMode);
+    // after SDL init (cSDLSystem), so pads that are already plugged in are found
+    m_gamepad = std::make_unique<Gamepad>();
     if (!m_windowed) {
         m_Screen->setFullScreenMode();
     }
