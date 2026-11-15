@@ -34,7 +34,6 @@
 #include "gameobjects/map/cPreviewMaps.h"
 #include <algorithm>
 #include "utils/Log.h"
-#include "include/gfxeditor.h"
 #include "include/sGameEvent.h"
 
 #include "include/cAssert.h"
@@ -116,7 +115,7 @@ void cEditorState::populateSelectBar()
     auto rectGui = cRectangle(0, 0, heightButtonSize, heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(STONELAYER))
+            .withTexture(m_gfxeditor->getTexture("stonelayer"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 setCurrentBar(m_topologyBar.get());
@@ -128,7 +127,7 @@ void cEditorState::populateSelectBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(STARTPOSITION))
+            .withTexture(m_gfxeditor->getTexture("StartPosition"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 setCurrentBar(m_startCellBar.get());
@@ -139,7 +138,7 @@ void cEditorState::populateSelectBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPHORZ))
+            .withTexture(m_gfxeditor->getTexture("flipHorz"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 setCurrentBar(m_symmetricBar.get());
@@ -152,7 +151,7 @@ void cEditorState::populateSelectBar()
     // std::cout << "Save icon position: x=" << rectGui.getX() << " y=" << rectGui.getY() << " w= " << rectGui.getWidth() << " h= " << rectGui.getHeight() << std::endl;
     auto guiIcon = GuiButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(SAVEICON))
+            .withTexture(m_gfxeditor->getTexture("icoSave"))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_STRETCHED_TEXTURE)
             .onClick([this]() {
@@ -170,7 +169,7 @@ void cEditorState::populateTopologyBar()
     auto rectGui = cRectangle(0,0,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(TERRAN_HILL))
+            .withTexture(m_gfxeditor->getTexture("TERRAN_HILL"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_HILL;
@@ -181,7 +180,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(TERRAN_MOUNTAIN))
+            .withTexture(m_gfxeditor->getTexture("TERRAN_MOUNTAIN"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_MOUNTAIN;
@@ -192,7 +191,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(TERRAN_ROCK))
+            .withTexture(m_gfxeditor->getTexture("TERRAN_ROCK"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_ROCK;
@@ -203,7 +202,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(TERRAN_SAND))
+            .withTexture(m_gfxeditor->getTexture("TERRAN_SAND"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_SAND;
@@ -215,7 +214,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(TERRAN_SPICE))
+            .withTexture(m_gfxeditor->getTexture("TERRAN_SPICE"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_SPICE;
@@ -226,7 +225,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(TERRAN_SPICEHILL))
+            .withTexture(m_gfxeditor->getTexture("TERRAN_SPICEHILL"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_SPICEHILL;
@@ -278,7 +277,7 @@ void cEditorState::populateStartCellBar()
     auto rectGui = cRectangle(0, 0, heightButtonSize, heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(STARTPOSITION1))
+            .withTexture(m_gfxeditor->getTexture("StartPosition1"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 0;
@@ -290,7 +289,7 @@ void cEditorState::populateStartCellBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(STARTPOSITION2))
+            .withTexture(m_gfxeditor->getTexture("StartPosition2"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 1;
@@ -301,7 +300,7 @@ void cEditorState::populateStartCellBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(STARTPOSITION3))
+            .withTexture(m_gfxeditor->getTexture("StartPosition3"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 2;
@@ -312,7 +311,7 @@ void cEditorState::populateStartCellBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(STARTPOSITION4))
+            .withTexture(m_gfxeditor->getTexture("StartPosition4"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 3;
@@ -323,7 +322,7 @@ void cEditorState::populateStartCellBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(STARTPOSITION5))
+            .withTexture(m_gfxeditor->getTexture("StartPosition5"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 4;
@@ -339,7 +338,7 @@ void cEditorState::populateSymmetricBar()
     auto rectGui = cRectangle(0, 0, heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPHORZLR))
+            .withTexture(m_gfxeditor->getTexture("FlipHorzLR"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 // std::cout << "FLIPHORZLR" << std::endl;
@@ -351,7 +350,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPHORZRL))
+            .withTexture(m_gfxeditor->getTexture("FlipHorzRL"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 // std::cout << "FLIPHORZRL" << std::endl;
@@ -363,7 +362,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPVERTBT))
+            .withTexture(m_gfxeditor->getTexture("FlipVertBT"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 // std::cout << "FLIPVERTBT" << std::endl;
@@ -375,7 +374,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPVERTTB))
+            .withTexture(m_gfxeditor->getTexture("FlipVertTB"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 // std::cout << "FLIPVERTTB" << std::endl;
@@ -387,7 +386,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPDIAGBL))
+            .withTexture(m_gfxeditor->getTexture("FlipDiagBL"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 modifySymmetricArea(Direction::bottomLeft);
@@ -398,7 +397,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPDIAGBR))
+            .withTexture(m_gfxeditor->getTexture("FlipDiagBR"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 modifySymmetricArea(Direction::bottomRight);
@@ -409,7 +408,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPDIAGTL))
+            .withTexture(m_gfxeditor->getTexture("FlipDiagTL"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 modifySymmetricArea(Direction::topLeft);
@@ -420,7 +419,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture(FLIPDIAGTR))
+            .withTexture(m_gfxeditor->getTexture("FlipDiagTR"))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 modifySymmetricArea(Direction::topRight);
@@ -1406,7 +1405,7 @@ void cEditorState::drawStartCells() const
             // Display if onscreen
             if (x + tileLenSize > 0 && x < m_settings->getScreenW() &&y + tileLenSize > heightBarSize && y < m_settings->getScreenH()) {
                 destRect = cRectangle(x, y, tileLenSize, tileLenSize);
-                m_sdlDrawer->renderStrechSprite(m_gfxeditor->getTexture(STARTPOSITION1+i), srcRect, destRect);
+                m_sdlDrawer->renderStrechSprite(m_gfxeditor->getTexture("StartPosition" + std::to_string(i + 1)), srcRect, destRect);
             }
         }
     }
