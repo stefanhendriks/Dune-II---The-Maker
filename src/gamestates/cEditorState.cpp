@@ -1197,10 +1197,9 @@ void cEditorState::toggleMarkerCell(int posX, int posY, std::vector<int> &cells)
         return;
     }
     const int cell = tileY * static_cast<int>(m_mapData->getCols()) + tileX;
-    const auto it = std::find(cells.begin(), cells.end(), cell);
-    if (it != cells.end()) {
-        cells.erase(it);
-    } else {
+    // erase every entry: a loaded map may list the same cell twice, one removal would leave a marker behind
+    const auto removed = std::erase(cells, cell);
+    if (removed == 0) {
         cells.push_back(cell);
     }
     m_hasChanged = true;
