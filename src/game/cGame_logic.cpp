@@ -523,6 +523,7 @@ void cGame::updateMouseAndKeyboardState()
 {
     m_mouse->updateState(); // calls observers that are interested in mouse input
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
+    m_gamepad->update(); // polled only, nothing reacts to the pad yet
 }
 
 // void cGame::loadSkirmishMaps() const
@@ -609,6 +610,12 @@ void cGame::run()
                 case SDL_EVENT_MOUSE_MOTION:
                 case SDL_EVENT_MOUSE_WHEEL:
                     m_mouse->handleEvent(event);
+                    break;
+
+                case SDL_EVENT_GAMEPAD_ADDED:
+                case SDL_EVENT_GAMEPAD_REMOVED:
+                    m_gamepad->handleEvent(event);
+                    break;
                 default:
                     break;
             }
@@ -715,6 +722,7 @@ bool cGame::setupGame()
     // INI
     const auto title = std::format("Dune II - The Maker [{}] - (by Stefan Hendriks)", D2TM_VERSION);
 
+    m_gamepad = std::make_unique<Gamepad>();
     m_keyboard = std::make_unique<cKeyboard>();
     Logger::info(COMP_INIT, "Initializing Keyboard", "install_keyboard()");
 

@@ -251,7 +251,7 @@ cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &t
 {
     Logger::info(COMP_SDL2, "cSDLSystem", "=== SDL ===");
 
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS)) {
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD)) {
         Logger::fatal(COMP_SDL2, "SDL init", "{}", SDL_GetError());
         throw std::runtime_error(SDL_GetError());
     }
