@@ -98,4 +98,11 @@ void PadBindings::readModifier(const cSection &section, const char *key, std::op
 {
     if (!section.hasValue(key)) return;
     target = parseButton(section.getStringValue(key), key);
+    if (!target) return;
+
+    // one button triggers one thing: an explicit modifier takes the button from actions and other modifiers
+    std::erase_if(m_actionButtons, [&](const auto &entry) { return entry.second == *target; });
+    for (auto *other : {&m_shiftButton, &m_ctrlButton, &m_altButton}) {
+        if (other != &target && *other == target) other->reset();
+    }
 }
