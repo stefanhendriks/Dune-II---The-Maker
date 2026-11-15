@@ -388,7 +388,18 @@ bool cPreviewMaps::saveSkirmishMap(const s_PreviewMap &map, bool backup)
             firstStartCell = false;
         }
     }
-    saveFile << "\n\n\n[MAP]\n" << mapRows;
+    saveFile << "\n";
+    const auto writeCells = [&saveFile](const char *key, const std::vector<int> &cells) {
+        if (cells.empty()) return;
+        saveFile << key << "=";
+        for (size_t i = 0; i < cells.size(); i++) {
+            saveFile << (i > 0 ? "," : "") << cells[i];
+        }
+        saveFile << "\n";
+    };
+    writeCells("Bloom", map.blooms);
+    writeCells("Field", map.fields);
+    saveFile << "\n\n[MAP]\n" << mapRows;
 
     saveFile.close();
     if (!saveFile) {

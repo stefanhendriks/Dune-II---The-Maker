@@ -32,6 +32,7 @@
 #include "game/GameStateTransition.hpp"
 #include "controls/cMouse.h"
 #include "gameobjects/map/cPreviewMaps.h"
+#include <algorithm>
 #include "include/gfxeditor.h"
 #include "include/sGameEvent.h"
 
@@ -425,6 +426,10 @@ void cEditorState::draw() const
         drawAxes();
     if (m_currentBar == m_startCellBar.get())
         drawStartCells();
+    if (m_currentBar == m_topologyBar.get()) {
+        drawMarkerCells(m_blooms, "bloom");
+        drawMarkerCells(m_fields, "field");
+    }
     m_selectBar->draw();
     m_currentBar->draw();
     m_mouse->draw();
@@ -476,7 +481,13 @@ void cEditorState::onNotifyMouseEvent(const s_MouseEvent &event)
                 updateSelectionFromTiles(m_selectionAnchorTileX, m_selectionAnchorTileY, tileX, tileY);
             }
         } else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_topologyBar.get()) {
-            modifyTile(mouseX, mouseY, idTerrainToMapModif);
+            if (idTerrainToMapModif == PLACE_BLOOM) {
+                toggleMarkerCell(mouseX, mouseY, m_blooms);
+            } else if (idTerrainToMapModif == PLACE_FIELD) {
+                toggleMarkerCell(mouseX, mouseY, m_fields);
+            } else {
+                modifyTile(mouseX, mouseY, idTerrainToMapModif);
+            }
         }else if (event.eventType == MOUSE_LEFT_BUTTON_PRESSED && m_currentBar == m_startCellBar.get()) {
             modifyStartCell(mouseX, mouseY, idStartCellPlayer);
         }        
@@ -610,6 +621,8 @@ void cEditorState::loadMap(int mapIndex)
     m_mapAuthor = map->author;
     m_mapDescription = map->description;
     m_mapName = map->name;
+    m_blooms = map->blooms;
+    m_fields = map->fields;
     startCells.fill({-1, -1});
     for (int i=0; i<MAX_SKIRMISHMAP_PLAYERS; i++) {
         if (map->iStartCell[i] !=-1) {
@@ -1153,6 +1166,23 @@ void cEditorState::modifyStartCell(int posX, int posY, int startCellID)
     }
 }
 
+void cEditorState::toggleMarkerCell(int posX, int posY, std::vector<int> &cells)
+{
+    const int tileX = m_editorCam->screenToTileX(posX);
+    const int tileY = m_editorCam->screenToTileY(posY);
+    if (m_mapData == nullptr || tileX < 1 || tileY < 1 || tileX >= static_cast<int>(m_mapData->getCols()) - 1 || tileY >= static_cast<int>(m_mapData->getRows()) - 1) {
+        return;
+    }
+    const int cell = tileY * static_cast<int>(m_mapData->getCols()) + tileX;
+    const auto it = std::find(cells.begin(), cells.end(), cell);
+    if (it != cells.end()) {
+        cells.erase(it);
+    } else {
+        cells.push_back(cell);
+    }
+    m_hasChanged = true;
+}
+
 void cEditorState::modifySymmetricArea(Direction dir)
 {
     //std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
@@ -1361,6 +1391,25 @@ void cEditorState::drawStartCells() const
     }
 }
 
+void cEditorState::drawMarkerCells(const std::vector<int> &cells, const char *textureName) const
+{
+    Texture *texture = m_gfxeditor->getTexture(textureName);
+    if (texture == nullptr) return; // icon not in the pack
+    const cRectangle srcRect{0, 0, 32, 32}; // first sprite of the icon
+    const int cameraX = m_editorCam->getCameraX();
+    const int cameraY = m_editorCam->getCameraY();
+    const int tileLenSize = m_editorCam->getTileSize();
+    const int cols = static_cast<int>(m_mapData->getCols());
+    for (const int cell : cells) {
+        if (cell < 0) continue; // RANDOM_CELL has no position
+        const int x = (cell % cols) * tileLenSize - cameraX;
+        const int y = heightBarSize + (cell / cols) * tileLenSize - cameraY;
+        if (x + tileLenSize > 0 && x < m_settings->getScreenW() && y + tileLenSize > heightBarSize && y < m_settings->getScreenH()) {
+            m_sdlDrawer->renderStrechSprite(texture, srcRect, cRectangle(x, y, tileLenSize, tileLenSize));
+        }
+    }
+}
+
 bool cEditorState::saveMap(bool backup) const
 {
     s_PreviewMap map;
@@ -1370,6 +1419,8 @@ bool cEditorState::saveMap(bool backup) const
     map.author = m_mapAuthor;
     map.description = m_mapDescription;
     map.iStartCell.fill(-1);
+    map.blooms = m_blooms;
+    map.fields = m_fields;
     map.terrainType.reserve(static_cast<size_t>(map.width * map.height));
     for (int y = 0; y < map.height; y++) {
         for (int x = 0; x < map.width; x++) {
