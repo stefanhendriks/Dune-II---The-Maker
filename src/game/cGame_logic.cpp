@@ -525,6 +525,7 @@ void cGame::updateMouseAndKeyboardState()
 {
     m_gamepad->update();
     m_gamepadCursor.update(*m_gamepad, *m_mouse, m_gameSettings->getScreenW(), m_gameSettings->getScreenH(), m_gamepadCursorSpeed);
+    m_gamepadKeys.update(*m_gamepad, *m_keyboard);
     m_mouse->updateState(); // calls observers that are interested in mouse input
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
 }
@@ -735,6 +736,13 @@ bool cGame::setupGame()
         m_keyboard->loadKeyBindings();
     }
     Logger::info(COMP_INIT, "Initializing Key Bindings", "Loaded from [KEYS] section");
+
+    PadBindings padBindings;
+    padBindings.loadDefaults();
+    if (settings->hasSection("PAD")) {
+        padBindings.loadFromSection(settings->getSection("PAD"));
+    }
+    m_gamepadKeys.setBindings(padBindings);
 
     m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title, m_windowed, m_scalingMode);
     // after SDL init (cSDLSystem), so pads that are already plugged in are found
