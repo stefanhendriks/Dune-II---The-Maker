@@ -528,6 +528,7 @@ void cGame::updateMouseAndKeyboardState()
     m_gamepadKeys.update(*m_gamepad, *m_keyboard);
     m_mouse->updateState(); // calls observers that are interested in mouse input
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
+    m_gamepad->update(); // polled only, nothing reacts to the pad yet
 }
 
 // void cGame::loadSkirmishMaps() const
