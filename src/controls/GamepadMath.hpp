@@ -55,6 +55,20 @@ inline float applyResponseCurve(float value, float exponent)
 }
 
 /**
+ * Cursor movement for one frame from a stick that already has its deadzone applied: the magnitude is
+ * run through the response curve (direction is kept), then scaled to pixels with speed (pixels per
+ * second at full tilt) and the frame time in seconds.
+ */
+inline s_Stick cursorDelta(s_Stick stick, float speed, float exponent, float dtSeconds)
+{
+    const float magnitude = std::sqrt(stick.x * stick.x + stick.y * stick.y);
+    if (magnitude <= 0.0f) return {};
+    const float curved = applyResponseCurve(magnitude, exponent);
+    const float factor = curved / magnitude * speed * dtSeconds;
+    return {stick.x * factor, stick.y * factor};
+}
+
+/**
  * Converts a raw SDL axis value (-32768..32767) to -1..1.
  */
 inline float normalizeAxis(int raw)

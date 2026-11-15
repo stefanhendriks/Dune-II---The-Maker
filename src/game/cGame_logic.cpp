@@ -310,6 +310,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_cameraDragMoveSpeed = gs->cameraDragMoveSpeed;
     m_cameraBorderOrKeyMoveSpeed = gs->cameraBorderOrKeyMoveSpeed;
     m_cameraEdgeMove = gs->cameraEdgeMove;
+    m_gamepadCursorSpeed = gs->gamepadCursorSpeed;
     m_windowed = gs->windowed;
     m_scalingMode = gs->scalingMode;
 
@@ -351,6 +352,7 @@ InitialGameSettings cGame::currentSettings() const
     gs.cameraDragMoveSpeed = m_cameraDragMoveSpeed;
     gs.cameraBorderOrKeyMoveSpeed = m_cameraBorderOrKeyMoveSpeed;
     gs.cameraEdgeMove = m_cameraEdgeMove;
+    gs.gamepadCursorSpeed = m_gamepadCursorSpeed;
     gs.windowed = m_windowed;
     gs.scalingMode = m_scalingMode;
     gs.allowRepeatingReinforcements = m_gameSettings->m_allowRepeatingReinforcements;
@@ -521,9 +523,10 @@ void cGame::thinkFast_audio()
 
 void cGame::updateMouseAndKeyboardState()
 {
+    m_gamepad->update();
+    m_gamepadCursor.update(*m_gamepad, *m_mouse, m_gameSettings->getScreenW(), m_gameSettings->getScreenH(), m_gamepadCursorSpeed);
     m_mouse->updateState(); // calls observers that are interested in mouse input
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
-    m_gamepad->update(); // polled only, nothing reacts to the pad yet
 }
 
 // void cGame::loadSkirmishMaps() const

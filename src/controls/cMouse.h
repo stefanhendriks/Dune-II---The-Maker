@@ -70,6 +70,15 @@ public:
         return m_coords.y;
     }
 
+    // Injection API for the gamepad, in render coordinates. Sets the same state as real mouse events.
+    void moveTo(int x, int y);
+    void setLeftButton(bool down);
+    void setRightButton(bool down);
+    void scroll(bool up);
+
+    // true when the cursor was last moved by the gamepad, false again once the real mouse moves
+    bool isDrivenByPad() const { return m_padDriven; }
+
     void setCursorPosition(SDL_Window *_windows, int x, int y);
 
     bool isOverRectangle(int x, int y, int width, int height);
@@ -133,6 +142,13 @@ private:
 
     cPoint m_coords;
     cPoint m_coordsOnClick;
+
+    // gamepad injection state
+    bool m_padDriven = false;
+    bool m_padLeftHeld = false;
+    bool m_padRightHeld = false;
+    bool m_padLeftIsDoubleClick = false;
+    Uint64 m_padLastLeftClickTicks = 0;
 
     // Mouse information - for select box and dragging, etc
     int m_mouseCoX1;        // coordinates
