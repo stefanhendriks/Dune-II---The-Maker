@@ -73,6 +73,7 @@ private:
     void populateSymmetricBar();
     void setCurrentBar(GuiBar* bar);
     void modifySymmetricArea(Direction dir);
+    void mirrorMarkerCells(Direction dir, std::vector<int> &cells) const;
 
     void drawMap() const;
     void drawHoveredCellHighlight() const;
