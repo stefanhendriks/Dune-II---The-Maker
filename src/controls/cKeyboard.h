@@ -42,6 +42,11 @@ public:
      */
     void loadKeyBindings(const cSection *section = nullptr);
 
+    const cKeyBindings *getKeyBindings() const { return m_keyBindings.get(); }
+
+    // Presses or releases a key as if it came from the keyboard (used by the gamepad)
+    void injectKey(SDL_Scancode scancode, bool down);
+
 private:
     cInputObserver *m_keyboardObserver;
     std::unique_ptr<cKeyBindings> m_keyBindings;

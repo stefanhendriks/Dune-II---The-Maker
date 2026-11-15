@@ -310,6 +310,13 @@ bool cKeyBindings::matches(const std::bitset<SDL_SCANCODE_COUNT> &keys, const s_
     return false;
 }
 
+const s_KeyBinding *cKeyBindings::getBinding(eKeyAction action) const
+{
+    auto it = m_bindings.find(action);
+    if (it == m_bindings.end()) return nullptr;
+    return &it->second;
+}
+
 bool cKeyBindings::containsActionKey(const std::bitset<SDL_SCANCODE_COUNT> &keys, eKeyAction action) const
 {
     auto it = m_bindings.find(action);
