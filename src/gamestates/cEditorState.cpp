@@ -33,6 +33,7 @@
 #include "controls/cMouse.h"
 #include "gameobjects/map/cPreviewMaps.h"
 #include <algorithm>
+#include <optional>
 #include "utils/Log.h"
 #include "include/sGameEvent.h"
 
@@ -1203,6 +1204,50 @@ void cEditorState::toggleMarkerCell(int posX, int posY, std::vector<int> &cells)
     m_hasChanged = true;
 }
 
+// Applies the same copy as modifySymmetricArea does for terrain: every cell of the destination half takes over
+// the marker state of its source cell.
+void cEditorState::mirrorMarkerCells(Direction dir, std::vector<int> &cells) const
+{
+    const int cols = static_cast<int>(m_mapData->getCols());
+    const int rows = static_cast<int>(m_mapData->getRows());
+    // source cell of a destination cell, nullopt when the cell is not a destination for this direction
+    const auto sourceOf = [&](int x, int y) -> std::optional<cPoint> {
+        switch (dir) {
+            case Direction::bottom:
+                if (y >= rows - rows / 2) return cPoint(x, rows - 1 - y);
+                break;
+            case Direction::top:
+                if (y < rows / 2) return cPoint(x, rows - 1 - y);
+                break;
+            case Direction::right:
+                if (x >= cols - cols / 2) return cPoint(cols - 1 - x, y);
+                break;
+            case Direction::left:
+                if (x < cols / 2) return cPoint(cols - 1 - x, y);
+                break;
+            default:
+                break;
+        }
+        return std::nullopt;
+    };
+
+    const std::vector<int> original = cells;
+    for (int y = 1; y < rows - 1; y++) {
+        for (int x = 1; x < cols - 1; x++) {
+            const auto source = sourceOf(x, y);
+            if (!source) continue;
+            const int destCell = y * cols + x;
+            const bool hasMarker = std::find(original.begin(), original.end(), source->y * cols + source->x) != original.end();
+            const auto it = std::find(cells.begin(), cells.end(), destCell);
+            if (hasMarker && it == cells.end()) {
+                cells.push_back(destCell);
+            } else if (!hasMarker && it != cells.end()) {
+                cells.erase(it);
+            }
+        }
+    }
+}
+
 void cEditorState::modifySymmetricArea(Direction dir)
 {
     //std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
@@ -1387,6 +1432,8 @@ void cEditorState::modifySymmetricArea(Direction dir)
             }
             break;
     }
+    mirrorMarkerCells(dir, m_blooms);
+    mirrorMarkerCells(dir, m_fields);
     m_hasChanged = true;
 }
 
