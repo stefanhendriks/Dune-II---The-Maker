@@ -79,3 +79,17 @@ TEST_CASE("PadBindings explicit binding takes the button from a default one", "[
     REQUIRE(bindings.getButton(eKeyAction::EDITOR_UNDO) == SDL_GAMEPAD_BUTTON_DPAD_RIGHT);
     REQUIRE_FALSE(bindings.getButton(eKeyAction::EDITOR_REDO).has_value());
 }
+
+TEST_CASE("PadBindings explicit modifier takes the button from actions and other modifiers", "[padbindings]")
+{
+    PadBindings bindings;
+    bindings.loadDefaults();
+    cSection section("PAD");
+    section.addValue("MODIFIER_SHIFT", "start"); // MENU_BACK has it by default
+    section.addValue("MODIFIER_ALT", "rightstick"); // MODIFIER_CTRL has it by default
+    bindings.loadFromSection(section);
+    REQUIRE(bindings.getShiftButton() == SDL_GAMEPAD_BUTTON_START);
+    REQUIRE_FALSE(bindings.getButton(eKeyAction::MENU_BACK).has_value());
+    REQUIRE(bindings.getAltButton() == SDL_GAMEPAD_BUTTON_RIGHT_STICK);
+    REQUIRE_FALSE(bindings.getCtrlButton().has_value());
+}
