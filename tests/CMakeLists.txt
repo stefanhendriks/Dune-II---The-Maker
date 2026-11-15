@@ -2,6 +2,7 @@ find_package(Catch2 3 REQUIRED)
 
 # Test files
 set(TEST_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_GamepadMath.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyBindings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyboardEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/drawers/test_CreditsMath.cpp
