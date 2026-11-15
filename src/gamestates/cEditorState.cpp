@@ -48,6 +48,7 @@
 
 const int heightBarSize = 48;
 const int heightButtonSize = 40;
+const int sizeButtonSpacing = 4;
 const int maxPenSize = 11; // must be odd to have a center
 const Color editorGridColor = Color{128, 128, 128, 180};
 const Color editorCenterLineColor = Color{32, 176, 32, 220};
@@ -163,7 +164,7 @@ void cEditorState::populateSelectBar()
             .build();
     m_selectBar->addGuiObject(std::move(guiIcon));
 
-    rectGui = cRectangle(m_settings->getScreenW()-heightButtonSize*2, (heightBarSize-heightButtonSize)/2, heightButtonSize, heightButtonSize);
+    rectGui = cRectangle(m_settings->getScreenW()-heightButtonSize*2+sizeButtonSpacing, (heightBarSize-heightButtonSize)/2, heightButtonSize, heightButtonSize);
     auto returnIcon = GuiButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture("ICORETURN"))
