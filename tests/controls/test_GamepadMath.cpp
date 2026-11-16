@@ -108,3 +108,24 @@ TEST_CASE("repeat timing", "[gamepad]")
     REQUIRE(repeatsBetween(0.5f, 0.5f, 0.4f, 0.1f) == 0);
     REQUIRE(repeatsBetween(0.0f, 1.0f, 0.4f, 0.0f) == 0);
 }
+
+TEST_CASE("stick scroll directions", "[gamepad]")
+{
+    const auto centered = scrollDirections({0.0f, 0.0f}, 0.5f);
+    REQUIRE_FALSE((centered.left || centered.right || centered.up || centered.down));
+
+    const auto east = scrollDirections({0.9f, 0.1f}, 0.5f);
+    REQUIRE(east.right);
+    REQUIRE_FALSE((east.left || east.up || east.down));
+
+    const auto northWest = scrollDirections({-0.8f, -0.8f}, 0.5f);
+    REQUIRE(northWest.left);
+    REQUIRE(northWest.up);
+    REQUIRE_FALSE((northWest.right || northWest.down));
+
+    // below the threshold nothing scrolls, exactly on it neither
+    const auto weak = scrollDirections({0.5f, 0.3f}, 0.5f);
+    REQUIRE_FALSE((weak.left || weak.right || weak.up || weak.down));
+
+    REQUIRE(scrollDirections({0.0f, 1.0f}, 0.5f).down);
+}
