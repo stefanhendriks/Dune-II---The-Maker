@@ -139,3 +139,157 @@ TEST_CASE("setting values outside their range fall back", "[gamepad]")
     REQUIRE(valueOrDefault(1.0f, 0.0f, 0.9f, 0.2f) == 0.2f);
     REQUIRE(valueOrDefault(std::nanf(""), 0.0f, 0.9f, 0.2f) == 0.2f);
 }
+
+TEST_CASE("radial deadzone exactly on the edge is zero, just outside is not", "[gamepad]")
+{
+    REQUIRE(applyRadialDeadzone(0.25f, 0.0f, 0.25f).x == 0.0f);
+    REQUIRE(applyRadialDeadzone(0.0f, -0.25f, 0.25f).y == 0.0f);
+    REQUIRE(applyRadialDeadzone(0.26f, 0.0f, 0.25f).x > 0.0f);
+}
+
+TEST_CASE("radial deadzone keeps the sign per axis", "[gamepad]")
+{
+    const auto s = applyRadialDeadzone(-0.8f, 0.6f, 0.2f);
+    REQUIRE(s.x < 0.0f);
+    REQUIRE(s.y > 0.0f);
+    // direction (ratio) is kept
+    REQUIRE_THAT(s.x / s.y, WithinAbs(-0.8 / 0.6, 1e-4));
+}
+
+TEST_CASE("radial deadzone clamps input beyond the unit circle", "[gamepad]")
+{
+    const auto s = applyRadialDeadzone(3.0f, 4.0f, 0.2f);
+    REQUIRE_THAT(std::sqrt(s.x * s.x + s.y * s.y), WithinAbs(1.0, 1e-5));
+    // a deadzone above 1 behaves like 1: nothing gets through
+    REQUIRE(applyRadialDeadzone(1.0f, 1.0f, 1.5f).x == 0.0f);
+}
+
+TEST_CASE("radial deadzone output never exceeds the unit circle", "[gamepad]")
+{
+    for (float x = -1.0f; x <= 1.0f; x += 0.125f) {
+        for (float y = -1.0f; y <= 1.0f; y += 0.125f) {
+            const auto s = applyRadialDeadzone(x, y, 0.15f);
+            REQUIRE(std::sqrt(s.x * s.x + s.y * s.y) <= 1.0f + 1e-5f);
+        }
+    }
+}
+
+TEST_CASE("response curve with exponent below one speeds up the center", "[gamepad]")
+{
+    REQUIRE_THAT(applyResponseCurve(0.25f, 0.5f), WithinAbs(0.5, 1e-5));
+    REQUIRE_THAT(applyResponseCurve(-0.25f, 0.5f), WithinAbs(-0.5, 1e-5));
+}
+
+TEST_CASE("response curve at the extremes and with negative input", "[gamepad]")
+{
+    for (float exponent : {0.5f, 1.0f, 2.0f, 3.0f}) {
+        REQUIRE_THAT(applyResponseCurve(1.0f, exponent), WithinAbs(1.0, 1e-5));
+        REQUIRE_THAT(applyResponseCurve(-1.0f, exponent), WithinAbs(-1.0, 1e-5));
+        REQUIRE_THAT(applyResponseCurve(-2.0f, exponent), WithinAbs(-1.0, 1e-5)); // clamped
+        REQUIRE_THAT(applyResponseCurve(0.0f, exponent), WithinAbs(0.0, 1e-5));
+    }
+}
+
+TEST_CASE("response curve is monotonic", "[gamepad]")
+{
+    float previous = -1.0f;
+    for (float v = -1.0f; v <= 1.0f; v += 0.05f) {
+        const float curved = applyResponseCurve(v, 2.0f);
+        REQUIRE(curved >= previous);
+        previous = curved;
+    }
+}
+
+TEST_CASE("cursor delta follows the response curve exponent", "[gamepad]")
+{
+    // magnitude 0.5: exponent 1 -> 0.5, exponent 3 -> 0.125
+    REQUIRE_THAT(cursorDelta({0.5f, 0.0f}, 100.0f, 1.0f, 1.0f).x, WithinAbs(50.0, 1e-3));
+    REQUIRE_THAT(cursorDelta({0.5f, 0.0f}, 100.0f, 3.0f, 1.0f).x, WithinAbs(12.5, 1e-3));
+}
+
+TEST_CASE("cursor delta with zero speed or zero frame time does not move", "[gamepad]")
+{
+    REQUIRE(cursorDelta({1.0f, 0.0f}, 0.0f, 2.0f, 0.1f).x == 0.0f);
+    REQUIRE(cursorDelta({1.0f, 1.0f}, 600.0f, 2.0f, 0.0f).y == 0.0f);
+}
+
+TEST_CASE("cursor delta distance is proportional to frame time", "[gamepad]")
+{
+    const auto oneFrame = cursorDelta({0.0f, 0.8f}, 500.0f, 2.0f, 0.016f);
+    const auto twoFrames = cursorDelta({0.0f, 0.8f}, 500.0f, 2.0f, 0.032f);
+    REQUIRE_THAT(twoFrames.y, WithinAbs(oneFrame.y * 2.0f, 1e-4));
+}
+
+TEST_CASE("axis normalisation is symmetric around zero and clamped", "[gamepad]")
+{
+    REQUIRE_THAT(normalizeAxis(16384), WithinAbs(0.5, 1e-3));
+    REQUIRE_THAT(normalizeAxis(-16384), WithinAbs(-0.5, 1e-3));
+    REQUIRE_THAT(normalizeAxis(1), WithinAbs(1.0 / 32767.0, 1e-9));
+    REQUIRE_THAT(normalizeAxis(-1), WithinAbs(-1.0 / 32768.0, 1e-9));
+    // out of SDL range values are clamped
+    REQUIRE(normalizeAxis(100000) == 1.0f);
+    REQUIRE(normalizeAxis(-100000) == -1.0f);
+}
+
+TEST_CASE("repeat timing edges", "[gamepad]")
+{
+    // exactly on the initial delay fires, just before does not
+    REQUIRE(repeatsBetween(0.0f, 0.4f, 0.4f, 0.1f) == 1);
+    REQUIRE(repeatsBetween(0.0f, 0.39f, 0.4f, 0.1f) == 0);
+    // time going backwards never repeats
+    REQUIRE(repeatsBetween(1.0f, 0.5f, 0.4f, 0.1f) == 0);
+    // negative interval is invalid
+    REQUIRE(repeatsBetween(0.0f, 1.0f, 0.4f, -0.1f) == 0);
+    // a big frame hiccup fires every missed repeat
+    REQUIRE(repeatsBetween(0.0f, 2.45f, 0.4f, 0.1f) == 21);
+    // many small steps give about the same total as one big step (float rounding allows one off)
+    int total = 0;
+    float before = 0.0f;
+    for (int i = 1; i <= 100; i++) {
+        const float now = static_cast<float>(i) * 0.01f;
+        total += repeatsBetween(before, now, 0.4f, 0.1f);
+        before = now;
+    }
+    REQUIRE(std::abs(total - repeatsBetween(0.0f, before, 0.4f, 0.1f)) <= 1);
+}
+
+TEST_CASE("stick scroll threshold edges", "[gamepad]")
+{
+    REQUIRE_FALSE(scrollDirections({0.5f, 0.0f}, 0.5f).right);
+    REQUIRE(scrollDirections({0.5001f, 0.0f}, 0.5f).right);
+    REQUIRE_FALSE(scrollDirections({-0.5f, 0.0f}, 0.5f).left);
+    REQUIRE(scrollDirections({-0.5001f, 0.0f}, 0.5f).left);
+    REQUIRE_FALSE(scrollDirections({0.0f, -0.5f}, 0.5f).up);
+    REQUIRE(scrollDirections({0.0f, -0.5001f}, 0.5f).up);
+    REQUIRE_FALSE(scrollDirections({0.0f, 0.5f}, 0.5f).down);
+    REQUIRE(scrollDirections({0.0f, 0.5001f}, 0.5f).down);
+}
+
+TEST_CASE("stick scroll directions never give opposite directions at once", "[gamepad]")
+{
+    for (float x = -1.0f; x <= 1.0f; x += 0.1f) {
+        for (float y = -1.0f; y <= 1.0f; y += 0.1f) {
+            const auto d = scrollDirections({x, y}, 0.4f);
+            REQUIRE_FALSE((d.left && d.right));
+            REQUIRE_FALSE((d.up && d.down));
+        }
+    }
+}
+
+TEST_CASE("stick scroll threshold extremes", "[gamepad]")
+{
+    // threshold 0: any tilt scrolls, centered does not
+    REQUIRE(scrollDirections({0.01f, 0.0f}, 0.0f).right);
+    REQUIRE_FALSE(scrollDirections({0.0f, 0.0f}, 0.0f).right);
+    // threshold 1: full tilt is not strictly above it, so nothing scrolls
+    const auto full = scrollDirections({1.0f, -1.0f}, 1.0f);
+    REQUIRE_FALSE((full.left || full.right || full.up || full.down));
+}
+
+TEST_CASE("setting value fallback handles infinities and a swapped range", "[gamepad]")
+{
+    REQUIRE(valueOrDefault(INFINITY, 0.0f, 1.0f, 0.5f) == 0.5f);
+    REQUIRE(valueOrDefault(-INFINITY, 0.0f, 1.0f, 0.5f) == 0.5f);
+    // min above max: nothing fits
+    REQUIRE(valueOrDefault(0.5f, 1.0f, 0.0f, 0.25f) == 0.25f);
+}
