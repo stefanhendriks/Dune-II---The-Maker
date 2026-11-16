@@ -69,6 +69,14 @@ inline s_Stick cursorDelta(s_Stick stick, float speed, float exponent, float dtS
 }
 
 /**
+ * For settings: the value when it lies within [min, max], otherwise (also for NaN) the fallback.
+ */
+inline float valueOrDefault(float value, float min, float max, float fallback)
+{
+    return (value >= min && value <= max) ? value : fallback;
+}
+
+/**
  * Which scroll directions a stick (deadzone already applied) asks for, like the mouse at a screen
  * edge: a direction is on when its axis is tilted further than threshold, so a diagonal gives two.
  */
