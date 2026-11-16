@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <string>
 #include "game/Preferences.hpp"
+#include "utils/cIniFile.h"
 #include "utils/InitialGameSettings.hpp"
 
 namespace {
@@ -106,4 +107,20 @@ TEST_CASE("Preferences - the low power icon is off unless the preferences enable
     loaded.showLowPowerIcon = true;
     REQUIRE(Preferences::load(file, loaded, error));
     REQUIRE_FALSE(loaded.showLowPowerIcon);
+}
+
+TEST_CASE("Preferences - invalid gamepad values fall back to the defaults", "[preferences]")
+{
+    cSection section("SETTINGS");
+    section.addValue("GamepadDeadzone", "abc");
+    section.addValue("GamepadCursorCurve", "");
+    section.addValue("GamepadScrollThreshold", "5");
+    section.addValue("GamepadCursorSpeed", "300");
+
+    InitialGameSettings settings;
+    Preferences::readSettings(section, settings);
+    REQUIRE(settings.gamepadDeadzone == 0.2f);
+    REQUIRE(settings.gamepadCursorCurve == 2.0f);
+    REQUIRE(settings.gamepadScrollThreshold == 0.5f);
+    REQUIRE(settings.gamepadCursorSpeed == 300.0f);
 }
