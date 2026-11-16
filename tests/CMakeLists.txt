@@ -36,6 +36,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_RNG.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cFileValidator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPack.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cDataPack.cpp
 )
 
 # Production source files the tests depend on.
@@ -70,6 +71,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/context/MusicJukeBox.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cFileValidator.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cPack.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/cDataPack.cpp
 )
 
 add_executable(d2tm_tests
@@ -93,7 +95,7 @@ target_link_libraries(d2tm_tests PRIVATE cpp_stacktrace)
 # cKeyBindings calls SDL scancode functions. On Linux/Windows link_libraries() in the root
 # CMakeLists.txt provides SDL3; on macOS (pkg-config) it must be linked explicitly.
 if(APPLE)
-    target_link_libraries(d2tm_tests PRIVATE ${SDL3_LIBRARIES})
+    target_link_libraries(d2tm_tests PRIVATE ${SDL3_LIBRARIES} ${SDL3_IMAGE_LIBRARIES} ${SDL3_MIXER_LIBRARIES})
     # Same as the game target: Apple libc++ has no float std::from_chars, IniParsing.cpp needs the fallback.
     target_compile_definitions(d2tm_tests PRIVATE D2TM_CLANG=1)
 endif()
