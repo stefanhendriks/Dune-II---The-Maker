@@ -129,3 +129,13 @@ TEST_CASE("stick scroll directions", "[gamepad]")
 
     REQUIRE(scrollDirections({0.0f, 1.0f}, 0.5f).down);
 }
+
+TEST_CASE("setting values outside their range fall back", "[gamepad]")
+{
+    REQUIRE(valueOrDefault(0.3f, 0.0f, 0.9f, 0.2f) == 0.3f);
+    REQUIRE(valueOrDefault(0.0f, 0.0f, 0.9f, 0.2f) == 0.0f);
+    REQUIRE(valueOrDefault(0.9f, 0.0f, 0.9f, 0.2f) == 0.9f);
+    REQUIRE(valueOrDefault(-0.1f, 0.0f, 0.9f, 0.2f) == 0.2f);
+    REQUIRE(valueOrDefault(1.0f, 0.0f, 0.9f, 0.2f) == 0.2f);
+    REQUIRE(valueOrDefault(std::nanf(""), 0.0f, 0.9f, 0.2f) == 0.2f);
+}
