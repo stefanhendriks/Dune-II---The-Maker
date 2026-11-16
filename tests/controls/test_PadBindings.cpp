@@ -180,7 +180,7 @@ TEST_CASE("PadBindings keys that are no action are ignored", "[padbindings]")
     REQUIRE(bindings.getActionButtons() == before);
 }
 
-TEST_CASE("PadBindings two explicit actions on one button leave it with exactly one", "[padbindings]")
+TEST_CASE("PadBindings two explicit actions on one button go to the later action in the table", "[padbindings]")
 {
     PadBindings bindings;
     bindings.loadDefaults();
@@ -188,9 +188,9 @@ TEST_CASE("PadBindings two explicit actions on one button leave it with exactly 
     section.addValue("EDITOR_UNDO", "x");
     section.addValue("EDITOR_REDO", "x");
     bindings.loadFromSection(section);
-    const bool undo = bindings.getButton(eKeyAction::EDITOR_UNDO) == SDL_GAMEPAD_BUTTON_WEST;
-    const bool redo = bindings.getButton(eKeyAction::EDITOR_REDO) == SDL_GAMEPAD_BUTTON_WEST;
-    REQUIRE(undo != redo);
+    // the section is read in action table order (EDITOR_UNDO before EDITOR_REDO): the later action wins
+    REQUIRE_FALSE(bindings.getButton(eKeyAction::EDITOR_UNDO).has_value());
+    REQUIRE(bindings.getButton(eKeyAction::EDITOR_REDO) == SDL_GAMEPAD_BUTTON_WEST);
 }
 
 TEST_CASE("PadBindings unbinding an action leaves other actions alone", "[padbindings]")
