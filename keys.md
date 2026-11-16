@@ -104,10 +104,13 @@ Speed is set with `GamepadCursorSpeed` in `settings.ini`. Edge scrolling is off 
 | Button | Action |
 |--------|--------|
 | Left stick | Move the cursor |
+| Right stick | Scroll the map (holds the `SCROLL_*` keys, same speed as the keyboard or a screen edge) |
 | South (A) | Left click (hold and move to box select or drag) |
 | East (B) | Right click |
 | Right shoulder | Mouse wheel up (zoom in) |
 | Left shoulder | Mouse wheel down (zoom out) |
+
+The right stick holds the `SCROLL_*` keys itself, so do not bind `SCROLL_*` actions to pad buttons in `[PAD]`: the stick and the button would release each other's key.
 
 ### Gamepad key actions
 
