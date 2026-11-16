@@ -16,6 +16,7 @@
 #pragma once
 
 #include "controls/PadBindings.hpp"
+#include "controls/eKeyAction.h"
 
 #include <SDL3/SDL.h>
 
@@ -38,8 +39,13 @@ public:
     void update(const Gamepad &gamepad, cKeyboard &keyboard);
 
 private:
+    // how far the right stick must be tilted (after the deadzone) to scroll
+    static constexpr float STICK_SCROLL_THRESHOLD = 0.5f;
+
     void pressModifier(cKeyboard &keyboard, SDL_Scancode modifier);
     void releaseModifier(cKeyboard &keyboard, SDL_Scancode modifier);
+    void handleStickScroll(const Gamepad &gamepad, cKeyboard &keyboard);
+    void setScrollKey(cKeyboard &keyboard, eKeyAction action, bool wanted, bool &isDown);
     void handleModifierButton(const Gamepad &gamepad, cKeyboard &keyboard, std::optional<SDL_GamepadButton> button, SDL_Scancode modifier);
 
     PadBindings m_bindings;
@@ -47,4 +53,9 @@ private:
     std::map<SDL_Scancode, int> m_modifierHolds;
     // modifiers an action needed: released one frame after its key, so the key-up still sees them
     std::vector<SDL_Scancode> m_modifiersToRelease;
+    // scroll keys that are held down because of the right stick
+    bool m_scrollLeftDown = false;
+    bool m_scrollRightDown = false;
+    bool m_scrollUpDown = false;
+    bool m_scrollDownDown = false;
 };
