@@ -12,7 +12,6 @@
 #include <cctype>
 #include <filesystem>
 #include <fstream>
-#include <regex>
 #include <set>
 #include <sstream>
 #include <string>
@@ -25,8 +24,16 @@
 // D2TM_SOURCE_DIR is set in tests/CMakeLists.txt
 
 namespace {
-const char *const READ_PATTERN = R"re(hasValue\("([A-Za-z0-9_]+)"\))re";
-const char *const SAVE_PATTERN = R"re(set\(ini, "([A-Za-z0-9_]+)")re";
+// A key is the quoted name between the prefix and the suffix, e.g. hasValue("Windowed")
+const char *const READ_PREFIX = "hasValue(\"";
+const char *const READ_SUFFIX = "\")";
+const char *const SAVE_PREFIX = "set(ini, \"";
+const char *const SAVE_SUFFIX = "\"";
+
+bool isKeyChar(char c)
+{
+    return std::isalnum(static_cast<unsigned char>(c)) != 0 || c == '_';
+}
 
 std::string lower(std::string s)
 {
@@ -50,7 +57,6 @@ std::string readFile(const std::string &relativePath)
 std::set<std::string> keysInSection(const std::string &section)
 {
     std::istringstream in(readFile("resources/bin/settings.ini"));
-    const std::regex keyLine(R"(^\s*#?\s*([A-Za-z0-9_]+)\s*=)");
     std::set<std::string> keys;
     std::string line;
     bool inSection = false;
@@ -59,26 +65,46 @@ std::set<std::string> keysInSection(const std::string &section)
             inSection = line.rfind("[" + section + "]", 0) == 0;
             continue;
         }
-        std::smatch match;
-        if (inSection && std::regex_search(line, match, keyLine)) {
-            const std::string key = lower(match[1]);
-            // "#true = ..." is a sentence in a comment, not a setting
-            if (key != "true" && key != "false") {
-                keys.insert(key);
-            }
+        if (!inSection) continue;
+        // optional '#', then a name, then '='
+        std::size_t pos = line.find_first_not_of(" \t");
+        if (pos == std::string::npos) continue;
+        if (line[pos] == '#') {
+            pos = line.find_first_not_of(" \t", pos + 1);
+            if (pos == std::string::npos) continue;
+        }
+        std::size_t end = pos;
+        while (end < line.size() && isKeyChar(line[end])) {
+            end++;
+        }
+        if (end == pos) continue;
+        const std::size_t equals = line.find_first_not_of(" \t", end);
+        if (equals == std::string::npos || line[equals] != '=') continue;
+        const std::string key = lower(line.substr(pos, end - pos));
+        // "#true = ..." is a sentence in a comment, not a setting
+        if (key != "true" && key != "false") {
+            keys.insert(key);
         }
     }
     return keys;
 }
 
-// Keys (lower case) that a pattern with one capture group finds in Preferences.cpp
-std::set<std::string> keysInPreferences(const std::string &pattern)
+// Keys (lower case) in Preferences.cpp written as <prefix>Name<suffix>
+std::set<std::string> keysInPreferences(const std::string &prefix, const std::string &suffix)
 {
     const std::string source = readFile("src/game/Preferences.cpp");
     std::set<std::string> keys;
-    const std::regex re(pattern);
-    for (auto it = std::sregex_iterator(source.begin(), source.end(), re); it != std::sregex_iterator(); ++it) {
-        keys.insert(lower((*it)[1]));
+    std::size_t pos = source.find(prefix);
+    while (pos != std::string::npos) {
+        const std::size_t start = pos + prefix.size();
+        std::size_t end = start;
+        while (end < source.size() && isKeyChar(source[end])) {
+            end++;
+        }
+        if (end > start && source.compare(end, suffix.size(), suffix) == 0) {
+            keys.insert(lower(source.substr(start, end - start)));
+        }
+        pos = source.find(prefix, start);
     }
     return keys;
 }
@@ -187,7 +213,7 @@ TEST_CASE("Settings ini - the shipped settings.ini loads into the documented val
 
 TEST_CASE("Settings ini - every [SETTINGS] key read in code is in settings.ini", "[settings]")
 {
-    const auto readInCode = keysInPreferences(READ_PATTERN);
+    const auto readInCode = keysInPreferences(READ_PREFIX, READ_SUFFIX);
     REQUIRE(readInCode.size() > 10);
     const auto inIni = keysInSection("SETTINGS");
     // On failure: add the key to resources/bin/settings.ini (commented out when off by default)
@@ -198,7 +224,7 @@ TEST_CASE("Settings ini - every [SETTINGS] key read in code is in settings.ini",
 TEST_CASE("Settings ini - every [SETTINGS] key in settings.ini is read in code", "[settings]")
 {
     // GameDir is read when the data files are loaded, not by Preferences
-    std::set<std::string> readInCode = keysInPreferences(READ_PATTERN);
+    std::set<std::string> readInCode = keysInPreferences(READ_PREFIX, READ_SUFFIX);
     readInCode.insert("gamedir");
     const auto inIni = keysInSection("SETTINGS");
     INFO("in settings.ini, not read in code:" << missingFrom(inIni, readInCode));
@@ -207,8 +233,8 @@ TEST_CASE("Settings ini - every [SETTINGS] key in settings.ini is read in code",
 
 TEST_CASE("Settings ini - every saved option is also read back", "[settings]")
 {
-    const auto readInCode = keysInPreferences(READ_PATTERN);
-    const auto savedInCode = keysInPreferences(SAVE_PATTERN);
+    const auto readInCode = keysInPreferences(READ_PREFIX, READ_SUFFIX);
+    const auto savedInCode = keysInPreferences(SAVE_PREFIX, SAVE_SUFFIX);
     REQUIRE(savedInCode.size() > 10);
     INFO("saved but never read:" << missingFrom(savedInCode, readInCode));
     CHECK(missingFrom(savedInCode, readInCode).empty());
