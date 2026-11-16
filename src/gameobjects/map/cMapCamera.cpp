@@ -286,8 +286,7 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
         int mouseX = event.coords.x;
         int mouseY = event.coords.y;
 
-        // a pad-driven cursor would constantly hit the edges
-        // TODO(#1750) - scroll the map with the right stick, so a pad-only player can scroll while edge scrolling is off
+        // a pad-driven cursor would constantly hit the edges (the right stick scrolls instead)
         const bool atEdges = !m_mouse->isDrivenByPad();
 
         if (atEdges && mouseX <= 2) {

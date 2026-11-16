@@ -17,6 +17,7 @@
 
 #include "controls/Gamepad.hpp"
 #include "controls/cKeyBindings.h"
+#include "controls/GamepadMath.hpp"
 #include "controls/cKeyboard.h"
 
 void GamepadKeys::pressModifier(cKeyboard &keyboard, SDL_Scancode modifier)
@@ -43,6 +44,28 @@ void GamepadKeys::handleModifierButton(const Gamepad &gamepad, cKeyboard &keyboa
     }
 }
 
+void GamepadKeys::setScrollKey(cKeyboard &keyboard, eKeyAction action, bool wanted, bool &isDown)
+{
+    if (wanted == isDown) return;
+    const cKeyBindings *keyBindings = keyboard.getKeyBindings();
+    const s_KeyBinding *binding = keyBindings ? keyBindings->getBinding(action) : nullptr;
+    if (!binding || binding->keys.empty()) return;
+    keyboard.injectKey(binding->keys.front(), wanted);
+    isDown = wanted;
+}
+
+// The right stick scrolls like the mouse at a screen edge: it holds the scroll keys, so the camera
+// (and the editor) react exactly as they do to the keyboard.
+void GamepadKeys::handleStickScroll(const Gamepad &gamepad, cKeyboard &keyboard)
+{
+    // a stick that is no longer there (unplugged) reports centered, which releases the keys
+    const auto directions = GamepadMath::scrollDirections(gamepad.getRightStick(), STICK_SCROLL_THRESHOLD);
+    setScrollKey(keyboard, eKeyAction::SCROLL_LEFT, directions.left, m_scrollLeftDown);
+    setScrollKey(keyboard, eKeyAction::SCROLL_RIGHT, directions.right, m_scrollRightDown);
+    setScrollKey(keyboard, eKeyAction::SCROLL_UP, directions.up, m_scrollUpDown);
+    setScrollKey(keyboard, eKeyAction::SCROLL_DOWN, directions.down, m_scrollDownDown);
+}
+
 void GamepadKeys::update(const Gamepad &gamepad, cKeyboard &keyboard)
 {
     // modifiers of actions that were released last frame: their key-up has been handled by now
@@ -54,6 +77,8 @@ void GamepadKeys::update(const Gamepad &gamepad, cKeyboard &keyboard)
     handleModifierButton(gamepad, keyboard, m_bindings.getShiftButton(), SDL_SCANCODE_LSHIFT);
     handleModifierButton(gamepad, keyboard, m_bindings.getCtrlButton(), SDL_SCANCODE_LCTRL);
     handleModifierButton(gamepad, keyboard, m_bindings.getAltButton(), SDL_SCANCODE_LALT);
+
+    handleStickScroll(gamepad, keyboard);
 
     const cKeyBindings *keyBindings = keyboard.getKeyBindings();
     if (!keyBindings) return;
