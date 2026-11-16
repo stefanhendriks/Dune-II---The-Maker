@@ -23,6 +23,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_IniScenarioParsing.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_CampaignProgress.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_Preferences.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_SettingsDefaults.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPoint.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_LowPowerBlink.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cRectangle.cpp
@@ -89,6 +90,7 @@ target_include_directories(d2tm_tests
         ${SDL3_INCLUDE_DIRS}
 )
 
+target_compile_definitions(d2tm_tests PRIVATE D2TM_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 target_link_libraries(d2tm_tests PRIVATE Catch2::Catch2WithMain)
 target_link_libraries(d2tm_tests PRIVATE cpp_stacktrace)
 
