@@ -37,6 +37,20 @@ std::string toText(bool value)
     return value ? "true" : "false";
 }
 
+// A number within [min, max], anything else (not a number, empty, out of range) gives the fallback
+float readGamepadValue(const cSection &section, const char *key, float min, float max, float fallback)
+{
+    const std::string text = section.getStringValue(key);
+    try {
+        size_t used = 0;
+        const float value = std::stof(text, &used);
+        if (used != text.size()) return fallback;
+        return GamepadMath::valueOrDefault(value, min, max, fallback);
+    } catch (const std::exception &) {
+        return fallback;
+    }
+}
+
 void set(cIniFile &ini, const char *key, const std::string &value)
 {
     ini.setValue(SECTION, key, value);
@@ -58,16 +72,16 @@ void readSettings(const cSection &section, InitialGameSettings &settings)
         settings.cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     }
     if (section.hasValue("GamepadCursorSpeed")) {
-        settings.gamepadCursorSpeed = GamepadMath::valueOrDefault(static_cast<float>(section.getDouble("GamepadCursorSpeed")), 1.0f, 10000.0f, settings.gamepadCursorSpeed);
+        settings.gamepadCursorSpeed = readGamepadValue(section, "GamepadCursorSpeed", 1.0f, 10000.0f, settings.gamepadCursorSpeed);
     }
     if (section.hasValue("GamepadDeadzone")) {
-        settings.gamepadDeadzone = GamepadMath::valueOrDefault(static_cast<float>(section.getDouble("GamepadDeadzone")), 0.0f, 0.9f, settings.gamepadDeadzone);
+        settings.gamepadDeadzone = readGamepadValue(section, "GamepadDeadzone", 0.0f, 0.9f, settings.gamepadDeadzone);
     }
     if (section.hasValue("GamepadCursorCurve")) {
-        settings.gamepadCursorCurve = GamepadMath::valueOrDefault(static_cast<float>(section.getDouble("GamepadCursorCurve")), 0.1f, 5.0f, settings.gamepadCursorCurve);
+        settings.gamepadCursorCurve = readGamepadValue(section, "GamepadCursorCurve", 0.1f, 5.0f, settings.gamepadCursorCurve);
     }
     if (section.hasValue("GamepadScrollThreshold")) {
-        settings.gamepadScrollThreshold = GamepadMath::valueOrDefault(static_cast<float>(section.getDouble("GamepadScrollThreshold")), 0.05f, 0.95f, settings.gamepadScrollThreshold);
+        settings.gamepadScrollThreshold = readGamepadValue(section, "GamepadScrollThreshold", 0.05f, 0.95f, settings.gamepadScrollThreshold);
     }
     if (section.hasValue("FullScreen")) {
         settings.windowed = !section.getBoolean("FullScreen");
