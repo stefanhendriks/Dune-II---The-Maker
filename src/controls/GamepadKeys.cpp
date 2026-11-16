@@ -59,7 +59,7 @@ void GamepadKeys::setScrollKey(cKeyboard &keyboard, eKeyAction action, bool want
 void GamepadKeys::handleStickScroll(const Gamepad &gamepad, cKeyboard &keyboard)
 {
     // a stick that is no longer there (unplugged) reports centered, which releases the keys
-    const auto directions = GamepadMath::scrollDirections(gamepad.getRightStick(), STICK_SCROLL_THRESHOLD);
+    const auto directions = GamepadMath::scrollDirections(gamepad.getRightStick(), m_scrollThreshold);
     setScrollKey(keyboard, eKeyAction::SCROLL_LEFT, directions.left, m_scrollLeftDown);
     setScrollKey(keyboard, eKeyAction::SCROLL_RIGHT, directions.right, m_scrollRightDown);
     setScrollKey(keyboard, eKeyAction::SCROLL_UP, directions.up, m_scrollUpDown);

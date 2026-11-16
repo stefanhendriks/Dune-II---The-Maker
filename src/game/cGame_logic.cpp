@@ -311,6 +311,9 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_cameraBorderOrKeyMoveSpeed = gs->cameraBorderOrKeyMoveSpeed;
     m_cameraEdgeMove = gs->cameraEdgeMove;
     m_gamepadCursorSpeed = gs->gamepadCursorSpeed;
+    m_gamepadDeadzone = gs->gamepadDeadzone;
+    m_gamepadCursorCurve = gs->gamepadCursorCurve;
+    m_gamepadScrollThreshold = gs->gamepadScrollThreshold;
     m_windowed = gs->windowed;
     m_scalingMode = gs->scalingMode;
 
@@ -353,6 +356,9 @@ InitialGameSettings cGame::currentSettings() const
     gs.cameraBorderOrKeyMoveSpeed = m_cameraBorderOrKeyMoveSpeed;
     gs.cameraEdgeMove = m_cameraEdgeMove;
     gs.gamepadCursorSpeed = m_gamepadCursorSpeed;
+    gs.gamepadDeadzone = m_gamepadDeadzone;
+    gs.gamepadCursorCurve = m_gamepadCursorCurve;
+    gs.gamepadScrollThreshold = m_gamepadScrollThreshold;
     gs.windowed = m_windowed;
     gs.scalingMode = m_scalingMode;
     gs.allowRepeatingReinforcements = m_gameSettings->m_allowRepeatingReinforcements;
@@ -524,7 +530,7 @@ void cGame::thinkFast_audio()
 void cGame::updateMouseAndKeyboardState()
 {
     m_gamepad->update();
-    m_gamepadCursor.update(*m_gamepad, *m_mouse, m_gameSettings->getScreenW(), m_gameSettings->getScreenH(), m_gamepadCursorSpeed);
+    m_gamepadCursor.update(*m_gamepad, *m_mouse, m_gameSettings->getScreenW(), m_gameSettings->getScreenH(), m_gamepadCursorSpeed, m_gamepadCursorCurve);
     m_gamepadKeys.update(*m_gamepad, *m_keyboard);
     m_mouse->updateState(); // calls observers that are interested in mouse input
     m_keyboard->updateState(); // calls observers that are interested in keyboard input
@@ -743,10 +749,11 @@ bool cGame::setupGame()
         padBindings.loadFromSection(settings->getSection("PAD"));
     }
     m_gamepadKeys.setBindings(padBindings);
+    m_gamepadKeys.setScrollThreshold(m_gamepadScrollThreshold);
 
     m_Screen = std::make_unique<cSDLSystem>(m_gameSettings->m_screenW, m_gameSettings->m_screenH, title, m_windowed, m_scalingMode);
     // after SDL init (cSDLSystem), so pads that are already plugged in are found
-    m_gamepad = std::make_unique<Gamepad>();
+    m_gamepad = std::make_unique<Gamepad>(m_gamepadDeadzone);
     if (!m_windowed) {
         m_Screen->setFullScreenMode();
     }

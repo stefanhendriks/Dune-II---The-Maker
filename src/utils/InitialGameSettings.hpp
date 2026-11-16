@@ -25,6 +25,9 @@ struct InitialGameSettings {
     float cameraBorderOrKeyMoveSpeed = 0.5f;
     bool cameraEdgeMove = true;
     float gamepadCursorSpeed = 600.0f; // pixels per second at full stick tilt
+    float gamepadDeadzone = 0.2f;        // stick tilt (0..1) that is ignored
+    float gamepadCursorCurve = 2.0f;     // response curve of the cursor stick, 1 is linear, higher is more precise near the center
+    float gamepadScrollThreshold = 0.5f; // right stick tilt (after the deadzone) at which the map scrolls
     bool windowed = false;
     eScalingMode scalingMode = eScalingMode::INTEGER_SCALE;
     bool allowRepeatingReinforcements = false;

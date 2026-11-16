@@ -16,6 +16,7 @@
 
 #include "game/Preferences.hpp"
 
+#include "controls/GamepadMath.hpp"
 #include "utils/cIniFile.h"
 #include "utils/InitialGameSettings.hpp"
 
@@ -57,7 +58,16 @@ void readSettings(const cSection &section, InitialGameSettings &settings)
         settings.cameraBorderOrKeyMoveSpeed = section.getDouble("CameraBorderOrKeyMoveSpeed");
     }
     if (section.hasValue("GamepadCursorSpeed")) {
-        settings.gamepadCursorSpeed = section.getDouble("GamepadCursorSpeed");
+        settings.gamepadCursorSpeed = GamepadMath::valueOrDefault(static_cast<float>(section.getDouble("GamepadCursorSpeed")), 1.0f, 10000.0f, settings.gamepadCursorSpeed);
+    }
+    if (section.hasValue("GamepadDeadzone")) {
+        settings.gamepadDeadzone = GamepadMath::valueOrDefault(static_cast<float>(section.getDouble("GamepadDeadzone")), 0.0f, 0.9f, settings.gamepadDeadzone);
+    }
+    if (section.hasValue("GamepadCursorCurve")) {
+        settings.gamepadCursorCurve = GamepadMath::valueOrDefault(static_cast<float>(section.getDouble("GamepadCursorCurve")), 0.1f, 5.0f, settings.gamepadCursorCurve);
+    }
+    if (section.hasValue("GamepadScrollThreshold")) {
+        settings.gamepadScrollThreshold = GamepadMath::valueOrDefault(static_cast<float>(section.getDouble("GamepadScrollThreshold")), 0.05f, 0.95f, settings.gamepadScrollThreshold);
     }
     if (section.hasValue("FullScreen")) {
         settings.windowed = !section.getBoolean("FullScreen");

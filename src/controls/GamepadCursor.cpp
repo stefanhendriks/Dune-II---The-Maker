@@ -20,7 +20,7 @@
 
 #include <algorithm>
 
-void GamepadCursor::update(const Gamepad &gamepad, cMouse &mouse, int screenW, int screenH, float speed)
+void GamepadCursor::update(const Gamepad &gamepad, cMouse &mouse, int screenW, int screenH, float speed, float curve)
 {
     const Uint64 now = SDL_GetTicks();
     // cap the step so a long frame (or the first call) does not make the cursor jump
@@ -40,7 +40,7 @@ void GamepadCursor::update(const Gamepad &gamepad, cMouse &mouse, int screenW, i
         m_y = static_cast<float>(mouse.getY());
     }
 
-    const auto delta = GamepadMath::cursorDelta(gamepad.getLeftStick(), speed, RESPONSE_EXPONENT, dt);
+    const auto delta = GamepadMath::cursorDelta(gamepad.getLeftStick(), speed, curve, dt);
     m_x = std::clamp(m_x + delta.x, 0.0f, static_cast<float>(screenW - 1));
     m_y = std::clamp(m_y + delta.y, 0.0f, static_cast<float>(screenH - 1));
     mouse.moveTo(static_cast<int>(m_x), static_cast<int>(m_y));
