@@ -233,16 +233,7 @@ TEST_CASE("Settings ini - [KEYS] and [PAD] only name actions the game knows", "[
 
 TEST_CASE("Settings ini - every key action can be remapped in [KEYS]", "[settings]")
 {
-    // TODO(#1522) - these actions are not in settings.ini yet; remove them here when they are added
-    const std::set<std::string> knownMissing = {
-        "editor_copy", "editor_cut", "editor_display_axes", "editor_display_grid", "editor_paste",
-        "editor_redo", "editor_undo", "group_6", "select_attacking_on_map", "select_harvesters_on_map",
-        "select_harvesters_on_screen", "select_infantry_on_map", "select_infantry_on_screen",
-        "select_launchers_on_map", "select_launchers_on_screen", "select_same_type_on_map",
-        "select_tanks_on_map", "select_tanks_on_screen", "select_wheels_on_map", "select_wheels_on_screen",
-    };
-    auto keys = keysInSection("KEYS");
-    keys.insert(knownMissing.begin(), knownMissing.end());
+    const auto keys = keysInSection("KEYS");
     const auto actions = actionNames();
     INFO("action without a [KEYS] entry in settings.ini:" << missingFrom(actions, keys));
     CHECK(missingFrom(actions, keys).empty());
