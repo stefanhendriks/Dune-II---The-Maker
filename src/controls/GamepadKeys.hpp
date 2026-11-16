@@ -35,13 +35,13 @@ class GamepadKeys {
 public:
     void setBindings(const PadBindings &bindings) { m_bindings = bindings; }
 
+    // how far the right stick must be tilted (after the deadzone) to scroll the map
+    void setScrollThreshold(float threshold) { m_scrollThreshold = threshold; }
+
     // Call once per frame, after Gamepad::update() and before cKeyboard::updateState()
     void update(const Gamepad &gamepad, cKeyboard &keyboard);
 
 private:
-    // how far the right stick must be tilted (after the deadzone) to scroll
-    static constexpr float STICK_SCROLL_THRESHOLD = 0.5f;
-
     void pressModifier(cKeyboard &keyboard, SDL_Scancode modifier);
     void releaseModifier(cKeyboard &keyboard, SDL_Scancode modifier);
     void handleStickScroll(const Gamepad &gamepad, cKeyboard &keyboard);
@@ -49,6 +49,7 @@ private:
     void handleModifierButton(const Gamepad &gamepad, cKeyboard &keyboard, std::optional<SDL_GamepadButton> button, SDL_Scancode modifier);
 
     PadBindings m_bindings;
+    float m_scrollThreshold = 0.5f;
     // how many pad buttons or actions currently hold a modifier key down
     std::map<SDL_Scancode, int> m_modifierHolds;
     // modifiers an action needed: released one frame after its key, so the key-up still sees them

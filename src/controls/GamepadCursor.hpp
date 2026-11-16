@@ -26,9 +26,8 @@ class cMouse;
  */
 class GamepadCursor {
 public:
-    static constexpr float RESPONSE_EXPONENT = 2.0f;
-
-    void update(const Gamepad &gamepad, cMouse &mouse, int screenW, int screenH, float speed);
+    // speed: pixels per second at full tilt, curve: response curve exponent of the stick
+    void update(const Gamepad &gamepad, cMouse &mouse, int screenW, int screenH, float speed, float curve);
 
 private:
     float m_x = 0.0f;

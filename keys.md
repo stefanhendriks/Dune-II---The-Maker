@@ -99,7 +99,16 @@
 ## Gamepad (cursor mode)
 
 Active whenever a gamepad is connected. Mouse and keyboard keep working alongside it.
-Speed is set with `GamepadCursorSpeed` in `settings.ini`. Edge scrolling is off while the pad drives the cursor.
+Edge scrolling is off while the pad drives the cursor.
+
+Tunable in `settings.ini` (a missing or out of range value falls back to the default):
+
+| Setting | Default | Range | Meaning |
+|---------|---------|-------|---------|
+| `GamepadCursorSpeed` | 600 | 1 to 10000 | Cursor speed in pixels per second at full stick tilt |
+| `GamepadDeadzone` | 0.2 | 0 to 0.9 | Stick tilt that is ignored (both sticks) |
+| `GamepadCursorCurve` | 2 | 0.1 to 5 | Cursor stick response: 1 is linear, higher is more precise near the center |
+| `GamepadScrollThreshold` | 0.5 | 0.05 to 0.95 | Right stick tilt (after the deadzone) at which the map scrolls |
 
 | Button | Action |
 |--------|--------|

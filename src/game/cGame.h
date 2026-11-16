@@ -196,6 +196,9 @@ private:
     float m_cameraDragMoveSpeed;            // speed of camera when dragging mouse (default = 0.5f)
     float m_cameraBorderOrKeyMoveSpeed;     // speed of camera when hitting mouse border or pressing keys (default = 0.5f)
     float m_gamepadCursorSpeed = 600.0f;    // pixels per second the pad-driven cursor moves at full stick tilt
+    float m_gamepadDeadzone = 0.2f;         // stick tilt that is ignored
+    float m_gamepadCursorCurve = 2.0f;      // response curve exponent of the cursor stick
+    float m_gamepadScrollThreshold = 0.5f;  // right stick tilt at which the map scrolls
     bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
 
     std::string m_gameFilename;
