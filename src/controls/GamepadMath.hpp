@@ -69,6 +69,22 @@ inline s_Stick cursorDelta(s_Stick stick, float speed, float exponent, float dtS
 }
 
 /**
+ * Which scroll directions a stick (deadzone already applied) asks for, like the mouse at a screen
+ * edge: a direction is on when its axis is tilted further than threshold, so a diagonal gives two.
+ */
+struct s_ScrollDirections {
+    bool left = false;
+    bool right = false;
+    bool up = false;
+    bool down = false;
+};
+
+inline s_ScrollDirections scrollDirections(s_Stick stick, float threshold)
+{
+    return {stick.x < -threshold, stick.x > threshold, stick.y < -threshold, stick.y > threshold};
+}
+
+/**
  * Converts a raw SDL axis value (-32768..32767) to -1..1.
  */
 inline float normalizeAxis(int raw)
