@@ -105,6 +105,7 @@ TEST_CASE("DataPack - getText returns the contents of text entries only", "[data
     writePack(packName, {{dir.write("a.txt", "hello world"), "greeting"},
         {dir.write("b.txt", utf8), "utf8"},
         {dir.write("c.txt", ""), "empty"},
+        // extension .dat: only entries with extension txt count as text
         {dir.write("d.dat", "binary"), "notext"}});
 
     DataPack pack(packName, nullptr);
