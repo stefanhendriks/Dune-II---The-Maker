@@ -14,6 +14,8 @@
  */
 
 #include "utils/ini.h"
+
+#include <filesystem>
 #include "utils/ScenarioData.hpp"
 #include "iniSections.h"
 #include "iniWords.h"
@@ -374,8 +376,14 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, eScenarioIniSection iSect
 }
 
 
-// Game.ini loader
+// Game rules loader: game.ini, followed by structures.ini in the same directory
 void cIni::installGame(const std::string& filename)
+{
+    installRulesFile(filename);
+    installRulesFile(std::filesystem::path(filename).replace_filename("structures.ini").string());
+}
+
+void cIni::installRulesFile(const std::string& filename)
 {
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
