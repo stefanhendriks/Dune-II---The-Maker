@@ -42,18 +42,30 @@ public:
 
     [[nodiscard]] std::string getStringValue(const std::string &key) const;
 
+    // Returns defaultValue when the key is missing (no warning logged)
+    [[nodiscard]] std::string getStringValue(const std::string &key, const std::string &defaultValue) const;
+
     [[nodiscard]] int getInt(const std::string &key) const;
+
+    // Returns defaultValue when the key is missing or its value is empty
+    [[nodiscard]] int getInt(const std::string &key, int defaultValue) const;
 
     [[nodiscard]] double getDouble(const std::string &key) const;
 
+    // Returns defaultValue when the key is missing or its value is empty
+    [[nodiscard]] double getDouble(const std::string &key, double defaultValue) const;
+
     [[nodiscard]] bool getBoolean(const std::string &key) const;
+
+    // Returns defaultValue when the key is missing or its value is empty
+    [[nodiscard]] bool getBoolean(const std::string &key, bool defaultValue) const;
 
     [[nodiscard]] std::vector<std::string> getData() const {
         return m_dataConfs;
     }
 
     template<typename T>
-    T FromString(std::string value) const;
+    T FromString(const std::string &value) const;
 
     // Writes "[name]", all key=value pairs and raw data lines
     void write(std::ostream &out) const;

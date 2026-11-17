@@ -107,6 +107,46 @@ TEST_CASE("cIniFile returns empty and zero defaults for missing values", "[ini]"
     REQUIRE_THROWS_AS(ini.getSection("missing"), std::invalid_argument);
 }
 
+TEST_CASE("cSection default-value getters return the default only when the key is missing or empty", "[ini]")
+{
+    cSection section("TEST");
+    section.addValue("text", "hello");
+    section.addValue("number", "42");
+    section.addValue("ratio", "2.5");
+    section.addValue("flag", "On");
+    section.addValue("off", "false");
+    section.addValue("empty", "");
+
+    SECTION("present values win over the default") {
+        REQUIRE(section.getStringValue("text", "x") == "hello");
+        REQUIRE(section.getInt("number", 7) == 42);
+        REQUIRE(section.getDouble("ratio", 9.0) == 2.5);
+        REQUIRE(section.getBoolean("flag", false));
+        REQUIRE_FALSE(section.getBoolean("off", true));
+    }
+
+    SECTION("missing keys return the default") {
+        REQUIRE(section.getStringValue("nope", "x") == "x");
+        REQUIRE(section.getInt("nope", 7) == 7);
+        REQUIRE(section.getDouble("nope", 9.5) == 9.5);
+        REQUIRE(section.getBoolean("nope", true));
+        REQUIRE_FALSE(section.getBoolean("nope", false));
+    }
+
+    SECTION("empty values return the default for typed getters") {
+        REQUIRE(section.getStringValue("empty", "x").empty());
+        REQUIRE(section.getInt("empty", 7) == 7);
+        REQUIRE(section.getDouble("empty", 9.5) == 9.5);
+        REQUIRE(section.getBoolean("empty", true));
+    }
+
+    SECTION("getters without default give zero or false for missing and empty values") {
+        REQUIRE(section.getInt("empty") == 0);
+        REQUIRE(section.getDouble("nope") == 0.0);
+        REQUIRE_FALSE(section.getBoolean("empty"));
+    }
+}
+
 TEST_CASE("cIniFile setValue creates sections and replaces existing values", "[ini]")
 {
     TemporaryDirectory directory;
