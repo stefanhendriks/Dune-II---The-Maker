@@ -395,7 +395,7 @@ void cIni::installRulesFile(const std::string& filename)
 
     std::ifstream file(filename);
     if (!file.is_open()) {
-        Logger::error(COMP_GAMERULES, "cIni::installGame", "[GameRules] Error, could not open file");
+        Logger::error(COMP_GAMERULES, "cIni::installGame", "[GameRules] Error, could not open file [{}], its rules are missing and defaults are used", filename);
         return;
     }
 
@@ -415,9 +415,9 @@ void cIni::installRulesFile(const std::string& filename)
 
             if (last != section) {
                 id = -1;
-                if (section == eGameIniSection::UNITS)      Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [UNITS]");
-                if (section == eGameIniSection::STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [STRUCTURES]");
-                if (section == eGameIniSection::BULLETS)    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] -> [BULLETS]");
+                if (section == eGameIniSection::UNITS)      Logger::info(COMP_GAMERULES, "cIni::installGame", "[{}] -> [UNITS]", filename);
+                if (section == eGameIniSection::STRUCTURES) Logger::info(COMP_GAMERULES, "cIni::installGame", "[{}] -> [STRUCTURES]", filename);
+                if (section == eGameIniSection::BULLETS)    Logger::info(COMP_GAMERULES, "cIni::installGame", "[{}] -> [BULLETS]", filename);
             }
 
             if (section == eGameIniSection::UNITS && linefeed.find("[UNIT:") != std::string::npos) {
@@ -525,5 +525,5 @@ void cIni::installRulesFile(const std::string& filename)
     } // while
     file.close();
 
-    Logger::info(COMP_GAMERULES, "cIni::installGame", "[GAME.INI] Done");
+    Logger::info(COMP_GAMERULES, "cIni::installGame", "[{}] Done", filename);
 }
