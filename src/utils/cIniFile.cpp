@@ -96,8 +96,17 @@ std::string cSection::getStringValue(const std::string &key) const
     }
 }
 
+std::string cSection::getStringValue(const std::string &key, const std::string &defaultValue) const
+{
+    const auto it = m_sectionConf.find(key);
+    if (it == m_sectionConf.end()) {
+        return defaultValue;
+    }
+    return it->second;
+}
+
 template<typename T>
-T cSection::FromString(std::string value) const
+T cSection::FromString(const std::string &value) const
 {
     std::istringstream ss(value);
     T res;
@@ -134,6 +143,26 @@ double cSection::getDouble(const std::string &key) const
         return FromString<double>(value);
     }
     return 0;
+}
+
+int cSection::getInt(const std::string &key, int defaultValue) const
+{
+    const std::string value = getStringValue(key, "");
+    return value.empty() ? defaultValue : FromString<int>(value);
+}
+
+double cSection::getDouble(const std::string &key, double defaultValue) const
+{
+    const std::string value = getStringValue(key, "");
+    return value.empty() ? defaultValue : FromString<double>(value);
+}
+
+bool cSection::getBoolean(const std::string &key, bool defaultValue) const
+{
+    if (getStringValue(key, "").empty()) {
+        return defaultValue;
+    }
+    return getBoolean(key);
 }
 
 void cSection::write(std::ostream &out) const
