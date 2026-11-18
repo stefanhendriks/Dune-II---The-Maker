@@ -391,8 +391,11 @@ void cIni::installRulesFile(const std::string& filename, bool structuresFile, bo
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
     eGameIniSection section = eGameIniSection::GAME;
-    if (structuresFile) section = eGameIniSection::STRUCTURES;
-    if (unitsFile) section = eGameIniSection::UNITS;
+    if (structuresFile) {
+        section = eGameIniSection::STRUCTURES;
+    } else if (unitsFile) {
+        section = eGameIniSection::UNITS;
+    }
     eIniWord wordtype = eIniWord::NONE;
     int id = -1;
 
