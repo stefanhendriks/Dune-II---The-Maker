@@ -413,6 +413,11 @@ void cIni::installRulesFile(const std::string& filename, bool structuresFile)
         if (!sectionName.empty() && structuresFile) {
             id = cIniUtils::getStructureType(sectionName);
             if (id >= MAX_STRUCTURETYPES) id--;
+            if (id == PALACE && !cIniUtils::caseInsCompare(sectionName, "PALACE")) {
+                // getStructureType falls back to 0 for unknown names, which would pour this section's values into the Palace
+                Logger::error(COMP_GAMERULES, "cIni::installGame", "[{}] Unknown structure section [{}], skipping it (expected e.g. [WOR])", filename, sectionName);
+                id = -1;
+            }
             continue;
         }
 
