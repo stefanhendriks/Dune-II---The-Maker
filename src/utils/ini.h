@@ -49,7 +49,7 @@ public:
 
 
 private:
-    void installRulesFile(const std::string& filename);
+    void installRulesFile(const std::string& filename, bool structuresFile);
     void populateScenario(const ScenarioData& data, AbstractMentat *pMentat, cReinforcements *reinforcements, int iHouse);
     int  findPlayerIdByHouse(int house) const;
     void INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota);

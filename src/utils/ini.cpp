@@ -379,15 +379,16 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, eScenarioIniSection iSect
 // Game rules loader: game.ini, followed by structures.ini in the same directory
 void cIni::installGame(const std::string& filename)
 {
-    installRulesFile(filename);
-    installRulesFile(std::filesystem::path(filename).replace_filename("structures.ini").string());
+    installRulesFile(filename, false);
+    installRulesFile(std::filesystem::path(filename).replace_filename("structures.ini").string(), true);
 }
 
-void cIni::installRulesFile(const std::string& filename)
+// structuresFile: every section is a structure, named by the section ([WOR]), instead of [STRUCTURE: WOR] in game.ini
+void cIni::installRulesFile(const std::string& filename, bool structuresFile)
 {
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
-    eGameIniSection section = eGameIniSection::GAME;
+    eGameIniSection section = structuresFile ? eGameIniSection::STRUCTURES : eGameIniSection::GAME;
     eIniWord wordtype = eIniWord::NONE;
     int id = -1;
 
@@ -409,6 +410,12 @@ void cIni::installRulesFile(const std::string& filename)
         wordtype = eIniWord::NONE;
 
         auto sectionName = extractSectionName(linefeed);
+        if (!sectionName.empty() && structuresFile) {
+            id = cIniUtils::getStructureType(sectionName);
+            if (id >= MAX_STRUCTURETYPES) id--;
+            continue;
+        }
+
         if (!sectionName.empty()) {
             eGameIniSection last = section;
             section = GAME_INI_SectionType(sectionName, section);
