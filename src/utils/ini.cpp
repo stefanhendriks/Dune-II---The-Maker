@@ -376,17 +376,19 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, eScenarioIniSection iSect
 }
 
 
-// Game rules loader: game.ini, followed by structures.ini in the same directory
+// Game rules loader: game.ini, followed by structures.ini, units.ini and bullets.ini in the same directory
 void cIni::installGame(const std::string& filename)
 {
-    installRulesFile(filename, false, false);
-    installRulesFile(std::filesystem::path(filename).replace_filename("structures.ini").string(), true, false);
-    installRulesFile(std::filesystem::path(filename).replace_filename("units.ini").string(), false, true);
+    installRulesFile(filename, false, false, false);
+    installRulesFile(std::filesystem::path(filename).replace_filename("structures.ini").string(), true, false, false);
+    installRulesFile(std::filesystem::path(filename).replace_filename("units.ini").string(), false, true, false);
+    installRulesFile(std::filesystem::path(filename).replace_filename("bullets.ini").string(), false, false, true);
 }
 
 // structuresFile: every section is a structure, named by the section ([WOR]), instead of [STRUCTURE: WOR] in game.ini
 // unitsFile: every section is a unit, named by the section ([TRIKE]), instead of [UNIT: TRIKE] in game.ini
-void cIni::installRulesFile(const std::string& filename, bool structuresFile, bool unitsFile)
+// bulletsFile: every section is a bullet, named by the section ([ROCKET_NORMAL]), instead of [BULLET: ROCKET_NORMAL] in game.ini
+void cIni::installRulesFile(const std::string& filename, bool structuresFile, bool unitsFile, bool bulletsFile)
 {
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
@@ -395,6 +397,8 @@ void cIni::installRulesFile(const std::string& filename, bool structuresFile, bo
         section = eGameIniSection::STRUCTURES;
     } else if (unitsFile) {
         section = eGameIniSection::UNITS;
+    } else if (bulletsFile) {
+        section = eGameIniSection::BULLETS;
     }
     eIniWord wordtype = eIniWord::NONE;
     int id = -1;
@@ -433,6 +437,15 @@ void cIni::installRulesFile(const std::string& filename, bool structuresFile, bo
             if (id >= MAX_UNITTYPES) id--;
             if (id < 0) {
                 Logger::error(COMP_GAMERULES, "cIni::installGame", "[{}] Unknown unit section [{}], skipping it (expected e.g. [TRIKE])", filename, sectionName);
+            }
+            continue;
+        }
+
+        if (!sectionName.empty() && bulletsFile) {
+            id = cIniUtils::getBulletTypeFromString(sectionName);
+            if (id >= static_cast<int>(m_infos->getBulletInfos()->size())) id--;
+            if (id < 0) {
+                Logger::error(COMP_GAMERULES, "cIni::installGame", "[{}] Unknown bullet section [{}], skipping it (expected e.g. [ROCKET_NORMAL])", filename, sectionName);
             }
             continue;
         }
@@ -548,6 +561,12 @@ void cIni::installRulesFile(const std::string& filename, bool structuresFile, bo
             if (wordtype == eIniWord::DEVIATE_PROBABILITY) m_infos->getBulletInfo(id).deviateProbability = ToInt(word_right);
             if (wordtype == eIniWord::EXPLOSION_SIZE)     m_infos->getBulletInfo(id).explosionSize = ToInt(word_right);
             if (wordtype == eIniWord::GROUND_BULLET)      m_infos->getBulletInfo(id).groundBullet = ToBool(word_right);
+            if (wordtype == eIniWord::MOVESPEED)          m_infos->getBulletInfo(id).moveSpeed = ToInt(word_right);
+            if (wordtype == eIniWord::BITMAP_WIDTH)       m_infos->getBulletInfo(id).bmp_width = ToInt(word_right);
+            if (wordtype == eIniWord::BITMAP_FRAMES)      m_infos->getBulletInfo(id).max_frames = ToInt(word_right);
+            if (wordtype == eIniWord::BITMAP_DEADFRAMES)  m_infos->getBulletInfo(id).max_deadframes = ToInt(word_right);
+            if (wordtype == eIniWord::CANDAMAGEAIRUNITS)  m_infos->getBulletInfo(id).canDamageAirUnits = ToBool(word_right);
+            if (wordtype == eIniWord::CANDAMAGEGROUND)    m_infos->getBulletInfo(id).canDamageGround = ToBool(word_right);
         }
 
     } // while

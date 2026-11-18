@@ -69,6 +69,8 @@ enum class eIniWord {
     EXPLOSION_SIZE,  // (Explosion size)
     DEVIATE_PROBABILITY,  // (Deviation probability)
     GROUND_BULLET,  // (blocked by mountains, walls, structures)
+    CANDAMAGEAIRUNITS,  // (bullet can damage air units on impact)
+    CANDAMAGEGROUND,    // (bullet can damage walls, slabs, etc)
     UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN,  // (structures, how many units to spawn if destroyed? (min))
     UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX,  // (structures, how many units to spawn if destroyed? (max))
     UPON_DESTRUCTION_SPAWN_UNIT_TYPE,  // (structures, which type of unit to spawn if destroyed?)
