@@ -51,6 +51,7 @@ cp -p build/d2tm bin
 echo "12. Copy game rules file (game.ini)"
 cp resources/game.ini.org bin/game.ini
 cp resources/structures.ini.org bin/structures.ini
+cp resources/units.ini.org bin/units.ini
 cp resources/bin/settings.ini bin
 echo "13. Copy txt files"
 cp resources/doc/versionhistory.txt bin
