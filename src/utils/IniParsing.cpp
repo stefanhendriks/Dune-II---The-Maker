@@ -228,6 +228,9 @@ eIniWord GameIniWordType(const std::string& word, eGameIniSection section)
         if (cIniUtils::caseInsCompare(word, "ExplosionSize"))     return eIniWord::EXPLOSION_SIZE;
         if (cIniUtils::caseInsCompare(word, "DeviateProbability"))return eIniWord::DEVIATE_PROBABILITY;
         if (cIniUtils::caseInsCompare(word, "GroundBullet"))      return eIniWord::GROUND_BULLET;
+        if (cIniUtils::caseInsCompare(word, "MoveSpeed"))         return eIniWord::MOVESPEED;
+        if (cIniUtils::caseInsCompare(word, "CanDamageAirUnits")) return eIniWord::CANDAMAGEAIRUNITS;
+        if (cIniUtils::caseInsCompare(word, "CanDamageGround"))   return eIniWord::CANDAMAGEGROUND;
     }
     else if (section == eGameIniSection::STRUCTURES) {
         if (cIniUtils::caseInsCompare(word, "HitPoints"))         return eIniWord::HITPOINTS;

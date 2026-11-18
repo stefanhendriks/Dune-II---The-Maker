@@ -26,6 +26,8 @@ jobs:
               - 'resources/structures.ini.org'
               - 'resources/units.ini'
               - 'resources/units.ini.org'
+              - 'resources/bullets.ini'
+              - 'resources/bullets.ini.org'
               - 'CMakeLists.txt'
               - 'create_release.bat'
               - 'create_release.sh'
