@@ -1,0 +1,399 @@
+; ========================================================
+; Unit types
+; ========================================================
+;
+; 2 Timers used for units.
+; 1 Timer for moving; 100 ticks a second timer. 
+; 1 Timer for thinking; 10 ticks a second timer (building speed as well).
+;
+; For assigning speed to a unit, give amount of ticks needed for moving 1 pixel.
+; This means, 0 ticks, is move as fast as possible (fastest). The more ticks
+; the slower the movement.
+;
+; Same rules go for building, turning, move speed, attack (frequency) speed.
+;
+; The higher the number, the slower the units (the more ticks it needs to
+; move one pixel). So MoveSpeed=0 is fastest. Movespeed 10000 will make the
+; unit uber slow.
+;
+; UNIT NAMES MUST BE IN CAPITAL, DO NOT CHANGE THIS OR UNITS WILL NOT BE
+; IDENTIFIED WHEN READING THE INI FILE (AN ERROR WILL APPEAR ON LOADING).
+
+; -----------------
+; Unit: Sandworm
+; -----------------
+[SANDWORM]
+; Unit properties
+HitPoints=2500
+; Amount of units it can eat, after eating the last unit it will die (to be respawned later)
+Appetite=3
+
+; -----------------
+; Unit: Ornithopter
+; -----------------
+[ORNITHOPTER]
+; Unit properties
+HitPoints=40
+MoveSpeed=0
+TurnSpeed=2
+; Attackfrequency is used a bit differently for ornithopters, they have a
+; stalled thinking after they have launched their rockets. 
+AttackFrequency=2
+; Sight will not help ornithopters, they will NOT clear any shroud - unles firing
+Sight=0
+; Range determines when we are close enough to fire!
+Range=9
+
+; Build properties + Sidebar
+BuildTime=40
+Cost=500
+
+; -----------------
+; Unit: Carry-All
+; -----------------
+[CARRYALL]
+; Unit properties
+HitPoints=50
+MoveSpeed=1
+TurnSpeed=3
+AttackFrequency=0
+Sight=0
+Range=0
+
+; Build properties + Sidebar
+BuildTime=62
+Cost=800
+
+; -----------------
+; Unit: Harvester
+; -----------------
+[HARVESTER]
+; Unit properties
+HitPoints=450
+MoveSpeed=7
+TurnSpeed=5
+AttackFrequency=15
+Sight=3
+Range=3
+
+; Build properties + Sidebar
+BuildTime=70
+Cost=400
+
+; Harvester specific properties
+MaxCredits=700
+; 'ticks' to collect...
+HarvestSpeed=2
+; ... amount of spice
+HarvestAmount=10
+
+
+
+; -----------------
+; Unit: Rocket Launcher
+; -----------------
+[LAUNCHER]
+; Unit properties
+HitPoints=130
+MoveSpeed=4
+TurnSpeed=4
+FireTwice=true
+AttackFrequency=30
+NextAttackFrequency=10
+Sight=9
+Range=8
+
+; Build properties + Sidebar
+BuildTime=62
+Cost=400
+
+; -----------------
+; Unit: Deviator
+; -----------------
+[DEVIATOR]
+HitPoints=70
+MoveSpeed=3
+TurnSpeed=3
+AttackFrequency=35
+Sight=8
+Range=8
+# TODO
+#Producer="HEAVYFACTORY"
+
+; Build properties + Sidebar
+BuildTime=60
+Cost=700
+
+; -----------------
+; Unit: Devastator
+; -----------------
+[DEVASTATOR]
+; Unit properties
+HitPoints=800
+MoveSpeed=9
+TurnSpeed=8
+AttackFrequency=42
+Sight=6
+Range=5
+
+; Build properties + Sidebar
+BuildTime=112
+Cost=900
+
+; -----------------
+; Unit: Siege Tank
+; -----------------
+[SIEGETANK]
+; Unit properties
+HitPoints=400
+MoveSpeed=6
+TurnSpeed=6
+FireTwice=true
+AttackFrequency=23
+NextAttackFrequency=6
+Sight=6
+Range=5
+
+; Build properties + Sidebar
+BuildTime=86
+Cost=600
+
+; -----------------
+; Unit: Tank
+; -----------------
+[COMBATTANK]
+; Unit properties
+HitPoints=175
+MoveSpeed=5
+TurnSpeed=4
+FireTwice=false
+AttackFrequency=13
+Sight=5
+Range=4
+
+; Build properties + Sidebar
+BuildTime=54
+Cost=300
+
+; -----------------
+; Unit: Sonic Tank
+; -----------------
+[SONICTANK]
+; Unit properties
+HitPoints=220
+MoveSpeed=4
+TurnSpeed=4
+FireTwice=false
+AttackFrequency=19
+Sight=7
+Range=7
+
+; Build properties + Sidebar
+BuildTime=94
+Cost=600
+
+; -----------------
+; Unit: Quad
+; -----------------
+[QUAD]
+HitPoints=130
+MoveSpeed=3
+TurnSpeed=3
+FireTwice=true
+AttackFrequency=12
+Sight=4
+Range=3
+BuildTime=40
+Cost=200
+
+; -----------------
+; Unit: Trike
+; -----------------
+[TRIKE]
+HitPoints=100
+MoveSpeed=2
+TurnSpeed=1
+FireTwice=false
+AttackFrequency=8
+Sight=4
+Range=3
+Cost=150
+BuildTime=28
+
+
+; -----------------
+; Unit: Raider Trike
+; -----------------
+[RAIDER]
+; Unit properties
+HitPoints=40
+MoveSpeed=0
+TurnSpeed=1
+FireTwice=false
+AttackFrequency=5
+Sight=5
+Range=2
+
+; Build properties + Sidebar
+BuildTime=24
+Cost=125
+
+
+; INFANTRY / TROOPERS / ETC
+
+; -----------------
+; Unit: Soldier
+; -----------------
+[SOLDIER]
+; Unit properties
+HitPoints=40
+MoveSpeed=5
+TurnSpeed=1
+FireTwice=false
+AttackFrequency=6
+Sight=2
+Range=2
+
+; Build properties + Sidebar
+BuildTime=12
+Cost=60
+DamageOnEnterStructure=10.0
+
+
+
+; -----------------
+; Unit: Infantry
+; -----------------
+[INFANTRY]
+; Unit properties
+HitPoints=120
+MoveSpeed=5
+TurnSpeed=1
+FireTwice=true
+AttackFrequency=6
+Sight=3
+Range=2
+
+; Build properties + Sidebar
+BuildTime=20
+Cost=100
+DamageOnEnterStructure=25.0
+
+; -----------------
+; Unit: Trooper
+; -----------------
+[TROOPER]
+; Unit properties
+HitPoints=60
+MoveSpeed=6
+TurnSpeed=1
+FireTwice=false
+AttackFrequency=15
+Sight=3
+Range=5
+
+; Build properties + Sidebar
+BuildTime=28
+Cost=80
+DamageOnEnterStructure=12.0
+
+; -----------------
+; Unit: Troopers
+; -----------------
+[TROOPERS]
+; Unit properties
+HitPoints=180
+MoveSpeed=6
+TurnSpeed=1
+FireTwice=true
+AttackFrequency=15
+Sight=4
+Range=5
+
+; Build properties + Sidebar
+BuildTime=38
+Cost=175
+DamageOnEnterStructure=35.0
+
+; -----------------
+; Unit: Mobile Construction Vehicle
+; -----------------
+[MCV]
+HitPoints=200
+MoveSpeed=4
+TurnSpeed=6
+AttackFrequency=0
+Sight=5
+Range=0
+Cost=999
+BuildTime=100
+
+; -------------------------------------
+; PALACE SPECIFIC UNITS
+;
+; changing build time or cost here will not do anything
+; this is stored in a separate entry, a so called "Special". These are not yet
+; supported in the game.ini file yet
+;
+; -------------------------------------
+
+; -----------------
+; Unit: Single fremen (Atreides)
+; the buildtime/cost etc is not used here!
+; -----------------
+[ONEFREMEN]
+; Unit properties
+HitPoints=120
+MoveSpeed=4
+TurnSpeed=2
+AttackFrequency=14
+Sight=6
+Range=6
+
+; changing build time or cost here will not do anything
+; this is stored in a separate entry, a so called "Special". These are not yet
+; supported in the game.ini file yet
+BuildTime=1000
+Cost=0
+
+; -----------------
+; Unit: Triple fremen (Atreides)
+; this unit is used in the sidebar! (so the cost and buildtime of this one are
+; used!)
+; -----------------
+[THREEFREMEN]
+; Unit properties
+HitPoints=450
+MoveSpeed=4
+TurnSpeed=2
+FireTwice=true
+AttackFrequency=14
+Sight=6
+Range=6
+
+; changing build time or cost here will not do anything
+; this is stored in a separate entry, a so called "Special". These are not yet
+; supported in the game.ini file yet
+BuildTime=1000
+Cost=0
+
+; -----------------
+; Unit: SABOTEUR (ordos specific stuff)
+; -----------------
+[SABOTEUR]
+; Unit properties
+HitPoints=150
+MoveSpeed=0
+TurnSpeed=0
+AttackFrequency=0
+Sight=3
+Range=2
+  
+; changing build time or cost here will not do anything
+; this is stored in a separate entry, a so called "Special". These are not yet
+; supported in the game.ini file yet
+BuildTime=1000
+Cost=0
+; enter-structure attack behaviour (saboteur destroys the structure it enters)
+AttackIsEnterStructure=true
+DamageOnEnterStructure=9999.99
