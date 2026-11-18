@@ -24,6 +24,8 @@ jobs:
               - 'resources/game.ini.org'
               - 'resources/structures.ini'
               - 'resources/structures.ini.org'
+              - 'resources/units.ini'
+              - 'resources/units.ini.org'
               - 'CMakeLists.txt'
               - 'create_release.bat'
               - 'create_release.sh'

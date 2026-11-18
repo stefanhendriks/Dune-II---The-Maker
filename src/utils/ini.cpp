@@ -379,16 +379,20 @@ void cIni::loadBriefing(int iHouse, int iScenarioFind, eScenarioIniSection iSect
 // Game rules loader: game.ini, followed by structures.ini in the same directory
 void cIni::installGame(const std::string& filename)
 {
-    installRulesFile(filename, false);
-    installRulesFile(std::filesystem::path(filename).replace_filename("structures.ini").string(), true);
+    installRulesFile(filename, false, false);
+    installRulesFile(std::filesystem::path(filename).replace_filename("structures.ini").string(), true, false);
+    installRulesFile(std::filesystem::path(filename).replace_filename("units.ini").string(), false, true);
 }
 
 // structuresFile: every section is a structure, named by the section ([WOR]), instead of [STRUCTURE: WOR] in game.ini
-void cIni::installRulesFile(const std::string& filename, bool structuresFile)
+// unitsFile: every section is a unit, named by the section ([TRIKE]), instead of [UNIT: TRIKE] in game.ini
+void cIni::installRulesFile(const std::string& filename, bool structuresFile, bool unitsFile)
 {
     Logger::info(COMP_GAMERULES, "cIni::installGame", "[GameRules] Opening file");
 
-    eGameIniSection section = structuresFile ? eGameIniSection::STRUCTURES : eGameIniSection::GAME;
+    eGameIniSection section = eGameIniSection::GAME;
+    if (structuresFile) section = eGameIniSection::STRUCTURES;
+    if (unitsFile) section = eGameIniSection::UNITS;
     eIniWord wordtype = eIniWord::NONE;
     int id = -1;
 
@@ -417,6 +421,15 @@ void cIni::installRulesFile(const std::string& filename, bool structuresFile)
                 // getStructureType falls back to 0 for unknown names, which would pour this section's values into the Palace
                 Logger::error(COMP_GAMERULES, "cIni::installGame", "[{}] Unknown structure section [{}], skipping it (expected e.g. [WOR])", filename, sectionName);
                 id = -1;
+            }
+            continue;
+        }
+
+        if (!sectionName.empty() && unitsFile) {
+            id = cIniUtils::getUnitTypeFromString(sectionName);
+            if (id >= MAX_UNITTYPES) id--;
+            if (id < 0) {
+                Logger::error(COMP_GAMERULES, "cIni::installGame", "[{}] Unknown unit section [{}], skipping it (expected e.g. [TRIKE])", filename, sectionName);
             }
             continue;
         }
