@@ -23,6 +23,16 @@
 ; Unit: Sandworm
 ; -----------------
 [SANDWORM]
+Name=Sandworm
+Width=48
+Height=48
+CanSquishInfantry=false
+CanGuard=true
+CanAttackUnits=true
+DieWhenLowerThanHp=1000
+MoveSpeed=3
+TurnSpeed=0
+Sight=16
 ; Unit properties
 HitPoints=2500
 ; Amount of units it can eat, after eating the last unit it will die (to be respawned later)
@@ -32,6 +42,18 @@ Appetite=3
 ; Unit: Ornithopter
 ; -----------------
 [ORNITHOPTER]
+Name=Ornithopter
+Width=48
+Height=48
+StartPixel=0
+Frames=4
+Bullet=ROCKET_SMALL_ORNI
+ListType=LIST_UNITS
+SubListId=SUBLIST_HIGHTECH
+FireTwice=true
+IsAirborn=true
+FreeRoam=true
+CanSquishInfantry=false
 ; Unit properties
 HitPoints=40
 MoveSpeed=0
@@ -52,6 +74,15 @@ Cost=500
 ; Unit: Carry-All
 ; -----------------
 [CARRYALL]
+Name=Carry-All
+Width=48
+Height=48
+StartPixel=0
+Frames=2
+ListType=LIST_UNITS
+SubListId=SUBLIST_HIGHTECH
+IsAirborn=true
+FreeRoam=true
 ; Unit properties
 HitPoints=50
 MoveSpeed=1
@@ -68,6 +99,15 @@ Cost=800
 ; Unit: Harvester
 ; -----------------
 [HARVESTER]
+Name=Harvester
+Width=80
+Height=52
+StartPixel=24
+Frames=4
+ListType=LIST_UNITS
+SubListId=SUBLIST_HEAVYFCTRY
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 ; Unit properties
 HitPoints=450
 MoveSpeed=7
@@ -93,6 +133,19 @@ HarvestAmount=10
 ; Unit: Rocket Launcher
 ; -----------------
 [LAUNCHER]
+Name=Launcher
+Width=32
+Height=32
+StartPixel=0
+Frames=1
+Bullet=ROCKET_NORMAL
+ListType=LIST_UNITS
+SubListId=SUBLIST_HEAVYFCTRY
+CanGuard=true
+CanAttackUnits=true
+CanAttackAirUnits=true
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 ; Unit properties
 HitPoints=130
 MoveSpeed=4
@@ -111,6 +164,19 @@ Cost=400
 ; Unit: Deviator
 ; -----------------
 [DEVIATOR]
+Name=Deviator
+Width=32
+Height=32
+StartPixel=0
+Frames=1
+Bullet=BULLET_GAS
+ListType=LIST_UNITS
+SubListId=SUBLIST_HEAVYFCTRY
+CanGuard=true
+CanAttackUnits=true
+CanDamageStructures=false
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 HitPoints=70
 MoveSpeed=3
 TurnSpeed=3
@@ -128,6 +194,19 @@ Cost=700
 ; Unit: Devastator
 ; -----------------
 [DEVASTATOR]
+Name=Devastator
+Width=38
+Height=46
+StartPixel=0
+Frames=1
+Bullet=BULLET_DEVASTATOR
+ListType=LIST_UNITS
+SubListId=SUBLIST_HEAVYFCTRY
+FireTwice=true
+CanGuard=true
+CanAttackUnits=true
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 ; Unit properties
 HitPoints=800
 MoveSpeed=9
@@ -144,6 +223,18 @@ Cost=900
 ; Unit: Siege Tank
 ; -----------------
 [SIEGETANK]
+Name=Siege Tank
+Width=36
+Height=36
+StartPixel=1
+Frames=0
+Bullet=BULLET_SIEGE
+ListType=LIST_UNITS
+SubListId=SUBLIST_HEAVYFCTRY
+CanGuard=true
+CanAttackUnits=true
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 ; Unit properties
 HitPoints=400
 MoveSpeed=6
@@ -162,6 +253,18 @@ Cost=600
 ; Unit: Tank
 ; -----------------
 [COMBATTANK]
+Name=Tank
+Width=32
+Height=32
+StartPixel=0
+Frames=0
+Bullet=BULLET_TANK
+ListType=LIST_UNITS
+SubListId=SUBLIST_HEAVYFCTRY
+CanGuard=true
+CanAttackUnits=true
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 ; Unit properties
 HitPoints=175
 MoveSpeed=5
@@ -179,6 +282,18 @@ Cost=300
 ; Unit: Sonic Tank
 ; -----------------
 [SONICTANK]
+Name=Sonic Tank
+Width=32
+Height=32
+StartPixel=0
+Frames=1
+Bullet=BULLET_SHIMMER
+ListType=LIST_UNITS
+SubListId=SUBLIST_HEAVYFCTRY
+CanGuard=true
+CanAttackUnits=true
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 ; Unit properties
 HitPoints=220
 MoveSpeed=4
@@ -196,6 +311,19 @@ Cost=600
 ; Unit: Quad
 ; -----------------
 [QUAD]
+Name=Quad
+Width=32
+Height=32
+StartPixel=0
+Frames=1
+Bullet=BULLET_QUAD
+ListType=LIST_UNITS
+SubListId=SUBLIST_LIGHTFCTRY
+CanSquishInfantry=false
+CanGuard=true
+CanAttackUnits=true
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 HitPoints=130
 MoveSpeed=3
 TurnSpeed=3
@@ -210,6 +338,19 @@ Cost=200
 ; Unit: Trike
 ; -----------------
 [TRIKE]
+Name=Trike
+Width=28
+Height=26
+StartPixel=0
+Frames=1
+Bullet=BULLET_TRIKE
+ListType=LIST_UNITS
+SubListId=SUBLIST_LIGHTFCTRY
+CanSquishInfantry=false
+CanGuard=true
+CanAttackUnits=true
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 HitPoints=100
 MoveSpeed=2
 TurnSpeed=1
@@ -225,6 +366,19 @@ BuildTime=28
 ; Unit: Raider Trike
 ; -----------------
 [RAIDER]
+Name=Raider Trike
+Width=28
+Height=28
+StartPixel=0
+Frames=1
+Bullet=BULLET_TRIKE
+ListType=LIST_UNITS
+SubListId=SUBLIST_LIGHTFCTRY
+CanSquishInfantry=false
+CanGuard=true
+CanAttackUnits=true
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 ; Unit properties
 HitPoints=40
 MoveSpeed=0
@@ -245,6 +399,21 @@ Cost=125
 ; Unit: Soldier
 ; -----------------
 [SOLDIER]
+Name=Soldier
+Width=32
+Height=32
+StartPixel=0
+Frames=3
+Bullet=BULLET_SMALL
+ListType=LIST_FOOT_UNITS
+SubListId=SUBLIST_INFANTRY
+IsInfantry=true
+CanSquishInfantry=false
+CanBeSquished=true
+CanGuard=true
+CanAttackUnits=true
+CanEnterAndDamageStructure=true
+AttackIsEnterStructure=false
 ; Unit properties
 HitPoints=40
 MoveSpeed=5
@@ -265,6 +434,21 @@ DamageOnEnterStructure=10.0
 ; Unit: Infantry
 ; -----------------
 [INFANTRY]
+Name=Light Infantry
+Width=32
+Height=32
+StartPixel=0
+Frames=3
+Bullet=BULLET_SMALL
+ListType=LIST_FOOT_UNITS
+SubListId=SUBLIST_INFANTRY
+IsInfantry=true
+CanSquishInfantry=false
+CanBeSquished=true
+CanGuard=true
+CanAttackUnits=true
+CanEnterAndDamageStructure=true
+AttackIsEnterStructure=false
 ; Unit properties
 HitPoints=120
 MoveSpeed=5
@@ -283,6 +467,24 @@ DamageOnEnterStructure=25.0
 ; Unit: Trooper
 ; -----------------
 [TROOPER]
+Name=Trooper
+Width=32
+Height=32
+StartPixel=0
+Frames=3
+Bullet=ROCKET_SMALL
+BulletSecondary=BULLET_SMALL
+FireSecondaryWithinRange=2
+ListType=LIST_FOOT_UNITS
+SubListId=SUBLIST_TROOPERS
+IsInfantry=true
+CanSquishInfantry=false
+CanBeSquished=true
+CanGuard=true
+CanAttackUnits=true
+CanAttackAirUnits=true
+CanEnterAndDamageStructure=true
+AttackIsEnterStructure=false
 ; Unit properties
 HitPoints=60
 MoveSpeed=6
@@ -301,6 +503,24 @@ DamageOnEnterStructure=12.0
 ; Unit: Troopers
 ; -----------------
 [TROOPERS]
+Name=Troopers
+Width=32
+Height=32
+StartPixel=0
+Frames=3
+Bullet=ROCKET_SMALL
+BulletSecondary=BULLET_SMALL
+FireSecondaryWithinRange=2
+ListType=LIST_FOOT_UNITS
+SubListId=SUBLIST_TROOPERS
+IsInfantry=true
+CanSquishInfantry=false
+CanBeSquished=true
+CanGuard=true
+CanAttackUnits=true
+CanAttackAirUnits=true
+CanEnterAndDamageStructure=true
+AttackIsEnterStructure=false
 ; Unit properties
 HitPoints=180
 MoveSpeed=6
@@ -319,6 +539,15 @@ DamageOnEnterStructure=35.0
 ; Unit: Mobile Construction Vehicle
 ; -----------------
 [MCV]
+Name=MCV
+Width=48
+Height=50
+StartPixel=0
+Frames=1
+ListType=LIST_UNITS
+SubListId=SUBLIST_HEAVYFCTRY
+SmokeWhenDamaged=true
+SmokeHpFactor=0.5
 HitPoints=200
 MoveSpeed=4
 TurnSpeed=6
@@ -342,6 +571,19 @@ BuildTime=100
 ; the buildtime/cost etc is not used here!
 ; -----------------
 [ONEFREMEN]
+Name=Fremen (1)
+Width=32
+Height=32
+StartPixel=0
+Frames=3
+Bullet=ROCKET_SMALL_FREMEN
+FireTwice=false
+IsInfantry=true
+CanSquishInfantry=false
+CanBeSquished=true
+CanGuard=true
+CanAttackUnits=true
+CanAttackAirUnits=true
 ; Unit properties
 HitPoints=120
 MoveSpeed=4
@@ -362,6 +604,18 @@ Cost=0
 ; used!)
 ; -----------------
 [THREEFREMEN]
+Name=Fremen (3)
+Width=32
+Height=32
+StartPixel=0
+Frames=3
+Bullet=ROCKET_SMALL_FREMEN
+IsInfantry=true
+CanSquishInfantry=false
+CanBeSquished=true
+CanGuard=true
+CanAttackUnits=true
+CanAttackAirUnits=true
 ; Unit properties
 HitPoints=450
 MoveSpeed=4
@@ -381,6 +635,17 @@ Cost=0
 ; Unit: SABOTEUR (ordos specific stuff)
 ; -----------------
 [SABOTEUR]
+Name=Saboteur
+Width=32
+Height=32
+StartPixel=0
+Frames=3
+ListType=LIST_PALACE
+SubListId=0
+IsInfantry=true
+CanSquishInfantry=false
+CanBeSquished=true
+CanEnterAndDamageStructure=true
 ; Unit properties
 HitPoints=150
 MoveSpeed=0
