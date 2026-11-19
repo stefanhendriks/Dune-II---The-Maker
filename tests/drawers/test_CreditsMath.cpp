@@ -17,12 +17,17 @@
 
 #include "drawers/CreditsMath.hpp"
 
-TEST_CASE("CreditsMath::getCreditDrawId maps digits to consecutive sprites", "[credits]")
+TEST_CASE("CreditsMath::getCreditDrawId maps each digit to its sprite", "[credits]")
 {
-    for (char c = '0'; c <= '9'; c++) {
-        REQUIRE(CreditsMath::getCreditDrawId(c) == CREDITS_0 + (c - '0'));
-    }
     REQUIRE(CreditsMath::getCreditDrawId('0') == CREDITS_0);
+    REQUIRE(CreditsMath::getCreditDrawId('1') == CREDITS_1);
+    REQUIRE(CreditsMath::getCreditDrawId('2') == CREDITS_2);
+    REQUIRE(CreditsMath::getCreditDrawId('3') == CREDITS_3);
+    REQUIRE(CreditsMath::getCreditDrawId('4') == CREDITS_4);
+    REQUIRE(CreditsMath::getCreditDrawId('5') == CREDITS_5);
+    REQUIRE(CreditsMath::getCreditDrawId('6') == CREDITS_6);
+    REQUIRE(CreditsMath::getCreditDrawId('7') == CREDITS_7);
+    REQUIRE(CreditsMath::getCreditDrawId('8') == CREDITS_8);
     REQUIRE(CreditsMath::getCreditDrawId('9') == CREDITS_9);
 }
 
