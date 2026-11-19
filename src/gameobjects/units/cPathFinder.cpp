@@ -18,7 +18,6 @@
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/players/cPlayers.h"
 #include "gameobjects/map/cMap.h"
-#include "data/gfxdata.h"
 #include "utils/common.h"
 #include "utils/Log.h"
 #include "utils/RNG.hpp"

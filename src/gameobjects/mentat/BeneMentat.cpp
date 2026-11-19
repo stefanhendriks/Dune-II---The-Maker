@@ -16,7 +16,6 @@
 #include "BeneMentat.h"
 
 #include "controls/eKeyAction.h"
-#include "include/gfxmentat.h"
 #include "data/GfxNames.hpp"
 #include "game/GameStateTransition.hpp"
 #include "game/MissionFlow.hpp"

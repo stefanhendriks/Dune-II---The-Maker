@@ -15,7 +15,6 @@
 
 #include "cPreviewMaps.h"
 #include "gameobjects/map/TerrainTypes.hpp"
-#include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "include/Texture.hpp"

@@ -16,8 +16,6 @@
 #include "common.h"
 #include "gameobjects/map/TerrainTypes.hpp"
 
-#include "data/gfxdata.h"
-#include "data/gfxinter.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMap.h"

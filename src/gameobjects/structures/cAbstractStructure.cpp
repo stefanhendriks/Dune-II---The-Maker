@@ -25,7 +25,6 @@
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
 #include "gameobjects/map/cMapCamera.h"
-#include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/particles/cParticles.h"

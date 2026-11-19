@@ -1,5 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
-#include "data/gfxdata.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cPreviewMaps.h"
 
