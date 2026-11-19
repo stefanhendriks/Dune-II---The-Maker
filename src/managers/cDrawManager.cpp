@@ -99,7 +99,7 @@ void cDrawManager::reset()
     m_messageDrawer = std::make_unique<cMessageDrawer>(m_ctx, m_services);
     m_placeitDrawer = std::make_unique<cPlaceItDrawer>(m_ctx, m_player, m_structureUtils);
     m_structureDrawer = std::make_unique<cStructureDrawer>(m_ctx, m_player, m_structureUtils);
-    m_btnOptions.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex));
+    m_btnOptions.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(),m_player, m_gfxinter->getSurface(toSurfaceID(BTN_OPTIONS)), TransparentColorIndex));
     m_mouseDrawer = std::make_unique<cMouseDrawer>(m_player, m_ctx->getTextContext()->getSmallTextDrawer());
 
     m_sidebarDrawer->serviceInit(m_services);
@@ -234,12 +234,12 @@ void cDrawManager::drawRallyPoint()
     int drawX = m_mapCamera->getWindowXPositionFromCell(rallyPointCell);
     int drawY = m_mapCamera->getWindowYPositionFromCell(rallyPointCell);
 
-    SDL_Surface *mouseMoveBitmap = m_gfxdata->getSurface(MOUSE_MOVE);
+    SDL_Surface *mouseMoveBitmap = m_gfxdata->getSurface(toSurfaceID(MOUSE_MOVE));
 
     int rallyPointWidthScaled = m_mapCamera->factorZoomLevel(mouseMoveBitmap->w);
     int rallyPointHeightScaled = m_mapCamera->factorZoomLevel(mouseMoveBitmap->h);
     cRectangle dest = {drawX, drawY, rallyPointWidthScaled, rallyPointHeightScaled};
-    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_MOVE), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(toTextureID(MOUSE_MOVE)), dest);
 
     int startX = theStructure->iDrawX() + m_mapCamera->factorZoomLevel(theStructure->getWidthInPixels() / 2);
     int startY = theStructure->iDrawY() + m_mapCamera->factorZoomLevel(theStructure->getHeightInPixels() / 2);
@@ -301,7 +301,7 @@ void cDrawManager::drawMouse()
 
 void cDrawManager::drawTopBarBackground()
 {
-    Texture *topbarPiece = m_gfxinter->getTexture(BMP_TOPBAR_BACKGROUND);
+    Texture *topbarPiece = m_gfxinter->getTexture(toTextureID(BMP_TOPBAR_BACKGROUND));
     for (int x = 0; x < m_gameSettings->getScreenW(); x+= topbarPiece->w) {
         m_sdlDrawer->renderSprite(topbarPiece, x, 0);
     }
@@ -320,7 +320,7 @@ void cDrawManager::setPlayerToDraw(cPlayer *playerToDraw)
     const bool houseChanged = m_player->getHouse() != playerToDraw->getHouse();
     m_player = playerToDraw;
     if (houseChanged) {
-        m_btnOptions.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), m_player, m_gfxinter->getSurface(BTN_OPTIONS), TransparentColorIndex));
+        m_btnOptions.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_ctx->getSDLDrawer(), m_player, m_gfxinter->getSurface(toSurfaceID(BTN_OPTIONS)), TransparentColorIndex));
     }
     m_creditsDrawer->setPlayer(playerToDraw);
     m_sidebarDrawer->setPlayer(playerToDraw);
@@ -338,7 +338,7 @@ void cDrawManager::drawOptionBar()
     m_sdlDrawer->renderRectFillColor(0,m_gameSettings->getScreenW(), 40,32, Color{214,149,20,255});
 
     for (int w = 0; w < (m_gameSettings->getScreenW() + 800); w += 789) {
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(BMP_GERALD_TOP_BAR), w, 31);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(BMP_GERALD_TOP_BAR)), w, 31);
     }
 }
 
