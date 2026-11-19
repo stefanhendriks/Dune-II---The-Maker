@@ -159,7 +159,7 @@ void cMiniMapDrawer::drawStaticFrame()
     if (m_status == eMinimapStatus::LOWPOWER) return;
 
     if (m_status == eMinimapStatus::POWERDOWN) {
-        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(staticFrameIds[m_iStaticFrame]), m_RectFullMinimap);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(toTextureID(staticFrameIds[m_iStaticFrame])), m_RectFullMinimap);
         return;
     }
 
@@ -173,7 +173,7 @@ void cMiniMapDrawer::drawStaticFrame()
 
     // non-stat01 frames are drawn transparent
     if (m_iStaticFrame != 0) {
-        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(staticFrameIds[m_iStaticFrame]), m_RectFullMinimap,m_iTrans);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(toTextureID(staticFrameIds[m_iStaticFrame])), m_RectFullMinimap,m_iTrans);
     }
 }
 
