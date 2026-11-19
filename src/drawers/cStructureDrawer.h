@@ -27,6 +27,7 @@ class cGameSettings;
 class cMouse;
 struct sGameServices;
 
+#include "utils/GraphicsID.hpp"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "utils/cStructureUtils.h"
 #include "utils/Color.hpp"
@@ -52,7 +53,7 @@ protected:
     void drawStructureAnimationTurret(cAbstractStructure *structure);
     void drawStructureForLayer(cAbstractStructure *structure, int layer);
 
-    int determinePreBuildAnimationIndex(cAbstractStructure *structure);
+    TextureID determinePreBuildAnimationIndex(cAbstractStructure *structure);
 
 private:
     SDLDrawer* m_sdlDrawer;

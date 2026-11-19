@@ -15,30 +15,31 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "data/GfxIds.hpp"
 #include "drawers/CreditsMath.hpp"
 
 TEST_CASE("CreditsMath::getCreditDrawId maps each digit to its sprite", "[credits]")
 {
-    REQUIRE(CreditsMath::getCreditDrawId('0') == CREDITS_0);
-    REQUIRE(CreditsMath::getCreditDrawId('1') == CREDITS_1);
-    REQUIRE(CreditsMath::getCreditDrawId('2') == CREDITS_2);
-    REQUIRE(CreditsMath::getCreditDrawId('3') == CREDITS_3);
-    REQUIRE(CreditsMath::getCreditDrawId('4') == CREDITS_4);
-    REQUIRE(CreditsMath::getCreditDrawId('5') == CREDITS_5);
-    REQUIRE(CreditsMath::getCreditDrawId('6') == CREDITS_6);
-    REQUIRE(CreditsMath::getCreditDrawId('7') == CREDITS_7);
-    REQUIRE(CreditsMath::getCreditDrawId('8') == CREDITS_8);
-    REQUIRE(CreditsMath::getCreditDrawId('9') == CREDITS_9);
+    REQUIRE(CreditsMath::getCreditDrawId('0') == gfx::tex::CREDITS_0);
+    REQUIRE(CreditsMath::getCreditDrawId('1') == gfx::tex::CREDITS_1);
+    REQUIRE(CreditsMath::getCreditDrawId('2') == gfx::tex::CREDITS_2);
+    REQUIRE(CreditsMath::getCreditDrawId('3') == gfx::tex::CREDITS_3);
+    REQUIRE(CreditsMath::getCreditDrawId('4') == gfx::tex::CREDITS_4);
+    REQUIRE(CreditsMath::getCreditDrawId('5') == gfx::tex::CREDITS_5);
+    REQUIRE(CreditsMath::getCreditDrawId('6') == gfx::tex::CREDITS_6);
+    REQUIRE(CreditsMath::getCreditDrawId('7') == gfx::tex::CREDITS_7);
+    REQUIRE(CreditsMath::getCreditDrawId('8') == gfx::tex::CREDITS_8);
+    REQUIRE(CreditsMath::getCreditDrawId('9') == gfx::tex::CREDITS_9);
 }
 
-TEST_CASE("CreditsMath::getCreditDrawId returns CREDITS_NONE for non digits", "[credits]")
+TEST_CASE("CreditsMath::getCreditDrawId returns gfx::tex::CREDITS_NONE for non digits", "[credits]")
 {
-    REQUIRE(CreditsMath::getCreditDrawId('\0') == CREDITS_NONE);
-    REQUIRE(CreditsMath::getCreditDrawId(' ') == CREDITS_NONE);
-    REQUIRE(CreditsMath::getCreditDrawId('-') == CREDITS_NONE);
-    REQUIRE(CreditsMath::getCreditDrawId('a') == CREDITS_NONE);
-    REQUIRE(CreditsMath::getCreditDrawId('/') == CREDITS_NONE);
-    REQUIRE(CreditsMath::getCreditDrawId(':') == CREDITS_NONE);
+    REQUIRE(CreditsMath::getCreditDrawId('\0') == gfx::tex::CREDITS_NONE);
+    REQUIRE(CreditsMath::getCreditDrawId(' ') == gfx::tex::CREDITS_NONE);
+    REQUIRE(CreditsMath::getCreditDrawId('-') == gfx::tex::CREDITS_NONE);
+    REQUIRE(CreditsMath::getCreditDrawId('a') == gfx::tex::CREDITS_NONE);
+    REQUIRE(CreditsMath::getCreditDrawId('/') == gfx::tex::CREDITS_NONE);
+    REQUIRE(CreditsMath::getCreditDrawId(':') == gfx::tex::CREDITS_NONE);
 }
 
 TEST_CASE("CreditsMath::getXDrawingOffset right aligns the number in 6 slots", "[credits]")

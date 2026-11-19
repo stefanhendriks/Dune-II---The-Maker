@@ -14,13 +14,13 @@
  */
 
 #include "cStructureDrawer.h"
+#include "data/GfxIds.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/structures/cStructures.h"
-#include "data/gfxdata.h"
 #include "controls/cMouse.h"
 #include "gameobjects/structures/cGunTurret.h"
 #include "gameobjects/structures/cRepairFacility.h"
@@ -39,7 +39,6 @@
 #include "context/cGameObjectContext.h"
 #include "utils/d2tm_math.h"
 #include "utils/LowPowerBlink.hpp"
-#include "data/gfxinter.h"
 #include <SDL3/SDL.h>
 #include "include/cAssert.h"
 #include "context/TextContext.hpp"
@@ -148,8 +147,8 @@ void cStructureDrawer::drawRectangleOfStructure(cAbstractStructure *theStructure
 
 void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *structure)
 {
-    int iDrawPreBuild = determinePreBuildAnimationIndex(structure);
-    if (iDrawPreBuild < 0) return; // bail, don't draw invalid tiles
+    TextureID iDrawPreBuild = determinePreBuildAnimationIndex(structure);
+    if (iDrawPreBuild == TextureID::invalid) return; // bail, don't draw invalid tiles
 
     int pixelWidth = structure->getWidthInPixels();
     int pixelHeight = structure->getHeightInPixels();
@@ -162,7 +161,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // Draw prebuild
     cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(toTextureID(iDrawPreBuild)), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(iDrawPreBuild), dest);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -171,7 +170,7 @@ void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
     structure->draw();
 }
 
-int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *structure)
+TextureID cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *structure)
 {
     d2tm_assert(structure);
     int iBuildFase = structure->getBuildingFase();
@@ -187,23 +186,23 @@ int cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *struct
 
         // determine what kind of prebuild picture should be used.
         if (width == 1 && height == 1) {
-            return BUILD_PRE_1X1;
+            return gfx::tex::BUILD_PRE_1X1;
         }
 
         if (width == 2 && height == 2) {
-            return BUILD_PRE_2X2;
+            return gfx::tex::BUILD_PRE_2X2;
         }
 
         if (width == 3 && height == 2) {
-            return BUILD_PRE_3X2;
+            return gfx::tex::BUILD_PRE_3X2;
         }
 
         if (width == 3 && height == 3) {
-            return BUILD_PRE_3X3;
+            return gfx::tex::BUILD_PRE_3X3;
         }
     }
 
-    return -1;
+    return TextureID::invalid;
 }
 
 void cStructureDrawer::drawStructureAnimationTurret(cAbstractStructure *structure)
@@ -302,13 +301,13 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
     // should be 'particles' (like smoke etc) instead of being hacked here!
 
     if (layer <= 1) {
-        int iDrawPreBuild = determinePreBuildAnimationIndex(structure);
+        TextureID iDrawPreBuild = determinePreBuildAnimationIndex(structure);
 
         // if no prebuild picture is selected, than we should draw the building
         // itself. The reason why the above if uses only buildfase 1, 3, 5, 7 and 9 means
         // that it will cause the switching between pre-build/building state as if the
         // building is being 'readied' after placement.
-        if (iDrawPreBuild < 0) {
+        if (iDrawPreBuild == TextureID::invalid) {
             if (structure->getType() == TURRET || structure->getType() == RTURRET) {
                 drawStructureAnimationTurret(structure);
             }
@@ -343,7 +342,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
 
 void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) const
 {
-    Texture *icon = m_gfxinter->getTexture(toTextureID(ICON_POWER_LOW));
+    Texture *icon = m_gfxinter->getTexture(gfx::tex::ICON_POWER_LOW);
     if (!icon) return;
 
     const s_StructureInfo info = structure->getStructureInfo();
@@ -361,8 +360,8 @@ void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) c
 
 void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const
 {
-    int iconWidth = (m_gfxdata->getSurface(toSurfaceID(MOUSE_REPAIR)))->w;
-    int iconHeight = (m_gfxdata->getSurface(toSurfaceID(MOUSE_REPAIR)))->h;
+    int iconWidth = (m_gfxdata->getSurface(gfx::surf::MOUSE_REPAIR))->w;
+    int iconHeight = (m_gfxdata->getSurface(gfx::surf::MOUSE_REPAIR))->h;
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -372,7 +371,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int scaledWidth = m_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(toTextureID(MOUSE_REPAIR)), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(gfx::tex::MOUSE_REPAIR), dest);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
@@ -381,7 +380,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     d2tm_assert(repairFacility);
     int unitId = repairFacility->getUnitIdWithin();
     cUnit *pUnit = m_objects->getUnit(unitId);
-    int iconId = pUnit->getUnitInfo().icon;
+    TextureID iconId = pUnit->getUnitInfo().icon;
 
     int iconWidth = (m_gfxinter->getSurface(toSurfaceID(iconId)))->w;
     int iconHeight = (m_gfxinter->getSurface(toSurfaceID(iconId)))->h;
@@ -417,7 +416,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int scaledWidth = m_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(toTextureID(iconId)), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(iconId), dest);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)
