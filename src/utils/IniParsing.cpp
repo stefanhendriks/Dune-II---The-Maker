@@ -258,21 +258,21 @@ namespace {
 
 void readScenarioHouseLine(ScenarioData& data, eIniWord wordtype, int iPlayerID, const std::string& value)
 {
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, std::to_underlying(wordtype));
+    Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Scenario_Section_House", "Section is between atreides and mercenary, the playerId is [{}]. WordType is [{}]", iPlayerID, std::to_underlying(wordtype));
     if (iPlayerID < 0) return;
 
     if (wordtype == eIniWord::BRAIN) {
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Brain is [{}]", value);
+        Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Scenario_Section_House", "Brain is [{}]", value);
         if (cIniUtils::caseInsCompare(value, "Human")) {
-            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
+            Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Scenario_Section_House", "Found human player for id [{}]", iPlayerID);
             data.humanPlayerId = iPlayerID;
         } else {
-            Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "This brain is not human...");
+            Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Scenario_Section_House", "This brain is not human...");
         }
     }
     else if (wordtype == eIniWord::CREDITS) {
         int credits = ToInt(value) - 1;
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_House", "Set credits for player id [{}] to [{}]", iPlayerID, credits);
+        Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Scenario_Section_House", "Set credits for player id [{}] to [{}]", iPlayerID, credits);
         data.playerCredits[iPlayerID] = credits;
     }
     else if (wordtype == eIniWord::QUOTA) {
@@ -284,14 +284,14 @@ void readScenarioMapLine(ScenarioData& data, eIniWord wordtype, const std::strin
 {
     std::optional<int> seed;
     if (wordtype == eIniWord::MAPSEED) {
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
+        Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] Seed=");
         auto [word, seek] = INI_SplitWord(slinefeed);
         seed = ToInt(seek);
     }
     data.mapLines.push_back(seed);
 
     auto parseCells = [&](std::span<int> dest, const char* label) {
-        Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] {}=", label);
+        Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Scenario_Section_MAP", "[SCENARIO] -> [MAP] {}=", label);
         auto [key, values] = INI_SplitWord(slinefeed);
         int idx = 0;
         for (const auto& token : splitByComma(values)) {
@@ -312,7 +312,7 @@ void readScenarioMapLine(ScenarioData& data, eIniWord wordtype, const std::strin
 
 void readScenarioReinforcementLine(ScenarioData& data, const std::string& slinefeed)
 {
-    Logger::info(COMP_SCENARIOINI, "cIni::INI_Scenario_Section_Reinforcements", "[SCENARIO] -> REINFORCEMENTS");
+    Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Scenario_Section_Reinforcements", "[SCENARIO] -> REINFORCEMENTS");
 
     auto eqPos = slinefeed.find('=');
     if (eqPos == std::string::npos) return;
@@ -457,7 +457,7 @@ ScenarioData parseScenario(std::istream& file)
             if (sectionType != eScenarioIniSection::NONE) {
                 section = sectionType;
 
-                Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] found section '{}', resulting in section id [{}]", sectionName, std::to_underlying(section));
+                Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Load", "[SCENARIO] found section '{}', resulting in section id [{}]", sectionName, std::to_underlying(section));
 
                 if (isHouseSection(section)) {
                     iPlayerID = std::min(iPlayerID + 1, MAX_PLAYERS - 1);
@@ -472,7 +472,7 @@ ScenarioData parseScenario(std::istream& file)
 
                     data.playerHouse[iPlayerID] = house;
 
-                    Logger::info(COMP_SCENARIOINI, "cIni::INI_Load", "[SCENARIO] Setting house to [{}] for playerId [{}]", data.playerHouse[iPlayerID], iPlayerID);
+                    Logger::info(COMP_SCENARIOINI, "ScenarioLoader::INI_Load", "[SCENARIO] Setting house to [{}] for playerId [{}]", data.playerHouse[iPlayerID], iPlayerID);
                 }
             }
             continue;
@@ -578,7 +578,7 @@ RegionFileData parseRegionFile(std::istream& file)
 
         auto [word_left, word_right] = INI_SplitWord(line);
         if (word_left.empty() || word_right.empty()) {
-            Logger::warn(COMP_REGIONINI, "cIni::loadRegionfile", "Skipping invalid line: '{}'", line);
+            Logger::warn(COMP_REGIONINI, "ScenarioLoader::loadRegionfile", "Skipping invalid line: '{}'", line);
             continue;
         }
 
