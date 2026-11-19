@@ -56,7 +56,6 @@ public:
     std::vector<std::string> getNames() const;
 private:
     // pack index access, only reachable through the typed ids and names
-    SDL_Surface *getSurface(int index) const;
     Texture *getTexture(int index);
     SDL_Renderer *renderer;
     std::unique_ptr<DataPack> dataPack;

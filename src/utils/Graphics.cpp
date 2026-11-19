@@ -31,14 +31,9 @@ Graphics::~Graphics()
     // Smart pointers handle automatic cleanup
 }
 
-SDL_Surface *Graphics::getSurface(int index) const
-{
-    return dataPack->getSurface(index);
-}
-
 SDL_Surface *Graphics::getSurface(SurfaceID id) const
 {
-    return getSurface(toPackIndex(id));
+    return dataPack->getSurface(toPackIndex(id));
 }
 
 SDL_Surface *Graphics::getSurface(const std::string &name) const
