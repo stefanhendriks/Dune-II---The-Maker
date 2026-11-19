@@ -14,12 +14,12 @@
  */
 
 #include "cGameControlsContext.h"
+#include "data/GfxIds.hpp"
 #include "game/cGameSettings.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/structures/cStructures.h"
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/map/cMap.h"
-#include "data/gfxdata.h"
 #include "managers/cDrawManager.h"
 #include "gameobjects/map/cMapCamera.h"
 #include "context/cInfoContext.h"
@@ -228,7 +228,7 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event)
     onNotifyMouseStateEvent(event);
 
     if (!isMouseOnBattleField()) {
-        m_mouse->setTile(MOUSE_NORMAL);
+        m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
     }
 
 }
