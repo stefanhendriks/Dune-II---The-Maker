@@ -14,7 +14,7 @@
  */
 
 #include "building/cItemBuilder.h"
-#include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 #include "config.h"
 #include "context/AudioContext.hpp"
 #include "context/ContextCreator.hpp"
@@ -490,7 +490,7 @@ void cGame::setMissionWon()
     setState(eGameState::WINNING);
 
     m_screenShake->reset();
-    m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
+    m_mouse->setTile(eMouseTile::NORMAL);
 
     m_audioContext->playVoice(soundpools::voice07, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
@@ -513,7 +513,7 @@ void cGame::setMissionLost()
     setState(eGameState::LOSING);
 
     m_screenShake->reset();
-    m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
+    m_mouse->setTile(eMouseTile::NORMAL);
 
     m_audioContext->playVoice(soundpools::voice08, m_gameObjectsContext->getPlayer(HUMAN)->getHouse());
 
@@ -958,7 +958,7 @@ void cGame::setCheatMode(bool enabled)
 
 void cGame::setMouseNormal()
 {
-    m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
+    m_mouse->setTile(eMouseTile::NORMAL);
 }
 
 void cGame::takeBackgroundScreen()

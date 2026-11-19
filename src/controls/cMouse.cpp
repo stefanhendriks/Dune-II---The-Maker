@@ -14,7 +14,7 @@
  */
 
 #include "cMouse.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 #include "game/cGameSettings.h"
 #include "controls/cGameControlsContext.h"
 #include "observers/cInputObserver.h"
@@ -61,7 +61,7 @@ cMouse::~cMouse()
 
 void cMouse::init()
 {
-    m_mouseTile = gfx::tex::MOUSE_NORMAL;
+    m_mouseTile = eMouseTile::NORMAL;
 
     m_mouseCoX1 = -1;
     m_mouseCoY1 = -1;
@@ -415,7 +415,7 @@ void cMouse::resetBoxSelect()
     m_mouseCoY2 = -1;
 }
 
-bool cMouse::isTile(TextureID value)
+bool cMouse::isTile(eMouseTile value)
 {
     return m_mouseTile == value;
 }
@@ -432,31 +432,31 @@ void cMouse::draw()
     int mouseDrawX = m_coords.x;
     int mouseDrawY = m_coords.y;
 
-    if (m_mouseTile != TextureID::invalid) {
+    {
         // adjust coordinates of drawing according to the specific mouse sprite/tile
-        if (m_mouseTile == gfx::tex::MOUSE_DOWN) {
+        if (m_mouseTile == eMouseTile::DOWN) {
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == gfx::tex::MOUSE_RIGHT) {
+        else if (m_mouseTile == eMouseTile::RIGHT) {
             mouseDrawX -= 16;
         }
-        else if (m_mouseTile == gfx::tex::MOUSE_MOVE || m_mouseTile == gfx::tex::MOUSE_RALLY) {
-            mouseDrawX -= 16;
-            mouseDrawY -= 16;
-        }
-        else if (m_mouseTile == gfx::tex::MOUSE_ATTACK) {
+        else if (m_mouseTile == eMouseTile::MOVE || m_mouseTile == eMouseTile::RALLY) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == gfx::tex::MOUSE_REPAIR) {
+        else if (m_mouseTile == eMouseTile::ATTACK) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == gfx::tex::MOUSE_FORBIDDEN) {
+        else if (m_mouseTile == eMouseTile::REPAIR) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == gfx::tex::MOUSE_PICK) {
+        else if (m_mouseTile == eMouseTile::FORBIDDEN) {
+            mouseDrawX -= 16;
+            mouseDrawY -= 16;
+        }
+        else if (m_mouseTile == eMouseTile::PICK) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
@@ -465,7 +465,10 @@ void cMouse::draw()
     }
 
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
-    m_sdlDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
+    if (!m_tileTexturesResolved) {
+        resolveTileTextures();
+    }
+    m_sdlDrawer->renderSprite(gfxdata->getTexture(m_tileTextures[static_cast<size_t>(m_mouseTile)]),mouseDrawX, mouseDrawY);
 }
 
 bool cMouse::isNormalRightClick()
@@ -499,32 +502,43 @@ cPoint cMouse::getDragLineEndPoint()
     return cPoint(m_mouseMvX2, m_mouseMvY2);
 }
 
-void cMouse::setTile(TextureID value)
+void cMouse::resolveTileTextures()
+{
+    auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
+    // in the order of eMouseTile
+    constexpr std::array<std::string_view, 11> names = {
+        gfxnames::MOUSE_NORMAL, gfxnames::MOUSE_DOWN, gfxnames::MOUSE_RIGHT, gfxnames::MOUSE_LEFT,
+        gfxnames::MOUSE_UP, gfxnames::MOUSE_MOVE, gfxnames::MOUSE_RALLY, gfxnames::MOUSE_ATTACK,
+        gfxnames::MOUSE_REPAIR, gfxnames::MOUSE_FORBIDDEN, gfxnames::MOUSE_PICK
+    };
+    for (size_t i = 0; i < names.size(); i++) {
+        m_tileTextures[i] = gfxdata->getTextureID(names[i]);
+    }
+    m_tileTexturesResolved = true;
+}
+
+void cMouse::setTile(eMouseTile value)
 {
     if (value != m_mouseTile) {
-        Logger::info(COMP_NONE, "cMouse::setTile", "Changing mouse tile from {} ({}) to {} ({})", toPackIndex(m_mouseTile),
-                     mouseTileName(m_mouseTile).c_str(), toPackIndex(value), mouseTileName(value).c_str());
+        Logger::info(COMP_NONE, "cMouse::setTile", "Changing mouse tile from {} to {}", mouseTileName(m_mouseTile), mouseTileName(value));
         m_mouseTile = value;
     }
 }
 
-std::string cMouse::mouseTileName(TextureID tile)
+std::string cMouse::mouseTileName(eMouseTile tile)
 {
-    if (tile == gfx::tex::MOUSE_NORMAL) {
-        return "gfx::tex::MOUSE_NORMAL";
-    }
-    if (tile == gfx::tex::MOUSE_MOVE) {
-        return "gfx::tex::MOUSE_MOVE";
-    }
-    if (tile == gfx::tex::MOUSE_PICK) {
-        return "gfx::tex::MOUSE_PICK";
-    }
-    if (tile == gfx::tex::MOUSE_RALLY) {
-        return "gfx::tex::MOUSE_RALLY";
-    }
-    if (tile == gfx::tex::MOUSE_REPAIR) {
-        return "gfx::tex::MOUSE_REPAIR";
+    switch (tile) {
+        case eMouseTile::NORMAL: return "MOUSE_NORMAL";
+        case eMouseTile::DOWN: return "MOUSE_DOWN";
+        case eMouseTile::RIGHT: return "MOUSE_RIGHT";
+        case eMouseTile::LEFT: return "MOUSE_LEFT";
+        case eMouseTile::UP: return "MOUSE_UP";
+        case eMouseTile::MOVE: return "MOUSE_MOVE";
+        case eMouseTile::RALLY: return "MOUSE_RALLY";
+        case eMouseTile::ATTACK: return "MOUSE_ATTACK";
+        case eMouseTile::REPAIR: return "MOUSE_REPAIR";
+        case eMouseTile::FORBIDDEN: return "MOUSE_FORBIDDEN";
+        case eMouseTile::PICK: return "MOUSE_PICK";
     }
     return "UNKNOWN";
 }
-

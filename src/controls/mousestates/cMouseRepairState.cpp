@@ -14,7 +14,7 @@
  */
 
 #include "cMouseRepairState.h"
-#include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 
 #include "controls/eKeyAction.h"
 #include "gameobjects/map/cMap.h"
@@ -116,24 +116,24 @@ void cMouseRepairState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
     }
 }
 
-TextureID cMouseRepairState::getMouseTileForRepairState()
+eMouseTile cMouseRepairState::getMouseTileForRepairState()
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
         if (pUnit->isValid() && pUnit->belongsTo(m_player) && pUnit->isEligibleForRepair()) {
-            return gfx::tex::MOUSE_REPAIR;
+            return eMouseTile::REPAIR;
         }
     }
 
     cAbstractStructure *pStructure = m_context->getStructurePointerWhereMouseHovers();
     if (pStructure && pStructure->isValid()) {
         if (pStructure->belongsTo(m_player) && pStructure->isDamaged()) {
-            return gfx::tex::MOUSE_REPAIR;
+            return eMouseTile::REPAIR;
         }
     }
 
-    return gfx::tex::MOUSE_FORBIDDEN;
+    return eMouseTile::FORBIDDEN;
 }
 
 void cMouseRepairState::onFocus()

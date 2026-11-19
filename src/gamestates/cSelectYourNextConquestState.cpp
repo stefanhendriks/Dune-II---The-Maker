@@ -15,6 +15,7 @@
 
 #include "cSelectYourNextConquestState.h"
 #include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 
 #include <cmath>
 #include "controls/eKeyAction.h"
@@ -294,7 +295,7 @@ void cSelectYourNextConquestState::thinkFast()
 
 void cSelectYourNextConquestState::draw() const
 {
-    m_mouse->setTile(gfx::tex::MOUSE_NORMAL); // global state of mouse
+    m_mouse->setTile(eMouseTile::NORMAL); // global state of mouse
     // STEPS:
     // 1. Show current conquered regions
     // 2. Show next progress + story (in message bar)
@@ -396,7 +397,7 @@ void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
         pRegion->iAlpha = 256;
-        m_mouse->setTile(gfx::tex::MOUSE_ATTACK);
+        m_mouse->setTile(eMouseTile::ATTACK);
     }
 
     // draw here stuff
@@ -711,7 +712,7 @@ void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event)
     cRegion *region = getRegionMouseIsOver();
     if (region && region->bSelectable) {
         region->iAlpha = 255;
-        m_mouse->setTile(gfx::tex::MOUSE_ATTACK);
+        m_mouse->setTile(eMouseTile::ATTACK);
     }
 }
 

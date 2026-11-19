@@ -14,7 +14,7 @@
  */
 
 #include "cMousePlaceState.h"
-#include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 #include "gameobjects/map/TerrainTypes.hpp"
 
 #include "gameobjects/map/cMap.h"
@@ -230,7 +230,7 @@ void cMousePlaceState::onMouseMovedTo()
 
 void cMousePlaceState::onStateSet()
 {
-    m_mouseTile = gfx::tex::MOUSE_NORMAL;
+    m_mouseTile = eMouseTile::NORMAL;
     m_mouse->setTile(m_mouseTile);
 }
 

@@ -84,5 +84,5 @@ private:
 
     void setState(eMouseNormalState newState);
 
-    TextureID getMouseTileForNormalState() const;
+    eMouseTile getMouseTileForNormalState() const;
 };

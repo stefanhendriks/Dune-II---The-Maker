@@ -14,7 +14,7 @@
  */
 
 #include "gamestates/cTellHouseState.h"
-#include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 #include "gameobjects/mentat/BeneMentat.h"
 #include "utils/ScenarioLoader.hpp"
 #include "controls/cMouse.h"
@@ -99,7 +99,7 @@ void cTellHouseState::thinkFast()
 
 void cTellHouseState::draw() const
 {
-    m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
+    m_mouse->setTile(eMouseTile::NORMAL);
     if (m_mentat) m_mentat->draw();
     m_mouse->draw();
 }
