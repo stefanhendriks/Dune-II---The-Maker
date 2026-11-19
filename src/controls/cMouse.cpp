@@ -465,7 +465,7 @@ void cMouse::draw()
     }
 
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
-    m_sdlDrawer->renderSprite(gfxdata->getTexture(m_mouseTile),mouseDrawX, mouseDrawY);
+    m_sdlDrawer->renderSprite(gfxdata->getTexture(toTextureID(m_mouseTile)),mouseDrawX, mouseDrawY);
 }
 
 bool cMouse::isNormalRightClick()
