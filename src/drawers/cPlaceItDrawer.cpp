@@ -201,13 +201,13 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace, i
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {
-        bmp = m_gfxdata->getTexture(PLACE_SLAB1);
+        bmp = m_gfxdata->getTexture(toTextureID(PLACE_SLAB1));
     }
     else if (structureId == SLAB4) {
-        bmp = m_gfxdata->getTexture(PLACE_SLAB4);
+        bmp = m_gfxdata->getTexture(toTextureID(PLACE_SLAB4));
     }
     else if (structureId == WALL) {
-        bmp = m_gfxdata->getTexture(PLACE_WALL);
+        bmp = m_gfxdata->getTexture(toTextureID(PLACE_WALL));
     }
     else {
         bmp = m_player->getStructureBitmap(structureId);
