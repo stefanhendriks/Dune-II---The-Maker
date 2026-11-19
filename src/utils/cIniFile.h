@@ -95,6 +95,11 @@ public:
 
     bool hasSection(const std::string &section) const;
 
+    // Section names in the order they appear in the file
+    [[nodiscard]] const std::vector<std::string> &getSectionNames() const {
+        return m_sectionOrder;
+    }
+
     // Sets (or replaces) a key=value, creating the section if needed
     void setValue(const std::string &section, const std::string &key, const std::string &value);
 

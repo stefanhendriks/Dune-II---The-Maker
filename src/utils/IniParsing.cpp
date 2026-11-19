@@ -128,15 +128,6 @@ std::vector<std::string> splitByComma(const std::string& input)
     return result;
 }
 
-std::string extractTagValue(const std::string& line, std::string_view prefix)
-{
-    auto pos = line.find(prefix);
-    if (pos == std::string::npos) return {};
-    auto start = pos + prefix.size();
-    auto end = line.find(']', start);
-    return ToTrim(line.substr(start, end == std::string::npos ? std::string::npos : end - start));
-}
-
 std::string extractSectionName(const std::string& line)
 {
     auto start = line.find('[');
@@ -210,113 +201,6 @@ eIniWord ScenarioIniWordType(const std::string& word, eScenarioIniSection sectio
     return eIniWord::NONE;
 }
 
-eIniWord GameIniWordType(const std::string& word, eGameIniSection section)
-{
-    if (section == eGameIniSection::GAME) {
-        if (cIniUtils::caseInsCompare(word, "ModId"))             return eIniWord::MODID;
-    }
-    else if (section == eGameIniSection::BULLETS) {
-        if (cIniUtils::caseInsCompare(word, "Bitmap"))            return eIniWord::BITMAP;
-        if (cIniUtils::caseInsCompare(word, "BitmapExplosion"))   return eIniWord::BITMAP_DEAD;
-        if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return eIniWord::BITMAP_WIDTH;
-        if (cIniUtils::caseInsCompare(word, "BitmapFrames"))      return eIniWord::BITMAP_FRAMES;
-        if (cIniUtils::caseInsCompare(word, "BitmapExplFrames"))  return eIniWord::BITMAP_DEADFRAMES;
-        if (cIniUtils::caseInsCompare(word, "DamageVehicle"))     return eIniWord::DAMAGE_VEHICLE;
-        if (cIniUtils::caseInsCompare(word, "DamageInfantry"))    return eIniWord::DAMAGE_INFANTRY;
-        if (cIniUtils::caseInsCompare(word, "Definition"))        return eIniWord::DEFINITION;
-        if (cIniUtils::caseInsCompare(word, "Sound"))             return eIniWord::SOUND;
-        if (cIniUtils::caseInsCompare(word, "ExplosionSize"))     return eIniWord::EXPLOSION_SIZE;
-        if (cIniUtils::caseInsCompare(word, "DeviateProbability"))return eIniWord::DEVIATE_PROBABILITY;
-        if (cIniUtils::caseInsCompare(word, "GroundBullet"))      return eIniWord::GROUND_BULLET;
-        if (cIniUtils::caseInsCompare(word, "MoveSpeed"))         return eIniWord::MOVESPEED;
-        if (cIniUtils::caseInsCompare(word, "CanDamageAirUnits")) return eIniWord::CANDAMAGEAIRUNITS;
-        if (cIniUtils::caseInsCompare(word, "CanDamageGround"))   return eIniWord::CANDAMAGEGROUND;
-    }
-    else if (section == eGameIniSection::STRUCTURES) {
-        if (cIniUtils::caseInsCompare(word, "HitPoints"))         return eIniWord::HITPOINTS;
-        if (cIniUtils::caseInsCompare(word, "FixPoints"))         return eIniWord::FIXHP;
-        if (cIniUtils::caseInsCompare(word, "PowerDrain"))        return eIniWord::POWERDRAIN;
-        if (cIniUtils::caseInsCompare(word, "HasConcrete"))       return eIniWord::HAS_CONCRETE;
-        if (cIniUtils::caseInsCompare(word, "NeedPowerToWork"))   return eIniWord::NEED_POWER_TO_WORK;
-        if (cIniUtils::caseInsCompare(word, "LowPowerIconX"))     return eIniWord::LOW_POWER_ICON_X;
-        if (cIniUtils::caseInsCompare(word, "LowPowerIconY"))     return eIniWord::LOW_POWER_ICON_Y;
-        if (cIniUtils::caseInsCompare(word, "PowerGive"))         return eIniWord::POWERGIVE;
-        if (cIniUtils::caseInsCompare(word, "Cost"))              return eIniWord::COST;
-        if (cIniUtils::caseInsCompare(word, "BuildTime"))         return eIniWord::BUILDTIME;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMin")) return eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitAmountMax")) return eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX;
-        if (cIniUtils::caseInsCompare(word, "UponDestructionSpawnUnitType"))      return eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_TYPE;
-    }
-    else if (section == eGameIniSection::UNITS) {
-        if (cIniUtils::caseInsCompare(word, "Bitmap"))            return eIniWord::BITMAP;
-        if (cIniUtils::caseInsCompare(word, "BitmapTop"))         return eIniWord::BITMAP_TOP;
-        if (cIniUtils::caseInsCompare(word, "Icon"))              return eIniWord::ICON;
-        if (cIniUtils::caseInsCompare(word, "BitmapWidth"))       return eIniWord::BITMAP_WIDTH;
-        if (cIniUtils::caseInsCompare(word, "BitmapHeight"))      return eIniWord::BITMAP_HEIGHT;
-        if (cIniUtils::caseInsCompare(word, "HitPoints"))         return eIniWord::HITPOINTS;
-        if (cIniUtils::caseInsCompare(word, "Appetite"))          return eIniWord::APPETITE;
-        if (cIniUtils::caseInsCompare(word, "Cost"))              return eIniWord::COST;
-        if (cIniUtils::caseInsCompare(word, "BulletType"))        return eIniWord::BULLETTYPE;
-        if (cIniUtils::caseInsCompare(word, "MoveSpeed"))         return eIniWord::MOVESPEED;
-        if (cIniUtils::caseInsCompare(word, "TurnSpeed"))         return eIniWord::TURNSPEED;
-        // Attack frequency (todo: wording, it should be more like "delay" or "fireRate")
-        if (cIniUtils::caseInsCompare(word, "AttackFrequency"))   return eIniWord::ATTACKFREQ;
-        // Next Attack frequency (if applicable) (todo: wording, it should be more like "delay" or "fireRate")
-        if (cIniUtils::caseInsCompare(word, "NextAttackFrequency")) return eIniWord::NEXTATTACKFREQ;
-        if (cIniUtils::caseInsCompare(word, "Sight"))             return eIniWord::SIGHT;
-        if (cIniUtils::caseInsCompare(word, "Range"))             return eIniWord::RANGE;
-        if (cIniUtils::caseInsCompare(word, "BuildTime"))         return eIniWord::BUILDTIME;
-        if (cIniUtils::caseInsCompare(word, "Description"))       return eIniWord::DESCRIPTION;
-        // BOOLEANS
-        if (cIniUtils::caseInsCompare(word, "IsHarvester"))       return eIniWord::ISHARVESTER;
-        if (cIniUtils::caseInsCompare(word, "FireTwice"))         return eIniWord::FIRETWICE;
-        if (cIniUtils::caseInsCompare(word, "IsInfantry"))        return eIniWord::ISINFANTRY;
-        if (cIniUtils::caseInsCompare(word, "Squishable"))        return eIniWord::ISSQUISHABLE;
-        if (cIniUtils::caseInsCompare(word, "CanSquish"))         return eIniWord::CANSQUISH;
-        if (cIniUtils::caseInsCompare(word, "IsAirborn"))         return eIniWord::ISAIRBORN;
-        if (cIniUtils::caseInsCompare(word, "AbleToCarry"))       return eIniWord::ABLETOCARRY;
-        if (cIniUtils::caseInsCompare(word, "FreeRoam"))          return eIniWord::FREEROAM;
-        if (cIniUtils::caseInsCompare(word, "Producer"))          return eIniWord::PRODUCER;
-        if (cIniUtils::caseInsCompare(word, "MaxCredits"))        return eIniWord::HARVESTLIMIT;
-        if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return eIniWord::HARVESTSPEED;
-        if (cIniUtils::caseInsCompare(word, "HarvestAmount"))     return eIniWord::HARVESTAMOUNT;
-        if (cIniUtils::caseInsCompare(word, "squish"))            return eIniWord::SQUISH;
-        if (cIniUtils::caseInsCompare(word, "SmokeHpFactor"))     return eIniWord::SMOKEHFACTOR;
-        if (cIniUtils::caseInsCompare(word, "CanAttackAirUnits")) return eIniWord::CANATTACKAIRUNITS;
-        if (cIniUtils::caseInsCompare(word, "CanAttackUnits"))    return eIniWord::CANATTACKUNITS;
-        if (cIniUtils::caseInsCompare(word, "AttackIsEnterStructure")) return eIniWord::ATTACK_IS_ENTER_STRUCTURE;
-        if (cIniUtils::caseInsCompare(word, "DamageOnEnterStructure")) return eIniWord::DAMAGE_ON_ENTER_STRUCTURE;
-    }
-    else if (section == eGameIniSection::STRUCTURES) {
-        if (word.length() > 1) {
-            if (cIniUtils::caseInsCompare(word, "PreBuild"))      return eIniWord::PREBUILD;
-            if (cIniUtils::caseInsCompare(word, "Description"))   return eIniWord::DESCRIPTION;
-            if (cIniUtils::caseInsCompare(word, "Power"))         return eIniWord::POWER;
-            if (cIniUtils::caseInsCompare(word, "Sight"))         return eIniWord::SIGHT;
-            if (cIniUtils::caseInsCompare(word, "Range"))         return eIniWord::RANGE;
-            if (cIniUtils::caseInsCompare(word, "FireRate"))      return eIniWord::FIRERATE;
-        }
-        else
-            return eIniWord::NONE;
-    }
-    else if (section == eGameIniSection::HOUSES) {
-        if (cIniUtils::caseInsCompare(word, "ColorR"))            return eIniWord::RED;
-        if (cIniUtils::caseInsCompare(word, "ColorG"))            return eIniWord::GREEN;
-        if (cIniUtils::caseInsCompare(word, "ColorB"))            return eIniWord::BLUE;
-        if (cIniUtils::caseInsCompare(word, "FirePower"))         return eIniWord::FIREPOWER;
-        if (cIniUtils::caseInsCompare(word, "FireRate"))          return eIniWord::FIRERATE;
-        if (cIniUtils::caseInsCompare(word, "StructPrice"))       return eIniWord::STRUCTPRICE;
-        if (cIniUtils::caseInsCompare(word, "UnitPrice"))         return eIniWord::UNITPRICE;
-        if (cIniUtils::caseInsCompare(word, "Speed"))             return eIniWord::SPEED;
-        if (cIniUtils::caseInsCompare(word, "BuildSpeed"))        return eIniWord::BUILDSPEED;
-        if (cIniUtils::caseInsCompare(word, "HarvestSpeed"))      return eIniWord::HARVESTSPEED;
-        if (cIniUtils::caseInsCompare(word, "DumpSpeed"))         return eIniWord::DUMPSPEED;
-    }
-
-    Logger::warn(COMP_NONE, "GameIniWordType", "Could not find word-type for [{}]", word);
-    return eIniWord::NONE;
-}
-
 eScenarioIniSection SCEN_INI_SectionType(const std::string& section)
 {
     if (cIniUtils::caseInsCompare(section, "UNITS"))          return eScenarioIniSection::UNITS;
@@ -333,17 +217,6 @@ eScenarioIniSection SCEN_INI_SectionType(const std::string& section)
     if (cIniUtils::caseInsCompare(section, "Mercenary"))      return eScenarioIniSection::HOUSEMERCENARY;
     Logger::warn(COMP_NONE, "SCEN_INI_SectionType", "Could not find section type for [{}]", section);
     return eScenarioIniSection::NONE;
-}
-
-eGameIniSection GAME_INI_SectionType(const std::string& section, eGameIniSection last)
-{
-    if (cIniUtils::caseInsCompare(section, "BULLETS"))    return eGameIniSection::BULLETS;
-    if (cIniUtils::caseInsCompare(section, "UNITS"))      return eGameIniSection::UNITS;
-    if (cIniUtils::caseInsCompare(section, "STRUCTURES")) return eGameIniSection::STRUCTURES;
-    if (cIniUtils::caseInsCompare(section, "TERRAINS"))   return eGameIniSection::TERRAINS;
-    // When nothing found; we assume its just a new ID tag for some unit or structure
-    // Therefor we return the last known SECTION ID so we can assign the proper WORD ID's
-    return last;
 }
 
 bool isCommentLine(const std::string& linefeed)

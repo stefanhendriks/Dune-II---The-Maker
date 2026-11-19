@@ -208,3 +208,17 @@ TEST_CASE("cIniFile reports failures to open files for loading or saving", "[ini
     REQUIRE_FALSE(ini.isLoadSuccess());
     REQUIRE_FALSE(ini.save(unavailableFile.string()));
 }
+
+TEST_CASE("cIniFile lists section names in file order", "[cIniFile]")
+{
+    TemporaryDirectory directory;
+    const auto path = directory.path() / "order.ini";
+    {
+        std::ofstream out(path);
+        out << "[WOR]\nCost=1\n\n[PALACE]\nCost=2\n\n[LIGHTFACTORY]\nCost=3\n";
+    }
+
+    cIniFile ini;
+    REQUIRE(ini.load(path.string()));
+    REQUIRE(ini.getSectionNames() == std::vector<std::string>{"WOR", "PALACE", "LIGHTFACTORY"});
+}

@@ -108,24 +108,6 @@ TEST_CASE("splitByComma - consecutive commas give empty tokens, trailing comma d
     REQUIRE(parts[2] == "b");
 }
 
-TEST_CASE("extractTagValue - returns the trimmed value after the prefix", "[ini_parsing]")
-{
-    REQUIRE(extractTagValue("[UNIT: Devastator]", "[UNIT:") == "Devastator");
-    REQUIRE(extractTagValue("[UNIT:Trike]", "[UNIT:") == "Trike");
-    REQUIRE(extractTagValue("[STRUCTURE:  Refinery ]", "[STRUCTURE:") == "Refinery");
-}
-
-TEST_CASE("extractTagValue - missing prefix gives empty string", "[ini_parsing]")
-{
-    REQUIRE(extractTagValue("[BULLET: Rocket]", "[UNIT:").empty());
-    REQUIRE(extractTagValue("", "[UNIT:").empty());
-}
-
-TEST_CASE("extractTagValue - missing closing bracket takes the rest of the line", "[ini_parsing]")
-{
-    REQUIRE(extractTagValue("[UNIT: Trike", "[UNIT:") == "Trike");
-}
-
 TEST_CASE("extractSectionName - returns the trimmed section name", "[ini_parsing]")
 {
     REQUIRE(extractSectionName("[UNITS]") == "UNITS");
@@ -245,22 +227,6 @@ TEST_CASE("isHouseSection - bounds of the house range", "[ini_parsing][sections]
     REQUIRE_FALSE(isHouseSection(eScenarioIniSection::REINFORCEMENTS));
 }
 
-TEST_CASE("GAME_INI_SectionType - maps game.ini sections", "[ini_parsing][sections]")
-{
-    REQUIRE(GAME_INI_SectionType("BULLETS", eGameIniSection::GAME) == eGameIniSection::BULLETS);
-    REQUIRE(GAME_INI_SectionType("UNITS", eGameIniSection::GAME) == eGameIniSection::UNITS);
-    REQUIRE(GAME_INI_SectionType("STRUCTURES", eGameIniSection::GAME) == eGameIniSection::STRUCTURES);
-    REQUIRE(GAME_INI_SectionType("TERRAINS", eGameIniSection::GAME) == eGameIniSection::TERRAINS);
-    REQUIRE(GAME_INI_SectionType("terrains", eGameIniSection::GAME) == eGameIniSection::TERRAINS);
-}
-
-TEST_CASE("GAME_INI_SectionType - unknown names keep the last known section", "[ini_parsing][sections]")
-{
-    REQUIRE(GAME_INI_SectionType("UNIT: Trike", eGameIniSection::UNITS) == eGameIniSection::UNITS);
-    REQUIRE(GAME_INI_SectionType("STRUCTURE: Refinery", eGameIniSection::STRUCTURES) == eGameIniSection::STRUCTURES);
-    REQUIRE(GAME_INI_SectionType("whatever", eGameIniSection::GAME) == eGameIniSection::GAME);
-}
-
 TEST_CASE("INI_WordType - REGION section", "[ini_parsing][words]")
 {
     REQUIRE(ScenarioIniWordType("Region", eScenarioIniSection::REGION) == eIniWord::REGION);
@@ -290,7 +256,6 @@ TEST_CASE("INI_WordType - SKIRMISH section", "[ini_parsing][words]")
 
 TEST_CASE("INI_WordType - GAME and BASIC sections", "[ini_parsing][words]")
 {
-    REQUIRE(GameIniWordType("ModId", eGameIniSection::GAME) == eIniWord::MODID);
     REQUIRE(ScenarioIniWordType("CursorPos", eScenarioIniSection::BASIC) == eIniWord::FOCUS_POS);
     REQUIRE(ScenarioIniWordType("BriefPicture", eScenarioIniSection::BASIC) == eIniWord::BRIEFPICTURE);
     REQUIRE(ScenarioIniWordType("WinFlags", eScenarioIniSection::BASIC) == eIniWord::WINFLAGS);
@@ -320,100 +285,8 @@ TEST_CASE("INI_WordType - MAP section", "[ini_parsing][words]")
     REQUIRE(ScenarioIniWordType("Field", eScenarioIniSection::MAP) == eIniWord::MAPFIELD);
 }
 
-TEST_CASE("INI_WordType - BULLETS section", "[ini_parsing][words]")
-{
-    REQUIRE(GameIniWordType("Bitmap", eGameIniSection::BULLETS) == eIniWord::BITMAP);
-    REQUIRE(GameIniWordType("BitmapExplosion", eGameIniSection::BULLETS) == eIniWord::BITMAP_DEAD);
-    REQUIRE(GameIniWordType("BitmapWidth", eGameIniSection::BULLETS) == eIniWord::BITMAP_WIDTH);
-    REQUIRE(GameIniWordType("BitmapFrames", eGameIniSection::BULLETS) == eIniWord::BITMAP_FRAMES);
-    REQUIRE(GameIniWordType("BitmapExplFrames", eGameIniSection::BULLETS) == eIniWord::BITMAP_DEADFRAMES);
-    REQUIRE(GameIniWordType("DamageVehicle", eGameIniSection::BULLETS) == eIniWord::DAMAGE_VEHICLE);
-    REQUIRE(GameIniWordType("DamageInfantry", eGameIniSection::BULLETS) == eIniWord::DAMAGE_INFANTRY);
-    REQUIRE(GameIniWordType("Definition", eGameIniSection::BULLETS) == eIniWord::DEFINITION);
-    REQUIRE(GameIniWordType("Sound", eGameIniSection::BULLETS) == eIniWord::SOUND);
-    REQUIRE(GameIniWordType("ExplosionSize", eGameIniSection::BULLETS) == eIniWord::EXPLOSION_SIZE);
-    REQUIRE(GameIniWordType("DeviateProbability", eGameIniSection::BULLETS) == eIniWord::DEVIATE_PROBABILITY);
-    REQUIRE(GameIniWordType("GroundBullet", eGameIniSection::BULLETS) == eIniWord::GROUND_BULLET);
-}
-
-TEST_CASE("INI_WordType - STRUCTURES section", "[ini_parsing][words]")
-{
-    REQUIRE(GameIniWordType("HitPoints", eGameIniSection::STRUCTURES) == eIniWord::HITPOINTS);
-    REQUIRE(GameIniWordType("FixPoints", eGameIniSection::STRUCTURES) == eIniWord::FIXHP);
-    REQUIRE(GameIniWordType("PowerDrain", eGameIniSection::STRUCTURES) == eIniWord::POWERDRAIN);
-    REQUIRE(GameIniWordType("HasConcrete", eGameIniSection::STRUCTURES) == eIniWord::HAS_CONCRETE);
-    REQUIRE(GameIniWordType("NeedPowerToWork", eGameIniSection::STRUCTURES) == eIniWord::NEED_POWER_TO_WORK);
-    REQUIRE(GameIniWordType("LowPowerIconX", eGameIniSection::STRUCTURES) == eIniWord::LOW_POWER_ICON_X);
-    REQUIRE(GameIniWordType("LowPowerIconY", eGameIniSection::STRUCTURES) == eIniWord::LOW_POWER_ICON_Y);
-    REQUIRE(GameIniWordType("PowerGive", eGameIniSection::STRUCTURES) == eIniWord::POWERGIVE);
-    REQUIRE(GameIniWordType("Cost", eGameIniSection::STRUCTURES) == eIniWord::COST);
-    REQUIRE(GameIniWordType("BuildTime", eGameIniSection::STRUCTURES) == eIniWord::BUILDTIME);
-    REQUIRE(GameIniWordType("UponDestructionSpawnUnitAmountMin", eGameIniSection::STRUCTURES) == eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MIN);
-    REQUIRE(GameIniWordType("UponDestructionSpawnUnitAmountMax", eGameIniSection::STRUCTURES) == eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_AMOUNT_MAX);
-    REQUIRE(GameIniWordType("UponDestructionSpawnUnitType", eGameIniSection::STRUCTURES) == eIniWord::UPON_DESTRUCTION_SPAWN_UNIT_TYPE);
-}
-
-TEST_CASE("INI_WordType - UNITS section numeric and boolean words", "[ini_parsing][words]")
-{
-    REQUIRE(GameIniWordType("Bitmap", eGameIniSection::UNITS) == eIniWord::BITMAP);
-    REQUIRE(GameIniWordType("BitmapTop", eGameIniSection::UNITS) == eIniWord::BITMAP_TOP);
-    REQUIRE(GameIniWordType("Icon", eGameIniSection::UNITS) == eIniWord::ICON);
-    REQUIRE(GameIniWordType("HitPoints", eGameIniSection::UNITS) == eIniWord::HITPOINTS);
-    REQUIRE(GameIniWordType("Appetite", eGameIniSection::UNITS) == eIniWord::APPETITE);
-    REQUIRE(GameIniWordType("MoveSpeed", eGameIniSection::UNITS) == eIniWord::MOVESPEED);
-    REQUIRE(GameIniWordType("TurnSpeed", eGameIniSection::UNITS) == eIniWord::TURNSPEED);
-    REQUIRE(GameIniWordType("AttackFrequency", eGameIniSection::UNITS) == eIniWord::ATTACKFREQ);
-    REQUIRE(GameIniWordType("NextAttackFrequency", eGameIniSection::UNITS) == eIniWord::NEXTATTACKFREQ);
-    REQUIRE(GameIniWordType("IsHarvester", eGameIniSection::UNITS) == eIniWord::ISHARVESTER);
-    REQUIRE(GameIniWordType("FireTwice", eGameIniSection::UNITS) == eIniWord::FIRETWICE);
-    REQUIRE(GameIniWordType("IsInfantry", eGameIniSection::UNITS) == eIniWord::ISINFANTRY);
-    REQUIRE(GameIniWordType("Squishable", eGameIniSection::UNITS) == eIniWord::ISSQUISHABLE);
-    REQUIRE(GameIniWordType("CanSquish", eGameIniSection::UNITS) == eIniWord::CANSQUISH);
-    REQUIRE(GameIniWordType("IsAirborn", eGameIniSection::UNITS) == eIniWord::ISAIRBORN);
-    REQUIRE(GameIniWordType("AbleToCarry", eGameIniSection::UNITS) == eIniWord::ABLETOCARRY);
-    REQUIRE(GameIniWordType("FreeRoam", eGameIniSection::UNITS) == eIniWord::FREEROAM);
-    REQUIRE(GameIniWordType("MaxCredits", eGameIniSection::UNITS) == eIniWord::HARVESTLIMIT);
-    REQUIRE(GameIniWordType("HarvestSpeed", eGameIniSection::UNITS) == eIniWord::HARVESTSPEED);
-    REQUIRE(GameIniWordType("HarvestAmount", eGameIniSection::UNITS) == eIniWord::HARVESTAMOUNT);
-    REQUIRE(GameIniWordType("CanAttackAirUnits", eGameIniSection::UNITS) == eIniWord::CANATTACKAIRUNITS);
-    REQUIRE(GameIniWordType("CanAttackUnits", eGameIniSection::UNITS) == eIniWord::CANATTACKUNITS);
-    REQUIRE(GameIniWordType("AttackIsEnterStructure", eGameIniSection::UNITS) == eIniWord::ATTACK_IS_ENTER_STRUCTURE);
-    REQUIRE(GameIniWordType("DamageOnEnterStructure", eGameIniSection::UNITS) == eIniWord::DAMAGE_ON_ENTER_STRUCTURE);
-}
-
-TEST_CASE("INI_WordType - HOUSES section", "[ini_parsing][words]")
-{
-    REQUIRE(GameIniWordType("ColorR", eGameIniSection::HOUSES) == eIniWord::RED);
-    REQUIRE(GameIniWordType("ColorG", eGameIniSection::HOUSES) == eIniWord::GREEN);
-    REQUIRE(GameIniWordType("ColorB", eGameIniSection::HOUSES) == eIniWord::BLUE);
-    REQUIRE(GameIniWordType("FirePower", eGameIniSection::HOUSES) == eIniWord::FIREPOWER);
-    REQUIRE(GameIniWordType("FireRate", eGameIniSection::HOUSES) == eIniWord::FIRERATE);
-    REQUIRE(GameIniWordType("StructPrice", eGameIniSection::HOUSES) == eIniWord::STRUCTPRICE);
-    REQUIRE(GameIniWordType("UnitPrice", eGameIniSection::HOUSES) == eIniWord::UNITPRICE);
-    REQUIRE(GameIniWordType("Speed", eGameIniSection::HOUSES) == eIniWord::SPEED);
-    REQUIRE(GameIniWordType("BuildSpeed", eGameIniSection::HOUSES) == eIniWord::BUILDSPEED);
-    REQUIRE(GameIniWordType("HarvestSpeed", eGameIniSection::HOUSES) == eIniWord::HARVESTSPEED);
-    REQUIRE(GameIniWordType("DumpSpeed", eGameIniSection::HOUSES) == eIniWord::DUMPSPEED);
-}
-
-TEST_CASE("INI_WordType - matching is case-insensitive", "[ini_parsing][words]")
-{
-    REQUIRE(ScenarioIniWordType("credits", eScenarioIniSection::HOUSEATREIDES) == eIniWord::CREDITS);
-    REQUIRE(ScenarioIniWordType("CREDITS", eScenarioIniSection::HOUSEATREIDES) == eIniWord::CREDITS);
-    REQUIRE(GameIniWordType("hitpoints", eGameIniSection::UNITS) == eIniWord::HITPOINTS);
-}
-
-TEST_CASE("INI_WordType - words from another section are not recognised", "[ini_parsing][words]")
-{
-    REQUIRE(ScenarioIniWordType("Credits", eScenarioIniSection::MAP) == eIniWord::NONE);
-    REQUIRE(ScenarioIniWordType("Width", eScenarioIniSection::HOUSEORDOS) == eIniWord::NONE);
-    REQUIRE(GameIniWordType("MoveSpeed", eGameIniSection::STRUCTURES) == eIniWord::NONE);
-    REQUIRE(ScenarioIniWordType("Seed", eScenarioIniSection::NONE) == eIniWord::NONE);
-}
-
 TEST_CASE("INI_WordType - empty word gives NONE", "[ini_parsing][words]")
 {
-    REQUIRE(GameIniWordType("", eGameIniSection::UNITS) == eIniWord::NONE);
     REQUIRE(ScenarioIniWordType("", eScenarioIniSection::MAP) == eIniWord::NONE);
 }
 
@@ -452,12 +325,6 @@ TEST_CASE("Briefing workflow - scenario number line", "[ini_parsing][workflow]")
     auto [left, right] = INI_SplitWord("Number=3");
     REQUIRE(ScenarioIniWordType(left, eScenarioIniSection::SCEN) == eIniWord::NUMBER);
     REQUIRE(ToInt(right) == 3);
-}
-
-TEST_CASE("GameIniWordType - NONE section knows no words", "[ini_parsing][words]")
-{
-    REQUIRE(GameIniWordType("ModId", eGameIniSection::NONE) == eIniWord::NONE);
-    REQUIRE(GameIniWordType("Bitmap", eGameIniSection::NONE) == eIniWord::NONE);
 }
 
 TEST_CASE("ScenarioIniWordType - game.ini words are not recognised in scenario sections", "[ini_parsing][words]")
