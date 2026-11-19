@@ -22,6 +22,7 @@
  */
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include <string>
 #include "include/enums/BuildEnums.h"
 #include "include/enums/ListEnums.h"
@@ -41,7 +42,7 @@ public:
     ~cBuildingListItem();
 
     // uber constructor
-    cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable);
+    cBuildingListItem(eBuildType type, int buildId, int cost, TextureID icon, cBuildingList *list, int subList, bool queuable);
 
     // easier constructors (they have no LIST, this is intentional and assigned later to the item by add**toList functions in the cBuildingList.cpp class
     cBuildingListItem(int theID, s_StructureInfo entry, int subList);
@@ -57,7 +58,7 @@ public:
     // getters
     int getTotalBuildTimeInMs();
     int getProgressBuildTimeInMs(); // how much time has passed for build item
-    int getIconId() {
+    TextureID getIconId() {
         return m_icon;
     }
     std::string getInfo();
@@ -173,7 +174,7 @@ public:
     }
 
     // setters
-    void setIconId(int value) {
+    void setIconId(TextureID value) {
         m_icon = value;
     }
     void setBuildCost(int value) {
@@ -292,7 +293,7 @@ private:
         m_progress = value;
     }
 
-    int m_icon;				// the icon ID to draw (from datafile)
+    TextureID m_icon;				// the icon ID to draw (from datafile)
     int m_buildId;			// the ID to build .. (ie TRIKE, or CONSTYARD)
     eBuildType m_type;		// .. of this type of thing (ie, UNIT or STRUCTURE)
     int m_cost;				// price

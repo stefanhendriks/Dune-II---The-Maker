@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include <array>
 #include <cstddef>
 #include <stdexcept>
@@ -34,7 +35,7 @@ enum class RenderLayerParticle : char {
  */
 
 struct s_ParticleInfo {
-    int bmpIndex;           // index of bmp to draw (index in DataRepository)
+    TextureID bmpIndex;           // index of bmp to draw (index in DataRepository)
     int startAlpha;         // 0-255 (anything else == 255 = opaque)
     bool usesAdditiveBlending; // type of blending used when alpha > 0 and < 255 (default = transparent, if this is set to false)
     RenderLayerParticle layer;  // at which 'layer' (z-index like) to draw particle (0 = top (over unit), 1 = bottom (beneath unit))

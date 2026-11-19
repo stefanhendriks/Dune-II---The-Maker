@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include <array>
 #include <cstddef>
 #include <stdexcept>
@@ -65,7 +66,7 @@ struct s_StructureInfo {
     int fadecol;         // Fading color (if needed), -1 is none, > -1 means starting color
     int fademax;         // Max fading color (assuming fadecol < fademax)
 
-    int icon;            // icon id
+    TextureID icon;            // icon id
 
     int cost;            // price
 
