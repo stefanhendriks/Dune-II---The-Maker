@@ -15,8 +15,11 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
+
 #include <SDL3/SDL.h>
 #include <string>
+#include <string_view>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -36,14 +39,21 @@ public:
     ~Graphics();
     // return a surface from his index
     SDL_Surface *getSurface(int index) const;
+    // return a surface from his id
+    SDL_Surface *getSurface(SurfaceID id) const;
     // return a surface from his name
     SDL_Surface *getSurface(const std::string &name) const;
     // return a texture from his index
     Texture *getTexture(int index);
+    // return a texture from his id
+    Texture *getTexture(TextureID id);
     // return a texture of a frame sequence (movie pack), frames are numbered from 0 in pack order
     Texture *getFrameTexture(int frameNumber) { return getTexture(frameNumber); }
     // return a texture from his name
     Texture *getTexture(const std::string &name);
+    // resolve a name to an id once (at init) and keep the id; logs an error and returns invalid when the name is not in the pack
+    SurfaceID surfaceId(std::string_view name) const;
+    TextureID textureId(std::string_view name) const;
     // return number of file in Pack
     int getNumberOfFiles();
     // name of every file in the pack, in index order
