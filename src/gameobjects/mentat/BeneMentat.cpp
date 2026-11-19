@@ -49,14 +49,14 @@ BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTrans
     d2tm_assert(ctx != nullptr);
     d2tm_assert(dataCampaign != nullptr);
     resolveFaceFrames(eyesNames, mouthNames);
-    iBackgroundFrame = MENTATM;
-    buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);
-    buildRightButton(gfxmentat->getTexture(BTN_YES), 466, 423);
+    m_backgroundTexture = gfxmentat->textureId(gfxnames::MENTATM);
+    buildLeftButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_NO)), 293, 423);
+    buildRightButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_YES)), 466, 423);
 
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)
             .withLabel("No")
-            .withTexture(gfxmentat->getTexture(BTN_NO))
+            .withTexture(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_NO)))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onNoButtonPressed(); })
@@ -65,7 +65,7 @@ BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTrans
     rightGuiButton = GuiButtonBuilder()
             .withRect(*rightButton)
             .withLabel("Yes")
-            .withTexture(gfxmentat->getTexture(BTN_YES))
+            .withTexture(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_YES)))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onYesButtonPressed(); })

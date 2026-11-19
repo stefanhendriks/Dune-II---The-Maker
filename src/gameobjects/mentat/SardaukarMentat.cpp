@@ -15,6 +15,7 @@
 
 #include "SardaukarMentat.h"
 #include "include/gfxmentat.h"
+#include "data/GfxNames.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
@@ -29,13 +30,13 @@ SardaukarMentat::SardaukarMentat(GameContext* ctx, cGameSettings* settings, Game
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
-    iBackgroundFrame = MENTATS;
-    buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
-    buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
+    m_backgroundTexture = gfxmentat->textureId(gfxnames::MENTATS);
+    buildLeftButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_REPEAT)), 293, 423);
+    buildRightButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_PROCEED)), 466, 423);
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)        
             .withLabel("Repeat")
-            .withTexture(gfxmentat->getTexture(BTN_REPEAT))
+            .withTexture(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_REPEAT)))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {this->resetSpeak();})
@@ -44,7 +45,7 @@ SardaukarMentat::SardaukarMentat(GameContext* ctx, cGameSettings* settings, Game
     rightGuiButton = GuiButtonBuilder()
             .withRect(*rightButton)        
             .withLabel("Yes")
-            .withTexture(gfxmentat->getTexture(BTN_YES))
+            .withTexture(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_YES)))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
