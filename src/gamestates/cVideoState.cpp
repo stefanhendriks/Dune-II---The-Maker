@@ -58,7 +58,7 @@ cVideoState::cVideoState(sGameServices* services, const std::string &filename)
     // a missing (or invalid) pack has no frames: thinkNormal sends us back to the main menu
     if (m_gfxMovie->getNumberOfFiles() > 0) {
         Logger::info(COMP_INIT, "video", "Successful loaded video [{}]", filename);
-        m_currentFrame = m_gfxMovie->getFrameTexture(m_movieFrame);
+        m_currentFrame = m_gfxMovie->getFrameTexture(toTextureID(m_movieFrame));
         m_offsetX = (m_settings->getScreenW() - VIDEO_WIDTH) / 2 - VIDEO_CENTER_SHIFT;
         m_offsetY = (m_settings->getScreenH() - VIDEO_MAX_HEIGHT) / 2 - VIDEO_CENTER_SHIFT;
     } else {
@@ -83,7 +83,7 @@ void cVideoState::thinkNormal()
 {
     // one frame per call: thinkNormal runs every ~100 ms, so the video plays at 10 fps
     if (m_movieFrame < m_gfxMovie->getNumberOfFiles()) {
-        m_currentFrame = m_gfxMovie->getFrameTexture(m_movieFrame);
+        m_currentFrame = m_gfxMovie->getFrameTexture(toTextureID(m_movieFrame));
         m_movieFrame++;
     } else {
         m_stateTransitions->setNextStateWithFade(eGameState::MENU);
