@@ -14,8 +14,8 @@
  */
 
 #include "cMouseDeployState.h"
+#include "data/GfxIds.hpp"
 
-#include "data/gfxdata.h"
 #include "game/cEventEmitter.h"
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/players/cPlayer.h"
@@ -106,7 +106,7 @@ void cMouseDeployState::onMouseMovedTo()
 
 void cMouseDeployState::onStateSet()
 {
-    m_mouseTile = MOUSE_ATTACK; // TODO: have other cursor for this? based on thing to deploy?
+    m_mouseTile = gfx::tex::MOUSE_ATTACK; // TODO: have other cursor for this? based on thing to deploy?
     m_mouse->setTile(m_mouseTile);
 }
 

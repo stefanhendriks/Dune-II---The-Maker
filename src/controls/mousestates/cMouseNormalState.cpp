@@ -14,6 +14,7 @@
  */
 
 #include "cMouseNormalState.h"
+#include "data/GfxIds.hpp"
 
 #include "controls/cGameControlsContext.h"
 #include "controls/eKeyAction.h"
@@ -29,7 +30,6 @@
 
 
 #include "utils/Log.h"
-#include "data/gfxdata.h"
 #include "context/cInfoContext.h"
 #include "context/cGameObjectContext.h"
 
@@ -195,29 +195,29 @@ void cMouseNormalState::onMouseMovedTo()
         m_mouseTile = getMouseTileForNormalState();
     }
     else if (m_state == SELECT_STATE_RALLY) {
-        m_mouseTile = MOUSE_RALLY;
+        m_mouseTile = gfx::tex::MOUSE_RALLY;
     }
 }
 
-int cMouseNormalState::getMouseTileForNormalState() const
+TextureID cMouseNormalState::getMouseTileForNormalState() const
 {
     int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
     if (hoverUnitId > -1) {
         cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
         if (pUnit->isValid() && pUnit->belongsTo(m_player)) {
             // only show this for units
-            return MOUSE_PICK;
+            return gfx::tex::MOUSE_PICK;
         }
         // non-selectable units (all from other players), don't give a "pick" mouse tile
-        return MOUSE_NORMAL;
+        return gfx::tex::MOUSE_NORMAL;
     }
-    return MOUSE_NORMAL;
+    return gfx::tex::MOUSE_NORMAL;
 }
 
 void cMouseNormalState::onStateSet()
 {
     setState(SELECT_STATE_NORMAL);
-    m_mouseTile = MOUSE_NORMAL;
+    m_mouseTile = gfx::tex::MOUSE_NORMAL;
     m_mouse->setTile(m_mouseTile);
 }
 
@@ -248,7 +248,7 @@ void cMouseNormalState::onKeyDown(const cKeyboardEvent &event)
         // when selecting a structure
         if (pSelectedStructure && pSelectedStructure->belongsTo(m_player) && pSelectedStructure->canHaveRallyPoint()) {
             setState(SELECT_STATE_RALLY);
-            m_mouseTile = MOUSE_RALLY;
+            m_mouseTile = gfx::tex::MOUSE_RALLY;
         }
     }
     if (event.isAction(eKeyAction::SELECT_INFANTRY_ON_MAP)) {
@@ -350,7 +350,7 @@ void cMouseNormalState::onKeyPressed(const cKeyboardEvent &event)
     if (event.isAction(eKeyAction::ATTACK_MODE)) {
         // actual group creation is at cGameLogic onKeyPressed
         setState(SELECT_STATE_NORMAL);
-        m_mouseTile = MOUSE_NORMAL;
+        m_mouseTile = gfx::tex::MOUSE_NORMAL;
         m_mouse->resetBoxSelect();
     }
     else {

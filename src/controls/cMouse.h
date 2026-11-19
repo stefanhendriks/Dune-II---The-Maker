@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "utils/cPoint.h"
 
 #include <SDL3/SDL.h>
@@ -89,7 +90,7 @@ public:
 
     bool isBoxSelecting();
 
-    void setTile(int value);
+    void setTile(TextureID value);
 
     void resetDragViewportInteraction();
 
@@ -101,7 +102,7 @@ public:
 
     void resetBoxSelect();
 
-    bool isTile(int value);
+    bool isTile(TextureID value);
 
     void draw();
 
@@ -161,8 +162,8 @@ private:
     int m_mouseMvX2;        // the
     int m_mouseMvY2;        // dragging viewport
 
-    int m_mouseTile;       // mouse picture in gfxdata
+    TextureID m_mouseTile;       // mouse picture in gfxdata
 
-    std::string mouseTileName(int tile);
+    std::string mouseTileName(TextureID tile);
 
 };
