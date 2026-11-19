@@ -178,4 +178,14 @@ private:
 
     bool onMouseLeftButtonClicked(const s_MouseEvent &event);
     mutable std::array<cRegion, MAX_REGIONS> world;
+private:
+    // graphics resolved once from the pack
+    SurfaceID m_surfWorldDuneClick = SurfaceID::invalid;
+    TextureID m_texBmpNextconq = TextureID::invalid;
+    TextureID m_texBmpNcatr = TextureID::invalid;
+    TextureID m_texBmpNcord = TextureID::invalid;
+    TextureID m_texBmpNchar = TextureID::invalid;
+    TextureID m_texBmpGameDune = TextureID::invalid;
+    TextureID m_texWorldDune = TextureID::invalid;
+    TextureID m_texWorldDuneRegions = TextureID::invalid;
 };
