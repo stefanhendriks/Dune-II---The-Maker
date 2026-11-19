@@ -14,7 +14,6 @@
  */
 
 #include "cMainMenuState.h"
-#include "data/GfxNames.hpp"
 #include "controls/cMouse.h"
 
 #include "gui/GuiButton.h"
@@ -59,7 +58,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    const TextureID texBmpD2tm = gfxinter->getTextureID(gfxnames::BMP_D2TM);
+    const TextureID texBmpD2tm = gfxinter->getTextureID("BMP_D2TM");
     bmp_D2TM_Title = gfxinter->getTexture(texBmpD2tm);
 
     int logoWidth = bmp_D2TM_Title->w;

@@ -14,7 +14,6 @@
  */
 
 #include "cCreditsState.h"
-#include "data/GfxNames.hpp"
 #include "game/cGameSettings.h"
 
 #include "controls/eKeyAction.h"
@@ -49,8 +48,8 @@ cCreditsState::cCreditsState(sGameServices* services) :
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     d2tm_assert(gfxinter != nullptr);
 
-    const TextureID texBmpGameDune = gfxinter->getTextureID(gfxnames::BMP_GAME_DUNE);
-    const TextureID texBmpD2tm = gfxinter->getTextureID(gfxnames::BMP_D2TM);
+    const TextureID texBmpGameDune = gfxinter->getTextureID("BMP_GAME_DUNE");
+    const TextureID texBmpD2tm = gfxinter->getTextureID("BMP_D2TM");
     m_duneBmp = gfxinter->getTexture(texBmpGameDune);
     m_titleBmp = gfxinter->getTexture(texBmpD2tm);
     int duneAtTheRight = m_settings->getScreenW() - (m_duneBmp->w * 1.1f);

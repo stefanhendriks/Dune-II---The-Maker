@@ -16,7 +16,6 @@
 #include "BeneMentat.h"
 
 #include "controls/eKeyAction.h"
-#include "data/GfxNames.hpp"
 #include "game/GameStateTransition.hpp"
 #include "game/MissionFlow.hpp"
 #include "include/eGameState.h"
@@ -38,8 +37,8 @@
 namespace {
 
 // sprite per eyes/mouth frame, the only place that lists the BEN sprites
-constexpr std::array<std::string_view, 5> eyesNames = {gfxnames::BEN_EYES01, gfxnames::BEN_EYES02, gfxnames::BEN_EYES03, gfxnames::BEN_EYES04, gfxnames::BEN_EYES05};
-constexpr std::array<std::string_view, 5> mouthNames = {gfxnames::BEN_MOUTH01, gfxnames::BEN_MOUTH02, gfxnames::BEN_MOUTH03, gfxnames::BEN_MOUTH04, gfxnames::BEN_MOUTH05};
+constexpr std::array<std::string_view, 5> eyesNames = {"BEN_EYES01", "BEN_EYES02", "BEN_EYES03", "BEN_EYES04", "BEN_EYES05"};
+constexpr std::array<std::string_view, 5> mouthNames = {"BEN_MOUTH01", "BEN_MOUTH02", "BEN_MOUTH03", "BEN_MOUTH04", "BEN_MOUTH05"};
 
 }
 
@@ -48,10 +47,10 @@ BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTrans
     d2tm_assert(ctx != nullptr);
     d2tm_assert(dataCampaign != nullptr);
     resolveFaceFrames(eyesNames, mouthNames);
-    m_backgroundTexture = gfxmentat->getTextureID(gfxnames::MENTATM);
-    Texture *leftButtonTexture = gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_NO));
+    m_backgroundTexture = gfxmentat->getTextureID("MENTATM");
+    Texture *leftButtonTexture = gfxmentat->getTexture(gfxmentat->getTextureID("BTN_NO"));
     buildLeftButton(leftButtonTexture, 293, 423);
-    buildRightButton(gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_YES)), 466, 423);
+    buildRightButton(gfxmentat->getTexture(gfxmentat->getTextureID("BTN_YES")), 466, 423);
 
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)
@@ -65,7 +64,7 @@ BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTrans
     rightGuiButton = GuiButtonBuilder()
             .withRect(*rightButton)
             .withLabel("Yes")
-            .withTexture(gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_YES)))
+            .withTexture(gfxmentat->getTexture(gfxmentat->getTextureID("BTN_YES")))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onYesButtonPressed(); })

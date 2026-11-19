@@ -14,7 +14,6 @@
  */
 
 #include "cSelectMissionState.h"
-#include "data/GfxNames.hpp"
 #include "context/GameContext.hpp"
 //#include "game/cGame.h"
 #include "config.h"
@@ -54,10 +53,10 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, eGameState pre
     cPlayer* humanPlayer = services->objects->getPlayer(HUMAN);
     const int house = humanPlayer->getHouse();
     Graphics* gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    const TextureID texBmpSelectHouseAtreides = gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ATREIDES);
-    const TextureID texBmpSelectHouseHarkonnen = gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_HARKONNEN);
-    const TextureID texBmpSelectHouseOrdos = gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ORDOS);
-    const TextureID texBmpSelectHouseSardaukar = gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_SARDAUKAR);
+    const TextureID texBmpSelectHouseAtreides = gfxinter->getTextureID("BMP_SELECT_HOUSE_ATREIDES");
+    const TextureID texBmpSelectHouseHarkonnen = gfxinter->getTextureID("BMP_SELECT_HOUSE_HARKONNEN");
+    const TextureID texBmpSelectHouseOrdos = gfxinter->getTextureID("BMP_SELECT_HOUSE_ORDOS");
+    const TextureID texBmpSelectHouseSardaukar = gfxinter->getTextureID("BMP_SELECT_HOUSE_SARDAUKAR");
     if (house == ATREIDES) {
         m_houseFlag = gfxinter->getTexture(texBmpSelectHouseAtreides);
     } else if (house == HARKONNEN) {

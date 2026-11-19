@@ -14,7 +14,6 @@
  */
 
 #include "gamestates/cEditorState.h"
-#include "data/GfxNames.hpp"
 #include "gameobjects/map/TerrainTypes.hpp"
 #include "gamestates/cEditorState/cEditorCam.h"
 #include "gamestates/cEditorState/cEditorUndoRedoHistory.h"
@@ -107,12 +106,12 @@ cEditorState::cEditorState(sGameServices* services)
     setCurrentBar(m_topologyBar.get());
     startCells.fill({-1, -1});
 
-    m_texTerrainSpice = m_gfxdata->getTextureID(gfxnames::TERRAIN_SPICE);
-    m_texTerrainSand = m_gfxdata->getTextureID(gfxnames::TERRAIN_SAND);
-    m_texTerrainMountain = m_gfxdata->getTextureID(gfxnames::TERRAIN_MOUNTAIN);
-    m_texTerrainRock = m_gfxdata->getTextureID(gfxnames::TERRAIN_ROCK);
-    m_texTerrainSpicehill = m_gfxdata->getTextureID(gfxnames::TERRAIN_SPICEHILL);
-    m_texTerrainHill = m_gfxdata->getTextureID(gfxnames::TERRAIN_HILL);
+    m_texTerrainSpice = m_gfxdata->getTextureID("TERRAIN_SPICE");
+    m_texTerrainSand = m_gfxdata->getTextureID("TERRAIN_SAND");
+    m_texTerrainMountain = m_gfxdata->getTextureID("TERRAIN_MOUNTAIN");
+    m_texTerrainRock = m_gfxdata->getTextureID("TERRAIN_ROCK");
+    m_texTerrainSpicehill = m_gfxdata->getTextureID("TERRAIN_SPICEHILL");
+    m_texTerrainHill = m_gfxdata->getTextureID("TERRAIN_HILL");
 }
 
 cEditorState::~cEditorState()

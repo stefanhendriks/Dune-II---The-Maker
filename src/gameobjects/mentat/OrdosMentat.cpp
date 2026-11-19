@@ -14,7 +14,6 @@
  */
 
 #include "OrdosMentat.h"
-#include "data/GfxNames.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"
@@ -29,8 +28,8 @@
 namespace {
 
 // sprite per eyes/mouth frame, the only place that lists the ORD sprites
-constexpr std::array<std::string_view, 5> eyesNames = {gfxnames::ORD_EYES01, gfxnames::ORD_EYES02, gfxnames::ORD_EYES03, gfxnames::ORD_EYES04, gfxnames::ORD_EYES05};
-constexpr std::array<std::string_view, 5> mouthNames = {gfxnames::ORD_MOUTH01, gfxnames::ORD_MOUTH02, gfxnames::ORD_MOUTH03, gfxnames::ORD_MOUTH04, gfxnames::ORD_MOUTH05};
+constexpr std::array<std::string_view, 5> eyesNames = {"ORD_EYES01", "ORD_EYES02", "ORD_EYES03", "ORD_EYES04", "ORD_EYES05"};
+constexpr std::array<std::string_view, 5> mouthNames = {"ORD_MOUTH01", "ORD_MOUTH02", "ORD_MOUTH03", "ORD_MOUTH04", "ORD_MOUTH05"};
 
 }
 
@@ -39,10 +38,10 @@ OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTra
     d2tm_assert(ctx != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
     resolveFaceFrames(eyesNames, mouthNames);
-    m_backgroundTexture = gfxmentat->getTextureID(gfxnames::MENTATO);
-    Texture *leftButtonTexture = gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_REPEAT));
+    m_backgroundTexture = gfxmentat->getTextureID("MENTATO");
+    Texture *leftButtonTexture = gfxmentat->getTexture(gfxmentat->getTextureID("BTN_REPEAT"));
     buildLeftButton(leftButtonTexture, 293, 423);
-    buildRightButton(gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_PROCEED)), 466, 423);
+    buildRightButton(gfxmentat->getTexture(gfxmentat->getTextureID("BTN_PROCEED")), 466, 423);
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)        
             .withLabel("Repeat")
@@ -55,7 +54,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTra
     rightGuiButton = GuiButtonBuilder()
             .withRect(*rightButton)        
             .withLabel("Yes")
-            .withTexture(gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_YES)))
+            .withTexture(gfxmentat->getTexture(gfxmentat->getTextureID("BTN_YES")))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
