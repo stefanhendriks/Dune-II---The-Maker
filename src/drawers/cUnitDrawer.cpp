@@ -31,8 +31,16 @@
 #include "include/cAssert.h"
 
 #include <SDL3/SDL.h>
+#include <array>
 #include <cmath>
 #include <format>
+
+namespace {
+
+// veteran star sprite per star type, the only place that lists the star sprites
+constexpr std::array<int, 3> starIds = {OBJECT_STAR_01, OBJECT_STAR_02, OBJECT_STAR_03};
+
+}
 
 cUnitDrawer::cUnitDrawer(cUnit &unit, SDLDrawer *renderer, Graphics *gfxdata) :
     m_unit(unit),
@@ -149,7 +157,7 @@ void cUnitDrawer::draw_experience()
     int drawy = m_unit.draw_y() - 19;
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        m_renderer->renderSprite(m_gfxdata->getTexture(OBJECT_STAR_01 + iStarType), drawx + i * 9, drawy, ShadowTrans);
+        m_renderer->renderSprite(m_gfxdata->getTexture(starIds[iStarType]), drawx + i * 9, drawy, ShadowTrans);
     }
 }
 
