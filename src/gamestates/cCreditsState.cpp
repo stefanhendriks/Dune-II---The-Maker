@@ -49,8 +49,8 @@ cCreditsState::cCreditsState(sGameServices* services) :
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     d2tm_assert(gfxinter != nullptr);
 
-    m_duneBmp = gfxinter->getTexture(BMP_GAME_DUNE);
-    m_titleBmp = gfxinter->getTexture(BMP_D2TM);
+    m_duneBmp = gfxinter->getTexture(toTextureID(BMP_GAME_DUNE));
+    m_titleBmp = gfxinter->getTexture(toTextureID(BMP_D2TM));
     int duneAtTheRight = m_settings->getScreenW() - (m_duneBmp->w * 1.1f);
     int duneAlmostAtBottom = m_settings->getScreenH() - (m_duneBmp->h * 1.1f);
     m_duneCoordinates = cPoint(duneAtTheRight, duneAlmostAtBottom);
