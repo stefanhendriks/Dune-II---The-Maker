@@ -14,7 +14,7 @@
  */
 
 #include "cSideBarDrawer.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cOrderDrawer.h"
@@ -49,6 +49,23 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices 
 
     m_candiBarRenderer = m_sdlDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_services->settings->getScreenH()-40);
     createPlayerCandyBar();
+
+    m_surfBmpGeraldCandybarBall = m_gfxinter->getSurfaceID(gfxnames::BMP_GERALD_CANDYBAR_BALL);
+    m_surfBmpGeraldCandybarPiece = m_gfxinter->getSurfaceID(gfxnames::BMP_GERALD_CANDYBAR_PIECE);
+    m_surfHorizontalCandybar = m_gfxinter->getSurfaceID(gfxnames::HORIZONTAL_CANDYBAR);
+    m_texBmpGeraldIconlistBackground = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_ICONLIST_BACKGROUND);
+    m_texBmpGeraldSidebarPiece = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_SIDEBAR_PIECE);
+    m_texBmpSelectHouseAtreides = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ATREIDES);
+    m_texBmpSelectHouseHarkonnen = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_HARKONNEN);
+    m_texBmpSelectHouseOrdos = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ORDOS);
+    m_texBmpSelectHouseSardaukar = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_SARDAUKAR);
+    m_texBmpGeraldCandybarTop = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_CANDYBAR_TOP);
+    m_texBmpGeraldCandybarBottom = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_CANDYBAR_BOTTOM);
+    m_texIconPowerHigh = m_gfxinter->getTextureID(gfxnames::ICON_POWER_HIGH);
+    m_texIconPower = m_gfxinter->getTextureID(gfxnames::ICON_POWER);
+    m_texIconSolarisFull = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS_FULL);
+    m_texIconSolarisLow = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS_LOW);
+    m_texIconSolaris = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS);
 }
 
 cSideBarDrawer::~cSideBarDrawer()
@@ -104,11 +121,11 @@ void cSideBarDrawer::setPlayer(cPlayer *pPlayer)
 void cSideBarDrawer::createPlayerCandyBar()
 {
     m_candyBarBall.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer,
-        m_player, m_gfxinter->getSurface(gfx::surf::BMP_GERALD_CANDYBAR_BALL), TransparentColorIndex));
+        m_player, m_gfxinter->getSurface(m_surfBmpGeraldCandybarBall), TransparentColorIndex));
     m_candyBarPiece.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer,
-        m_player, m_gfxinter->getSurface(gfx::surf::BMP_GERALD_CANDYBAR_PIECE), TransparentColorIndex));
+        m_player, m_gfxinter->getSurface(m_surfBmpGeraldCandybarPiece), TransparentColorIndex));
     m_candyHorizonBar.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer,
-        m_player, m_gfxinter->getSurface(gfx::surf::HORIZONTAL_CANDYBAR), TransparentColorIndex));
+        m_player, m_gfxinter->getSurface(m_surfHorizontalCandybar), TransparentColorIndex));
 
     m_sdlDrawer->beginDrawingToTexture(m_candiBarRenderer);
     createCandyBar();
@@ -134,7 +151,7 @@ void cSideBarDrawer::drawBuildingLists()
     }
 
     // draw background of buildlist
-    Texture *backgroundSprite = m_gfxinter->getTexture(gfx::tex::BMP_GERALD_ICONLIST_BACKGROUND);
+    Texture *backgroundSprite = m_gfxinter->getTexture(m_texBmpGeraldIconlistBackground);
 
     int drawX = m_services->settings->getScreenW() - cSideBar::SidebarWidthWithoutCandyBar + 1;
 
@@ -153,7 +170,7 @@ void cSideBarDrawer::drawBuildingLists()
     int iDrawX = m_buildingListDrawer.getDrawX();
     int iDrawY = m_buildingListDrawer.getDrawY();
 
-    Texture *horBar = m_gfxinter->getTexture(gfx::tex::BMP_GERALD_SIDEBAR_PIECE);
+    Texture *horBar = m_gfxinter->getTexture(m_texBmpGeraldSidebarPiece);
     m_sdlDrawer->renderSprite(horBar, iDrawX-1, iDrawY-38); // above sublist buttons
     m_sdlDrawer->renderSprite(horBar, iDrawX-1, iDrawY-5); // above normal icons
 
@@ -255,7 +272,7 @@ void cSideBarDrawer::drawMinimap()
                                       m_player->getEmblemBackgroundColor());
 
     if (m_player->isHouse(ATREIDES) || m_player->isHouse(HARKONNEN) || m_player->isHouse(ORDOS) || m_player->isHouse(SARDAUKAR)) {
-        TextureID bitmapId = gfx::tex::BMP_SELECT_HOUSE_ATREIDES;
+        TextureID bitmapId = m_texBmpSelectHouseAtreides;
 
         int srcX = 11;
         int srcY = 10;
@@ -265,17 +282,17 @@ void cSideBarDrawer::drawMinimap()
         int emblemHeight = 50;
 
         if (m_player->isHouse(HARKONNEN)) {
-            bitmapId = gfx::tex::BMP_SELECT_HOUSE_HARKONNEN;
+            bitmapId = m_texBmpSelectHouseHarkonnen;
         }
 
         if (m_player->isHouse(ORDOS)) {
-            bitmapId = gfx::tex::BMP_SELECT_HOUSE_ORDOS;
+            bitmapId = m_texBmpSelectHouseOrdos;
             emblemHeight = 49;
             srcY = 11;
         }
 
         if (m_player->isHouse(SARDAUKAR)) {
-            bitmapId = gfx::tex::BMP_SELECT_HOUSE_SARDAUKAR;
+            bitmapId = m_texBmpSelectHouseSardaukar;
             //emblemHeight = 49;
             //srcY = 11;
         }
@@ -297,7 +314,7 @@ void cSideBarDrawer::createCandyBar()
     int heightInPixels = (m_services->settings->getScreenH() - cSideBar::TopBarHeight);
     // ball first
     m_sdlDrawer->renderSprite(m_candyBarBall.get(), 0,0); // height of ball = 25
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::BMP_GERALD_CANDYBAR_TOP), 0, 26); // height of top = 10
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texBmpGeraldCandybarTop), 0, 26); // height of top = 10
     // now draw pieces untill the end (height of piece is 23 pixels)
     int startY = 26 + 10; // end of ball (26) + height of top m_candybar (=10) , makes 36
     int heightMinimap = cSideBar::HeightOfMinimap;
@@ -310,20 +327,20 @@ void cSideBarDrawer::createCandyBar()
     int ballY = (heightMinimap) - 6;
 
     // draw bottom m_candybar
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::BMP_GERALD_CANDYBAR_BOTTOM), 0, ballY - 10); // height of bottom = 9
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texBmpGeraldCandybarBottom), 0, ballY - 10); // height of bottom = 9
 
     // draw ball
     m_sdlDrawer->renderSprite(m_candyBarBall.get(), 0, ballY); // height of ball = 25
 
     // draw top m_candybar again
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::BMP_GERALD_CANDYBAR_TOP), 0, ballY + 26); // height of top = 10
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texBmpGeraldCandybarTop), 0, ballY + 26); // height of top = 10
 
     startY = ballY + 26 + 10;
     for (int y = startY; y < (heightInPixels + 23); y += 24) {
         m_sdlDrawer->renderSprite(m_candyBarPiece.get(), 0, y);
     }
     // draw bottom
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::BMP_GERALD_CANDYBAR_BOTTOM), 0, heightInPixels - 10); // height of top = 10
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texBmpGeraldCandybarBottom), 0, heightInPixels - 10); // height of top = 10
 }
 
 void cSideBarDrawer::drawPowerUsage() const
@@ -375,10 +392,10 @@ void cSideBarDrawer::drawPowerUsage() const
     m_sdlDrawer->renderLine(barX, barY, barX, barY + barTotalHeight, darker); // left side |
     m_sdlDrawer->renderLine(barX, barY, barX+barWidth, barY, darker); // top side _
     if (m_player->bEnoughPower()) {
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::ICON_POWER_HIGH),barX-3, barY - 21);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texIconPowerHigh),barX-3, barY - 21);
     }
     else {
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::ICON_POWER),barX-3, barY - 21);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texIconPower),barX-3, barY - 21);
     }
 }
 
@@ -434,10 +451,10 @@ void cSideBarDrawer::drawCreditsUsage()
     m_sdlDrawer->renderLine( barX, barY, barX+barWidth, barY, darker); // top side _
 
     if (spiceCapacityRatio>0.95) {
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::ICON_SOLARIS_FULL), barX-5, barY-20);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texIconSolarisFull), barX-5, barY-20);
     } else  if (spiceCapacityRatio<0.05) {
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::ICON_SOLARIS_LOW), barX-5, barY-20);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texIconSolarisLow), barX-5, barY-20);
     } else {
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::ICON_SOLARIS), barX-5, barY-20);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(m_texIconSolaris), barX-5, barY-20);
     }
 }

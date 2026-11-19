@@ -14,7 +14,7 @@
  */
 
 #include "cPlaceItDrawer.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 #include "gameobjects/map/TerrainTypes.hpp"
 #include "utils/cStructureUtils.h"
 
@@ -40,6 +40,10 @@ cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer, cStructureU
     d2tm_assert(thePlayer != nullptr);
     d2tm_assert(ctx != nullptr);
     m_gfxdata = m_ctx->getGraphicsContext()->gfxdata.get();
+
+    m_texPlaceSlab1 = m_gfxdata->getTextureID(gfxnames::PLACE_SLAB1);
+    m_texPlaceSlab4 = m_gfxdata->getTextureID(gfxnames::PLACE_SLAB4);
+    m_texPlaceWall = m_gfxdata->getTextureID(gfxnames::PLACE_WALL);
 }
 
 cPlaceItDrawer::~cPlaceItDrawer()
@@ -202,13 +206,13 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace, i
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {
-        bmp = m_gfxdata->getTexture(gfx::tex::PLACE_SLAB1);
+        bmp = m_gfxdata->getTexture(m_texPlaceSlab1);
     }
     else if (structureId == SLAB4) {
-        bmp = m_gfxdata->getTexture(gfx::tex::PLACE_SLAB4);
+        bmp = m_gfxdata->getTexture(m_texPlaceSlab4);
     }
     else if (structureId == WALL) {
-        bmp = m_gfxdata->getTexture(gfx::tex::PLACE_WALL);
+        bmp = m_gfxdata->getTexture(m_texPlaceWall);
     }
     else {
         bmp = m_player->getStructureBitmap(structureId);

@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "sidebar/cBuildingListItem.h"
 
 class GameContext;
@@ -52,4 +53,9 @@ private:
     cGameObjectContext* m_objects = nullptr;
     cInfoContext* m_infos = nullptr;
     cMapCamera* m_mapCamera = nullptr;
+private:
+    // graphics resolved once from the pack
+    TextureID m_texPlaceSlab1 = TextureID::invalid;
+    TextureID m_texPlaceSlab4 = TextureID::invalid;
+    TextureID m_texPlaceWall = TextureID::invalid;
 };

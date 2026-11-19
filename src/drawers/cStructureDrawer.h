@@ -72,4 +72,13 @@ private:
     void renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const;
     void renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const;
     void renderIconThatPowerIsLow(cAbstractStructure *structure) const;
+private:
+    // graphics resolved once from the pack
+    TextureID m_texBuildPre1x1 = TextureID::invalid;
+    TextureID m_texBuildPre2x2 = TextureID::invalid;
+    TextureID m_texBuildPre3x2 = TextureID::invalid;
+    TextureID m_texBuildPre3x3 = TextureID::invalid;
+    TextureID m_texIconPowerLow = TextureID::invalid;
+    SurfaceID m_surfMouseRepair = SurfaceID::invalid;
+    TextureID m_texMouseRepair = TextureID::invalid;
 };

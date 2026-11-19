@@ -14,7 +14,7 @@
  */
 
 #include "cMessageDrawer.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "sidebar/cSideBar.h"
 #include "utils/Graphics.hpp"
@@ -48,6 +48,10 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx, sGameServices* services) :
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
     init();
+
+    m_surfMessageLeft = m_gfxinter->getSurfaceID(gfxnames::MESSAGE_LEFT);
+    m_surfMessageMiddle = m_gfxinter->getSurfaceID(gfxnames::MESSAGE_MIDDLE);
+    m_surfMessageRight = m_gfxinter->getSurfaceID(gfxnames::MESSAGE_RIGHT);
 }
 
 cMessageDrawer::~cMessageDrawer()
@@ -179,15 +183,15 @@ void cMessageDrawer::createMessageBarBmp(int desiredWidth)
     m_bmpBar = SDL_CreateSurface(desiredWidth, 30, SDL_PIXELFORMAT_RGBA32);
     auto color = SDL_MapRGBA(SDL_GetPixelFormatDetails(m_bmpBar->format), SDL_GetSurfacePalette(m_bmpBar), 255, 0, 255, 255);
     SDL_FillSurfaceRect(m_bmpBar, nullptr, color);
-    SDL_BlitSurface(m_gfxinter->getSurface(gfx::surf::MESSAGE_LEFT), nullptr, m_bmpBar, nullptr);
+    SDL_BlitSurface(m_gfxinter->getSurface(m_surfMessageLeft), nullptr, m_bmpBar, nullptr);
 
     for (int drawX = 11; drawX < m_bmpBar->w; drawX+= 55) {
-        auto src = m_gfxinter->getSurface(gfx::surf::MESSAGE_MIDDLE);
+        auto src = m_gfxinter->getSurface(m_surfMessageMiddle);
         auto tmp = cRectangle{drawX, 0,src->w,src->h};
         SDL_Rect destRect = tmp.toSDL();
         SDL_BlitSurface(src, nullptr, m_bmpBar, &destRect);
     }
-    auto src = m_gfxinter->getSurface(gfx::surf::MESSAGE_RIGHT);
+    auto src = m_gfxinter->getSurface(m_surfMessageRight);
     auto tmp = cRectangle{m_bmpBar->w - 11, 0,src->w,src->h};
     SDL_Rect destRect = tmp.toSDL();
     SDL_BlitSurface(src, nullptr, m_bmpBar, &destRect);

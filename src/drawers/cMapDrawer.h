@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 // #include "gameobjects/map/cMap.h"
 // #include "gameobjects/map/cMapCamera.h"
 
@@ -88,4 +89,9 @@ private:
      * is disabled, so this checks the live setting itself rather than trusting isSeen()'s state.
      */
     void drawFogVeil(int iCell, int iPl, int iDrawX, int iDrawY, int iTileWidth, int iTileHeight);
+private:
+    // graphics resolved once from the pack
+    SurfaceID m_surfShroud = SurfaceID::invalid;
+    TextureID m_texShroud = TextureID::invalid;
+    TextureID m_texSmudge = TextureID::invalid;
 };
