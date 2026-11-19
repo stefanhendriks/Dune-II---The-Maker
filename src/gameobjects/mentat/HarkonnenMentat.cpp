@@ -24,6 +24,15 @@
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
 #include "include/cAssert.h"
+#include <array>
+
+namespace {
+
+// sprite per eyes/mouth frame, the only place that lists the HAR sprites
+constexpr std::array<int, 5> eyesIds = {HAR_EYES01, HAR_EYES02, HAR_EYES03, HAR_EYES04, HAR_EYES05};
+constexpr std::array<int, 5> mouthIds = {HAR_MOUTH01, HAR_MOUTH02, HAR_MOUTH03, HAR_MOUTH04, HAR_MOUTH05};
+
+}
 
 HarkonnenMentat::HarkonnenMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, MentatFlow* mentatFlow, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, mentatFlow, allowMissionSelect)
 {
@@ -70,10 +79,10 @@ void HarkonnenMentat::draw_other()
 
 void HarkonnenMentat::draw_eyes()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(HAR_EYES01+ iMentatEyes), offsetX + 64, offsetY + 256);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(eyesIds[iMentatEyes]), offsetX + 64, offsetY + 256);
 }
 
 void HarkonnenMentat::draw_mouth()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(HAR_MOUTH01+ iMentatMouth), offsetX + 64, offsetY + 288);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(mouthIds[iMentatMouth]), offsetX + 64, offsetY + 288);
 }

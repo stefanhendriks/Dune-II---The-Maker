@@ -31,7 +31,16 @@
 #include "context/GameContext.hpp"
 #include "context/cInfoContext.h"
 #include "controls/cKeyboardEvent.h"
+#include <array>
 #include <iostream>
+
+namespace {
+
+// sprite per eyes/mouth frame, the only place that lists the BEN sprites
+constexpr std::array<int, 5> eyesIds = {BEN_EYES01, BEN_EYES02, BEN_EYES03, BEN_EYES04, BEN_EYES05};
+constexpr std::array<int, 5> mouthIds = {BEN_MOUTH01, BEN_MOUTH02, BEN_MOUTH03, BEN_MOUTH04, BEN_MOUTH05};
+
+}
 
 BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, MissionFlow* missionFlow, cPlayer* humanPlayer, s_DataCampaign* dataCampaign) : AbstractMentat(ctx, settings, stateTransitions, nullptr, false), m_humanPlayer(humanPlayer), m_missionFlow(missionFlow), m_dataCampaign(dataCampaign)
 {
@@ -106,12 +115,12 @@ void BeneMentat::draw_other()
 
 void BeneMentat::draw_eyes()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(BEN_EYES01+ iMentatEyes), offsetX + 128, offsetY + 240);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(eyesIds[iMentatEyes]), offsetX + 128, offsetY + 240);
 }
 
 void BeneMentat::draw_mouth()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(BEN_MOUTH01+ iMentatMouth), offsetX + 112, offsetY + 272);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(mouthIds[iMentatMouth]), offsetX + 112, offsetY + 272);
 }
 
 void BeneMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)
