@@ -99,6 +99,12 @@ cEditorState::cEditorState(sGameServices* services)
     m_symmetricBar->setTheme(cGuiThemeBuilder().light().build());
     m_symmetricBar->beginPlacement(heightBarSize);
 
+    m_texBloom = m_gfxeditor->getTextureID("BLOOM");
+    m_texField = m_gfxeditor->getTextureID("FIELD");
+    for (size_t i = 0; i < m_texStartPosition.size(); i++) {
+        m_texStartPosition[i] = m_gfxeditor->getTextureID("STARTPOSITION" + std::to_string(i + 1));
+    }
+
     populateSelectBar();
     populateTopologyBar();
     populateStartCellBar();
@@ -124,7 +130,7 @@ void cEditorState::populateSelectBar()
     auto rectGui = cRectangle(0, 0, heightButtonSize, heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("STONELAYER"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("STONELAYER")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 setCurrentBar(m_topologyBar.get());
@@ -136,7 +142,7 @@ void cEditorState::populateSelectBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("STARTPOSITION"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("STARTPOSITION")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 setCurrentBar(m_startCellBar.get());
@@ -147,7 +153,7 @@ void cEditorState::populateSelectBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPHORZ"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPHORZ")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 setCurrentBar(m_symmetricBar.get());
@@ -160,7 +166,7 @@ void cEditorState::populateSelectBar()
     // std::cout << "Save icon position: x=" << rectGui.getX() << " y=" << rectGui.getY() << " w= " << rectGui.getWidth() << " h= " << rectGui.getHeight() << std::endl;
     auto guiIcon = GuiButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("ICOSAVE"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("ICOSAVE")))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_STRETCHED_TEXTURE)
             .onClick([this]() {
@@ -174,7 +180,7 @@ void cEditorState::populateSelectBar()
     rectGui = cRectangle(m_settings->getScreenW()-heightButtonSize*2+sizeButtonSpacing, (heightBarSize-heightButtonSize)/2, heightButtonSize, heightButtonSize);
     auto returnIcon = GuiButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("ICORETURN"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("ICORETURN")))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_STRETCHED_TEXTURE)
             .onClick([this]() {
@@ -190,7 +196,7 @@ void cEditorState::populateTopologyBar()
     auto rectGui = cRectangle(0,0,heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("TERRAN_HILL"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("TERRAN_HILL")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_HILL;
@@ -201,7 +207,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("TERRAN_MOUNTAIN"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("TERRAN_MOUNTAIN")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_MOUNTAIN;
@@ -212,7 +218,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("TERRAN_ROCK"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("TERRAN_ROCK")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_ROCK;
@@ -223,7 +229,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("TERRAN_SAND"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("TERRAN_SAND")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_SAND;
@@ -235,7 +241,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("TERRAN_SPICE"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("TERRAN_SPICE")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_SPICE;
@@ -246,7 +252,7 @@ void cEditorState::populateTopologyBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("TERRAN_SPICEHILL"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("TERRAN_SPICEHILL")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idTerrainToMapModif = TERRAIN_SPICEHILL;
@@ -255,8 +261,8 @@ void cEditorState::populateTopologyBar()
     guiButton->setGroup(m_topologyGroup.get());
     m_topologyBar->addAutoGuiObject(std::move(guiButton));
 
-    const auto addMarkerButton = [&](const char *textureName, int placeMode) {
-        Texture *texture = m_gfxeditor->getTexture(textureName);
+    const auto addMarkerButton = [&](const char *textureName, TextureID textureId, int placeMode) {
+        Texture *texture = m_gfxeditor->getTexture(textureId);
         if (texture == nullptr) {
             Logger::warn(COMP_MAP, "cEditorState", "Editor icon '{}' not found in gfxeditor pack, button skipped", textureName);
             return;
@@ -272,8 +278,8 @@ void cEditorState::populateTopologyBar()
         button->setGroup(m_topologyGroup.get());
         m_topologyBar->addAutoGuiObject(std::move(button));
     };
-    addMarkerButton("BLOOM", PLACE_BLOOM);
-    addMarkerButton("FIELD", PLACE_FIELD);
+    addMarkerButton("BLOOM", m_texBloom, PLACE_BLOOM);
+    addMarkerButton("FIELD", m_texField, PLACE_FIELD);
 
     auto cursorSizeButton = GuiValueButtonBuilder()
             .withRect(cRectangle(0, 0, heightButtonSize, heightButtonSize))
@@ -298,7 +304,7 @@ void cEditorState::populateStartCellBar()
     auto rectGui = cRectangle(0, 0, heightButtonSize, heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("STARTPOSITION1"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("STARTPOSITION1")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 0;
@@ -310,7 +316,7 @@ void cEditorState::populateStartCellBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("STARTPOSITION2"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("STARTPOSITION2")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 1;
@@ -321,7 +327,7 @@ void cEditorState::populateStartCellBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("STARTPOSITION3"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("STARTPOSITION3")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 2;
@@ -332,7 +338,7 @@ void cEditorState::populateStartCellBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("STARTPOSITION4"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("STARTPOSITION4")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 3;
@@ -343,7 +349,7 @@ void cEditorState::populateStartCellBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("STARTPOSITION5"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("STARTPOSITION5")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 idStartCellPlayer = 4;
@@ -359,7 +365,7 @@ void cEditorState::populateSymmetricBar()
     auto rectGui = cRectangle(0, 0, heightButtonSize,heightButtonSize);
     auto guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPHORZLR"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPHORZLR")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 // std::cout << "FLIPHORZLR" << std::endl;
@@ -371,7 +377,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPHORZRL"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPHORZRL")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 // std::cout << "FLIPHORZRL" << std::endl;
@@ -383,7 +389,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPVERTBT"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPVERTBT")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 // std::cout << "FLIPVERTBT" << std::endl;
@@ -395,7 +401,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPVERTTB"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPVERTTB")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 // std::cout << "FLIPVERTTB" << std::endl;
@@ -407,7 +413,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPDIAGBL"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPDIAGBL")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 modifySymmetricArea(Direction::bottomLeft);
@@ -418,7 +424,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPDIAGBR"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPDIAGBR")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 modifySymmetricArea(Direction::bottomRight);
@@ -429,7 +435,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPDIAGTL"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPDIAGTL")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 modifySymmetricArea(Direction::topLeft);
@@ -440,7 +446,7 @@ void cEditorState::populateSymmetricBar()
 
     guiButton = GuiStateButtonBuilder()
             .withRect(rectGui)
-            .withTexture(m_gfxeditor->getTexture("FLIPDIAGTR"))
+            .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPDIAGTR")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
                 modifySymmetricArea(Direction::topRight);
@@ -468,8 +474,8 @@ void cEditorState::draw() const
     if (m_currentBar == m_startCellBar.get())
         drawStartCells();
     if (m_currentBar == m_topologyBar.get()) {
-        drawMarkerCells(m_blooms, "BLOOM");
-        drawMarkerCells(m_fields, "FIELD");
+        drawMarkerCells(m_blooms, m_texBloom);
+        drawMarkerCells(m_fields, m_texField);
     }
     m_selectBar->draw();
     m_currentBar->draw();
@@ -1485,15 +1491,16 @@ void cEditorState::drawStartCells() const
             // Display if onscreen
             if (x + tileLenSize > 0 && x < m_settings->getScreenW() &&y + tileLenSize > heightBarSize && y < m_settings->getScreenH()) {
                 destRect = cRectangle(x, y, tileLenSize, tileLenSize);
-                m_sdlDrawer->renderStrechSprite(m_gfxeditor->getTexture("STARTPOSITION" + std::to_string(i + 1)), srcRect, destRect);
+                m_sdlDrawer->renderStrechSprite(m_gfxeditor->getTexture(m_texStartPosition[i]), srcRect, destRect);
             }
         }
     }
 }
 
-void cEditorState::drawMarkerCells(const std::vector<int> &cells, const char *textureName) const
+void cEditorState::drawMarkerCells(const std::vector<int> &cells, TextureID textureId) const
 {
-    Texture *texture = m_gfxeditor->getTexture(textureName);
+    if (textureId == TextureID::invalid) return; // icon not in the pack
+    Texture *texture = m_gfxeditor->getTexture(textureId);
     if (texture == nullptr) return; // icon not in the pack
     const cRectangle srcRect{0, 0, 32, 32}; // first sprite of the icon
     const int cameraX = m_editorCam->getCameraX();

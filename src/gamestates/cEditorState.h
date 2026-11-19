@@ -89,7 +89,7 @@ private:
     void modifyTile(int posX, int posY, int tileID);
     void modifyStartCell(int posX, int posY, int startCellID);
     void toggleMarkerCell(int posX, int posY, std::vector<int> &cells);
-    void drawMarkerCells(const std::vector<int> &cells, const char *textureName) const;
+    void drawMarkerCells(const std::vector<int> &cells, TextureID textureId) const;
     void normalizeModifications();
     bool tryGetTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const;
     bool tryGetEditableTileFromMouseCoords(const cPoint &coords, int &tileX, int &tileY) const;
@@ -152,4 +152,7 @@ private:
     TextureID m_texTerrainRock = TextureID::invalid;
     TextureID m_texTerrainSpicehill = TextureID::invalid;
     TextureID m_texTerrainHill = TextureID::invalid;
+    TextureID m_texBloom = TextureID::invalid;
+    TextureID m_texField = TextureID::invalid;
+    std::array<TextureID, 5> m_texStartPosition{};
 };
