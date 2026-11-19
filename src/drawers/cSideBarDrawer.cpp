@@ -14,7 +14,6 @@
  */
 
 #include "cSideBarDrawer.h"
-#include "data/GfxNames.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cOrderDrawer.h"
@@ -48,22 +47,22 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices 
     d2tm_assert(services != nullptr);
 
     m_candiBarRenderer = m_sdlDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_services->settings->getScreenH()-40);
-    m_surfBmpGeraldCandybarBall = m_gfxinter->getSurfaceID(gfxnames::BMP_GERALD_CANDYBAR_BALL);
-    m_surfBmpGeraldCandybarPiece = m_gfxinter->getSurfaceID(gfxnames::BMP_GERALD_CANDYBAR_PIECE);
-    m_surfHorizontalCandybar = m_gfxinter->getSurfaceID(gfxnames::HORIZONTAL_CANDYBAR);
-    m_texBmpGeraldIconlistBackground = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_ICONLIST_BACKGROUND);
-    m_texBmpGeraldSidebarPiece = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_SIDEBAR_PIECE);
-    m_texBmpSelectHouseAtreides = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ATREIDES);
-    m_texBmpSelectHouseHarkonnen = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_HARKONNEN);
-    m_texBmpSelectHouseOrdos = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ORDOS);
-    m_texBmpSelectHouseSardaukar = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_SARDAUKAR);
-    m_texBmpGeraldCandybarTop = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_CANDYBAR_TOP);
-    m_texBmpGeraldCandybarBottom = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_CANDYBAR_BOTTOM);
-    m_texIconPowerHigh = m_gfxinter->getTextureID(gfxnames::ICON_POWER_HIGH);
-    m_texIconPower = m_gfxinter->getTextureID(gfxnames::ICON_POWER);
-    m_texIconSolarisFull = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS_FULL);
-    m_texIconSolarisLow = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS_LOW);
-    m_texIconSolaris = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS);
+    m_surfBmpGeraldCandybarBall = m_gfxinter->getSurfaceID("BMP_GERALD_CANDYBAR_BALL");
+    m_surfBmpGeraldCandybarPiece = m_gfxinter->getSurfaceID("BMP_GERALD_CANDYBAR_PIECE");
+    m_surfHorizontalCandybar = m_gfxinter->getSurfaceID("HORIZONTAL_CANDYBAR");
+    m_texBmpGeraldIconlistBackground = m_gfxinter->getTextureID("BMP_GERALD_ICONLIST_BACKGROUND");
+    m_texBmpGeraldSidebarPiece = m_gfxinter->getTextureID("BMP_GERALD_SIDEBAR_PIECE");
+    m_texBmpSelectHouseAtreides = m_gfxinter->getTextureID("BMP_SELECT_HOUSE_ATREIDES");
+    m_texBmpSelectHouseHarkonnen = m_gfxinter->getTextureID("BMP_SELECT_HOUSE_HARKONNEN");
+    m_texBmpSelectHouseOrdos = m_gfxinter->getTextureID("BMP_SELECT_HOUSE_ORDOS");
+    m_texBmpSelectHouseSardaukar = m_gfxinter->getTextureID("BMP_SELECT_HOUSE_SARDAUKAR");
+    m_texBmpGeraldCandybarTop = m_gfxinter->getTextureID("BMP_GERALD_CANDYBAR_TOP");
+    m_texBmpGeraldCandybarBottom = m_gfxinter->getTextureID("BMP_GERALD_CANDYBAR_BOTTOM");
+    m_texIconPowerHigh = m_gfxinter->getTextureID("ICON_POWER_HIGH");
+    m_texIconPower = m_gfxinter->getTextureID("ICON_POWER");
+    m_texIconSolarisFull = m_gfxinter->getTextureID("ICON_SOLARIS_FULL");
+    m_texIconSolarisLow = m_gfxinter->getTextureID("ICON_SOLARIS_LOW");
+    m_texIconSolaris = m_gfxinter->getTextureID("ICON_SOLARIS");
 
     createPlayerCandyBar();
 }

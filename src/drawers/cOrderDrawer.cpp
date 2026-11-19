@@ -14,7 +14,6 @@
  */
 
 #include "cOrderDrawer.h"
-#include "data/GfxNames.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "gameobjects/players/cPlayer.h"
@@ -38,7 +37,7 @@ cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player, sGameServices *ser
     d2tm_assert(ctx != nullptr);
     d2tm_assert(services != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    m_surfBtnOrder = gfxinter->getSurfaceID(gfxnames::BTN_ORDER);
+    m_surfBtnOrder = gfxinter->getSurfaceID("BTN_ORDER");
     m_buttonBitmap.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, player, gfxinter->getSurface(m_surfBtnOrder), TransparentColorIndex));
     int halfOfButton = m_buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;

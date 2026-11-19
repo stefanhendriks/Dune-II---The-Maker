@@ -14,7 +14,6 @@
  */
 
 #include "CreditsDrawer.h"
-#include "data/GfxNames.hpp"
 #include "CreditsMath.hpp"
 #include "include/sGameServices.h"
 #include "utils/common.h"
@@ -69,11 +68,11 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer 
     m_currentCredits = 0;
     m_previousCredits = 0;
 
-    m_surfCreditsBar = m_gfxinter->getSurfaceID(gfxnames::CREDITS_BAR);
-    m_texCreditsBar = m_gfxinter->getTextureID(gfxnames::CREDITS_BAR);
+    m_surfCreditsBar = m_gfxinter->getSurfaceID("CREDITS_BAR");
+    m_texCreditsBar = m_gfxinter->getTextureID("CREDITS_BAR");
     constexpr std::array<std::string_view, 10> digitNames = {
-        gfxnames::CREDITS_0, gfxnames::CREDITS_1, gfxnames::CREDITS_2, gfxnames::CREDITS_3, gfxnames::CREDITS_4,
-        gfxnames::CREDITS_5, gfxnames::CREDITS_6, gfxnames::CREDITS_7, gfxnames::CREDITS_8, gfxnames::CREDITS_9
+        "CREDITS_0", "CREDITS_1", "CREDITS_2", "CREDITS_3", "CREDITS_4",
+        "CREDITS_5", "CREDITS_6", "CREDITS_7", "CREDITS_8", "CREDITS_9"
     };
     for (size_t i = 0; i < digitNames.size(); i++) {
         m_digitTextures[i] = m_gfxdata->getTextureID(digitNames[i]);

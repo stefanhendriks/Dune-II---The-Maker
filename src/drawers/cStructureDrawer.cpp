@@ -14,7 +14,6 @@
  */
 
 #include "cStructureDrawer.h"
-#include "data/GfxNames.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
@@ -62,13 +61,13 @@ cStructureDrawer::cStructureDrawer(GameContext *ctx, cPlayer *player, cStructure
     d2tm_assert(m_gfxdata != nullptr);
     d2tm_assert(m_player != nullptr);
 
-    m_texBuildPre1x1 = m_gfxdata->getTextureID(gfxnames::BUILD_PRE_1X1);
-    m_texBuildPre2x2 = m_gfxdata->getTextureID(gfxnames::BUILD_PRE_2X2);
-    m_texBuildPre3x2 = m_gfxdata->getTextureID(gfxnames::BUILD_PRE_3X2);
-    m_texBuildPre3x3 = m_gfxdata->getTextureID(gfxnames::BUILD_PRE_3X3);
-    m_texIconPowerLow = m_gfxinter->getTextureID(gfxnames::ICON_POWER_LOW);
-    m_surfMouseRepair = m_gfxdata->getSurfaceID(gfxnames::MOUSE_REPAIR);
-    m_texMouseRepair = m_gfxdata->getTextureID(gfxnames::MOUSE_REPAIR);
+    m_texBuildPre1x1 = m_gfxdata->getTextureID("BUILD_PRE_1X1");
+    m_texBuildPre2x2 = m_gfxdata->getTextureID("BUILD_PRE_2X2");
+    m_texBuildPre3x2 = m_gfxdata->getTextureID("BUILD_PRE_3X2");
+    m_texBuildPre3x3 = m_gfxdata->getTextureID("BUILD_PRE_3X3");
+    m_texIconPowerLow = m_gfxinter->getTextureID("ICON_POWER_LOW");
+    m_surfMouseRepair = m_gfxdata->getSurfaceID("MOUSE_REPAIR");
+    m_texMouseRepair = m_gfxdata->getTextureID("MOUSE_REPAIR");
 }
 
 
