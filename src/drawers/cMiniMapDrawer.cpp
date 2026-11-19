@@ -38,11 +38,31 @@
 #include "gameobjects/map/cMap.h"
 #include "include/cAssert.h"
 #include <algorithm>
+#include <array>
 #include <cmath>
 //#include <iostream>
 
 #include "data/SoundPools.h"
 #include "gameobjects/particles/cParticle.h"
+
+namespace {
+
+// static animation frames, the only place that lists the STAT sprites
+constexpr std::array<int, 21> staticFrameIds = {
+    STAT01, STAT02, STAT03,
+    STAT04, STAT05, STAT06,
+    STAT07, STAT08, STAT09,
+    STAT10, STAT11, STAT12,
+    STAT13, STAT14, STAT15,
+    STAT16, STAT17, STAT18,
+    STAT19, STAT20, STAT21
+};
+
+// m_iStaticFrame counts 0 (STAT01, no static) up to kStaticLastFrame (STAT21, full static)
+constexpr int kStaticStartFrame = 13; // STAT14
+constexpr int kStaticLastFrame = 20;  // STAT21
+
+}
 
 cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *map, cPlayer *player, cMapCamera *mapCamera) :
     m_isMouseOver(false),
@@ -54,7 +74,7 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *
     m_gfxinter(ctx->getGraphicsContext()->gfxinter.get()),
     m_sdlDrawer(ctx->getSDLDrawer()),
     m_status(eMinimapStatus::NOTAVAILABLE),
-    m_iStaticFrame(STAT14),
+    m_iStaticFrame(kStaticStartFrame),
     m_iTrans(0)
 {
     d2tm_assert(map!=nullptr);
@@ -92,7 +112,7 @@ cMiniMapDrawer::~cMiniMapDrawer()
 {
     m_map = nullptr;
     m_mapCamera = nullptr;
-    m_iStaticFrame = STAT14;
+    m_iStaticFrame = kStaticStartFrame;
     m_status = eMinimapStatus::NOTAVAILABLE;
 }
 
@@ -139,28 +159,28 @@ void cMiniMapDrawer::drawStaticFrame()
     if (m_status == eMinimapStatus::LOWPOWER) return;
 
     if (m_status == eMinimapStatus::POWERDOWN) {
-        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_iStaticFrame), m_RectFullMinimap);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(staticFrameIds[m_iStaticFrame]), m_RectFullMinimap);
         return;
     }
 
     // Draw static info
-    // < STAT01 frames are going from very transparent to opaque
-    if (m_iStaticFrame < STAT10) {
-        m_iTrans = 255 - healthBar(192, (STAT12 - m_iStaticFrame), 12);
+    // frames before STAT10 (index 9) are going from very transparent to opaque
+    if (m_iStaticFrame < 9) {
+        m_iTrans = 255 - healthBar(192, (11 - m_iStaticFrame), 12);
     } else {
         m_iTrans = 255;
     }
 
     // non-stat01 frames are drawn transparent
-    if (m_iStaticFrame != STAT01) {
-        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_iStaticFrame), m_RectFullMinimap,m_iTrans);
+    if (m_iStaticFrame != 0) {
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(staticFrameIds[m_iStaticFrame]), m_RectFullMinimap,m_iTrans);
     }
 }
 
 void cMiniMapDrawer::init()
 {
     m_status = eMinimapStatus::NOTAVAILABLE;
-    m_iStaticFrame = STAT14;
+    m_iStaticFrame = kStaticStartFrame;
     m_iTrans = 0;
     m_isMouseOver = false;
 }
@@ -208,7 +228,7 @@ void cMiniMapDrawer::think()
     // think about the animation
 
     if (m_status == eMinimapStatus::POWERDOWN) {
-        if (m_iStaticFrame < STAT21) {
+        if (m_iStaticFrame < kStaticLastFrame) {
             m_iStaticFrame++;
         }
         else {
@@ -216,7 +236,7 @@ void cMiniMapDrawer::think()
         }
     }
     else if (m_status == eMinimapStatus::POWERUP) {
-        if (m_iStaticFrame > STAT01) {
+        if (m_iStaticFrame > 0) {
             m_iStaticFrame--;
         }
         else {
