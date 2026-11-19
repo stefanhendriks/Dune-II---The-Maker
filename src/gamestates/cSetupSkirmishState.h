@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "cGameState.h"
 struct sGameServices;
 #include "controls/cKeyboardEvent.h"
@@ -217,4 +218,7 @@ private:
     void onMouseRightButtonClickedAtTechLevel();
 
     void moveCursor(int deltaX, int deltaY);
+private:
+    // graphics resolved once from the pack
+    TextureID m_texBmpUnknownmap = TextureID::invalid;
 };
