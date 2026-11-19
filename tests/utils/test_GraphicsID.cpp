@@ -52,9 +52,9 @@ TEST_CASE("Graphics - surfaceId and textureId resolve names and give invalid for
     auto *fakeRenderer = reinterpret_cast<SDL_Renderer *>(1);
     Graphics graphics(fakeRenderer, packName);
 
-    REQUIRE(graphics.surfaceId("first") == toSurfaceID(0));
-    REQUIRE(graphics.surfaceId("second") == toSurfaceID(1));
-    REQUIRE(graphics.textureId("second") == toTextureID(1));
-    REQUIRE(graphics.surfaceId("missing") == SurfaceID::invalid);
-    REQUIRE(graphics.textureId("missing") == TextureID::invalid);
+    REQUIRE(graphics.getSurfaceID("first") == toSurfaceID(0));
+    REQUIRE(graphics.getSurfaceID("second") == toSurfaceID(1));
+    REQUIRE(graphics.getTextureID("second") == toTextureID(1));
+    REQUIRE(graphics.getSurfaceID("missing") == SurfaceID::invalid);
+    REQUIRE(graphics.getTextureID("missing") == TextureID::invalid);
 }

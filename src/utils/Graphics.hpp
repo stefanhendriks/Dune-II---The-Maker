@@ -48,8 +48,8 @@ public:
     // return a texture from his name
     Texture *getTexture(const std::string &name);
     // resolve a name to an id once (at init) and keep the id; logs an error and returns invalid when the name is not in the pack
-    SurfaceID surfaceId(std::string_view name) const;
-    TextureID textureId(std::string_view name) const;
+    SurfaceID getSurfaceID(std::string_view name) const;
+    TextureID getTextureID(std::string_view name) const;
     // return number of file in Pack
     int getNumberOfFiles();
     // name of every file in the pack, in index order

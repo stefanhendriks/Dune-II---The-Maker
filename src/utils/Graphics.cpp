@@ -73,7 +73,7 @@ Texture *Graphics::getTexture(const std::string &name)
     return getTexture(toTextureID(index));
 }
 
-SurfaceID Graphics::surfaceId(std::string_view name) const
+SurfaceID Graphics::getSurfaceID(std::string_view name) const
 {
     const int index = dataPack->getIndexFromName(std::string(name));
     if (index < 0) {
@@ -83,7 +83,7 @@ SurfaceID Graphics::surfaceId(std::string_view name) const
     return toSurfaceID(index);
 }
 
-TextureID Graphics::textureId(std::string_view name) const
+TextureID Graphics::getTextureID(std::string_view name) const
 {
     const int index = dataPack->getIndexFromName(std::string(name));
     if (index < 0) {

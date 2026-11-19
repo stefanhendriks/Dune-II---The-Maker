@@ -373,8 +373,8 @@ void AbstractMentat::speak()
 void AbstractMentat::resolveFaceFrames(const std::array<std::string_view, 5> &eyes, const std::array<std::string_view, 5> &mouth)
 {
     for (std::size_t i = 0; i < eyes.size(); i++) {
-        m_eyesTextures[i] = gfxmentat->textureId(eyes[i]);
-        m_mouthTextures[i] = gfxmentat->textureId(mouth[i]);
+        m_eyesTextures[i] = gfxmentat->getTextureID(eyes[i]);
+        m_mouthTextures[i] = gfxmentat->getTextureID(mouth[i]);
     }
 }
 
