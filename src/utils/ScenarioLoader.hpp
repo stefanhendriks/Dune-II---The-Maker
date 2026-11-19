@@ -1,5 +1,5 @@
 /**
- * @file ini.h
+ * @file ScenarioLoader.hpp
  *
  * Dune 2 - The Maker
  *
@@ -34,12 +34,10 @@ class cEventEmitter;
 class cGameConditionChecker;
 struct sGameServices;
 
-// public stuff
-class cIni {
+// Loads campaign scenarios, mentat briefings and region files into the game
+class ScenarioLoader {
 public:
-    explicit cIni(sGameServices* services);
-    // Read structures.ini, units.ini and bullets.ini (in the same directory as the given game.ini)
-    void installGame(const std::string& filename);
+    explicit ScenarioLoader(sGameServices* services);
     // Load original scenario ini file
     void loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign);
     // Load briefing for original scenario
@@ -47,11 +45,7 @@ public:
     // Load regionfile for original scenario
     void loadRegionfile(std::span<cRegion> world, int iHouse, int iMission, cSelectYourNextConquestState *selectYourNextConquestState);
 
-
 private:
-    void installStructures(const std::string& filename);
-    void installUnits(const std::string& filename);
-    void installBullets(const std::string& filename);
     void populateScenario(const ScenarioData& data, AbstractMentat *pMentat, cReinforcements *reinforcements, int iHouse);
     int  findPlayerIdByHouse(int house) const;
     void INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota);

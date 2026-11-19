@@ -69,7 +69,8 @@ class cDrawManager;
 class cTimeManager;
 class cStructureUtils;
 class Texture;
-class cIni;
+class ScenarioLoader;
+class GameRulesLoader;
 class cEventEmitter;
 class cCreatorState;
 class CampaignProgress;
@@ -291,7 +292,8 @@ private:
     std::unique_ptr<VideoFlow> m_videoFlow;
 
     std::unique_ptr<sGameServices> m_services;
-    std::unique_ptr<cIni> m_cIni;
+    std::unique_ptr<ScenarioLoader> m_scenarioLoader;
+    std::unique_ptr<GameRulesLoader> m_gameRulesLoader;
     std::unique_ptr<cEventEmitter> m_eventEmitter;
     std::unique_ptr<cCreatorState> m_creatorState;
     std::unique_ptr<GameStateMachine> m_stateMachine;

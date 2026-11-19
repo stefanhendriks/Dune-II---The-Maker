@@ -23,7 +23,7 @@
 #include "include/gfxworld.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cMessageDrawer.h"
-#include "utils/ini.h"
+#include "utils/ScenarioLoader.hpp"
 #include "utils/texture_utils.h"
 #include "include/sDataCampaign.h"
 #include "managers/cDrawManager.h"
@@ -75,7 +75,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     return colorIndex;
 }
 
-cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* services, cIni* ini, s_DataCampaign* dataCompaign) :
+cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* services, ScenarioLoader* scenarioLoader, s_DataCampaign* dataCompaign) :
     cGameState(services),
     m_settings(services->settings),
     m_scenarioFlow(services->scenarioFlow),
@@ -88,7 +88,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     m_dataCampaign(dataCompaign),
     m_gfxworld(m_ctx->getGraphicsContext()->gfxworld.get()),
     m_gfxinter(m_ctx->getGraphicsContext()->gfxinter.get()),
-    m_cIni(ini)
+    m_scenarioLoader(scenarioLoader)
 {
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_scenarioFlow != nullptr);
@@ -100,7 +100,7 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_gfxworld != nullptr);
     d2tm_assert(m_gfxinter != nullptr);
-    d2tm_assert(m_cIni != nullptr);
+    d2tm_assert(m_scenarioLoader != nullptr);
     state = eRegionState::REGSTATE_INIT;
     regionSceneState = eRegionSceneState::SCENE_INIT;
     m_mouse = services->mouse;
@@ -513,7 +513,7 @@ void cSelectYourNextConquestState::regionSetupNextMission(int iMission, int iHou
 
     // Per mission assign:
     // Every house has a different campaign, so...
-    m_cIni->loadRegionfile(world, iHouse, iMission, this);
+    m_scenarioLoader->loadRegionfile(world, iHouse, iMission, this);
 
     selectNextConquestAlpha = 1;
 

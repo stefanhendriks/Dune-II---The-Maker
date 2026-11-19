@@ -25,7 +25,7 @@
 #include "game/ScenarioFlow.hpp"
 #include "game/MissionFlow.hpp"
 #include "controls/cMouse.h"
-#include "utils/ini.h"
+#include "utils/ScenarioLoader.hpp"
 #include "iniSections.h"
 #include "utils/RNG.hpp"
 #include "gameobjects/players/cPlayer.h"
@@ -35,7 +35,7 @@
 #include "include/cAssert.h"
 #include "include/sGameServices.h"
 
-cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini, s_DataCampaign* dataCampaign)
+cMentatState::cMentatState(sGameServices* services, MentatMode mode, ScenarioLoader* scenarioLoader, s_DataCampaign* dataCampaign)
     : cGameState(services),
       m_dataCampaign(dataCampaign),
       m_settings(services->settings),
@@ -46,7 +46,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
       m_mouse(services->mouse),
       m_objects(services->objects),
       m_reinforcements(services->reinforcements),
-      m_cIni(cini),
+      m_scenarioLoader(scenarioLoader),
       m_mode(mode),
       m_house(dataCampaign->housePlayer),
       m_allowMissionSelect(false)
@@ -60,7 +60,7 @@ cMentatState::cMentatState(sGameServices* services, MentatMode mode, cIni* cini,
     d2tm_assert(m_missionFlow != nullptr);
     d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_reinforcements != nullptr);
-    d2tm_assert(m_cIni != nullptr);
+    d2tm_assert(m_scenarioLoader != nullptr);
     prepareMentat(m_house);
 }
 
@@ -92,8 +92,8 @@ void cMentatState::prepareMentat(int house)
                 m_mentat = std::make_unique<BeneMentat>(m_ctx, m_settings, m_stateTransitions, m_missionFlow, humanPlayer, m_dataCampaign);
             m_missionFlow->init();
             m_scenarioFlow->setupPlayers();
-            m_cIni->loadScenario(m_mentat.get(), m_reinforcements,m_dataCampaign);
-            m_cIni->loadBriefing(house, m_dataCampaign->region, eScenarioIniSection::BRIEFING, m_mentat.get());
+            m_scenarioLoader->loadScenario(m_mentat.get(), m_reinforcements,m_dataCampaign);
+            m_scenarioLoader->loadBriefing(house, m_dataCampaign->region, eScenarioIniSection::BRIEFING, m_mentat.get());
             break;
         case MentatMode::WinBrief:
             if (house == ATREIDES)
@@ -111,7 +111,7 @@ void cMentatState::prepareMentat(int house)
                 m_mentat->loadScene("win01");
             else
                 m_mentat->loadScene("win02");
-            m_cIni->loadBriefing(house, m_dataCampaign->region, eScenarioIniSection::WIN, m_mentat.get());
+            m_scenarioLoader->loadBriefing(house, m_dataCampaign->region, eScenarioIniSection::WIN, m_mentat.get());
             break;
         case MentatMode::LoseBrief:
             if (house == ATREIDES) 
@@ -130,7 +130,7 @@ void cMentatState::prepareMentat(int house)
             else
                 m_mentat->loadScene("lose02");
             
-            m_cIni->loadBriefing(house, m_dataCampaign->region, eScenarioIniSection::LOSE, m_mentat.get());
+            m_scenarioLoader->loadBriefing(house, m_dataCampaign->region, eScenarioIniSection::LOSE, m_mentat.get());
             break;
     }
     m_mentat->speak();
@@ -160,10 +160,10 @@ void cMentatState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
 void cMentatState::loadScenario(cReinforcements *reinforcements)
 {
-    m_cIni->loadScenario(m_mentat.get(), reinforcements, m_dataCampaign);
+    m_scenarioLoader->loadScenario(m_mentat.get(), reinforcements, m_dataCampaign);
 }
 
 void cMentatState::loadBriefing(int iScenarioFind, eScenarioIniSection iSectionFind)
 {
-    m_cIni->loadBriefing(m_dataCampaign->housePlayer, iScenarioFind, iSectionFind, m_mentat.get());
+    m_scenarioLoader->loadBriefing(m_dataCampaign->housePlayer, iScenarioFind, iSectionFind, m_mentat.get());
 }

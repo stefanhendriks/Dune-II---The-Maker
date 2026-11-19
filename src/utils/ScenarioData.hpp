@@ -25,7 +25,7 @@
 
 /**
  * The content of a campaign scenario INI file, as read from disk and before any game object is touched.
- * cIni reads a file into this structure first, and populates the game objects from it afterwards.
+ * ScenarioLoader reads a file into this structure first, and populates the game objects from it afterwards.
  */
 struct ScenarioData {
     static constexpr int MAX_BLOOMS_AND_FIELDS = 30;

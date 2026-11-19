@@ -15,7 +15,7 @@
 
 #include "gamestates/cTellHouseState.h"
 #include "gameobjects/mentat/BeneMentat.h"
-#include "utils/ini.h"
+#include "utils/ScenarioLoader.hpp"
 #include "controls/cMouse.h"
 #include "iniSections.h"
 #include "include/sDataCampaign.h"
@@ -30,14 +30,14 @@
 #include "game/MissionFlow.hpp"
 #include "include/sGameServices.h"
 
-cTellHouseState::cTellHouseState(sGameServices* services, cIni *ini, s_DataCampaign* dataCampaign)
+cTellHouseState::cTellHouseState(sGameServices* services, ScenarioLoader *scenarioLoader, s_DataCampaign* dataCampaign)
     : cGameState(services),
     m_house(dataCampaign->housePlayer),
     m_dataCampaign(dataCampaign),
-    m_cIni(ini)
+    m_scenarioLoader(scenarioLoader)
 {
     d2tm_assert(services != nullptr);
-    d2tm_assert(m_cIni != nullptr);
+    d2tm_assert(m_scenarioLoader != nullptr);
     d2tm_assert(dataCampaign != nullptr);
     m_mouse = services->mouse;
     d2tm_assert(m_mouse != nullptr);
@@ -71,19 +71,19 @@ void cTellHouseState::prepareMentat(int house)
 
     if (house == ATREIDES) {
         m_audioContext->playSound(m_atreidesSound);
-        m_cIni->loadBriefing(ATREIDES, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
+        m_scenarioLoader->loadBriefing(ATREIDES, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("platr");
     } else if (house == HARKONNEN) {
         m_audioContext->playSound(m_harkonnenSound);
-        m_cIni->loadBriefing(HARKONNEN, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
+        m_scenarioLoader->loadBriefing(HARKONNEN, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plhar");
     } else if (house == ORDOS) {
         m_audioContext->playSound(m_ordosSound);
-        m_cIni->loadBriefing(ORDOS, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
+        m_scenarioLoader->loadBriefing(ORDOS, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
         m_mentat->loadScene("plord");
     } else if (house == SARDAUKAR) {
         //m_audioContext->playSound(SOUND_SARDAUKAR);
-        m_cIni->loadBriefing(SARDAUKAR, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
+        m_scenarioLoader->loadBriefing(SARDAUKAR, 0, eScenarioIniSection::DESCRIPTION, m_mentat.get());
         //m_mentat->loadScene("plsar");
     } else {
         Logger::warn(COMP_GAMERULES, "cTellHouseState::prepareMentat", "called with an invalid house value: {}", house);

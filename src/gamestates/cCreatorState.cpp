@@ -15,7 +15,7 @@
 
 #include "gamestates/cCreatorState.h"
 #include "utils/Log.h"
-#include "utils/ini.h"
+#include "utils/ScenarioLoader.hpp"
 #include "gamestates/cGameState.h"
 
 #include "gamestates/cMainMenuState.h"
@@ -40,14 +40,14 @@
 #include "include/cAssert.h"
 #include "include/sGameServices.h"
 
-cCreatorState::cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign) :
+cCreatorState::cCreatorState(sGameServices *services, ScenarioLoader *scenarioLoader, s_DataCampaign *dataCampaign) :
     m_services(services),
     m_dataCampaign(dataCampaign),
     m_stateTransitions(m_services->stateTransitions),
-    m_cIni(ini)
+    m_scenarioLoader(scenarioLoader)
 {
     d2tm_assert(m_services != nullptr);
-    d2tm_assert(m_cIni != nullptr);
+    d2tm_assert(m_scenarioLoader != nullptr);
     d2tm_assert(m_dataCampaign != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
 }
@@ -104,7 +104,7 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
             break;
 
         case eGameState::NEW_MAP_EDITOR:
-            m_states[eGameState::NEW_MAP_EDITOR] = std::make_unique<cNewMapEditorState>(m_services, m_cIni);
+            m_states[eGameState::NEW_MAP_EDITOR] = std::make_unique<cNewMapEditorState>(m_services);
             break;
 
         case eGameState::WINNING:
@@ -121,21 +121,21 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
 
         case eGameState::BRIEFING:
             m_states[eGameState::BRIEFING] = std::make_unique<cMentatState>(
-                m_services, MentatMode::Briefing, m_cIni, m_dataCampaign);
+                m_services, MentatMode::Briefing, m_scenarioLoader, m_dataCampaign);
             break;
 
         case eGameState::WINBRIEF:
             m_states[eGameState::WINBRIEF] = std::make_unique<cMentatState>(
-                m_services, MentatMode::WinBrief, m_cIni, m_dataCampaign);
+                m_services, MentatMode::WinBrief, m_scenarioLoader, m_dataCampaign);
             break;
 
         case eGameState::LOSEBRIEF:
             m_states[eGameState::LOSEBRIEF] = std::make_unique<cMentatState>(
-                m_services, MentatMode::LoseBrief, m_cIni, m_dataCampaign);
+                m_services, MentatMode::LoseBrief, m_scenarioLoader, m_dataCampaign);
             break;
 
         case eGameState::TELLHOUSE:
-            m_states[eGameState::TELLHOUSE] = std::make_unique<cTellHouseState>(m_services, m_cIni, m_dataCampaign);
+            m_states[eGameState::TELLHOUSE] = std::make_unique<cTellHouseState>(m_services, m_scenarioLoader, m_dataCampaign);
             break;
 
         case eGameState::SELECT_HOUSE:
@@ -144,7 +144,7 @@ void cCreatorState::createStateFromScratch(eGameState gameState) {
 
         case eGameState::REGION:
             m_states[eGameState::REGION] = std::make_unique<cSelectYourNextConquestState>(
-                m_services, m_cIni, m_dataCampaign);
+                m_services, m_scenarioLoader, m_dataCampaign);
             break;
 
         case eGameState::PLAYING:
