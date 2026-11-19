@@ -23,6 +23,15 @@
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
 #include "include/cAssert.h"
+#include <array>
+
+namespace {
+
+// sprite per eyes/mouth frame, the only place that lists the ORD sprites
+constexpr std::array<int, 5> eyesIds = {ORD_EYES01, ORD_EYES02, ORD_EYES03, ORD_EYES04, ORD_EYES05};
+constexpr std::array<int, 5> mouthIds = {ORD_MOUTH01, ORD_MOUTH02, ORD_MOUTH03, ORD_MOUTH04, ORD_MOUTH05};
+
+}
 
 OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTransition* stateTransitions, MentatFlow* mentatFlow, bool allowMissionSelect) : AbstractMentat(ctx, settings, stateTransitions, mentatFlow, allowMissionSelect)
 {
@@ -69,10 +78,10 @@ void OrdosMentat::draw_other()
 
 void OrdosMentat::draw_eyes()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(ORD_EYES01+ iMentatEyes), offsetX + 32, offsetY + 240);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(eyesIds[iMentatEyes]), offsetX + 32, offsetY + 240);
 }
 
 void OrdosMentat::draw_mouth()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(ORD_MOUTH01+ iMentatMouth), offsetX + 31, offsetY + 270);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(mouthIds[iMentatMouth]), offsetX + 31, offsetY + 270);
 }
