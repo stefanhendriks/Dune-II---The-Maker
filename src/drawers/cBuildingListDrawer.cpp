@@ -29,6 +29,7 @@
 #include "utils/Log.h"
 
 #include <SDL3/SDL.h>
+#include <array>
 #include <format>
 
 #include "gameobjects/structures/cStructureFactory.h"
@@ -39,6 +40,22 @@
 #include "game/cGameSettings.h"
 #include "gameobjects/structures/cStructureInfo.h"
 #include "controls/cKeyboardEvent.h"
+
+namespace {
+
+// build progress overlay per frame, the only place that lists the progress sprites
+constexpr std::array<int, 32> progressFrameIds = {
+    PROGRESS001, PROGRESS002, PROGRESS003, PROGRESS004,
+    PROGRESS005, PROGRESS006, PROGRESS007, PROGRESS008,
+    PROGRESS009, PROGRESS010, PROGRESS011, PROGRESS012,
+    PROGRESS013, PROGRESS014, PROGRESS015, PROGRESS016,
+    PROGRESS017, PROGRESS018, PROGRESS019, PROGRESS020,
+    PROGRESS021, PROGRESS022, PROGRESS023, PROGRESS024,
+    PROGRESS025, PROGRESS026, PROGRESS027, PROGRESS028,
+    PROGRESS029, PROGRESS030, PROGRESS031, PROGRESS032
+};
+
+}
 
 cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player) :
     m_gameTextDrawer(ctx->getTextContext()->getGameTextDrawer()),
@@ -212,7 +229,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
                 m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
-                m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESS001+iFrame), iDrawX+2, iDrawY+2,128);
+                m_sdlDrawer->renderSprite(m_gfxinter->getTexture(progressFrameIds[iFrame]), iDrawX+2, iDrawY+2,128);
 
                 if (item->isPaused()) {
                     m_smallTextDrawer->drawTextCenteredInBox("Paused", iDrawX, iDrawY, withOfIcon, heightOfIcon, Color::Yellow);
