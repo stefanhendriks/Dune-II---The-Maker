@@ -40,6 +40,8 @@ public:
     SDL_Surface *getSurface(const std::string &name) const;
     // return a texture from his index
     Texture *getTexture(int index);
+    // return a texture of a frame sequence (movie pack), frames are numbered from 0 in pack order
+    Texture *getFrameTexture(int frameNumber) { return getTexture(frameNumber); }
     // return a texture from his name
     Texture *getTexture(const std::string &name);
     // return number of file in Pack
