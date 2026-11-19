@@ -55,13 +55,13 @@ cSelectMissionState::cSelectMissionState(sGameServices* services, eGameState pre
     const int house = humanPlayer->getHouse();
     Graphics* gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
     if (house == ATREIDES) {
-        m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_ATREIDES);
+        m_houseFlag = gfxinter->getTexture(toTextureID(BMP_SELECT_HOUSE_ATREIDES));
     } else if (house == HARKONNEN) {
-        m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_HARKONNEN);
+        m_houseFlag = gfxinter->getTexture(toTextureID(BMP_SELECT_HOUSE_HARKONNEN));
     } else if (house == ORDOS) {
-        m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_ORDOS);
+        m_houseFlag = gfxinter->getTexture(toTextureID(BMP_SELECT_HOUSE_ORDOS));
     } else if (house == SARDAUKAR) {
-        m_houseFlag = gfxinter->getTexture(BMP_SELECT_HOUSE_SARDAUKAR);
+        m_houseFlag = gfxinter->getTexture(toTextureID(BMP_SELECT_HOUSE_SARDAUKAR));
     } else {
         m_houseFlag = humanPlayer->getFlagBitmap();
     }
