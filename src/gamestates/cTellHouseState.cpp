@@ -14,12 +14,12 @@
  */
 
 #include "gamestates/cTellHouseState.h"
+#include "data/GfxIds.hpp"
 #include "gameobjects/mentat/BeneMentat.h"
 #include "utils/ScenarioLoader.hpp"
 #include "controls/cMouse.h"
 #include "iniSections.h"
 #include "include/sDataCampaign.h"
-#include "data/gfxdata.h"
 #include "context/AudioContext.hpp"
 #include "context/GameContext.hpp"
 #include "context/cGameObjectContext.h"
@@ -99,7 +99,7 @@ void cTellHouseState::thinkFast()
 
 void cTellHouseState::draw() const
 {
-    m_mouse->setTile(MOUSE_NORMAL);
+    m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
     if (m_mentat) m_mentat->draw();
     m_mouse->draw();
 }

@@ -14,8 +14,8 @@
  */
 
 #include "gamestates/cVideoState.h"
+#include "data/GfxIds.hpp"
 #include "controls/cMouse.h"
-#include "data/gfxdata.h"
 #include "utils/Graphics.hpp"
 #include "game/GameStateTransition.hpp"
 #include "game/cGameSettings.h"
@@ -92,7 +92,7 @@ void cVideoState::thinkNormal()
 
 void cVideoState::draw() const
 {
-    m_mouse->setTile(MOUSE_NORMAL);
+    m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
     if (m_currentFrame != nullptr) {
         cRectangle dest = {m_offsetX, m_offsetY, VIDEO_WIDTH + VIDEO_DRAW_EXTRA, VIDEO_MAX_HEIGHT + VIDEO_DRAW_EXTRA};
         m_sdlDrawer->renderStrechFullSprite(m_currentFrame, dest);

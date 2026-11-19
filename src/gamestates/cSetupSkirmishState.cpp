@@ -14,12 +14,11 @@
  */
 
 #include "gamestates/cSetupSkirmishState.h"
+#include "data/GfxIds.hpp"
 #include "gameobjects/map/TerrainTypes.hpp"
 
 #include "controls/eKeyAction.h"
 #include "controls/cMouse.h"
-#include "data/gfxdata.h"
-#include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "managers/cDrawManager.h"
@@ -615,7 +614,7 @@ void cSetupSkirmishState::drawPreviewMapAndMore(const cRectangle &previewMapRect
             if (previewMapRect.isPointWithin(m_mouse->getX(), m_mouse->getY())) {
                     m_sdlDrawer->renderStrechFullSprite(selectedView->previewTex, dst);
             } else {
-                m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(toTextureID(BMP_UNKNOWNMAP)), dst);
+                m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(gfx::tex::BMP_UNKNOWNMAP), dst);
             }
         }
         m_textDrawer->drawText(previewMapRect.getX() + 4, previewMapRect.getY() + previewMapRect.getHeight() + 16,
@@ -1438,7 +1437,7 @@ void cSetupSkirmishState::drawMapList(const cRectangle &selectMapArea) const
         Texture *tex = nullptr;
         if (mapIndexToRender == 0) {
             // random map, render the 'random map' texture
-            tex = m_gfxinter->getTexture(toTextureID(BMP_UNKNOWNMAP));
+            tex = m_gfxinter->getTexture(gfx::tex::BMP_UNKNOWNMAP);
         } else {
             tex = m_previewMaps->getView(mapIndexToRender)->previewTex;
         }

@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "definitions.h"
 #include "cGameState.h"
 
@@ -66,7 +67,7 @@ public:
     int oldHouse;       // avoid recreate Texture
     int x, y;           // x and y position of the region
     int iAlpha;         // Alpha (0 = not visible, > 0 goes up to 255)
-    int iTile;          // tile refering to gfxworld.dat
+    TextureID iTile;          // tile refering to gfxworld.dat
     bool bSelectable;   // selectable for attacking (default = false)
     SDL_Surface *bmp;        // the original bmp
     Texture *bmpColor; // the bmp (created! and thus must be destroyed) on same bitdepth as bmp_screen
@@ -169,7 +170,7 @@ private:
     void onMouseMove(const s_MouseEvent &event);
 
     int regionOver(int mouseX, int mouseY);
-    void regionNew(int x, int y, int iAlpha, int iHouse, int iTile);
+    void regionNew(int x, int y, int iAlpha, int iHouse, TextureID iTile);
 
     cRegion *getRegionMouseIsOver() const;
 

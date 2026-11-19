@@ -14,13 +14,11 @@
  */
 
 #include "cSelectYourNextConquestState.h"
+#include "data/GfxIds.hpp"
 
 #include <cmath>
 #include "controls/eKeyAction.h"
 #include "controls/cMouse.h"
-#include "data/gfxdata.h"
-#include "data/gfxinter.h"
-#include "include/gfxworld.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cMessageDrawer.h"
 #include "utils/ScenarioLoader.hpp"
@@ -156,7 +154,7 @@ void cSelectYourNextConquestState::thinkFast()
     // First time INIT
     if (state == eRegionState::REGSTATE_INIT) {
         // temp bitmap to read from
-        regionClickMapBmp = m_gfxworld->getSurface(toSurfaceID(WORLD_DUNE_CLICK)); // 8 bit bitmap
+        regionClickMapBmp = m_gfxworld->getSurface(gfx::surf::WORLD_DUNE_CLICK); // 8 bit bitmap
         // NOTE: No need to use Offset here, as it is on a tempreg and we pretend our mouse is on that BMP as well
         // we substract the offset from mouse coordinates to compensate
         state = fastForward ? eRegionState::REGSTATE_CONQUER_REGIONS : eRegionState::REGSTATE_INTRODUCTION;
@@ -296,7 +294,7 @@ void cSelectYourNextConquestState::thinkFast()
 
 void cSelectYourNextConquestState::draw() const
 {
-    m_mouse->setTile(MOUSE_NORMAL); // global state of mouse
+    m_mouse->setTile(gfx::tex::MOUSE_NORMAL); // global state of mouse
     // STEPS:
     // 1. Show current conquered regions
     // 2. Show next progress + story (in message bar)
@@ -319,7 +317,7 @@ void cSelectYourNextConquestState::draw() const
 
 
     // Draw this last
-    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(BMP_NEXTCONQ)), offsetX, offsetY); // title "Select your next Conquest"
+    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::BMP_NEXTCONQ), offsetX, offsetY); // title "Select your next Conquest"
     drawLogoInFourCorners(iHouse);
     m_drawManager->drawMessageBar();
 
@@ -330,27 +328,27 @@ void cSelectYourNextConquestState::draw() const
 
 void cSelectYourNextConquestState::drawLogoInFourCorners(int iHouse) const
 {
-    int iLogo = -1;
+    TextureID iLogo = TextureID::invalid;
 
     // Draw your logo
     if (iHouse == ATREIDES)
-        iLogo = BMP_NCATR;
+        iLogo = gfx::tex::BMP_NCATR;
 
     if (iHouse == ORDOS)
-        iLogo = BMP_NCORD;
+        iLogo = gfx::tex::BMP_NCORD;
 
     if (iHouse == HARKONNEN)
-        iLogo = BMP_NCHAR;
+        iLogo = gfx::tex::BMP_NCHAR;
 
     if (iHouse == SARDAUKAR)
-        iLogo = BMP_NCHAR;
+        iLogo = gfx::tex::BMP_NCHAR;
 
         // Draw 4 times the logo (in each corner)
-    if (iLogo > -1) {
-        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(iLogo)), offsetX, offsetY);
-        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(iLogo)), offsetX + (640) - 64, offsetY);
-        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(iLogo)), offsetX, offsetY + (480) - 64);
-        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(iLogo)), offsetX + (640) - 64, offsetY + (480) - 64);
+    if (iLogo != TextureID::invalid) {
+        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY);
+        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY);
+        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX, offsetY + (480) - 64);
+        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(iLogo), offsetX + (640) - 64, offsetY + (480) - 64);
     }
 }
 
@@ -358,26 +356,26 @@ void cSelectYourNextConquestState::drawStateIntroduction() const
 {
     if (regionSceneState == SCENE_THREE_HOUSES_COME_FOR_DUNE) {
         // draw dune planet (being faded in)
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(BMP_GAME_DUNE)),offsetX, offsetY + 12,iRegionSceneAlpha);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::BMP_GAME_DUNE),offsetX, offsetY + 12,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_TO_TAKE_CONTROL_OF_THE_LAND) {
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(BMP_GAME_DUNE)), offsetX, offsetY + 12); // dune is opaque
-        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(WORLD_DUNE)), offsetX + 16, offsetY + 73, iRegionSceneAlpha);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(gfx::tex::BMP_GAME_DUNE), offsetX, offsetY + 12); // dune is opaque
+        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::WORLD_DUNE), offsetX + 16, offsetY + 73, iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_THAT_HAS_BECOME_DIVIDED) {
         // now the world map is opaque
-        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(WORLD_DUNE)), offsetX + 16, offsetY + 73);
-        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(WORLD_DUNE_REGIONS)), offsetX + 16, offsetY + 73,iRegionSceneAlpha);
+        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::WORLD_DUNE), offsetX + 16, offsetY + 73);
+        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73,iRegionSceneAlpha);
     }
     else if (regionSceneState == SCENE_SELECT_YOUR_NEXT_CONQUEST) {
-        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(WORLD_DUNE_REGIONS)), offsetX + 16, offsetY + 73);
+        m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
     }
 }
 
 void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dune first
 {
-    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(WORLD_DUNE)), offsetX + 16, offsetY + 73);
-    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(WORLD_DUNE_REGIONS)), offsetX + 16, offsetY + 73);
+    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::WORLD_DUNE), offsetX + 16, offsetY + 73);
+    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     // draw here stuff
     for (int i = 0; i < 27; i++) {
@@ -392,13 +390,13 @@ void cSelectYourNextConquestState::drawStateConquerRegions() const   // draw dun
 
 void cSelectYourNextConquestState::drawStateSelectYourNextConquest() const
 {
-    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(WORLD_DUNE)), offsetX + 16, offsetY + 73);
-    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(toTextureID(WORLD_DUNE_REGIONS)), offsetX + 16, offsetY + 73);
+    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::WORLD_DUNE), offsetX + 16, offsetY + 73);
+    m_sdlDrawer->renderSprite(m_gfxworld->getTexture(gfx::tex::WORLD_DUNE_REGIONS), offsetX + 16, offsetY + 73);
 
     cRegion *pRegion = getRegionMouseIsOver();
     if (pRegion && pRegion->bSelectable) {
         pRegion->iAlpha = 256;
-        m_mouse->setTile(MOUSE_ATTACK);
+        m_mouse->setTile(gfx::tex::MOUSE_ATTACK);
     }
 
     // draw here stuff
@@ -591,7 +589,7 @@ int cSelectYourNextConquestState::regionOver(int mouseX, int mouseY)
     return c - 1;
 }
 
-void cSelectYourNextConquestState::regionNew(int x, int y, int iAlpha, int iHouse, int iTile)
+void cSelectYourNextConquestState::regionNew(int x, int y, int iAlpha, int iHouse, TextureID iTile)
 {
     int iNew = -1;
 
@@ -623,7 +621,7 @@ void cSelectYourNextConquestState::installWorld()
         world[i].iAlpha = 0;
         world[i].iHouse = -1;
         world[i].oldHouse = -2; // all <0 except iHouse = -1 (for cache)
-        world[i].iTile = -1;
+        world[i].iTile = TextureID::invalid;
         world[i].x = -1;
         world[i].y = -1;
         world[i].bmp = nullptr;
@@ -632,39 +630,39 @@ void cSelectYourNextConquestState::installWorld()
     // Now create the regions (x,y wise)
 
     // FIRST ROW (EASY, SAME Y AXIS)
-    regionNew(16, 73, 1, -1, PIECE_DUNE_001);
-    regionNew(126, 73, 1, -1, PIECE_DUNE_002);
-    regionNew(210, 73, 1, -1, PIECE_DUNE_003);
-    regionNew(306, 73, 1, -1, PIECE_DUNE_004);
-    regionNew(438, 73, 1, -1, PIECE_DUNE_005);
-    regionNew(510, 73, 1, -1, PIECE_DUNE_006);
+    regionNew(16, 73, 1, -1, gfx::tex::PIECE_DUNE_001);
+    regionNew(126, 73, 1, -1, gfx::tex::PIECE_DUNE_002);
+    regionNew(210, 73, 1, -1, gfx::tex::PIECE_DUNE_003);
+    regionNew(306, 73, 1, -1, gfx::tex::PIECE_DUNE_004);
+    regionNew(438, 73, 1, -1, gfx::tex::PIECE_DUNE_005);
+    regionNew(510, 73, 1, -1, gfx::tex::PIECE_DUNE_006);
 
     // SECOND ROW, HARDER FROM NOW ON (DIFFERENT Y AXIS ALL THE TIME)
-    regionNew(16, 91, 1, -1, PIECE_DUNE_007);
-    regionNew(158, 149, 1, -1, PIECE_DUNE_008);
-    regionNew(282, 135, 1, -1, PIECE_DUNE_009);
-    regionNew(362, 105, 1, -1, PIECE_DUNE_010);
-    regionNew(456, 117, 1, -1, PIECE_DUNE_011);
-    regionNew(544, 105, 1, -1, PIECE_DUNE_012);
+    regionNew(16, 91, 1, -1, gfx::tex::PIECE_DUNE_007);
+    regionNew(158, 149, 1, -1, gfx::tex::PIECE_DUNE_008);
+    regionNew(282, 135, 1, -1, gfx::tex::PIECE_DUNE_009);
+    regionNew(362, 105, 1, -1, gfx::tex::PIECE_DUNE_010);
+    regionNew(456, 117, 1, -1, gfx::tex::PIECE_DUNE_011);
+    regionNew(544, 105, 1, -1, gfx::tex::PIECE_DUNE_012);
 
     // THIRD ROW
-    regionNew(16, 155, 1, -1, PIECE_DUNE_013);
-    regionNew(58, 165, 1, -1, PIECE_DUNE_014);
-    regionNew(190, 213, 1, -1, PIECE_DUNE_015);
-    regionNew(312, 163, 1, -1, PIECE_DUNE_016);
-    regionNew(388, 163, 1, -1, PIECE_DUNE_017);
-    regionNew(502, 167, 1, -1, PIECE_DUNE_018);
-    regionNew(576, 167, 1, -1, PIECE_DUNE_019);
+    regionNew(16, 155, 1, -1, gfx::tex::PIECE_DUNE_013);
+    regionNew(58, 165, 1, -1, gfx::tex::PIECE_DUNE_014);
+    regionNew(190, 213, 1, -1, gfx::tex::PIECE_DUNE_015);
+    regionNew(312, 163, 1, -1, gfx::tex::PIECE_DUNE_016);
+    regionNew(388, 163, 1, -1, gfx::tex::PIECE_DUNE_017);
+    regionNew(502, 167, 1, -1, gfx::tex::PIECE_DUNE_018);
+    regionNew(576, 167, 1, -1, gfx::tex::PIECE_DUNE_019);
 
     // FOURTH ROW
-    regionNew(16, 237, 1, -1, PIECE_DUNE_020);
-    regionNew(62, 255, 1, -1, PIECE_DUNE_021);
-    regionNew(134, 245, 1, -1, PIECE_DUNE_022);
-    regionNew(282, 257, 1, -1, PIECE_DUNE_023);
-    regionNew(360, 253, 1, -1, PIECE_DUNE_024);
-    regionNew(406, 213, 1, -1, PIECE_DUNE_025);
-    regionNew(448, 269, 1, -1, PIECE_DUNE_026);
-    regionNew(514, 227, 1, -1, PIECE_DUNE_027);
+    regionNew(16, 237, 1, -1, gfx::tex::PIECE_DUNE_020);
+    regionNew(62, 255, 1, -1, gfx::tex::PIECE_DUNE_021);
+    regionNew(134, 245, 1, -1, gfx::tex::PIECE_DUNE_022);
+    regionNew(282, 257, 1, -1, gfx::tex::PIECE_DUNE_023);
+    regionNew(360, 253, 1, -1, gfx::tex::PIECE_DUNE_024);
+    regionNew(406, 213, 1, -1, gfx::tex::PIECE_DUNE_025);
+    regionNew(448, 269, 1, -1, gfx::tex::PIECE_DUNE_026);
+    regionNew(514, 227, 1, -1, gfx::tex::PIECE_DUNE_027);
 }
 
 eGameStateType cSelectYourNextConquestState::getType()
@@ -713,7 +711,7 @@ void cSelectYourNextConquestState::onMouseMove(const s_MouseEvent &event)
     cRegion *region = getRegionMouseIsOver();
     if (region && region->bSelectable) {
         region->iAlpha = 255;
-        m_mouse->setTile(MOUSE_ATTACK);
+        m_mouse->setTile(gfx::tex::MOUSE_ATTACK);
     }
 }
 
