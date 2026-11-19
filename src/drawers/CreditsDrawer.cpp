@@ -69,7 +69,7 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer 
     m_previousCredits = 0;
 
     // center credits bar within sidebar
-    int widthCreditsBar = (m_gfxinter->getSurface(CREDITS_BAR))->w;
+    int widthCreditsBar = (m_gfxinter->getSurface(toSurfaceID(CREDITS_BAR)))->w;
     m_drawX = settings->getScreenW() - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
     m_drawY = 0;
 }
@@ -209,7 +209,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
  */
 void CreditsDrawer::draw()
 {
-    auto *tex = m_gfxinter->getTexture(CREDITS_BAR);
+    auto *tex = m_gfxinter->getTexture(toTextureID(CREDITS_BAR));
     m_sdlDrawer->renderSprite(tex, m_drawX, m_drawY);
     m_sdlDrawer->setClippingFor(m_drawX+1, m_drawY+5, m_drawX+tex->w-1, m_drawY+tex->h-5);
     drawCurrentCredits(m_drawX, m_drawY);
@@ -246,7 +246,7 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
         int nr = CreditsMath::getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(toTextureID(nr)), drawX+dx+8, drawY+dy+8);
         }
     }
 }
@@ -278,7 +278,7 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
         int nr = CreditsMath::getCreditDrawId(credits[i]);
 
         if (nr != CREDITS_NONE) {
-            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(toTextureID(nr)), drawX+dx+8, drawY+dy+8);
         }
     }
 }
