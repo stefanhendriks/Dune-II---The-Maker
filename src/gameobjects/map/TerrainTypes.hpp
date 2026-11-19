@@ -17,7 +17,7 @@
 
 // Terrain types of a map cell. These are game values, not graphics ids.
 // The values are contiguous (BLOOM..WALL), code compares against that range.
-// The terrain sprites in sdl_data.dat share these indexes (static_assert in test_GfxNameConstants.cpp), so the map drawer can
+// The terrain sprites in sdl_data.dat share these indexes (checked in test_GfxNameConstants.cpp), so the map drawer can
 // turn a terrain type into a TextureID with toTextureID(); gfxnames::TERRAIN_x are the entry names.
 constexpr int TERRAIN_BLOOM = 117;
 constexpr int TERRAIN_HILL = 118;

@@ -14,7 +14,6 @@
  */
 
 #include "AudioContext.hpp"
-#include "data/GfxIds.hpp"
 
 #include "context/MusicJukeBox.hpp"
 #include "game/cGameSettings.h"

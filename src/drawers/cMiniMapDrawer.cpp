@@ -15,7 +15,6 @@
 
 #include "data/GfxNames.hpp"
 #include "cMiniMapDrawer.h"
-#include "data/GfxIds.hpp"
 #include "controls/eMouseTile.h"
 #include "gameobjects/map/TerrainTypes.hpp"
 #include "include/sGameServices.h"
