@@ -38,6 +38,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cFileValidator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPack.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cDataPack.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_GraphicsID.cpp
 )
 
 # Production source files the tests depend on.
@@ -73,6 +74,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/cFileValidator.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cPack.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cDataPack.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/Graphics.cpp
 )
 
 add_executable(d2tm_tests
