@@ -14,6 +14,7 @@
  */
 
 #include "gameobjects/units/cPathFinder.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/players/cPlayers.h"
 #include "gameobjects/map/cMap.h"

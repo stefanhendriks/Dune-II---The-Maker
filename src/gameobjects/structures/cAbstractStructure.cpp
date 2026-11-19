@@ -14,6 +14,7 @@
  */
 
 #include "cAbstractStructure.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 
 #include "utils/Log.h"
 #include "game/cGameSettings.h"
