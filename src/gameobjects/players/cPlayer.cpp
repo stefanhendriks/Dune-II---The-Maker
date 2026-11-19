@@ -14,7 +14,6 @@
  */
 
 #include "cPlayer.h"
-#include "data/GfxNames.hpp"
 
 #include "building/cItemBuilder.h"
 #include "game/cEventEmitter.h"
@@ -101,8 +100,8 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_structureUtils != nullptr);
     m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
     d2tm_assert(m_gfxdata != nullptr);
-    m_surfBuildingFlagLarge = m_gfxdata->getSurfaceID(gfxnames::BUILDING_FLAG_LARGE);
-    m_surfBuildingFlagSmall = m_gfxdata->getSurfaceID(gfxnames::BUILDING_FLAG_SMALL);
+    m_surfBuildingFlagLarge = m_gfxdata->getSurfaceID("BUILDING_FLAG_LARGE");
+    m_surfBuildingFlagSmall = m_gfxdata->getSurfaceID("BUILDING_FLAG_SMALL");
     m_renderer = services->ctx->getSDLDrawer();
     d2tm_assert(m_renderer != nullptr);
     if (difficultySettings) {

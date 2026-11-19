@@ -14,7 +14,6 @@
  */
 
 #include "cDrawManager.h"
-#include "data/GfxNames.hpp"
 
 #include "controls/cGameControlsContext.h"
 #include "gameobjects/particles/cParticles.h"
@@ -83,11 +82,11 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_mapCamera != nullptr);
     d2tm_assert(m_gameSettings != nullptr);
-    m_surfBtnOptions = m_gfxinter->getSurfaceID(gfxnames::BTN_OPTIONS);
-    m_surfMouseMove = m_gfxdata->getSurfaceID(gfxnames::MOUSE_MOVE);
-    m_texMouseMove = m_gfxdata->getTextureID(gfxnames::MOUSE_MOVE);
-    m_texBmpTopbarBackground = m_gfxinter->getTextureID(gfxnames::BMP_TOPBAR_BACKGROUND);
-    m_texBmpGeraldTopBar = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_TOP_BAR);
+    m_surfBtnOptions = m_gfxinter->getSurfaceID("BTN_OPTIONS");
+    m_surfMouseMove = m_gfxdata->getSurfaceID("MOUSE_MOVE");
+    m_texMouseMove = m_gfxdata->getTextureID("MOUSE_MOVE");
+    m_texBmpTopbarBackground = m_gfxinter->getTextureID("BMP_TOPBAR_BACKGROUND");
+    m_texBmpGeraldTopBar = m_gfxinter->getTextureID("BMP_GERALD_TOP_BAR");
 
     this->reset();
 }
