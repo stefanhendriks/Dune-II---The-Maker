@@ -18,14 +18,15 @@
 #include "sidebar/cBuildingList.h"
 
 class cGameSettings;
+class Graphics;
 
 class cBuildingListFactory {
 
 public:
     explicit cBuildingListFactory(cGameSettings* settings);
     ~cBuildingListFactory() = default;
-    void initializeList(cBuildingList *list, eListType listType);
-    cBuildingList *createList(eListType listType);
+    void initializeList(cBuildingList *list, eListType listType, Graphics *gfx);
+    cBuildingList *createList(eListType listType, Graphics *gfx);
 
 protected:
     int getButtonDrawY();
