@@ -118,7 +118,7 @@ private:
 
     eMinimapStatus m_status;
 
-    int m_iStaticFrame;
+    int m_iStaticFrame; // frame counter of the static animation, 0 = none
     int m_iTrans;							// transparancy
 
     // the top left coordinates for the minimap
