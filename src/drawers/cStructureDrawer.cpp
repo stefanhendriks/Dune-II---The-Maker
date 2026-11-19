@@ -14,7 +14,7 @@
  */
 
 #include "cStructureDrawer.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
@@ -61,6 +61,14 @@ cStructureDrawer::cStructureDrawer(GameContext *ctx, cPlayer *player, cStructure
     d2tm_assert(m_gfxinter != nullptr);
     d2tm_assert(m_gfxdata != nullptr);
     d2tm_assert(m_player != nullptr);
+
+    m_texBuildPre1x1 = m_gfxdata->getTextureID(gfxnames::BUILD_PRE_1X1);
+    m_texBuildPre2x2 = m_gfxdata->getTextureID(gfxnames::BUILD_PRE_2X2);
+    m_texBuildPre3x2 = m_gfxdata->getTextureID(gfxnames::BUILD_PRE_3X2);
+    m_texBuildPre3x3 = m_gfxdata->getTextureID(gfxnames::BUILD_PRE_3X3);
+    m_texIconPowerLow = m_gfxinter->getTextureID(gfxnames::ICON_POWER_LOW);
+    m_surfMouseRepair = m_gfxdata->getSurfaceID(gfxnames::MOUSE_REPAIR);
+    m_texMouseRepair = m_gfxdata->getTextureID(gfxnames::MOUSE_REPAIR);
 }
 
 
@@ -186,19 +194,19 @@ TextureID cStructureDrawer::determinePreBuildAnimationIndex(cAbstractStructure *
 
         // determine what kind of prebuild picture should be used.
         if (width == 1 && height == 1) {
-            return gfx::tex::BUILD_PRE_1X1;
+            return m_texBuildPre1x1;
         }
 
         if (width == 2 && height == 2) {
-            return gfx::tex::BUILD_PRE_2X2;
+            return m_texBuildPre2x2;
         }
 
         if (width == 3 && height == 2) {
-            return gfx::tex::BUILD_PRE_3X2;
+            return m_texBuildPre3x2;
         }
 
         if (width == 3 && height == 3) {
-            return gfx::tex::BUILD_PRE_3X3;
+            return m_texBuildPre3x3;
         }
     }
 
@@ -342,7 +350,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
 
 void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) const
 {
-    Texture *icon = m_gfxinter->getTexture(gfx::tex::ICON_POWER_LOW);
+    Texture *icon = m_gfxinter->getTexture(m_texIconPowerLow);
     if (!icon) return;
 
     const s_StructureInfo info = structure->getStructureInfo();
@@ -360,8 +368,8 @@ void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) c
 
 void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const
 {
-    int iconWidth = (m_gfxdata->getSurface(gfx::surf::MOUSE_REPAIR))->w;
-    int iconHeight = (m_gfxdata->getSurface(gfx::surf::MOUSE_REPAIR))->h;
+    int iconWidth = (m_gfxdata->getSurface(m_surfMouseRepair))->w;
+    int iconHeight = (m_gfxdata->getSurface(m_surfMouseRepair))->h;
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -371,7 +379,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int scaledWidth = m_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(gfx::tex::MOUSE_REPAIR), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(m_texMouseRepair), dest);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const

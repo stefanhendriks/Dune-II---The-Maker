@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "utils/cPoint.h"
 #include "cTextDrawer.h"
 #include <string>
@@ -86,4 +87,9 @@ private:
     sGameServices* m_services;
 
     void createMessageBarBmp(int desiredWidth);
+private:
+    // graphics resolved once from the pack
+    SurfaceID m_surfMessageLeft = SurfaceID::invalid;
+    SurfaceID m_surfMessageMiddle = SurfaceID::invalid;
+    SurfaceID m_surfMessageRight = SurfaceID::invalid;
 };

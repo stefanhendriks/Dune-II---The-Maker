@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "cBuildingListDrawer.h"
 #include "cTextDrawer.h"
 class cKeyboardEvent;
@@ -79,4 +80,22 @@ private:
     std::unique_ptr<Texture> m_candyBarPiece;
     std::unique_ptr<Texture> m_candyHorizonBar;
     Texture *m_candiBarRenderer= nullptr;
+private:
+    // graphics resolved once from the pack
+    SurfaceID m_surfBmpGeraldCandybarBall = SurfaceID::invalid;
+    SurfaceID m_surfBmpGeraldCandybarPiece = SurfaceID::invalid;
+    SurfaceID m_surfHorizontalCandybar = SurfaceID::invalid;
+    TextureID m_texBmpGeraldIconlistBackground = TextureID::invalid;
+    TextureID m_texBmpGeraldSidebarPiece = TextureID::invalid;
+    TextureID m_texBmpSelectHouseAtreides = TextureID::invalid;
+    TextureID m_texBmpSelectHouseHarkonnen = TextureID::invalid;
+    TextureID m_texBmpSelectHouseOrdos = TextureID::invalid;
+    TextureID m_texBmpSelectHouseSardaukar = TextureID::invalid;
+    TextureID m_texBmpGeraldCandybarTop = TextureID::invalid;
+    TextureID m_texBmpGeraldCandybarBottom = TextureID::invalid;
+    TextureID m_texIconPowerHigh = TextureID::invalid;
+    TextureID m_texIconPower = TextureID::invalid;
+    TextureID m_texIconSolarisFull = TextureID::invalid;
+    TextureID m_texIconSolarisLow = TextureID::invalid;
+    TextureID m_texIconSolaris = TextureID::invalid;
 };

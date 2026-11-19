@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "controls/sMouseEvent.h"
 #include "utils/cRectangle.h"
 #include <memory>
@@ -52,4 +53,7 @@ private:
     cPlayer *m_player;
     cRectangle m_buttonRect;
     std::unique_ptr<Texture> m_buttonBitmap;
+private:
+    // graphics resolved once from the pack
+    SurfaceID m_surfBtnOrder = SurfaceID::invalid;
 };
