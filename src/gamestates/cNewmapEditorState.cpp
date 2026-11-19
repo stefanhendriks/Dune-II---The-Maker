@@ -30,7 +30,6 @@
 #include "gameobjects/map/cPreviewMaps.h"
 #include "gameobjects/map/cRandomMapGenerator.h"
 #include "gameobjects/map/SeedMapLoader.hpp"
-#include "utils/ini.h"
 #include "utils/Log.h"
 
 #include "include/cAssert.h"
@@ -45,7 +44,7 @@
 
 static const int borderSize = 2;
 
-cNewMapEditorState::cNewMapEditorState(sGameServices* services, cIni* ini)
+cNewMapEditorState::cNewMapEditorState(sGameServices* services)
     : cGameState(services),
     m_textDrawer(m_ctx->getTextContext()->getBeneTextDrawer()),
     m_settings(services->settings),
@@ -54,14 +53,12 @@ cNewMapEditorState::cNewMapEditorState(sGameServices* services, cIni* ini)
     m_mouse(services->mouse),
     m_guiWindow(nullptr),
     m_objects(services->objects),
-    m_previewMap(services->objects->getPreviewMaps()),
-    m_cIni(ini)
+    m_previewMap(services->objects->getPreviewMaps())
 {
     d2tm_assert(m_textDrawer != nullptr);
     d2tm_assert(m_settings != nullptr);
     d2tm_assert(m_scenarioFlow != nullptr);
     d2tm_assert(m_stateTransitions != nullptr);
-    d2tm_assert(m_cIni != nullptr);
     constructWindow();
 }
 

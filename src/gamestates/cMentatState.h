@@ -27,7 +27,7 @@ class GameStateTransition;
 class MentatFlow;
 class MissionFlow;
 class cGameSettings;
-class cIni;
+class ScenarioLoader;
 class cMouse;
 class cGameObjectContext;
 
@@ -39,7 +39,7 @@ enum class MentatMode {
 
 class cMentatState : public cGameState {
 public:
-    cMentatState(sGameServices* services, MentatMode mode, cIni* cini, s_DataCampaign* dataCampaign);
+    cMentatState(sGameServices* services, MentatMode mode, ScenarioLoader* scenarioLoader, s_DataCampaign* dataCampaign);
     ~cMentatState() override;
 
     void thinkFast() override;
@@ -64,7 +64,7 @@ private:
     cMouse* m_mouse = nullptr;
     cGameObjectContext* m_objects = nullptr;
     cReinforcements* m_reinforcements = nullptr;
-    cIni* m_cIni = nullptr;
+    ScenarioLoader* m_scenarioLoader = nullptr;
     MentatMode m_mode;
     int m_house;
     bool m_allowMissionSelect;

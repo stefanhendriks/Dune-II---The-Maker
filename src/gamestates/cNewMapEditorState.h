@@ -33,13 +33,12 @@ class GuiCheckBox;
 class GuiTextInput;
 class cPreviewMaps;
 class cGameObjectContext;
-class cIni;
 class cGameSettings;
 
 
 class cNewMapEditorState : public cGameState {
 public:
-    cNewMapEditorState(sGameServices* services, cIni* ini);
+    cNewMapEditorState(sGameServices* services);
     ~cNewMapEditorState() override;
 
     void thinkFast() override;
@@ -60,7 +59,6 @@ private:
     std::unique_ptr<GuiWindow> m_guiWindow;
     cGameObjectContext* m_objects = nullptr;
     cPreviewMaps* m_previewMap = nullptr;
-    cIni* m_cIni = nullptr;
     void constructWindow();
     GuiTextInput* m_inputName = nullptr;
     GuiTextInput* m_inputAuthor = nullptr;

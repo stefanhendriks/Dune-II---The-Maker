@@ -26,7 +26,7 @@
 class GuiButton;
 struct SDL_Surface;
 class cMouse;
-class cIni;
+class ScenarioLoader;
 
 class Texture;
 class Graphics;
@@ -75,7 +75,7 @@ public:
 class cSelectYourNextConquestState : public cGameState {
 
 public:
-    explicit cSelectYourNextConquestState(sGameServices* services, cIni* ini, s_DataCampaign* dataCompaign);
+    explicit cSelectYourNextConquestState(sGameServices* services, ScenarioLoader* scenarioLoader, s_DataCampaign* dataCompaign);
     ~cSelectYourNextConquestState() override;
     static constexpr int MAX_REGIONS = 27;
 
@@ -125,7 +125,7 @@ private:
     Graphics* m_gfxinter = nullptr;
     cMouse* m_mouse = nullptr;
     cDrawManager *m_drawManager = nullptr;
-    cIni* m_cIni = nullptr;
+    ScenarioLoader* m_scenarioLoader = nullptr;
     eRegionState state;
 
     eRegionSceneState regionSceneState;

@@ -89,7 +89,8 @@
 #include "game/cGameSettings.h"
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
-#include "utils/ini.h"
+#include "utils/ScenarioLoader.hpp"
+#include "utils/GameRulesLoader.hpp"
 
 #include "controls/cGameControlsContext.h"
 #include "controls/eKeyAction.h"
@@ -294,9 +295,10 @@ cGame::cGame()
     m_buildingListFactory = std::make_unique<cBuildingListFactory>(m_gameSettings.get());
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());
 
-    m_cIni = std::make_unique<cIni>(m_services.get());
+    m_scenarioLoader = std::make_unique<ScenarioLoader>(m_services.get());
+    m_gameRulesLoader = std::make_unique<GameRulesLoader>(m_services.get());
 
-    m_creatorState = std::make_unique<cCreatorState>(m_services.get(), m_cIni.get(), m_dataCampaign.get());
+    m_creatorState = std::make_unique<cCreatorState>(m_services.get(), m_scenarioLoader.get(), m_dataCampaign.get());
     IStateCallbacks &stateCallbacks = *this; // cGame inherits it privately
     m_stateMachine = std::make_unique<GameStateMachine>(*m_creatorState, stateCallbacks);
 }
@@ -426,12 +428,12 @@ void cGame::init()
         bullet.init();
     }
 
-    // Initialize InfoContext with empty objects that will be populated by cIni::installGame()
+    // Initialize InfoContext with empty objects that will be populated by GameRulesLoader::installGame()
     m_infoContext->initializeDefaultInfos();
 
     // Units & Structures are already initialized in map.init()
     // Load properties
-    m_cIni->installGame(m_gameFilename);
+    m_gameRulesLoader->installGame(m_gameFilename);
 }
 
 // TODO: Bad smell (duplicate code)
@@ -448,7 +450,7 @@ void cGame::missionInit()
     m_screenShake->reset();
 
     m_gameObjectsContext->getMap()->init(64, 64);
-    // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in cIni::installGame() when loading map.
+    // @mira: while cMap is created beforce all, need to set up terrain before loading scenario, so we can use it in GameRulesLoader::installGame() when loading map.
     m_gameObjectsContext->getMap()->setTerrainInfo(m_infoContext->getTerrainInfo());
 
     for (int i = 0; i < m_gameObjectsContext->getUnits()->size(); i++) {
@@ -852,7 +854,7 @@ bool cGame::setupGame()
     m_services->mapCamera = m_mapCamera.get();
     m_structureUtils->serviceInit(m_services.get());
 
-    m_cIni->installGame(m_gameFilename);
+    m_gameRulesLoader->installGame(m_gameFilename);
     // Now we are ready for the menu state
     setState(eGameState::MENU);
 

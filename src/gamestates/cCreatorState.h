@@ -27,11 +27,11 @@
 
 class GameContext;
 class GameStateTransition;
-class cIni;
+class ScenarioLoader;
 
 class cCreatorState : public IStateCreator {
 public:
-    explicit cCreatorState(sGameServices *services, cIni *ini, s_DataCampaign *dataCampaign);
+    explicit cCreatorState(sGameServices *services, ScenarioLoader *scenarioLoader, s_DataCampaign *dataCampaign);
 
     ~cCreatorState() override;
 
@@ -53,7 +53,7 @@ private:
     sGameServices *m_services = nullptr;
     s_DataCampaign *m_dataCampaign = nullptr;
     GameStateTransition *m_stateTransitions = nullptr;
-    cIni *m_cIni = nullptr;
+    ScenarioLoader *m_scenarioLoader = nullptr;
 
     void createStateFromScratch(eGameState gameState);
 };

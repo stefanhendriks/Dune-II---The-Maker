@@ -27,7 +27,7 @@
 #include <utility>
 #include <vector>
 
-// Pure string/INI parsing helpers used by cIni. They do not depend on game state.
+// Pure string/INI parsing helpers used by the ScenarioLoader. They do not depend on game state.
 
 int ToInt(const std::string& str);
 float ToFloat(const std::string& str);

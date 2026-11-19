@@ -23,7 +23,7 @@
 
 struct s_DataCampaign;
 class cMouse;
-class cIni;
+class ScenarioLoader;
 class AudioContext;
 class cGameSettings;
 class cPlayer;
@@ -32,7 +32,7 @@ class MissionFlow;
 
 class cTellHouseState : public cGameState {
 public:
-    cTellHouseState(sGameServices* services, cIni *ini, s_DataCampaign* dataCampaign);
+    cTellHouseState(sGameServices* services, ScenarioLoader *scenarioLoader, s_DataCampaign* dataCampaign);
     ~cTellHouseState() override;
 
     void thinkFast() override;
@@ -49,7 +49,7 @@ private:
     int m_house = -1;
     s_DataCampaign* m_dataCampaign = nullptr;
     cMouse* m_mouse = nullptr;
-    cIni* m_cIni = nullptr;
+    ScenarioLoader* m_scenarioLoader = nullptr;
     AudioContext* m_audioContext = nullptr;
     audioID m_atreidesSound = audioID::invalid;
     audioID m_harkonnenSound = audioID::invalid;
