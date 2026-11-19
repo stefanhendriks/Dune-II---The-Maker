@@ -14,13 +14,13 @@
  */
 
 #include "cMainMenuState.h"
+#include "data/GfxIds.hpp"
 #include "controls/cMouse.h"
 
 #include "gui/GuiButton.h"
 #include "gui/GuiWindow.h"
 #include "controls/eKeyAction.h"
 #include "config.h"
-#include "data/gfxinter.h"
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "utils/Graphics.hpp"
@@ -59,7 +59,7 @@ cMainMenuState::cMainMenuState(sGameServices* services) :
     d2tm_assert(m_stateTransitions != nullptr);
     d2tm_assert(m_mouse != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    bmp_D2TM_Title = gfxinter->getTexture(toTextureID(BMP_D2TM));
+    bmp_D2TM_Title = gfxinter->getTexture(gfx::tex::BMP_D2TM);
 
     int logoWidth = bmp_D2TM_Title->w;
     int logoHeight = bmp_D2TM_Title->h;
