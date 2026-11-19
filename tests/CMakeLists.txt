@@ -39,6 +39,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cPack.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_cDataPack.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_GraphicsID.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils/test_GfxNameConstants.cpp
 )
 
 # Production source files the tests depend on.
