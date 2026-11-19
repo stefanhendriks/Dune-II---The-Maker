@@ -14,7 +14,6 @@
  */
 
 #include "include/definitions.h"
-#include "data/GfxNames.hpp"
 #include "gamestates/cChooseHouseState.h"
 #include "game/cGameSettings.h"
 #include "controls/eKeyAction.h"
@@ -51,12 +50,12 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     d2tm_assert(settings != nullptr);
 
     backButtonRect = m_textDrawer->getAsRectangle(0, settings->getScreenH() - m_textDrawer->getFontHeight(), " Back");
-    const TextureID texBmpGameDune = m_gfxinter->getTextureID(gfxnames::BMP_GAME_DUNE);
-    const TextureID texBmpSelectYourHouse = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_YOUR_HOUSE);
-    const TextureID texBmpSelectHouseAtreides = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ATREIDES);
-    const TextureID texBmpSelectHouseOrdos = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ORDOS);
-    const TextureID texBmpSelectHouseHarkonnen = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_HARKONNEN);
-    const TextureID texBmpSelectHouseSardaukar = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_SARDAUKAR);
+    const TextureID texBmpGameDune = m_gfxinter->getTextureID("BMP_GAME_DUNE");
+    const TextureID texBmpSelectYourHouse = m_gfxinter->getTextureID("BMP_SELECT_YOUR_HOUSE");
+    const TextureID texBmpSelectHouseAtreides = m_gfxinter->getTextureID("BMP_SELECT_HOUSE_ATREIDES");
+    const TextureID texBmpSelectHouseOrdos = m_gfxinter->getTextureID("BMP_SELECT_HOUSE_ORDOS");
+    const TextureID texBmpSelectHouseHarkonnen = m_gfxinter->getTextureID("BMP_SELECT_HOUSE_HARKONNEN");
+    const TextureID texBmpSelectHouseSardaukar = m_gfxinter->getTextureID("BMP_SELECT_HOUSE_SARDAUKAR");
     bmp_Dune = m_gfxinter->getTexture(texBmpGameDune);
 
     int duneAtTheRight = settings->getScreenW() - bmp_Dune->w;

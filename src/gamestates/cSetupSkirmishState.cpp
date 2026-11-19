@@ -14,7 +14,6 @@
  */
 
 #include "gamestates/cSetupSkirmishState.h"
-#include "data/GfxNames.hpp"
 #include "gameobjects/map/TerrainTypes.hpp"
 
 #include "controls/eKeyAction.h"
@@ -394,7 +393,7 @@ cSetupSkirmishState::cSetupSkirmishState(sGameServices* services, cPreviewMaps* 
             })
             .build();
 
-    m_texBmpUnknownmap = m_gfxinter->getTextureID(gfxnames::BMP_UNKNOWNMAP);
+    m_texBmpUnknownmap = m_gfxinter->getTextureID("BMP_UNKNOWNMAP");
 }
 
 cSetupSkirmishState::~cSetupSkirmishState()

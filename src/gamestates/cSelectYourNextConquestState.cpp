@@ -14,7 +14,6 @@
  */
 
 #include "cSelectYourNextConquestState.h"
-#include "data/GfxNames.hpp"
 #include "controls/eMouseTile.h"
 
 #include <cmath>
@@ -137,14 +136,14 @@ cSelectYourNextConquestState::cSelectYourNextConquestState(sGameServices* servic
                 m_stateTransitions->setNextState(eGameState::MISSIONSELECT);})
             .build();
 
-    m_surfWorldDuneClick = m_gfxworld->getSurfaceID(gfxnames::WORLD_DUNE_CLICK);
-    m_texBmpNextconq = m_gfxworld->getTextureID(gfxnames::BMP_NEXTCONQ);
-    m_texBmpNcatr = m_gfxworld->getTextureID(gfxnames::BMP_NCATR);
-    m_texBmpNcord = m_gfxworld->getTextureID(gfxnames::BMP_NCORD);
-    m_texBmpNchar = m_gfxworld->getTextureID(gfxnames::BMP_NCHAR);
-    m_texBmpGameDune = m_gfxinter->getTextureID(gfxnames::BMP_GAME_DUNE);
-    m_texWorldDune = m_gfxworld->getTextureID(gfxnames::WORLD_DUNE);
-    m_texWorldDuneRegions = m_gfxworld->getTextureID(gfxnames::WORLD_DUNE_REGIONS);
+    m_surfWorldDuneClick = m_gfxworld->getSurfaceID("WORLD_DUNE_CLICK");
+    m_texBmpNextconq = m_gfxworld->getTextureID("BMP_NEXTCONQ");
+    m_texBmpNcatr = m_gfxworld->getTextureID("BMP_NCATR");
+    m_texBmpNcord = m_gfxworld->getTextureID("BMP_NCORD");
+    m_texBmpNchar = m_gfxworld->getTextureID("BMP_NCHAR");
+    m_texBmpGameDune = m_gfxinter->getTextureID("BMP_GAME_DUNE");
+    m_texWorldDune = m_gfxworld->getTextureID("WORLD_DUNE");
+    m_texWorldDuneRegions = m_gfxworld->getTextureID("WORLD_DUNE_REGIONS");
 }
 
 void cSelectYourNextConquestState::calculateOffset()
@@ -640,39 +639,39 @@ void cSelectYourNextConquestState::installWorld()
     // Now create the regions (x,y wise)
 
     // FIRST ROW (EASY, SAME Y AXIS)
-    regionNew(16, 73, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_001));
-    regionNew(126, 73, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_002));
-    regionNew(210, 73, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_003));
-    regionNew(306, 73, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_004));
-    regionNew(438, 73, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_005));
-    regionNew(510, 73, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_006));
+    regionNew(16, 73, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_001"));
+    regionNew(126, 73, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_002"));
+    regionNew(210, 73, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_003"));
+    regionNew(306, 73, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_004"));
+    regionNew(438, 73, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_005"));
+    regionNew(510, 73, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_006"));
 
     // SECOND ROW, HARDER FROM NOW ON (DIFFERENT Y AXIS ALL THE TIME)
-    regionNew(16, 91, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_007));
-    regionNew(158, 149, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_008));
-    regionNew(282, 135, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_009));
-    regionNew(362, 105, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_010));
-    regionNew(456, 117, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_011));
-    regionNew(544, 105, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_012));
+    regionNew(16, 91, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_007"));
+    regionNew(158, 149, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_008"));
+    regionNew(282, 135, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_009"));
+    regionNew(362, 105, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_010"));
+    regionNew(456, 117, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_011"));
+    regionNew(544, 105, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_012"));
 
     // THIRD ROW
-    regionNew(16, 155, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_013));
-    regionNew(58, 165, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_014));
-    regionNew(190, 213, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_015));
-    regionNew(312, 163, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_016));
-    regionNew(388, 163, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_017));
-    regionNew(502, 167, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_018));
-    regionNew(576, 167, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_019));
+    regionNew(16, 155, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_013"));
+    regionNew(58, 165, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_014"));
+    regionNew(190, 213, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_015"));
+    regionNew(312, 163, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_016"));
+    regionNew(388, 163, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_017"));
+    regionNew(502, 167, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_018"));
+    regionNew(576, 167, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_019"));
 
     // FOURTH ROW
-    regionNew(16, 237, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_020));
-    regionNew(62, 255, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_021));
-    regionNew(134, 245, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_022));
-    regionNew(282, 257, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_023));
-    regionNew(360, 253, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_024));
-    regionNew(406, 213, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_025));
-    regionNew(448, 269, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_026));
-    regionNew(514, 227, 1, -1, m_gfxworld->getTextureID(gfxnames::PIECE_DUNE_027));
+    regionNew(16, 237, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_020"));
+    regionNew(62, 255, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_021"));
+    regionNew(134, 245, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_022"));
+    regionNew(282, 257, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_023"));
+    regionNew(360, 253, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_024"));
+    regionNew(406, 213, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_025"));
+    regionNew(448, 269, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_026"));
+    regionNew(514, 227, 1, -1, m_gfxworld->getTextureID("PIECE_DUNE_027"));
 }
 
 eGameStateType cSelectYourNextConquestState::getType()

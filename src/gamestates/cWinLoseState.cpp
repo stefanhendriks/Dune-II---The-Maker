@@ -14,7 +14,6 @@
  */
 
 #include "gamestates/cWinLoseState.h"
-#include "data/GfxNames.hpp"
 
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
@@ -52,8 +51,8 @@ cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) :
 
     m_backgroundTexture = services->screenTexture;
     
-    const TextureID texBmpLosing = gfxinter->getTextureID(gfxnames::BMP_LOSING);
-    const TextureID texBmpWinning = gfxinter->getTextureID(gfxnames::BMP_WINNING);
+    const TextureID texBmpLosing = gfxinter->getTextureID("BMP_LOSING");
+    const TextureID texBmpWinning = gfxinter->getTextureID("BMP_WINNING");
     if (m_statement == Outcome::Lose) {
         m_tex = gfxinter->getTexture(texBmpLosing);
     } else {
