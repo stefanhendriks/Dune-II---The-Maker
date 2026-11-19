@@ -42,12 +42,13 @@ HarkonnenMentat::HarkonnenMentat(GameContext* ctx, cGameSettings* settings, Game
     d2tm_assert(m_mentatFlow != nullptr);
     resolveFaceFrames(eyesNames, mouthNames);
     m_backgroundTexture = gfxmentat->textureId(gfxnames::MENTATH);
-    buildLeftButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_REPEAT)), 293, 423);
+    Texture *leftButtonTexture = gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_REPEAT));
+    buildLeftButton(leftButtonTexture, 293, 423);
     buildRightButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_PROCEED)), 466, 423);
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)        
             .withLabel("Repeat")
-            .withTexture(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_REPEAT)))
+            .withTexture(leftButtonTexture)
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {this->resetSpeak();})
