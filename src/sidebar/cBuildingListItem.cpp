@@ -27,7 +27,7 @@
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/units/cUnitInfos.h"
 
-cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, int icon, cBuildingList *list, int subList, bool queuable)
+cBuildingListItem::cBuildingListItem(eBuildType type, int buildId, int cost, TextureID icon, cBuildingList *list, int subList, bool queuable)
 {
     d2tm_assert(buildId >= 0);
     m_icon = icon;

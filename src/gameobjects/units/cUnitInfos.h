@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include <array>
 #include "utils/AudioID.hpp"
 #include <cstddef>
@@ -59,7 +60,7 @@ struct s_UnitInfo {
     int    max_bullets;       // Maximum of 'bullets' it can fire at a time
     int    sight;             // Sight of a unit (in radius)
     int    range;             // Range of a unit (in radius)
-    int    icon;              // icon id (taken from gfxInter data file)
+    TextureID icon;              // icon id (taken from gfxInter data file)
     int    cost;              // cost/price
 
     bool airborn;             // does this unit fly?

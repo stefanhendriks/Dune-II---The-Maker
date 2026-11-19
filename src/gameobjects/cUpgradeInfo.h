@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include <string>
 
 #include <array>
@@ -35,7 +36,7 @@
  */
 struct s_UpgradeInfo {
     bool enabled;        // set to true to use this upgrade logic
-    int icon;            // icon id
+    TextureID icon;            // icon id
     int cost;            // price
     std::string description; // ie: "Upgrade to 4slab"
     int buildTime;     // how long it takes to upgrade/build

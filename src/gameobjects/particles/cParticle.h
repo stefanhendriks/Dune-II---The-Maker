@@ -127,5 +127,5 @@ private:
     void recolorForHouseIfGiven();
     cParticle& getBoundParticle();
 
-    static std::map<std::pair<int, int>, Texture*> particleTextureCache;
+    static std::map<std::pair<TextureID, int>, Texture*> particleTextureCache;
 };
