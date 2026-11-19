@@ -162,7 +162,7 @@ void cStructureDrawer::drawStructurePrebuildAnimation(cAbstractStructure *struct
 
     // Draw prebuild
     cRectangle dest= {drawX, drawY, scaledWidth, scaledHeight};
-    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(iDrawPreBuild), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(toTextureID(iDrawPreBuild)), dest);
 }
 
 void cStructureDrawer::drawStructureAnimation(cAbstractStructure *structure)
@@ -343,7 +343,7 @@ void cStructureDrawer::drawStructureForLayer(cAbstractStructure *structure, int 
 
 void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) const
 {
-    Texture *icon = m_gfxinter->getTexture(ICON_POWER_LOW);
+    Texture *icon = m_gfxinter->getTexture(toTextureID(ICON_POWER_LOW));
     if (!icon) return;
 
     const s_StructureInfo info = structure->getStructureInfo();
@@ -361,8 +361,8 @@ void cStructureDrawer::renderIconThatPowerIsLow(cAbstractStructure *structure) c
 
 void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure *structure) const
 {
-    int iconWidth = (m_gfxdata->getSurface(MOUSE_REPAIR))->w;
-    int iconHeight = (m_gfxdata->getSurface(MOUSE_REPAIR))->h;
+    int iconWidth = (m_gfxdata->getSurface(toSurfaceID(MOUSE_REPAIR)))->w;
+    int iconHeight = (m_gfxdata->getSurface(toSurfaceID(MOUSE_REPAIR)))->h;
     int drawX = structure->iDrawX();
     int drawY = structure->iDrawY();
     int offsetX = (structure->getWidthInPixels() - iconWidth) / 2;
@@ -372,7 +372,7 @@ void cStructureDrawer::renderIconThatStructureIsBeingRepaired(cAbstractStructure
     int scaledWidth = m_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX+offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(MOUSE_REPAIR), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxdata->getTexture(toTextureID(MOUSE_REPAIR)), dest);
 }
 
 void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structure) const
@@ -383,8 +383,8 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     cUnit *pUnit = m_objects->getUnit(unitId);
     int iconId = pUnit->getUnitInfo().icon;
 
-    int iconWidth = (m_gfxinter->getSurface(iconId))->w;
-    int iconHeight = (m_gfxinter->getSurface(iconId))->h;
+    int iconWidth = (m_gfxinter->getSurface(toSurfaceID(iconId)))->w;
+    int iconHeight = (m_gfxinter->getSurface(toSurfaceID(iconId)))->h;
 
     // draw health bar of unit on top of icon?
     int draw_x = 3;
@@ -417,7 +417,7 @@ void cStructureDrawer::renderIconOfUnitBeingRepaired(cAbstractStructure *structu
     int scaledWidth = m_mapCamera->factorZoomLevel(iconWidth);
     int scaledHeight = m_mapCamera->factorZoomLevel(iconHeight);
     cRectangle dest = {drawX + offsetXScaled, drawY + offsetYScaled, scaledWidth, scaledHeight};
-    m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(iconId), dest);
+    m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(toTextureID(iconId)), dest);
 }
 
 void cStructureDrawer::drawStructuresForLayer(int layer)
