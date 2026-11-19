@@ -37,6 +37,12 @@ constexpr TextureID toTextureID(int packIndex)
     return static_cast<TextureID>(static_cast<std::uint32_t>(packIndex));
 }
 
+// the surface and the texture of an image share the pack index
+constexpr SurfaceID toSurfaceID(TextureID id)
+{
+    return static_cast<SurfaceID>(static_cast<std::uint32_t>(id));
+}
+
 // the pack index of the surface, or -1 for SurfaceID::invalid
 constexpr int toPackIndex(SurfaceID id)
 {
