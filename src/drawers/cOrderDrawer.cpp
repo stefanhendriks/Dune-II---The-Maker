@@ -14,7 +14,7 @@
  */
 
 #include "cOrderDrawer.h"
-#include "data/gfxinter.h"
+#include "data/GfxIds.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cOrderProcesser.h"
 #include "gameobjects/players/cPlayer.h"
@@ -38,7 +38,7 @@ cOrderDrawer::cOrderDrawer(GameContext *ctx, cPlayer *player, sGameServices *ser
     d2tm_assert(ctx != nullptr);
     d2tm_assert(services != nullptr);
     auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-    m_buttonBitmap.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, player, gfxinter->getSurface(toSurfaceID(BTN_ORDER)), TransparentColorIndex));
+    m_buttonBitmap.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, player, gfxinter->getSurface(gfx::surf::BTN_ORDER), TransparentColorIndex));
     int halfOfButton = m_buttonBitmap->w / 2;
     int halfOfSidebar = cSideBar::SidebarWidthWithoutCandyBar / 2;
     int halfOfHeightLeftForButton = 50 / 2; // 50 = height of 1 row icons which is removed for Starport
@@ -118,6 +118,6 @@ void cOrderDrawer::setPlayer(cPlayer *pPlayer)
     this->m_player = pPlayer;
     if (houseChanged) {
         auto *gfxinter = m_ctx->getGraphicsContext()->gfxinter.get();
-        m_buttonBitmap.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, m_player, gfxinter->getSurface(toSurfaceID(BTN_ORDER)), TransparentColorIndex));
+        m_buttonBitmap.reset(createPlayerTextureFromIndexedSurfaceWithPalette(m_sdlDrawer, m_player, gfxinter->getSurface(gfx::surf::BTN_ORDER), TransparentColorIndex));
     }
 }

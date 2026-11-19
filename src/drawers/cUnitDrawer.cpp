@@ -14,6 +14,7 @@
  */
 
 #include "cUnitDrawer.h"
+#include "data/GfxIds.hpp"
 
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/map/cMapCamera.h"
@@ -25,7 +26,6 @@
 #include "utils/Color.hpp"
 #include "utils/cRectangle.h"
 #include "utils/d2tm_math.h"
-#include "data/gfxdata.h"
 #include "include/definitions.h"
 #include "include/Facing.h"
 #include "include/cAssert.h"
@@ -38,7 +38,7 @@
 namespace {
 
 // veteran star sprite per star type, the only place that lists the star sprites
-constexpr std::array<int, 3> starIds = {OBJECT_STAR_01, OBJECT_STAR_02, OBJECT_STAR_03};
+constexpr std::array<TextureID, 3> starIds = {gfx::tex::OBJECT_STAR_01, gfx::tex::OBJECT_STAR_02, gfx::tex::OBJECT_STAR_03};
 
 }
 
@@ -157,7 +157,7 @@ void cUnitDrawer::draw_experience()
     int drawy = m_unit.draw_y() - 19;
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        m_renderer->renderSprite(m_gfxdata->getTexture(toTextureID(starIds[iStarType])), drawx + i * 9, drawy, ShadowTrans);
+        m_renderer->renderSprite(m_gfxdata->getTexture(starIds[iStarType]), drawx + i * 9, drawy, ShadowTrans);
     }
 }
 
@@ -279,11 +279,11 @@ void cUnitDrawer::draw()
 
     // when we want to be picked up..
     if (m_unit.bCarryMe) {
-        m_renderer->renderSprite(m_gfxdata->getTexture(toTextureID(SYMB_PICKMEUP)), ux, uy - 7);
+        m_renderer->renderSprite(m_gfxdata->getTexture(gfx::tex::SYMB_PICKMEUP), ux, uy - 7);
     }
 
     if (m_unit.isSelected()) {
-        SDL_Surface *focusBitmap = m_gfxdata->getSurface(toSurfaceID(FOCUS));
+        SDL_Surface *focusBitmap = m_gfxdata->getSurface(gfx::surf::FOCUS);
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
 
@@ -291,7 +291,7 @@ void cUnitDrawer::draw()
         int y = m_unit.draw_y(bmp_height);
 
         cRectangle dest = {x,y, static_cast<int>(round(m_unit.getMapCamera()->factorZoomLevel(bmp_width))),static_cast<int>(round(m_unit.getMapCamera()->factorZoomLevel(bmp_height)))};
-        m_renderer->renderStrechFullSprite(m_gfxdata->getTexture(toTextureID(FOCUS)), dest);
+        m_renderer->renderStrechFullSprite(m_gfxdata->getTexture(gfx::tex::FOCUS), dest);
     }
 
     if (m_unit.isDrawUnitDebugEnabled()) {
