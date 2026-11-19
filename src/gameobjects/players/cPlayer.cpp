@@ -14,7 +14,7 @@
  */
 
 #include "cPlayer.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 
 #include "building/cItemBuilder.h"
 #include "game/cEventEmitter.h"
@@ -101,6 +101,8 @@ void cPlayer::serviceInit(sGameServices* services)
     d2tm_assert(m_structureUtils != nullptr);
     m_gfxdata = services->ctx->getGraphicsContext()->gfxdata.get();
     d2tm_assert(m_gfxdata != nullptr);
+    m_surfBuildingFlagLarge = m_gfxdata->getSurfaceID(gfxnames::BUILDING_FLAG_LARGE);
+    m_surfBuildingFlagSmall = m_gfxdata->getSurfaceID(gfxnames::BUILDING_FLAG_SMALL);
     m_renderer = services->ctx->getSDLDrawer();
     d2tm_assert(m_renderer != nullptr);
     if (difficultySettings) {
@@ -276,8 +278,8 @@ void cPlayer::setHouse(int iHouse)
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
-        bmp_flag = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(gfx::surf::BUILDING_FLAG_LARGE),TransparentColorIndex);
-        bmp_flag_small = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(gfx::surf::BUILDING_FLAG_SMALL),TransparentColorIndex);
+        bmp_flag = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(m_surfBuildingFlagLarge),TransparentColorIndex);
+        bmp_flag_small = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(m_surfBuildingFlagSmall),TransparentColorIndex);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {

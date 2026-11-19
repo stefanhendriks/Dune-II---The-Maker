@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 
 #include "controls/mousestates/eMouseStates.h"
 #include "utils/AudioID.hpp"
@@ -665,4 +666,8 @@ private:
     bool alive = false;
 
     void reinforceHarvesterIfNeeded(int cell);
+private:
+    // graphics resolved once from the pack
+    SurfaceID m_surfBuildingFlagLarge = SurfaceID::invalid;
+    SurfaceID m_surfBuildingFlagSmall = SurfaceID::invalid;
 };

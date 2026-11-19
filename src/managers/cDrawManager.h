@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 class cKeyboardEvent;
 class cBuildingListDrawer;
 class cMapDrawer;
@@ -163,4 +164,11 @@ private:
     void onKeyDown(const cKeyboardEvent &event);
 
     void onKeyPressed(const cKeyboardEvent &event);
+private:
+    // graphics resolved once from the pack
+    SurfaceID m_surfBtnOptions = SurfaceID::invalid;
+    SurfaceID m_surfMouseMove = SurfaceID::invalid;
+    TextureID m_texMouseMove = TextureID::invalid;
+    TextureID m_texBmpTopbarBackground = TextureID::invalid;
+    TextureID m_texBmpGeraldTopBar = TextureID::invalid;
 };
