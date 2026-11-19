@@ -53,9 +53,9 @@ cWinLoseState::cWinLoseState(sGameServices* services, Outcome value) :
     m_backgroundTexture = services->screenTexture;
     
     if (m_statement == Outcome::Lose) {
-        m_tex = gfxinter->getTexture(BMP_LOSING);
+        m_tex = gfxinter->getTexture(toTextureID(BMP_LOSING));
     } else {
-        m_tex = gfxinter->getTexture(BMP_WINNING);
+        m_tex = gfxinter->getTexture(toTextureID(BMP_WINNING));
     }
 }
 
