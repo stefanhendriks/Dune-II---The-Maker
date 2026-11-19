@@ -758,22 +758,22 @@ void cEditorState::drawMap() const
             switch (tileID)
             {
             case TERRAIN_SPICE:
-                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SPICE), srcRect, destRect);
+                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(TERRAIN_SPICE)), srcRect, destRect);
                 break;
             case TERRAIN_SAND:
-                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SAND), srcRect, destRect);
+                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(TERRAIN_SAND)), srcRect, destRect);
                 break;
             case TERRAIN_MOUNTAIN:
-                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_MOUNTAIN), srcRect, destRect);
+                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(TERRAIN_MOUNTAIN)), srcRect, destRect);
                 break;
             case TERRAIN_ROCK:
-                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_ROCK), srcRect, destRect);
+                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(TERRAIN_ROCK)), srcRect, destRect);
                 break;
             case TERRAIN_SPICEHILL:
-                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_SPICEHILL), srcRect, destRect);
+                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(TERRAIN_SPICEHILL)), srcRect, destRect);
                 break;  
             case TERRAIN_HILL:
-                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(TERRAIN_HILL), srcRect, destRect);
+                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(TERRAIN_HILL)), srcRect, destRect);
                 break;            
             default:
                 break;
