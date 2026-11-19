@@ -21,7 +21,6 @@
 #include "game/cScreenShake.h"
 #include "game/cEventEmitter.h"
 #include "utils/Log.h"
-#include "data/gfxdata.h"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/projectiles/bullet.h"
 #include "gameobjects/structures/cStructureFactory.h"
