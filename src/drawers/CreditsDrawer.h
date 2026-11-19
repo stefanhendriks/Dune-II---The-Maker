@@ -23,6 +23,9 @@
 #pragma once
 
 #include "utils/AudioID.hpp"
+#include "utils/GraphicsID.hpp"
+
+#include <array>
 
 class GameContext;
 class cGameSettings;
@@ -90,4 +93,8 @@ private:
 
     // topleft position of credits-bar bmp
     int m_drawX, m_drawY;
+    // graphics resolved once from the packs, a texture per digit (0 to 9)
+    std::array<TextureID, 10> m_digitTextures;
+    SurfaceID m_surfCreditsBar = SurfaceID::invalid;
+    TextureID m_texCreditsBar = TextureID::invalid;
 };

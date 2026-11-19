@@ -14,7 +14,7 @@
  */
 
 #include "CreditsDrawer.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 #include "CreditsMath.hpp"
 #include "include/sGameServices.h"
 #include "utils/common.h"
@@ -32,8 +32,10 @@
 #include "include/cAssert.h"
 #include "include/Texture.hpp"
 #include <algorithm>
+#include <array>
 #include <cstdlib>
 #include <string>
+#include <string_view>
 
 namespace {
 // digits of the credits, cut off / padded with '\0' to 8 characters (what the old char[9] buffers held)
@@ -67,8 +69,18 @@ CreditsDrawer::CreditsDrawer(GameContext* ctx, cGameSettings *settings, cPlayer 
     m_currentCredits = 0;
     m_previousCredits = 0;
 
+    m_surfCreditsBar = m_gfxinter->getSurfaceID(gfxnames::CREDITS_BAR);
+    m_texCreditsBar = m_gfxinter->getTextureID(gfxnames::CREDITS_BAR);
+    constexpr std::array<std::string_view, 10> digitNames = {
+        gfxnames::CREDITS_0, gfxnames::CREDITS_1, gfxnames::CREDITS_2, gfxnames::CREDITS_3, gfxnames::CREDITS_4,
+        gfxnames::CREDITS_5, gfxnames::CREDITS_6, gfxnames::CREDITS_7, gfxnames::CREDITS_8, gfxnames::CREDITS_9
+    };
+    for (size_t i = 0; i < digitNames.size(); i++) {
+        m_digitTextures[i] = m_gfxdata->getTextureID(digitNames[i]);
+    }
+
     // center credits bar within sidebar
-    int widthCreditsBar = (m_gfxinter->getSurface(gfx::surf::CREDITS_BAR))->w;
+    int widthCreditsBar = (m_gfxinter->getSurface(m_surfCreditsBar))->w;
     m_drawX = settings->getScreenW() - (cSideBar::SidebarWidthWithoutCandyBar / 2) - (widthCreditsBar / 2);
     m_drawY = 0;
 }
@@ -159,11 +171,11 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
     std::string previous_credits = creditsToDigits(m_previousCredits);
 
     for (int i = 0; i < 6; i++) {
-        TextureID currentId = CreditsMath::getCreditDrawId(current_credits[i]);
-        TextureID previousId = CreditsMath::getCreditDrawId(previous_credits[i]);
+        int currentDigit = CreditsMath::getCreditDigit(current_credits[i]);
+        int previousDigit = CreditsMath::getCreditDigit(previous_credits[i]);
 
         if (m_offset_direction[i] == 0) {
-            if (currentId == gfx::tex::CREDITS_NONE || previousId == gfx::tex::CREDITS_NONE) {
+            if (currentDigit == CreditsMath::noCreditDigit || previousDigit == CreditsMath::noCreditDigit) {
                 // either of the 2 is unidentifiable. Do nothing
                 m_offset_direction[i] = 3;
                 continue; // next
@@ -179,7 +191,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
             }
 
             // when the same, do not animate
-            if (currentId == previousId) {
+            if (currentDigit == previousDigit) {
                 m_offset_direction[i] = 3;
             }
 
@@ -208,7 +220,7 @@ void CreditsDrawer::thinkAboutIndividualCreditOffsets()
  */
 void CreditsDrawer::draw()
 {
-    auto *tex = m_gfxinter->getTexture(gfx::tex::CREDITS_BAR);
+    auto *tex = m_gfxinter->getTexture(m_texCreditsBar);
     m_sdlDrawer->renderSprite(tex, m_drawX, m_drawY);
     m_sdlDrawer->setClippingFor(m_drawX+1, m_drawY+5, m_drawX+tex->w-1, m_drawY+tex->h-5);
     drawCurrentCredits(m_drawX, m_drawY);
@@ -242,10 +254,10 @@ void CreditsDrawer::drawCurrentCredits(int drawX, int drawY)
             dy = -20 + static_cast<int>(m_offset_credit[i]);
         }
 
-        TextureID nr = CreditsMath::getCreditDrawId(credits[i]);
+        int digit = CreditsMath::getCreditDigit(credits[i]);
 
-        if (nr != gfx::tex::CREDITS_NONE) {
-            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+        if (digit != CreditsMath::noCreditDigit) {
+            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(m_digitTextures[digit]), drawX+dx+8, drawY+dy+8);
         }
     }
 }
@@ -274,10 +286,10 @@ void CreditsDrawer::drawPreviousCredits(int drawX, int drawY)
         else if (m_offset_direction[i] == 2) {
             dy = static_cast<int>(m_offset_credit[i]);
         }
-        TextureID nr = CreditsMath::getCreditDrawId(credits[i]);
+        int digit = CreditsMath::getCreditDigit(credits[i]);
 
-        if (nr != gfx::tex::CREDITS_NONE) {
-            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(nr), drawX+dx+8, drawY+dy+8);
+        if (digit != CreditsMath::noCreditDigit) {
+            m_sdlDrawer->renderSprite(m_gfxdata->getTexture(m_digitTextures[digit]), drawX+dx+8, drawY+dy+8);
         }
     }
 }
