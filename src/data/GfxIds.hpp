@@ -1,5 +1,5 @@
 /**
- * @file GfxNames.hpp
+ * @file GfxIds.hpp
  *
  * Dune 2 - The Maker
  *

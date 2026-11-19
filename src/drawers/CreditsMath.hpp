@@ -15,10 +15,9 @@
 
 #pragma once
 
-
+#include "data/GfxIds.hpp"
 #include "utils/GraphicsID.hpp"
 #include <array>
-#include "data/GfxIds.hpp"
 
 // Pure (SDL free) logic of the CreditsDrawer, so it can be unit tested.
 namespace CreditsMath {

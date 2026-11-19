@@ -19,8 +19,8 @@
 
 // The name of every graphics pack entry, exactly as it is stored in the pack (the file name of the image).
 // Resolve a name once with Graphics::surfaceId() / textureId() and keep the typed id.
-// Next to the int constants of gfxdata.h, gfxinter.h, gfxmentat.h and gfxworld.h, which stay until all call sites are migrated.
-// test_GfxNameConstants.cpp checks that each name resolves to the same index as the int constant of that name.
+// The typed ids for the same entries are in GfxIds.hpp.
+// test_GfxNameConstants.cpp checks that each name resolves to the same index as the typed id of that name.
 namespace gfxnames {
 
 // sdl_data.dat
