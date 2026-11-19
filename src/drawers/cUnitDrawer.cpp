@@ -14,7 +14,7 @@
  */
 
 #include "cUnitDrawer.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/map/cMapCamera.h"
@@ -32,13 +32,14 @@
 
 #include <SDL3/SDL.h>
 #include <array>
+#include <string_view>
 #include <cmath>
 #include <format>
 
 namespace {
 
 // veteran star sprite per star type, the only place that lists the star sprites
-constexpr std::array<TextureID, 3> starIds = {gfx::tex::OBJECT_STAR_01, gfx::tex::OBJECT_STAR_02, gfx::tex::OBJECT_STAR_03};
+constexpr std::array<std::string_view, 3> starTexturesNames = {gfxnames::OBJECT_STAR_01, gfxnames::OBJECT_STAR_02, gfxnames::OBJECT_STAR_03};
 
 }
 
@@ -49,6 +50,13 @@ cUnitDrawer::cUnitDrawer(cUnit &unit, SDLDrawer *renderer, Graphics *gfxdata) :
 {
     d2tm_assert(renderer != nullptr);
     d2tm_assert(gfxdata != nullptr);
+    for (size_t i = 0; i < starTexturesNames.size(); i++) {
+        m_starTextures[i] = m_gfxdata->getTextureID(starTexturesNames[i]);
+    }
+
+    m_texSymbPickmeup = m_gfxdata->getTextureID(gfxnames::SYMB_PICKMEUP);
+    m_surfFocus = m_gfxdata->getSurfaceID(gfxnames::FOCUS);
+    m_texFocus = m_gfxdata->getTextureID(gfxnames::FOCUS);
 }
 
 void cUnitDrawer::draw_spice()
@@ -157,7 +165,7 @@ void cUnitDrawer::draw_experience()
     int drawy = m_unit.draw_y() - 19;
     // 1 star = 1 experience
     for (int i = 0; i < iStars; i++) {
-        m_renderer->renderSprite(m_gfxdata->getTexture(starIds[iStarType]), drawx + i * 9, drawy, ShadowTrans);
+        m_renderer->renderSprite(m_gfxdata->getTexture(m_starTextures[iStarType]), drawx + i * 9, drawy, ShadowTrans);
     }
 }
 
@@ -279,11 +287,11 @@ void cUnitDrawer::draw()
 
     // when we want to be picked up..
     if (m_unit.bCarryMe) {
-        m_renderer->renderSprite(m_gfxdata->getTexture(gfx::tex::SYMB_PICKMEUP), ux, uy - 7);
+        m_renderer->renderSprite(m_gfxdata->getTexture(m_texSymbPickmeup), ux, uy - 7);
     }
 
     if (m_unit.isSelected()) {
-        SDL_Surface *focusBitmap = m_gfxdata->getSurface(gfx::surf::FOCUS);
+        SDL_Surface *focusBitmap = m_gfxdata->getSurface(m_surfFocus);
         int bmp_width = focusBitmap->w;
         int bmp_height = focusBitmap->h;
 
@@ -291,7 +299,7 @@ void cUnitDrawer::draw()
         int y = m_unit.draw_y(bmp_height);
 
         cRectangle dest = {x,y, static_cast<int>(round(m_unit.getMapCamera()->factorZoomLevel(bmp_width))),static_cast<int>(round(m_unit.getMapCamera()->factorZoomLevel(bmp_height)))};
-        m_renderer->renderStrechFullSprite(m_gfxdata->getTexture(gfx::tex::FOCUS), dest);
+        m_renderer->renderStrechFullSprite(m_gfxdata->getTexture(m_texFocus), dest);
     }
 
     if (m_unit.isDrawUnitDebugEnabled()) {

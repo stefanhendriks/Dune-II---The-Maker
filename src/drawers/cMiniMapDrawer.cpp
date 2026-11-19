@@ -13,6 +13,7 @@
  * This is a non-commercial educational project.
  */
 
+#include "data/GfxNames.hpp"
 #include "cMiniMapDrawer.h"
 #include "data/GfxIds.hpp"
 #include "controls/eMouseTile.h"
@@ -40,6 +41,7 @@
 #include "include/cAssert.h"
 #include <algorithm>
 #include <array>
+#include <string_view>
 #include <cmath>
 //#include <iostream>
 
@@ -49,15 +51,7 @@
 namespace {
 
 // static animation frames, the only place that lists the STAT sprites
-constexpr std::array<TextureID, 21> staticFrameIds = {
-    gfx::tex::STAT01, gfx::tex::STAT02, gfx::tex::STAT03,
-    gfx::tex::STAT04, gfx::tex::STAT05, gfx::tex::STAT06,
-    gfx::tex::STAT07, gfx::tex::STAT08, gfx::tex::STAT09,
-    gfx::tex::STAT10, gfx::tex::STAT11, gfx::tex::STAT12,
-    gfx::tex::STAT13, gfx::tex::STAT14, gfx::tex::STAT15,
-    gfx::tex::STAT16, gfx::tex::STAT17, gfx::tex::STAT18,
-    gfx::tex::STAT19, gfx::tex::STAT20, gfx::tex::STAT21
-};
+constexpr std::array<std::string_view, 21> staticFramesNames = {gfxnames::STAT01, gfxnames::STAT02, gfxnames::STAT03, gfxnames::STAT04, gfxnames::STAT05, gfxnames::STAT06, gfxnames::STAT07, gfxnames::STAT08, gfxnames::STAT09, gfxnames::STAT10, gfxnames::STAT11, gfxnames::STAT12, gfxnames::STAT13, gfxnames::STAT14, gfxnames::STAT15, gfxnames::STAT16, gfxnames::STAT17, gfxnames::STAT18, gfxnames::STAT19, gfxnames::STAT20, gfxnames::STAT21};
 
 // m_iStaticFrame counts 0 (STAT01, no static) up to kStaticLastFrame (STAT21, full static)
 constexpr int kStaticStartFrame = 13; // STAT14
@@ -107,6 +101,9 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *
     //std::cout << "Minimap top left corner: (" << m_RectMinimap.getX() << ", " << m_RectMinimap.getY() << ", " << m_RectMinimap.getWidth() << ", " << m_RectMinimap.getHeight() << ")" << std::endl;
     //std::cout << "RectFullMinimap: (" << m_RectFullMinimap.getX() << ", " << m_RectFullMinimap.getY() << ", " << m_RectFullMinimap.getWidth() << ", " << m_RectFullMinimap.getHeight() << ")" << std::endl;
     m_mipMapTex = m_sdlDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
+    for (size_t i = 0; i < staticFramesNames.size(); i++) {
+        m_staticFrames[i] = m_gfxinter->getTextureID(staticFramesNames[i]);
+    }
 }
 
 cMiniMapDrawer::~cMiniMapDrawer()
@@ -160,7 +157,7 @@ void cMiniMapDrawer::drawStaticFrame()
     if (m_status == eMinimapStatus::LOWPOWER) return;
 
     if (m_status == eMinimapStatus::POWERDOWN) {
-        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(staticFrameIds[m_iStaticFrame]), m_RectFullMinimap);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_staticFrames[m_iStaticFrame]), m_RectFullMinimap);
         return;
     }
 
@@ -174,7 +171,7 @@ void cMiniMapDrawer::drawStaticFrame()
 
     // non-stat01 frames are drawn transparent
     if (m_iStaticFrame != 0) {
-        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(staticFrameIds[m_iStaticFrame]), m_RectFullMinimap,m_iTrans);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(m_staticFrames[m_iStaticFrame]), m_RectFullMinimap,m_iTrans);
     }
 }
 

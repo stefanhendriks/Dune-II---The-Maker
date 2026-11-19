@@ -15,6 +15,10 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
+
+#include <array>
+
 class cUnit;
 class SDLDrawer;
 class Graphics;
@@ -37,4 +41,12 @@ private:
     cUnit &m_unit;
     SDLDrawer *m_renderer;
     Graphics *m_gfxdata;
+private:
+    // graphics resolved once from the pack
+    std::array<TextureID, 3> m_starTextures;
+private:
+    // graphics resolved once from the pack
+    TextureID m_texSymbPickmeup = TextureID::invalid;
+    SurfaceID m_surfFocus = SurfaceID::invalid;
+    TextureID m_texFocus = TextureID::invalid;
 };
