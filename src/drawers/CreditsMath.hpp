@@ -17,13 +17,21 @@
 
 #include "data/gfxdata.h"
 
+#include <array>
+
 // Pure (SDL free) logic of the CreditsDrawer, so it can be unit tested.
 namespace CreditsMath {
+
+// sprite index per digit, the only place that lists the digit sprites
+inline constexpr std::array<int, 10> creditDigitIds = {
+    CREDITS_0, CREDITS_1, CREDITS_2, CREDITS_3, CREDITS_4,
+    CREDITS_5, CREDITS_6, CREDITS_7, CREDITS_8, CREDITS_9
+};
 
 // sprite index of a digit character, CREDITS_NONE for anything else
 inline int getCreditDrawId(char c)
 {
-    if (c >= '0' && c <= '9') return CREDITS_0 + (c - '0');
+    if (c >= '0' && c <= '9') return creditDigitIds[c - '0'];
     return CREDITS_NONE;
 }
 
