@@ -14,9 +14,9 @@
  */
 
 #include "cMouseUnitsSelectedState.h"
+#include "data/GfxIds.hpp"
 
 #include "controls/eKeyAction.h"
-#include "data/gfxdata.h"
 #include "controls/cGameControlsContext.h"
 #include "context/cInfoContext.h"
 #include "context/AudioContext.hpp"
@@ -271,14 +271,14 @@ void cMouseUnitsSelectedState::onMouseRightButtonClicked()
 void cMouseUnitsSelectedState::onMouseMovedTo()
 {
     if (m_state == SELECTED_STATE_FORCE_ATTACK) {
-        m_mouseTile = MOUSE_ATTACK;
+        m_mouseTile = gfx::tex::MOUSE_ATTACK;
     }
     if (m_state == SELECTED_STATE_ADD_TO_SELECTION) {
         if (m_mouse->isBoxSelecting()) {
-            m_mouseTile = MOUSE_NORMAL;
+            m_mouseTile = gfx::tex::MOUSE_NORMAL;
         }
         else {
-            m_mouseTile = MOUSE_PICK;
+            m_mouseTile = gfx::tex::MOUSE_PICK;
         }
     }
     else {
@@ -288,7 +288,7 @@ void cMouseUnitsSelectedState::onMouseMovedTo()
 
 void cMouseUnitsSelectedState::evaluateMouseMoveState()
 {
-    m_mouseTile = MOUSE_MOVE;
+    m_mouseTile = gfx::tex::MOUSE_MOVE;
     setState(SELECTED_STATE_MOVE);
 
     cAbstractStructure *hoverStructure = m_context->getStructurePointerWhereMouseHovers();
@@ -300,7 +300,7 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
     if (hoverStructure) {
         if (!hoverStructure->getPlayer()->isSameTeamAs(m_player)) {
             if (unitsWhichCanAttackSelected) {
-                m_mouseTile = MOUSE_ATTACK;
+                m_mouseTile = gfx::tex::MOUSE_ATTACK;
                 setState(SELECTED_STATE_ATTACK);
             }
         }
@@ -311,7 +311,7 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
                 }
                 else {
                     setState(SELECTED_STATE_SELECT);
-                    m_mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
+                    m_mouseTile = gfx::tex::MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
                 }
             }
             else if (hoverStructure->getType() == REPAIR) {
@@ -320,12 +320,12 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
                 }
                 else {
                     setState(SELECTED_STATE_SELECT);
-                    m_mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
+                    m_mouseTile = gfx::tex::MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
                 }
             }
             else {
                 setState(SELECTED_STATE_SELECT);
-                m_mouseTile = MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
+                m_mouseTile = gfx::tex::MOUSE_NORMAL; // allow "selecting" of structure, event though we have units selected
             }
         }
     }
@@ -336,11 +336,11 @@ void cMouseUnitsSelectedState::evaluateMouseMoveState()
             cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
             if (pUnit->isValid()) {
                 if (!pUnit->getPlayer()->isSameTeamAs(m_player)) {
-                    m_mouseTile = MOUSE_ATTACK;
+                    m_mouseTile = gfx::tex::MOUSE_ATTACK;
                     setState(SELECTED_STATE_ATTACK);
                 }
                 else if (pUnit->getPlayer() == m_player) {
-                    m_mouseTile = MOUSE_PICK;
+                    m_mouseTile = gfx::tex::MOUSE_PICK;
                     setState(SELECTED_STATE_SELECT); // allow selecting of my unit
                 }
             }
@@ -361,7 +361,7 @@ void cMouseUnitsSelectedState::onStateSet()
     evaluateSelectedUnits();
     updateSelectedUnitsState();
 
-    m_mouseTile = MOUSE_MOVE; // TODO: check if unit at cell
+    m_mouseTile = gfx::tex::MOUSE_MOVE; // TODO: check if unit at cell
     m_mouse->setTile(m_mouseTile);
 }
 
@@ -444,19 +444,19 @@ void cMouseUnitsSelectedState::onKeyDown(const cKeyboardEvent &event)
 {
     if (event.isAction(eKeyAction::ATTACK_MODE)) {
         setState(SELECTED_STATE_ATTACK);
-        m_mouseTile = MOUSE_ATTACK;
+        m_mouseTile = gfx::tex::MOUSE_ATTACK;
     }
 
     if (event.isAction(eKeyAction::ADD_TO_SELECTION)) {
         setState(SELECTED_STATE_ADD_TO_SELECTION);
-        m_mouseTile = MOUSE_NORMAL;
+        m_mouseTile = gfx::tex::MOUSE_NORMAL;
 
         if (!m_mouse->isBoxSelecting()) {
             int hoverUnitId = m_context->getIdOfUnitWhereMouseHovers();
             if (hoverUnitId > -1) {
                 cUnit *pUnit = m_context->getObjects()->getUnit(hoverUnitId);
                 if (pUnit->getPlayer() == m_player) {
-                    m_mouseTile = MOUSE_PICK;
+                    m_mouseTile = gfx::tex::MOUSE_PICK;
                 }
             }
         }
