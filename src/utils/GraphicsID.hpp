@@ -17,7 +17,7 @@
 
 #include <cstdint>
 
-// Identify an image in a graphics pack, as returned by Graphics::surfaceId() / Graphics::textureId().
+// Identify an image in a graphics pack, as returned by Graphics::getSurfaceID() / Graphics::getTextureID().
 // The values are pack indices; `invalid` is the "not found / no image" value (the uint32 wrap of -1).
 enum class SurfaceID : std::uint32_t {
     invalid = 0xFFFFFFFFu

@@ -56,12 +56,12 @@ void checkTable(const std::string &packFile, const std::vector<NameConstant> &ta
         REQUIRE(index >= 0);
         REQUIRE(static_cast<std::size_t>(index) < names.size());
 
-        const SurfaceID surface = graphics.surfaceId(name);
+        const SurfaceID surface = graphics.getSurfaceID(name);
         REQUIRE(surface != SurfaceID::invalid);
         REQUIRE(surface == expectedSurface);
         REQUIRE(toPackIndex(surface) == index);
 
-        const TextureID texture = graphics.textureId(name);
+        const TextureID texture = graphics.getTextureID(name);
         REQUIRE(texture == expectedTexture);
         REQUIRE(toPackIndex(texture) == index);
     }

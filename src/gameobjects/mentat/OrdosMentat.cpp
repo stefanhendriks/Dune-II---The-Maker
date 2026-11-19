@@ -39,10 +39,10 @@ OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTra
     d2tm_assert(ctx != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
     resolveFaceFrames(eyesNames, mouthNames);
-    m_backgroundTexture = gfxmentat->textureId(gfxnames::MENTATO);
-    Texture *leftButtonTexture = gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_REPEAT));
+    m_backgroundTexture = gfxmentat->getTextureID(gfxnames::MENTATO);
+    Texture *leftButtonTexture = gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_REPEAT));
     buildLeftButton(leftButtonTexture, 293, 423);
-    buildRightButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_PROCEED)), 466, 423);
+    buildRightButton(gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_PROCEED)), 466, 423);
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)        
             .withLabel("Repeat")
@@ -55,7 +55,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTra
     rightGuiButton = GuiButtonBuilder()
             .withRect(*rightButton)        
             .withLabel("Yes")
-            .withTexture(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_YES)))
+            .withTexture(gfxmentat->getTexture(gfxmentat->getTextureID(gfxnames::BTN_YES)))
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() {
