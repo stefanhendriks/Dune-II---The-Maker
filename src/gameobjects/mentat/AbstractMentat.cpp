@@ -65,7 +65,6 @@ AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameSt
     iMentatEyes = 3;
     iMovieFrame = -1;
 
-
     house = GENERALHOUSE;
 
     gfxmovie = nullptr;

@@ -50,13 +50,14 @@ BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTrans
     d2tm_assert(dataCampaign != nullptr);
     resolveFaceFrames(eyesNames, mouthNames);
     m_backgroundTexture = gfxmentat->textureId(gfxnames::MENTATM);
-    buildLeftButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_NO)), 293, 423);
+    Texture *leftButtonTexture = gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_NO));
+    buildLeftButton(leftButtonTexture, 293, 423);
     buildRightButton(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_YES)), 466, 423);
 
     leftGuiButton = GuiButtonBuilder()
             .withRect(*leftButton)
             .withLabel("No")
-            .withTexture(gfxmentat->getTexture(gfxmentat->textureId(gfxnames::BTN_NO)))
+            .withTexture(leftButtonTexture)
             .withRenderer(m_sdlDrawer)
             .withKind(GuiRenderKind::WITH_TEXTURE)
             .onClick([this]() { this->onNoButtonPressed(); })
