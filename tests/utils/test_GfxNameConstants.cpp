@@ -21,6 +21,7 @@
 #include "include/gfxmentat.h"
 #include "include/gfxworld.h"
 
+#include <filesystem>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -37,8 +38,12 @@ struct NameConstant {
 
 void checkTable(const std::string &packFile, const std::vector<NameConstant> &table)
 {
+    const std::string packPath = std::string(D2TM_SOURCE_DIR) + "/resources/bin/data/" + packFile;
+    INFO("graphics pack not found: " << packPath);
+    REQUIRE(std::filesystem::exists(packPath));
+
     auto *fakeRenderer = reinterpret_cast<SDL_Renderer *>(1);
-    Graphics graphics(fakeRenderer, std::string(D2TM_SOURCE_DIR) + "/resources/bin/data/" + packFile);
+    Graphics graphics(fakeRenderer, packPath);
 
     // no entry without a constant, no constant without an entry
     REQUIRE(static_cast<std::size_t>(graphics.getNumberOfFiles()) == table.size());
