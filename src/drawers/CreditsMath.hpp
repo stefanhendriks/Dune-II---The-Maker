@@ -15,24 +15,25 @@
 
 #pragma once
 
-#include "data/gfxdata.h"
 
+#include "utils/GraphicsID.hpp"
 #include <array>
+#include "data/GfxIds.hpp"
 
 // Pure (SDL free) logic of the CreditsDrawer, so it can be unit tested.
 namespace CreditsMath {
 
 // sprite index per digit, the only place that lists the digit sprites
-inline constexpr std::array<int, 10> creditDigitIds = {
-    CREDITS_0, CREDITS_1, CREDITS_2, CREDITS_3, CREDITS_4,
-    CREDITS_5, CREDITS_6, CREDITS_7, CREDITS_8, CREDITS_9
+inline constexpr std::array<TextureID, 10> creditDigitIds = {
+    gfx::tex::CREDITS_0, gfx::tex::CREDITS_1, gfx::tex::CREDITS_2, gfx::tex::CREDITS_3, gfx::tex::CREDITS_4,
+    gfx::tex::CREDITS_5, gfx::tex::CREDITS_6, gfx::tex::CREDITS_7, gfx::tex::CREDITS_8, gfx::tex::CREDITS_9
 };
 
 // sprite index of a digit character, CREDITS_NONE for anything else
-inline int getCreditDrawId(char c)
+inline TextureID getCreditDrawId(char c)
 {
     if (c >= '0' && c <= '9') return creditDigitIds[c - '0'];
-    return CREDITS_NONE;
+    return gfx::tex::CREDITS_NONE;
 }
 
 // index of the first of the 6 digit slots that is drawn, so the number is right aligned

@@ -14,6 +14,7 @@
  */
 
 #include "cMiniMapDrawer.h"
+#include "data/GfxIds.hpp"
 #include "gameobjects/map/TerrainTypes.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
@@ -23,8 +24,6 @@
 #include "game/cGameSettings.h"
 #include "controls/cMouse.h"
 #include "context/AudioContext.hpp"
-#include "data/gfxdata.h"
-#include "data/gfxinter.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
 #include "sidebar/cSideBar.h"
@@ -49,14 +48,14 @@
 namespace {
 
 // static animation frames, the only place that lists the STAT sprites
-constexpr std::array<int, 21> staticFrameIds = {
-    STAT01, STAT02, STAT03,
-    STAT04, STAT05, STAT06,
-    STAT07, STAT08, STAT09,
-    STAT10, STAT11, STAT12,
-    STAT13, STAT14, STAT15,
-    STAT16, STAT17, STAT18,
-    STAT19, STAT20, STAT21
+constexpr std::array<TextureID, 21> staticFrameIds = {
+    gfx::tex::STAT01, gfx::tex::STAT02, gfx::tex::STAT03,
+    gfx::tex::STAT04, gfx::tex::STAT05, gfx::tex::STAT06,
+    gfx::tex::STAT07, gfx::tex::STAT08, gfx::tex::STAT09,
+    gfx::tex::STAT10, gfx::tex::STAT11, gfx::tex::STAT12,
+    gfx::tex::STAT13, gfx::tex::STAT14, gfx::tex::STAT15,
+    gfx::tex::STAT16, gfx::tex::STAT17, gfx::tex::STAT18,
+    gfx::tex::STAT19, gfx::tex::STAT20, gfx::tex::STAT21
 };
 
 // m_iStaticFrame counts 0 (STAT01, no static) up to kStaticLastFrame (STAT21, full static)
@@ -160,7 +159,7 @@ void cMiniMapDrawer::drawStaticFrame()
     if (m_status == eMinimapStatus::LOWPOWER) return;
 
     if (m_status == eMinimapStatus::POWERDOWN) {
-        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(toTextureID(staticFrameIds[m_iStaticFrame])), m_RectFullMinimap);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(staticFrameIds[m_iStaticFrame]), m_RectFullMinimap);
         return;
     }
 
@@ -174,7 +173,7 @@ void cMiniMapDrawer::drawStaticFrame()
 
     // non-stat01 frames are drawn transparent
     if (m_iStaticFrame != 0) {
-        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(toTextureID(staticFrameIds[m_iStaticFrame])), m_RectFullMinimap,m_iTrans);
+        m_sdlDrawer->renderStrechFullSprite(m_gfxinter->getTexture(staticFrameIds[m_iStaticFrame]), m_RectFullMinimap,m_iTrans);
     }
 }
 
@@ -464,9 +463,9 @@ void cMiniMapDrawer::updateMouseCursor()
     if (m_isMouseOver &&
         m_status != NOTAVAILABLE) {
         if (m_player->hasAnyUnitSelected()) {
-            m_mouse->setTile(MOUSE_MOVE);
+            m_mouse->setTile(gfx::tex::MOUSE_MOVE);
         } else {
-            m_mouse->setTile(MOUSE_NORMAL);
+            m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
         }
     }
 }

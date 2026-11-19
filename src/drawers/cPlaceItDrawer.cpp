@@ -14,12 +14,12 @@
  */
 
 #include "cPlaceItDrawer.h"
+#include "data/GfxIds.hpp"
 #include "gameobjects/map/TerrainTypes.hpp"
 #include "utils/cStructureUtils.h"
 
 #include "include/sGameServices.h"
 #include "context/GameContext.hpp"
-#include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/MapGeometry.hpp"
@@ -202,13 +202,13 @@ void cPlaceItDrawer::drawStructureIdAtMousePos(cBuildingListItem *itemToPlace, i
 
     Texture *bmp = nullptr;
     if (structureId == SLAB1) {
-        bmp = m_gfxdata->getTexture(toTextureID(PLACE_SLAB1));
+        bmp = m_gfxdata->getTexture(gfx::tex::PLACE_SLAB1);
     }
     else if (structureId == SLAB4) {
-        bmp = m_gfxdata->getTexture(toTextureID(PLACE_SLAB4));
+        bmp = m_gfxdata->getTexture(gfx::tex::PLACE_SLAB4);
     }
     else if (structureId == WALL) {
-        bmp = m_gfxdata->getTexture(toTextureID(PLACE_WALL));
+        bmp = m_gfxdata->getTexture(gfx::tex::PLACE_WALL);
     }
     else {
         bmp = m_player->getStructureBitmap(structureId);
