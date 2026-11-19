@@ -15,11 +15,13 @@
 
 #include "AtreidesMentat.h"
 #include "include/gfxmentat.h"
+#include "data/GfxNames.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"
 #include "gui/GuiButton.h"
 #include <array>
+#include <string_view>
 #include <iostream>
 #include "game/GameStateTransition.hpp"
 #include "game/MentatFlow.hpp"
@@ -28,8 +30,8 @@
 namespace {
 
 // sprite per eyes/mouth frame, the only place that lists the ATR sprites
-constexpr std::array<int, 5> eyesIds = {ATR_EYES01, ATR_EYES02, ATR_EYES03, ATR_EYES04, ATR_EYES05};
-constexpr std::array<int, 5> mouthIds = {ATR_MOUTH01, ATR_MOUTH02, ATR_MOUTH03, ATR_MOUTH04, ATR_MOUTH05};
+constexpr std::array<std::string_view, 5> eyesNames = {gfxnames::ATR_EYES01, gfxnames::ATR_EYES02, gfxnames::ATR_EYES03, gfxnames::ATR_EYES04, gfxnames::ATR_EYES05};
+constexpr std::array<std::string_view, 5> mouthNames = {gfxnames::ATR_MOUTH01, gfxnames::ATR_MOUTH02, gfxnames::ATR_MOUTH03, gfxnames::ATR_MOUTH04, gfxnames::ATR_MOUTH05};
 
 }
 
@@ -37,6 +39,7 @@ AtreidesMentat::AtreidesMentat(GameContext* ctx, cGameSettings* settings, GameSt
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
+    resolveFaceFrames(eyesNames, mouthNames);
     iBackgroundFrame = MENTATA;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
@@ -81,10 +84,10 @@ void AtreidesMentat::draw_other()
 
 void AtreidesMentat::draw_eyes()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(eyesIds[iMentatEyes]),  offsetX + 80, offsetY + 241);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(m_eyesTextures[iMentatEyes]),  offsetX + 80, offsetY + 241);
 }
 
 void AtreidesMentat::draw_mouth()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(mouthIds[iMentatMouth]),  offsetX + 80, offsetY + 273);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(m_mouthTextures[iMentatMouth]),  offsetX + 80, offsetY + 273);
 }
