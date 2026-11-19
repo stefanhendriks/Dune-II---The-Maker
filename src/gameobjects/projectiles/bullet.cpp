@@ -14,6 +14,7 @@
  */
 
 #include "bullet.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 #include "game/cGameSettings.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenShake.h"

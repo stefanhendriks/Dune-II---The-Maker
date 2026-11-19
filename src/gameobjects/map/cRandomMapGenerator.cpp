@@ -14,6 +14,7 @@
  */
 
 #include "cRandomMapGenerator.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 #include "gameobjects/map/PreviewMap.hpp"
 
 #include "data/gfxdata.h"

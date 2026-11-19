@@ -14,6 +14,7 @@
  */
 
 #include "cMiniMapDrawer.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cStructures.h"

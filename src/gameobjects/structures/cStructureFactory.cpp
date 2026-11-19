@@ -14,6 +14,7 @@
  */
 
 #include "cStructureFactory.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructures.h"

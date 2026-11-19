@@ -14,6 +14,7 @@
  */
 
 #include "cMapDrawer.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 
 #include "controls/cGameControlsContext.h"
 #include "data/gfxdata.h"

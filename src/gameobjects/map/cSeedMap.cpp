@@ -14,6 +14,7 @@
  */
 
 #include "cSeedMap.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 
 #include "data/gfxdata.h"
 

@@ -14,6 +14,7 @@
  */
 
 #include "cMapEditor.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 #include "gameobjects/map/cMap.h"
 #include "data/gfxdata.h"
 #include "utils/Log.h"

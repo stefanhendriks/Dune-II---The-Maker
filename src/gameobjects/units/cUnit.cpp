@@ -14,6 +14,7 @@
  */
 
 #include "cUnit.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 // #include "cUnits.h"
 
 

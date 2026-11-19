@@ -14,6 +14,7 @@
  */
 
 #include "cMousePlaceState.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 
 #include "gameobjects/map/cMap.h"
 #include "context/AudioContext.hpp"
