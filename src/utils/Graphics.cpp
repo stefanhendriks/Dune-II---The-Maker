@@ -36,11 +36,6 @@ SDL_Surface *Graphics::getSurface(SurfaceID id) const
     return dataPack->getSurface(toPackIndex(id));
 }
 
-SDL_Surface *Graphics::getSurface(const std::string &name) const
-{
-    return dataPack->getSurface(name);
-}
-
 Texture *Graphics::getTexture(TextureID id)
 {
     const int index = toPackIndex(id);
@@ -65,12 +60,6 @@ Texture *Graphics::getTexture(TextureID id)
     SDL_SetTextureScaleMode(outTexture, SDL_SCALEMODE_NEAREST);
     texCache.emplace(index, std::make_unique<Texture>(outTexture, outSurface->w, outSurface->h));
     return texCache[index].get();
-}
-
-Texture *Graphics::getTexture(const std::string &name)
-{
-    int index = dataPack->getIndexFromName(name);
-    return getTexture(toTextureID(index));
 }
 
 SurfaceID Graphics::getSurfaceID(std::string_view name) const
