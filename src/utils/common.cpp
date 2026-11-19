@@ -14,6 +14,7 @@
  */
 
 #include "common.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 
 #include "data/gfxdata.h"
 #include "data/gfxinter.h"

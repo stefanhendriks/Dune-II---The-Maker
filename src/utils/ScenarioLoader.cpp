@@ -14,6 +14,7 @@
  */
 
 #include "utils/ScenarioLoader.hpp"
+#include "gameobjects/map/TerrainTypes.hpp"
 
 #include <filesystem>
 #include "utils/ScenarioData.hpp"

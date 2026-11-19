@@ -14,6 +14,7 @@
  */
 
 #include "gamestates/cEditorState.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 #include "gamestates/cEditorState/cEditorCam.h"
 #include "gamestates/cEditorState/cEditorUndoRedoHistory.h"
 #include "controls/eKeyAction.h"

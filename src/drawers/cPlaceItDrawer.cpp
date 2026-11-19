@@ -14,6 +14,7 @@
  */
 
 #include "cPlaceItDrawer.h"
+#include "gameobjects/map/TerrainTypes.hpp"
 #include "utils/cStructureUtils.h"
 
 #include "include/sGameServices.h"
