@@ -48,8 +48,6 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices 
     d2tm_assert(services != nullptr);
 
     m_candiBarRenderer = m_sdlDrawer->createRenderTargetTexture(cSideBar::SidebarWidth, m_services->settings->getScreenH()-40);
-    createPlayerCandyBar();
-
     m_surfBmpGeraldCandybarBall = m_gfxinter->getSurfaceID(gfxnames::BMP_GERALD_CANDYBAR_BALL);
     m_surfBmpGeraldCandybarPiece = m_gfxinter->getSurfaceID(gfxnames::BMP_GERALD_CANDYBAR_PIECE);
     m_surfHorizontalCandybar = m_gfxinter->getSurfaceID(gfxnames::HORIZONTAL_CANDYBAR);
@@ -66,6 +64,8 @@ cSideBarDrawer::cSideBarDrawer(GameContext *ctx, cPlayer *player, sGameServices 
     m_texIconSolarisFull = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS_FULL);
     m_texIconSolarisLow = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS_LOW);
     m_texIconSolaris = m_gfxinter->getTextureID(gfxnames::ICON_SOLARIS);
+
+    createPlayerCandyBar();
 }
 
 cSideBarDrawer::~cSideBarDrawer()

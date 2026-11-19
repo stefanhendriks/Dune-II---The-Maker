@@ -47,11 +47,11 @@ cMessageDrawer::cMessageDrawer(GameContext* ctx, sGameServices* services) :
     m_bmpBar = nullptr;
     m_keepMessage = false;
     m_timeMessageIsVisible = 10;
-    init();
-
     m_surfMessageLeft = m_gfxinter->getSurfaceID(gfxnames::MESSAGE_LEFT);
     m_surfMessageMiddle = m_gfxinter->getSurfaceID(gfxnames::MESSAGE_MIDDLE);
     m_surfMessageRight = m_gfxinter->getSurfaceID(gfxnames::MESSAGE_RIGHT);
+
+    init();
 }
 
 cMessageDrawer::~cMessageDrawer()

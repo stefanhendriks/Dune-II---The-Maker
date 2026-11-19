@@ -37,7 +37,7 @@ cSideBar *cSideBarFactory::createSideBar(cPlayer *thePlayer)
     cSideBar *sidebar = new cSideBar(thePlayer);
 
     for (const auto listType : AllListTypes) {
-        cBuildingList *list = m_buildingListFactory->createList(listType, m_services->ctx->getGraphicsContext()->gfxdata.get());
+        cBuildingList *list = m_buildingListFactory->createList(listType, m_services->ctx->getGraphicsContext()->gfxinter.get());
         sidebar->setList(listType, list);
         list->setItemBuilder(thePlayer->getItemBuilder()); // TODO: this should be easier!?
         list->serviceInit(m_services);

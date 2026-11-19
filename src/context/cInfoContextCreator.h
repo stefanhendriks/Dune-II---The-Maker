@@ -56,5 +56,6 @@ private:
     void initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings);
 
     Graphics* m_gfxdata = nullptr;
+    Graphics* m_gfxinter = nullptr;
     const AudioContext* m_audio = nullptr;
 };
