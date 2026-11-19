@@ -14,7 +14,7 @@
  */
 
 #include "cMouseState.h"
-#include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 // until we have our own data structure to abstract Allegro away, we have tight coupling here
 
 #include "include/cAssert.h"
@@ -23,7 +23,7 @@ cMouseState::cMouseState(cPlayer *player, cGameControlsContext *context, cMouse 
     m_player(player),
     m_context(context),
     m_mouse(mouse),
-    m_mouseTile(gfx::tex::MOUSE_NORMAL)
+    m_mouseTile(eMouseTile::NORMAL)
 {
     d2tm_assert(player!=nullptr);
     d2tm_assert(context!=nullptr);

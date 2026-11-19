@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "utils/GraphicsID.hpp"
+#include "controls/eMouseTile.h"
 #include "observers/cInputObserver.h"
 #include "observers/cScenarioObserver.h"
 class cMouse;
@@ -41,6 +41,6 @@ protected:
     cGameControlsContext *m_context;
     cMouse *m_mouse;
 
-    TextureID m_mouseTile;
+    eMouseTile m_mouseTile;
 
 };

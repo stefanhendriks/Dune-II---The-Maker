@@ -15,6 +15,7 @@
 
 #include "cMiniMapDrawer.h"
 #include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 #include "gameobjects/map/TerrainTypes.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
@@ -463,9 +464,9 @@ void cMiniMapDrawer::updateMouseCursor()
     if (m_isMouseOver &&
         m_status != NOTAVAILABLE) {
         if (m_player->hasAnyUnitSelected()) {
-            m_mouse->setTile(gfx::tex::MOUSE_MOVE);
+            m_mouse->setTile(eMouseTile::MOVE);
         } else {
-            m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
+            m_mouse->setTile(eMouseTile::NORMAL);
         }
     }
 }

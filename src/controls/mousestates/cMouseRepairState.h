@@ -50,5 +50,5 @@ private:
 
     void onMouseMovedTo();
 
-    TextureID getMouseTileForRepairState();
+    eMouseTile getMouseTileForRepairState();
 };

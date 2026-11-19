@@ -14,7 +14,7 @@
  */
 
 #include "gamestates/cMentatState.h"
-#include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 #include "gameobjects/mentat/AtreidesMentat.h"
 #include "gameobjects/mentat/HarkonnenMentat.h"
 #include "gameobjects/mentat/OrdosMentat.h"
@@ -143,7 +143,7 @@ void cMentatState::thinkFast()
 
 void cMentatState::draw() const
 {
-    m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
+    m_mouse->setTile(eMouseTile::NORMAL);
     if (m_mentat) m_mentat->draw();
     m_mouse->draw();
 }

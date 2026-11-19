@@ -15,10 +15,12 @@
 
 #pragma once
 
+#include "controls/eMouseTile.h"
 #include "utils/GraphicsID.hpp"
 #include "utils/cPoint.h"
 
 #include <SDL3/SDL.h>
+#include <array>
 #include <string>
 
 class cRectangle;
@@ -90,7 +92,7 @@ public:
 
     bool isBoxSelecting();
 
-    void setTile(TextureID value);
+    void setTile(eMouseTile value);
 
     void resetDragViewportInteraction();
 
@@ -102,7 +104,7 @@ public:
 
     void resetBoxSelect();
 
-    bool isTile(TextureID value);
+    bool isTile(eMouseTile value);
 
     void draw();
 
@@ -162,8 +164,12 @@ private:
     int m_mouseMvX2;        // the
     int m_mouseMvY2;        // dragging viewport
 
-    TextureID m_mouseTile;       // mouse picture in gfxdata
+    eMouseTile m_mouseTile;       // mouse picture in gfxdata
+    // the sprite of every eMouseTile, asked from the graphics pack once (on first draw)
+    std::array<TextureID, 11> m_tileTextures;
+    bool m_tileTexturesResolved = false;
 
-    std::string mouseTileName(TextureID tile);
+    void resolveTileTextures();
+    std::string mouseTileName(eMouseTile tile);
 
 };

@@ -14,7 +14,7 @@
  */
 
 #include "cMapCamera.h"
-#include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 
 #include "controls/cMouse.h"
 #include "controls/eKeyAction.h"
@@ -291,11 +291,11 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
 
         if (atEdges && mouseX <= 2) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            m_mouse->setTile(gfx::tex::MOUSE_LEFT);
+            m_mouse->setTile(eMouseTile::LEFT);
         }
         else if (atEdges && mouseX >= (m_gameSettings->getScreenW() - 2)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            m_mouse->setTile(gfx::tex::MOUSE_RIGHT);
+            m_mouse->setTile(eMouseTile::RIGHT);
         }
         else {
             if (!m_keyPressedLeft && !m_keyPressedRight) {
@@ -305,11 +305,11 @@ void cMapCamera::onMouseMovedTo(const s_MouseEvent &event)
 
         if (atEdges && mouseY <= 2) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            m_mouse->setTile(gfx::tex::MOUSE_UP);
+            m_mouse->setTile(eMouseTile::UP);
         }
         else if (atEdges && mouseY >= (m_gameSettings->getScreenH() - 2)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            m_mouse->setTile(gfx::tex::MOUSE_DOWN);
+            m_mouse->setTile(eMouseTile::DOWN);
         }
         else {
             if (!m_keyPressedUp && !m_keyPressedDown) {
@@ -388,25 +388,25 @@ void cMapCamera::onKeyHold(const cKeyboardEvent &event)
     if (!m_mouse->isMapScrolling()) {
         if (event.isAction(eKeyAction::SCROLL_LEFT)) {
             setMoveX(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            m_mouse->setTile(gfx::tex::MOUSE_LEFT);
+            m_mouse->setTile(eMouseTile::LEFT);
             m_keyPressedLeft = true;
         }
 
         if (event.isAction(eKeyAction::SCROLL_UP)) {
             setMoveY(-kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            m_mouse->setTile(gfx::tex::MOUSE_UP);
+            m_mouse->setTile(eMouseTile::UP);
             m_keyPressedUp = true;
         }
 
         if (event.isAction(eKeyAction::SCROLL_RIGHT)) {
             setMoveX(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            m_mouse->setTile(gfx::tex::MOUSE_RIGHT);
+            m_mouse->setTile(eMouseTile::RIGHT);
             m_keyPressedRight = true;
         }
 
         if (event.isAction(eKeyAction::SCROLL_DOWN)) {
             setMoveY(kMapBoundaryScrollSpeed, m_moveSpeedBorderOrKeys);
-            m_mouse->setTile(gfx::tex::MOUSE_DOWN);
+            m_mouse->setTile(eMouseTile::DOWN);
             m_keyPressedDown = true;
         }
     }

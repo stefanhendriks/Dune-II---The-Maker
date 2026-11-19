@@ -14,7 +14,7 @@
  */
 
 #include "cGameControlsContext.h"
-#include "data/GfxIds.hpp"
+#include "controls/eMouseTile.h"
 #include "game/cGameSettings.h"
 #include "gameobjects/structures/cAbstractStructure.h"
 #include "gameobjects/structures/cStructures.h"
@@ -228,7 +228,7 @@ void cGameControlsContext::onNotifyMouseEvent(const s_MouseEvent &event)
     onNotifyMouseStateEvent(event);
 
     if (!isMouseOnBattleField()) {
-        m_mouse->setTile(gfx::tex::MOUSE_NORMAL);
+        m_mouse->setTile(eMouseTile::NORMAL);
     }
 
 }
