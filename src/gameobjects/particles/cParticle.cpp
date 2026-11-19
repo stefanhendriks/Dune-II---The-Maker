@@ -37,7 +37,7 @@
 #include <SDL3/SDL.h>
 #include <iostream>
 
-std::map<std::pair<int, int>, Texture*> cParticle::particleTextureCache = {};
+std::map<std::pair<TextureID, int>, Texture*> cParticle::particleTextureCache = {};
 
 cParticle::cParticle()
 {
@@ -754,8 +754,8 @@ cParticle& cParticle::getBoundParticle()
 void cParticle::init(const s_ParticleInfo &particleInfo)
 {
     init();
-    if (particleInfo.bmpIndex > -1) {
-        bmp = m_gfxdata->getTexture(toTextureID(particleInfo.bmpIndex));
+    if (particleInfo.bmpIndex != TextureID::invalid) {
+        bmp = m_gfxdata->getTexture(particleInfo.bmpIndex);
     }
 
     if (particleInfo.startAlpha > -1 && particleInfo.startAlpha < 256) {
@@ -850,7 +850,7 @@ void cParticle::recolorForHouseIfGiven() {
         return;
     }
 
-    int bmpIndex = m_services->info->getParticleInfo(iType).bmpIndex;
+    TextureID bmpIndex = m_services->info->getParticleInfo(iType).bmpIndex;
     if (m_renderer->isSurface8BitPaletted(m_gfxdata->getSurface(toSurfaceID(bmpIndex))) == false) {
         //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
@@ -872,7 +872,7 @@ void cParticle::recolorForHouseIfGiven() {
         bmp = recoloredBmp;
         particleTextureCache[cacheKey] = recoloredBmp;
     } else {
-        Texture* fallback = m_gfxdata->getTexture(toTextureID(bmpIndex));
+        Texture* fallback = m_gfxdata->getTexture(bmpIndex);
         if (fallback != nullptr) {
             bmp = fallback;
         }

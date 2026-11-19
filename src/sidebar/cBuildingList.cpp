@@ -35,7 +35,7 @@ cBuildingList::cBuildingList(eListType listType)
 {
     m_TIMER_flashing = 0;
     m_lastClickedId = 0;
-    m_buttonIconIdPressed = 0;	// the button to draw at the left of the list
+    m_buttonIconIdPressed = TextureID::invalid;	// the button to draw at the left of the list
     m_buttonDrawX = 0;
     m_buttonDrawY = 0;
     std::fill(std::begin(m_items), std::end(m_items), nullptr);

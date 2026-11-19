@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include <string>
 
 #include <array>
@@ -36,7 +37,7 @@
  * Then, also, this struct provides which item and what kind of item will be made available.
  */
 struct s_SpecialInfo {
-    int icon;            // icon id
+    TextureID icon;            // icon id
     std::string description; // ie: "Upgrade to 4slab"
     int buildTime;     // how long it takes to 'build' (ie wait before ready)
     eBuildType providesType;

@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "cSideBar.h"
 #include "definitions.h"
 
@@ -83,11 +84,11 @@ public:
         return m_lastClickedId;
     }
 
-    int getButtonIconIdPressed() {
+    TextureID getButtonIconIdPressed() {
         return m_buttonIconIdPressed;
     }
 
-    int getButtonIconIdUnpressed() {
+    TextureID getButtonIconIdUnpressed() {
         return m_buttonIconIdUnpressed;
     }
 
@@ -118,11 +119,11 @@ public:
 
     void setStatusAvailable(int subListId);
 
-    void setButtonIconIdPressed(int iconId) {
+    void setButtonIconIdPressed(TextureID iconId) {
         m_buttonIconIdPressed = iconId;
     }
 
-    void setButtonIconIdUnpressed(int iconId) {
+    void setButtonIconIdUnpressed(TextureID iconId) {
         m_buttonIconIdUnpressed = iconId;
     }
 
@@ -185,8 +186,8 @@ protected:
 
 private:
     int m_lastClickedId;    // last clicked item id
-    int m_buttonIconIdPressed;    // the button to draw at the left of the list when pressed (selected)
-    int m_buttonIconIdUnpressed;    // the button to draw at the left of the list when unpressed
+    TextureID m_buttonIconIdPressed;    // the button to draw at the left of the list when pressed (selected)
+    TextureID m_buttonIconIdUnpressed;    // the button to draw at the left of the list when unpressed
     int m_buttonDrawX;
     int m_buttonDrawY;
     int m_buttonWidth;
