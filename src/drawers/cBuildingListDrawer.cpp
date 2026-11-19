@@ -14,7 +14,6 @@
  */
 
 #include "cBuildingListDrawer.h"
-#include "data/GfxNames.hpp"
 #include "include/sGameServices.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/structures/cOrderProcesser.h"
@@ -45,7 +44,7 @@
 namespace {
 
 // build progress overlay per frame, the only place that lists the progress sprites
-constexpr std::array<std::string_view, 32> progressFramesNames = {gfxnames::PROGRESS001, gfxnames::PROGRESS002, gfxnames::PROGRESS003, gfxnames::PROGRESS004, gfxnames::PROGRESS005, gfxnames::PROGRESS006, gfxnames::PROGRESS007, gfxnames::PROGRESS008, gfxnames::PROGRESS009, gfxnames::PROGRESS010, gfxnames::PROGRESS011, gfxnames::PROGRESS012, gfxnames::PROGRESS013, gfxnames::PROGRESS014, gfxnames::PROGRESS015, gfxnames::PROGRESS016, gfxnames::PROGRESS017, gfxnames::PROGRESS018, gfxnames::PROGRESS019, gfxnames::PROGRESS020, gfxnames::PROGRESS021, gfxnames::PROGRESS022, gfxnames::PROGRESS023, gfxnames::PROGRESS024, gfxnames::PROGRESS025, gfxnames::PROGRESS026, gfxnames::PROGRESS027, gfxnames::PROGRESS028, gfxnames::PROGRESS029, gfxnames::PROGRESS030, gfxnames::PROGRESS031, gfxnames::PROGRESS032};
+constexpr std::array<std::string_view, 32> progressFramesNames = {"PROGRESS001", "PROGRESS002", "PROGRESS003", "PROGRESS004", "PROGRESS005", "PROGRESS006", "PROGRESS007", "PROGRESS008", "PROGRESS009", "PROGRESS010", "PROGRESS011", "PROGRESS012", "PROGRESS013", "PROGRESS014", "PROGRESS015", "PROGRESS016", "PROGRESS017", "PROGRESS018", "PROGRESS019", "PROGRESS020", "PROGRESS021", "PROGRESS022", "PROGRESS023", "PROGRESS024", "PROGRESS025", "PROGRESS026", "PROGRESS027", "PROGRESS028", "PROGRESS029", "PROGRESS030", "PROGRESS031", "PROGRESS032"};
 
 }
 
@@ -63,15 +62,15 @@ cBuildingListDrawer::cBuildingListDrawer(const GameContext *ctx, cPlayer *player
         m_progressFrames[i] = m_gfxinter->getTextureID(progressFramesNames[i]);
     }
 
-    m_texProgressfix = m_gfxinter->getTextureID(gfxnames::PROGRESSFIX);
-    m_texReady01 = m_gfxinter->getTextureID(gfxnames::READY01);
-    m_texReady02 = m_gfxinter->getTextureID(gfxnames::READY02);
-    m_texProgressna = m_gfxinter->getTextureID(gfxnames::PROGRESSNA);
-    m_texGrid1x1 = m_gfxinter->getTextureID(gfxnames::GRID_1X1);
-    m_texGrid2x2 = m_gfxinter->getTextureID(gfxnames::GRID_2X2);
-    m_texGrid3x2 = m_gfxinter->getTextureID(gfxnames::GRID_3X2);
-    m_texGrid3x3 = m_gfxinter->getTextureID(gfxnames::GRID_3X3);
-    m_texGrid0x0 = m_gfxinter->getTextureID(gfxnames::GRID_0X0);
+    m_texProgressfix = m_gfxinter->getTextureID("PROGRESSFIX");
+    m_texReady01 = m_gfxinter->getTextureID("READY01");
+    m_texReady02 = m_gfxinter->getTextureID("READY02");
+    m_texProgressna = m_gfxinter->getTextureID("PROGRESSNA");
+    m_texGrid1x1 = m_gfxinter->getTextureID("GRID_1X1");
+    m_texGrid2x2 = m_gfxinter->getTextureID("GRID_2X2");
+    m_texGrid3x2 = m_gfxinter->getTextureID("GRID_3X2");
+    m_texGrid3x3 = m_gfxinter->getTextureID("GRID_3X3");
+    m_texGrid0x0 = m_gfxinter->getTextureID("GRID_0X0");
 }
 
 void cBuildingListDrawer::serviceInit(sGameServices* services)

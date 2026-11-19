@@ -14,7 +14,6 @@
  */
 
 #include "cMapDrawer.h"
-#include "data/GfxNames.hpp"
 #include "gameobjects/map/TerrainTypes.hpp"
 
 #include "controls/cGameControlsContext.h"
@@ -57,9 +56,9 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
 
     m_fogTexture = createFogTexture();
 
-    m_surfShroud = m_gfxdata->getSurfaceID(gfxnames::SHROUD);
-    m_texShroud = m_gfxdata->getTextureID(gfxnames::SHROUD);
-    m_texSmudge = m_gfxdata->getTextureID(gfxnames::SMUDGE);
+    m_surfShroud = m_gfxdata->getSurfaceID("SHROUD");
+    m_texShroud = m_gfxdata->getTextureID("SHROUD");
+    m_texSmudge = m_gfxdata->getTextureID("SMUDGE");
 }
 
 /**

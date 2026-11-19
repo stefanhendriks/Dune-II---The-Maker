@@ -14,7 +14,6 @@
  */
 
 #include "cPlaceItDrawer.h"
-#include "data/GfxNames.hpp"
 #include "gameobjects/map/TerrainTypes.hpp"
 #include "utils/cStructureUtils.h"
 
@@ -41,9 +40,9 @@ cPlaceItDrawer::cPlaceItDrawer(GameContext *ctx, cPlayer *thePlayer, cStructureU
     d2tm_assert(ctx != nullptr);
     m_gfxdata = m_ctx->getGraphicsContext()->gfxdata.get();
 
-    m_texPlaceSlab1 = m_gfxdata->getTextureID(gfxnames::PLACE_SLAB1);
-    m_texPlaceSlab4 = m_gfxdata->getTextureID(gfxnames::PLACE_SLAB4);
-    m_texPlaceWall = m_gfxdata->getTextureID(gfxnames::PLACE_WALL);
+    m_texPlaceSlab1 = m_gfxdata->getTextureID("PLACE_SLAB1");
+    m_texPlaceSlab4 = m_gfxdata->getTextureID("PLACE_SLAB4");
+    m_texPlaceWall = m_gfxdata->getTextureID("PLACE_WALL");
 }
 
 cPlaceItDrawer::~cPlaceItDrawer()

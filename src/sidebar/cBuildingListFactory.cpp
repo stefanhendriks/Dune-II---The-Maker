@@ -13,7 +13,6 @@
  * This is a non-commercial educational project.
  */
 
-#include "data/GfxNames.hpp"
 #include "cBuildingListFactory.h"
 #include "game/cGameSettings.h"
 #include "utils/Graphics.hpp"
@@ -53,8 +52,8 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
     // now set it up
     if (listType == eListType::LIST_CONSTYARD) {
         list->setButtonDrawX(startX);
-        list->setButtonIconIdPressed(gfx->getTextureID(gfxnames::LIST_BTN_CONSTYARD));
-        list->setButtonIconIdUnpressed(gfx->getTextureID(gfxnames::LIST_BTN_CONSTYARD));
+        list->setButtonIconIdPressed(gfx->getTextureID("LIST_BTN_CONSTYARD"));
+        list->setButtonIconIdUnpressed(gfx->getTextureID("LIST_BTN_CONSTYARD"));
     }
 
 
@@ -64,32 +63,32 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
     // now set it up
     if (listType == eListType::LIST_FOOT_UNITS) {
         list->setButtonDrawX(startX);
-        list->setButtonIconIdPressed(gfx->getTextureID(gfxnames::LIST_BTN_INFANTRY));
-        list->setButtonIconIdUnpressed(gfx->getTextureID(gfxnames::LIST_BTN_INFANTRY));
+        list->setButtonIconIdPressed(gfx->getTextureID("LIST_BTN_INFANTRY"));
+        list->setButtonIconIdUnpressed(gfx->getTextureID("LIST_BTN_INFANTRY"));
     }
 
     startX += widthOfButtonIncludingMargin;
 
     if (listType == eListType::LIST_UNITS) {
         list->setButtonDrawX(startX);
-        list->setButtonIconIdPressed(gfx->getTextureID(gfxnames::LIST_BTN_FACTORY));
-        list->setButtonIconIdUnpressed(gfx->getTextureID(gfxnames::LIST_BTN_FACTORY));
+        list->setButtonIconIdPressed(gfx->getTextureID("LIST_BTN_FACTORY"));
+        list->setButtonIconIdUnpressed(gfx->getTextureID("LIST_BTN_FACTORY"));
     }
 
     startX += widthOfButtonIncludingMargin;
 
     if (listType == eListType::LIST_STARPORT) {
         list->setButtonDrawX(startX);
-        list->setButtonIconIdPressed(gfx->getTextureID(gfxnames::LIST_BTN_STARPORT));
-        list->setButtonIconIdUnpressed(gfx->getTextureID(gfxnames::LIST_BTN_STARPORT));
+        list->setButtonIconIdPressed(gfx->getTextureID("LIST_BTN_STARPORT"));
+        list->setButtonIconIdUnpressed(gfx->getTextureID("LIST_BTN_STARPORT"));
     }
 
     startX += widthOfButtonIncludingMargin;
 
     if (listType == eListType::LIST_PALACE) {
         list->setButtonDrawX(startX);
-        list->setButtonIconIdPressed(gfx->getTextureID(gfxnames::LIST_BTN_PALACE));
-        list->setButtonIconIdUnpressed(gfx->getTextureID(gfxnames::LIST_BTN_PALACE));
+        list->setButtonIconIdPressed(gfx->getTextureID("LIST_BTN_PALACE"));
+        list->setButtonIconIdUnpressed(gfx->getTextureID("LIST_BTN_PALACE"));
     }
 
     startX += widthOfButtonIncludingMargin;
@@ -97,8 +96,8 @@ void cBuildingListFactory::initializeList(cBuildingList *list, eListType listTyp
     if (listType == eListType::LIST_UPGRADES) {
         list->setButtonDrawX(startX);
         // temp, use CONST YARD
-        list->setButtonIconIdPressed(gfx->getTextureID(gfxnames::LIST_BTN_UPGRADE));
-        list->setButtonIconIdUnpressed(gfx->getTextureID(gfxnames::LIST_BTN_UPGRADE));
+        list->setButtonIconIdPressed(gfx->getTextureID("LIST_BTN_UPGRADE"));
+        list->setButtonIconIdUnpressed(gfx->getTextureID("LIST_BTN_UPGRADE"));
 
         // the contents of the list is determined elsewhere
     }

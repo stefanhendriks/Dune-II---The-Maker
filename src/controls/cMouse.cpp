@@ -14,7 +14,6 @@
  */
 
 #include "cMouse.h"
-#include "data/GfxNames.hpp"
 #include "game/cGameSettings.h"
 #include "controls/cGameControlsContext.h"
 #include "observers/cInputObserver.h"
@@ -507,9 +506,9 @@ void cMouse::resolveTileTextures()
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
     // in the order of eMouseTile
     constexpr std::array<std::string_view, 11> names = {
-        gfxnames::MOUSE_NORMAL, gfxnames::MOUSE_DOWN, gfxnames::MOUSE_RIGHT, gfxnames::MOUSE_LEFT,
-        gfxnames::MOUSE_UP, gfxnames::MOUSE_MOVE, gfxnames::MOUSE_RALLY, gfxnames::MOUSE_ATTACK,
-        gfxnames::MOUSE_REPAIR, gfxnames::MOUSE_FORBIDDEN, gfxnames::MOUSE_PICK
+        "MOUSE_NORMAL", "MOUSE_DOWN", "MOUSE_RIGHT", "MOUSE_LEFT",
+        "MOUSE_UP", "MOUSE_MOVE", "MOUSE_RALLY", "MOUSE_ATTACK",
+        "MOUSE_REPAIR", "MOUSE_FORBIDDEN", "MOUSE_PICK"
     };
     for (size_t i = 0; i < names.size(); i++) {
         m_tileTextures[i] = gfxdata->getTextureID(names[i]);

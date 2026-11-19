@@ -14,7 +14,6 @@
  */
 
 #include "cUnitDrawer.h"
-#include "data/GfxNames.hpp"
 
 #include "gameobjects/units/cUnit.h"
 #include "gameobjects/map/cMapCamera.h"
@@ -39,7 +38,7 @@
 namespace {
 
 // veteran star sprite per star type, the only place that lists the star sprites
-constexpr std::array<std::string_view, 3> starTexturesNames = {gfxnames::OBJECT_STAR_01, gfxnames::OBJECT_STAR_02, gfxnames::OBJECT_STAR_03};
+constexpr std::array<std::string_view, 3> starTexturesNames = {"OBJECT_STAR_01", "OBJECT_STAR_02", "OBJECT_STAR_03"};
 
 }
 
@@ -54,9 +53,9 @@ cUnitDrawer::cUnitDrawer(cUnit &unit, SDLDrawer *renderer, Graphics *gfxdata) :
         m_starTextures[i] = m_gfxdata->getTextureID(starTexturesNames[i]);
     }
 
-    m_texSymbPickmeup = m_gfxdata->getTextureID(gfxnames::SYMB_PICKMEUP);
-    m_surfFocus = m_gfxdata->getSurfaceID(gfxnames::FOCUS);
-    m_texFocus = m_gfxdata->getTextureID(gfxnames::FOCUS);
+    m_texSymbPickmeup = m_gfxdata->getTextureID("SYMB_PICKMEUP");
+    m_surfFocus = m_gfxdata->getSurfaceID("FOCUS");
+    m_texFocus = m_gfxdata->getTextureID("FOCUS");
 }
 
 void cUnitDrawer::draw_spice()

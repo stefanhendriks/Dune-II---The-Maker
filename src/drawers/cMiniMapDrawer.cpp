@@ -13,7 +13,6 @@
  * This is a non-commercial educational project.
  */
 
-#include "data/GfxNames.hpp"
 #include "cMiniMapDrawer.h"
 #include "controls/eMouseTile.h"
 #include "gameobjects/map/TerrainTypes.hpp"
@@ -50,7 +49,7 @@
 namespace {
 
 // static animation frames, the only place that lists the STAT sprites
-constexpr std::array<std::string_view, 21> staticFramesNames = {gfxnames::STAT01, gfxnames::STAT02, gfxnames::STAT03, gfxnames::STAT04, gfxnames::STAT05, gfxnames::STAT06, gfxnames::STAT07, gfxnames::STAT08, gfxnames::STAT09, gfxnames::STAT10, gfxnames::STAT11, gfxnames::STAT12, gfxnames::STAT13, gfxnames::STAT14, gfxnames::STAT15, gfxnames::STAT16, gfxnames::STAT17, gfxnames::STAT18, gfxnames::STAT19, gfxnames::STAT20, gfxnames::STAT21};
+constexpr std::array<std::string_view, 21> staticFramesNames = {"STAT01", "STAT02", "STAT03", "STAT04", "STAT05", "STAT06", "STAT07", "STAT08", "STAT09", "STAT10", "STAT11", "STAT12", "STAT13", "STAT14", "STAT15", "STAT16", "STAT17", "STAT18", "STAT19", "STAT20", "STAT21"};
 
 // m_iStaticFrame counts 0 (STAT01, no static) up to kStaticLastFrame (STAT21, full static)
 constexpr int kStaticStartFrame = 13; // STAT14
