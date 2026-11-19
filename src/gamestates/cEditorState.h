@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
 #include "cGameState.h"
 #include "utils/cMatrix.h"
 #include "controls/cKeyboardEvent.h"
@@ -143,4 +144,12 @@ private:
     // bloom and field cells: raw index into the bordered map (as in the skirmish ini), RANDOM_CELL for a random one
     std::vector<int> m_blooms;
     std::vector<int> m_fields;
+private:
+    // graphics resolved once from the pack
+    TextureID m_texTerrainSpice = TextureID::invalid;
+    TextureID m_texTerrainSand = TextureID::invalid;
+    TextureID m_texTerrainMountain = TextureID::invalid;
+    TextureID m_texTerrainRock = TextureID::invalid;
+    TextureID m_texTerrainSpicehill = TextureID::invalid;
+    TextureID m_texTerrainHill = TextureID::invalid;
 };

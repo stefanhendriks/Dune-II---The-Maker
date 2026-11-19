@@ -14,7 +14,7 @@
  */
 
 #include "include/definitions.h"
-#include "data/GfxIds.hpp"
+#include "data/GfxNames.hpp"
 #include "gamestates/cChooseHouseState.h"
 #include "game/cGameSettings.h"
 #include "controls/eKeyAction.h"
@@ -51,21 +51,27 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     d2tm_assert(settings != nullptr);
 
     backButtonRect = m_textDrawer->getAsRectangle(0, settings->getScreenH() - m_textDrawer->getFontHeight(), " Back");
-    bmp_Dune = m_gfxinter->getTexture(gfx::tex::BMP_GAME_DUNE);
+    const TextureID texBmpGameDune = m_gfxinter->getTextureID(gfxnames::BMP_GAME_DUNE);
+    const TextureID texBmpSelectYourHouse = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_YOUR_HOUSE);
+    const TextureID texBmpSelectHouseAtreides = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ATREIDES);
+    const TextureID texBmpSelectHouseOrdos = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_ORDOS);
+    const TextureID texBmpSelectHouseHarkonnen = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_HARKONNEN);
+    const TextureID texBmpSelectHouseSardaukar = m_gfxinter->getTextureID(gfxnames::BMP_SELECT_HOUSE_SARDAUKAR);
+    bmp_Dune = m_gfxinter->getTexture(texBmpGameDune);
 
     int duneAtTheRight = settings->getScreenW() - bmp_Dune->w;
     int duneAlmostAtBottom = settings->getScreenH() - (bmp_Dune->h * 0.90);
     coords_Dune = cPoint(duneAtTheRight, duneAlmostAtBottom);
 
-    bmp_SelectYourHouseTitle = m_gfxinter->getTexture(gfx::tex::BMP_SELECT_YOUR_HOUSE);
+    bmp_SelectYourHouseTitle = m_gfxinter->getTexture(texBmpSelectYourHouse);
 
     selectYourHouseXCentered = (settings->getScreenW() / 2) - bmp_SelectYourHouseTitle->w / 2;
     coords_SelectYourHouseTitle = cPoint(selectYourHouseXCentered, 0);
 
-    bmp_HouseAtreides = m_gfxinter->getTexture(gfx::tex::BMP_SELECT_HOUSE_ATREIDES);
-    bmp_HouseOrdos = m_gfxinter->getTexture(gfx::tex::BMP_SELECT_HOUSE_ORDOS);
-    bmp_HouseHarkonnen = m_gfxinter->getTexture(gfx::tex::BMP_SELECT_HOUSE_HARKONNEN);
-    bmp_HouseSardaukar = m_gfxinter->getTexture(gfx::tex::BMP_SELECT_HOUSE_SARDAUKAR);
+    bmp_HouseAtreides = m_gfxinter->getTexture(texBmpSelectHouseAtreides);
+    bmp_HouseOrdos = m_gfxinter->getTexture(texBmpSelectHouseOrdos);
+    bmp_HouseHarkonnen = m_gfxinter->getTexture(texBmpSelectHouseHarkonnen);
+    bmp_HouseSardaukar = m_gfxinter->getTexture(texBmpSelectHouseSardaukar);
 
     int selectYourHouseY = settings->getScreenH() * 0.25f;
 
@@ -79,6 +85,7 @@ cChooseHouseState::cChooseHouseState(sGameServices* services) :
     houseSardaukar = cRectangle((columnWidth * 7) + offset, selectYourHouseY, 90, 98);
 
     hoversOverBackButton = false;
+
 }
 
 cChooseHouseState::~cChooseHouseState()
