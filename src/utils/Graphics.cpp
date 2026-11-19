@@ -18,6 +18,7 @@
 #include "include/Texture.hpp"
 #include <iostream>
 #include "include/cAssert.h"
+#include "utils/Log.h"
 
 Graphics::Graphics(SDL_Renderer *_renderer,const std::string &filePackName): renderer(_renderer)
 {
@@ -33,6 +34,11 @@ Graphics::~Graphics()
 SDL_Surface *Graphics::getSurface(int index) const
 {
     return dataPack->getSurface(index);
+}
+
+SDL_Surface *Graphics::getSurface(SurfaceID id) const
+{
+    return getSurface(toPackIndex(id));
 }
 
 SDL_Surface *Graphics::getSurface(const std::string &name) const
@@ -65,10 +71,35 @@ Texture *Graphics::getTexture(int index)
     return texCache[index].get();
 }
 
+Texture *Graphics::getTexture(TextureID id)
+{
+    return getTexture(toPackIndex(id));
+}
+
 Texture *Graphics::getTexture(const std::string &name)
 {
     int index = dataPack->getIndexFromName(name);
     return this->getTexture(index);
+}
+
+SurfaceID Graphics::surfaceId(std::string_view name) const
+{
+    const int index = dataPack->getIndexFromName(std::string(name));
+    if (index < 0) {
+        Logger::error(COMP_INIT, "Graphics", "image '{}' not found in the graphics pack", name);
+        return SurfaceID::invalid;
+    }
+    return toSurfaceID(index);
+}
+
+TextureID Graphics::textureId(std::string_view name) const
+{
+    const int index = dataPack->getIndexFromName(std::string(name));
+    if (index < 0) {
+        Logger::error(COMP_INIT, "Graphics", "image '{}' not found in the graphics pack", name);
+        return TextureID::invalid;
+    }
+    return toTextureID(index);
 }
 
 int Graphics::getNumberOfFiles()
