@@ -106,7 +106,7 @@ void cBuildingListDrawer::drawButtonHoverRectangle(cBuildingList *list)
     int id = list->getButtonIconIdUnpressed();
 
     int width = 33;
-    int height = (m_gfxinter->getSurface(id))->h;
+    int height = (m_gfxinter->getSurface(toSurfaceID(id)))->h;
 
     Color color = m_player->getSelectFadingColor();
 
@@ -134,13 +134,13 @@ void cBuildingListDrawer::drawButton(cBuildingList *list, bool pressed)
 
 //	int width = (gfxinter->getSurface(id))->w;
     int width = 33;
-    int height = (m_gfxinter->getSurface(id))->h;
+    int height = (m_gfxinter->getSurface(toSurfaceID(id)))->h;
 
     // clear
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(list->getButtonIconIdUnpressed()), x, y);		// draw pressed button version (unpressed == default in gui)
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(list->getButtonIconIdUnpressed())), x, y);		// draw pressed button version (unpressed == default in gui)
 
     // set blender
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(id), x, y,128);
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(id)), x, y,128);
 
     if (!list->isAvailable()) {
         m_sdlDrawer->renderRectFillColor(x, y, width, height, 0,0,0,96);
@@ -216,7 +216,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
         // icon id must be set , assert it.
         d2tm_assert(item->getIconId() > -1);
 
-        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(item->getIconId()), iDrawX, iDrawY);
+        m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(item->getIconId())), iDrawX, iDrawY);
 
         if (shouldDrawStructureSize) {
             drawStructureSize(item->getBuildId(), iDrawX, iDrawY);
@@ -228,8 +228,8 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
 
             if (!item->isDoneBuilding() || iFrame < 31) {
                 // draw the other progress stuff
-                m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSFIX), iDrawX+2, iDrawY+2,128);
-                m_sdlDrawer->renderSprite(m_gfxinter->getTexture(progressFrameIds[iFrame]), iDrawX+2, iDrawY+2,128);
+                m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(PROGRESSFIX)), iDrawX+2, iDrawY+2,128);
+                m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(progressFrameIds[iFrame])), iDrawX+2, iDrawY+2,128);
 
                 if (item->isPaused()) {
                     m_smallTextDrawer->drawTextCenteredInBox("Paused", iDrawX, iDrawY, withOfIcon, heightOfIcon, Color::Yellow);
@@ -242,7 +242,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_PLACE)) {
                         icon = READY02;
                     }
-                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
+                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(icon)), iDrawX + 3, iDrawY + 16);
                 }
                 else if (item->shouldDeployIt()) {
                     // TODO: draw white/red (flicker)
@@ -251,7 +251,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
                     if (m_player->isContextMouseState(eMouseState::MOUSESTATE_DEPLOY)) {
                         icon = READY02;
                     }
-                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(icon), iDrawX + 3, iDrawY + 16);
+                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(icon)), iDrawX + 3, iDrawY + 16);
                 }
             }
 
@@ -285,7 +285,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
             if (!item->isAvailable() || isBuildingSameSubListItem || cannotBuildDueLimit) {
 
                 if (!cannotBuildDueLimit) {
-                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
+                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(PROGRESSNA)), iDrawX, iDrawY,64);
                     // Pending upgrading (ie: an upgrade is progressing, blocking the construction of these items)
                     if (item->isPendingUpgrading()) {
                         Color errorFadingColor = m_player->getErrorFadingColor();
@@ -319,7 +319,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
                 cOrderProcesser *orderProcesser = m_player->getOrderProcesser();
                 bool orderIsAwaitingFrigate = orderProcesser->isOrderPlaced() || orderProcesser->isFrigateSent();
                 if (cannotPayIt || orderIsAwaitingFrigate) {
-                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), iDrawX, iDrawY,64);
+                    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(PROGRESSNA)), iDrawX, iDrawY,64);
                     Color errorFadingColor = m_player->getErrorFadingColor();
                     m_sdlDrawer->renderRectColor(iDrawX, iDrawY, iDrawXEnd-iDrawX, iDrawYEnd-iDrawY, errorFadingColor);
                     m_sdlDrawer->renderLine( iDrawX, iDrawY, iDrawXEnd, iDrawYEnd, errorFadingColor);
@@ -398,7 +398,7 @@ void cBuildingListDrawer::drawList(cBuildingList *list, const bool shouldDrawStr
  */
 void cBuildingListDrawer::drawMaxBuilt(int x, int y, int width, int height)
 {
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(PROGRESSNA), x, y, 64);
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(PROGRESSNA)), x, y, 64);
     Color errorFadingColor = m_player->getErrorFadingColor();
     m_sdlDrawer->renderRectColor(x, y, width, height, errorFadingColor);
     m_sdlDrawer->renderLine(x, y, x + width, y + height, errorFadingColor);
@@ -437,8 +437,8 @@ void cBuildingListDrawer::drawStructureSize(int structureId, int x, int y)
     }
 
     m_sdlDrawer->renderRectFillColor(x + 43, y + 20,19,19,0,0,0,192);
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(GRID_0X0), x + 43, y + 20);
-    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(iTile), x + 43, y + 20);
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(GRID_0X0)), x + 43, y + 20);
+    m_sdlDrawer->renderSprite(m_gfxinter->getTexture(toTextureID(iTile)), x + 43, y + 20);
 }
 
 bool cBuildingListDrawer::isOverItemCoordinates_Boolean(int x, int y, int drawX, int drawY)
