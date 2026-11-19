@@ -65,7 +65,7 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
  */
 std::unique_ptr<Texture> cMapDrawer::createFogTexture() const
 {
-    SDL_Surface *shroudSurface = m_gfxdata->getSurface(SHROUD);
+    SDL_Surface *shroudSurface = m_gfxdata->getSurface(toSurfaceID(SHROUD));
     if (shroudSurface == nullptr) return nullptr;
 
     SDL_Surface *fogSurface = SDL_ConvertSurface(shroudSurface, SDL_PIXELFORMAT_RGBA32);
@@ -144,7 +144,7 @@ void cMapDrawer::drawShroud()
                     if (tile > -1) {
                         const cRectangle src_pos = {tile * 32, 0, 32, 32};
                         cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                        m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(SHROUD), src_pos, dest_pos);
+                        m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(SHROUD)), src_pos, dest_pos);
                     }
                 }
                 else {
@@ -153,7 +153,7 @@ void cMapDrawer::drawShroud()
                     // tile 0 of shroud is entirely black... (effectively the same as drawing a rect here)
                     const cRectangle src_pos = {0, 0, 32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                    m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(SHROUD), src_pos, dest_pos);
+                    m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(SHROUD)), src_pos, dest_pos);
                 }
             }
         }
@@ -250,7 +250,7 @@ void cMapDrawer::drawTerrainCells(bool fogged)
                 // valid type
                 const cRectangle src_pos = {terrainTile * 32, 0,32, 32};
                 cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(terrainType), src_pos, dest_pos);
+                m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(terrainType)), src_pos, dest_pos);
             }
 
             // draw Smudge if necessary
@@ -258,7 +258,7 @@ void cMapDrawer::drawTerrainCells(bool fogged)
                 smudgeTypeToDraw.transform([&](const auto &smudgeType) {
                     const cRectangle src_pos = {smudgeTile * 32, static_cast<int>(smudgeType) * 32,32, 32};
                     cRectangle dest_pos = {iDrawX, iDrawY, iTileWidth, iTileHeight};
-                    m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(SMUDGE), src_pos, dest_pos);
+                    m_sdlDrawer->renderStrechSprite(m_gfxdata->getTexture(toTextureID(SMUDGE)), src_pos, dest_pos);
                     return std::monostate{}; // needed with GCC15, with GCC16 not needed to return anything.
                 });
             }
