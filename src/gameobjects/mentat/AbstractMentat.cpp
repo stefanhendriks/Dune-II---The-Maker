@@ -65,7 +65,6 @@ AbstractMentat::AbstractMentat(GameContext* ctx, cGameSettings* settings, GameSt
     iMentatEyes = 3;
     iMovieFrame = -1;
 
-    iBackgroundFrame = -1;
 
     house = GENERALHOUSE;
 
@@ -316,8 +315,8 @@ void AbstractMentat::draw()
 
 Texture *AbstractMentat::getBackgroundBitmap() const
 {
-    if (iBackgroundFrame < 0) return nullptr;
-    return gfxmentat->getTexture(iBackgroundFrame);
+    if (m_backgroundTexture == TextureID::invalid) return nullptr;
+    return gfxmentat->getTexture(m_backgroundTexture);
 }
 
 void AbstractMentat::draw_movie()
