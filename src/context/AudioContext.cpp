@@ -35,7 +35,7 @@ const char* musicTypeName(eMusicType type)
     case eMusicType::ATTACK: return "ATTACK";
     case eMusicType::PEACE: return "PEACE";
     case eMusicType::MENU: return "MENU";
-    case eMusicType::CONQUEST: return "gfx::tex::CONQUEST";
+    case eMusicType::CONQUEST: return "CONQUEST";
     case eMusicType::BRIEFING: return "BRIEFING";
     }
     return "UNKNOWN";
