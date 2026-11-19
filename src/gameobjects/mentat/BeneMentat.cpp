@@ -17,6 +17,7 @@
 
 #include "controls/eKeyAction.h"
 #include "include/gfxmentat.h"
+#include "data/GfxNames.hpp"
 #include "game/GameStateTransition.hpp"
 #include "game/MissionFlow.hpp"
 #include "include/eGameState.h"
@@ -32,13 +33,14 @@
 #include "context/cInfoContext.h"
 #include "controls/cKeyboardEvent.h"
 #include <array>
+#include <string_view>
 #include <iostream>
 
 namespace {
 
 // sprite per eyes/mouth frame, the only place that lists the BEN sprites
-constexpr std::array<int, 5> eyesIds = {BEN_EYES01, BEN_EYES02, BEN_EYES03, BEN_EYES04, BEN_EYES05};
-constexpr std::array<int, 5> mouthIds = {BEN_MOUTH01, BEN_MOUTH02, BEN_MOUTH03, BEN_MOUTH04, BEN_MOUTH05};
+constexpr std::array<std::string_view, 5> eyesNames = {gfxnames::BEN_EYES01, gfxnames::BEN_EYES02, gfxnames::BEN_EYES03, gfxnames::BEN_EYES04, gfxnames::BEN_EYES05};
+constexpr std::array<std::string_view, 5> mouthNames = {gfxnames::BEN_MOUTH01, gfxnames::BEN_MOUTH02, gfxnames::BEN_MOUTH03, gfxnames::BEN_MOUTH04, gfxnames::BEN_MOUTH05};
 
 }
 
@@ -46,6 +48,7 @@ BeneMentat::BeneMentat(GameContext* ctx, cGameSettings* settings, GameStateTrans
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(dataCampaign != nullptr);
+    resolveFaceFrames(eyesNames, mouthNames);
     iBackgroundFrame = MENTATM;
     buildLeftButton(gfxmentat->getTexture(BTN_NO), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_YES), 466, 423);
@@ -115,12 +118,12 @@ void BeneMentat::draw_other()
 
 void BeneMentat::draw_eyes()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(eyesIds[iMentatEyes]), offsetX + 128, offsetY + 240);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(m_eyesTextures[iMentatEyes]), offsetX + 128, offsetY + 240);
 }
 
 void BeneMentat::draw_mouth()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(mouthIds[iMentatMouth]), offsetX + 112, offsetY + 272);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(m_mouthTextures[iMentatMouth]), offsetX + 112, offsetY + 272);
 }
 
 void BeneMentat::onNotifyKeyboardEvent(const cKeyboardEvent &event)

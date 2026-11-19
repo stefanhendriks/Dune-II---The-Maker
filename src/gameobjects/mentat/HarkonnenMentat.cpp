@@ -15,6 +15,7 @@
 
 #include "HarkonnenMentat.h"
 #include "include/gfxmentat.h"
+#include "data/GfxNames.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"
@@ -25,12 +26,13 @@
 #include "game/MentatFlow.hpp"
 #include "include/cAssert.h"
 #include <array>
+#include <string_view>
 
 namespace {
 
 // sprite per eyes/mouth frame, the only place that lists the HAR sprites
-constexpr std::array<int, 5> eyesIds = {HAR_EYES01, HAR_EYES02, HAR_EYES03, HAR_EYES04, HAR_EYES05};
-constexpr std::array<int, 5> mouthIds = {HAR_MOUTH01, HAR_MOUTH02, HAR_MOUTH03, HAR_MOUTH04, HAR_MOUTH05};
+constexpr std::array<std::string_view, 5> eyesNames = {gfxnames::HAR_EYES01, gfxnames::HAR_EYES02, gfxnames::HAR_EYES03, gfxnames::HAR_EYES04, gfxnames::HAR_EYES05};
+constexpr std::array<std::string_view, 5> mouthNames = {gfxnames::HAR_MOUTH01, gfxnames::HAR_MOUTH02, gfxnames::HAR_MOUTH03, gfxnames::HAR_MOUTH04, gfxnames::HAR_MOUTH05};
 
 }
 
@@ -38,6 +40,7 @@ HarkonnenMentat::HarkonnenMentat(GameContext* ctx, cGameSettings* settings, Game
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
+    resolveFaceFrames(eyesNames, mouthNames);
     iBackgroundFrame = MENTATH;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
@@ -79,10 +82,10 @@ void HarkonnenMentat::draw_other()
 
 void HarkonnenMentat::draw_eyes()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(eyesIds[iMentatEyes]), offsetX + 64, offsetY + 256);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(m_eyesTextures[iMentatEyes]), offsetX + 64, offsetY + 256);
 }
 
 void HarkonnenMentat::draw_mouth()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(mouthIds[iMentatMouth]), offsetX + 64, offsetY + 288);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(m_mouthTextures[iMentatMouth]), offsetX + 64, offsetY + 288);
 }

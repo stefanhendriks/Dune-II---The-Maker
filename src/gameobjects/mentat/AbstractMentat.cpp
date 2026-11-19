@@ -372,6 +372,14 @@ void AbstractMentat::speak()
     state = SPEAKING;
 }
 
+void AbstractMentat::resolveFaceFrames(const std::array<std::string_view, 5> &eyes, const std::array<std::string_view, 5> &mouth)
+{
+    for (std::size_t i = 0; i < eyes.size(); i++) {
+        m_eyesTextures[i] = gfxmentat->textureId(eyes[i]);
+        m_mouthTextures[i] = gfxmentat->textureId(mouth[i]);
+    }
+}
+
 void AbstractMentat::buildLeftButton(Texture *bmp, int x, int y)
 {
     leftButton = std::make_unique<cRectangle>(offsetX + x, offsetY + y, bmp->w, bmp->h);

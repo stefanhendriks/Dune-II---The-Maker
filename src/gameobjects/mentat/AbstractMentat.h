@@ -17,10 +17,12 @@
 
 #include "utils/cRectangle.h"
 #include "observers/cInputObserver.h"
+#include "utils/GraphicsID.hpp"
 class Graphics;
 
 #include <array>
 #include <string>
+#include <string_view>
 #include <memory>
 #include <SDL3_ttf/SDL_ttf.h>
 
@@ -97,6 +99,11 @@ protected:
 
     int iMentatMouth;
     int iMentatEyes;
+
+    // eyes and mouth sprites per frame, resolved once by resolveFaceFrames()
+    std::array<TextureID, 5> m_eyesTextures{};
+    std::array<TextureID, 5> m_mouthTextures{};
+    void resolveFaceFrames(const std::array<std::string_view, 5> &eyes, const std::array<std::string_view, 5> &mouth);
 
     std::shared_ptr<Graphics> gfxmovie;
 

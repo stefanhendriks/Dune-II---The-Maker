@@ -15,6 +15,7 @@
 
 #include "OrdosMentat.h"
 #include "include/gfxmentat.h"
+#include "data/GfxNames.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"
@@ -24,12 +25,13 @@
 #include "game/MentatFlow.hpp"
 #include "include/cAssert.h"
 #include <array>
+#include <string_view>
 
 namespace {
 
 // sprite per eyes/mouth frame, the only place that lists the ORD sprites
-constexpr std::array<int, 5> eyesIds = {ORD_EYES01, ORD_EYES02, ORD_EYES03, ORD_EYES04, ORD_EYES05};
-constexpr std::array<int, 5> mouthIds = {ORD_MOUTH01, ORD_MOUTH02, ORD_MOUTH03, ORD_MOUTH04, ORD_MOUTH05};
+constexpr std::array<std::string_view, 5> eyesNames = {gfxnames::ORD_EYES01, gfxnames::ORD_EYES02, gfxnames::ORD_EYES03, gfxnames::ORD_EYES04, gfxnames::ORD_EYES05};
+constexpr std::array<std::string_view, 5> mouthNames = {gfxnames::ORD_MOUTH01, gfxnames::ORD_MOUTH02, gfxnames::ORD_MOUTH03, gfxnames::ORD_MOUTH04, gfxnames::ORD_MOUTH05};
 
 }
 
@@ -37,6 +39,7 @@ OrdosMentat::OrdosMentat(GameContext* ctx, cGameSettings* settings, GameStateTra
 {
     d2tm_assert(ctx != nullptr);
     d2tm_assert(m_mentatFlow != nullptr);
+    resolveFaceFrames(eyesNames, mouthNames);
     iBackgroundFrame = MENTATO;
     buildLeftButton(gfxmentat->getTexture(BTN_REPEAT), 293, 423);
     buildRightButton(gfxmentat->getTexture(BTN_PROCEED), 466, 423);
@@ -78,10 +81,10 @@ void OrdosMentat::draw_other()
 
 void OrdosMentat::draw_eyes()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(eyesIds[iMentatEyes]), offsetX + 32, offsetY + 240);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(m_eyesTextures[iMentatEyes]), offsetX + 32, offsetY + 240);
 }
 
 void OrdosMentat::draw_mouth()
 {
-    m_sdlDrawer->renderSprite(gfxmentat->getTexture(mouthIds[iMentatMouth]), offsetX + 31, offsetY + 270);
+    m_sdlDrawer->renderSprite(gfxmentat->getTexture(m_mouthTextures[iMentatMouth]), offsetX + 31, offsetY + 270);
 }
