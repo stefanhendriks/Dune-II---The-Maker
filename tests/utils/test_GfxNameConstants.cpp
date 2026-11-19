@@ -19,6 +19,7 @@
 #include "data/GfxIds.hpp"
 #include "data/GfxIds.hpp"
 #include "data/GfxNames.hpp"
+#include "gameobjects/map/TerrainTypes.hpp"
 
 #include <filesystem>
 #include <string>
@@ -66,6 +67,17 @@ void checkTable(const std::string &packFile, const std::vector<NameConstant> &ta
     }
 }
 }
+
+// the map drawer turns a terrain type into a TextureID, so the terrain constants must stay in line with the pack
+static_assert(toTextureID(TERRAIN_BLOOM) == gfx::tex::TERRAIN_BLOOM);
+static_assert(toTextureID(TERRAIN_HILL) == gfx::tex::TERRAIN_HILL);
+static_assert(toTextureID(TERRAIN_MOUNTAIN) == gfx::tex::TERRAIN_MOUNTAIN);
+static_assert(toTextureID(TERRAIN_ROCK) == gfx::tex::TERRAIN_ROCK);
+static_assert(toTextureID(TERRAIN_SAND) == gfx::tex::TERRAIN_SAND);
+static_assert(toTextureID(TERRAIN_SLAB) == gfx::tex::TERRAIN_SLAB);
+static_assert(toTextureID(TERRAIN_SPICE) == gfx::tex::TERRAIN_SPICE);
+static_assert(toTextureID(TERRAIN_SPICEHILL) == gfx::tex::TERRAIN_SPICEHILL);
+static_assert(toTextureID(TERRAIN_WALL) == gfx::tex::TERRAIN_WALL);
 
 TEST_CASE("gfxdata typed ids match the entries of sdl_data.dat", "[graphics]")
 {
