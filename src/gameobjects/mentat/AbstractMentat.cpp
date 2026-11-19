@@ -324,7 +324,7 @@ void AbstractMentat::draw_movie()
     if (iMovieFrame < 0) return;
 
     // drawing only, circulating is done in think function
-    Texture *tmp = gfxmovie->getFrameTexture(toTextureID(iMovieFrame));
+    Texture *tmp = gfxmovie->getFrameTexture(iMovieFrame);
     cRectangle dest = {movieTopleftX, movieTopleftY,tmp->w, tmp->h};
     m_sdlDrawer->renderStrechFullSprite(tmp, dest);
 }
