@@ -41,8 +41,9 @@ SDL_Surface *Graphics::getSurface(const std::string &name) const
     return dataPack->getSurface(name);
 }
 
-Texture *Graphics::getTexture(int index)
+Texture *Graphics::getTexture(TextureID id)
 {
+    const int index = toPackIndex(id);
     if (index < 0) {
         std::cerr << "Graphics: Invalid index " << index << std::endl;
         return nullptr;
@@ -66,15 +67,10 @@ Texture *Graphics::getTexture(int index)
     return texCache[index].get();
 }
 
-Texture *Graphics::getTexture(TextureID id)
-{
-    return getTexture(toPackIndex(id));
-}
-
 Texture *Graphics::getTexture(const std::string &name)
 {
     int index = dataPack->getIndexFromName(name);
-    return this->getTexture(index);
+    return getTexture(toTextureID(index));
 }
 
 SurfaceID Graphics::surfaceId(std::string_view name) const

@@ -43,8 +43,8 @@ public:
     SDL_Surface *getSurface(const std::string &name) const;
     // return a texture from his id
     Texture *getTexture(TextureID id);
-    // return a texture of a frame sequence (movie pack), frames are numbered from 0 in pack order, as TextureID
-    Texture *getFrameTexture(TextureID frame) { return getTexture(frame); }
+    // return a texture of a frame sequence (movie pack), unnamed: frames are numbered from 0 in pack order
+    Texture *getFrameTexture(int frameNumber) { return getTexture(toTextureID(frameNumber)); }
     // return a texture from his name
     Texture *getTexture(const std::string &name);
     // resolve a name to an id once (at init) and keep the id; logs an error and returns invalid when the name is not in the pack
@@ -55,8 +55,6 @@ public:
     // name of every file in the pack, in index order
     std::vector<std::string> getNames() const;
 private:
-    // pack index access, only reachable through the typed ids and names
-    Texture *getTexture(int index);
     SDL_Renderer *renderer;
     std::unique_ptr<DataPack> dataPack;
     std::unordered_map<int, std::unique_ptr<Texture>> texCache;
