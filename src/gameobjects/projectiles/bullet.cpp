@@ -18,7 +18,6 @@
 #include "game/cGameSettings.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenShake.h"
-#include "data/gfxdata.h"
 #include "drawers/SDLDrawer.hpp"
 #include "gameobjects/particles/cParticle.h"
 #include "gameobjects/structures/cStructures.h"

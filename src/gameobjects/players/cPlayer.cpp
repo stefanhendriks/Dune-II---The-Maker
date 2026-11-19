@@ -14,12 +14,12 @@
  */
 
 #include "cPlayer.h"
+#include "data/GfxIds.hpp"
 
 #include "building/cItemBuilder.h"
 #include "game/cEventEmitter.h"
 #include "game/cScreenFader.h"
 #include "gameobjects/map/cMap.h"
-#include "data/gfxdata.h"
 #include "gameobjects/units/cReinforcements.h"
 #include "gameobjects/structures/cStructureFactory.h"
 #include "gameobjects/structures/cStructures.h"
@@ -276,8 +276,8 @@ void cPlayer::setHouse(int iHouse)
         emblemBackgroundColor = getEmblemBackgroundColorForHouse(house);
 
         destroyAllegroBitmaps();
-        bmp_flag = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(toSurfaceID(BUILDING_FLAG_LARGE)),TransparentColorIndex);
-        bmp_flag_small = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(toSurfaceID(BUILDING_FLAG_SMALL)),TransparentColorIndex);
+        bmp_flag = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(gfx::surf::BUILDING_FLAG_LARGE),TransparentColorIndex);
+        bmp_flag_small = createPlayerTextureFromIndexedSurfaceWithPalette(m_renderer, this, m_gfxdata->getSurface(gfx::surf::BUILDING_FLAG_SMALL),TransparentColorIndex);
 
         // now copy / set all structures for this player, with the correct color
         for (int i = 0; i < MAX_STRUCTURETYPES; i++) {

@@ -25,7 +25,6 @@
 #include "utils/cIniUtils.h"
 #include "utils/IniParsing.hpp"
 
-#include "data/gfxdata.h"
 #include "definitions.h"
 #include "include/sDataCampaign.h"
 #include "gamestates/cSelectYourNextConquestState.h"

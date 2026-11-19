@@ -1,6 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "data/gfxdata.h"
 #include "gameobjects/map/cSeedMap.h"
 #include "gameobjects/map/cSeedMapGenerator.h"
 

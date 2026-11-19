@@ -17,7 +17,6 @@
 #include "gameobjects/map/TerrainTypes.hpp"
 #include "gameobjects/map/PreviewMap.hpp"
 
-#include "data/gfxdata.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"

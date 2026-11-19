@@ -14,7 +14,6 @@
  */
 
 #include "OrdosMentat.h"
-#include "include/gfxmentat.h"
 #include "data/GfxNames.hpp"
 #include "drawers/SDLDrawer.hpp"
 #include "utils/Graphics.hpp"

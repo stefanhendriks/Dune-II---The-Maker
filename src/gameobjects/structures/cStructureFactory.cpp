@@ -43,7 +43,6 @@
 #include "cStarPort.h"
 #include "cWindTrap.h"
 #include "cWor.h"
-#include "data/gfxdata.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/players/cPlayer.h"
