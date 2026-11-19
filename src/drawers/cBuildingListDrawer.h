@@ -15,6 +15,10 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
+
+#include <array>
+
 class cTextDrawer;
 class cGameObjectContext;
 #include "observers/cInputObserver.h"
@@ -78,4 +82,18 @@ private:
     void onKeyHold(const cKeyboardEvent &event);
 
     void onKeyPressed(const cKeyboardEvent &event);
+private:
+    // graphics resolved once from the pack
+    std::array<TextureID, 32> m_progressFrames;
+private:
+    // graphics resolved once from the pack
+    TextureID m_texProgressfix = TextureID::invalid;
+    TextureID m_texReady01 = TextureID::invalid;
+    TextureID m_texReady02 = TextureID::invalid;
+    TextureID m_texProgressna = TextureID::invalid;
+    TextureID m_texGrid1x1 = TextureID::invalid;
+    TextureID m_texGrid2x2 = TextureID::invalid;
+    TextureID m_texGrid3x2 = TextureID::invalid;
+    TextureID m_texGrid3x3 = TextureID::invalid;
+    TextureID m_texGrid0x0 = TextureID::invalid;
 };

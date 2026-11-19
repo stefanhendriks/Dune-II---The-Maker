@@ -22,6 +22,10 @@
 
 #pragma once
 
+#include "utils/GraphicsID.hpp"
+
+#include <array>
+
 // #include "gameobjects/map/cMap.h"
 // #include "gameobjects/map/cMapCamera.h"
 #include "utils/cRectangle.h"
@@ -127,4 +131,7 @@ private:
 
     // bool isBigMap;
     float m_factorZoom = 1.f; // factor to zoom the minimap, based on the map size and the minimap size
+private:
+    // graphics resolved once from the pack
+    std::array<TextureID, 21> m_staticFrames;
 };
