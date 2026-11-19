@@ -46,6 +46,14 @@ if(APPLE)
 
     find_package(PkgConfig REQUIRED)
 
+    # brew's sdl3-mixer requires fluidsynth, which requires the keg-only readline. Without readline on the
+    # pkg-config path, pkg-config cannot resolve sdl3-mixer and its link flags (-lSDL3_mixer) come out empty.
+    foreach(READLINE_PC_DIR /opt/homebrew/opt/readline/lib/pkgconfig /usr/local/opt/readline/lib/pkgconfig)
+        if(EXISTS "${READLINE_PC_DIR}")
+            set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${READLINE_PC_DIR}")
+        endif()
+    endforeach()
+
     pkg_check_modules(SDL3       REQUIRED sdl3)
     pkg_check_modules(SDL3_IMAGE REQUIRED sdl3-image)
     pkg_check_modules(SDL3_TTF   REQUIRED sdl3-ttf)
