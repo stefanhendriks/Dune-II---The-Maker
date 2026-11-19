@@ -6,17 +6,6 @@
 
 #pragma once
 
-// Sections of game.ini
-enum class eGameIniSection {
-    NONE = -1,
-    HOUSES,
-    UNITS,
-    STRUCTURES,
-    TERRAINS,
-    GAME,
-    BULLETS
-};
-
 // Sections of scenario, briefing and region files
 enum class eScenarioIniSection {
     NONE = -1,

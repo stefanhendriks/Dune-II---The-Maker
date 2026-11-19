@@ -36,18 +36,14 @@ std::string ToTrim(const std::string& input);
 std::string removeQuote(const std::string& input);
 // Split a comma-separated string into a vector of tokens (not trimmed)
 std::vector<std::string> splitByComma(const std::string& input);
-// Extract the trimmed value from a section tag like "[UNIT: Devastator]" given the prefix "[UNIT:"
-std::string extractTagValue(const std::string& line, std::string_view prefix);
 // [SECTION] -> "SECTION"
 std::string extractSectionName(const std::string& line);
 // "key=value" -> {"key", "value"}
 std::pair<std::string, std::string> INI_SplitWord(const std::string& input);
 // Reads out word[], does a string compare and returns the word id
 eIniWord ScenarioIniWordType(const std::string& word, eScenarioIniSection section);
-eIniWord GameIniWordType(const std::string& word, eGameIniSection section);
 // Scenario section types
 eScenarioIniSection SCEN_INI_SectionType(const std::string& section);
-eGameIniSection GAME_INI_SectionType(const std::string& section, eGameIniSection last);
 bool isCommentLine(const std::string& linefeed);
 
 // Name of the directory (below campaign/) that holds the files of the given house

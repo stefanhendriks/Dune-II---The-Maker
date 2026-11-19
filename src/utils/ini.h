@@ -38,7 +38,7 @@ struct sGameServices;
 class cIni {
 public:
     explicit cIni(sGameServices* services);
-    // Read game.ini, structures.ini, units.ini and bullets.ini (in the same directory)
+    // Read structures.ini, units.ini and bullets.ini (in the same directory as the given game.ini)
     void installGame(const std::string& filename);
     // Load original scenario ini file
     void loadScenario(AbstractMentat *pMentat, cReinforcements *reinforcements, s_DataCampaign *dataCampaign);
@@ -49,7 +49,9 @@ public:
 
 
 private:
-    void installRulesFile(const std::string& filename, bool structuresFile, bool unitsFile, bool bulletsFile);
+    void installStructures(const std::string& filename);
+    void installUnits(const std::string& filename);
+    void installBullets(const std::string& filename);
     void populateScenario(const ScenarioData& data, AbstractMentat *pMentat, cReinforcements *reinforcements, int iHouse);
     int  findPlayerIdByHouse(int house) const;
     void INI_Scenario_SetupPlayers(int iHumanID, std::span<const int> iPl_credits, std::span<const int> iPl_house, std::span<const int> iPl_quota);
