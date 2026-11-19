@@ -83,13 +83,13 @@ cDrawManager::cDrawManager(GameContext *ctx, cPlayer *thePlayer, sGameServices *
     d2tm_assert(m_objects != nullptr);
     d2tm_assert(m_mapCamera != nullptr);
     d2tm_assert(m_gameSettings != nullptr);
-    this->reset();
-
     m_surfBtnOptions = m_gfxinter->getSurfaceID(gfxnames::BTN_OPTIONS);
     m_surfMouseMove = m_gfxdata->getSurfaceID(gfxnames::MOUSE_MOVE);
     m_texMouseMove = m_gfxdata->getTextureID(gfxnames::MOUSE_MOVE);
     m_texBmpTopbarBackground = m_gfxinter->getTextureID(gfxnames::BMP_TOPBAR_BACKGROUND);
     m_texBmpGeraldTopBar = m_gfxinter->getTextureID(gfxnames::BMP_GERALD_TOP_BAR);
+
+    this->reset();
 }
 
 void cDrawManager::reset()
