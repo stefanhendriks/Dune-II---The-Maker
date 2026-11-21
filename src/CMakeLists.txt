@@ -176,7 +176,7 @@ set(D2TM_SOURCES
     utils/cStructureUtils.cpp
     utils/d2tm_math.cpp
     utils/Graphics.cpp
-    utils/GameRulesLoader.cpp
+    context/UnitInfosLoader.cpp
     utils/ParticleNames.cpp
     utils/ScenarioLoader.cpp
     utils/IniParsing.cpp

@@ -90,7 +90,6 @@
 #include "utils/Graphics.hpp"
 #include "utils/common.h"
 #include "utils/ScenarioLoader.hpp"
-#include "utils/GameRulesLoader.hpp"
 
 #include "controls/cGameControlsContext.h"
 #include "controls/eKeyAction.h"
@@ -296,7 +295,6 @@ cGame::cGame()
     m_sideBarFactory = std::make_unique<cSideBarFactory>(m_buildingListFactory.get(), m_services.get());
 
     m_scenarioLoader = std::make_unique<ScenarioLoader>(m_services.get());
-    m_gameRulesLoader = std::make_unique<GameRulesLoader>(m_services.get());
 
     m_creatorState = std::make_unique<cCreatorState>(m_services.get(), m_scenarioLoader.get(), m_dataCampaign.get());
     IStateCallbacks &stateCallbacks = *this; // cGame inherits it privately
@@ -428,12 +426,10 @@ void cGame::init()
         bullet.init();
     }
 
-    // Initialize InfoContext with empty objects that will be populated by GameRulesLoader::installGame()
+    // Initialize InfoContext with empty objects, cInfoContextCreator::installInfos() populates them in setupGame()
     m_infoContext->initializeDefaultInfos();
 
     // Units & Structures are already initialized in map.init()
-    // Load properties
-    m_gameRulesLoader->installGame(m_gameFilename);
 }
 
 // TODO: Bad smell (duplicate code)
@@ -854,7 +850,6 @@ bool cGame::setupGame()
     m_services->mapCamera = m_mapCamera.get();
     m_structureUtils->serviceInit(m_services.get());
 
-    m_gameRulesLoader->installGame(m_gameFilename);
     // Now we are ready for the menu state
     setState(eGameState::MENU);
 
