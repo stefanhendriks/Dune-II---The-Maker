@@ -28,6 +28,8 @@ jobs:
               - 'resources/units.ini.org'
               - 'resources/bullets.ini'
               - 'resources/bullets.ini.org'
+              - 'resources/terrain.ini'
+              - 'resources/terrain.ini.org'
               - 'CMakeLists.txt'
               - 'create_release.bat'
               - 'create_release.sh'

@@ -52,6 +52,7 @@ copy resources\game.ini.org bin\game.ini || exit /b 1
 copy resources\structures.ini.org bin\structures.ini || exit /b 1
 copy resources\units.ini.org bin\units.ini || exit /b 1
 copy resources\bullets.ini.org bin\bullets.ini || exit /b 1
+copy resources\terrain.ini.org bin\terrain.ini || exit /b 1
 copy resources\bin\settings.ini bin || exit /b 1
 echo 13. Copy txt files
 copy resources\doc\versionhistory.txt bin || exit /b 1
