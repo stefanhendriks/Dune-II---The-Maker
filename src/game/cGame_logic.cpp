@@ -340,7 +340,7 @@ void cGame::applySettings(std::unique_ptr<InitialGameSettings> gs)
     m_gameSettings->m_drawUsages = gs->drawUsages;
     m_gameSettings->m_fogOfWarEnabled = gs->fogOfWarEnabled;
     m_gameSettings->m_playCreditsSound = gs->playCreditsSound;
-    m_gameFilename = gs->gameFilename;
+    m_rulesDirectory = gs->rulesDirectory;
 
     // save settings for later use
     m_initialGameSettings = std::move(gs);
@@ -378,7 +378,7 @@ InitialGameSettings cGame::currentSettings() const
     gs.drawUsages = m_gameSettings->m_drawUsages;
     gs.fogOfWarEnabled = m_gameSettings->m_fogOfWarEnabled;
     gs.pauseWhenLosingFocus = m_pauseWhenLosingFocus;
-    gs.gameFilename = m_gameFilename;
+    gs.rulesDirectory = m_rulesDirectory;
     return gs;
 }
 
@@ -696,7 +696,7 @@ bool cGame::setupGame()
 
     // SETTINGS.INI
     std::shared_ptr<cIniFile> settings = std::make_shared<cIniFile>("settings.ini");
-    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>(m_gameFilename);
+    std::shared_ptr<cIniFile> gamesCfg = std::make_shared<cIniFile>((std::filesystem::path(m_rulesDirectory) / "houses.ini").string());
 
     m_reinforcements = std::make_unique<cReinforcements>();
     m_reinforcements->serviceInit(m_services.get());
@@ -841,7 +841,7 @@ bool cGame::setupGame()
     // A few messages for the player
     Logger::info(COMP_INIT, "cGame::setupGame", "Initializing:  PLAYERS");
     m_players->setupPlayers(m_Houses.get());
-    cInfoContextCreator infoCreator(ctx->getGraphicsContext(), m_audioContext, std::filesystem::path(m_gameFilename).parent_path().string());
+    cInfoContextCreator infoCreator(ctx->getGraphicsContext(), m_audioContext, m_rulesDirectory);
     infoCreator.installInfos(*m_infoContext);
 
     m_mapCamera.reset();

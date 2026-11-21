@@ -65,7 +65,7 @@ int cHandleArgument::handleArguments(int argc, char *argv[], InitialGameSettings
             case Options::GAME:
                 if ((i + 1) < argc) {
                     i++;
-                    settings->gameFilename = std::string(argv[i]);
+                    settings->rulesDirectory = std::string(argv[i]);
                 } else {
                     throw std::runtime_error("invokes game but no value assigned");
                 }
@@ -163,7 +163,7 @@ void cHandleArgument::printInstructions() const
     std::cout << "\n\n";
     std::cout << "Experimental\n";
     std::cout << "------------\n\n";
-    std::cout << "-game <filename>       - Specify which file to use instead of houses.ini\n";
+    std::cout << "-game <directory>      - Directory to read the rules INI files from (houses.ini, units.ini, ...), default is the current directory\n";
     std::cout << "\n\n";
     std::cout << "Other\n";
     std::cout << "---------\n\n";

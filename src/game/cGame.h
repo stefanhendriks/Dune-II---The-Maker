@@ -101,8 +101,8 @@ public:
 
     void jumpToSelectYourNextConquestMission(int missionNr);
 
-    void setGameFilename(const std::string &filename) {
-        m_gameFilename = filename;
+    void setRulesDirectory(const std::string &directory) {
+        m_rulesDirectory = directory;
     }
 
     std::unique_ptr<cRectangle> m_mapViewport;
@@ -201,7 +201,7 @@ private:
     float m_gamepadScrollThreshold = 0.5f;  // right stick tilt at which the map scrolls
     bool m_cameraEdgeMove;                  // should move map camera when hitting edges of screen
 
-    std::string m_gameFilename;
+    std::string m_rulesDirectory;
 
     std::unique_ptr<cSDLSystem> m_Screen;
     std::unique_ptr<cFocusManager> m_focusManager;
