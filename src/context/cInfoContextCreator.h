@@ -51,7 +51,6 @@ public:
 private:
     void installTerrain(s_TerrainInfo* terrainInfo);
     void initUnits(cUnitInfos& unitInfos);
-    void initStructures(cStructureInfos& structureInfos);
     void initSpecials(cSpecialInfos& specialInfos);
     void initParticles(cParticleInfos& particleInfos);
     void initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings);

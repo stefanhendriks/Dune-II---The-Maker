@@ -6,6 +6,7 @@ set(D2TM_SOURCES
     context/cGameObjectContextCreator.cpp
     context/cInfoContext.cpp
     context/BulletInfosLoader.cpp
+    context/StructureInfosLoader.cpp
     context/cInfoContextCreator.cpp
     context/ContextCreator.cpp
     context/GameContext.cpp
