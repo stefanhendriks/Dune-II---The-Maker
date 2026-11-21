@@ -211,7 +211,7 @@ std::vector<std::string> ReaderPack::getNames() const
 SDL_IOStream *ReaderPack::getData(unsigned int index)
 {
     if (index >= fileInPack.size()) {
-        std::cerr << "Invalid index: " << index << std::endl;
+        std::cerr << "ReaderPack::getData invalid index: " << index << std::endl;
         return nullptr;
     }
     return SDL_IOFromConstMem( &fileInMemory[fileInPack[index].fileOffset], fileInPack[index].fileSize );
