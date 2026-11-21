@@ -265,7 +265,11 @@ void cPlayer::setHouse(int iHouse)
                  currentHouse, getHouseNameForId(currentHouse), iHouse, getHouseNameForId(iHouse));
     house = iHouse; // use rules of this house
 
-    difficultySettings = cPlayerDifficultySettings::createFromHouse(iHouse);
+    if (m_HousesInfo) {
+        difficultySettings = std::make_unique<cPlayerDifficultySettings>(m_HousesInfo->getDifficulty(iHouse));
+    } else {
+        difficultySettings = cPlayerDifficultySettings::createFromHouse(iHouse);
+    }
     if (m_infos) {
         difficultySettings->setInfoContext(m_infos);
     }

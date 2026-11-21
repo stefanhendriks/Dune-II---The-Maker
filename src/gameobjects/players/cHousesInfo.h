@@ -20,6 +20,7 @@ class cIniFile;
 #include <SDL3/SDL.h>
 #include "utils/Color.hpp"
 #include "utils/HouseColors.h"
+#include "gameobjects/players/cPlayerDifficultySettings.h"
 
 #define MAX_HOUSES        12      // 12 different type of houses
 
@@ -27,6 +28,7 @@ class cIniFile;
 struct s_HouseInfo {
     Color minimap_color;      // rgb value on minimap
     HouseColors colors;         // 7 RGB entries used to recolor sprites
+    cPlayerDifficultySettings difficulty; // speed and damage factors of the house
 };
 
 class cHousesInfo {
@@ -41,6 +43,10 @@ public:
 
     Color getMinimapColor(int house) const {
         return m_houseInfo[house].minimap_color;
+    }
+
+    const cPlayerDifficultySettings& getDifficulty(int house) const {
+        return m_houseInfo[house].difficulty;
     }
 
     void installHouses(std::shared_ptr<cIniFile> gameCfg);
