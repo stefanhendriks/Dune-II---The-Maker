@@ -4,6 +4,7 @@ find_package(Catch2 3 REQUIRED)
 set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/context/test_BulletInfosLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/context/test_StructureInfosLoader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/context/test_UnitInfosLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_GamepadMath.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_PadBindings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyBindings.cpp
@@ -50,6 +51,7 @@ set(TEST_FILES
 set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/context/BulletInfosLoader.cpp
     ${CMAKE_SOURCE_DIR}/src/context/StructureInfosLoader.cpp
+    ${CMAKE_SOURCE_DIR}/src/context/UnitInfosLoader.cpp
     ${CMAKE_SOURCE_DIR}/src/controls/cKeyBindings.cpp
     ${CMAKE_SOURCE_DIR}/src/controls/PadBindings.cpp
     ${CMAKE_SOURCE_DIR}/src/controls/cKeyboardEvent.cpp
