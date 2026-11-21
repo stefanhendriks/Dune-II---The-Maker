@@ -143,7 +143,7 @@ changed in the in-game options menu, which saves them back. A few of them:
 - `AllTurretsDownOnLowPower` / `RocketTurretsDownOnLowPower`: turrets stop firing when the player is low on power.
 - `ShowLowPowerIcon` (default `false`): when `true`, your structures that need power show a blinking lightning-bolt
   icon while you are low on power. Also available as the "Low power icon" checkbox in the options menu. Which
-  structures show it, and where, is set per structure in `game.ini` with `NeedPowerToWork`, `LowPowerIconX` and
+  structures show it, and where, is set per structure in `structures.ini` with `NeedPowerToWork`, `LowPowerIconX` and
   `LowPowerIconY`.
 
 # Project status
