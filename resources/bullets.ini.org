@@ -15,7 +15,12 @@
 ; CanDamageAirUnits=true can damage air units on impact
 ; CanDamageGround=true can damage walls, slabs, etc.
 ;
-; Bitmaps, sounds and particles of a bullet are not configurable here (yet).
+; Bitmap=name of the image in the graphics data (no key = no image)
+; Sound=name of the sound played when shot (no key = silent)
+; DeviateSound=name of the sound played when a unit is deviated (no key = silent)
+; DeathParticle=particle spawned when the bullet dies, without the D2TM_PARTICLE_ prefix (no key = none)
+; SmokeParticle=particle spawned while the bullet travels, same naming (no key = none)
+; A bullet without a section gets defaults and does nothing.
 
 ; -----------------
 ; Bullet: Huge rocket/missile (palace Death Hand)
@@ -32,6 +37,10 @@ DeviateProbability=0
 GroundBullet=false
 CanDamageAirUnits=true
 CanDamageGround=true
+Bitmap=BULLET_ROCKET_LARGE
+DeathParticle=EXPLOSION_STRUCTURE01
+SmokeParticle=BULLET_PUF
+Sound=SOUND_ROCKET
 
 ; -----------------
 ; Bullet: Small rocket of an Ornithopter
@@ -48,6 +57,10 @@ DeviateProbability=0
 GroundBullet=false
 CanDamageAirUnits=true
 CanDamageGround=true
+Bitmap=BULLET_ROCKET_SMALL
+DeathParticle=EXPLOSION_ROCKET_SMALL
+SmokeParticle=BULLET_PUF
+Sound=SOUND_ROCKET_SMALL
 
 ; -----------------
 ; Bullet: Small rocket (troopers)
@@ -64,6 +77,9 @@ DeviateProbability=0
 GroundBullet=false
 CanDamageAirUnits=true
 CanDamageGround=true
+Bitmap=BULLET_ROCKET_SMALL
+DeathParticle=EXPLOSION_ROCKET_SMALL
+Sound=SOUND_ROCKET_SMALL
 
 ; -----------------
 ; Bullet: Small rocket of a Fremen
@@ -80,6 +96,9 @@ DeviateProbability=0
 GroundBullet=false
 CanDamageAirUnits=true
 CanDamageGround=true
+Bitmap=BULLET_ROCKET_SMALL
+DeathParticle=EXPLOSION_ROCKET_SMALL
+Sound=SOUND_ROCKET_SMALL
 
 ; -----------------
 ; Bullet: Normal rocket (launcher)
@@ -96,6 +115,10 @@ DeviateProbability=0
 GroundBullet=false
 CanDamageAirUnits=true
 CanDamageGround=true
+Bitmap=BULLET_ROCKET_NORMAL
+DeathParticle=EXPLOSION_ROCKET
+SmokeParticle=BULLET_PUF
+Sound=SOUND_ROCKET
 
 ; -----------------
 ; Bullet: Soldier/infantry shot
@@ -112,6 +135,9 @@ DeviateProbability=0
 GroundBullet=true
 CanDamageAirUnits=false
 CanDamageGround=false
+Bitmap=BULLET_DOT_SMALL
+DeathParticle=EXPLOSION_BULLET
+Sound=SOUND_GUN
 
 ; -----------------
 ; Bullet: Trike/raider shot
@@ -128,6 +154,9 @@ DeviateProbability=0
 GroundBullet=true
 CanDamageAirUnits=false
 CanDamageGround=false
+Bitmap=BULLET_DOT_SMALL
+DeathParticle=EXPLOSION_BULLET
+Sound=SOUND_MACHINEGUN
 
 ; -----------------
 ; Bullet: Quad shot
@@ -144,6 +173,9 @@ DeviateProbability=0
 GroundBullet=true
 CanDamageAirUnits=false
 CanDamageGround=false
+Bitmap=BULLET_DOT_SMALL
+DeathParticle=EXPLOSION_BULLET
+Sound=SOUND_MACHINEGUN
 
 ; -----------------
 ; Bullet: Normal tank shot
@@ -160,6 +192,9 @@ DeviateProbability=0
 GroundBullet=true
 CanDamageAirUnits=false
 CanDamageGround=true
+Bitmap=BULLET_DOT_MEDIUM
+DeathParticle=EXPLOSION_BULLET
+Sound=SOUND_EXPL_ROCKET
 
 ; -----------------
 ; Bullet: Siege tank shot
@@ -176,6 +211,9 @@ DeviateProbability=0
 GroundBullet=true
 CanDamageAirUnits=false
 CanDamageGround=true
+Bitmap=BULLET_DOT_MEDIUM
+DeathParticle=EXPLOSION_BULLET
+Sound=SOUND_EXPL_ROCKET
 
 ; -----------------
 ; Bullet: Devastator shot
@@ -192,6 +230,9 @@ DeviateProbability=0
 GroundBullet=true
 CanDamageAirUnits=false
 CanDamageGround=true
+Bitmap=BULLET_DOT_LARGE
+DeathParticle=EXPLOSION_ROCKET_SMALL
+Sound=SOUND_EXPL_ROCKET
 
 ; -----------------
 ; Bullet: Gas rocket of a deviator
@@ -208,6 +249,11 @@ DeviateProbability=34
 GroundBullet=false
 CanDamageAirUnits=false
 CanDamageGround=false
+Bitmap=BULLET_ROCKET_NORMAL
+DeathParticle=EXPLOSION_GAS
+SmokeParticle=BULLET_PUF
+Sound=SOUND_ROCKET
+DeviateSound=SOUND_GAS
 
 ; -----------------
 ; Bullet: Gun turret shot (flies over structures, walls, mountains)
@@ -224,6 +270,9 @@ DeviateProbability=0
 GroundBullet=false
 CanDamageAirUnits=false
 CanDamageGround=true
+Bitmap=BULLET_DOT_MEDIUM
+DeathParticle=EXPLOSION_BULLET
+Sound=SOUND_GUNTURRET
 
 ; -----------------
 ; Bullet: Shimmer of a Sonic tank (no bitmap)
@@ -240,6 +289,7 @@ DeviateProbability=0
 GroundBullet=false
 CanDamageAirUnits=false
 CanDamageGround=false
+Sound=SOUND_SHIMMER
 
 ; -----------------
 ; Bullet: Rocket of a rocket turret
@@ -256,3 +306,7 @@ DeviateProbability=0
 GroundBullet=false
 CanDamageAirUnits=true
 CanDamageGround=true
+Bitmap=BULLET_ROCKET_NORMAL
+DeathParticle=EXPLOSION_ROCKET_SMALL
+SmokeParticle=BULLET_PUF
+Sound=SOUND_ROCKET

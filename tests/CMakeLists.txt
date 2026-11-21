@@ -2,6 +2,7 @@ find_package(Catch2 3 REQUIRED)
 
 # Test files
 set(TEST_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/context/test_BulletInfosLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_GamepadMath.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_PadBindings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_cKeyBindings.cpp
@@ -46,6 +47,7 @@ set(TEST_FILES
 # No SDL runtime linkage required — SDL headers are needed only to compile
 # types like cRectangle (which declares an inline toSDL() helper using SDL_Rect).
 set(TEST_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/context/BulletInfosLoader.cpp
     ${CMAKE_SOURCE_DIR}/src/controls/cKeyBindings.cpp
     ${CMAKE_SOURCE_DIR}/src/controls/PadBindings.cpp
     ${CMAKE_SOURCE_DIR}/src/controls/cKeyboardEvent.cpp
@@ -65,6 +67,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/utils/cIniFile.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/IniParsing.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cIniUtils.cpp
+    ${CMAKE_SOURCE_DIR}/src/utils/ParticleNames.cpp
     ${CMAKE_SOURCE_DIR}/src/game/CampaignProgress.cpp
     ${CMAKE_SOURCE_DIR}/src/game/GameStateMachine.cpp
     ${CMAKE_SOURCE_DIR}/src/include/eGameState.cpp

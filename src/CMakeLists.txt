@@ -5,6 +5,7 @@ set(D2TM_SOURCES
     context/cGameObjectContext.cpp
     context/cGameObjectContextCreator.cpp
     context/cInfoContext.cpp
+    context/BulletInfosLoader.cpp
     context/cInfoContextCreator.cpp
     context/ContextCreator.cpp
     context/GameContext.cpp
@@ -175,6 +176,7 @@ set(D2TM_SOURCES
     utils/d2tm_math.cpp
     utils/Graphics.cpp
     utils/GameRulesLoader.cpp
+    utils/ParticleNames.cpp
     utils/ScenarioLoader.cpp
     utils/IniParsing.cpp
     utils/CrashHandler.cpp
