@@ -20,7 +20,6 @@
 
 #include "definitions.h"
 #include "context/cInfoContext.h"
-#include "gameobjects/projectiles/cBulletInfos.h"
 #include "gameobjects/structures/cStructureInfo.h"
 #include "gameobjects/units/cUnitInfos.h"
 #include "include/sGameServices.h"
@@ -64,13 +63,12 @@ bool loadRulesFile(cIniFile& file, const std::string& filename)
 
 } // namespace
 
-// Game rules loader: structures.ini, units.ini and bullets.ini, in the same directory as the given game.ini
+// Game rules loader: structures.ini and units.ini, in the same directory as the given game.ini
 void GameRulesLoader::installGame(const std::string& filename)
 {
     const std::filesystem::path directory = std::filesystem::path(filename).parent_path();
     installStructures((directory / "structures.ini").string());
     installUnits((directory / "units.ini").string());
-    installBullets((directory / "bullets.ini").string());
 }
 
 // Every section is a structure, named by the section ([WOR])
@@ -157,37 +155,6 @@ void GameRulesLoader::installUnits(const std::string& filename)
         if (section.hasValue("Producer")) {
             info.structureTypeItLeavesFrom = cIniUtils::getStructureType(section.getStringValue("Producer"));
         }
-    }
-    Logger::info(COMP_GAMERULES, "GameRulesLoader::installGame", "[{}] Done", filename);
-}
-
-// Every section is a bullet, named by the section ([ROCKET_NORMAL])
-void GameRulesLoader::installBullets(const std::string& filename)
-{
-    cIniFile file;
-    if (!loadRulesFile(file, filename)) return;
-
-    const int bulletInfoCount = static_cast<int>(m_infos->getBulletInfos()->size());
-    for (const auto& sectionName : file.getSectionNames()) {
-        const int id = cIniUtils::getBulletTypeFromString(sectionName);
-        if (id < 0 || id >= bulletInfoCount) {
-            Logger::error(COMP_GAMERULES, "GameRulesLoader::installGame", "[{}] Unknown bullet section [{}], skipping it (expected e.g. [ROCKET_NORMAL])", filename, sectionName);
-            continue;
-        }
-
-        const cSection section = file.getSection(sectionName);
-        s_BulletInfo& info = m_infos->getBulletInfo(id);
-        readInt(section, "DamageVehicle", info.damage_vehicles);
-        readInt(section, "DamageInfantry", info.damage_infantry);
-        readInt(section, "DeviateProbability", info.deviateProbability);
-        readInt(section, "ExplosionSize", info.explosionSize);
-        readBool(section, "GroundBullet", info.groundBullet);
-        readInt(section, "MoveSpeed", info.moveSpeed);
-        readInt(section, "BitmapWidth", info.bmp_width);
-        readInt(section, "BitmapFrames", info.max_frames);
-        readInt(section, "BitmapExplFrames", info.max_deadframes);
-        readBool(section, "CanDamageAirUnits", info.canDamageAirUnits);
-        readBool(section, "CanDamageGround", info.canDamageGround);
     }
     Logger::info(COMP_GAMERULES, "GameRulesLoader::installGame", "[{}] Done", filename);
 }

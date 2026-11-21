@@ -20,17 +20,16 @@
 class cInfoContext;
 struct sGameServices;
 
-// Loads the game rules (structures.ini, units.ini and bullets.ini) into the info tables
+// Loads the game rules (structures.ini and units.ini) into the info tables
 class GameRulesLoader {
 public:
     explicit GameRulesLoader(sGameServices* services);
-    // Read structures.ini, units.ini and bullets.ini (in the same directory as the given game.ini)
+    // Read structures.ini and units.ini (in the same directory as the given game.ini)
     void installGame(const std::string& filename);
 
 private:
     void installStructures(const std::string& filename);
     void installUnits(const std::string& filename);
-    void installBullets(const std::string& filename);
 
     cInfoContext* m_infos = nullptr;
 };

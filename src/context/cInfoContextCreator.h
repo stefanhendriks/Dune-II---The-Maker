@@ -16,6 +16,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 class cParticleInfos;
 class cStructureInfos;
@@ -33,7 +34,8 @@ struct s_TerrainInfo;
 
 class cInfoContextCreator {
 public:
-    cInfoContextCreator(GraphicsContext* graphicsContext, const AudioContext* audioContext);
+    // rulesDirectory holds the rules INI files (bullets.ini), it is the directory of game.ini
+    cInfoContextCreator(GraphicsContext* graphicsContext, const AudioContext* audioContext, std::string rulesDirectory);
     ~cInfoContextCreator() = default;
 
     std::unique_ptr<cParticleInfos> createParticleInfos();
@@ -50,7 +52,6 @@ private:
     void installTerrain(s_TerrainInfo* terrainInfo);
     void initUnits(cUnitInfos& unitInfos);
     void initStructures(cStructureInfos& structureInfos);
-    void initBullets(cBulletInfos& bulletInfos);
     void initSpecials(cSpecialInfos& specialInfos);
     void initParticles(cParticleInfos& particleInfos);
     void initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings);
@@ -58,4 +59,5 @@ private:
     Graphics* m_gfxdata = nullptr;
     Graphics* m_gfxinter = nullptr;
     const AudioContext* m_audio = nullptr;
+    std::string m_rulesDirectory;
 };

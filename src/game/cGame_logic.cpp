@@ -845,7 +845,7 @@ bool cGame::setupGame()
     // A few messages for the player
     Logger::info(COMP_INIT, "cGame::setupGame", "Initializing:  PLAYERS");
     m_players->setupPlayers(m_Houses.get());
-    cInfoContextCreator infoCreator(ctx->getGraphicsContext(), m_audioContext);
+    cInfoContextCreator infoCreator(ctx->getGraphicsContext(), m_audioContext, std::filesystem::path(m_gameFilename).parent_path().string());
     infoCreator.installInfos(*m_infoContext);
 
     m_mapCamera.reset();
