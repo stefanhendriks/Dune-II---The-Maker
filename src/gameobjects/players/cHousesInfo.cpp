@@ -23,20 +23,20 @@
 namespace {
     struct HouseEntry { int house; const char* section; };
     constexpr HouseEntry kHouses[] = {
-        {GENERALHOUSE, "HOUSE: GENERAL"},
-        {HARKONNEN,    "HOUSE: HARKONNEN"},
-        {ATREIDES,     "HOUSE: ATREIDES"},
-        {ORDOS,        "HOUSE: ORDOS"},
-        {SARDAUKAR,    "HOUSE: SARDAUKAR"},
-        {FREMEN,       "HOUSE: FREMEN"},
-        {MERCENARY,    "HOUSE: MERCENARY"},
-        {CORRINO,      "HOUSE: CORRINO"},
+        {GENERALHOUSE, "GENERAL"},
+        {HARKONNEN,    "HARKONNEN"},
+        {ATREIDES,     "ATREIDES"},
+        {ORDOS,        "ORDOS"},
+        {SARDAUKAR,    "SARDAUKAR"},
+        {FREMEN,       "FREMEN"},
+        {MERCENARY,    "MERCENARY"},
+        {CORRINO,      "CORRINO"},
     };
 }
 
 cHousesInfo::cHousesInfo()
 {
-    // the original factors are the defaults, [HOUSE: X] in game.ini can override them
+    // the original factors are the defaults, [X] in houses.ini can override them
     for (auto& [house, sectionName] : kHouses) {
         m_houseInfo[house].difficulty = *cPlayerDifficultySettings::createFromHouse(house);
     }

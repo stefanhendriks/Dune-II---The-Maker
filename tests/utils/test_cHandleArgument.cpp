@@ -70,7 +70,7 @@ TEST_CASE("cHandleArgument - no arguments leaves every setting at its default", 
     REQUIRE_FALSE(settings.drawUsages);
     REQUIRE_FALSE(settings.fogOfWarEnabled);
     REQUIRE_FALSE(settings.pauseWhenLosingFocus);
-    REQUIRE(settings.gameFilename == "game.ini");
+    REQUIRE(settings.gameFilename == "houses.ini");
     REQUIRE(changedFields(settings).empty());
 }
 

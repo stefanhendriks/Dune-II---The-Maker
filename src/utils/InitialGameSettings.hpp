@@ -48,5 +48,5 @@ struct InitialGameSettings {
     bool drawUsages = false;
     bool fogOfWarEnabled = false;
     bool pauseWhenLosingFocus = false;
-    std::string gameFilename = "game.ini";
+    std::string gameFilename = "houses.ini";
 };

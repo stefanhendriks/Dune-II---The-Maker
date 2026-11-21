@@ -71,7 +71,7 @@ public:
     float getInflictDamage(int iDamageInflicted);
 
     /**
-     * Factory method for constructing this based on House type (the original values, used as defaults for game.ini)
+     * Factory method for constructing this based on House type (the original values, used as defaults for houses.ini)
      * @param house
      * @return
      */
