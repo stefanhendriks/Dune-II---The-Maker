@@ -28,7 +28,6 @@ public:
     void installGame(const std::string& filename);
 
 private:
-    void installStructures(const std::string& filename);
     void installUnits(const std::string& filename);
 
     cInfoContext* m_infos = nullptr;

@@ -63,52 +63,11 @@ bool loadRulesFile(cIniFile& file, const std::string& filename)
 
 } // namespace
 
-// Game rules loader: structures.ini and units.ini, in the same directory as the given game.ini
+// Game rules loader: units.ini, in the same directory as the given game.ini
 void GameRulesLoader::installGame(const std::string& filename)
 {
     const std::filesystem::path directory = std::filesystem::path(filename).parent_path();
-    installStructures((directory / "structures.ini").string());
     installUnits((directory / "units.ini").string());
-}
-
-// Every section is a structure, named by the section ([WOR])
-void GameRulesLoader::installStructures(const std::string& filename)
-{
-    cIniFile file;
-    if (!loadRulesFile(file, filename)) return;
-
-    for (const auto& sectionName : file.getSectionNames()) {
-        const int id = cIniUtils::getStructureType(sectionName);
-        // getStructureType falls back to 0 for unknown names, which would pour this section's values into the Palace
-        if (id < 0 || id >= MAX_STRUCTURETYPES || (id == PALACE && !cIniUtils::caseInsCompare(sectionName, "PALACE"))) {
-            Logger::error(COMP_GAMERULES, "GameRulesLoader::installGame", "[{}] Unknown structure section [{}], skipping it (expected e.g. [WOR])", filename, sectionName);
-            continue;
-        }
-
-        const cSection section = file.getSection(sectionName);
-        s_StructureInfo& info = m_infos->getStructureInfo(id);
-        readInt(section, "HitPoints", info.hp);
-        readInt(section, "FixPoints", info.fixhp);
-        readInt(section, "PowerDrain", info.power_drain);
-        readBool(section, "HasConcrete", info.hasConcrete);
-        readBool(section, "NeedPowerToWork", info.needPowerToWork);
-        readInt(section, "LowPowerIconX", info.lowPowerIconX);
-        readInt(section, "LowPowerIconY", info.lowPowerIconY);
-        readInt(section, "PowerGive", info.power_give);
-        readInt(section, "Cost", info.cost);
-        readInt(section, "BuildTime", info.buildTime);
-        readBool(section, "CanAttackAirUnits", info.canAttackAirUnits);
-        readBool(section, "CanAttackUnits", info.canAttackGroundUnits);
-        readInt(section, "Sight", info.sight);
-        readInt(section, "Range", info.range);
-        readInt(section, "FireRate", info.fireRate);
-        readInt(section, "UponDestructionSpawnUnitAmountMin", info.uponDestructionSpawnUnitAmountMin);
-        readInt(section, "UponDestructionSpawnUnitAmountMax", info.uponDestructionSpawnUnitAmountMax);
-        if (section.hasValue("UponDestructionSpawnUnitType")) {
-            info.uponDestructionSpawnUnitType = cIniUtils::getUnitTypeFromString(section.getStringValue("UponDestructionSpawnUnitType"));
-        }
-    }
-    Logger::info(COMP_GAMERULES, "GameRulesLoader::installGame", "[{}] Done", filename);
 }
 
 // Every section is a unit, named by the section ([TRIKE])
