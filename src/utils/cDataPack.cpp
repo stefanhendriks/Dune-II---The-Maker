@@ -68,7 +68,7 @@ int DataPack::getIndexFromName(const std::string &name) const
 SDL_Surface *DataPack::getSurface(int index)
 {
     if (index < 0 || index >= reader->getNumberOfFiles()) {
-        std::cerr << "Invalid index: " << index << std::endl;
+        std::cerr << "DataPack::getSurface invalid index: " << index << std::endl;
         return nullptr;
     }
     auto it = surfaceCache.find(index);
@@ -92,7 +92,7 @@ MIX_Audio *DataPack::getAudio(const std::string &name)
 MIX_Audio *DataPack::getAudio(int index)
 {
     if (index < 0 || index >= reader->getNumberOfFiles()) {
-        std::cerr << "Invalid index: " << index << std::endl;
+        std::cerr << "DataPack::getAudio invalid index: " << index << std::endl;
         return nullptr;
     }
     auto it = audioCache.find(index);
