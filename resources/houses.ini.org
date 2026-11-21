@@ -1,22 +1,16 @@
-; D2TM - DEVELOPER GAME PROFILE.
-; 0 MOVESPEED
-; 0 TURNSPEED
-; 0 BUILDTIME
-
-[HOUSES]
-; ========================================================
-; House types
-; ========================================================
+; Dune II - The Maker: houses
 ;
-; Each house is defined in its own [HOUSE: <NAME>] section.
+; Each house is defined in its own section, named after the house: [ATREIDES].
+; House names must be in capitals, otherwise the house is not recognized.
+;
 ; MINIMAPCOLOR sets the colour shown on the minimap (r,g,b).
-; TEAMCOLOR_0 through TEAMCOLOR_6 define the sprite recolor shades,
-; from brightest (0) to darkest (6).
+; TEAMCOLOR_0 through TEAMCOLOR_6 define the sprite recolor shades, from brightest (0) to darkest (6).
+; MoveSpeedFactor, BuildSpeedFactor, HarvestSpeedFactor, DumpSpeedFactor and InflictDamageFactor
+; are the house difficulty factors. Keys that are absent use the original values.
 ;
-; HOUSE NAMES MUST BE IN CAPITAL, DO NOT CHANGE THIS OR HOUSES WILL NOT BE
-; IDENTIFIED WHEN READING THE INI FILE.
+; ";", "#" or "//" starts a comment. It cannot be used AFTER a line.
 
-[HOUSE: GENERAL]
+[GENERAL]
 MINIMAPCOLOR = 128,128,128
 TEAMCOLOR_0 = 194,194,218
 TEAMCOLOR_1 = 157,157,186
@@ -26,7 +20,7 @@ TEAMCOLOR_4 = 64,64,89
 TEAMCOLOR_5 = 40,40,60
 TEAMCOLOR_6 = 20,20,40
 
-[HOUSE: HARKONNEN]
+[HARKONNEN]
 MINIMAPCOLOR = 255,0,0
 TEAMCOLOR_0 = 214,0,0
 TEAMCOLOR_1 = 182,0,0
@@ -41,7 +35,7 @@ HarvestSpeedFactor = 1.1
 DumpSpeedFactor = 1.1
 InflictDamageFactor = 1.2
 
-[HOUSE: ATREIDES]
+[ATREIDES]
 MINIMAPCOLOR = 0,0,255
 TEAMCOLOR_0 = 80,121,214
 TEAMCOLOR_1 = 52,85,182
@@ -56,7 +50,7 @@ HarvestSpeedFactor = 1.0
 DumpSpeedFactor = 1.0
 InflictDamageFactor = 1.0
 
-[HOUSE: ORDOS]
+[ORDOS]
 MINIMAPCOLOR = 0,255,0
 TEAMCOLOR_0 = 76,214,76
 TEAMCOLOR_1 = 56,182,56
@@ -71,7 +65,7 @@ HarvestSpeedFactor = 0.9
 DumpSpeedFactor = 0.9
 InflictDamageFactor = 0.8
 
-[HOUSE: MERCENARY]
+[MERCENARY]
 MINIMAPCOLOR = 214,121,16
 TEAMCOLOR_0 = 214,121,16
 TEAMCOLOR_1 = 182,97,8
@@ -81,7 +75,7 @@ TEAMCOLOR_4 = 93,40,0
 TEAMCOLOR_5 = 60,24,0
 TEAMCOLOR_6 = 32,12,0
 
-[HOUSE: SARDAUKAR]
+[SARDAUKAR]
 MINIMAPCOLOR = 101,12,101
 TEAMCOLOR_0 = 242,105,242
 TEAMCOLOR_1 = 206,72,206
@@ -97,7 +91,7 @@ DumpSpeedFactor = 1.1
 InflictDamageFactor = 1.25
 
 # Fremen is colored as "sand" on the minimap
-[HOUSE: FREMEN]
+[FREMEN]
 MINIMAPCOLOR = 194,125,60
 TEAMCOLOR_0 = 214,149,0
 TEAMCOLOR_1 = 182,125,0
@@ -107,7 +101,7 @@ TEAMCOLOR_4 = 89,56,0
 TEAMCOLOR_5 = 60,36,0
 TEAMCOLOR_6 = 32,16,0
 
-[HOUSE: CORRINO]
+[CORRINO]
 MINIMAPCOLOR = 192,192,192
 TEAMCOLOR_0 = 226,182,149
 TEAMCOLOR_1 = 202,161,133
@@ -119,7 +113,7 @@ TEAMCOLOR_6 = 80,60,52
 
 ; --------------------------------------------------------
 ; Inspirational color palettes (copy TEAMCOLOR lines into
-; a [HOUSE: X] section to apply them)
+; a [X] section to apply them)
 ; --------------------------------------------------------
 ;
 ; Orange

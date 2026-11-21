@@ -31,7 +31,7 @@ std::shared_ptr<cIniFile> loadIni(const std::string& contents)
 TEST_CASE("House difficulty factors are read from the house section")
 {
     cHousesInfo houses;
-    houses.installHouses(loadIni("[HOUSE: ORDOS]\nMoveSpeedFactor=0.5\nBuildSpeedFactor=0.6\nHarvestSpeedFactor=0.7\nDumpSpeedFactor=0.8\nInflictDamageFactor=0.9\n"));
+    houses.installHouses(loadIni("[ORDOS]\nMoveSpeedFactor=0.5\nBuildSpeedFactor=0.6\nHarvestSpeedFactor=0.7\nDumpSpeedFactor=0.8\nInflictDamageFactor=0.9\n"));
 
     const auto& difficulty = houses.getDifficulty(ORDOS);
     CHECK(difficulty.getMoveSpeedFactor() == 0.5f);
@@ -44,7 +44,7 @@ TEST_CASE("House difficulty factors are read from the house section")
 TEST_CASE("House difficulty factors keep the old values for missing keys, sections and files")
 {
     cHousesInfo houses;
-    houses.installHouses(loadIni("[HOUSE: SARDAUKAR]\nBuildSpeedFactor=2.0\n[HOUSE: HARKONNEN]\nMINIMAPCOLOR = 255,0,0\n"));
+    houses.installHouses(loadIni("[SARDAUKAR]\nBuildSpeedFactor=2.0\n[HARKONNEN]\nMINIMAPCOLOR = 255,0,0\n"));
 
     CHECK(houses.getDifficulty(SARDAUKAR).getBuildSpeedFactor() == 2.0f);
     CHECK(houses.getDifficulty(SARDAUKAR).getMoveSpeedFactor() == 1.2f);
@@ -58,12 +58,12 @@ TEST_CASE("House difficulty factors keep the old values for missing keys, sectio
     CHECK(untouched.getDifficulty(HARKONNEN).getMoveSpeedFactor() == 1.2f);
 }
 
-TEST_CASE("The shipped game.ini.org holds the old house difficulty factors")
+TEST_CASE("The shipped houses.ini.org holds the old house difficulty factors")
 {
     cHousesInfo shipped;
     cHousesInfo defaults;
     auto ini = std::make_shared<cIniFile>();
-    REQUIRE(ini->load(std::string(D2TM_SOURCE_DIR) + "/resources/game.ini.org"));
+    REQUIRE(ini->load(std::string(D2TM_SOURCE_DIR) + "/resources/houses.ini.org"));
     shipped.installHouses(ini);
 
     for (const int house : {ATREIDES, ORDOS, HARKONNEN, SARDAUKAR}) {

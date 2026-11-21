@@ -163,7 +163,7 @@ void cHandleArgument::printInstructions() const
     std::cout << "\n\n";
     std::cout << "Experimental\n";
     std::cout << "------------\n\n";
-    std::cout << "-game <filename>       - Specify which file to use instead of game.ini\n";
+    std::cout << "-game <filename>       - Specify which file to use instead of houses.ini\n";
     std::cout << "\n\n";
     std::cout << "Other\n";
     std::cout << "---------\n\n";

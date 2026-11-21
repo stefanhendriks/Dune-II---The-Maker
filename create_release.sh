@@ -48,8 +48,8 @@ echo "10. Copying dll files"
 echo "TODO TODO TODO"
 echo "11. Copy executable"
 cp -p build/d2tm bin
-echo "12. Copy game rules file (game.ini)"
-cp resources/game.ini.org bin/game.ini
+echo "12. Copy houses file (houses.ini)"
+cp resources/houses.ini.org bin/houses.ini
 cp resources/structures.ini.org bin/structures.ini
 cp resources/units.ini.org bin/units.ini
 cp resources/bullets.ini.org bin/bullets.ini

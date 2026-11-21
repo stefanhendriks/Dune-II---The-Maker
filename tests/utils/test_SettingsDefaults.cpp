@@ -163,7 +163,7 @@ TEST_CASE("Settings defaults - InitialGameSettings values without any settings.i
     CHECK_FALSE(gs.drawUsages);
     CHECK_FALSE(gs.fogOfWarEnabled);
     CHECK_FALSE(gs.pauseWhenLosingFocus);
-    CHECK(gs.gameFilename == "game.ini");
+    CHECK(gs.gameFilename == "houses.ini");
 }
 
 TEST_CASE("Settings defaults - a [SETTINGS] section without known keys changes nothing", "[settings]")
@@ -202,7 +202,7 @@ TEST_CASE("Settings ini - the shipped settings.ini loads into the documented val
     CHECK_FALSE(gs.turretsDownOnLowPower);
     CHECK(gs.rocketTurretsDownOnLowPower);
     CHECK_FALSE(gs.showLowPowerIcon);
-    CHECK(gs.gameFilename == "game.ini");
+    CHECK(gs.gameFilename == "houses.ini");
     // everything that is commented out in the shipped file keeps its default
     const InitialGameSettings defaults;
     CHECK(gs.playMusic == defaults.playMusic);
