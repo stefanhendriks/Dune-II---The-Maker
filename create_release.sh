@@ -53,6 +53,7 @@ cp resources/game.ini.org bin/game.ini
 cp resources/structures.ini.org bin/structures.ini
 cp resources/units.ini.org bin/units.ini
 cp resources/bullets.ini.org bin/bullets.ini
+cp resources/terrain.ini.org bin/terrain.ini
 cp resources/bin/settings.ini bin
 echo "13. Copy txt files"
 cp resources/doc/versionhistory.txt bin

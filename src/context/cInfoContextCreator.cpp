@@ -31,6 +31,7 @@
 #include "utils/Graphics.hpp"
 #include "utils/Log.h"
 #include "gameobjects/map/cMap.h"
+#include "context/TerrainInfoLoader.hpp"
 #include "gameobjects/sTerrainInfo.h"
 #include "include/enums/HouseFlags.h"
 
@@ -100,7 +101,8 @@ std::unique_ptr<cUpgradeInfos> cInfoContextCreator::createUpgradeInfos(const cIn
 
 std::unique_ptr<s_TerrainInfo> cInfoContextCreator::createTerrainInfos() {
     auto terrainInfo = std::make_unique<s_TerrainInfo>();
-    installTerrain(terrainInfo.get());
+    const TerrainInfoLoader loader;
+    loader.load((std::filesystem::path(m_rulesDirectory) / "terrain.ini").string(), *terrainInfo);
     return terrainInfo;
 }
 
@@ -616,14 +618,4 @@ void cInfoContextCreator::initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoC
         upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].buildTime = 150;
     }
     upgradeInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].description = "Build Devastator at Heavy Factory";
-}
-
-void cInfoContextCreator::installTerrain(s_TerrainInfo* terrainInfo)
-{
-    terrainInfo->bloomTimerDuration = 200;
-    terrainInfo->terrainSpiceMinSpice = 50;
-    terrainInfo->terrainSpiceMaxSpice = 125;
-    terrainInfo->terrainSpiceHillMinSpice = 75;
-    terrainInfo->terrainSpiceHillMaxSpice = 150;
-    terrainInfo->terrainWallHp = 100;
 }
