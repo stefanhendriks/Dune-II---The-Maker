@@ -49,6 +49,12 @@ public:
 
     void setInfoContext(cInfoContext* info) { m_info = info; }
 
+    float getMoveSpeedFactor() const { return m_moveSpeedFactor; }
+    float getBuildSpeedFactor() const { return m_buildSpeedFactor; }
+    float getHarvestSpeedFactor() const { return m_harvestSpeedFactor; }
+    float getDumpSpeedFactor() const { return m_dumpSpeedFactor; }
+    float getInflictDamageFactor() const { return m_inflictDamageFactor; }
+
     // get move speed of a unit
     float getMoveSpeed(int iUnitType, int slowDown);
 
@@ -65,7 +71,7 @@ public:
     float getInflictDamage(int iDamageInflicted);
 
     /**
-     * Factory method for constructing this based on House type
+     * Factory method for constructing this based on House type (the original values, used as defaults for game.ini)
      * @param house
      * @return
      */

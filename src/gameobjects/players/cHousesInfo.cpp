@@ -18,6 +18,7 @@
 #include "utils/cIniUtils.h"
 #include "utils/Log.h"
 #include "utils/cIniFile.h"
+#include "gameobjects/players/cPlayerDifficultySettings.h"
 
 namespace {
     struct HouseEntry { int house; const char* section; };
@@ -35,6 +36,11 @@ namespace {
 
 cHousesInfo::cHousesInfo()
 {
+    // the original factors are the defaults, [HOUSE: X] in game.ini can override them
+    for (auto& [house, sectionName] : kHouses) {
+        m_houseInfo[house].difficulty = *cPlayerDifficultySettings::createFromHouse(house);
+    }
+
     m_houseInfo[GENERALHOUSE].minimap_color = Color(128,128,128);
     m_houseInfo[GENERALHOUSE].colors = {{{194, 194, 218}, {157, 157, 186}, {125, 125, 153},
                                     {93, 93, 121}, { 64, 64, 89}, { 40, 40, 60}, { 20, 20, 40}}};
@@ -81,6 +87,13 @@ void cHousesInfo::installHouses(std::shared_ptr<cIniFile> gameCfg)
     for (auto& [house, sectionName] : kHouses) {
         if (!gameCfg->hasSection(sectionName)) continue;
         const cSection& section = gameCfg->getSection(sectionName);
+        const cPlayerDifficultySettings& defaults = m_houseInfo[house].difficulty;
+        m_houseInfo[house].difficulty = cPlayerDifficultySettings(
+            static_cast<float>(section.getDouble("MoveSpeedFactor", defaults.getMoveSpeedFactor())),
+            static_cast<float>(section.getDouble("BuildSpeedFactor", defaults.getBuildSpeedFactor())),
+            static_cast<float>(section.getDouble("HarvestSpeedFactor", defaults.getHarvestSpeedFactor())),
+            static_cast<float>(section.getDouble("DumpSpeedFactor", defaults.getDumpSpeedFactor())),
+            static_cast<float>(section.getDouble("InflictDamageFactor", defaults.getInflictDamageFactor())));
         if (section.hasValue("MINIMAPCOLOR")) {
             m_houseInfo[house].minimap_color = cIniUtils::colorFromString(section.getStringValue("MINIMAPCOLOR"));
         }
