@@ -34,7 +34,7 @@ struct s_TerrainInfo;
 
 class cInfoContextCreator {
 public:
-    // rulesDirectory holds the rules INI files (bullets.ini), it is the directory of the game rules file (houses.ini)
+    // rulesDirectory holds the rules INI files (bullets.ini), set with -game, default is the current directory
     cInfoContextCreator(GraphicsContext* graphicsContext, const AudioContext* audioContext, std::string rulesDirectory);
     ~cInfoContextCreator() = default;
 

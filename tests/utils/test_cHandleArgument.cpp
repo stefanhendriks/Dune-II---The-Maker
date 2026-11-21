@@ -45,7 +45,7 @@ std::vector<std::string> changedFields(const InitialGameSettings &s)
     check("drawUsages", s.drawUsages != d.drawUsages);
     check("fogOfWarEnabled", s.fogOfWarEnabled != d.fogOfWarEnabled);
     check("pauseWhenLosingFocus", s.pauseWhenLosingFocus != d.pauseWhenLosingFocus);
-    check("gameFilename", s.gameFilename != d.gameFilename);
+    check("rulesDirectory", s.rulesDirectory != d.rulesDirectory);
     return changed;
 }
 }
@@ -70,7 +70,7 @@ TEST_CASE("cHandleArgument - no arguments leaves every setting at its default", 
     REQUIRE_FALSE(settings.drawUsages);
     REQUIRE_FALSE(settings.fogOfWarEnabled);
     REQUIRE_FALSE(settings.pauseWhenLosingFocus);
-    REQUIRE(settings.gameFilename == "houses.ini");
+    REQUIRE(settings.rulesDirectory == ".");
     REQUIRE(changedFields(settings).empty());
 }
 
@@ -187,10 +187,10 @@ TEST_CASE("cHandleArgument - scaling mode flags", "[arguments]")
 TEST_CASE("cHandleArgument - options with a value consume it", "[arguments]")
 {
     InitialGameSettings settings;
-    run({"-screenWidth", "1280", "-screenHeight", "720", "-game", "custom.ini"}, settings);
+    run({"-screenWidth", "1280", "-screenHeight", "720", "-game", "custom_rules"}, settings);
     REQUIRE(settings.screenW == 1280);
     REQUIRE(settings.screenH == 720);
-    REQUIRE(settings.gameFilename == "custom.ini");
+    REQUIRE(settings.rulesDirectory == "custom_rules");
 }
 
 TEST_CASE("cHandleArgument - option missing its value throws", "[arguments]")

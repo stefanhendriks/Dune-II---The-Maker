@@ -106,8 +106,8 @@ void readSettings(const cSection &section, InitialGameSettings &settings)
     if (section.hasValue("RocketTurretsDownOnLowPower")) {
         settings.rocketTurretsDownOnLowPower = section.getBoolean("RocketTurretsDownOnLowPower");
     }
-    if (section.hasValue("GameRules")) {
-        settings.gameFilename = section.getStringValue("GameRules");
+    if (section.hasValue("RulesDirectory")) {
+        settings.rulesDirectory = section.getStringValue("RulesDirectory");
     }
     if (section.hasValue("NoAI")) {
         settings.disableAI = section.getBoolean("NoAI");
@@ -191,7 +191,7 @@ bool save(const std::filesystem::path &file, const InitialGameSettings &settings
     set(ini, "AllTurretsDownOnLowPower", toText(settings.turretsDownOnLowPower));
     set(ini, "RocketTurretsDownOnLowPower", toText(settings.rocketTurretsDownOnLowPower));
     set(ini, "ShowLowPowerIcon", toText(settings.showLowPowerIcon));
-    set(ini, "GameRules", settings.gameFilename);
+    set(ini, "RulesDirectory", settings.rulesDirectory);
     set(ini, "NoAI", toText(settings.disableAI));
     set(ini, "Debug", toText(settings.debugMode));
     set(ini, "playMusic", toText(settings.playMusic));

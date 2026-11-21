@@ -51,7 +51,7 @@ TEST_CASE("Preferences - saved settings load back identical", "[preferences]")
     saved.drawUsages = true;
     saved.fogOfWarEnabled = true;
     saved.pauseWhenLosingFocus = true;
-    saved.gameFilename = "custom.ini";
+    saved.rulesDirectory = "custom_rules";
 
     std::string error;
     REQUIRE(Preferences::save(file, saved, error));
@@ -81,7 +81,7 @@ TEST_CASE("Preferences - saved settings load back identical", "[preferences]")
     REQUIRE(loaded.drawUsages);
     REQUIRE(loaded.fogOfWarEnabled);
     REQUIRE(loaded.pauseWhenLosingFocus);
-    REQUIRE(loaded.gameFilename == "custom.ini");
+    REQUIRE(loaded.rulesDirectory == "custom_rules");
 }
 
 TEST_CASE("Preferences - loading a missing file leaves the settings untouched", "[preferences]")
