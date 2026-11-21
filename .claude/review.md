@@ -94,7 +94,7 @@ Keep the posted review short. A maintainer should read it in under a minute.
 - Unit/structure removal clears all back-references (selection, group, cell id,
   rally point, repair/refine targets).
 - INI-driven data (`cUnitInfos`, `cStructureInfos`, ...) is read through the
-  info tables, not hardcoded. New tunables get a `game.ini` entry.
+  info tables, not hardcoded. New tunables get an entry in the matching INI file.
 
 ## Build stability & CI
 

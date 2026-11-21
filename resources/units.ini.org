@@ -620,7 +620,7 @@ BuildTime=100
 ;
 ; changing build time or cost here will not do anything
 ; this is stored in a separate entry, a so called "Special". These are not yet
-; supported in the game.ini file yet
+; supported in this file yet
 ;
 ; -------------------------------------
 
@@ -655,7 +655,7 @@ Range=6
 
 ; changing build time or cost here will not do anything
 ; this is stored in a separate entry, a so called "Special". These are not yet
-; supported in the game.ini file yet
+; supported in this file yet
 BuildTime=1000
 Cost=0
 
@@ -691,7 +691,7 @@ Range=6
 
 ; changing build time or cost here will not do anything
 ; this is stored in a separate entry, a so called "Special". These are not yet
-; supported in the game.ini file yet
+; supported in this file yet
 BuildTime=1000
 Cost=0
 
@@ -722,7 +722,7 @@ Range=2
   
 ; changing build time or cost here will not do anything
 ; this is stored in a separate entry, a so called "Special". These are not yet
-; supported in the game.ini file yet
+; supported in this file yet
 BuildTime=1000
 Cost=0
 ; enter-structure attack behaviour (saboteur destroys the structure it enters)
