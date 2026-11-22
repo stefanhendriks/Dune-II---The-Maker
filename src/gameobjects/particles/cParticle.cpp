@@ -95,7 +95,6 @@ void cParticle::init()
     TIMER_dead = 0;     // when > -1, this timer will determine when the thing dies
 
     dimensions.reset();
-    //std::cout << "cParticle initialized: size cache " << particleTextureCache.size() << std::endl;
 }
 
 bool cParticle::isValid() const {
@@ -852,7 +851,6 @@ void cParticle::recolorForHouseIfGiven() {
 
     TextureID bmpIndex = m_services->info->getParticleInfo(iType).bmpIndex;
     if (m_renderer->isSurface8BitPaletted(m_gfxdata->getSurface(toSurfaceID(bmpIndex))) == false) {
-        //std::cout << "cParticle::recolorForHouseIfGiven: Particle type " << iType << " with bmpIndex " << bmpIndex << " is not an 8-bit paletted surface, cannot recolor.\n";
         return;
     }
     auto cacheKey = std::make_pair(bmpIndex, iHousePal);

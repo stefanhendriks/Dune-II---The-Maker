@@ -41,7 +41,6 @@ void cFocusManager::onWindowFocusLost()
     }
     gameWindowActive = false;
     m_timeManager->onWindowFocusLost();
-    std::cout << "D2TM: Window focus lost" << std::endl;
 }
 
 void cFocusManager::onWindowFocusGained()
@@ -51,7 +50,6 @@ void cFocusManager::onWindowFocusGained()
     }
     gameWindowActive = true;
     m_timeManager->onWindowFocusGained();
-    std::cout << "D2TM: Window focus gained" << std::endl;
 }
 
 bool cFocusManager::isGameWindowActive() const

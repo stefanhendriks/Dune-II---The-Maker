@@ -238,7 +238,6 @@ void cMouse::updateState()
         if (m_leftButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_PRESSED;
             m_mouseObserver->onNotifyMouseEvent(event);
-            // std::cout << "emit left pressed" << std::endl;
         }
 
         if (m_leftButtonDoubleClicked) {
@@ -247,19 +246,16 @@ void cMouse::updateState()
         } else if (m_leftButtonReleased) {
             event.eventType = eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED;
             m_mouseObserver->onNotifyMouseEvent(event);
-            // std::cout << "emit left released" << std::endl;
         }
 
         if (m_rightButtonPressed) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_PRESSED;
             m_mouseObserver->onNotifyMouseEvent(event);
-            // std::cout << "emit right pressed" << std::endl;
         }
 
         if (m_rightButtonReleased) {
             event.eventType = eMouseEventType::MOUSE_RIGHT_BUTTON_CLICKED;
             m_mouseObserver->onNotifyMouseEvent(event);
-            // std::cout << "emit right click" << std::endl;
         }
     }
 

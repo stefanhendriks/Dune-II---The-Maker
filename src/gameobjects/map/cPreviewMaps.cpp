@@ -110,7 +110,6 @@ void cPreviewMaps::drawPreview(const s_PreviewMap &previewMap, SDL_Surface *surf
 
 void cPreviewMaps::destroy()
 {
-    // std::cout << "Destroying preview maps" << std::endl;
     for (auto& previewMap : m_PreviewMap) {
         if (previewMap == nullptr) {
             continue;
@@ -299,7 +298,6 @@ void cPreviewMaps::loadSkirmishMaps()
     const std::filesystem::path pathfile{"skirmish"};
     for (auto const &file: std::filesystem::directory_iterator{pathfile}) {
         auto fullname = file.path().string();
-        // std::cout << "Found file: " << fullname << std::endl;
         if (file.path().extension() == ".ini") {
             loadSkirmish(fullname);
             Logger::info(COMP_MAP, "cPreviewMaps", "Loading skirmish map: {}", fullname);
@@ -425,29 +423,19 @@ void cPreviewMaps::initPreviews()
 
 void cPreviewMaps::initRandomMap()
 {
-    // std::cout << "Initializing random map" << std::endl;
     auto firstSkirmishMap = std::make_unique<PreviewMapView>();
     firstSkirmishMap->map.name = "Random map";
     firstSkirmishMap->map.validMap = false;
 
     firstSkirmishMap->map.terrainType = std::vector<int>(1, -1);
-    // if (firstSkirmishMap.terrain != nullptr) {
-    //     SDL_DestroySurface(firstSkirmishMap.terrain);
-    // }
     firstSkirmishMap->terrain = nullptr;
-    // if (firstSkirmishMap.previewTex != nullptr) {
-        // delete firstSkirmishMap.previewTex;
-    // }
     firstSkirmishMap->previewTex = nullptr;
     if (m_PreviewMap.empty() || m_PreviewMap[0] == nullptr) {
-        // std::cout << "Pushing random map as first map in the list" << std::endl;
         m_PreviewMap.push_back(std::move(firstSkirmishMap));
     }
     else {
-        // std::cout << "Replacing first map in the list with random map" << std::endl;
         m_PreviewMap[0] = std::move(firstSkirmishMap);
     }
-    //m_PreviewMap.push_back(std::move(firstSkirmishMap));
 }
 
 std::string cPreviewMaps::getMapSize(int i) const
