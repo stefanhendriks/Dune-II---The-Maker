@@ -21,7 +21,6 @@
 #include "definitions.h"
 #include "include/enums/HouseFlags.h"
 #include "gameobjects/cSpecialInfos.h"
-#include "utils/IniParsing.hpp"
 #include "utils/Log.h"
 #include "utils/cIniFile.h"
 #include "utils/cIniUtils.h"
@@ -81,11 +80,6 @@ unsigned char houseFlagsFromString(const std::string& text)
     return flags;
 }
 
-void readInt(const cSection& section, const char* key, int& target)
-{
-    if (section.hasValue(key)) target = ToInt(section.getStringValue(key));
-}
-
 } // namespace
 
 SpecialInfosLoader::SpecialInfosLoader(IconLookup iconLookup) : m_iconLookup(std::move(iconLookup))
@@ -118,15 +112,15 @@ bool SpecialInfosLoader::load(const std::string& filename, cSpecialInfos& specia
         info.listType = eListType::LIST_PALACE;
         info.subListId = 0;
 
-        if (section.hasValue("Description")) info.description = section.getStringValue("Description");
+        info.description = section.getStringValue("Description", info.description);
         if (section.hasValue("Icon")) info.icon = m_iconLookup(section.getStringValue("Icon"));
         if (section.hasValue("Houses")) info.house = houseFlagsFromString(section.getStringValue("Houses"));
-        if (section.hasValue("AutoBuild")) info.autoBuild = ToBool(section.getStringValue("AutoBuild"));
-        readInt(section, "BuildTime", info.buildTime);
-        readInt(section, "Units", info.units);
-        readInt(section, "DeployTargetPrecision", info.deployTargetPrecision);
-        readInt(section, "SpawnBorderDistance", info.spawnBorderDistance);
-        readInt(section, "SpawnScatter", info.spawnScatter);
+        info.autoBuild = section.getBoolean("AutoBuild", info.autoBuild);
+        info.buildTime = section.getInt("BuildTime", info.buildTime);
+        info.units = section.getInt("Units", info.units);
+        info.deployTargetPrecision = section.getInt("DeployTargetPrecision", info.deployTargetPrecision);
+        info.spawnBorderDistance = section.getInt("SpawnBorderDistance", info.spawnBorderDistance);
+        info.spawnScatter = section.getInt("SpawnScatter", info.spawnScatter);
 
         if (section.hasValue("Provides")) {
             const std::string provides = section.getStringValue("Provides");
