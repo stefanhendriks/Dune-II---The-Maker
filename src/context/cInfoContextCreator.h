@@ -49,7 +49,6 @@ public:
     void installInfos(cInfoContext& infoContext);
 
 private:
-    void initSpecials(cSpecialInfos& specialInfos);
     void initParticles(cParticleInfos& particleInfos);
     void initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings);
 

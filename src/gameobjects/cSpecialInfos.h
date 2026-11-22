@@ -50,6 +50,8 @@ struct s_SpecialInfo {
      * A 0 means 100% accurate (ie nothing to fudge), 1 means 1 cell off, etc.
      */
     int deployTargetPrecision;
+    int spawnBorderDistance; // for AT_RANDOM_CELL: minimum distance in cells from the map border for the first spawn cell
+    int spawnScatter; // for AT_RANDOM_CELL: each next unit spawns 1 up to this many cells away from the previous one
     unsigned char house; // which house(s) have access to this?
     bool autoBuild; // if true, then this item is built automatically
     int deployAtStructure; // if deployFrom == STRUCTURE, then this is the structure type to deploy at

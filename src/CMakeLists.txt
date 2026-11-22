@@ -7,6 +7,7 @@ set(D2TM_SOURCES
     context/cInfoContext.cpp
     context/BulletInfosLoader.cpp
     context/StructureInfosLoader.cpp
+    context/SpecialInfosLoader.cpp
     context/TerrainInfoLoader.cpp
     context/cInfoContextCreator.cpp
     context/ContextCreator.cpp

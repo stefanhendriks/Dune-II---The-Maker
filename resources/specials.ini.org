@@ -1,0 +1,59 @@
+; Special weapons (superweapons, built at the palace). Every section is a special, named by the section:
+; [SABOTEUR], [FREMEN] or [DEATHHAND]. Other names are skipped. Every key is optional: when absent the default is used.
+;
+; Description=name shown in the game
+; Icon=name of the icon in the interface graphics
+; Houses=comma separated houses that can build it (Atreides, Ordos, Harkonnen, Sardaukar, Fremen)
+; AutoBuild=true builds it automatically at the palace
+; BuildTime=time it takes before it is ready (Atreides is the baseline, other houses get their build speed factor on top)
+; ProvidesType=UNIT (default) or BULLET, Provides=name of the unit or bullet that is deployed
+; Units=amount of units spawned at once
+; DeployFrom=STRUCTURE (deployed at DeployAtStructure) or RANDOM_CELL (deployed at a random cell on the map)
+; DeployAtStructure=structure the special is deployed from (same names as in the scenario files)
+; DeployTarget=SPECIFIC (the player picks the cell), INACCURATE (the player picks a cell, but it can be off) or NONE
+; DeployTargetPrecision=with INACCURATE: how many cells the target can be off (0 = exact)
+; SpawnBorderDistance=with RANDOM_CELL: minimum distance in cells from the map border for the first unit
+; SpawnScatter=with RANDOM_CELL: each next unit is placed 1 up to this many cells away from the previous one
+
+; Ordos: a saboteur is deployed at the palace. ~ 6 minutes, times 1.2 to compensate for the faster Ordos building
+[SABOTEUR]
+Description=Saboteur
+Icon=ICON_SPECIAL_SABOTEUR
+Houses=Ordos
+AutoBuild=true
+ProvidesType=UNIT
+Provides=SABOTEUR
+DeployFrom=STRUCTURE
+DeployAtStructure=Palace
+Units=1
+BuildTime=2468
+
+; Atreides: Fremen appear at a random cell. ~ 4 minutes (Atreides has baseline build times)
+[FREMEN]
+Description=Fremen
+Icon=ICON_SPECIAL_FREMEN
+Houses=Atreides
+AutoBuild=true
+ProvidesType=UNIT
+Provides=THREEFREMEN
+DeployFrom=RANDOM_CELL
+Units=6
+BuildTime=1371
+SpawnBorderDistance=4
+SpawnScatter=2
+
+; Harkonnen and Sardaukar: the rocket is fired from the palace. ~ 10 minutes at baseline (342.8 = ~ 1 minute),
+; Harkonnen is done * 1.2 so it becomes 12 minutes real-time, the Dune 2 Insider guide mentions 11 to 12 minutes.
+[DEATHHAND]
+Description=Death Hand
+Icon=ICON_SPECIAL_MISSILE
+Houses=Harkonnen, Sardaukar
+AutoBuild=true
+ProvidesType=BULLET
+Provides=ROCKET_BIG
+DeployFrom=STRUCTURE
+DeployAtStructure=Palace
+DeployTarget=INACCURATE
+DeployTargetPrecision=6
+Units=1
+BuildTime=3428
