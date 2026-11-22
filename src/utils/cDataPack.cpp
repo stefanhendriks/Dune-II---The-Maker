@@ -77,7 +77,7 @@ SDL_Surface *DataPack::getSurface(int index)
     SDL_IOStream *tmp = reader->getData(index);
     SDL_Surface *out = IMG_Load_IO(tmp, true);
     if (!out) {
-        Logger::error(COMP_SDL2, "getSurface", "Failed to load image {} : {}", index, SDL_GetError());
+        Logger::error(COMP_SDL3, "getSurface", "Failed to load image {} : {}", index, SDL_GetError());
     }
     surfaceCache[index] = out;
     return out;

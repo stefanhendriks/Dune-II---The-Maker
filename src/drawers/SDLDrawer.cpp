@@ -287,7 +287,7 @@ void SDLDrawer::setPixel(SDL_Surface *bmp, int x, int y, Color color)
                                      color.r, color.g, color.b, color.a);
 
     if (!SDL_LockSurface(bmp)) {
-        Logger::error(COMP_SDL2, "setPixel", "Error locking surface: {}", SDL_GetError());
+        Logger::error(COMP_SDL3, "setPixel", "Error locking surface: {}", SDL_GetError());
         return;
     }
     set_pixel(bmp,x,y,mappedColor);

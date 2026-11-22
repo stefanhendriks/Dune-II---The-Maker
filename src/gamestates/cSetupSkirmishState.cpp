@@ -1369,7 +1369,7 @@ void cSetupSkirmishState::generateRandomMap()
 
     SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), randomView->terrain);
     if (out == nullptr) {
-        Logger::error(COMP_SDL2, "cSetupSkirmishState", "Error creating texture from surface: {}", SDL_GetError());
+        Logger::error(COMP_SDL3, "cSetupSkirmishState", "Error creating texture from surface: {}", SDL_GetError());
         return;
     }
     SDL_SetTextureScaleMode(out, SDL_SCALEMODE_NEAREST);

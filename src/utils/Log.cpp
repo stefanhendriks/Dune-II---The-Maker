@@ -70,7 +70,7 @@ std::string_view getLogComponentString(eLogComponent component)
         { COMP_NONE, "NONE" },
         { COMP_SETUP, "SETUP" },
         { COMP_INIT, "INIT" },
-        { COMP_SDL2, "SDL2" },
+        { COMP_SDL3, "SDL3" },
         { COMP_VERSION, "VERSION" },
         { COMP_SKIRMISHSETUP, "SKIRMISHSETUP" },
         { COMP_TEXT, "TEXT" },
