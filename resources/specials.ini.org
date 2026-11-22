@@ -37,6 +37,7 @@ AutoBuild=true
 ProvidesType=UNIT
 Provides=THREEFREMEN
 DeployFrom=RANDOM_CELL
+DeployAtStructure=Palace
 Units=6
 BuildTime=1371
 SpawnBorderDistance=4
