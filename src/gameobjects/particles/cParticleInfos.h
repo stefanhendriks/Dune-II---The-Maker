@@ -61,6 +61,23 @@ struct s_ParticleInfo {
     int startAlphaRandom;       // when > 0: a random 0 .. n-1 is added to startAlpha
     bool anchorBottom;          // true: the position is the bottom of the bitmap instead of its center
     s_ParticleSpawn spawns[MAX_PARTICLE_SPAWNS]; // particles that are spawned together with this one
+
+    // values used while the particle animates and fades (timers are in ticks of 5 ms)
+    int frameDelay;             // time between animation steps
+    int frameDelayRandom;       // when > 0: a random 0 .. n-1 is added to frameDelay
+    int fadeDelay;              // time between steps while fading out, -1 = same as frameDelay
+    int lastAnimFrame;          // last frame of the animation, after it the particle fades out or dies
+    int holdFrame;              // frame that is shown while fading out
+    int frameCount;             // number of frames of an animation that loops
+    int fadeStep;               // alpha that is subtracted per fade step
+    int fadeInStep;             // alpha that is added per step while fading in
+    int fadeInMaxAlpha;         // alpha at which fading in stops
+    int dieAlpha;               // the particle dies when it fades below this alpha
+    int nextFrameBelowAlpha;    // alpha below which the second frame is shown
+    int wearChance;             // chance in percent per step that the alpha drops by 1 (a track wears off)
+    int wearMinAlpha;           // alpha above which a particle can wear off
+
+    int getFadeDelay() const { return fadeDelay < 0 ? frameDelay : fadeDelay; }
 };
 
 

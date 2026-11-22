@@ -190,6 +190,8 @@ void cParticle::thinkFast()
     }
 
     // old way
+    const s_ParticleInfo &info = getParticleInfo();
+
     if (iType == D2TM_PARTICLE_OBJECT_BOOM01 ||iType == D2TM_PARTICLE_OBJECT_BOOM02 ||
             iType == D2TM_PARTICLE_OBJECT_BOOM03) {
         TIMER_frame++;
@@ -197,9 +199,9 @@ void cParticle::thinkFast()
         if (TIMER_frame > 0) {
             TIMER_frame = 0;
 
-            iAlpha -= 2;
+            iAlpha -= info.fadeStep;
 
-            if (iAlpha < 1) {
+            if (iAlpha < info.dieAlpha) {
                 die();
                 return;
             }
@@ -211,14 +213,17 @@ void cParticle::thinkFast()
 
         if (TIMER_frame < 0) {
             frameIndex++;
-            TIMER_frame = 100 + RNG::rnd(100);
+            TIMER_frame = info.frameDelay;
+            if (info.frameDelayRandom > 0) {
+                TIMER_frame += RNG::rnd(info.frameDelayRandom);
+            }
 
-            if (frameIndex > 5) {
+            if (frameIndex > info.lastAnimFrame) {
                 die();
                 return;
             }
 
-            iAlpha -= 16;
+            iAlpha -= info.fadeStep;
         }
     }
 
@@ -227,15 +232,15 @@ void cParticle::thinkFast()
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
-            TIMER_frame = 15;
+            TIMER_frame = info.frameDelay;
             frameIndex++;
         }
 
-        if (frameIndex > 9) {
-            iAlpha -= 35;
-            frameIndex = 9;
+        if (frameIndex > info.lastAnimFrame) {
+            iAlpha -= info.fadeStep;
+            frameIndex = info.holdFrame;
 
-            if (iAlpha < 10) {
+            if (iAlpha < info.dieAlpha) {
                 die();
                 return;
             }
@@ -250,19 +255,19 @@ void cParticle::thinkFast()
         if (TIMER_frame < 0) {
             frameIndex++;
 
-            if (frameIndex > 2) {
-                frameIndex = 2;
-                iAlpha -= 10;
+            if (frameIndex > info.lastAnimFrame) {
+                frameIndex = info.holdFrame;
+                iAlpha -= info.fadeStep;
 
-                if (iAlpha < 10) {
+                if (iAlpha < info.dieAlpha) {
                     die();
                     return;
                 }
 
-                TIMER_frame = 10;
+                TIMER_frame = info.getFadeDelay();
             }
             else {
-                TIMER_frame = 250;
+                TIMER_frame = info.frameDelay;
             }
         }
     }
@@ -270,13 +275,13 @@ void cParticle::thinkFast()
     if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE) {
         TIMER_frame--;
         if (TIMER_frame < 0) {
-            iAlpha -= 20;
-            TIMER_frame = 5;
+            iAlpha -= info.fadeStep;
+            TIMER_frame = info.frameDelay;
 
-            if (frameIndex < 1 && iAlpha < 220)
+            if (frameIndex < 1 && iAlpha < info.nextFrameBelowAlpha)
                 frameIndex++;
 
-            if (frameIndex >= 1 && iAlpha < 10) {
+            if (frameIndex >= 1 && iAlpha < info.dieAlpha) {
                 die();
                 return;
             }
@@ -287,39 +292,27 @@ void cParticle::thinkFast()
         TIMER_frame--;
         TIMER_dead--;
 
-        // particle is not yet going to die, and still not opaque, make it fade-in
-        if (TIMER_dead > 0 && iAlpha < 255) {
-            if (iType == D2TM_PARTICLE_SMOKE) {
-                iAlpha++;
-            }
-            else if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
-                // shadow remains 128 alpha (never fully opaque)
-                if (iAlpha < 128) {
-                    iAlpha++;
-                }
-            }
+        // particle is not yet going to die, and still not at its maximum opacity, make it fade-in
+        // (the shadow remains at 128 alpha, never fully opaque)
+        if (TIMER_dead > 0 && iAlpha < info.fadeInMaxAlpha) {
+            iAlpha += info.fadeInStep;
         }
 
         // animation timer
         if (TIMER_frame < 0) {
-            TIMER_frame = 50;
+            TIMER_frame = info.frameDelay;
             frameIndex++;
 
-            if (frameIndex > 2) {
+            if (frameIndex >= info.frameCount) {
                 frameIndex = 0;
             }
 
             // make it fade-out at the speed we animate
             if (TIMER_dead < 0) {
                 TIMER_dead = -1;
-                if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
-                    iAlpha -= 10;
-                }
-                else {
-                    iAlpha -= 14;
-                }
+                iAlpha -= info.fadeStep;
 
-                if (iAlpha < 10) {
+                if (iAlpha < info.dieAlpha) {
                     die();
                     return;
                 }
@@ -333,19 +326,19 @@ void cParticle::thinkFast()
         TIMER_frame--;
         TIMER_dead--;
         if (TIMER_frame < 0) {
-            TIMER_frame = 10;
-            if (RNG::rnd(100) < 10 && iAlpha > 192)
+            TIMER_frame = info.frameDelay;
+            if (RNG::rnd(100) < info.wearChance && iAlpha > info.wearMinAlpha)
                 iAlpha--;
 
             if (TIMER_dead > 0) {
-                if (iAlpha < 255)
-                    iAlpha += 2;
+                if (iAlpha < info.fadeInMaxAlpha)
+                    iAlpha += info.fadeInStep;
 
             }
             else {
                 // its dying
-                if (iAlpha > 10) {
-                    iAlpha -= 10;
+                if (iAlpha > info.dieAlpha) {
+                    iAlpha -= info.fadeStep;
                 }
                 else {
                     die();
@@ -359,11 +352,11 @@ void cParticle::thinkFast()
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
-            TIMER_frame = 15;
+            TIMER_frame = info.frameDelay;
 
             frameIndex++;
 
-            if (frameIndex > 7) {
+            if (frameIndex > info.lastAnimFrame) {
                 die();
             }
         }
@@ -377,15 +370,15 @@ void cParticle::thinkFast()
         if (TIMER_frame < 0) {
             if (TIMER_dead < 0) {
                 TIMER_dead = -1;
-                iAlpha -= 5;
+                iAlpha -= info.fadeStep;
 
-                if (iAlpha < 5) {
+                if (iAlpha < info.dieAlpha) {
                     die();
                 }
 
             }
 
-            TIMER_frame = 10;
+            TIMER_frame = info.frameDelay;
         }
 
     }
@@ -394,16 +387,17 @@ void cParticle::thinkFast()
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
-            TIMER_frame = 10;
+            TIMER_frame = info.frameDelay;
 
             frameIndex++;
 
-            if (frameIndex > 1) {
-                frameIndex = 1;
 
-                iAlpha -= 25;
+            if (frameIndex > info.lastAnimFrame) {
+                frameIndex = info.holdFrame;
 
-                if (iAlpha < 25) {
+                iAlpha -= info.fadeStep;
+
+                if (iAlpha < info.dieAlpha) {
                     die();
                 }
             }
@@ -415,16 +409,16 @@ void cParticle::thinkFast()
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
-            TIMER_frame = 10;
+            TIMER_frame = info.frameDelay;
 
             frameIndex++;
 
-            if (frameIndex > 3) {
-                frameIndex = 4;
+            if (frameIndex > info.lastAnimFrame) {
+                frameIndex = info.holdFrame;
 
-                iAlpha -= 35;
+                iAlpha -= info.fadeStep;
 
-                if (iAlpha < 25) {
+                if (iAlpha < info.dieAlpha) {
                     die();
                 }
             }
@@ -435,19 +429,19 @@ void cParticle::thinkFast()
         TIMER_frame--;
 
         if (TIMER_frame < 0) {
-            if (frameIndex <= 3)
-                TIMER_frame = 100;
+            if (frameIndex <= info.lastAnimFrame)
+                TIMER_frame = info.frameDelay;
             else
-                TIMER_frame = 20;
+                TIMER_frame = info.getFadeDelay();
 
             frameIndex++;
 
-            if (frameIndex > 3) {
-                frameIndex = 4;
+            if (frameIndex > info.lastAnimFrame) {
+                frameIndex = info.holdFrame;
 
-                iAlpha -= 5;
+                iAlpha -= info.fadeStep;
 
-                if (iAlpha < 5) {
+                if (iAlpha < info.dieAlpha) {
                     die();
                 }
             }
@@ -462,21 +456,21 @@ void cParticle::thinkFast()
         if (TIMER_frame < 0) {
 
             // delay for next frame(s)
-            if (frameIndex <= 3) {
-                TIMER_frame = 28;
+            if (frameIndex <= info.lastAnimFrame) {
+                TIMER_frame = info.frameDelay;
             }
             else {
-                TIMER_frame = 10;
+                TIMER_frame = info.getFadeDelay();
             }
 
             frameIndex++;
 
-            if (frameIndex > 3) {
-                frameIndex = 4;
+            if (frameIndex > info.lastAnimFrame) {
+                frameIndex = info.holdFrame;
 
-                iAlpha -= 15;
+                iAlpha -= info.fadeStep;
 
-                if (iAlpha < 25) {
+                if (iAlpha < info.dieAlpha) {
                     die();
                 }
             }
@@ -490,20 +484,20 @@ void cParticle::thinkFast()
             frameIndex++;
 
             // delay for next frame(s)
-            if (frameIndex <= 3) {
+            if (frameIndex <= info.lastAnimFrame) {
                 // begins slow, and speeds up after each frame
 //                TIMER_frame = (4 - frameIndex) * 32;
-                TIMER_frame = 80;
+                TIMER_frame = info.frameDelay;
             }
             else {
-                // frame will stick at 4 (eaten)
-                frameIndex = 4;
+                // frame will stick at its hold frame (eaten)
+                frameIndex = info.holdFrame;
 
                 // fade out
-                iAlpha -= 15;
+                iAlpha -= info.fadeStep;
 
                 // until particle dies
-                if (iAlpha < 25) {
+                if (iAlpha < info.dieAlpha) {
                     die();
                 }
             }
@@ -514,9 +508,9 @@ void cParticle::thinkFast()
     if (iType == D2TM_PARTICLE_EXPLOSION_BULLET) {
         TIMER_frame--;
         if (TIMER_frame < 0) {
-            TIMER_frame = 10;
+            TIMER_frame = info.frameDelay;
             frameIndex++;
-            if (frameIndex > 1) {
+            if (frameIndex > info.lastAnimFrame) {
                 die();
             }
 
@@ -529,14 +523,14 @@ void cParticle::thinkFast()
             iType == D2TM_PARTICLE_EXPLOSION_CARRYALL) {
         TIMER_frame--;
         if (TIMER_frame < 0) {
-            if (iAlpha > 5) {
-                iAlpha -= 5;
+            if (iAlpha > info.dieAlpha) {
+                iAlpha -= info.fadeStep;
             }
             else {
                 die();
             }
 
-            TIMER_frame = 50;
+            TIMER_frame = info.frameDelay;
         }
     }
 
@@ -544,16 +538,16 @@ void cParticle::thinkFast()
         TIMER_frame--;
         TIMER_dead--;
         if (TIMER_frame < 0) {
-            TIMER_frame = 2;
+            TIMER_frame = info.frameDelay;
             if (TIMER_dead > 0) {
-                if (iAlpha + 5 < 255)
-                    iAlpha += 5;
+                if (iAlpha + info.fadeInStep < info.fadeInMaxAlpha)
+                    iAlpha += info.fadeInStep;
             }
             else {
                 TIMER_dead = -1;
-                iAlpha -= 15;
+                iAlpha -= info.fadeStep;
 
-                if (iAlpha < 10) {
+                if (iAlpha < info.dieAlpha) {
                     die();
                 }
             }
@@ -565,25 +559,25 @@ void cParticle::thinkFast()
         TIMER_frame--;
         TIMER_dead--;
         if (TIMER_frame < 0) {
-            TIMER_frame = 20;
+            TIMER_frame = info.frameDelay;
 
             frameIndex++;
 
 
-            if (frameIndex > 2)
+            if (frameIndex >= info.frameCount)
                 frameIndex = 0;
 
             if (TIMER_dead < 0) {
-                iAlpha -= 20;
-                if (iAlpha < 10) {
+                iAlpha -= info.fadeStep;
+                if (iAlpha < info.dieAlpha) {
                     die();
                 }
             }
             else {
-                if (iAlpha + 15 < 255)
-                    iAlpha += 15;
+                if (iAlpha + info.fadeInStep < info.fadeInMaxAlpha)
+                    iAlpha += info.fadeInStep;
                 else
-                    iAlpha = 255;
+                    iAlpha = info.fadeInMaxAlpha;
             }
 
         }
