@@ -34,6 +34,8 @@ jobs:
               - 'resources/specials.ini.org'
               - 'resources/upgrades.ini'
               - 'resources/upgrades.ini.org'
+              - 'resources/particles.ini'
+              - 'resources/particles.ini.org'
               - 'CMakeLists.txt'
               - 'create_release.bat'
               - 'create_release.sh'

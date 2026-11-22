@@ -49,7 +49,6 @@ public:
     void installInfos(cInfoContext& infoContext);
 
 private:
-    void initParticles(cParticleInfos& particleInfos);
 
     Graphics* m_gfxdata = nullptr;
     Graphics* m_gfxinter = nullptr;
