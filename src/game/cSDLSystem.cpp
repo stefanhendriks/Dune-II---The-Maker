@@ -53,8 +53,8 @@ void cSDLSystem::applyFullscreenPresentation()
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
 
-        Logger::info(COMP_SDL2, "desktop", "Renderer output size : {}x{}", renderW, renderH);
-        Logger::info(COMP_SDL2, "desktop", "Presentation mode : INTEGER_SCALE (integer scale = {})", intScale);
+        Logger::info(COMP_SDL3, "desktop", "Renderer output size : {}x{}", renderW, renderH);
+        Logger::info(COMP_SDL3, "desktop", "Presentation mode : INTEGER_SCALE (integer scale = {})", intScale);
     } else {
         // Fullscreen fills the screen edge to edge instead of adding bars, at the cost of a
         // fractional scale (at 1.5x, one game pixel covers 1 or 2 screen pixels).
@@ -65,17 +65,17 @@ void cSDLSystem::applyFullscreenPresentation()
         SDL_RenderClear(renderer);
         SDL_RenderPresent(renderer);
 
-        Logger::info(COMP_SDL2, "desktop", "Renderer output size : {}x{}", renderW, renderH);
-        Logger::info(COMP_SDL2, "desktop", "Presentation mode : LETTERBOX (scale = {})", scaleToFillScreen);
+        Logger::info(COMP_SDL3, "desktop", "Renderer output size : {}x{}", renderW, renderH);
+        Logger::info(COMP_SDL3, "desktop", "Presentation mode : LETTERBOX (scale = {})", scaleToFillScreen);
     }
     float scale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
-    Logger::info(COMP_SDL2, "DPI", "Display content scale : {}", scale);
+    Logger::info(COMP_SDL3, "DPI", "Display content scale : {}", scale);
 }
 
 void cSDLSystem::toggleScalingMode()
 {
     m_scalingMode = (m_scalingMode == eScalingMode::LETTERBOX) ? eScalingMode::INTEGER_SCALE : eScalingMode::LETTERBOX;
-    Logger::info(COMP_SDL2, "desktop", "Scaling mode toggled to {}",
+    Logger::info(COMP_SDL3, "desktop", "Scaling mode toggled to {}",
                  m_scalingMode == eScalingMode::INTEGER_SCALE ? "INTEGER_SCALE" : "LETTERBOX");
     if (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) {
         applyFullscreenPresentation();
@@ -90,7 +90,7 @@ void cSDLSystem::setFullScreenMode()
     // state (and renderer output size) is final, so applyFullscreenPresentation
     // measures the correct output size.
     SDL_SyncWindow(window);
-    Logger::info(COMP_SDL2, "desktop", "Fullscreen desktop");
+    Logger::info(COMP_SDL3, "desktop", "Fullscreen desktop");
     applyFullscreenPresentation();
 }
 
@@ -107,7 +107,7 @@ void cSDLSystem::setWindowMode()
     SDL_SetWindowSize(window, renderResolution.width, renderResolution.height);
     SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     SDL_SetRenderLogicalPresentation(renderer, renderResolution.width, renderResolution.height, SDL_LOGICAL_PRESENTATION_LETTERBOX);
-    Logger::info(COMP_SDL2, "desktop", "Windowed desktop");
+    Logger::info(COMP_SDL3, "desktop", "Windowed desktop");
 }
 
 void cSDLSystem::getWindowResolution()
@@ -118,7 +118,7 @@ void cSDLSystem::getWindowResolution()
     // Use SDL_GetDisplayBounds which returns screen coordinates (logical pixels).
     SDL_Rect bounds = {};
     if (SDL_GetDisplayBounds(SDL_GetPrimaryDisplay(), &bounds)) {
-        Logger::info(COMP_SDL2, "desktop", "Display bounds : {}x{}", bounds.w, bounds.h);
+        Logger::info(COMP_SDL3, "desktop", "Display bounds : {}x{}", bounds.w, bounds.h);
         windowResolution.width = bounds.w;
         windowResolution.height = bounds.h;
     }
@@ -130,7 +130,7 @@ void cSDLSystem::getWindowResolution()
     usableResolution = windowResolution;
     SDL_Rect usableBounds = {};
     if (SDL_GetDisplayUsableBounds(SDL_GetPrimaryDisplay(), &usableBounds)) {
-        Logger::info(COMP_SDL2, "desktop", "Usable bounds : {}x{}", usableBounds.w, usableBounds.h);
+        Logger::info(COMP_SDL3, "desktop", "Usable bounds : {}x{}", usableBounds.w, usableBounds.h);
         usableResolution.width = usableBounds.w;
         usableResolution.height = usableBounds.h;
     }
@@ -184,12 +184,12 @@ void cSDLSystem::syncRenderResolutionToWindow()
 
     if (outputWidth < MIN_RENDER_WIDTH || outputHeight < MIN_RENDER_HEIGHT) {
         // below what the UI is laid out for: keep the render resolution and let SDL letterbox
-        Logger::info(COMP_SDL2, "Resolution", "Window is {}x{}, too small to adopt, letterboxing",
+        Logger::info(COMP_SDL3, "Resolution", "Window is {}x{}, too small to adopt, letterboxing",
                      outputWidth, outputHeight);
         return;
     }
 
-    Logger::info(COMP_SDL2, "Resolution", "Desktop gave us {}x{} instead of {}x{}, adopting it",
+    Logger::info(COMP_SDL3, "Resolution", "Desktop gave us {}x{} instead of {}x{}, adopting it",
                  outputWidth, outputHeight, renderResolution.width, renderResolution.height);
 
     renderResolution.width = outputWidth;
@@ -198,7 +198,7 @@ void cSDLSystem::syncRenderResolutionToWindow()
 
 void cSDLSystem::adaptResolution(int desiredWidth, int desiredHeight, bool windowed)
 {
-    Logger::info(COMP_SDL2, "Resolution", "Desired : {}x{}", desiredWidth, desiredHeight);
+    Logger::info(COMP_SDL3, "Resolution", "Desired : {}x{}", desiredWidth, desiredHeight);
     if (desiredWidth<MIN_RENDER_WIDTH)
         desiredWidth = MIN_RENDER_WIDTH;
     if (desiredHeight<MIN_RENDER_HEIGHT)
@@ -228,53 +228,53 @@ void cSDLSystem::adaptResolution(int desiredWidth, int desiredHeight, bool windo
         fitToUsableBounds();
     }
 
-    Logger::info(COMP_SDL2, "Resolution", "Adopted : {}x{}", renderResolution.width, renderResolution.height);
+    Logger::info(COMP_SDL3, "Resolution", "Adopted : {}x{}", renderResolution.width, renderResolution.height);
 }
 
 cSDLSystem::~cSDLSystem()
 {
-    Logger::info(COMP_SDL2, "SDL shutdown", "Shutting down...");
+    Logger::info(COMP_SDL3, "SDL shutdown", "Shutting down...");
     TTF_Quit();
     MIX_Quit();
-    Logger::info(COMP_SDL2, "SDL_mixer shutdown", "Thanks for playing!");
+    Logger::info(COMP_SDL3, "SDL_mixer shutdown", "Thanks for playing!");
     // On Linux, SDL3 registers its own atexit() handler that calls SDL_Quit() before
     // C++ global destructors run. Calling it again here causes a double-free crash.
     // Guard so we only call SDL_Quit() if SDL is still initialised.
     if (SDL_WasInit(0)==0) {
         SDL_Quit();
     }
-    Logger::info(COMP_SDL2, "SDL shutdown", "Thanks for playing!");
+    Logger::info(COMP_SDL3, "SDL shutdown", "Thanks for playing!");
 }
 
 cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &title, bool windowed, eScalingMode scalingMode)
     : m_scalingMode(scalingMode)
 {
-    Logger::info(COMP_SDL2, "cSDLSystem", "=== SDL ===");
+    Logger::info(COMP_SDL3, "cSDLSystem", "=== SDL ===");
 
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_GAMEPAD)) {
-        Logger::fatal(COMP_SDL2, "SDL init", "{}", SDL_GetError());
+        Logger::fatal(COMP_SDL3, "SDL init", "{}", SDL_GetError());
         throw std::runtime_error(SDL_GetError());
     }
     else {
-        Logger::info(COMP_SDL2, "SDL init", "Initialized successfully");
+        Logger::info(COMP_SDL3, "SDL init", "Initialized successfully");
     }
 
     if (!MIX_Init()) {
-        Logger::fatal(COMP_SDL2, "SDL mixer", "{}", SDL_GetError());
+        Logger::fatal(COMP_SDL3, "SDL mixer", "{}", SDL_GetError());
         throw std::runtime_error(SDL_GetError());
     }
     else {
-        Logger::info(COMP_SDL2, "SDL_mixer", "Initialized successfully");
+        Logger::info(COMP_SDL3, "SDL_mixer", "Initialized successfully");
         for (auto i =0; i < MIX_GetNumAudioDecoders();i++) {
-            Logger::info(COMP_SDL2, "SDL_mixer", "Audio decoder {} : {}", i, MIX_GetAudioDecoder(i));
+            Logger::info(COMP_SDL3, "SDL_mixer", "Audio decoder {} : {}", i, MIX_GetAudioDecoder(i));
         }
     }
 
     if (!TTF_Init()) {
-        Logger::fatal(COMP_SDL2, "SDL ttf", "{}", SDL_GetError());
+        Logger::fatal(COMP_SDL3, "SDL ttf", "{}", SDL_GetError());
     }
     else {
-        Logger::info(COMP_SDL2, "SDL_ttf", "Initialized successfully");
+        Logger::info(COMP_SDL3, "SDL_ttf", "Initialized successfully");
     }
 
     this->getWindowResolution();
@@ -289,23 +289,23 @@ cSDLSystem::cSDLSystem(int desiredWidth, int desiredHeight, const std::string &t
 
     window = SDL_CreateWindow(title.c_str(), renderResolution.width, renderResolution.height, 0);
     if (window == nullptr) {
-        Logger::error(COMP_SDL2, "Screen init", "Failed initialized screen with resolution {}x{}", renderResolution.width, renderResolution.height);
+        Logger::error(COMP_SDL3, "Screen init", "Failed initialized screen with resolution {}x{}", renderResolution.width, renderResolution.height);
         SDL_Quit();
         return;
     }
     else {
-        Logger::info(COMP_SDL2, "Screen init", "Successfully initialized screen with resolution {}x{}.", renderResolution.width, renderResolution.height);
+        Logger::info(COMP_SDL3, "Screen init", "Successfully initialized screen with resolution {}x{}.", renderResolution.width, renderResolution.height);
     }
 
     renderer = SDL_CreateRenderer(window, nullptr);
     if (renderer == nullptr) {
-        Logger::error(COMP_SDL2, "Renderer init", "Failed initialized renderer with resolution {}x{}", renderResolution.width, renderResolution.height);
+        Logger::error(COMP_SDL3, "Renderer init", "Failed initialized renderer with resolution {}x{}", renderResolution.width, renderResolution.height);
         SDL_DestroyWindow(window);
         SDL_Quit();
         return;
     }
     else {
-        Logger::info(COMP_SDL2, "Renderer init", "Successfully initialized renderer");
+        Logger::info(COMP_SDL3, "Renderer init", "Successfully initialized renderer");
     }
 
     SDL_SetRenderVSync(renderer, 1);

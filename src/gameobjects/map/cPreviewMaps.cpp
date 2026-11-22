@@ -273,7 +273,7 @@ void cPreviewMaps::loadSkirmish(const std::string &filename)
     if (view->terrain!= nullptr){
         SDL_Texture* out = SDL_CreateTextureFromSurface(m_sdlDrawer->getRenderer(), view->terrain);
         if (out == nullptr) {
-            Logger::error(COMP_SDL2, "cPreviewMaps", "Error creating texture from surface: {}", SDL_GetError());
+            Logger::error(COMP_SDL3, "cPreviewMaps", "Error creating texture from surface: {}", SDL_GetError());
             return;
         }
         SDL_SetTextureScaleMode(out, SDL_SCALEMODE_NEAREST);
