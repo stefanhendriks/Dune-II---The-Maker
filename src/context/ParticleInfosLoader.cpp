@@ -36,7 +36,7 @@ void setDefaults(s_ParticleInfo& info)
     info.frameWidth = 32;
     info.frameHeight = 32;
     info.oldParticle = true; // keep the old behavior for now (will be removed)
-    info.spawnFrameTimer = 10;
+    info.spawnFrameTimer = 0;
     info.spawnFrameTimerRandom = 0;
     info.spawnDeadTimer = 0;
     info.spawnDeadTimerRandom = 0;
@@ -82,6 +82,31 @@ void readSpawn(const cSection& section, int number, s_ParticleSpawn& spawn)
     spawn.offsetX = section.getInt(key + "OffsetX", spawn.offsetX);
     spawn.offsetY = section.getInt(key + "OffsetY", spawn.offsetY);
     spawn.inheritHouse = section.getBoolean(key + "InheritHouse", spawn.inheritHouse);
+}
+
+// True when spawning from 'current' leads back to 'origin' (a particle that spawns itself, directly or not)
+bool spawnsLeadBackTo(const cParticleInfos& infos, int origin, int current, int depth)
+{
+    if (depth > static_cast<int>(infos.size())) return true;
+    for (const auto& spawn : infos[static_cast<std::size_t>(current)].spawns) {
+        if (spawn.type < 0) continue;
+        if (spawn.type == origin || spawnsLeadBackTo(infos, origin, spawn.type, depth + 1)) return true;
+    }
+    return false;
+}
+
+// A spawn that leads back to its own particle would spawn forever, so it is dropped
+void removeCyclicSpawns(cParticleInfos& infos)
+{
+    for (std::size_t id = 0; id < infos.size(); id++) {
+        for (auto& spawn : infos[id].spawns) {
+            if (spawn.type < 0) continue;
+            if (spawn.type == static_cast<int>(id) || spawnsLeadBackTo(infos, static_cast<int>(id), spawn.type, 0)) {
+                Logger::error(COMP_GAMERULES, "ParticleInfosLoader::load", "Particle {} spawns itself (directly or through other particles), skipping that spawn", id);
+                spawn.type = -1;
+            }
+        }
+    }
 }
 
 } // namespace
@@ -146,6 +171,7 @@ bool ParticleInfosLoader::load(const std::string& filename, cParticleInfos& part
         info.wearChance = section.getInt("WearChance", info.wearChance);
         info.wearMinAlpha = section.getInt("WearMinAlpha", info.wearMinAlpha);
     }
+    removeCyclicSpawns(particleInfos);
     Logger::info(COMP_GAMERULES, "ParticleInfosLoader::load", "[{}] Done", filename);
     return true;
 }

@@ -9,7 +9,7 @@
 ; FrameWidth=, FrameHeight=size in pixels of one animation frame (default 32 x 32)
 ;
 ; When a particle is spawned:
-; FrameTimer=ticks (of 5 ms) before the first frame change (default 10), FrameTimerRandom=n adds a random 0 .. n-1
+; FrameTimer=ticks (of 5 ms) before the first frame change (default 0), FrameTimerRandom=n adds a random 0 .. n-1
 ; DeadTimer=ticks the particle lives before it starts to fade out (default 0), DeadTimerRandom=n adds a random 0 .. n-1
 ; StartAlphaRandom=n adds a random 0 .. n-1 to StartAlpha
 ; AnchorBottom=true when the position of the particle is the bottom of its bitmap instead of the center (default false)

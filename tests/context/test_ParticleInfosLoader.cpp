@@ -135,7 +135,7 @@ TEST_CASE("ParticleInfosLoader spawn values default to a plain particle")
     std::filesystem::remove(path);
 
     const s_ParticleInfo& info = infos[D2TM_PARTICLE_MOVE];
-    CHECK(info.spawnFrameTimer == 10);
+    CHECK(info.spawnFrameTimer == 0);
     CHECK(info.spawnFrameTimerRandom == 0);
     CHECK(info.spawnDeadTimer == 0);
     CHECK(info.spawnDeadTimerRandom == 0);
@@ -176,4 +176,21 @@ TEST_CASE("ParticleInfosLoader reads the animation values of a particle")
     const s_ParticleInfo& move = infos[D2TM_PARTICLE_MOVE];
     CHECK(move.getFadeDelay() == 15);
     CHECK(move.fadeInMaxAlpha == 255);
+}
+
+TEST_CASE("ParticleInfosLoader drops spawns that lead back to their own particle")
+{
+    const auto path = writeTempFile(
+        "[SMOKE]\nSpawn1=SMOKE\n"
+        "[MOVE]\nSpawn1=ATTACK\n[ATTACK]\nSpawn1=MOVE\n"
+        "[SIEGEDIE]\nSpawn1=OBJECT_BOOM02\n");
+    cParticleInfos infos;
+
+    REQUIRE(makeLoader().load(path.string(), infos));
+    std::filesystem::remove(path);
+
+    CHECK(infos[D2TM_PARTICLE_SMOKE].spawns[0].type == -1);
+    // breaking the cycle at one particle is enough
+    CHECK((infos[D2TM_PARTICLE_MOVE].spawns[0].type == -1 || infos[D2TM_PARTICLE_ATTACK].spawns[0].type == -1));
+    CHECK(infos[D2TM_PARTICLE_SIEGEDIE].spawns[0].type == D2TM_PARTICLE_OBJECT_BOOM02);
 }
