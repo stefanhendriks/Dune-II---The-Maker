@@ -7,6 +7,14 @@
 ; AdditiveBlending=true or false (default)
 ; Layer=TOP (default, drawn over units) or BOTTOM (drawn beneath units)
 ; FrameWidth=, FrameHeight=size in pixels of one animation frame (default 32 x 32)
+;
+; When a particle is spawned:
+; FrameTimer=ticks (of 5 ms) before the first frame change (default 10), FrameTimerRandom=n adds a random 0 .. n-1
+; DeadTimer=ticks the particle lives before it starts to fade out (default 0), DeadTimerRandom=n adds a random 0 .. n-1
+; StartAlphaRandom=n adds a random 0 .. n-1 to StartAlpha
+; AnchorBottom=true when the position of the particle is the bottom of its bitmap instead of the center (default false)
+; Spawn1=, Spawn2=, Spawn3=particle that is spawned together with this one, for example OBJECT_BOOM02. Each takes
+;   Spawn1OffsetX=, Spawn1OffsetY= (offset to this particle, default 0) and Spawn1InheritHouse=true (house colors, default false)
 
 [MOVE]
 Bitmap=MOVE_INDICATOR
@@ -21,44 +29,58 @@ Bitmap=EXPLOSION_TRIKE
 StartAlpha=255
 FrameWidth=48
 FrameHeight=48
+Spawn1=OBJECT_BOOM03
 
 [SMOKE]
 Bitmap=OBJECT_SMOKE
 StartAlpha=0
 FrameWidth=32
 FrameHeight=48
+DeadTimer=1500
+AnchorBottom=true
 
 [SMOKE_WITH_SHADOW]
 Bitmap=OBJECT_SMOKE
 StartAlpha=0
 FrameWidth=32
 FrameHeight=48
+DeadTimer=1500
+AnchorBottom=true
+Spawn1=SMOKE_SHADOW
+Spawn1OffsetX=16
+Spawn1OffsetY=38
 
 [SMOKE_SHADOW]
 Bitmap=OBJECT_SMOKE_SHADOW
 StartAlpha=0
 FrameWidth=36
 FrameHeight=38
+DeadTimer=1500
+AnchorBottom=true
 
 [TRACK_DIA]
 Bitmap=TRACK_DIA
 StartAlpha=128
 Layer=BOTTOM
+DeadTimer=2000
 
 [TRACK_HOR]
 Bitmap=TRACK_HOR
 StartAlpha=128
 Layer=BOTTOM
+DeadTimer=2000
 
 [TRACK_VER]
 Bitmap=TRACK_VER
 StartAlpha=128
 Layer=BOTTOM
+DeadTimer=2000
 
 [TRACK_DIA2]
 Bitmap=TRACK_DIA2
 StartAlpha=128
 Layer=BOTTOM
+DeadTimer=2000
 
 [BULLET_PUF]
 Bitmap=BULLET_PUF
@@ -67,24 +89,31 @@ FrameHeight=18
 
 [EXPLOSION_FIRE]
 Bitmap=EXPLOSION_FIRE
+StartAlpha=0
+StartAlphaRandom=255
+DeadTimer=750
+DeadTimerRandom=500
 
 [WORMEAT]
 Bitmap=OBJECT_WORMEAT
 StartAlpha=255
 FrameWidth=48
 FrameHeight=48
+FrameTimer=80
 
 [EXPLOSION_TANK_ONE]
 Bitmap=EXPLOSION_TANK_ONE
 StartAlpha=255
 FrameWidth=48
 FrameHeight=48
+Spawn1=OBJECT_BOOM02
 
 [EXPLOSION_TANK_TWO]
 Bitmap=EXPLOSION_TANK_TWO
 StartAlpha=255
 FrameWidth=48
 FrameHeight=48
+Spawn1=OBJECT_BOOM02
 
 [EXPLOSION_STRUCTURE01]
 Bitmap=EXPLOSION_STRUCTURE01
@@ -103,6 +132,7 @@ Bitmap=EXPLOSION_GAS
 StartAlpha=255
 FrameWidth=48
 FrameHeight=48
+Spawn1=OBJECT_BOOM02
 
 [WORMTRAIL]
 Bitmap=OBJECT_WORMTRAIL
@@ -114,22 +144,28 @@ FrameHeight=48
 [DEADINF01]
 Bitmap=OBJECT_DEADINF01
 Layer=BOTTOM
+DeadTimer=500
+DeadTimerRandom=500
 
 [DEADINF02]
 Bitmap=OBJECT_DEADINF02
 Layer=BOTTOM
+DeadTimer=500
+DeadTimerRandom=500
 
 [TANKSHOOT]
 Bitmap=OBJECT_TANKSHOOT
 StartAlpha=128
 FrameWidth=64
 FrameHeight=64
+DeadTimer=50
 
 [SIEGESHOOT]
 Bitmap=OBJECT_SIEGESHOOT
 StartAlpha=128
 FrameWidth=64
 FrameHeight=64
+DeadTimer=50
 
 [SQUISH01]
 Bitmap=EXPLOSION_SQUISH01
@@ -137,6 +173,7 @@ StartAlpha=255
 Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
+FrameTimer=50
 
 [SQUISH02]
 Bitmap=EXPLOSION_SQUISH02
@@ -144,6 +181,7 @@ StartAlpha=255
 Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
+FrameTimer=50
 
 [SQUISH03]
 Bitmap=EXPLOSION_SQUISH03
@@ -151,6 +189,7 @@ StartAlpha=255
 Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
+FrameTimer=50
 
 [EXPLOSION_ORNI]
 Bitmap=EXPLOSION_ORNI
@@ -158,6 +197,7 @@ StartAlpha=255
 Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
+FrameTimer=50
 
 [EXPLOSION_CARRYALL]
 Bitmap=EXPLOSION_CARRYALL
@@ -165,21 +205,37 @@ StartAlpha=255
 Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
+FrameTimer=50
 
 [SIEGEDIE]
 Bitmap=OBJECT_SIEGEDIE
+FrameTimer=500
+FrameTimerRandom=300
+Spawn1=EXPLOSION_FIRE
+Spawn1OffsetY=-18
+Spawn2=SMOKE
+Spawn2OffsetY=-18
+Spawn3=OBJECT_BOOM02
 
 [CARRYPUFF]
 Bitmap=OBJECT_CARRYPUFF
 Layer=BOTTOM
 FrameWidth=96
 FrameHeight=96
+FrameTimer=50
+FrameTimerRandom=50
+StartAlpha=96
+StartAlphaRandom=64
 
 [EXPLOSION_ROCKET]
 Bitmap=EXPLOSION_ROCKET
+Spawn1=OBJECT_BOOM03
+Spawn1InheritHouse=true
 
 [EXPLOSION_ROCKET_SMALL]
 Bitmap=EXPLOSION_ROCKET_SMALL
+Spawn1=OBJECT_BOOM03
+Spawn1InheritHouse=true
 
 [EXPLOSION_BULLET]
 Bitmap=EXPLOSION_BULLET

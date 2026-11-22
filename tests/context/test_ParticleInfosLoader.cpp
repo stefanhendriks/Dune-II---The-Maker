@@ -98,3 +98,50 @@ TEST_CASE("ParticleInfosLoader skips unknown sections and a missing file")
     CHECK_FALSE(makeLoader().load("does/not/exist.ini", missing));
     CHECK(missing[D2TM_PARTICLE_MOVE].frameWidth == 32);
 }
+
+TEST_CASE("ParticleInfosLoader reads the spawn values of a particle")
+{
+    const auto path = writeTempFile(
+        "[SIEGEDIE]\nFrameTimer=500\nFrameTimerRandom=300\nDeadTimer=40\nDeadTimerRandom=7\nStartAlphaRandom=64\nAnchorBottom=true\n"
+        "Spawn1=EXPLOSION_FIRE\nSpawn1OffsetY=-18\nSpawn2=OBJECT_BOOM03\nSpawn2OffsetX=4\nSpawn2InheritHouse=true\nSpawn3=NO_SUCH_PARTICLE\n");
+    cParticleInfos infos;
+
+    REQUIRE(makeLoader().load(path.string(), infos));
+    std::filesystem::remove(path);
+
+    const s_ParticleInfo& info = infos[D2TM_PARTICLE_SIEGEDIE];
+    CHECK(info.spawnFrameTimer == 500);
+    CHECK(info.spawnFrameTimerRandom == 300);
+    CHECK(info.spawnDeadTimer == 40);
+    CHECK(info.spawnDeadTimerRandom == 7);
+    CHECK(info.startAlphaRandom == 64);
+    CHECK(info.anchorBottom);
+    CHECK(info.spawns[0].type == D2TM_PARTICLE_EXPLOSION_FIRE);
+    CHECK(info.spawns[0].offsetX == 0);
+    CHECK(info.spawns[0].offsetY == -18);
+    CHECK_FALSE(info.spawns[0].inheritHouse);
+    CHECK(info.spawns[1].type == D2TM_PARTICLE_OBJECT_BOOM03);
+    CHECK(info.spawns[1].offsetX == 4);
+    CHECK(info.spawns[1].inheritHouse);
+    CHECK(info.spawns[2].type == -1);
+}
+
+TEST_CASE("ParticleInfosLoader spawn values default to a plain particle")
+{
+    const auto path = writeTempFile("[MOVE]\nStartAlpha=99\n");
+    cParticleInfos infos;
+
+    REQUIRE(makeLoader().load(path.string(), infos));
+    std::filesystem::remove(path);
+
+    const s_ParticleInfo& info = infos[D2TM_PARTICLE_MOVE];
+    CHECK(info.spawnFrameTimer == 10);
+    CHECK(info.spawnFrameTimerRandom == 0);
+    CHECK(info.spawnDeadTimer == 0);
+    CHECK(info.spawnDeadTimerRandom == 0);
+    CHECK(info.startAlphaRandom == 0);
+    CHECK_FALSE(info.anchorBottom);
+    for (const auto& spawn : info.spawns) {
+        CHECK(spawn.type == -1);
+    }
+}

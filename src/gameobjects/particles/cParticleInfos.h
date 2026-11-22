@@ -34,6 +34,16 @@ enum class RenderLayerParticle : char {
  * - fade out (either while animating or not)
  */
 
+// A particle that is spawned together with another one
+struct s_ParticleSpawn {
+    int type;           // particle type (D2TM_PARTICLE_*), -1 = none
+    int offsetX;        // offset to the position of the spawning particle
+    int offsetY;
+    bool inheritHouse;  // true: uses the house colors of the spawning particle
+};
+
+constexpr int MAX_PARTICLE_SPAWNS = 3;
+
 struct s_ParticleInfo {
     TextureID bmpIndex;           // index of bmp to draw (index in DataRepository)
     int startAlpha;         // 0-255 (anything else == 255 = opaque)
@@ -42,6 +52,15 @@ struct s_ParticleInfo {
     int frameWidth;         // width of frame
     int frameHeight;        // height of frame
     bool oldParticle;       // if true, then keep old behavior for now (will be removed)
+
+    // values used when the particle is spawned
+    int spawnFrameTimer;        // frame timer at spawn (ticks of 5 ms)
+    int spawnFrameTimerRandom;  // when > 0: a random 0 .. n-1 is added to spawnFrameTimer
+    int spawnDeadTimer;         // time (ticks of 5 ms) the particle lives before it starts to die, 0 = starts dying at once
+    int spawnDeadTimerRandom;   // when > 0: a random 0 .. n-1 is added to spawnDeadTimer
+    int startAlphaRandom;       // when > 0: a random 0 .. n-1 is added to startAlpha
+    bool anchorBottom;          // true: the position is the bottom of the bitmap instead of its center
+    s_ParticleSpawn spawns[MAX_PARTICLE_SPAWNS]; // particles that are spawned together with this one
 };
 
 

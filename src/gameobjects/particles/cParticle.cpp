@@ -138,7 +138,7 @@ void cParticle::draw()
         return;
     }
 
-    s_ParticleInfo particleInfo = getParticleInfo();
+    const s_ParticleInfo &particleInfo = getParticleInfo();
     int frameWidth = getFrameWidth();
     int frameHeight = getFrameHeight();
 
@@ -615,9 +615,11 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame,
 
     cParticle &pParticle = objects->getParticles()[iNewId];
     const int particleInfoCount = info->getParticleInfos()->size();
+    const s_ParticleInfo* spawnInfo = nullptr;
     if (iType >= 0 && iType < particleInfoCount) {
         s_ParticleInfo &sParticle = info->getParticleInfo(iType);
         pParticle.init(sParticle);
+        spawnInfo = &sParticle;
     }
     else {
         pParticle.init();
@@ -642,103 +644,44 @@ int cParticle::create(long x, long y, int iType, int iHouse, int iFrame,
     pParticle.drawYBmpOffset = (pParticle.getFrameHeight() / 2) * -1;
     pParticle.recreateDimensions();
 
-    if (iType == D2TM_PARTICLE_EXPLOSION_TRIKE) {
-        // TODO: Spawn additional particle property
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, -1, 0, objects, info, iUnitID);
-    }
+    int firstSpawnedId = -1;
+    if (spawnInfo != nullptr) {
+        pParticle.TIMER_frame = spawnInfo->spawnFrameTimer;
+        if (spawnInfo->spawnFrameTimerRandom > 0) {
+            pParticle.TIMER_frame += RNG::rnd(spawnInfo->spawnFrameTimerRandom);
+        }
+        pParticle.TIMER_dead = spawnInfo->spawnDeadTimer;
+        if (spawnInfo->spawnDeadTimerRandom > 0) {
+            pParticle.TIMER_dead += RNG::rnd(spawnInfo->spawnDeadTimerRandom);
+        }
+        if (spawnInfo->startAlphaRandom > 0) {
+            pParticle.iAlpha += RNG::rnd(spawnInfo->startAlphaRandom);
+        }
 
-    if (iType == D2TM_PARTICLE_SMOKE) {
-        pParticle.TIMER_dead = 1500;
+        // since x, y is 'center' of particle, we have to compensate for particles that "start" at the bottom
+        // (ie, its offset is not in center). So we have to subtract half of the sprite's height
+        if (spawnInfo->anchorBottom) {
+            pParticle.y += pParticle.drawYBmpOffset;
+        }
 
-        // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
-        // offset is not in center). So we have to subtract half of the sprite's height
-        pParticle.y += pParticle.drawYBmpOffset;
+        // particles that are spawned together with this one
+        for (const s_ParticleSpawn &spawn : spawnInfo->spawns) {
+            if (spawn.type < 0) continue;
+            const int spawnedId = create(x + spawn.offsetX, y + spawn.offsetY, spawn.type,
+                                         spawn.inheritHouse ? iHouse : -1, 0, objects, info, iUnitID);
+            if (firstSpawnedId < 0) {
+                firstSpawnedId = spawnedId;
+            }
+        }
     }
 
     if (iType == D2TM_PARTICLE_SMOKE_WITH_SHADOW) {
-        pParticle.TIMER_dead = 1500;
-        int shadowParticleId = create(x + 16, y + 38, D2TM_PARTICLE_SMOKE_SHADOW, -1, -1, objects, info, iUnitID);
-
-        // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
-        // offset is not in center). So we have to subtract half of the sprite's height
-        pParticle.y += pParticle.drawYBmpOffset;
-        pParticle.boundParticleID = shadowParticleId;
+        pParticle.boundParticleID = firstSpawnedId;
         pParticle.iType = D2TM_PARTICLE_SMOKE; // ugly hack for now, but this reduces the need to duplicate if-statements later
-    }
-
-    if (iType == D2TM_PARTICLE_SMOKE_SHADOW) {
-        pParticle.TIMER_dead = 1500;
-
-        // since x, y is 'center' of particle, we have to compensate. Because smoke "starts" at the bottom (ie, its
-        // offset is not in center). So we have to subtract half of the sprite's height
-        pParticle.y += pParticle.drawYBmpOffset;
-    }
-
-    if (iType == D2TM_PARTICLE_TRACK_DIA || iType == D2TM_PARTICLE_TRACK_HOR || iType == D2TM_PARTICLE_TRACK_VER ||
-            iType == D2TM_PARTICLE_TRACK_DIA2) {
-        pParticle.TIMER_dead = 2000;
-    }
-
-
-    // trike exploding
-    if (iType == D2TM_PARTICLE_EXPLOSION_FIRE) {
-        pParticle.iAlpha = 255;
-        pParticle.TIMER_dead = 750 + RNG::rnd(500);
-        pParticle.iAlpha = RNG::rnd(255);
-    }
-
-    // tanks exploding
-    if (iType == D2TM_PARTICLE_WORMEAT) {
-        pParticle.TIMER_frame = 80; // 2,5 * 32 (a tad slower than on 3 frames)
-    }
-
-    // tanks exploding
-    if (iType == D2TM_PARTICLE_EXPLOSION_TANK_ONE || iType == D2TM_PARTICLE_EXPLOSION_TANK_TWO ||
-            iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE01 || iType == D2TM_PARTICLE_EXPLOSION_STRUCTURE02 ||
-            iType == D2TM_PARTICLE_EXPLOSION_GAS) {
-
-        if (iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE01 && iType != D2TM_PARTICLE_EXPLOSION_STRUCTURE02) {
-            create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, objects, info, iUnitID);
-        }
-
-    }
-
-    if (iType == D2TM_PARTICLE_DEADINF01 || iType == D2TM_PARTICLE_DEADINF02) {
-        pParticle.TIMER_dead = 500 + RNG::rnd(500);
-        pParticle.iAlpha = 255;
     }
 
     if (iType == D2TM_PARTICLE_TANKSHOOT || iType == D2TM_PARTICLE_SIEGESHOOT) {
         pParticle.frameIndex = iFrame;
-        pParticle.TIMER_dead = 50;
-    }
-
-    if (iType == D2TM_PARTICLE_SQUISH01 || iType == D2TM_PARTICLE_SQUISH02 ||
-        iType == D2TM_PARTICLE_SQUISH03 || iType == D2TM_PARTICLE_EXPLOSION_ORNI ||
-        iType == D2TM_PARTICLE_EXPLOSION_CARRYALL) {
-        pParticle.frameIndex = 0;
-        pParticle.TIMER_frame = 50;
-    }
-
-    if (iType == D2TM_PARTICLE_SIEGEDIE) {
-        pParticle.iAlpha = 255;
-        pParticle.TIMER_frame = 500 + RNG::rnd(300);
-
-        create(x, y - 18, D2TM_PARTICLE_EXPLOSION_FIRE, -1, -1, objects, info, iUnitID);
-        create(x, y - 18, D2TM_PARTICLE_SMOKE, -1, -1, objects, info, iUnitID);
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM02, -1, 0, objects, info, iUnitID);
-    }
-
-    if (iType == D2TM_PARTICLE_CARRYPUFF) {
-        pParticle.frameIndex = 0;
-        pParticle.TIMER_frame = 50 + RNG::rnd(50);
-        pParticle.iAlpha = 96 + RNG::rnd(64);
-    }
-
-    if (iType == D2TM_PARTICLE_EXPLOSION_ROCKET || iType == D2TM_PARTICLE_EXPLOSION_ROCKET_SMALL) {
-        pParticle.iAlpha = 255;
-        // also create bloom
-        create(x, y, D2TM_PARTICLE_OBJECT_BOOM03, iHouse, 0, objects, info, iUnitID);
     }
 
     pParticle.recolorForHouseIfGiven();
