@@ -256,7 +256,7 @@ void cUnitDrawer::draw()
         cRectangle src = {start_x, start_y, bmp_width, bmp_height};
         cRectangle dest = {ux, uy, roundedScaledWidth, roundedScaledHeight};
         if (m_unit.iType == CARRYALL) {
-            dest = {ux, uy+24, roundedScaledWidth, roundedScaledHeight};
+            dest = {ux+2, uy+21, roundedScaledWidth, roundedScaledHeight};
         }
         m_renderer->renderStrechSprite(shadow,src, dest, ShadowTrans);
     }
