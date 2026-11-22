@@ -42,7 +42,7 @@ enum eLogComponent {
     COMP_GAME,
     COMP_NONE,
     COMP_INIT,
-    COMP_SDL2,        /** Use for SDL2 specific calls **/
+    COMP_SDL3,        /** Use for SDL3 specific calls **/
     COMP_SETUP,
     COMP_VERSION,		/** version specific loggin messages **/
     COMP_SKIRMISHSETUP, /** When skirmish game is being set up **/
