@@ -50,7 +50,6 @@ public:
 
 private:
     void initParticles(cParticleInfos& particleInfos);
-    void initUpgrades(cUpgradeInfos& upgradeInfos, const cInfoContext* infoContext, const cGameSettings* settings);
 
     Graphics* m_gfxdata = nullptr;
     Graphics* m_gfxinter = nullptr;
