@@ -145,3 +145,35 @@ TEST_CASE("ParticleInfosLoader spawn values default to a plain particle")
         CHECK(spawn.type == -1);
     }
 }
+
+TEST_CASE("ParticleInfosLoader reads the animation values of a particle")
+{
+    const auto path = writeTempFile(
+        "[WORMTRAIL]\nFrameDelay=100\nFrameDelayRandom=5\nFadeDelay=20\nLastAnimFrame=3\nHoldFrame=4\nFrameCount=2\n"
+        "FadeStep=5\nFadeInStep=2\nFadeInMaxAlpha=128\nDieAlpha=6\nNextFrameBelowAlpha=220\nWearChance=10\nWearMinAlpha=192\n"
+        "[MOVE]\nFrameDelay=15\n");
+    cParticleInfos infos;
+
+    REQUIRE(makeLoader().load(path.string(), infos));
+    std::filesystem::remove(path);
+
+    const s_ParticleInfo& info = infos[D2TM_PARTICLE_WORMTRAIL];
+    CHECK(info.frameDelay == 100);
+    CHECK(info.frameDelayRandom == 5);
+    CHECK(info.getFadeDelay() == 20);
+    CHECK(info.lastAnimFrame == 3);
+    CHECK(info.holdFrame == 4);
+    CHECK(info.frameCount == 2);
+    CHECK(info.fadeStep == 5);
+    CHECK(info.fadeInStep == 2);
+    CHECK(info.fadeInMaxAlpha == 128);
+    CHECK(info.dieAlpha == 6);
+    CHECK(info.nextFrameBelowAlpha == 220);
+    CHECK(info.wearChance == 10);
+    CHECK(info.wearMinAlpha == 192);
+
+    // without FadeDelay the fade uses the frame delay, and the fade-in is not capped
+    const s_ParticleInfo& move = infos[D2TM_PARTICLE_MOVE];
+    CHECK(move.getFadeDelay() == 15);
+    CHECK(move.fadeInMaxAlpha == 255);
+}

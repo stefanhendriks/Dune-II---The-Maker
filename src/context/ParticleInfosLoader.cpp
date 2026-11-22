@@ -45,6 +45,19 @@ void setDefaults(s_ParticleInfo& info)
     for (auto& spawn : info.spawns) {
         spawn = s_ParticleSpawn{-1, 0, 0, false};
     }
+    info.frameDelay = 10;
+    info.frameDelayRandom = 0;
+    info.fadeDelay = -1;
+    info.lastAnimFrame = 0;
+    info.holdFrame = 0;
+    info.frameCount = 1;
+    info.fadeStep = 0;
+    info.fadeInStep = 0;
+    info.fadeInMaxAlpha = 255;
+    info.dieAlpha = 0;
+    info.nextFrameBelowAlpha = 0;
+    info.wearChance = 0;
+    info.wearMinAlpha = 0;
 }
 
 RenderLayerParticle layerFromName(const std::string& name, RenderLayerParticle fallback)
@@ -119,6 +132,19 @@ bool ParticleInfosLoader::load(const std::string& filename, cParticleInfos& part
         for (int i = 0; i < MAX_PARTICLE_SPAWNS; i++) {
             readSpawn(section, i + 1, info.spawns[i]);
         }
+        info.frameDelay = section.getInt("FrameDelay", info.frameDelay);
+        info.frameDelayRandom = section.getInt("FrameDelayRandom", info.frameDelayRandom);
+        info.fadeDelay = section.getInt("FadeDelay", info.fadeDelay);
+        info.lastAnimFrame = section.getInt("LastAnimFrame", info.lastAnimFrame);
+        info.holdFrame = section.getInt("HoldFrame", info.holdFrame);
+        info.frameCount = section.getInt("FrameCount", info.frameCount);
+        info.fadeStep = section.getInt("FadeStep", info.fadeStep);
+        info.fadeInStep = section.getInt("FadeInStep", info.fadeInStep);
+        info.fadeInMaxAlpha = section.getInt("FadeInMaxAlpha", info.fadeInMaxAlpha);
+        info.dieAlpha = section.getInt("DieAlpha", info.dieAlpha);
+        info.nextFrameBelowAlpha = section.getInt("NextFrameBelowAlpha", info.nextFrameBelowAlpha);
+        info.wearChance = section.getInt("WearChance", info.wearChance);
+        info.wearMinAlpha = section.getInt("WearMinAlpha", info.wearMinAlpha);
     }
     Logger::info(COMP_GAMERULES, "ParticleInfosLoader::load", "[{}] Done", filename);
     return true;

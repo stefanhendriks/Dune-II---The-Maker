@@ -15,14 +15,38 @@
 ; AnchorBottom=true when the position of the particle is the bottom of its bitmap instead of the center (default false)
 ; Spawn1=, Spawn2=, Spawn3=particle that is spawned together with this one, for example OBJECT_BOOM02. Each takes
 ;   Spawn1OffsetX=, Spawn1OffsetY= (offset to this particle, default 0) and Spawn1InheritHouse=true (house colors, default false)
+;
+; While a particle animates (timers are in ticks of 5 ms):
+; FrameDelay=time between animation steps (default 10), FrameDelayRandom=n adds a random 0 .. n-1
+; FadeDelay=time between steps while fading out (default: the FrameDelay)
+; LastAnimFrame=last frame of the animation, after it the particle fades out or dies, HoldFrame=frame shown while fading out
+; FrameCount=number of frames of an animation that loops
+; FadeStep=alpha subtracted per fade step, DieAlpha=the particle dies when its alpha gets below this
+;   (tracks, squish, orni and carryall explosions die when alpha is at or below it)
+; FadeInStep=alpha added per step while fading in, FadeInMaxAlpha=alpha at which fading in stops (default 255)
+; NextFrameBelowAlpha=alpha below which the second frame is shown
+; WearChance=chance in percent per step that the alpha drops by 1, WearMinAlpha=alpha above which that can happen (tracks)
+
 
 [MOVE]
 Bitmap=MOVE_INDICATOR
 StartAlpha=128
+FrameDelay=15
+LastAnimFrame=9
+HoldFrame=9
+FadeStep=35
+DieAlpha=10
+
 
 [ATTACK]
 Bitmap=ATTACK_INDICATOR
 StartAlpha=128
+FrameDelay=15
+LastAnimFrame=9
+HoldFrame=9
+FadeStep=35
+DieAlpha=10
+
 
 [EXPLOSION_TRIKE]
 Bitmap=EXPLOSION_TRIKE
@@ -30,6 +54,11 @@ StartAlpha=255
 FrameWidth=48
 FrameHeight=48
 Spawn1=OBJECT_BOOM03
+FrameDelay=5
+FadeStep=20
+NextFrameBelowAlpha=220
+DieAlpha=10
+
 
 [SMOKE]
 Bitmap=OBJECT_SMOKE
@@ -38,6 +67,12 @@ FrameWidth=32
 FrameHeight=48
 DeadTimer=1500
 AnchorBottom=true
+FrameDelay=50
+FrameCount=3
+FadeInStep=1
+FadeStep=14
+DieAlpha=10
+
 
 [SMOKE_WITH_SHADOW]
 Bitmap=OBJECT_SMOKE
@@ -49,6 +84,12 @@ AnchorBottom=true
 Spawn1=SMOKE_SHADOW
 Spawn1OffsetX=16
 Spawn1OffsetY=38
+FrameDelay=50
+FrameCount=3
+FadeInStep=1
+FadeStep=14
+DieAlpha=10
+
 
 [SMOKE_SHADOW]
 Bitmap=OBJECT_SMOKE_SHADOW
@@ -57,35 +98,73 @@ FrameWidth=36
 FrameHeight=38
 DeadTimer=1500
 AnchorBottom=true
+FrameDelay=50
+FrameCount=3
+FadeInStep=1
+FadeInMaxAlpha=128
+FadeStep=10
+DieAlpha=10
+
 
 [TRACK_DIA]
 Bitmap=TRACK_DIA
 StartAlpha=128
 Layer=BOTTOM
 DeadTimer=2000
+FrameDelay=10
+FadeInStep=2
+FadeStep=10
+DieAlpha=10
+WearChance=10
+WearMinAlpha=192
+
 
 [TRACK_HOR]
 Bitmap=TRACK_HOR
 StartAlpha=128
 Layer=BOTTOM
 DeadTimer=2000
+FrameDelay=10
+FadeInStep=2
+FadeStep=10
+DieAlpha=10
+WearChance=10
+WearMinAlpha=192
+
 
 [TRACK_VER]
 Bitmap=TRACK_VER
 StartAlpha=128
 Layer=BOTTOM
 DeadTimer=2000
+FrameDelay=10
+FadeInStep=2
+FadeStep=10
+DieAlpha=10
+WearChance=10
+WearMinAlpha=192
+
 
 [TRACK_DIA2]
 Bitmap=TRACK_DIA2
 StartAlpha=128
 Layer=BOTTOM
 DeadTimer=2000
+FrameDelay=10
+FadeInStep=2
+FadeStep=10
+DieAlpha=10
+WearChance=10
+WearMinAlpha=192
+
 
 [BULLET_PUF]
 Bitmap=BULLET_PUF
 FrameWidth=18
 FrameHeight=18
+FrameDelay=15
+LastAnimFrame=7
+
 
 [EXPLOSION_FIRE]
 Bitmap=EXPLOSION_FIRE
@@ -93,6 +172,12 @@ StartAlpha=0
 StartAlphaRandom=255
 DeadTimer=750
 DeadTimerRandom=500
+FrameDelay=20
+FrameCount=3
+FadeInStep=15
+FadeStep=20
+DieAlpha=10
+
 
 [WORMEAT]
 Bitmap=OBJECT_WORMEAT
@@ -100,6 +185,12 @@ StartAlpha=255
 FrameWidth=48
 FrameHeight=48
 FrameTimer=80
+FrameDelay=80
+LastAnimFrame=3
+HoldFrame=4
+FadeStep=15
+DieAlpha=25
+
 
 [EXPLOSION_TANK_ONE]
 Bitmap=EXPLOSION_TANK_ONE
@@ -107,6 +198,13 @@ StartAlpha=255
 FrameWidth=48
 FrameHeight=48
 Spawn1=OBJECT_BOOM02
+FrameDelay=28
+FadeDelay=10
+LastAnimFrame=3
+HoldFrame=4
+FadeStep=15
+DieAlpha=25
+
 
 [EXPLOSION_TANK_TWO]
 Bitmap=EXPLOSION_TANK_TWO
@@ -114,18 +212,39 @@ StartAlpha=255
 FrameWidth=48
 FrameHeight=48
 Spawn1=OBJECT_BOOM02
+FrameDelay=28
+FadeDelay=10
+LastAnimFrame=3
+HoldFrame=4
+FadeStep=15
+DieAlpha=25
+
 
 [EXPLOSION_STRUCTURE01]
 Bitmap=EXPLOSION_STRUCTURE01
 StartAlpha=255
 FrameWidth=48
 FrameHeight=48
+FrameDelay=28
+FadeDelay=10
+LastAnimFrame=3
+HoldFrame=4
+FadeStep=15
+DieAlpha=25
+
 
 [EXPLOSION_STRUCTURE02]
 Bitmap=EXPLOSION_STRUCTURE02
 StartAlpha=255
 FrameWidth=48
 FrameHeight=48
+FrameDelay=28
+FadeDelay=10
+LastAnimFrame=3
+HoldFrame=4
+FadeStep=15
+DieAlpha=25
+
 
 [EXPLOSION_GAS]
 Bitmap=EXPLOSION_GAS
@@ -133,6 +252,13 @@ StartAlpha=255
 FrameWidth=48
 FrameHeight=48
 Spawn1=OBJECT_BOOM02
+FrameDelay=28
+FadeDelay=10
+LastAnimFrame=3
+HoldFrame=4
+FadeStep=15
+DieAlpha=25
+
 
 [WORMTRAIL]
 Bitmap=OBJECT_WORMTRAIL
@@ -140,18 +266,33 @@ StartAlpha=96
 Layer=BOTTOM
 FrameWidth=48
 FrameHeight=48
+FrameDelay=100
+FadeDelay=20
+LastAnimFrame=3
+HoldFrame=4
+FadeStep=5
+DieAlpha=5
+
 
 [DEADINF01]
 Bitmap=OBJECT_DEADINF01
 Layer=BOTTOM
 DeadTimer=500
 DeadTimerRandom=500
+FrameDelay=10
+FadeStep=5
+DieAlpha=5
+
 
 [DEADINF02]
 Bitmap=OBJECT_DEADINF02
 Layer=BOTTOM
 DeadTimer=500
 DeadTimerRandom=500
+FrameDelay=10
+FadeStep=5
+DieAlpha=5
+
 
 [TANKSHOOT]
 Bitmap=OBJECT_TANKSHOOT
@@ -159,6 +300,11 @@ StartAlpha=128
 FrameWidth=64
 FrameHeight=64
 DeadTimer=50
+FrameDelay=2
+FadeInStep=5
+FadeStep=15
+DieAlpha=10
+
 
 [SIEGESHOOT]
 Bitmap=OBJECT_SIEGESHOOT
@@ -166,6 +312,11 @@ StartAlpha=128
 FrameWidth=64
 FrameHeight=64
 DeadTimer=50
+FrameDelay=2
+FadeInStep=5
+FadeStep=15
+DieAlpha=10
+
 
 [SQUISH01]
 Bitmap=EXPLOSION_SQUISH01
@@ -174,6 +325,10 @@ Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
 FrameTimer=50
+FrameDelay=50
+FadeStep=5
+DieAlpha=5
+
 
 [SQUISH02]
 Bitmap=EXPLOSION_SQUISH02
@@ -182,6 +337,10 @@ Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
 FrameTimer=50
+FrameDelay=50
+FadeStep=5
+DieAlpha=5
+
 
 [SQUISH03]
 Bitmap=EXPLOSION_SQUISH03
@@ -190,6 +349,10 @@ Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
 FrameTimer=50
+FrameDelay=50
+FadeStep=5
+DieAlpha=5
+
 
 [EXPLOSION_ORNI]
 Bitmap=EXPLOSION_ORNI
@@ -198,6 +361,10 @@ Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
 FrameTimer=50
+FrameDelay=50
+FadeStep=5
+DieAlpha=5
+
 
 [EXPLOSION_CARRYALL]
 Bitmap=EXPLOSION_CARRYALL
@@ -206,6 +373,10 @@ Layer=BOTTOM
 FrameWidth=32
 FrameHeight=32
 FrameTimer=50
+FrameDelay=50
+FadeStep=5
+DieAlpha=5
+
 
 [SIEGEDIE]
 Bitmap=OBJECT_SIEGEDIE
@@ -216,6 +387,13 @@ Spawn1OffsetY=-18
 Spawn2=SMOKE
 Spawn2OffsetY=-18
 Spawn3=OBJECT_BOOM02
+FrameDelay=250
+FadeDelay=10
+LastAnimFrame=2
+HoldFrame=2
+FadeStep=10
+DieAlpha=10
+
 
 [CARRYPUFF]
 Bitmap=OBJECT_CARRYPUFF
@@ -226,19 +404,39 @@ FrameTimer=50
 FrameTimerRandom=50
 StartAlpha=96
 StartAlphaRandom=64
+FrameDelay=100
+FrameDelayRandom=100
+LastAnimFrame=5
+FadeStep=16
+
 
 [EXPLOSION_ROCKET]
 Bitmap=EXPLOSION_ROCKET
 Spawn1=OBJECT_BOOM03
 Spawn1InheritHouse=true
+FrameDelay=10
+LastAnimFrame=3
+HoldFrame=4
+FadeStep=35
+DieAlpha=25
+
 
 [EXPLOSION_ROCKET_SMALL]
 Bitmap=EXPLOSION_ROCKET_SMALL
 Spawn1=OBJECT_BOOM03
 Spawn1InheritHouse=true
+FrameDelay=10
+LastAnimFrame=1
+HoldFrame=1
+FadeStep=25
+DieAlpha=25
+
 
 [EXPLOSION_BULLET]
 Bitmap=EXPLOSION_BULLET
+FrameDelay=10
+LastAnimFrame=1
+
 
 [OBJECT_BOOM01]
 Bitmap=OBJECT_BOOM01
@@ -246,6 +444,9 @@ StartAlpha=240
 AdditiveBlending=true
 FrameWidth=512
 FrameHeight=512
+FadeStep=2
+DieAlpha=1
+
 
 [OBJECT_BOOM02]
 Bitmap=OBJECT_BOOM02
@@ -253,6 +454,9 @@ StartAlpha=230
 AdditiveBlending=true
 FrameWidth=256
 FrameHeight=256
+FadeStep=2
+DieAlpha=1
+
 
 [OBJECT_BOOM03]
 Bitmap=OBJECT_BOOM03
@@ -260,3 +464,5 @@ StartAlpha=220
 AdditiveBlending=true
 FrameWidth=128
 FrameHeight=128
+FadeStep=2
+DieAlpha=1
