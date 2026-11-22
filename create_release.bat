@@ -55,6 +55,7 @@ copy resources\bullets.ini.org bin\bullets.ini || exit /b 1
 copy resources\terrain.ini.org bin\terrain.ini || exit /b 1
 copy resources\specials.ini.org bin\specials.ini || exit /b 1
 copy resources\upgrades.ini.org bin\upgrades.ini || exit /b 1
+copy resources\particles.ini.org bin\particles.ini || exit /b 1
 copy resources\bin\settings.ini bin || exit /b 1
 echo 13. Copy txt files
 copy resources\doc\versionhistory.txt bin || exit /b 1

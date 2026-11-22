@@ -56,6 +56,7 @@ cp resources/bullets.ini.org bin/bullets.ini
 cp resources/terrain.ini.org bin/terrain.ini
 cp resources/specials.ini.org bin/specials.ini
 cp resources/upgrades.ini.org bin/upgrades.ini
+cp resources/particles.ini.org bin/particles.ini
 cp resources/bin/settings.ini bin
 echo "13. Copy txt files"
 cp resources/doc/versionhistory.txt bin
