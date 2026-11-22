@@ -54,9 +54,8 @@ cMapDrawer::cMapDrawer(GameContext *ctx, cMap *map, cPlayer *player, cMapCamera 
     d2tm_assert(services != nullptr);
     d2tm_assert(m_settings != nullptr);
 
-    m_fogTexture = createFogTexture();
-
     m_surfShroud = m_gfxdata->getSurfaceID("SHROUD");
+    m_fogTexture = createFogTexture();
     m_texShroud = m_gfxdata->getTextureID("SHROUD");
     m_texSmudge = m_gfxdata->getTextureID("SMUDGE");
 }
