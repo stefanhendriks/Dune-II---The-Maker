@@ -32,6 +32,8 @@ jobs:
               - 'resources/terrain.ini.org'
               - 'resources/specials.ini'
               - 'resources/specials.ini.org'
+              - 'resources/upgrades.ini'
+              - 'resources/upgrades.ini.org'
               - 'CMakeLists.txt'
               - 'create_release.bat'
               - 'create_release.sh'
