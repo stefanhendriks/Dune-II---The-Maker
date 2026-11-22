@@ -91,10 +91,9 @@ class LogViewer:
             for line in lines:
                 if not line.strip() or line.startswith("\\\\"): continue
                 parts = line.strip().split('|')
-                if len(parts) >= 7:
-                    row = (parts + [""] * len(self.columns))[:len(self.columns)]
-                    self.all_logs.append(row)
-                    comps.add(row[2])
+                row = (parts + [""] * len(self.columns))[:len(self.columns)]
+                self.all_logs.append(row)
+                comps.add(row[2])
             
             self.components_list = ["ALL"] + sorted(list(comps))
             self.comp_combo['values'] = self.components_list
