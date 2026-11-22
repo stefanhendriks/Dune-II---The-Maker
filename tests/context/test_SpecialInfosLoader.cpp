@@ -106,6 +106,7 @@ TEST_CASE("The shipped specials.ini holds the old values")
     CHECK(fremen.house == eHouseBitFlag::Atreides);
     CHECK(fremen.providesTypeId == UNIT_FREMEN_THREE);
     CHECK(fremen.deployFrom == eDeployFromType::AT_RANDOM_CELL);
+    CHECK(fremen.deployAtStructure == PALACE);
     CHECK(fremen.units == 6);
     CHECK(fremen.buildTime == 1371);
     CHECK(fremen.spawnBorderDistance == 4);
