@@ -173,16 +173,29 @@ bool UpgradeInfosLoader::load(const std::string& filename, cUpgradeInfos& upgrad
         info.techLevel = section.getInt("TechLevel", info.techLevel);
         info.atUpgradeLevel = section.getInt("AtUpgradeLevel", info.atUpgradeLevel);
         info.dependsOnStructureLevel = section.getBoolean("DependsOnStructureLevel", info.dependsOnStructureLevel);
-        if (section.hasValue("Structure")) info.structureType = structureFromName(section.getStringValue("Structure"));
+        if (section.hasValue("Structure")) {
+            const int structure = structureFromName(section.getStringValue("Structure"));
+            if (structure >= 0) {
+                info.structureType = structure;
+            }
+        }
         if (section.hasValue("NeedsStructure")) info.needsStructureType = structureFromName(section.getStringValue("NeedsStructure"));
 
         // either a fixed Cost, or a percentage of the cost of a structure or unit
         info.cost = section.getInt("Cost", info.cost);
         const int percentage = section.getInt("CostPercentage", 50);
         if (section.hasValue("CostOfStructure")) {
-            info.cost = m_structureCost(structureFromName(section.getStringValue("CostOfStructure"))) * percentage / 100;
+            const int structure = structureFromName(section.getStringValue("CostOfStructure"));
+            if (structure >= 0) {
+                info.cost = m_structureCost(structure) * percentage / 100;
+            }
         } else if (section.hasValue("CostOfUnit")) {
-            info.cost = m_unitCost(cIniUtils::getUnitTypeFromString(section.getStringValue("CostOfUnit"))) * percentage / 100;
+            const int unit = cIniUtils::getUnitTypeFromString(section.getStringValue("CostOfUnit"));
+            if (unit >= 0) {
+                info.cost = m_unitCost(unit) * percentage / 100;
+            } else {
+                Logger::error(COMP_GAMERULES, "UpgradeInfosLoader::load", "[{}] Unknown unit in CostOfUnit, keeping cost {}", sectionName, info.cost);
+            }
         }
 
         if (section.hasValue("ProvidesType")) {

@@ -199,3 +199,18 @@ TEST_CASE("The shipped upgrades.ini holds the old values")
     CHECK(cheatInfos[UPGRADE_TYPE_HEAVYFCTRY_SAR_DEVASTATOR].buildTime == 5);
     CHECK(cheatInfos[UPGRADE_TYPE_CONSTYARD_SLAB4].buildTime == 50);
 }
+
+TEST_CASE("UpgradeInfosLoader keeps the defaults when a structure or unit name is unknown")
+{
+    const auto path = writeTempFile(
+        "[HEAVYFCTRY_MVC]\nCostOfStructure=NOPE\nStructure=NOPE\n"
+        "[HEAVYFCTRY_SAR_SONICTANK]\nCostOfUnit=NOPE\n");
+    cUpgradeInfos infos;
+
+    REQUIRE(makeLoader().load(path.string(), infos));
+    std::filesystem::remove(path);
+
+    CHECK(infos[UPGRADE_TYPE_HEAVYFCTRY_MVC].cost == 100);
+    CHECK(infos[UPGRADE_TYPE_HEAVYFCTRY_MVC].structureType == CONSTYARD);
+    CHECK(infos[UPGRADE_TYPE_HEAVYFCTRY_SAR_SONICTANK].cost == 100);
+}
