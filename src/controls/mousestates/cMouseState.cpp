@@ -17,7 +17,6 @@
 #include "controls/eMouseTile.h"
 #include "include/cAssert.h"
 
-
 cMouseState::cMouseState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     m_player(player),
     m_context(context),
