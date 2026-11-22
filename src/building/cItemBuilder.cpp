@@ -328,7 +328,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
                     // Case: Fremen is deployed at random cell on the map
                     if (special.providesType == UNIT) {
                         // determine cell
-                        int iCll = m_services->objects->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(4);
+                        int iCll = m_services->objects->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(special.spawnBorderDistance);
 
                         for (int j = 0; j < special.units; j++) {
                             bool passable = m_services->objects->getMap()->isCellPassableForFootUnits(iCll);
@@ -342,7 +342,7 @@ void cItemBuilder::itemIsDoneBuildingLogic(cBuildingListItem *item)
 
                             int x = m_services->objects->getMapGeometry()->getCellX(iCll);
                             int y = m_services->objects->getMapGeometry()->getCellY(iCll);
-                            int amount = RNG::rnd(2) + 1;
+                            int amount = RNG::rnd(special.spawnScatter) + 1;
 
                             // randomly shift the cell one coordinate up/down/left/right
                             switch (RNG::rnd(4)) {
