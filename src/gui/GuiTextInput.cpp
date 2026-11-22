@@ -64,9 +64,7 @@ void GuiTextInput::draw() const
 
 void GuiTextInput::onNotifyKeyboardEvent(const cKeyboardEvent& event)
 {
-    //std::cout << "GuiTextInput received keyboard event: " << event.toString() << std::endl;
     if (!m_focused) return;
-    //std::cout << "GuiTextInput focused received keyboard event: " << event.toString() << std::endl;
     if (event.hasTextInput()) {
         const auto& textInput = event.getTextInput();
         if (canAppendText(textInput)) {
@@ -132,7 +130,6 @@ std::string GuiTextInput::getFittedDisplayText() const
 
 void GuiTextInput::onNotifyMouseEvent(const s_MouseEvent& event)
 {
-    //std::cout << "GuiTextInput received mouse event: " << s_MouseEvent::toString(event) << std::endl;
     if (event.eventType != eMouseEventType::MOUSE_LEFT_BUTTON_CLICKED) {
         return;
     }

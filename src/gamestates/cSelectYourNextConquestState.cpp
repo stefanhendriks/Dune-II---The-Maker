@@ -593,7 +593,6 @@ int cSelectYourNextConquestState::regionOver(int mouseX, int mouseY)
     int wCalc = round((mouseX-offsetX-16)*608.0/regionClickMapBmp->w);
     int hCalc = round((mouseY-offsetY-73)*240.0/regionClickMapBmp->h);
     int c = getPixelColorIndexFromSurface(regionClickMapBmp, wCalc, hCalc);
-    //std::cout << "REGION_OVER " << mouseX-offsetX << " " << mouseY-offsetY << " " << c << std::endl;
     m_drawManager->setMessage(std::format("region {}",c-1));
     return c - 1;
 }

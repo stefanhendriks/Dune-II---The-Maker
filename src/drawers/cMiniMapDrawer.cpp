@@ -79,7 +79,6 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *
     float reportX = cSideBar::WidthOfMinimap*1.f / getMapWidthInPixels();
     float reportY = cSideBar::HeightOfMinimap*1.f / getMapHeightInPixels();
     m_factorZoom = std::min(reportX, reportY);
-    //std::cout << "Minimap zoom factor: " << m_factorZoom << std::endl;
 
     int halfWidthOfMinimap = cSideBar::WidthOfMinimap / 2;
     int halfWidthOfMap = getMapWidthInPixels() / 2;
@@ -96,8 +95,6 @@ cMiniMapDrawer::cMiniMapDrawer(GameContext *ctx, cGameSettings *settings, cMap *
 
     m_RectMinimap = cRectangle(m_drawX, m_drawY, m_factorZoom*getMapWidthInPixels(), m_factorZoom * getMapHeightInPixels());
     m_RectFullMinimap = cRectangle(topLeftX, topLeftY, cSideBar::WidthOfMinimap, cSideBar::HeightOfMinimap);
-    //std::cout << "Minimap top left corner: (" << m_RectMinimap.getX() << ", " << m_RectMinimap.getY() << ", " << m_RectMinimap.getWidth() << ", " << m_RectMinimap.getHeight() << ")" << std::endl;
-    //std::cout << "RectFullMinimap: (" << m_RectFullMinimap.getX() << ", " << m_RectFullMinimap.getY() << ", " << m_RectFullMinimap.getWidth() << ", " << m_RectFullMinimap.getHeight() << ")" << std::endl;
     m_mipMapTex = m_sdlDrawer->createRenderTargetTexture(getMapWidthInPixels(), getMapHeightInPixels());
     for (size_t i = 0; i < staticFramesNames.size(); i++) {
         m_staticFrames[i] = m_gfxinter->getTextureID(staticFramesNames[i]);

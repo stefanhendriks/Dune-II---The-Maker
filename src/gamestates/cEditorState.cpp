@@ -163,7 +163,6 @@ void cEditorState::populateSelectBar()
     m_selectBar->addAutoGuiObject(std::move(guiButton));
 
     rectGui = cRectangle(m_settings->getScreenW()-heightButtonSize*3, (heightBarSize-heightButtonSize)/2, heightButtonSize, heightButtonSize);
-    // std::cout << "Save icon position: x=" << rectGui.getX() << " y=" << rectGui.getY() << " w= " << rectGui.getWidth() << " h= " << rectGui.getHeight() << std::endl;
     auto guiIcon = GuiButtonBuilder()
             .withRect(rectGui)
             .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("ICOSAVE")))
@@ -368,7 +367,6 @@ void cEditorState::populateSymmetricBar()
             .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPHORZLR")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
-                // std::cout << "FLIPHORZLR" << std::endl;
                 modifySymmetricArea(Direction::right);
             })
             .build();
@@ -380,7 +378,6 @@ void cEditorState::populateSymmetricBar()
             .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPHORZRL")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
-                // std::cout << "FLIPHORZRL" << std::endl;
                 modifySymmetricArea(Direction::left);
             })
             .build();
@@ -392,7 +389,6 @@ void cEditorState::populateSymmetricBar()
             .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPVERTBT")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
-                // std::cout << "FLIPVERTBT" << std::endl;
                 modifySymmetricArea(Direction::top);
             })
             .build();
@@ -404,7 +400,6 @@ void cEditorState::populateSymmetricBar()
             .withTexture(m_gfxeditor->getTexture(m_gfxeditor->getTextureID("FLIPVERTTB")))
             .withRenderer(m_sdlDrawer)
             .onClick([this]() {
-                // std::cout << "FLIPVERTTB" << std::endl;
                 modifySymmetricArea(Direction::bottom);
             })
             .build();
@@ -573,7 +568,6 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             m_stateTransitions->setNextState(eGameState::OPTIONS);
         }
         if (event.isAction(eKeyAction::EDITOR_SAVE)) {
-            //std::cout << "Save" << std::endl;
             if (saveMap()) {
                 m_hasChanged = false;
             }
@@ -592,13 +586,11 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 
         if (event.isAction(eKeyAction::EDITOR_DISPLAY_GRID)) {
             // toggle grid display
-            //std::cout << "Toggle grid display" << std::endl;
             m_displayGrid = !m_displayGrid;
 
         }
         if (event.isAction(eKeyAction::EDITOR_DISPLAY_AXES)) {
             // toggle axes display
-            //std::cout << "Toggle axes display" << std::endl;
             m_displayAxes = !m_displayAxes;
         }
         if (event.isAction(eKeyAction::EDITOR_UNDO)) {
@@ -612,11 +604,9 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
             }
         }
         if (event.isAction(eKeyAction::EDITOR_COPY)) {
-            //std::cout << "Action : Copy selection to clipboard" << std::endl;
             copySelectionToClipboard();
         }
         if (event.isAction(eKeyAction::EDITOR_PASTE)) {
-            //std::cout << "Action : Paste selection to clipboard" << std::endl;
             pasteClipboardAtMouseCursor();
         }
         if (event.isAction(eKeyAction::EDITOR_CUT)) {
@@ -665,7 +655,6 @@ void cEditorState::onNotifyKeyboardEvent(const cKeyboardEvent &event)
 void cEditorState::loadMap(int mapIndex)
 {
     s_PreviewMap* map = m_previewMaps->getMap(mapIndex);
-    //std::cout << "open |"<< map->name << "|" << std::endl;
     m_mapData = std::make_unique<Matrix<int>>(map->terrainType, map->height, map->width);
     m_mapAuthor = map->author;
     m_mapDescription = map->description;
@@ -675,7 +664,6 @@ void cEditorState::loadMap(int mapIndex)
     startCells.fill({-1, -1});
     for (int i=0; i<MAX_SKIRMISHMAP_PLAYERS; i++) {
         if (map->iStartCell[i] !=-1) {
-            //std::cout << "startCell " << map->iStartCell[i] << std::endl;
             int w = map->iStartCell[i] % map->width;
             int h = map->iStartCell[i] / map->width;
             startCells[i] = cPoint(w,h);
@@ -1289,7 +1277,6 @@ void cEditorState::mirrorMarkerCells(Direction dir, std::vector<int> &cells) con
 
 void cEditorState::modifySymmetricArea(Direction dir)
 {
-    //std::cout << "modifySymmetricArea " << static_cast<int>(dir) << std::endl;
     switch (dir) {
         case Direction::bottom:
             m_undoRedo->beginRecordGroup();
@@ -1349,7 +1336,6 @@ void cEditorState::modifySymmetricArea(Direction dir)
             break;
         case Direction::topLeft:
             if (m_mapData->getCols() != m_mapData->getRows()) {
-                //std::cout << "topLeft symmetry requires a square map, skipping." << std::endl;
                 const s_GameEvent newEvent {
                     .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
                     .data = NotificationEvent {
@@ -1381,7 +1367,6 @@ void cEditorState::modifySymmetricArea(Direction dir)
 
         case Direction::topRight:
             if (m_mapData->getCols() != m_mapData->getRows()) {
-                //std::cout << "topRight symmetry requires a square map, skipping." << std::endl;
                 const s_GameEvent newEvent {
                     .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
                     .data = NotificationEvent {
@@ -1411,7 +1396,6 @@ void cEditorState::modifySymmetricArea(Direction dir)
 
         case Direction::bottomLeft:
             if (m_mapData->getCols() != m_mapData->getRows()) {
-                //std::cout << "bottomLeft symmetry requires a square map, skipping." << std::endl;
                 const s_GameEvent newEvent {
                     .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
                     .data = NotificationEvent {
@@ -1441,7 +1425,6 @@ void cEditorState::modifySymmetricArea(Direction dir)
 
         case Direction::bottomRight:
             if (m_mapData->getCols() != m_mapData->getRows()) {
-                //std::cout << "bottomRight symmetry requires a square map, skipping." << std::endl;
                 const s_GameEvent newEvent {
                     .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
                     .data = NotificationEvent {

@@ -321,7 +321,6 @@ std::string cIniFile::getStringValue(const std::string &section, const std::stri
         return getSection(section).getStringValue(key);
     }
     else {
-        //std::cout << " getStringValue section " << section << " didn't exist" << std::endl;
         Logger::error(COMP_GAMERULES, "cIniFile::getStringValue", "section {} didn't exist", section);
         return std::string();
     }
