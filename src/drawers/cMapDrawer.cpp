@@ -107,11 +107,6 @@ cMapDrawer::~cMapDrawer()
 
 void cMapDrawer::drawShroud()
 {
-    float tileWidth = m_camera->getZoomedTileWidth();
-    float tileHeight = m_camera->getZoomedTileHeight();
-
-    int iTileHeight = static_cast<int>(std::ceil(tileHeight));
-    int iTileWidth = static_cast<int>(std::ceil(tileWidth));
     int iPl = m_player->getId();
 
     for (int viewportX = m_camera->getViewportStartX(); viewportX < m_camera->getViewportEndX() + 32; viewportX += 32) {
@@ -130,17 +125,18 @@ void cMapDrawer::drawShroud()
             int iDrawX = static_cast<int>(std::floor(fDrawX));
             int iDrawY = static_cast<int>(std::floor(fDrawY));
 
-            // the veil is semi-transparent: tiles must meet exactly, an overlap shows as a darker line
-            const int iVeilWidth = static_cast<int>(std::floor(fDrawX + tileWidth)) - iDrawX;
-            const int iVeilHeight = static_cast<int>(std::floor(fDrawY + tileHeight)) - iDrawY;
-            drawFogVeil(iCell, iPl, iDrawX, iDrawY, iVeilWidth, iVeilHeight);
+            // Tiles must span exactly up to the next cell's window position: the shroud and veil sprites
+            // are (partly) transparent, so an overlap with a neighbour shows as a dark line when zoomed.
+            const int iTileWidth = m_camera->getWindowXPosition(absoluteXCoordinateOnMap + TILESIZE_WIDTH_PIXELS) - iDrawX;
+            const int iTileHeight = m_camera->getWindowYPosition(absoluteYCoordinateOnMap + TILESIZE_HEIGHT_PIXELS) - iDrawY;
+            drawFogVeil(iCell, iPl, iDrawX, iDrawY, iTileWidth, iTileHeight);
 
             if (m_drawWithoutShroudTiles) {
                 if (m_map->isVisible(iCell, iPl)) {
                     // do nothing
                 }
                 else {
-                    m_sdlDrawer->renderRectFillColor(fDrawX, fDrawY, tileWidth, tileHeight,0, 0, 0,128);
+                    m_sdlDrawer->renderRectFillColor(fDrawX, fDrawY, iTileWidth, iTileHeight,0, 0, 0,128);
                 }
             }
             else {
