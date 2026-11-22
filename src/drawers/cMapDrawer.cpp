@@ -130,7 +130,10 @@ void cMapDrawer::drawShroud()
             int iDrawX = static_cast<int>(std::floor(fDrawX));
             int iDrawY = static_cast<int>(std::floor(fDrawY));
 
-            drawFogVeil(iCell, iPl, iDrawX, iDrawY, iTileWidth, iTileHeight);
+            // the veil is semi-transparent: tiles must meet exactly, an overlap shows as a darker line
+            const int iVeilWidth = static_cast<int>(std::floor(fDrawX + tileWidth)) - iDrawX;
+            const int iVeilHeight = static_cast<int>(std::floor(fDrawY + tileHeight)) - iDrawY;
+            drawFogVeil(iCell, iPl, iDrawX, iDrawY, iVeilWidth, iVeilHeight);
 
             if (m_drawWithoutShroudTiles) {
                 if (m_map->isVisible(iCell, iPl)) {
