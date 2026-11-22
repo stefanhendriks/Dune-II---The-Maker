@@ -91,8 +91,8 @@ class LogViewer:
             for line in lines:
                 if not line.strip() or line.startswith("\\\\"): continue
                 parts = line.strip().split('|')
-                if len(parts) >= 8:
-                    row = parts[:8]
+                if len(parts) >= 7:
+                    row = (parts + [""] * len(self.columns))[:len(self.columns)]
                     self.all_logs.append(row)
                     comps.add(row[2])
             
