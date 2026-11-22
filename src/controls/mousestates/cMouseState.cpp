@@ -15,9 +15,8 @@
 
 #include "cMouseState.h"
 #include "controls/eMouseTile.h"
-// until we have our own data structure to abstract Allegro away, we have tight coupling here
-
 #include "include/cAssert.h"
+
 
 cMouseState::cMouseState(cPlayer *player, cGameControlsContext *context, cMouse *mouse) :
     m_player(player),
