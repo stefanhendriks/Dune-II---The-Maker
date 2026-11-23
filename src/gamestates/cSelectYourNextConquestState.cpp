@@ -65,7 +65,7 @@ static Uint8 getPixelColorIndexFromSurface(SDL_Surface *surface, int x, int y)
     }
 
     if (x < 0 || x >= surface->w || y < 0 || y >= surface->h) {
-        std::cerr << "Error : out of range pixel (" << x << ", " << y << ") in (" << surface->w << ", " << surface->h << ")." << std::endl;
+        //std::cerr << "Error : out of range pixel (" << x << ", " << y << ") in (" << surface->w << ", " << surface->h << ")." << std::endl;
         return 0;
     }
     Uint8 *pixelData = static_cast<Uint8 *>(surface->pixels);
