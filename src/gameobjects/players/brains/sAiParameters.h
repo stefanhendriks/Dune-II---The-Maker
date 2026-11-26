@@ -50,6 +50,14 @@ struct s_AiSharedParameters {
     // ... and its hit points are below this fraction of its max hit points
     double repairStructureBelowHpFraction = 0.75;
 
+    // a damaged ground vehicle is sent to a Repair Facility when its hit points drop below a fraction of its max:
+    // ... this one when no friendly unit is fighting near it (ambushed)
+    double repairRecallAmbushedBelowHpFraction = 0.35;
+    // ... this one when a friendly unit is fighting near it (sieging), so it soaks up damage a bit longer
+    double repairRecallSiegingBelowHpFraction = 0.20;
+    // a friendly unit is "near" when it is within this many cells (horizontally and vertically) of the unit
+    int repairRecallSiegeRadius = 3;
+
     // max number of units sent to respond to a threat
     s_AiRandomAmount respondersWhenHarvesterAttacked = {2, 4};
     s_AiRandomAmount respondersWhenStructureAttacked = {2, 4};
@@ -57,6 +65,10 @@ struct s_AiSharedParameters {
 
     // initial delay of a superweapon mission (deathhand, saboteur, fremen) is RNG::rnd(this)
     int superWeaponMissionDelayRandom = 10;
+
+    double repairRecallBelowHpFraction(bool sieging) const {
+        return sieging ? repairRecallSiegingBelowHpFraction : repairRecallAmbushedBelowHpFraction;
+    }
     bool operator==(const s_AiSharedParameters &) const = default;
 };
 

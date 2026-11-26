@@ -47,6 +47,30 @@ TEST_CASE("AiParametersLoader reads values of every kind from their sections")
     CHECK(parameters.fremenSuperWeapon.skipPlayerAbove == 60);
 }
 
+TEST_CASE("AiParametersLoader reads the repair recall values")
+{
+    const auto path = writeTempFile(
+        "[SHARED]\nRepairRecallAmbushedBelowHpFraction=0.4\nRepairRecallSiegingBelowHpFraction=0.1\nRepairRecallSiegeRadius=5\n");
+    brains::s_AiParameters parameters;
+
+    REQUIRE(AiParametersLoader().load(path.string(), parameters));
+    std::filesystem::remove(path);
+
+    CHECK(parameters.shared.repairRecallAmbushedBelowHpFraction == 0.4);
+    CHECK(parameters.shared.repairRecallSiegingBelowHpFraction == 0.1);
+    CHECK(parameters.shared.repairRecallSiegeRadius == 5);
+}
+
+TEST_CASE("A sieging unit uses the sieging recall threshold, an ambushed unit the ambushed one")
+{
+    brains::s_AiSharedParameters parameters;
+    parameters.repairRecallAmbushedBelowHpFraction = 0.35;
+    parameters.repairRecallSiegingBelowHpFraction = 0.2;
+
+    CHECK(parameters.repairRecallBelowHpFraction(false) == 0.35);
+    CHECK(parameters.repairRecallBelowHpFraction(true) == 0.2);
+}
+
 TEST_CASE("AiParametersLoader keeps the defaults for keys that are missing")
 {
     const auto path = writeTempFile("[SHARED]\nRestTime=20\nRespondersWhenHarvesterAttackedBase=5\n");
@@ -81,6 +105,7 @@ TEST_CASE("The shipped AI.ini holds the default values")
     brains::s_AiParameters parameters;
     // start from values that differ from every default, so a key missing from the file shows up
     parameters.shared.restTime = -1;
+    parameters.shared.repairRecallSiegeRadius = -1;
     parameters.skirmish.initialRestRandom = -1;
     parameters.skirmish.mayBuildAdditionalUnitsOffset = {-1, -1};
     parameters.campaign.initialRestTime = -1;

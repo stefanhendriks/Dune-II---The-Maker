@@ -56,6 +56,9 @@ bool AiParametersLoader::load(const std::string& filename, brains::s_AiParameter
         p.baseDefenseRadius = section.getInt("BaseDefenseRadius", p.baseDefenseRadius);
         p.repairStructureMinCredits = section.getInt("RepairStructureMinCredits", p.repairStructureMinCredits);
         p.repairStructureBelowHpFraction = section.getDouble("RepairStructureBelowHpFraction", p.repairStructureBelowHpFraction);
+        p.repairRecallAmbushedBelowHpFraction = section.getDouble("RepairRecallAmbushedBelowHpFraction", p.repairRecallAmbushedBelowHpFraction);
+        p.repairRecallSiegingBelowHpFraction = section.getDouble("RepairRecallSiegingBelowHpFraction", p.repairRecallSiegingBelowHpFraction);
+        p.repairRecallSiegeRadius = section.getInt("RepairRecallSiegeRadius", p.repairRecallSiegeRadius);
         readRandomAmount(section, "RespondersWhenHarvesterAttacked", p.respondersWhenHarvesterAttacked);
         readRandomAmount(section, "RespondersWhenStructureAttacked", p.respondersWhenStructureAttacked);
         readRandomAmount(section, "RespondersWhenEnemyNearBase", p.respondersWhenEnemyNearBase);
