@@ -170,6 +170,18 @@ struct s_AiSkirmishParameters {
 };
 
 /**
+ * Values of the campaign brain (cPlayerBrainCampaign), outside the per-level mission scripts
+ * (produceLevelNMissions()).
+ */
+struct s_AiCampaignParameters {
+    // ticks to rest before the first think cycle (4 minutes)
+    int initialRestTime = (10 * 60) * 4;
+    // initial delay of the scout mission is RNG::rnd(this)
+    int scoutMissionDelayRandom = 5;
+    int scoutsPerScoutMission = 1;
+};
+
+/**
  * Values of the brain missions (cPlayerBrainMission and its kinds). Chances are percentages.
  * Mission timers count mission ticks (missions think every 5 ms).
  */
@@ -235,6 +247,7 @@ struct s_AiFremenSuperWeaponParameters {
 struct s_AiParameters {
     s_AiSharedParameters shared;
     s_AiSkirmishParameters skirmish;
+    s_AiCampaignParameters campaign;
     s_AiMissionParameters missions;
     s_AiSandwormParameters sandworm;
     s_AiFremenSuperWeaponParameters fremenSuperWeapon;
