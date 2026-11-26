@@ -48,7 +48,7 @@ cPlayerBrainCampaign::cPlayerBrainCampaign(cPlayer *player, s_DataCampaign* data
     d2tm_assert(dataCampaign != nullptr);
     // timer is subtracted every 100 ms with 1 (ie, 10 == 10*100 = 1000ms == 1 second)
     // 10*60 -> 1 minute. * 4 -> 4 minutes
-    m_TIMER_rest = (10 * 60) * 4;
+    m_TIMER_rest = m_aiParameters.campaign.initialRestTime;
     m_myBase = std::vector<s_structurePosition>();
     m_buildOrders = std::vector<s_buildOrder>();
     m_discoveredEnemyAtCell = std::set<int>();
@@ -358,12 +358,12 @@ void cPlayerBrainCampaign::thinkState_Missions()
             group.push_back(s_groupKind{
                 .buildType = eBuildType::UNIT,
                 .type = player->getScoutingUnitType(),
-                .required = 1,
+                .required = m_aiParameters.campaign.scoutsPerScoutMission,
                 .ordered = 0,
                 .produced = 0,
             });
 
-            cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, RNG::rnd(5), 99);
+            cPlayerBrainMission someMission(player, ePlayerBrainMissionKind::PLAYERBRAINMISSION_KIND_EXPLORE, this, group, RNG::rnd(m_aiParameters.campaign.scoutMissionDelayRandom), 99);
             m_missions.push_back(someMission);
         }
     }
