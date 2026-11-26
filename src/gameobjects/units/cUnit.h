@@ -394,6 +394,11 @@ public:
         return m_action == eActionType::GUARD;
     }
 
+    // on its way to a Repair Facility; once the order is abandoned (ie, the facility is gone) the unit is idle again
+    bool isHeadingForRepair() const {
+        return intent == eUnitActionIntent::INTENT_REPAIR && m_action != eActionType::GUARD;
+    }
+
     bool isAttacking() const {
         return m_action == eActionType::ATTACK || m_action == eActionType::ATTACK_CHASE;
     }

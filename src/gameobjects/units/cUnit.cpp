@@ -1935,7 +1935,7 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
         if (unitWhoShotMe->getPlayer()->isSameTeamAs(getPlayer())) return; // ignore friendly fire
 
         // an AI unit on its way to a Repair Facility keeps going instead of turning around to fight
-        if (!getPlayer()->isHuman() && intent == eUnitActionIntent::INTENT_REPAIR) return;
+        if (!getPlayer()->isHuman() && isHeadingForRepair()) return;
 
         bool unitWhoShotMeIsInfantry = unitWhoShotMe->isInfantryUnit();
         bool unitWhoShotMeIsAirborn = unitWhoShotMe->isAirbornUnit();

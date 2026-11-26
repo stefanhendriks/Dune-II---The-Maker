@@ -51,6 +51,7 @@ void cPlayerBrain::serviceInit(sGameServices* services)
 bool cPlayerBrain::recallForRepairWhenBadlyDamaged(cUnit *unit)
 {
     if (!unit->isValid() || !unit->isEligibleForRepair()) return false;
+    if (unit->isHeadingForRepair()) return false;
 
     const s_AiSharedParameters &parameters = m_aiParameters.shared;
     const double health = unit->getHealthNormalized();
