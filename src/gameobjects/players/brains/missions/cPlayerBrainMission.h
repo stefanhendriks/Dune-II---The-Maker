@@ -128,6 +128,9 @@ public:
 
     std::vector<int> &getUnits();
 
+    // the unit no longer belongs to this mission (ie, it was sent away to repair)
+    void releaseUnit(int unitId);
+
     int getUniqueId() const {
         return uniqueIdentifier;
     }

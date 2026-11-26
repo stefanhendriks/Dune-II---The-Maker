@@ -21,6 +21,11 @@
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
 #include "include/cAssert.h"
+#include "gameobjects/map/MapGeometry.hpp"
+#include "gameobjects/units/cUnit.h"
+
+#include <algorithm>
+#include <cstdlib>
 
 namespace brains {
 
@@ -41,6 +46,42 @@ void cPlayerBrain::serviceInit(sGameServices* services)
     m_info = services->info;
     m_settings = services->settings;
     m_eventEmitter = services->eventEmitter;
+}
+
+bool cPlayerBrain::recallForRepairWhenBadlyDamaged(cUnit *unit)
+{
+    if (!unit->isValid() || !unit->isEligibleForRepair()) return false;
+
+    const s_AiSharedParameters &parameters = m_aiParameters.shared;
+    const double health = unit->getHealthNormalized();
+    // cheap checks first, looking for friendly units near this one is not
+    if (health >= std::max(parameters.repairRecallAmbushedBelowHpFraction, parameters.repairRecallSiegingBelowHpFraction)) return false;
+    if (!player->hasAtleastOneStructure(REPAIR)) return false;
+    if (health >= parameters.repairRecallBelowHpFraction(hasFriendlyUnitFightingNear(unit))) return false;
+
+    const eHeadTowardsStructureResult result = unit->findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
+    return result == eHeadTowardsStructureResult::SUCCESS_RETURNING ||
+           result == eHeadTowardsStructureResult::SUCCESS_AWAITING_CARRYALL;
+}
+
+bool cPlayerBrain::hasFriendlyUnitFightingNear(cUnit *unit) const
+{
+    const MapGeometry *geometry = m_objects->getMapGeometry();
+    const int radius = m_aiParameters.shared.repairRecallSiegeRadius;
+    const int unitX = geometry->getCellX(unit->getCell());
+    const int unitY = geometry->getCellY(unit->getCell());
+    for (int i = 0; i < m_objects->getUnitsSize(); i++) {
+        cUnit *other = m_objects->getUnit(i);
+        if (other == unit) continue;
+        if (!other->isAlive()) continue;
+        if (!other->belongsTo(player)) continue;
+        if (other->isAirbornUnit()) continue;
+        if (!other->isAttacking()) continue;
+        if (std::abs(geometry->getCellX(other->getCell()) - unitX) > radius) continue;
+        if (std::abs(geometry->getCellY(other->getCell()) - unitY) > radius) continue;
+        return true;
+    }
+    return false;
 }
 
 }

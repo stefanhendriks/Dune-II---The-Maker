@@ -280,6 +280,11 @@ void cPlayerBrainMission::removeUnitIdFromListIfPresent(int unitIdToRemove)
     }
 }
 
+void cPlayerBrainMission::releaseUnit(int unitId)
+{
+    removeUnitIdFromListIfPresent(unitId);
+}
+
 void cPlayerBrainMission::thinkState_InitialDelay()
 {
     log(std::format("thinkState_InitialDelay(), delay = {}", TIMER_delay).c_str());

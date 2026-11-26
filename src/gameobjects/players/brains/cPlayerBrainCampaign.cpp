@@ -268,6 +268,13 @@ void cPlayerBrainCampaign::onMyStructureDestroyed(const CommonEvent &event)
 
 void cPlayerBrainCampaign::onMyUnitAttacked(const DamagedEvent &event)
 {
+    if (recallForRepairWhenBadlyDamaged(m_objects->getUnit(event.entityID))) {
+        // the unit leaves its mission, else the mission orders it back into the fight once it is idle
+        for (auto &mission : m_missions) {
+            mission.releaseUnit(event.entityID);
+        }
+    }
+
     if (event.originType == eBuildType::UNKNOWN) {
         // don't know who attacked us; ignore
         return;
