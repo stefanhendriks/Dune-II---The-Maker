@@ -166,7 +166,7 @@ private:
 
     eMouseTile m_mouseTile;       // mouse picture in gfxdata
     // the sprite of every eMouseTile, asked from the graphics pack once (on first draw)
-    std::array<TextureID, 11> m_tileTextures;
+    std::array<TextureID, 15> m_tileTextures;
     bool m_tileTexturesResolved = false;
 
     void resolveTileTextures();
