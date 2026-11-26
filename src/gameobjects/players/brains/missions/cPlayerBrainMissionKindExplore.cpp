@@ -18,6 +18,7 @@
 #include "gameobjects/units/cUnits.h"
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
+#include "gameobjects/players/brains/sAiParameters.h"
 #include "include/cAssert.h"
 #include <format>
 
@@ -40,7 +41,7 @@ cPlayerBrainMissionKindExplore::~cPlayerBrainMissionKindExplore()
 
 bool cPlayerBrainMissionKindExplore::think_SelectTarget()
 {
-    targetCell = player->getObjects()->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(2);
+    targetCell = player->getObjects()->getMapGeometry()->getRandomCellWithinMapWithSafeDistanceFromBorder(mission->getAiParameters().missions.exploreBorderDistance);
     return true;
 }
 
@@ -51,7 +52,7 @@ void cPlayerBrainMissionKindExplore::think_Execute()
         cUnit *aUnit = player->getObjects()->getUnit(myUnit);
         if (aUnit->isValid()) {
             if (aUnit->isIdle()) {
-                if (player->getObjects()->getMapGeometry()->distance(aUnit->getCell(), targetCell) < 4) {
+                if (player->getObjects()->getMapGeometry()->distance(aUnit->getCell(), targetCell) < mission->getAiParameters().missions.exploreArrivedDistanceIdle) {
                     targetCell = -1;
                     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET); // select new target
                 }
@@ -60,7 +61,7 @@ void cPlayerBrainMissionKindExplore::think_Execute()
                 }
             }
             else {
-                if (player->getObjects()->getMapGeometry()->distance(aUnit->getCell(), targetCell) < 2) {
+                if (player->getObjects()->getMapGeometry()->distance(aUnit->getCell(), targetCell) < mission->getAiParameters().missions.exploreArrivedDistanceMoving) {
                     // almost there. Select new target.
                     targetCell = -1;
                     mission->changeState(PLAYERBRAINMISSION_STATE_SELECT_TARGET); // select new target

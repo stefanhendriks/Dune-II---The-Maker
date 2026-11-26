@@ -27,6 +27,7 @@ namespace brains {
 
 class cPlayerBrain;
 class cPlayerBrainMissionKind;
+struct s_AiParameters;
 
 enum ePlayerBrainMissionState {
     /**
@@ -132,6 +133,8 @@ public:
     }
 
     bool isDoneGatheringResources();
+
+    const s_AiParameters &getAiParameters() const;
 
     void log(const char *txt);
 private:

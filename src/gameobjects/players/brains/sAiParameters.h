@@ -170,12 +170,74 @@ struct s_AiSkirmishParameters {
 };
 
 /**
+ * Values of the brain missions (cPlayerBrainMission and its kinds). Chances are percentages.
+ * Mission timers count mission ticks (missions think every 5 ms).
+ */
+struct s_AiMissionParameters {
+    // --- waiting for a build order (cPlayerBrainMission) ---
+    // ticks to wait when the build time is unknown; a wait at or below this is replaced by the fallback below
+    int buildOrderDefaultWaitTicks = 15;
+    // wait this factor times the item's build time before giving up
+    float buildOrderWaitBuildTimeFactor = 1.25f;
+    int buildOrderFallbackWaitMs = 1000 * 60 * 5;
+    // extra wait on top, so the brain has time to process the build order
+    int buildOrderExtraWaitMs = 1000 * 60;
+    // a mission without units waits this long again after gathering resources
+    int missionWithoutUnitsWaitMs = 1000 * 60 * 10;
+
+    // --- attack ---
+    // chance to look for a unit target first (else a structure)
+    int attackTargetUnitFirstChance = 50;
+    // chance to stop at the current candidate while looking for a target
+    int attackPickStructureChance = 10;
+    int attackPickUnitChance = 5;
+
+    // --- deathhand ---
+    int deathHandPickStructureChance = 25;
+    int deathHandPickUnitChance = 5;
+
+    // --- saboteur ---
+    int saboteurPickStructureChance = 25;
+
+    // --- explore ---
+    // explore targets keep this distance (in cells) from the map border
+    int exploreBorderDistance = 2;
+    // a new target is picked when an idle unit is within this distance of the target
+    int exploreArrivedDistanceIdle = 4;
+    // ... or a moving unit is within this distance
+    int exploreArrivedDistanceMoving = 2;
+};
+
+/**
+ * Values of the sandworm brain (cPlayerBrainSandworm).
+ */
+struct s_AiSandwormParameters {
+    // the sandworms are moved every this many brain ticks
+    int thinkInterval = 5;
+};
+
+/**
+ * Values of the brain that controls the Fremen called in with the superweapon (cPlayerBrainFremenSuperWeapon).
+ * A roll (RNG::rnd(100)) above a threshold triggers the action.
+ */
+struct s_AiFremenSuperWeaponParameters {
+    // an enemy player is skipped when the roll is above this
+    int skipPlayerAbove = 70;
+    // the current unit / structure target is kept when the roll is above this
+    int keepUnitTargetAbove = 30;
+    int keepStructureTargetAbove = 30;
+};
+
+/**
  * All hard-coded AI tuning values in one place. Each brain owns one (see cPlayerBrain::getAiParameters());
  * missions read the values of the brain they belong to.
  */
 struct s_AiParameters {
     s_AiSharedParameters shared;
     s_AiSkirmishParameters skirmish;
+    s_AiMissionParameters missions;
+    s_AiSandwormParameters sandworm;
+    s_AiFremenSuperWeaponParameters fremenSuperWeapon;
 };
 
 }
