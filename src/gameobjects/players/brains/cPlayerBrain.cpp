@@ -68,21 +68,10 @@ bool cPlayerBrain::recallForRepairWhenBadlyDamaged(cUnit *unit)
            result == eHeadTowardsStructureResult::SUCCESS_AWAITING_CARRYALL;
 }
 
-bool cPlayerBrain::shouldEjectRepairingUnits(int attackedStructureType) const
-{
-    const s_AiSharedParameters &parameters = m_aiParameters.shared;
-    if (parameters.repairEjectWhenThreatened &&
-            (attackedStructureType == REPAIR || attackedStructureType == CONSTYARD)) {
-        return true;
-    }
-    const bool repairStalled = player->getCredits() <= 0;
-    return parameters.repairEjectWhenStalled && repairStalled &&
-           (attackedStructureType == CONSTYARD || attackedStructureType == REPAIR || attackedStructureType == REFINERY);
-}
-
 void cPlayerBrain::ejectRepairingUnitsToFight(int attackedStructureType, cUnit *attacker)
 {
-    if (!shouldEjectRepairingUnits(attackedStructureType)) return;
+    const bool repairStalled = player->getCredits() <= 0;
+    if (!m_aiParameters.shared.ejectRepairingUnitsWhenAttacked(attackedStructureType, repairStalled)) return;
 
     for (int structureId : player->getAllMyStructuresAsIdForType(REPAIR)) {
         auto *facility = dynamic_cast<cRepairFacility *>(m_objects->getStructure(structureId));
