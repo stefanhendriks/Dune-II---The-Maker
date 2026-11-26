@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include "include/definitions.h"
 #include "utils/RNG.hpp"
 
 namespace brains {
@@ -76,6 +77,15 @@ struct s_AiSharedParameters {
 
     double repairRecallBelowHpFraction(bool sieging) const {
         return sieging ? repairRecallSiegingBelowHpFraction : repairRecallAmbushedBelowHpFraction;
+    }
+
+    // repairStalled: the player has no credits left, so repairing has stopped
+    bool ejectRepairingUnitsWhenAttacked(int attackedStructureType, bool repairStalled) const {
+        if (repairEjectWhenThreatened && (attackedStructureType == REPAIR || attackedStructureType == CONSTYARD)) {
+            return true;
+        }
+        return repairEjectWhenStalled && repairStalled &&
+               (attackedStructureType == CONSTYARD || attackedStructureType == REPAIR || attackedStructureType == REFINERY);
     }
     bool operator==(const s_AiSharedParameters &) const = default;
 };

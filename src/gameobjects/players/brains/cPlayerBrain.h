@@ -84,8 +84,6 @@ protected:
     void thinkUnitsEjectedFromRepair();
 
 private:
-    bool shouldEjectRepairingUnits(int attackedStructureType) const;
-
     // unit id of a unit ejected from a Repair Facility -> brain ticks it has been idle since its fight
     std::map<int, int> m_idleTicksOfUnitsEjectedFromRepair;
 

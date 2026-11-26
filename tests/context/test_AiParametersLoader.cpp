@@ -85,6 +85,36 @@ TEST_CASE("A sieging unit uses the sieging recall threshold, an ambushed unit th
     CHECK(parameters.repairRecallBelowHpFraction(true) == 0.2);
 }
 
+TEST_CASE("Repairing units are ejected when the Repair Facility or Construction Yard is attacked")
+{
+    brains::s_AiSharedParameters parameters;
+    parameters.repairEjectWhenThreatened = true;
+    parameters.repairEjectWhenStalled = false;
+
+    CHECK(parameters.ejectRepairingUnitsWhenAttacked(REPAIR, false));
+    CHECK(parameters.ejectRepairingUnitsWhenAttacked(CONSTYARD, false));
+    CHECK_FALSE(parameters.ejectRepairingUnitsWhenAttacked(REFINERY, false));
+    CHECK_FALSE(parameters.ejectRepairingUnitsWhenAttacked(REFINERY, true));
+    CHECK_FALSE(parameters.ejectRepairingUnitsWhenAttacked(WINDTRAP, false));
+
+    parameters.repairEjectWhenThreatened = false;
+    CHECK_FALSE(parameters.ejectRepairingUnitsWhenAttacked(REPAIR, false));
+    CHECK_FALSE(parameters.ejectRepairingUnitsWhenAttacked(CONSTYARD, false));
+}
+
+TEST_CASE("Repairing units are ejected when the Refinery is attacked only while repair is stalled")
+{
+    brains::s_AiSharedParameters parameters;
+    parameters.repairEjectWhenThreatened = false;
+    parameters.repairEjectWhenStalled = true;
+
+    CHECK(parameters.ejectRepairingUnitsWhenAttacked(REFINERY, true));
+    CHECK(parameters.ejectRepairingUnitsWhenAttacked(CONSTYARD, true));
+    CHECK(parameters.ejectRepairingUnitsWhenAttacked(REPAIR, true));
+    CHECK_FALSE(parameters.ejectRepairingUnitsWhenAttacked(REFINERY, false));
+    CHECK_FALSE(parameters.ejectRepairingUnitsWhenAttacked(WINDTRAP, true));
+}
+
 TEST_CASE("AiParametersLoader keeps the defaults for keys that are missing")
 {
     const auto path = writeTempFile("[SHARED]\nRestTime=20\nRespondersWhenHarvesterAttackedBase=5\n");
