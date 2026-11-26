@@ -758,6 +758,7 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
     }
 
     setAction(chaseWhenOutOfRange ? eActionType::ATTACK_CHASE : eActionType::ATTACK);
+    intent = eUnitActionIntent::INTENT_NONE; // no longer heading towards a structure (ie, to repair)
     setGoalCell(goalCell);
     combat.iAttackStructure = structureId;
     combat.iAttackUnit = unitId;
@@ -1933,6 +1934,9 @@ void cUnit::think_hit(int iShotUnit, int iShotStructure)
         }
         if (unitWhoShotMe->getPlayer()->isSameTeamAs(getPlayer())) return; // ignore friendly fire
 
+        // an AI unit on its way to a Repair Facility keeps going instead of turning around to fight
+        if (!getPlayer()->isHuman() && intent == eUnitActionIntent::INTENT_REPAIR) return;
+
         bool unitWhoShotMeIsInfantry = unitWhoShotMe->isInfantryUnit();
         bool unitWhoShotMeIsAirborn = unitWhoShotMe->isAirbornUnit();
 
@@ -3056,6 +3060,8 @@ void cUnit::restoreFromTempHitPoints()
         iHitPoints = maxHp;
     }
     iTempHitPoints = -1; // TODO: get rid of this hack
+    // the unit left the structure, so the intent to enter it is done (else ordering it to repair again is ignored)
+    intent = eUnitActionIntent::INTENT_NONE;
 }
 
 void cUnit::setMaxHitPoints()

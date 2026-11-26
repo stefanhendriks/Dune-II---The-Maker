@@ -394,6 +394,10 @@ public:
         return m_action == eActionType::GUARD;
     }
 
+    bool isAttacking() const {
+        return m_action == eActionType::ATTACK || m_action == eActionType::ATTACK_CHASE;
+    }
+
     void takeDamage(int damage, int unitWhoDealsDamage, int structureWhoDealsDamage);
 
     void setHp(int hp) {
