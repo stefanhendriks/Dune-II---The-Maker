@@ -103,6 +103,14 @@ s_TerrainInfo* cInfoContext::getTerrainInfo() const {
     return m_terrainInfo.get();
 }
 
+void cInfoContext::setAiParameters(const brains::s_AiParameters& aiParameters) {
+    m_aiParameters = aiParameters;
+}
+
+const brains::s_AiParameters& cInfoContext::getAiParameters() const {
+    return m_aiParameters;
+}
+
 void cInfoContext::initializeDefaultInfos()
 {
     setBulletInfos(std::make_unique<cBulletInfos>());

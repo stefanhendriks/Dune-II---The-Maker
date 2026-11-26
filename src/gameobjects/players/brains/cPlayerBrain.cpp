@@ -16,6 +16,7 @@
 #include "cPlayerBrain.h"
 #include "context/cGameObjectContext.h"
 #include "context/cInfoContext.h"
+#include "gameobjects/players/cPlayer.h"
 #include "game/cGameSettings.h"
 #include "context/GameContext.hpp"
 #include "include/sGameServices.h"
@@ -28,6 +29,10 @@ cPlayerBrain::~cPlayerBrain() = default;
 cPlayerBrain::cPlayerBrain(cPlayer *player) : player(player)
 {
     d2tm_assert(player != nullptr);
+    // brains created in cGame::init() come before the player has its infos; they are replaced before a game starts
+    if (player->getInfos() != nullptr) {
+        m_aiParameters = player->getInfos()->getAiParameters();
+    }
 }
 
 void cPlayerBrain::serviceInit(sGameServices* services)
