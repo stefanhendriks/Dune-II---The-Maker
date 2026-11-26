@@ -73,6 +73,7 @@ cPlayerBrainCampaign::~cPlayerBrainCampaign()
 
 void cPlayerBrainCampaign::think()
 {
+    thinkUnitsEjectedFromRepair();
     // for now use a switch statement for this state machine. If we need anything
     // more sophisticated we can always use the State Pattern.
     switch (m_thinkState) {
@@ -315,6 +316,8 @@ void cPlayerBrainCampaign::onMyStructureAttacked(const DamagedEvent &event)
             log(std::format("Unit {} who damaged my structure is from friendly player, ignoring.", unitIdThatAttacks).c_str());
             return;
         }
+
+        ejectRepairingUnitsToFight(event.entitySpecificType, originUnit);
 
         int cell = originUnit->getCell();
         respondToThreat(originUnit, nullptr, cell, m_aiParameters.shared.respondersWhenStructureAttacked.roll());

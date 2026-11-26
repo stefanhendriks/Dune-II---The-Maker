@@ -23,6 +23,7 @@
 #include "include/cAssert.h"
 #include "gameobjects/map/MapGeometry.hpp"
 #include "gameobjects/units/cUnit.h"
+#include "gameobjects/structures/cRepairFacility.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -52,6 +53,8 @@ bool cPlayerBrain::recallForRepairWhenBadlyDamaged(cUnit *unit)
 {
     if (!unit->isValid() || !unit->isEligibleForRepair()) return false;
     if (unit->isHeadingForRepair()) return false;
+    // ejected to fight; it goes back to repair after the fight (see thinkUnitsEjectedFromRepair)
+    if (m_idleTicksOfUnitsEjectedFromRepair.contains(unit->iID)) return false;
 
     const s_AiSharedParameters &parameters = m_aiParameters.shared;
     const double health = unit->getHealthNormalized();
@@ -63,6 +66,67 @@ bool cPlayerBrain::recallForRepairWhenBadlyDamaged(cUnit *unit)
     const eHeadTowardsStructureResult result = unit->findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
     return result == eHeadTowardsStructureResult::SUCCESS_RETURNING ||
            result == eHeadTowardsStructureResult::SUCCESS_AWAITING_CARRYALL;
+}
+
+bool cPlayerBrain::shouldEjectRepairingUnits(int attackedStructureType) const
+{
+    const s_AiSharedParameters &parameters = m_aiParameters.shared;
+    if (parameters.repairEjectWhenThreatened &&
+            (attackedStructureType == REPAIR || attackedStructureType == CONSTYARD)) {
+        return true;
+    }
+    const bool repairStalled = player->getCredits() <= 0;
+    return parameters.repairEjectWhenStalled && repairStalled &&
+           (attackedStructureType == CONSTYARD || attackedStructureType == REPAIR || attackedStructureType == REFINERY);
+}
+
+void cPlayerBrain::ejectRepairingUnitsToFight(int attackedStructureType, cUnit *attacker)
+{
+    if (!shouldEjectRepairingUnits(attackedStructureType)) return;
+
+    for (int structureId : player->getAllMyStructuresAsIdForType(REPAIR)) {
+        auto *facility = dynamic_cast<cRepairFacility *>(m_objects->getStructure(structureId));
+        if (!facility || !facility->hasUnitWithin()) continue;
+
+        cUnit *unit = m_objects->getUnit(facility->getUnitIdWithin());
+        // without a valid target the unit keeps repairing
+        const bool canHitAttacker = attacker->isAirbornUnit() ? unit->canAttackAirUnits() : unit->getUnitInfo().canAttackUnits;
+        if (!canHitAttacker) continue;
+
+        facility->ejectUnit();
+        unit->attackUnit(attacker->iID);
+        m_idleTicksOfUnitsEjectedFromRepair[unit->iID] = 0;
+    }
+}
+
+void cPlayerBrain::thinkUnitsEjectedFromRepair()
+{
+    for (auto it = m_idleTicksOfUnitsEjectedFromRepair.begin(); it != m_idleTicksOfUnitsEjectedFromRepair.end();) {
+        cUnit *unit = m_objects->getUnit(it->first);
+        if (!unit->isAlive() || !unit->belongsTo(player)) {
+            it = m_idleTicksOfUnitsEjectedFromRepair.erase(it);
+            continue;
+        }
+        if (unit->isAttacking()) {
+            // still fighting, the idle time starts after the fight
+            it->second = 0;
+            ++it;
+            continue;
+        }
+        if (!unit->isIdle()) {
+            // got another order (ie, moving somewhere), leave it be
+            it = m_idleTicksOfUnitsEjectedFromRepair.erase(it);
+            continue;
+        }
+        if (++it->second < m_aiParameters.shared.repairEjectReturnAfterIdleTicks) {
+            ++it;
+            continue;
+        }
+        if (unit->isEligibleForRepair() && player->hasAtleastOneStructure(REPAIR)) {
+            unit->findBestStructureCandidateAndHeadTowardsItOrWait(REPAIR, true, INTENT_REPAIR);
+        }
+        it = m_idleTicksOfUnitsEjectedFromRepair.erase(it);
+    }
 }
 
 bool cPlayerBrain::hasFriendlyUnitFightingNear(cUnit *unit) const
