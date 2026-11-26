@@ -11,6 +11,7 @@ set(D2TM_SOURCES
     context/UpgradeInfosLoader.cpp
     context/ParticleInfosLoader.cpp
     context/TerrainInfoLoader.cpp
+    context/AiParametersLoader.cpp
     context/cInfoContextCreator.cpp
     context/ContextCreator.cpp
     context/GameContext.cpp
