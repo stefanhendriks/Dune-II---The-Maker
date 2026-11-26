@@ -427,35 +427,40 @@ void cMouse::draw()
     int mouseDrawX = m_coords.x;
     int mouseDrawY = m_coords.y;
 
+    if (!m_tileTexturesResolved) {
+        resolveTileTextures();
+    }
+    const eMouseTile tile = drawableTile();
+
     {
         // adjust coordinates of drawing according to the specific mouse sprite/tile
-        if (m_mouseTile == eMouseTile::DOWN || m_mouseTile == eMouseTile::DOWN_LEFT) {
+        if (tile == eMouseTile::DOWN || tile == eMouseTile::DOWN_LEFT) {
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == eMouseTile::RIGHT || m_mouseTile == eMouseTile::UP_RIGHT) {
+        else if (tile == eMouseTile::RIGHT || tile == eMouseTile::UP_RIGHT) {
             mouseDrawX -= 16;
         }
-        else if (m_mouseTile == eMouseTile::DOWN_RIGHT) {
-            mouseDrawX -= 16;
-            mouseDrawY -= 16;
-        }
-        else if (m_mouseTile == eMouseTile::MOVE || m_mouseTile == eMouseTile::RALLY) {
+        else if (tile == eMouseTile::DOWN_RIGHT) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == eMouseTile::ATTACK) {
+        else if (tile == eMouseTile::MOVE || tile == eMouseTile::RALLY) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == eMouseTile::REPAIR) {
+        else if (tile == eMouseTile::ATTACK) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == eMouseTile::FORBIDDEN) {
+        else if (tile == eMouseTile::REPAIR) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == eMouseTile::PICK) {
+        else if (tile == eMouseTile::FORBIDDEN) {
+            mouseDrawX -= 16;
+            mouseDrawY -= 16;
+        }
+        else if (tile == eMouseTile::PICK) {
             mouseDrawX -= 16;
             mouseDrawY -= 16;
         }
@@ -464,10 +469,7 @@ void cMouse::draw()
     }
 
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
-    if (!m_tileTexturesResolved) {
-        resolveTileTextures();
-    }
-    m_sdlDrawer->renderSprite(gfxdata->getTexture(m_tileTextures[static_cast<size_t>(m_mouseTile)]),mouseDrawX, mouseDrawY);
+    m_sdlDrawer->renderSprite(gfxdata->getTexture(m_tileTextures[static_cast<size_t>(tile)]),mouseDrawX, mouseDrawY);
 }
 
 bool cMouse::isNormalRightClick()
@@ -514,18 +516,23 @@ void cMouse::resolveTileTextures()
     for (size_t i = 0; i < names.size(); i++) {
         m_tileTextures[i] = gfxdata->getTextureID(names[i]);
     }
-    // a graphics pack without the diagonal sprites shows the vertical scroll arrow instead
-    const auto fallBackTo = [this](eMouseTile tile, eMouseTile fallback) {
-        auto &texture = m_tileTextures[static_cast<size_t>(tile)];
-        if (texture == TextureID::invalid) {
-            texture = m_tileTextures[static_cast<size_t>(fallback)];
-        }
-    };
-    fallBackTo(eMouseTile::UP_LEFT, eMouseTile::UP);
-    fallBackTo(eMouseTile::UP_RIGHT, eMouseTile::UP);
-    fallBackTo(eMouseTile::DOWN_LEFT, eMouseTile::DOWN);
-    fallBackTo(eMouseTile::DOWN_RIGHT, eMouseTile::DOWN);
     m_tileTexturesResolved = true;
+}
+
+eMouseTile cMouse::drawableTile() const
+{
+    if (m_tileTextures[static_cast<size_t>(m_mouseTile)] != TextureID::invalid) return m_mouseTile;
+    // a graphics pack without the diagonal sprites shows the vertical scroll arrow instead
+    switch (m_mouseTile) {
+        case eMouseTile::UP_LEFT:
+        case eMouseTile::UP_RIGHT:
+            return eMouseTile::UP;
+        case eMouseTile::DOWN_LEFT:
+        case eMouseTile::DOWN_RIGHT:
+            return eMouseTile::DOWN;
+        default:
+            return m_mouseTile;
+    }
 }
 
 void cMouse::setTile(eMouseTile value)
