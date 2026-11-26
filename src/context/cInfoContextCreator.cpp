@@ -14,6 +14,7 @@
  */
 
 #include "context/cInfoContextCreator.h"
+#include "context/AiParametersLoader.hpp"
 #include "context/BulletInfosLoader.hpp"
 #include "context/ParticleInfosLoader.hpp"
 #include "context/StructureInfosLoader.hpp"
@@ -129,6 +130,15 @@ void cInfoContextCreator::installInfos(cInfoContext& infoContext) {
     infoContext.setParticleInfos(createParticleInfos());
     Logger::info(COMP_SETUP, "Setup", "TERRAINS");
     infoContext.setTerrainInfo(createTerrainInfos());
+    Logger::info(COMP_SETUP, "Setup", "AI PARAMETERS");
+    infoContext.setAiParameters(createAiParameters());
+}
+
+brains::s_AiParameters cInfoContextCreator::createAiParameters()
+{
+    brains::s_AiParameters aiParameters;
+    AiParametersLoader().load("AI.ini", aiParameters);
+    return aiParameters;
 }
 
 /********************************

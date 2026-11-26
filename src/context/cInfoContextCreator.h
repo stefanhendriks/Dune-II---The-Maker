@@ -31,6 +31,9 @@ class Graphics;
 class GraphicsContext;
 struct SDL_Renderer;
 struct s_TerrainInfo;
+namespace brains {
+struct s_AiParameters;
+}
 
 class cInfoContextCreator {
 public:
@@ -45,6 +48,8 @@ public:
     std::unique_ptr<cUpgradeInfos> createUpgradeInfos(const cInfoContext* infoContext, const cGameSettings* settings);
     std::unique_ptr<cUnitInfos> createUnitInfos();
     std::unique_ptr<s_TerrainInfo> createTerrainInfos();
+    // AI.ini is read from the current directory, next to settings.ini
+    brains::s_AiParameters createAiParameters();
 
     void installInfos(cInfoContext& infoContext);
 

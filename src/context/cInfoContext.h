@@ -17,6 +17,8 @@
 
 #include <memory>
 
+#include "gameobjects/players/brains/sAiParameters.h"
+
 class cParticleInfos;
 class cStructureInfos;
 class cBulletInfos;
@@ -50,6 +52,8 @@ public:
     cUnitInfos* getUnitInfos() const;
     void setTerrainInfo(std::unique_ptr<s_TerrainInfo> terrainInfo);
     s_TerrainInfo* getTerrainInfo() const;
+    void setAiParameters(const brains::s_AiParameters& aiParameters);
+    const brains::s_AiParameters& getAiParameters() const;
     void initializeDefaultInfos();
 
     // Convenience getters for individual elements
@@ -68,4 +72,6 @@ private:
     std::unique_ptr<cUpgradeInfos> m_upgradeInfos;
     std::unique_ptr<cUnitInfos> m_unitInfos;
     std::unique_ptr<s_TerrainInfo> m_terrainInfo;
+    // AI tuning values (AI.ini), the hard-coded defaults until installInfos() loads them
+    brains::s_AiParameters m_aiParameters;
 };
