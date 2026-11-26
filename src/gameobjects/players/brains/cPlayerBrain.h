@@ -19,6 +19,7 @@
 #include "sAiParameters.h"
 
 class cPlayer;
+class cUnit;
 class cAbstractStructure;
 class cGameObjectContext;
 class cInfoContext;
@@ -63,7 +64,14 @@ protected:
     cEventEmitter *m_eventEmitter = nullptr;
     s_AiParameters m_aiParameters;
 
+    /**
+     * Sends a damaged ground vehicle to a Repair Facility once its health drops below the recall threshold
+     * (lower when friendly units are fighting near it). Returns true when the unit was sent.
+     */
+    bool recallForRepairWhenBadlyDamaged(cUnit *unit);
+
 private:
+    bool hasFriendlyUnitFightingNear(cUnit *unit) const;
 
 
 };
