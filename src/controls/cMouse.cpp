@@ -429,11 +429,15 @@ void cMouse::draw()
 
     {
         // adjust coordinates of drawing according to the specific mouse sprite/tile
-        if (m_mouseTile == eMouseTile::DOWN) {
+        if (m_mouseTile == eMouseTile::DOWN || m_mouseTile == eMouseTile::DOWN_LEFT) {
             mouseDrawY -= 16;
         }
-        else if (m_mouseTile == eMouseTile::RIGHT) {
+        else if (m_mouseTile == eMouseTile::RIGHT || m_mouseTile == eMouseTile::UP_RIGHT) {
             mouseDrawX -= 16;
+        }
+        else if (m_mouseTile == eMouseTile::DOWN_RIGHT) {
+            mouseDrawX -= 16;
+            mouseDrawY -= 16;
         }
         else if (m_mouseTile == eMouseTile::MOVE || m_mouseTile == eMouseTile::RALLY) {
             mouseDrawX -= 16;
@@ -501,14 +505,26 @@ void cMouse::resolveTileTextures()
 {
     auto gfxdata = m_ctx->getGraphicsContext()->gfxdata;
     // in the order of eMouseTile
-    constexpr std::array<std::string_view, 11> names = {
+    constexpr std::array<std::string_view, 15> names = {
         "MOUSE_NORMAL", "MOUSE_DOWN", "MOUSE_RIGHT", "MOUSE_LEFT",
         "MOUSE_UP", "MOUSE_MOVE", "MOUSE_RALLY", "MOUSE_ATTACK",
-        "MOUSE_REPAIR", "MOUSE_FORBIDDEN", "MOUSE_PICK"
+        "MOUSE_REPAIR", "MOUSE_FORBIDDEN", "MOUSE_PICK",
+        "MOUSE_UP_LEFT", "MOUSE_UP_RIGHT", "MOUSE_DOWN_LEFT", "MOUSE_DOWN_RIGHT"
     };
     for (size_t i = 0; i < names.size(); i++) {
         m_tileTextures[i] = gfxdata->getTextureID(names[i]);
     }
+    // a graphics pack without the diagonal sprites shows the vertical scroll arrow instead
+    const auto fallBackTo = [this](eMouseTile tile, eMouseTile fallback) {
+        auto &texture = m_tileTextures[static_cast<size_t>(tile)];
+        if (texture == TextureID::invalid) {
+            texture = m_tileTextures[static_cast<size_t>(fallback)];
+        }
+    };
+    fallBackTo(eMouseTile::UP_LEFT, eMouseTile::UP);
+    fallBackTo(eMouseTile::UP_RIGHT, eMouseTile::UP);
+    fallBackTo(eMouseTile::DOWN_LEFT, eMouseTile::DOWN);
+    fallBackTo(eMouseTile::DOWN_RIGHT, eMouseTile::DOWN);
     m_tileTexturesResolved = true;
 }
 
@@ -534,6 +550,10 @@ std::string cMouse::mouseTileName(eMouseTile tile)
         case eMouseTile::REPAIR: return "MOUSE_REPAIR";
         case eMouseTile::FORBIDDEN: return "MOUSE_FORBIDDEN";
         case eMouseTile::PICK: return "MOUSE_PICK";
+        case eMouseTile::UP_LEFT: return "MOUSE_UP_LEFT";
+        case eMouseTile::UP_RIGHT: return "MOUSE_UP_RIGHT";
+        case eMouseTile::DOWN_LEFT: return "MOUSE_DOWN_LEFT";
+        case eMouseTile::DOWN_RIGHT: return "MOUSE_DOWN_RIGHT";
     }
     return "UNKNOWN";
 }
