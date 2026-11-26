@@ -58,6 +58,14 @@ struct s_AiSharedParameters {
     // a friendly unit is "near" when it is within this many cells (horizontally and vertically) of the unit
     int repairRecallSiegeRadius = 3;
 
+    // a unit in a Repair Facility is ejected to fight the attacker (when it can hit it) when
+    // ... the Repair Facility or the Construction Yard is attacked
+    bool repairEjectWhenThreatened = true;
+    // ... the player has no credits left (repair stalled) and the Construction Yard, Repair Facility or Refinery is attacked
+    bool repairEjectWhenStalled = false;
+    // an ejected unit that is idle this many ticks after its fight (60 seconds) goes back to repair
+    int repairEjectReturnAfterIdleTicks = 600;
+
     // max number of units sent to respond to a threat
     s_AiRandomAmount respondersWhenHarvesterAttacked = {2, 4};
     s_AiRandomAmount respondersWhenStructureAttacked = {2, 4};

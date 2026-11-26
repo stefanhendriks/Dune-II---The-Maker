@@ -61,6 +61,20 @@ TEST_CASE("AiParametersLoader reads the repair recall values")
     CHECK(parameters.shared.repairRecallSiegeRadius == 5);
 }
 
+TEST_CASE("AiParametersLoader reads the repair eject values")
+{
+    const auto path = writeTempFile(
+        "[SHARED]\nRepairEjectWhenThreatened=false\nRepairEjectWhenStalled=true\nRepairEjectReturnAfterIdleTicks=300\n");
+    brains::s_AiParameters parameters;
+
+    REQUIRE(AiParametersLoader().load(path.string(), parameters));
+    std::filesystem::remove(path);
+
+    CHECK_FALSE(parameters.shared.repairEjectWhenThreatened);
+    CHECK(parameters.shared.repairEjectWhenStalled);
+    CHECK(parameters.shared.repairEjectReturnAfterIdleTicks == 300);
+}
+
 TEST_CASE("A sieging unit uses the sieging recall threshold, an ambushed unit the ambushed one")
 {
     brains::s_AiSharedParameters parameters;
@@ -106,6 +120,9 @@ TEST_CASE("The shipped AI.ini holds the default values")
     // start from values that differ from every default, so a key missing from the file shows up
     parameters.shared.restTime = -1;
     parameters.shared.repairRecallSiegeRadius = -1;
+    parameters.shared.repairEjectWhenThreatened = false;
+    parameters.shared.repairEjectWhenStalled = true;
+    parameters.shared.repairEjectReturnAfterIdleTicks = -1;
     parameters.skirmish.initialRestRandom = -1;
     parameters.skirmish.mayBuildAdditionalUnitsOffset = {-1, -1};
     parameters.campaign.initialRestTime = -1;
