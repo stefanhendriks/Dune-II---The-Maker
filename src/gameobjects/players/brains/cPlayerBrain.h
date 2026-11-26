@@ -18,6 +18,8 @@
 #include "observers/cScenarioObserver.h"
 #include "sAiParameters.h"
 
+#include <map>
+
 class cPlayer;
 class cUnit;
 class cAbstractStructure;
@@ -70,7 +72,23 @@ protected:
      */
     bool recallForRepairWhenBadlyDamaged(cUnit *unit);
 
+    /**
+     * When the attacked structure calls for it (see the repairEject* AI parameters), units in a Repair Facility
+     * that can hit the attacker are ejected and attack it.
+     */
+    void ejectRepairingUnitsToFight(int attackedStructureType, cUnit *attacker);
+
+    /**
+     * Sends ejected units back to repair once they have been idle long enough after their fight. Call every think().
+     */
+    void thinkUnitsEjectedFromRepair();
+
 private:
+    bool shouldEjectRepairingUnits(int attackedStructureType) const;
+
+    // unit id of a unit ejected from a Repair Facility -> brain ticks it has been idle since its fight
+    std::map<int, int> m_idleTicksOfUnitsEjectedFromRepair;
+
     bool hasFriendlyUnitFightingNear(cUnit *unit) const;
 
 
