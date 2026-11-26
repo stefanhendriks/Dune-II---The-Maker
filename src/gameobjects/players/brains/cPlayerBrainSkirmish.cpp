@@ -79,7 +79,7 @@ void cPlayerBrainSkirmish::serviceInit(sGameServices* services)
 {
     cPlayerBrain::serviceInit(services);
     if (m_settings->isNoAiRest()) {
-        m_TIMER_rest = 10;
+        m_TIMER_rest = m_aiParameters.shared.restTimeWhenNoAiRest;
     }
 }
 
@@ -305,11 +305,11 @@ void cPlayerBrainSkirmish::onMyStructureDestroyed(const CommonEvent &event)
 
 void cPlayerBrainSkirmish::onMyStructureAttacked(const DamagedEvent &event)
 {
-    if (player->hasEnoughCreditsFor(50)) {
+    if (player->hasEnoughCreditsFor(m_aiParameters.shared.repairStructureMinCredits)) {
         cAbstractStructure *pStructure = m_objects->getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = m_info->getStructureInfo(event.entitySpecificType);
-            if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
+            if (pStructure->getHitPoints() < sStructures.hp * m_aiParameters.shared.repairStructureBelowHpFraction) {
                 pStructure->startRepairing();
             }
         }
@@ -329,7 +329,7 @@ void cPlayerBrainSkirmish::onMyStructureAttacked(const DamagedEvent &event)
 
         int cell = originUnit->getCell();
 
-        respondToThreat(originUnit, nullptr, cell, 2 + RNG::rnd(4));
+        respondToThreat(originUnit, nullptr, cell, m_aiParameters.shared.respondersWhenStructureAttacked.roll());
     }
 }
 
@@ -343,11 +343,11 @@ void cPlayerBrainSkirmish::respondToThreat(cUnit *threat, cUnit *victim, int cel
 
 void cPlayerBrainSkirmish::onMyStructureDecayed(const CommonEvent &event)
 {
-    if (player->hasEnoughCreditsFor(50)) {
+    if (player->hasEnoughCreditsFor(m_aiParameters.shared.repairStructureMinCredits)) {
         cAbstractStructure *pStructure = m_objects->getStructures()[event.entityID];
         if (!pStructure->isRepairing()) {
             s_StructureInfo &sStructures = m_info->getStructureInfo(event.entitySpecificType);
-            if (pStructure->getHitPoints() < sStructures.hp * 0.75) {
+            if (pStructure->getHitPoints() < sStructures.hp * m_aiParameters.shared.repairStructureBelowHpFraction) {
                 pStructure->startRepairing();
             }
         }
@@ -643,21 +643,21 @@ void cPlayerBrainSkirmish::produceSuperWeaponMissionsWhenApplicable()
         std::vector<s_groupKind> group = std::vector<s_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
-        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, RNG::rnd(10), SPECIAL_MISSION1);
+        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_DEATHHAND, group, RNG::rnd(m_aiParameters.shared.superWeaponMissionDelayRandom), SPECIAL_MISSION1);
     }
 
     if (player->couldBuildSpecial(SPECIAL_SABOTEUR) && !hasMission(SPECIAL_MISSION2)) {
         std::vector<s_groupKind> group = std::vector<s_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
-        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, RNG::rnd(10), SPECIAL_MISSION2);
+        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_SABOTEUR, group, RNG::rnd(m_aiParameters.shared.superWeaponMissionDelayRandom), SPECIAL_MISSION2);
     }
 
     if (player->couldBuildSpecial(SPECIAL_FREMEN) && !hasMission(SPECIAL_MISSION3)) {
         std::vector<s_groupKind> group = std::vector<s_groupKind>();
         // no need to add resources to mission, they are auto-produced.
         // TODO: Think of a way to make this script/configurable
-        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, RNG::rnd(10), SPECIAL_MISSION3);
+        addMission(PLAYERBRAINMISSION_KIND_SUPERWEAPON_FREMEN, group, RNG::rnd(m_aiParameters.shared.superWeaponMissionDelayRandom), SPECIAL_MISSION3);
     }
 }
 
@@ -926,7 +926,7 @@ void cPlayerBrainSkirmish::addMission(ePlayerBrainMissionKind kind, std::vector<
     // do note the cooldown is within the whole cylce of the AI thinking process. So this means the cooldown
     // here is the amount of 'iterations'. Since 1 iteration has a RestTime to wait, this means a cooldown of 10
     // is cooling down in 10 seconds.
-    int cooldown = cPlayerBrain::RestTime;
+    int cooldown = m_aiParameters.shared.restTime;
     m_TIMER_produceMissionCooldown += cooldown;
     log(std::format("addMission - upping cooldown with {} to a total of {}", cooldown, m_TIMER_produceMissionCooldown));
     // rest for a few seconds before producing a new mission)
@@ -955,7 +955,7 @@ void cPlayerBrainSkirmish::thinkState_Evaluate()
     }
 
     // take a little rest, before going into a new loop again?
-    m_TIMER_rest = cPlayerBrain::RestTime;
+    m_TIMER_rest = m_aiParameters.shared.restTime;
     changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_REST);
 }
 
@@ -1310,8 +1310,8 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const CommonEvent &event)
                         m_TIMER_rest = 0; // if we were still 'resting' then stop this now.
                         m_discoveredEnemyAtCell.insert(event.atCell);
 
-                        if (m_centerOfBaseCell > -1 && m_objects->getMapGeometry()->distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                            respondToThreat(pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
+                        if (m_centerOfBaseCell > -1 && m_objects->getMapGeometry()->distance(m_centerOfBaseCell, event.atCell) < m_aiParameters.shared.baseDefenseRadius) {
+                            respondToThreat(pUnit, nullptr, event.atCell, m_aiParameters.shared.respondersWhenEnemyNearBase.roll());
                         }
                     }
                 }
@@ -1372,8 +1372,8 @@ void cPlayerBrainSkirmish::onEntityDiscoveredEvent(const CommonEvent &event)
                 if (event.entityType == eBuildType::UNIT) {
                     cUnit *pUnit = m_objects->getUnit(event.entityID);
                     if (pUnit->isValid() && !pUnit->getPlayer()->isSameTeamAs(player)) {
-                        if (m_centerOfBaseCell > -1 && m_objects->getMapGeometry()->distance(m_centerOfBaseCell, event.atCell) < kScanRadius) {
-                            respondToThreat(pUnit, nullptr, event.atCell, 2 + RNG::rnd(4));
+                        if (m_centerOfBaseCell > -1 && m_objects->getMapGeometry()->distance(m_centerOfBaseCell, event.atCell) < m_aiParameters.shared.baseDefenseRadius) {
+                            respondToThreat(pUnit, nullptr, event.atCell, m_aiParameters.shared.respondersWhenEnemyNearBase.roll());
                         }
                     }
                 }
@@ -1685,7 +1685,7 @@ void cPlayerBrainSkirmish::onMyUnitAttacked(const DamagedEvent &event)
 
     cUnit *victim = m_objects->getUnit(event.entityID);
     if (victim->isHarvester()) {
-        respondToThreat(threat, victim, event.atCell, 2 + RNG::rnd(4));
+        respondToThreat(threat, victim, event.atCell, m_aiParameters.shared.respondersWhenHarvesterAttacked.roll());
     }
 }
 

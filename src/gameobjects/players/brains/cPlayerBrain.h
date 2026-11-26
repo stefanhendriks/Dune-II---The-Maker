@@ -16,6 +16,7 @@
 #pragma once
 
 #include "observers/cScenarioObserver.h"
+#include "sAiParameters.h"
 
 class cPlayer;
 class cAbstractStructure;
@@ -25,12 +26,6 @@ class cGameSettings;
 class cEventEmitter;
 struct sGameServices;
 
-namespace {
-
-constexpr int kScanRadius = 20; // hard-coded for now, make player property later?
-
-}
-
 namespace brains {
 
 struct s_buildOrder;
@@ -38,9 +33,6 @@ struct s_buildOrder;
 class cPlayerBrain : public cScenarioObserver {
 
 public:
-    // AI brain tick is every 100ms, so rest-time of 10 means resting 1 second.
-    const static int RestTime = 10;
-
     explicit cPlayerBrain(cPlayer *player);
 
     virtual ~cPlayerBrain();
@@ -59,12 +51,17 @@ public:
 
     virtual void addBuildOrder(s_buildOrder order) = 0;
 
+    const s_AiParameters &getAiParameters() const {
+        return m_aiParameters;
+    }
+
 protected:
     cPlayer *player;
     cGameObjectContext *m_objects = nullptr;
     cInfoContext *m_info = nullptr;
     cGameSettings *m_settings = nullptr;
     cEventEmitter *m_eventEmitter = nullptr;
+    s_AiParameters m_aiParameters;
 
 private:
 
