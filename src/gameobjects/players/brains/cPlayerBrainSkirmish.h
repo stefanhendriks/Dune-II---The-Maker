@@ -45,13 +45,6 @@ const int SPECIAL_MISSION1 = 50;
 const int SPECIAL_MISSION2 = 51;
 const int SPECIAL_MISSION3 = 52;
 
-// 10 ticks = 1 second.
-// 100 ticks = 10 seconds.
-// 600 ticks = 60 seconds (1 minute)
-const int MOMENT_CONSIDER_ADDITIONAL_REFINERY = 300; // after 30 seconds consider building 2nd refinery
-
-const int MOMENT_PRODUCE_ADDITIONAL_UNITS = 1800; // after 3 minutes consider building additional units
-
 struct s_SkirmishPlayer_PlaceForStructure {
     int structureType;
     int cell;
