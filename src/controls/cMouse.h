@@ -170,6 +170,8 @@ private:
     bool m_tileTexturesResolved = false;
 
     void resolveTileTextures();
+    // the tile to draw: m_mouseTile, or its fallback when the graphics pack lacks its sprite
+    eMouseTile drawableTile() const;
     std::string mouseTileName(eMouseTile tile);
 
 };
