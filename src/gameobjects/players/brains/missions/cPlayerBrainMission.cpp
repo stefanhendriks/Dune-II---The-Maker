@@ -369,13 +369,13 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                     // so wait just 5 minutes, that should be more then enough to process + wait for the build
                     // to be completed?
                     cSideBar *pSideBar = player->getSideBar();
-                    int awaitingResourcesTimeToIncrease = 15;
+                    int awaitingResourcesTimeToIncrease = brain->getAiParameters().missions.buildOrderDefaultWaitTicks;
                     if (thingIWant.buildType == UNIT) {
                         cBuildingListItem *pItem = pSideBar->getBuildingListItem(player->getInfos()->getUnitInfo(thingIWant.type).listType,
                                                    thingIWant.type);
 
                         if (pItem) {
-                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs())) * 1.25f);
+                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs())) * brain->getAiParameters().missions.buildOrderWaitBuildTimeFactor);
                             awaitingResourcesTimeToIncrease = fastThinkMsToTicks(msToWaitBeforeGivingUp);
                         }
                         else {
@@ -386,7 +386,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                         cBuildingListItem *pItem = pSideBar->getBuildingListItem(eListType::LIST_CONSTYARD,
                                                    thingIWant.type);
                         if (pItem) {
-                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs())) * 1.25f);
+                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs())) * brain->getAiParameters().missions.buildOrderWaitBuildTimeFactor);
                             awaitingResourcesTimeToIncrease = fastThinkMsToTicks(msToWaitBeforeGivingUp);
                         }
                         else {
@@ -398,7 +398,7 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                         cBuildingListItem *pItem = pSideBar->getBuildingListItem(eListType::LIST_PALACE,
                                                    thingIWant.type);
                         if (pItem) {
-                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs()) * 1.25f));
+                            int msToWaitBeforeGivingUp = ((1+static_cast<float>(pItem->getTotalBuildTimeInMs()) * brain->getAiParameters().missions.buildOrderWaitBuildTimeFactor));
                             awaitingResourcesTimeToIncrease = fastThinkMsToTicks(msToWaitBeforeGivingUp);
                         }
                         else {
@@ -407,12 +407,12 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                     }
 
                     // in case we have very low
-                    if (awaitingResourcesTimeToIncrease <= 15) {
-                        int msForFiveMinutes = 1000 * 60 * 5;
+                    if (awaitingResourcesTimeToIncrease <= brain->getAiParameters().missions.buildOrderDefaultWaitTicks) {
+                        int msForFiveMinutes = brain->getAiParameters().missions.buildOrderFallbackWaitMs;
                         awaitingResourcesTimeToIncrease = fastThinkMsToTicks(msForFiveMinutes);
                     }
 
-                    int msForOneMinute = 1000 * 60; // for allowing the mission to process build orders
+                    int msForOneMinute = brain->getAiParameters().missions.buildOrderExtraWaitMs; // for allowing the mission to process build orders
                     awaitingResourcesTimeToIncrease += fastThinkMsToTicks(msForOneMinute);
 
                     TIMER_awaitingGatheringResoures += awaitingResourcesTimeToIncrease;
@@ -569,10 +569,14 @@ void cPlayerBrainMission::thinkState_PrepareAwaitResources()
         }
         else {
             // wait for 10 minutes again (arbitrary) - will proceed based on events anyway
-            int msForOneMinute = 1000 * 60;
-            TIMER_awaitingGatheringResoures += fastThinkMsToTicks(msForOneMinute*10);
+            TIMER_awaitingGatheringResoures += fastThinkMsToTicks(brain->getAiParameters().missions.missionWithoutUnitsWaitMs);
         }
     }
+}
+
+const s_AiParameters &cPlayerBrainMission::getAiParameters() const
+{
+    return brain->getAiParameters();
 }
 
 bool cPlayerBrainMission::isEnded() const

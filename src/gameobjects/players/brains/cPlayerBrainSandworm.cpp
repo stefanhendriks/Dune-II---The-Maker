@@ -35,7 +35,7 @@ cPlayerBrainSandworm::~cPlayerBrainSandworm()
 void cPlayerBrainSandworm::think()
 {
     TIMER_think++;
-    if (TIMER_think < 5) {
+    if (TIMER_think < m_aiParameters.sandworm.thinkInterval) {
         return;
     }
 

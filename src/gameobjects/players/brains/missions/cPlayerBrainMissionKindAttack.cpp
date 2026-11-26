@@ -26,6 +26,7 @@
 #include "utils/Log.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
+#include "gameobjects/players/brains/sAiParameters.h"
 #include <format>
 #include "include/cAssert.h"
 #include "include/sGameEvent.h"
@@ -47,7 +48,7 @@ cPlayerBrainMissionKindAttack::~cPlayerBrainMissionKindAttack()
 
 bool cPlayerBrainMissionKindAttack::think_SelectTarget()
 {
-    if (RNG::rnd(100) < 50) {
+    if (RNG::rnd(100) < mission->getAiParameters().missions.attackTargetUnitFirstChance) {
         targetStructureID = -1;
         targetUnitID = findEnemyUnit();
         if (targetUnitID < 0) {
@@ -77,7 +78,7 @@ int cPlayerBrainMissionKindAttack::findEnemyStructure() const
 
         // enemy structure
         target =  theStructure->getStructureId();
-        if (RNG::rnd(100) < 10) {
+        if (RNG::rnd(100) < mission->getAiParameters().missions.attackPickStructureChance) {
             break; // this way we kind of have randomly another target...
         }
     }
@@ -97,7 +98,7 @@ int cPlayerBrainMissionKindAttack::findEnemyUnit() const
 
         // enemy unit
         target = i;
-        if (RNG::rnd(100) < 5) {
+        if (RNG::rnd(100) < mission->getAiParameters().missions.attackPickUnitChance) {
             break; // this way we kind of have randomly another target...
         }
     }

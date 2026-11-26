@@ -28,6 +28,7 @@
 #include "definitions.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
+#include "gameobjects/players/brains/sAiParameters.h"
 #include <format>
 #include "include/cAssert.h"
 
@@ -63,7 +64,7 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
 
         // enemy structure
         target = theStructure->getCell();
-        if (RNG::rnd(100) < 25) {
+        if (RNG::rnd(100) < mission->getAiParameters().missions.deathHandPickStructureChance) {
             break; // this way we kind of have randomly another target...
         }
     }
@@ -78,7 +79,7 @@ bool cPlayerBrainMissionKindDeathHand::think_SelectTarget()
             if (!player->getObjects()->getMap()->isVisible(pUnit->getCell(), player)) continue; // skip non visible targets
             // enemy unit
             target = i;
-            if (RNG::rnd(100) < 5) {
+            if (RNG::rnd(100) < mission->getAiParameters().missions.deathHandPickUnitChance) {
                 break; // this way we kind of have randomly another target...
             }
         }

@@ -71,7 +71,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         if (pPlayer->isSameTeamAs(player)) continue; // skip same team players
 
         // some chance to skip this player...
-        if (RNG::rnd(100) > 70) {
+        if (RNG::rnd(100) > m_aiParameters.fremenSuperWeapon.skipPlayerAbove) {
             continue;
         }
 
@@ -80,7 +80,7 @@ void cPlayerBrainFremenSuperWeapon::think()
         if (!unitIds.empty()) {
             std::shuffle(unitIds.begin(), unitIds.end(), g);
             cellToAttack = player->getObjects()->getUnit(unitIds.front())->getCell();
-            if (RNG::rnd(100) > 30) break;
+            if (RNG::rnd(100) > m_aiParameters.fremenSuperWeapon.keepUnitTargetAbove) break;
         }
 
         // or which structure
@@ -89,7 +89,7 @@ void cPlayerBrainFremenSuperWeapon::think()
             // pick structure to attack
             std::shuffle(structureIds.begin(), structureIds.end(), g);
             cellToAttack = player->getObjects()->getStructures()[structureIds.front()]->getCell();
-            if (RNG::rnd(100) > 30) break;
+            if (RNG::rnd(100) > m_aiParameters.fremenSuperWeapon.keepStructureTargetAbove) break;
         }
     }
 

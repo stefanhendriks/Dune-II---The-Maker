@@ -23,6 +23,7 @@
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "utils/RNG.hpp"
+#include "gameobjects/players/brains/sAiParameters.h"
 #include "utils/Log.h"
 #include <format>
 #include "include/cAssert.h"
@@ -60,7 +61,7 @@ bool cPlayerBrainMissionKindSaboteur::think_SelectTarget()
 
         // enemy structure
         targetStructureID = theStructure->getStructureId();
-        if (RNG::rnd(100) < 25) {
+        if (RNG::rnd(100) < mission->getAiParameters().missions.saboteurPickStructureChance) {
             break; // this way we kind of have randomly another target...
         }
     }
