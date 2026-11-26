@@ -29,6 +29,7 @@ struct s_AiRandomAmount {
     int roll() const {
         return base + RNG::rnd(randomExtra);
     }
+    bool operator==(const s_AiRandomAmount &) const = default;
 };
 
 /**
@@ -56,6 +57,7 @@ struct s_AiSharedParameters {
 
     // initial delay of a superweapon mission (deathhand, saboteur, fremen) is RNG::rnd(this)
     int superWeaponMissionDelayRandom = 10;
+    bool operator==(const s_AiSharedParameters &) const = default;
 };
 
 /**
@@ -167,6 +169,7 @@ struct s_AiSkirmishParameters {
 
     // a unit in the way of a new structure moves to a random cell within this distance
     int moveAsideDistance = 3;
+    bool operator==(const s_AiSkirmishParameters &) const = default;
 };
 
 /**
@@ -179,6 +182,7 @@ struct s_AiCampaignParameters {
     // initial delay of the scout mission is RNG::rnd(this)
     int scoutMissionDelayRandom = 5;
     int scoutsPerScoutMission = 1;
+    bool operator==(const s_AiCampaignParameters &) const = default;
 };
 
 /**
@@ -218,6 +222,7 @@ struct s_AiMissionParameters {
     int exploreArrivedDistanceIdle = 4;
     // ... or a moving unit is within this distance
     int exploreArrivedDistanceMoving = 2;
+    bool operator==(const s_AiMissionParameters &) const = default;
 };
 
 /**
@@ -226,6 +231,7 @@ struct s_AiMissionParameters {
 struct s_AiSandwormParameters {
     // the sandworms are moved every this many brain ticks
     int thinkInterval = 5;
+    bool operator==(const s_AiSandwormParameters &) const = default;
 };
 
 /**
@@ -238,6 +244,7 @@ struct s_AiFremenSuperWeaponParameters {
     // the current unit / structure target is kept when the roll is above this
     int keepUnitTargetAbove = 30;
     int keepStructureTargetAbove = 30;
+    bool operator==(const s_AiFremenSuperWeaponParameters &) const = default;
 };
 
 /**
@@ -251,6 +258,7 @@ struct s_AiParameters {
     s_AiMissionParameters missions;
     s_AiSandwormParameters sandworm;
     s_AiFremenSuperWeaponParameters fremenSuperWeapon;
+    bool operator==(const s_AiParameters &) const = default;
 };
 
 }
