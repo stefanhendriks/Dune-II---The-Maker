@@ -41,6 +41,9 @@ public:
 
     void think_repairUnit();
 
+    // the unit inside (if any) leaves, keeping the hit points repaired so far
+    void ejectUnit();
+
     void startAnimating() override;
 
     void draw() override {
