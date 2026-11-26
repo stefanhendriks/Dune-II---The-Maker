@@ -369,7 +369,8 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                     // so wait just 5 minutes, that should be more then enough to process + wait for the build
                     // to be completed?
                     cSideBar *pSideBar = player->getSideBar();
-                    int awaitingResourcesTimeToIncrease = brain->getAiParameters().missions.buildOrderDefaultWaitTicks;
+                    const int defaultWaitTicks = brain->getAiParameters().missions.buildOrderDefaultWaitTicks;
+                    int awaitingResourcesTimeToIncrease = defaultWaitTicks;
                     if (thingIWant.buildType == UNIT) {
                         cBuildingListItem *pItem = pSideBar->getBuildingListItem(player->getInfos()->getUnitInfo(thingIWant.type).listType,
                                                    thingIWant.type);
@@ -406,8 +407,8 @@ void cPlayerBrainMission::thinkState_PrepareGatherResources()
                         }
                     }
 
-                    // in case we have very low
-                    if (awaitingResourcesTimeToIncrease <= brain->getAiParameters().missions.buildOrderDefaultWaitTicks) {
+                    // in case we have very low (or no build item was found, so the default wait is still set)
+                    if (awaitingResourcesTimeToIncrease <= defaultWaitTicks) {
                         int msForFiveMinutes = brain->getAiParameters().missions.buildOrderFallbackWaitMs;
                         awaitingResourcesTimeToIncrease = fastThinkMsToTicks(msForFiveMinutes);
                     }
