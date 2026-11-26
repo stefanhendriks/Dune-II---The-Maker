@@ -58,6 +58,7 @@ cp resources/specials.ini.org bin/specials.ini
 cp resources/upgrades.ini.org bin/upgrades.ini
 cp resources/particles.ini.org bin/particles.ini
 cp resources/bin/settings.ini bin
+cp resources/bin/AI.ini bin
 echo "13. Copy txt files"
 cp resources/doc/versionhistory.txt bin
 cp resources/doc/controls.txt bin
