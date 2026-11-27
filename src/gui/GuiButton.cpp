@@ -30,7 +30,7 @@ GuiButton::GuiButton(SDLDrawer* drawer, const cRectangle &rect, const std::strin
     , m_onLeftMouseButtonClickedAction(nullptr)
     , m_onRightMouseButtonClickedAction(nullptr)
     , m_tex(nullptr)
-    , m_focus(false)
+    , m_hovered(false)
     , m_pressed(false)
     , m_enabled(true)   // by default always enabled
 {
@@ -45,7 +45,7 @@ void GuiButton::draw() const
 {
     const bool isDisabled = !m_enabled || m_visualState == VisualState::Disabled;
     const bool isPressed = m_pressed || m_visualState == VisualState::Pressed;
-    //const bool isHovered = m_focus || m_visualState == VisualState::Hover;
+    //const bool isHovered = m_hovered || m_visualState == VisualState::Hover;
 
     switch (m_renderKind) {
         case OPAQUE_WITHOUT_BORDER:
@@ -119,7 +119,7 @@ void GuiButton::setTexture(Texture *tex)
 void GuiButton::drawText() const
 {
     const bool isDisabled = !m_enabled || m_visualState == VisualState::Disabled;
-    const bool isHovered = m_focus || m_visualState == VisualState::Hover;
+    const bool isHovered = m_hovered || m_visualState == VisualState::Hover;
     Color textColor = isHovered ? m_theme.textColorHover : m_theme.textColor;
     if (isDisabled) {
         textColor = m_theme.disabledTextColor;
@@ -193,12 +193,12 @@ void GuiButton::onNotifyMouseEvent(const s_MouseEvent &event)
 
 void GuiButton::onMouseMovedTo(const s_MouseEvent &event)
 {
-    m_focus = m_rect.isPointWithin(event.coords);
+    m_hovered = m_rect.isPointWithin(event.coords);
     if (!m_enabled) {
         m_visualState = VisualState::Disabled;
     } else if (m_pressed) {
         m_visualState = VisualState::Pressed;
-    } else if (m_focus) {
+    } else if (m_hovered) {
         m_visualState = VisualState::Hover;
     } else {
         m_visualState = VisualState::Normal;
@@ -207,7 +207,7 @@ void GuiButton::onMouseMovedTo(const s_MouseEvent &event)
 
 void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
 {
-    if (m_focus) {
+    if (m_hovered) {
         if (m_enabled && m_onRightMouseButtonClickedAction) {
             m_onRightMouseButtonClickedAction();
         }
@@ -217,16 +217,16 @@ void GuiButton::onMouseRightButtonClicked(const s_MouseEvent &)
 void GuiButton::onMouseRightButtonPressed(const s_MouseEvent &)
 {
     if (m_enabled) {
-        m_pressed = m_focus;
-        m_visualState = m_pressed ? VisualState::Pressed : (m_focus ? VisualState::Hover : VisualState::Normal);
+        m_pressed = m_hovered;
+        m_visualState = m_pressed ? VisualState::Pressed : (m_hovered ? VisualState::Hover : VisualState::Normal);
     }
 }
 
 void GuiButton::onMouseLeftButtonPressed(const s_MouseEvent &)
 {
     if (m_enabled) {
-        m_pressed = m_focus;
-        m_visualState = m_pressed ? VisualState::Pressed : (m_focus ? VisualState::Hover : VisualState::Normal);
+        m_pressed = m_hovered;
+        m_visualState = m_pressed ? VisualState::Pressed : (m_hovered ? VisualState::Hover : VisualState::Normal);
     }
 }
 
@@ -235,12 +235,12 @@ void GuiButton::onMouseLeftButtonClicked(const s_MouseEvent &event) {
         return;
     }
 
-    if (m_focus && m_onLeftMouseButtonClickedAction) {
+    if (m_hovered && m_onLeftMouseButtonClickedAction) {
         m_onLeftMouseButtonClickedAction();
     }
 
     m_pressed = false;
-    m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
+    m_visualState = m_hovered ? VisualState::Hover : VisualState::Normal;
 }
 
 void GuiButton::setOnLeftMouseButtonClickedAction(std::function<void()> action)
@@ -259,7 +259,7 @@ void GuiButton::setEnabled(bool value)
     if (!m_enabled) {
         m_visualState = VisualState::Disabled;
         m_pressed = false;
-    } else if (m_focus) {
+    } else if (m_hovered) {
         m_visualState = VisualState::Hover;
     } else {
         m_visualState = VisualState::Normal;
@@ -278,19 +278,19 @@ void GuiButton::setVisualState(VisualState state)
         case VisualState::Disabled:
             m_enabled = false;
             m_pressed = false;
-            m_focus = false;
+            m_hovered = false;
             break;
         case VisualState::Pressed:
             m_pressed = true;
-            m_focus = true;
+            m_hovered = true;
             break;
         case VisualState::Hover:
             m_pressed = false;
-            m_focus = true;
+            m_hovered = true;
             break;
         case VisualState::Normal:
             m_pressed = false;
-            m_focus = false;
+            m_hovered = false;
             break;
     }
 }

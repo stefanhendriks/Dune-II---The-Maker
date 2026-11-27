@@ -69,7 +69,7 @@ private:
     std::function<void()> m_onRightMouseButtonClickedAction;
     Texture *m_tex;
 
-    bool m_focus;
+    bool m_hovered;
 
     // pressed state
     bool m_pressed;
