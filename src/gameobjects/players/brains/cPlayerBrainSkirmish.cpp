@@ -554,7 +554,7 @@ void cPlayerBrainSkirmish::orderUnitFromStarportIfWanted()
 {
     cOrderProcesser *orderProcesser = player->getOrderProcesser();
     // no Starport, or an order is still being delivered
-    if (!orderProcesser->acceptsOrders() || orderProcesser->hasOrderedAnything()) return;
+    if (!orderProcesser->acceptsOrders()) return;
     if (!m_aiParameters.skirmish.orderFromStarport(player->getCredits(), RNG::rnd(100))) return;
 
     cBuildingList *list = player->getSideBar()->getList(eListType::LIST_STARPORT);
