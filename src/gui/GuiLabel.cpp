@@ -26,7 +26,7 @@ GuiLabel::GuiLabel(SDLDrawer* drawer, const cRectangle &rect, const std::string 
     , m_renderKind(GuiRenderKind::OPAQUE_WITHOUT_BORDER)
     , m_textAlignHorizontal(GuiTextAlignHorizontal::CENTER)
     , m_tex(nullptr)
-    , m_focus(false)
+    , m_hovered(false)
     , m_enabled(true)
 {
     d2tm_assert(drawer != nullptr);
@@ -143,7 +143,7 @@ void GuiLabel::onNotifyMouseEvent(const s_MouseEvent &event)
 
 void GuiLabel::onMouseMovedTo(const s_MouseEvent &event)
 {
-    m_focus = m_rect.isPointWithin(event.coords);
+    m_hovered = m_rect.isPointWithin(event.coords);
 }
 
 void GuiLabel::setEnabled(bool value)
