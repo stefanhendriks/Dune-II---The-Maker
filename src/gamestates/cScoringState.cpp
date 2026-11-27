@@ -5,6 +5,7 @@
 #include "drawers/SDLDrawer.hpp"
 #include "drawers/cTextDrawer.h"
 #include "game/GameStateTransition.hpp"
+#include "game/KillDeathRatio.hpp"
 #include "game/MissionFlow.hpp"
 #include "game/cScreenFader.h"
 #include "game/cGameSettings.h"
@@ -88,8 +89,9 @@ void cScoringState::draw() const
         m_textDrawer->drawTextCentered(playerName, y, nameColor);
         y += lineHeight;
         m_smallTextDrawer->drawTextCentered(
-            std::format("Units built: {}   lost: {}   destroyed: {}",
-                playerStats.unitsBuilt, playerStats.unitsLost, playerStats.unitsDestroyed),
+            std::format("Units built: {}   lost: {}   destroyed: {}   KDR: {}",
+                playerStats.unitsBuilt, playerStats.unitsLost, playerStats.unitsDestroyed,
+                killDeathRatioText(playerStats.unitsDestroyed, playerStats.unitsLost)),
             y, Color::White);
         y += statLineHeight;
         m_smallTextDrawer->drawTextCentered(
