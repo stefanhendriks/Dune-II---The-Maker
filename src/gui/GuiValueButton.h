@@ -64,7 +64,7 @@ private:
     int m_stepValue = 1;
     int m_minValue = 0;
     int m_maxValue = 0;
-    bool m_focus = false;
+    bool m_hovered = false;
     bool m_pressed = false;
     bool m_enabled = true;
     VisualState m_visualState = VisualState::Normal;
