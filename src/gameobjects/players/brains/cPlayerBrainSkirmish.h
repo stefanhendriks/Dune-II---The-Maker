@@ -229,6 +229,8 @@ private:
 
     void buildUnitIfICanAndNotAlreadyQueued(int type);
 
+    void orderUnitFromStarportIfWanted();
+
     void logMissions();
 
     void produceMissionsDuringPeacetime(int scoutingUnitType);
