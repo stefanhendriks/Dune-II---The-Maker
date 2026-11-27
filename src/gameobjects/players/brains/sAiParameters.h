@@ -138,6 +138,12 @@ struct s_AiSkirmishParameters {
     int additionalUnitsMaxQuads = 5;
     int additionalUnitsMaxTanks = 4;
 
+    // --- units ordered from the Starport ---
+    // the brain considers a Starport order only with at least these credits
+    int starportOrderMinCredits = 1500;
+    // ... and then places one with this chance
+    int starportOrderChance = 35;
+
     // --- missions ---
     // initial delay of a (non superweapon) mission is RNG::rnd(this)
     int missionDelayRandom = 15;
@@ -199,6 +205,11 @@ struct s_AiSkirmishParameters {
 
     // a unit in the way of a new structure moves to a random cell within this distance
     int moveAsideDistance = 3;
+
+    // roll: a value in [0, 100), ie RNG::rnd(100)
+    bool orderFromStarport(int credits, int roll) const {
+        return credits >= starportOrderMinCredits && roll < starportOrderChance;
+    }
     bool operator==(const s_AiSkirmishParameters &) const = default;
 };
 

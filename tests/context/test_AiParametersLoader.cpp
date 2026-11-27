@@ -75,6 +75,33 @@ TEST_CASE("AiParametersLoader reads the repair eject values")
     CHECK(parameters.shared.repairEjectReturnAfterIdleTicks == 300);
 }
 
+TEST_CASE("AiParametersLoader reads the Starport order values")
+{
+    const auto path = writeTempFile("[SKIRMISH]\nStarportOrderMinCredits=2000\nStarportOrderChance=50\n");
+    brains::s_AiParameters parameters;
+
+    REQUIRE(AiParametersLoader().load(path.string(), parameters));
+    std::filesystem::remove(path);
+
+    CHECK(parameters.skirmish.starportOrderMinCredits == 2000);
+    CHECK(parameters.skirmish.starportOrderChance == 50);
+}
+
+TEST_CASE("The skirmish brain orders from the Starport only with enough credits and a lucky roll")
+{
+    brains::s_AiSkirmishParameters parameters;
+    parameters.starportOrderMinCredits = 1500;
+    parameters.starportOrderChance = 35;
+
+    CHECK(parameters.orderFromStarport(1500, 0));
+    CHECK(parameters.orderFromStarport(5000, 34));
+    CHECK_FALSE(parameters.orderFromStarport(5000, 35));
+    CHECK_FALSE(parameters.orderFromStarport(1499, 0));
+
+    parameters.starportOrderChance = 0;
+    CHECK_FALSE(parameters.orderFromStarport(5000, 0));
+}
+
 TEST_CASE("A sieging unit uses the sieging recall threshold, an ambushed unit the ambushed one")
 {
     brains::s_AiSharedParameters parameters;
@@ -155,6 +182,8 @@ TEST_CASE("The shipped AI.ini holds the default values")
     parameters.shared.repairEjectReturnAfterIdleTicks = -1;
     parameters.skirmish.initialRestRandom = -1;
     parameters.skirmish.mayBuildAdditionalUnitsOffset = {-1, -1};
+    parameters.skirmish.starportOrderMinCredits = -1;
+    parameters.skirmish.starportOrderChance = -1;
     parameters.campaign.initialRestTime = -1;
     parameters.missions.buildOrderWaitBuildTimeFactor = -1.0f;
     parameters.sandworm.thinkInterval = -1;

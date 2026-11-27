@@ -97,6 +97,8 @@ bool AiParametersLoader::load(const std::string& filename, brains::s_AiParameter
         p.additionalUnitsMaxLaunchers = section.getInt("AdditionalUnitsMaxLaunchers", p.additionalUnitsMaxLaunchers);
         p.additionalUnitsMaxQuads = section.getInt("AdditionalUnitsMaxQuads", p.additionalUnitsMaxQuads);
         p.additionalUnitsMaxTanks = section.getInt("AdditionalUnitsMaxTanks", p.additionalUnitsMaxTanks);
+        p.starportOrderMinCredits = section.getInt("StarportOrderMinCredits", p.starportOrderMinCredits);
+        p.starportOrderChance = section.getInt("StarportOrderChance", p.starportOrderChance);
         p.missionDelayRandom = section.getInt("MissionDelayRandom", p.missionDelayRandom);
         p.harvestersPerEconomyMission = section.getInt("HarvestersPerEconomyMission", p.harvestersPerEconomyMission);
         p.carryallsPerEconomyMission = section.getInt("CarryallsPerEconomyMission", p.carryallsPerEconomyMission);
