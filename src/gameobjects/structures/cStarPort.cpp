@@ -109,7 +109,9 @@ void cStarPort::think_deploy()
                     if (rallyPoint > -1) {
                         m_objects->getUnit(id)->move_to(rallyPoint, -1, -1);
                     }
-                    m_audioContext->playVoice(soundpools::voice05, m_objects->getPlayer(iPlayer)->getHouse()); // unit deployed
+                    if (m_objects->getPlayer(iPlayer)->isHuman()) {
+                        m_audioContext->playVoice(soundpools::voice05, m_objects->getPlayer(iPlayer)->getHouse()); // unit deployed
+                    }
                 }
                 else {
                     // could not find cell to deploy to, reinforce it

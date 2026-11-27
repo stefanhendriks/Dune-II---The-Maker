@@ -156,11 +156,11 @@ void cOrderProcesser::think()
 
         if (m_secondsUntilArrival == 0) {
             sendFrigate();
-            if (m_frigateSent) {
+            if (m_frigateSent && m_player->isHuman()) {
                 m_drawManager->setMessage("Frigate is arriving...");
             }
         }
-        else if (m_secondsUntilArrival <= 10) {
+        else if (m_secondsUntilArrival <= 10 && m_player->isHuman()) {
             std::string msg = std::format("T-{} before Frigate arrival.", m_secondsUntilArrival);
             m_drawManager->setMessage(msg);
         }
@@ -168,7 +168,7 @@ void cOrderProcesser::think()
     else if (m_secondsUntilArrival == 0 && m_orderPlaced && !m_frigateSent) {
         // the frigate could not be spawned (ie all unit slots taken), try again
         sendFrigate();
-        if (m_frigateSent) {
+        if (m_frigateSent && m_player->isHuman()) {
             m_drawManager->setMessage("Frigate is arriving...");
         }
     }
