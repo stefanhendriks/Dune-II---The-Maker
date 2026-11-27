@@ -609,7 +609,7 @@ void cGamePlaying::onKeyPressedGamePlaying(const cKeyboardEvent &event)
                 bool canPlace = u->getPlayer()->canPlaceStructureAt(u->getCell(), CONSTYARD, u->iID).success;
                 if (canPlace) {
                     // at the structure cap the Construction Yard can't be created; keep the MCV (and any other selected ones)
-                    if (m_structureFactory->getFreeSlot() < 0) {
+                    if (m_structureFactory->isStructureLimitReached()) {
                         m_eventEmitter->emit(s_GameEvent{
                             .eventType = eGameEventType::GAME_EVENT_NOTIFICATION,
                             .data = NotificationEvent{
