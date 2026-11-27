@@ -70,7 +70,7 @@ private:
     GuiTextAlignHorizontal m_textAlignHorizontal;
     Texture *m_tex;
 
-    bool m_focus;
+    bool m_hovered;
     bool m_enabled;
 
     // Functions
