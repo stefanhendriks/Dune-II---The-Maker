@@ -69,7 +69,7 @@ private:
     std::function<void()> m_onCheckAction;
     std::function<void()> m_onUnCheckAction;
 
-    bool m_focus;
+    bool m_hovered;
     bool m_pressed;
     bool m_enabled;
     bool m_checked;
