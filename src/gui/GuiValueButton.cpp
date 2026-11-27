@@ -41,15 +41,15 @@ void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
 
     switch (event.eventType) {
         case MOUSE_MOVED_TO:
-            m_focus = m_rect.isPointWithin(event.coords);
-            if (!m_focus) {
+            m_hovered = m_rect.isPointWithin(event.coords);
+            if (!m_hovered) {
                 m_pressed = false;
             }
             if (!m_enabled) {
                 m_visualState = VisualState::Disabled;
             } else if (m_pressed) {
                 m_visualState = VisualState::Pressed;
-            } else if (m_focus) {
+            } else if (m_hovered) {
                 m_visualState = VisualState::Hover;
             } else {
                 m_visualState = VisualState::Normal;
@@ -70,7 +70,7 @@ void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
                 }
             }
             m_pressed = false;
-            m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
+            m_visualState = m_hovered ? VisualState::Hover : VisualState::Normal;
             break;
         case MOUSE_RIGHT_BUTTON_CLICKED:
             if (m_rect.isPointWithin(event.coords)) {
@@ -80,7 +80,7 @@ void GuiValueButton::onNotifyMouseEvent(const s_MouseEvent &event)
                 }
             }
             m_pressed = false;
-            m_visualState = m_focus ? VisualState::Hover : VisualState::Normal;
+            m_visualState = m_hovered ? VisualState::Hover : VisualState::Normal;
             break;
         default:
             break;
@@ -101,7 +101,7 @@ void GuiValueButton::draw() const
     }
 
     if (m_textDrawer != nullptr) {
-        Color textColor = m_focus ? m_theme.textColorHover : m_theme.textColor;
+        Color textColor = m_hovered ? m_theme.textColorHover : m_theme.textColor;
         if (!m_enabled) {
             textColor = m_theme.disabledTextColor;
         }
@@ -135,7 +135,7 @@ void GuiValueButton::setEnabled(bool enabled)
     if (!m_enabled) {
         m_visualState = VisualState::Disabled;
         m_pressed = false;
-        m_focus = false;
+        m_hovered = false;
     } else if (m_visualState == VisualState::Disabled) {
         m_visualState = VisualState::Normal;
     }
@@ -163,19 +163,19 @@ void GuiValueButton::setVisualState(VisualState state)
         case VisualState::Disabled:
             m_enabled = false;
             m_pressed = false;
-            m_focus = false;
+            m_hovered = false;
             break;
         case VisualState::Pressed:
             m_pressed = true;
-            m_focus = true;
+            m_hovered = true;
             break;
         case VisualState::Hover:
             m_pressed = false;
-            m_focus = true;
+            m_hovered = true;
             break;
         case VisualState::Normal:
             m_pressed = false;
-            m_focus = false;
+            m_hovered = false;
             break;
     }
 }
