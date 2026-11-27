@@ -332,7 +332,7 @@ int cStructureFactory::getFreeSlot()
 
 bool cStructureFactory::isStructureLimitReached()
 {
-    return getFreeSlot() < 0;
+    return m_objects->getStructures().isFull();
 }
 
 bool cStructureFactory::isModifyingTerrain(int buildId)

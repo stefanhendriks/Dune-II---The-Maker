@@ -40,12 +40,15 @@ public:
     // Puts a structure in a slot, the pool takes ownership. The slot index is the structure id.
     void place(std::size_t index, std::unique_ptr<cAbstractStructure> structure) {
         d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        if (m_values[index]) m_count--;
+        if (structure) m_count++;
         m_values[index] = std::move(structure);
     }
 
     // Empties a slot and destroys the structure in it.
     void remove(std::size_t index) {
         d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
+        if (m_values[index]) m_count--;
         m_values[index].reset();
     }
 
@@ -55,12 +58,18 @@ public:
         d2tm_assert(index < MAX_STRUCTURES && "Index out of bounds for cStructure");
         if (m_values[index]) {
             m_detached.push_back(std::move(m_values[index]));
+            m_count--;
         }
     }
 
     void destroyDetached() { m_detached.clear(); }
 
     std::size_t size() const noexcept { return m_values.size(); }
+
+    // Number of occupied slots, kept up to date by place(), remove() and detach().
+    std::size_t count() const noexcept { return m_count; }
+
+    bool isFull() const noexcept { return m_count >= MAX_STRUCTURES_COUNT; }
 
     auto begin() noexcept { return m_values.begin(); }
     auto end() noexcept { return m_values.end(); }
@@ -71,4 +80,5 @@ private:
     static constexpr std::size_t MAX_STRUCTURES_COUNT = MAX_STRUCTURES;
     std::array<std::unique_ptr<cAbstractStructure>, MAX_STRUCTURES_COUNT> m_values{};
     std::vector<std::unique_ptr<cAbstractStructure>> m_detached;
+    std::size_t m_count = 0;
 };
