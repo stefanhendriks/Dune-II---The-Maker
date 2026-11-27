@@ -28,6 +28,9 @@
 #include "gameobjects/map/cMap.h"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
+#include "gameobjects/structures/cOrderProcesser.h"
+#include "sidebar/cBuildingList.h"
+#include "sidebar/cSideBar.h"
 #include "utils/common.h"
 #include "utils/RNG.hpp"
 #include "utils/Log.h"
@@ -542,7 +545,31 @@ void cPlayerBrainSkirmish::thinkState_Missions()
         }
     }
 
+    orderUnitFromStarportIfWanted();
+
     changeThinkStateTo(ePlayerBrainSkirmishThinkState::PLAYERBRAIN_SKIRMISH_STATE_PROCESS_BUILDORDERS);
+}
+
+void cPlayerBrainSkirmish::orderUnitFromStarportIfWanted()
+{
+    cOrderProcesser *orderProcesser = player->getOrderProcesser();
+    // no Starport, or an order is still being delivered
+    if (!orderProcesser->acceptsOrders() || orderProcesser->hasOrderedAnything()) return;
+    if (!m_aiParameters.skirmish.orderFromStarport(player->getCredits(), RNG::rnd(100))) return;
+
+    cBuildingList *list = player->getSideBar()->getList(eListType::LIST_STARPORT);
+    for (int unitType : {SIEGETANK, LAUNCHER, TANK, QUAD}) {
+        cBuildingListItem *item = list->getItemByBuildId(unitType);
+        if (item == nullptr || !player->hasEnoughCreditsFor(item->getBuildCost())) continue;
+
+        // the same steps as a human order (cSideBar::onMouseClickedLeft, then the order button in cOrderDrawer)
+        item->increaseTimesOrdered();
+        orderProcesser->addOrder(item);
+        player->substractCredits(item->getBuildCost());
+        orderProcesser->placeOrder();
+        log(std::format("orderUnitFromStarportIfWanted(): ordered unit type [{}] for [{}] credits", unitType, item->getBuildCost()));
+        return;
+    }
 }
 
 void cPlayerBrainSkirmish::logMissions()
