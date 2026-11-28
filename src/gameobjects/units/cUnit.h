@@ -547,7 +547,11 @@ private:
     eActionType m_action;
     eUnitActionIntent intent;
 
-    UnitOrderQueue m_orders; // the orders this unit was given, the front one is carried out now
+    // The orders this unit was given, the front one is carried out now. Nothing reads it yet (#1823), and it can lag
+    // behind the unit's own state: a move or attack order only leaves when the unit falls back to guard (code that sets
+    // the action directly does not touch it), a transfer order only when the carry-all's transfer ends (a move_to in
+    // between replaces it). Check the order against the unit's state before acting on current().
+    UnitOrderQueue m_orders;
 
     int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 
