@@ -34,6 +34,12 @@ class SpriteEditor:
             if self.image.mode != 'P':
                 print("Note: Image converted to palette mode (8-bit).")
                 self.image = self.image.convert('P')
+
+            # Ensure a full 256-color palette exists (768 values: R,G,B * 256).
+            palette = self.image.getpalette() or []
+            if self.image.mode == 'P' and len(palette) < 256 * 3:
+                palette.extend([255] * ((256 * 3) - len(palette)))
+                self.image.putpalette(palette)
         except Exception as e:
             messagebox.showerror("Error", f"Unable to open image: {e}")
             sys.exit(1)
