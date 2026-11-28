@@ -1423,7 +1423,8 @@ void cUnit::thinkFast_move_airUnit()
                 // Not yet picked up the unit
                 cUnit &unitToPickupOrDrop = getUnitToPickupOrDrop();
                 if (!bPickedUp) {
-                    if (!unitToPickupOrDrop.isValid() || unitToPickupOrDrop.isDead()) {
+                    // gone, or already in another carry-all (picking it up again would free its slot, #1830)
+                    if (!unitToPickupOrDrop.isValid() || unitToPickupOrDrop.isDead() || unitToPickupOrDrop.isCarried()) {
                         forgetAboutUnitToPickUp();
                         return;
                     }
@@ -1439,6 +1440,7 @@ void cUnit::thinkFast_move_airUnit()
                                 movedelayTimer.reset(300);
 
                                 unitToPickupOrDrop.willBePickedUpBy = -1; // set state in aircraft, that it has picked up a unit
+                                unitToPickupOrDrop.iCarryAll = iID;
                                 bPickedUp = true;
 
                                 // so we set the tempHitpoints so the unit 'disappears' from the map without being
@@ -1891,7 +1893,8 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
         return; // we cannot do multiple things at a time!!
 
     bool bringsNewUnit = transferType == eTransferType::NEW_STAY || transferType == eTransferType::NEW_LEAVE;
-    bool picksUpUnit = transferType == eTransferType::PICKUP && iuID > -1 && m_objects->getUnit(iuID)->isValid();
+    bool picksUpUnit = transferType == eTransferType::PICKUP && iuID > -1 && m_objects->getUnit(iuID)->isValid() &&
+                       !m_objects->getUnit(iuID)->isCarried();
     if (!bringsNewUnit && !picksUpUnit) return;
 
     UnitOrder order;
@@ -3447,6 +3450,9 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
     rendering.iFrame = 0; // stop animating
     d2tm_assert(structureType > -1);
 
+    // a unit inside a carry-all goes nowhere by itself, and must not get a second carry-all (#1830)
+    if (isCarried()) return eHeadTowardsStructureResult::NOOP_ALREADY_BUSY;
+
     if (intent == actionIntent) {
         // same intent, so ignore?
         return eHeadTowardsStructureResult::NOOP_ALREADY_BUSY;
@@ -3488,6 +3494,8 @@ eHeadTowardsStructureResult cUnit::findBestStructureCandidateAndHeadTowardsItOrW
 
 bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *candidate, int destCell)
 {
+    if (isCarried()) return false; // already in a carry-all
+
     // a carry-all may still be on its way with an older transfer (ie, back to the spice field)
     tellCarryAllThatWouldPickMeUpToForgetAboutMe();
 
