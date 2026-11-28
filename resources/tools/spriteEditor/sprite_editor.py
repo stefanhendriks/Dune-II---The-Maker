@@ -27,6 +27,7 @@ class SpriteEditor:
         self.zoom = self.ZOOM_DEFAULT
         self.zoom_var = tk.IntVar(value=self.ZOOM_DEFAULT) # Variable pour le slider de zoom
         self.current_color_index = 1
+        self.selected_cells = set()
         self.undo_stack = []
         self.redo_stack = []
         self.current_undo_data = None
@@ -65,6 +66,7 @@ class SpriteEditor:
         self.root.title(f"D2TM Sprite Editor - {self.image_path}")
         self.undo_stack.clear()
         self.redo_stack.clear()
+        self.selected_cells.clear()
         self.current_undo_data = None
         return True
 
@@ -242,6 +244,24 @@ class SpriteEditor:
             color = self._get_color_from_palette(index)
             canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=outline, tags=tag)
 
+    def _draw_selection_border(self, x, y):
+        """Draw selection border for one sprite cell."""
+        x1, y1 = x * self.zoom, y * self.zoom
+        x2, y2 = x1 + self.zoom, y1 + self.zoom
+        self.sprite_canvas.create_rectangle(
+            x1,
+            y1,
+            x2,
+            y2,
+            outline="#00ffff",
+            width=2,
+            tags=f"selection_{x}_{y}"
+        )
+
+    def _is_ctrl_pressed(self, event):
+        """Return True when CTRL is held during a mouse event."""
+        return bool(event.state & 0x0004)
+
     def on_scroll_h(self, *args):
         """Manage horizontal scrolling and redraw visible pixels."""
         self.sprite_canvas.xview(*args)
@@ -288,6 +308,10 @@ class SpriteEditor:
         for y in range(start_y, end_y):
             for x in range(start_x, end_x): # self.zoom is now update by the slider
                 self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, pixels[x, y], f"pixel_{x}_{y}")
+
+        for x, y in self.selected_cells:
+            if start_x <= x < end_x and start_y <= y < end_y:
+                self._draw_selection_border(x, y)
 
     def draw_palette(self):
         """Draw the 8x32 grid of colours from the palette."""
@@ -473,6 +497,11 @@ class SpriteEditor:
 
     def on_sprite_press(self, event):
         """Starts recording a new track for the history."""
+        if self._is_ctrl_pressed(event):
+            self.current_undo_data = None
+            self.on_sprite_click(event)
+            return
+
         self.current_undo_data = {}
         self.on_sprite_click(event)
 
@@ -518,6 +547,12 @@ class SpriteEditor:
         x, y = int(canvas_x // self.zoom), int(canvas_y // self.zoom)
         
         if 0 <= x < self.width and 0 <= y < self.height:
+            if self._is_ctrl_pressed(event):
+                if (x, y) not in self.selected_cells:
+                    self.selected_cells.add((x, y))
+                    self._draw_selection_border(x, y)
+                return
+
             old_index = self.image.getpixel((x, y))
             if old_index == self.current_color_index:
                 return
