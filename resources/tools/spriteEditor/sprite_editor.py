@@ -165,11 +165,11 @@ class SpriteEditor:
         menu_bar = tk.Menu(self.root)
 
         file_menu = tk.Menu(menu_bar, tearoff=0)
-        file_menu.add_command(label="Ouvrir...", command=self.open_image_dialog)
-        file_menu.add_command(label="Sauvegarder...", command=self.save_image)
+        file_menu.add_command(label="Open...", command=self.open_image_dialog)
+        file_menu.add_command(label="Save...", command=self.save_image)
         file_menu.add_separator()
-        file_menu.add_command(label="Quitter", command=self.on_exit)
-        menu_bar.add_cascade(label="Fichier", menu=file_menu)
+        file_menu.add_command(label="Quit", command=self.on_exit)
+        menu_bar.add_cascade(label="File", menu=file_menu)
 
         edit_menu = tk.Menu(menu_bar, tearoff=0)
         edit_menu.add_command(label="Undo", command=self.undo, accelerator="Ctrl+Z")
