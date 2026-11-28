@@ -25,6 +25,7 @@
 #include "gameobjects/units/cTimer.h"
 
 #include <array>
+#include <functional>
 #include <memory>
 #include <string>
 
@@ -485,6 +486,11 @@ public:
 
     // a ground unit that can reach fewer than 2 cells gets flown out by a new Carry-All
     void thinkNormal_rescueWhenBoxedIn();
+    // true when terrain and structures leave this unit fewer than 2 cells to move to
+    bool isBoxedIn();
+    std::function<bool(int)> canEnterCellPredicate();
+    // a rescue carry-all is on its way to pick this unit up
+    bool isAwaitingRescue();
 
     void hideUnit();
 
