@@ -1,5 +1,6 @@
 import sys
 import os
+from collections import deque
 import tkinter as tk
 from tkinter import messagebox, filedialog
 from PIL import Image
@@ -465,6 +466,24 @@ class SpriteEditor:
             self.redo_stack.clear()
             self.draw_sprite()
 
+    def apply_color_to_selection(self, new_index):
+        """Apply the selected palette index to all selected cells."""
+        if not self.selected_cells:
+            return
+
+        changes = {}
+        for (x, y) in self.selected_cells:
+            if 0 <= x < self.width and 0 <= y < self.height:
+                old_index = self.image.getpixel((x, y))
+                if old_index != new_index:
+                    changes[(x, y)] = old_index
+                    self.image.putpixel((x, y), new_index)
+
+        if changes:
+            self.undo_stack.append(changes)
+            self.redo_stack.clear()
+            self.draw_sprite()
+
     def on_palette_click(self, event):
         """Select a colour from the palette."""
         col, row = event.x // self.PALETTE_CELL_SIZE, event.y // self.PALETTE_CELL_SIZE
@@ -475,6 +494,7 @@ class SpriteEditor:
             
             self.current_color_index = new_index
             self.selected_label.config(text=f"Index selection : {self.current_color_index}")
+            self.apply_color_to_selection(new_index)
             self.draw_palette()
             self._update_rgb_entries()
 
