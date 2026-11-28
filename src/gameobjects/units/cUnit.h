@@ -171,13 +171,6 @@ public:
     int iHarvestCellMemory; // remembers the last spice cell this harvester was working on
     bool m_stayAtGoalCell;  // ordered by the player to stop at a cell: a harvester does not look for spice by itself there
 
-    // Carry-All specific
-    // -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
-    // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
-    // iTempHitPoints = hp of unit when transfertype = 1
-    eTransferType m_transferType;
-
-    int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
     int iNewUnitType;	// new unit that will be brought, will be this type
     int lastDroppedOffCell; // last cell where we dropepd off a unit
 
@@ -288,9 +281,6 @@ public:
     cAbstractStructure *findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType);
     cAbstractStructure *findClosestAvailableStructureType(int structureType);
     cAbstractStructure *findClosestStructureType(int structureType);
-
-    // carryall-functions:
-    void carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe);
 
     cTimer moveTimer;         // movement timer
     cTimer movewaitTimer;     // wait for move think...
@@ -472,14 +462,14 @@ public:
 
     void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
 
-    // a Carry-All bringing a new unit: the new unit drives to this cell after the drop
-    void setCellNewUnitMovesTo(int cell) {
-        m_newUnitMoveToCell = cell;
-    }
+    // a carry-all: it carries a new unit of this type (set down by a DropUnitOrder)
+    void loadNewUnit(int unitType);
+    // replaces the unit's orders with these, carried out one after the other
+    void giveOrders(std::initializer_list<QueuedOrder> orders);
 
-    // this Carry-All leaves the map once its transfer is done or cancelled, instead of staying
-    void leaveMapAfterTransfer() {
-        m_leavesMapAfterTransfer = true;
+    // this Carry-All leaves the map once its transfer is done or cancelled (a LeaveMapOrder is queued), instead of staying
+    [[nodiscard]] bool leavesMapAfterTransfer() const {
+        return m_orders.contains<LeaveMapOrder>();
     }
 
     // a ground unit that can reach fewer than 2 cells gets flown out by a new Carry-All
@@ -551,10 +541,10 @@ private:
     eActionType m_action;
     eUnitActionIntent intent;
 
-    // The orders this unit was given, the front one is carried out now. Nothing reads it yet (#1823), and it can lag
-    // behind the unit's own state: a move or attack order only leaves when the unit falls back to guard (code that sets
-    // the action directly does not touch it), a transfer order only when the carry-all's transfer ends (a move_to in
-    // between replaces it). Check the order against the unit's state before acting on current().
+    // The orders this unit was given, the front one is carried out now. A carry-all or frigate follows its pickup, drop
+    // and leave-map orders (#1825). A move or attack order can lag behind the unit's own state: it only leaves when the
+    // unit falls back to guard (code that sets the action directly does not touch it). Check such an order against the
+    // unit's state before acting on it.
     UnitOrderQueue m_orders;
 
     int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
@@ -569,9 +559,6 @@ private:
     int iHitPoints;     // hitpoints of unit
 
     bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
-
-    bool m_leavesMapAfterTransfer; // a Carry-All that flies off the map once its transfer is done or cancelled
-    int m_newUnitMoveToCell; // a Carry-All bringing a new unit: the cell that unit drives to after the drop (-1 = none)
 
     int unitsEaten; // worm related
 
@@ -665,13 +652,22 @@ private:
 
     void setAction(eActionType action);
     void setGoalCell(int goalCell);
-    void setTransferType(eTransferType transferType);
 
-    void giveOrder(const UnitOrder &order);   // replaces the unit's orders with this one and carries it out
+    void giveOrder(const QueuedOrder &order);   // replaces the unit's orders with this one and carries it out
     void carryOutCurrentOrder();
+    void completeCurrentOrder();   // the current order is done (or abandoned), carry out the next one
+    [[nodiscard]] bool canCarryOut(const QueuedOrder &order) const;
+    void carryOutUnitOrder(const UnitOrder &order);
+    void carryOutPickupOrder(const PickupUnitOrder &order);
+    void carryOutDropOrder(const DropUnitOrder &order);
+    void carryOutLeaveMapOrder();
+
+    // a carry-all or frigate: carries a new unit or a picked up unit
+    [[nodiscard]] bool isCarryingSomething() const;
+    // a carry-all or frigate: busy picking up or bringing a unit
+    [[nodiscard]] bool isTransferring() const;
     void carryOutMoveOrder(const UnitOrder &order);
     void carryOutAttackOrder(const UnitOrder &order);
-    void carryOutTransferOrder(const UnitOrder &order);
 
     static int carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects);
 };

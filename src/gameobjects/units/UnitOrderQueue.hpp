@@ -17,26 +17,48 @@
 
 #include "UnitOrder.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <deque>
-#include <optional>
+#include <initializer_list>
+#include <variant>
 
 /**
  * The orders of a unit, first in first out. The front is the order the unit carries out now.
- * For now a new order always replaces the queue, so it holds at most one order (see #1823).
+ * A new order replaces the queue; a carry-all gets a short sequence of orders at once (see #1823, #1825).
  */
 class UnitOrderQueue {
 public:
     // a new order replaces whatever the unit was told before
-    void replace(const UnitOrder &order) {
+    void replace(const QueuedOrder &order) {
         m_orders.clear();
         m_orders.push_back(order);
     }
 
-    // the order the unit carries out now, if any
-    [[nodiscard]] std::optional<UnitOrder> current() const {
-        if (m_orders.empty()) return std::nullopt;
-        return m_orders.front();
+    // new orders, carried out one after the other, replace whatever the unit was told before
+    void replace(std::initializer_list<QueuedOrder> orders) {
+        m_orders.assign(orders);
+    }
+
+    // the order the unit carries out now, nullptr when there is none
+    [[nodiscard]] const QueuedOrder *current() const {
+        if (m_orders.empty()) return nullptr;
+        return &m_orders.front();
+    }
+
+    // the order the unit carries out now when it is of type T, else nullptr
+    template <typename T>
+    [[nodiscard]] const T *currentAs() const {
+        if (m_orders.empty()) return nullptr;
+        return std::get_if<T>(&m_orders.front());
+    }
+
+    // true when an order of type T is current or waits in the queue
+    template <typename T>
+    [[nodiscard]] bool contains() const {
+        return std::ranges::any_of(m_orders, [](const QueuedOrder &order) {
+            return std::holds_alternative<T>(order);
+        });
     }
 
     // the current order is done (or abandoned), the next one (if any) becomes current
@@ -59,5 +81,5 @@ public:
     }
 
 private:
-    std::deque<UnitOrder> m_orders;
+    std::deque<QueuedOrder> m_orders;
 };

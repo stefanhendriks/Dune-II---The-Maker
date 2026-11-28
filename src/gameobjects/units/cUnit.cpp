@@ -122,14 +122,10 @@ void cUnit::init(int i)
     iStructureID = -1;   // structure ID to attack/bring to (refinery)
 
     // Carry-All specific
-    m_transferType = eTransferType::NONE;
-    m_leavesMapAfterTransfer = false;
     // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
 
-    iBringTarget = -1;    // Where to bring the carried unit (when iUnitIDWithinStructure > -1)
     iNewUnitType = -1;    // new unit that will be brought, will be this type
-    m_newUnitMoveToCell = -1;
     bPickedUp = false;    // carry-all/frigate: picked up the unit? (TODO: change this into states!)
     willBePickedUpBy = -1;// ID of the carry-all that will pick up this unit
 
@@ -855,28 +851,123 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     giveOrder(order);
 }
 
-void cUnit::giveOrder(const UnitOrder &order)
+void cUnit::giveOrder(const QueuedOrder &order)
 {
+    // a unit leaving the map stays leaving: it carries out a move or attack it gets (ie, an ornithopter of a
+    // defeated player that picks a target), and is removed at the next cell it reaches
+    if (m_orders.currentAs<LeaveMapOrder>() && std::holds_alternative<UnitOrder>(order)) {
+        carryOutUnitOrder(std::get<UnitOrder>(order));
+        return;
+    }
+
     m_orders.replace(order);
     carryOutCurrentOrder();
 }
 
+void cUnit::giveOrders(std::initializer_list<QueuedOrder> orders)
+{
+    m_orders.replace(orders);
+    carryOutCurrentOrder();
+}
+
+void cUnit::completeCurrentOrder()
+{
+    m_orders.completeCurrent();
+    carryOutCurrentOrder();
+}
+
+bool cUnit::canCarryOut(const QueuedOrder &order) const
+{
+    if (const PickupUnitOrder *pickupOrder = std::get_if<PickupUnitOrder>(&order)) {
+        // a unit already in a carry-all is not picked up again (#1830)
+        return pickupOrder->unitId > -1 && m_objects->getUnit(pickupOrder->unitId)->isValid() &&
+               !m_objects->getUnit(pickupOrder->unitId)->isCarried();
+    }
+    if (std::holds_alternative<DropUnitOrder>(order)) {
+        return isCarryingSomething();
+    }
+    return true;
+}
+
+bool cUnit::isCarryingSomething() const
+{
+    // a frigate always carries a package (for the starport)
+    return iNewUnitType > -1 || (iUnitID > -1 && bPickedUp) || iType == FRIGATE;
+}
+
+bool cUnit::isTransferring() const
+{
+    return m_orders.currentAs<PickupUnitOrder>() || m_orders.currentAs<DropUnitOrder>();
+}
+
+void cUnit::loadNewUnit(int unitType)
+{
+    iUnitID = -1;
+    bPickedUp = false;
+    iNewUnitType = unitType;
+}
+
 void cUnit::carryOutCurrentOrder()
 {
-    std::optional<UnitOrder> order = m_orders.current();
-    if (!order) return;
+    // an order that can no longer be carried out (ie, there is nothing to drop) is skipped
+    while (m_orders.current() && !canCarryOut(*m_orders.current())) {
+        m_orders.completeCurrent();
+    }
 
-    switch (order->kind) {
+    const QueuedOrder *current = m_orders.current();
+    if (!current) return;
+
+    // a copy: carrying out an order may change the queue
+    if (const UnitOrder *unitOrder = std::get_if<UnitOrder>(current)) {
+        carryOutUnitOrder(UnitOrder(*unitOrder));
+    }
+    else if (const PickupUnitOrder *pickupOrder = std::get_if<PickupUnitOrder>(current)) {
+        carryOutPickupOrder(PickupUnitOrder(*pickupOrder));
+    }
+    else if (const DropUnitOrder *dropOrder = std::get_if<DropUnitOrder>(current)) {
+        carryOutDropOrder(DropUnitOrder(*dropOrder));
+    }
+    else if (std::holds_alternative<LeaveMapOrder>(*current)) {
+        carryOutLeaveMapOrder();
+    }
+}
+
+void cUnit::carryOutDropOrder(const DropUnitOrder &order)
+{
+    setGoalCell(order.cell);
+}
+
+void cUnit::carryOutUnitOrder(const UnitOrder &order)
+{
+    switch (order.kind) {
         case eUnitOrderKind::MOVE:
-            carryOutMoveOrder(*order);
+            carryOutMoveOrder(order);
             break;
         case eUnitOrderKind::ATTACK:
-            carryOutAttackOrder(*order);
-            break;
-        case eUnitOrderKind::TRANSFER:
-            carryOutTransferOrder(*order);
+            carryOutAttackOrder(order);
             break;
     }
+}
+
+void cUnit::carryOutPickupOrder(const PickupUnitOrder &order)
+{
+    // the carry-all flies to the unit to pick it up; the drop order that follows says where to bring it
+    cUnit *pUnit = m_objects->getUnit(order.unitId);
+    setGoalCell(pUnit->position.iCell);
+
+    iNewUnitType = -1;
+    bPickedUp = false;
+
+    // which unit do we intent to pick up?
+    iUnitID = order.unitId;
+
+    // let the unit know we intent to pick it up
+    pUnit->willBePickedUpBy = iID;
+}
+
+void cUnit::carryOutLeaveMapOrder()
+{
+    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
 }
 
 void cUnit::carryOutMoveOrder(const UnitOrder &order)
@@ -1099,7 +1190,7 @@ bool cUnit::isAwaitingRescue()
 {
     if (willBePickedUpBy < 0) return false;
     cUnit *carryAll = m_objects->getUnit(willBePickedUpBy);
-    return carryAll->isValid() && carryAll->m_leavesMapAfterTransfer;
+    return carryAll->isValid() && carryAll->leavesMapAfterTransfer();
 }
 
 bool cUnit::isBoxedIn()
@@ -1210,18 +1301,17 @@ cAbstractStructure *cUnit::findClosestStructureType(int structureType)
 void cUnit::think_carryAll()  // A carry-all has something when:
 {
 // - it carries a unit (iUnitIDWithinStructure > -1)
-// - it has the flag eTransferType::NEW_
+// - it brings a new unit (a DropUnitOrder is current)
 
-    if ((m_transferType == eTransferType::NEW_STAY ||
-            m_transferType == eTransferType::NEW_LEAVE ||
-            m_transferType == eTransferType::PICKUP) || iUnitID > -1) {
+    bool picksUpUnit = m_orders.currentAs<PickupUnitOrder>() != nullptr;
+    if (picksUpUnit || iUnitID > -1 || m_orders.currentAs<DropUnitOrder>()) {
 
         // when picking up a unit.. only draw when picked up
-        if (m_transferType == eTransferType::PICKUP && bPickedUp)
+        if (picksUpUnit && bPickedUp)
             rendering.iFrame = 1;
 
         // any other transfer, means it is filled from start...
-        if (m_transferType != eTransferType::PICKUP)
+        if (!picksUpUnit)
             rendering.iFrame = 1;
     }
     else {
@@ -1411,14 +1501,14 @@ void cUnit::thinkFast_move_airUnit()
         bool isWithinMapBoundaries = m_objects->getMapGeometry()->isWithinBoundaries(position.iCellX, position.iCellY);
 
         // reinforcement stuff happens here...
-        if (m_transferType == eTransferType::DIE) {
+        if (m_orders.currentAs<LeaveMapOrder>()) {
             // kill (probably reached border or something)
             die(false, false);
             return;
         }
 
-        // transfer wants to pickup and drop a unit...
-        if (m_transferType == eTransferType::PICKUP) {
+        // pick up a unit, or drop the unit this carry-all picked up
+        if (m_orders.currentAs<PickupUnitOrder>() || (iUnitID > -1 && m_orders.currentAs<DropUnitOrder>())) {
             if (iUnitID > -1) {
                 // Not yet picked up the unit
                 cUnit &unitToPickupOrDrop = getUnitToPickupOrDrop();
@@ -1453,8 +1543,8 @@ void cUnit::thinkFast_move_airUnit()
                                 // remove unit from map id (so it wont block other units)
                                 m_map->cellResetIdFromLayer(position.iCell, MAPID_UNITS);
 
-                                // now move air unit to the 'bring target'
-                                setGoalCell(iBringTarget);
+                                // picked up: carry out the drop order, which flies the unit to where it is brought
+                                completeCurrentOrder();
 
                                 // smoke puffs when picking up unit
                                 int pufX = (pos_x() + getBmpWidth() / 2);
@@ -1485,13 +1575,13 @@ void cUnit::thinkFast_move_airUnit()
                     // unit, #1830): there is nothing to drop, carry on
                     log("The unit I carried is gone, nothing to drop");
                     iUnitID = -1;
-                    setTransferType(eTransferType::NONE);
+                    completeCurrentOrder();
                     return;
                 }
                 else {
                     // picked up unit! yay, we are at the destination where we had to
                     // bring it... w00t
-                    if (position.iCell == iBringTarget) {
+                    if (position.iCell == movement.iGoalCell) {
                         // TIMER_movedelay = 300; // this will make carry-all speed up slowly
                         movedelayTimer.reset(300);
                         lastDroppedOffCell = position.iCell; // remember this cell
@@ -1499,7 +1589,7 @@ void cUnit::thinkFast_move_airUnit()
                         // check if its valid for this unit...
                         if (!m_map->occupied(position.iCell, iUnitID) && isWithinMapBoundaries) {
                             // valid structure (a rescue only frees the unit, it does not bring it to a structure)
-                            cAbstractStructure *structureUnitWantsToEnter = m_leavesMapAfterTransfer ? nullptr : unitToPickupOrDrop.getStructureUnitWantsToEnter();
+                            cAbstractStructure *structureUnitWantsToEnter = leavesMapAfterTransfer() ? nullptr : unitToPickupOrDrop.getStructureUnitWantsToEnter();
 
                             if (structureUnitWantsToEnter) {
                                 bool isAttemptingDeployingAtStructure = m_map->getCellIdStructuresLayer(position.iCell) == structureUnitWantsToEnter->getStructureId();
@@ -1513,7 +1603,6 @@ void cUnit::thinkFast_move_airUnit()
 
                                         if (alternative) {
                                             setGoalCell(alternative->getRandomStructureCell());
-                                            iBringTarget = movement.iGoalCell;
                                             unitToPickupOrDrop.awaitBeingPickedUpToBeTransferedByCarryAllToStructure(alternative);
                                             return;
                                         }
@@ -1522,7 +1611,6 @@ void cUnit::thinkFast_move_airUnit()
                                             int dropLocation = m_map->findNearByValidDropLocation(position.iCell, 3, unitToPickupOrDrop.iType);
 //                                            carryAll_transferUnitTo(iUnitID, dropLocation);
                                             setGoalCell(dropLocation);
-                                            iBringTarget = dropLocation;
                                             return;
                                         }
                                     } // structure is being occupied or just about to be occupied
@@ -1530,7 +1618,7 @@ void cUnit::thinkFast_move_airUnit()
                             }
 
                             // a rescued unit carries on with its order (a goal elsewhere than where it was picked up)
-                            bool keepOrder = m_leavesMapAfterTransfer && unitToPickupOrDrop.movement.iGoalCell != unitToPickupOrDrop.position.iCell;
+                            bool keepOrder = leavesMapAfterTransfer() && unitToPickupOrDrop.movement.iGoalCell != unitToPickupOrDrop.position.iCell;
 
                             // dump it here (unload from carry-all)
                             unitToPickupOrDrop.setCell(position.iCell);
@@ -1562,7 +1650,7 @@ void cUnit::thinkFast_move_airUnit()
 
                             iUnitID = -1;         // reset this
                             iTempHitPoints = -1; // reset this
-                            setTransferType(eTransferType::NONE); // done
+                            m_orders.completeCurrent(); // dropped
 
                             // make it enter the structure instantly
                             if (structureUnitWantsToEnter) {
@@ -1582,41 +1670,43 @@ void cUnit::thinkFast_move_airUnit()
                             int pufX = (pos_x() + getBmpWidth() / 2);
                             int pufY = (pos_y() + getBmpHeight() / 2);
                             cParticle::create(pufX, pufY, D2TM_PARTICLE_CARRYPUFF, -1, -1, m_objects, m_infos);
+
+                            // dropped: carry out the next order, if any
+                            if (!m_orders.empty()) {
+                                carryOutCurrentOrder();
+                                return;
+                            }
                         }
                         else {
                             // find a new spot
                             updateCellXAndY();
                             setGoalCell(findNewDropLocation(m_objects->getUnit(iUnitID)->iType, position.iCell));
-                            iBringTarget = movement.iGoalCell;
                             return;
                         }
                     }
                 }
             }
             else {
-                setTransferType(eTransferType::NONE); // unit is not valid?
+                completeCurrentOrder(); // unit is not valid?
                 return;
             }
         }
 
-        // transfer is to create a new unit
-        if (m_transferType == eTransferType::NEW_LEAVE ||
-                m_transferType == eTransferType::NEW_STAY) {
-            // bring a new unit
-
+        // set down the new unit this carry-all brings, or the package a frigate brings to a starport
+        if (const DropUnitOrder *dropOrder = m_orders.currentAs<DropUnitOrder>(); dropOrder && iUnitID < 0) {
             if (iType == FRIGATE) {
                 int iStrucId = m_map->getCellIdStructuresLayer(position.iCell);
 
                 if (iStrucId > -1) {
-                    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
-                    setTransferType(eTransferType::DIE);
-
                     m_objects->getStructure(iStrucId)->setFrame(4); // show package on this structure
                     m_objects->getStructure(iStrucId)->setAnimating(true); // keep animating
                     cStarPort *starport = dynamic_cast<cStarPort *>(m_objects->getStructure(iStrucId));
                     if (starport) {
                         starport->setFrigateDroppedPackage(true);
                     }
+
+                    // dropped the package: carry out the next order (leave the map)
+                    completeCurrentOrder();
                 }
                 else {
                     // we don't expect this to go wrong :/
@@ -1636,15 +1726,14 @@ void cUnit::thinkFast_move_airUnit()
                 return; // override for frigates
             }
 
+            int unitMoveToCell = dropOrder->unitMoveToCell;
             bool canDeployAtCell = m_map->occupied(position.iCell, iID) == false;
 
             if (iNewUnitType > -1) {
                 canDeployAtCell = m_map->canDeployUnitAtCell(position.iCell, iID);
             }
 
-            // first check if this cell is clear
             if (canDeployAtCell && isWithinMapBoundaries) {
-                // drop unit
                 if (iNewUnitType > -1) {
                     const s_GameEvent event {
                         .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
@@ -1654,7 +1743,7 @@ void cUnit::thinkFast_move_airUnit()
                             .iPlayer = getPlayer()->getId(),
                             .bOnStart = true,
                             .isReinforcement = isReinforcement,
-                            .moveToCell = m_newUnitMoveToCell
+                            .moveToCell = unitMoveToCell
                         }
                     };
                     m_eventEmitter->emit(event);
@@ -1663,31 +1752,19 @@ void cUnit::thinkFast_move_airUnit()
                 // now make sure this carry-all will not be drawn as having a unit:
                 iNewUnitType = -1;
 
-                // depending on transfertype...
-                if (m_transferType == eTransferType::NEW_LEAVE) {
-                    setTransferType(eTransferType::DIE);
-
-                    // find a new border cell close to us... to die
-                    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
-                    return;
-                }
-                else if (m_transferType == eTransferType::NEW_STAY) {
-                    // reset transfertype:
-                    setTransferType(eTransferType::NONE);
-                    return;
-                }
-
-            }
-            else {
-                // find a new spot for delivery
-                updateCellXAndY();
-                setGoalCell(findNewDropLocation(iNewUnitType, position.iCell));
+                // dropped: carry out the next order (ie, leave the map)
+                completeCurrentOrder();
                 return;
             }
+
+            // find a new spot for delivery
+            updateCellXAndY();
+            setGoalCell(findNewDropLocation(iNewUnitType, position.iCell));
+            return;
         }
 
         // transfer done or cancelled
-        if (m_leavesMapAfterTransfer) {
+        if (leavesMapAfterTransfer()) {
             retreatToMapEdge();
             return;
         }
@@ -1709,7 +1786,7 @@ void cUnit::thinkFast_move_airUnit()
     int goalCellY = m_objects->getMapGeometry()->getCellY(movement.iGoalCell);
 
     // use this when picking something up
-    if (iUnitID > -1 || (m_transferType != eTransferType::DIE && m_transferType != eTransferType::NONE)) {
+    if (iUnitID > -1 || isTransferring()) {
         int iLength = ABS_length(position.iCellX, position.iCellY, goalCellX, goalCellY);
 
         if (iType != FRIGATE) {
@@ -1855,9 +1932,14 @@ void cUnit::forgetAboutUnitToPickUp()  // forget about this
             pUnit->willBePickedUpBy = -1;
         }
     }
-    setGoalCell(position.iCell);
-    setTransferType(eTransferType::NONE);
     iUnitID = -1;
+
+    // stop picking up (the drop that follows is skipped, there is nothing to drop); a carry-all that is leaving
+    // the map keeps leaving
+    if (m_orders.currentAs<PickupUnitOrder>()) {
+        setGoalCell(position.iCell);
+        completeCurrentOrder();
+    }
 }
 
 cUnit &cUnit::getUnitToPickupOrDrop() const
@@ -1888,76 +1970,6 @@ int cUnit::findNewDropLocation(int unitTypeToDrop, int cell) const
         dropLocation = m_map->findNearByValidDropLocation(cell, 16, unitTypeToDrop);
     }
     return dropLocation;
-}
-
-// Carryall-order
-//
-// Purpose:
-// Order a carryall to pickup a unit, or send a new unit (depending on transferType)
-//
-void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe)
-{
-    if (m_transferType != eTransferType::NONE)
-        return; // we cannot do multiple things at a time!!
-
-    bool bringsNewUnit = transferType == eTransferType::NEW_STAY || transferType == eTransferType::NEW_LEAVE;
-    bool picksUpUnit = transferType == eTransferType::PICKUP && iuID > -1 && m_objects->getUnit(iuID)->isValid() &&
-                       !m_objects->getUnit(iuID)->isCarried();
-    if (!bringsNewUnit && !picksUpUnit) return;
-
-    UnitOrder order;
-    order.kind = eUnitOrderKind::TRANSFER;
-    order.transferType = transferType;
-    order.goalCell = iBring;
-    order.unitToPickup = iuID;
-    order.newUnitType = iTpe;
-    giveOrder(order);
-}
-
-void cUnit::carryOutTransferOrder(const UnitOrder &order)
-{
-    if (order.transferType == eTransferType::NEW_STAY || order.transferType == eTransferType::NEW_LEAVE) {
-        // bring a new unit, depending on the transferType the carryall who brings this will be
-        // removed after he brought the unit...
-
-        // when iTranfer is 0 or 2, the unit is just created by REINFORCE() and this function
-        // sets the target and such.
-
-        m_transferType = order.transferType;
-
-        // Go to this:
-        setGoalCell(order.goalCell);
-        iBringTarget = movement.iGoalCell;
-
-        // unit we carry is none
-        iUnitID = -1;
-
-        // the unit type...
-        iNewUnitType = order.newUnitType;
-
-        bPickedUp = false;
-        // DONE!
-    }
-    else if (order.transferType == eTransferType::PICKUP) {
-        // the carryall must pickup the unit, and then bring it to the iBring stuff
-        cUnit *pUnit = m_objects->getUnit(order.unitToPickup);
-        m_transferType = order.transferType;
-
-        setGoalCell(pUnit->position.iCell); // first go to the target to pick it up
-
-        iNewUnitType = -1;
-
-        // where to bring it to
-        iBringTarget = order.goalCell; // bring
-
-        bPickedUp = false;
-
-        // which unit do we intent to pick up?
-        iUnitID = order.unitToPickup;
-
-        // let the unit know we intent to pick it up
-        pUnit->willBePickedUpBy = iID;
-    }
 }
 
 void cUnit::shoot(int iTargetCell)
@@ -3524,7 +3536,10 @@ bool cUnit::findAndOrderCarryAllToBringMeToStructureAtCell(cAbstractStructure *c
 
 void cUnit::carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell)
 {
-    carryall_order(unitIdToTransfer, eTransferType::PICKUP, destinationCell, -1);
+    if (isTransferring() || m_orders.contains<LeaveMapOrder>()) return; // we cannot do multiple things at a time
+    if (unitIdToTransfer < 0 || !m_objects->getUnit(unitIdToTransfer)->isValid()) return;
+
+    giveOrders({PickupUnitOrder{.unitId = unitIdToTransfer}, DropUnitOrder{.cell = destinationCell}});
 }
 
 void cUnit::awaitBeingPickedUpToBeTransferedByCarryAllToStructure(cAbstractStructure *candidate)
@@ -3954,21 +3969,8 @@ void cUnit::setAction(eActionType action)
 
     // back on guard: the unit is done with (or gave up) its order
     if (action == eActionType::GUARD) {
-        std::optional<UnitOrder> order = m_orders.current();
+        const UnitOrder *order = m_orders.currentAs<UnitOrder>();
         if (order && (order->kind == eUnitOrderKind::MOVE || order->kind == eUnitOrderKind::ATTACK)) {
-            m_orders.completeCurrent();
-        }
-    }
-}
-
-void cUnit::setTransferType(eTransferType transferType)
-{
-    m_transferType = transferType;
-
-    // no longer picking up or bringing a unit: the carry-all is done with (or gave up) its transfer order
-    if (transferType == eTransferType::NONE || transferType == eTransferType::DIE) {
-        std::optional<UnitOrder> order = m_orders.current();
-        if (order && order->kind == eUnitOrderKind::TRANSFER) {
             m_orders.completeCurrent();
         }
     }
@@ -3976,8 +3978,7 @@ void cUnit::setTransferType(eTransferType transferType)
 
 void cUnit::retreatToMapEdge()
 {
-    setTransferType(eTransferType::DIE);
-    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
+    giveOrder(LeaveMapOrder{});
 }
 
 void cUnit::retreatToNearbyBase()
@@ -4188,8 +4189,8 @@ int cUnit::carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects)
         if (!cUnit->isValid()) continue;
         if (cUnit->iPlayer != iPlayer) continue;
         if (cUnit->iType != CARRYALL) continue; // skip non-carry-all units
-        if (cUnit->m_transferType != eTransferType::NONE) continue; // skip busy carry-alls
-        if (cUnit->m_leavesMapAfterTransfer) continue; // about to leave the map
+        if (cUnit->isTransferring()) continue; // skip busy carry-alls
+        if (cUnit->leavesMapAfterTransfer()) continue; // leaving the map, now or after its transfer
         return i;
     }
 
@@ -4208,7 +4209,7 @@ int cUnit::carryallTransfer(int iuID, int iGoal, cGameObjectContext* objects)
     int carryAllUnitId = carryallFreeForTransfer(objects->getUnit(iuID)->iPlayer, objects);
     if (carryAllUnitId > -1) {
         cUnit *cUnit = objects->getUnit(carryAllUnitId);
-        cUnit->carryall_order(iuID, eTransferType::PICKUP, iGoal, -1);
+        cUnit->carryAll_transferUnitTo(iuID, iGoal);
     }
     return carryAllUnitId;
 }

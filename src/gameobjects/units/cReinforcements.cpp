@@ -241,7 +241,8 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* 
     if (!carryall) return;
 
     Logger::info(COMP_UNITS, "cReinforcements", "REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}", iTpe, iPlr, carryall->getCell(), iCll);
-    carryall->carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
+    carryall->loadNewUnit(iTpe);
+    carryall->giveOrders({DropUnitOrder{.cell = iCll}, LeaveMapOrder{}});
 }
 
 void rescueUnitWithCarryAll(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int unitId, int dropCell)
@@ -251,8 +252,7 @@ void rescueUnitWithCarryAll(cGameObjectContext* objects, cInfoContext* infos, cE
     if (!carryall) return;
 
     Logger::info(COMP_UNITS, "cReinforcements", "Rescue: carryall {} brings boxed in unit {} of player {} from cell {} to cell {}", carryall->iID, unitId, unit->iPlayer, unit->getCell(), dropCell);
-    carryall->carryAll_transferUnitTo(unitId, dropCell);
-    carryall->leaveMapAfterTransfer();
+    carryall->giveOrders({PickupUnitOrder{.unitId = unitId}, DropUnitOrder{.cell = dropCell}, LeaveMapOrder{}});
 }
 
 void deliverNewUnitNearStructure(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, cAbstractStructure *structure, int unitType, bool isReinforcement)
@@ -268,6 +268,6 @@ void deliverNewUnitNearStructure(cGameObjectContext* objects, cInfoContext* info
     if (!carryall) return;
 
     Logger::info(COMP_UNITS, "cReinforcements", "Bringing unit type {} of boxed in structure {} to cell {}, then to rally point {}", unitType, structure->getStructureId(), dropCell, structure->getRallyPoint());
-    carryall->carryall_order(-1, eTransferType::NEW_LEAVE, dropCell, unitType);
-    carryall->setCellNewUnitMovesTo(structure->getRallyPoint());
+    carryall->loadNewUnit(unitType);
+    carryall->giveOrders({DropUnitOrder{.cell = dropCell, .unitMoveToCell = structure->getRallyPoint()}, LeaveMapOrder{}});
 }
