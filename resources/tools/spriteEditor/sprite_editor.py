@@ -1,7 +1,7 @@
 import sys
 import os
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog, simpledialog
 from PIL import Image
 
 class SpriteEditor:
@@ -18,46 +18,60 @@ class SpriteEditor:
 
     def __init__(self, root, image_path):
         self.root = root
-        self.root.title(f"D2TM Sprite Editor - {image_path}")
         self.root.geometry(self.SCREEN_SIZE)
+
         self.image_path = image_path
-        
-        try:
-            # Restricted to PNG files only
-            if not image_path.lower().endswith('.png'):
-                messagebox.showerror("Error", "This program only supports PNG files.")
-                sys.exit(1)
-
-            # Opening the image with PIL
-            self.image = Image.open(image_path)
-            # We ensure that the image is in palette mode (P) to access the indexes
-            if self.image.mode != 'P':
-                print("Note: Image converted to palette mode (8-bit).")
-                self.image = self.image.convert('P')
-
-            # Ensure a full 256-color palette exists (768 values: R,G,B * 256).
-            palette = self.image.getpalette() or []
-            if self.image.mode == 'P' and len(palette) < 256 * 3:
-                palette.extend([255] * ((256 * 3) - len(palette)))
-                self.image.putpalette(palette)
-        except Exception as e:
-            messagebox.showerror("Error", f"Unable to open image: {e}")
-            sys.exit(1)
-
-        self.width, self.height = self.image.size
+        self.image = None
+        self.width = 0
+        self.height = 0
         self.zoom = self.ZOOM_DEFAULT
         self.zoom_var = tk.IntVar(value=self.ZOOM_DEFAULT) # Variable pour le slider de zoom
         self.current_color_index = 1
         self.undo_stack = []
+        self.redo_stack = []
         self.current_undo_data = None
+
+        if not self.load_image(image_path):
+            sys.exit(1)
         
         self.setup_ui()
         self.draw_sprite()
         self.draw_palette()
         self._update_rgb_entries()
 
+    def load_image(self, image_path):
+        """Load an image and normalize it to a complete 256-color palette."""
+        try:
+            if not image_path.lower().endswith('.png'):
+                messagebox.showerror("Error", "This program only supports PNG files.")
+                return False
+
+            image = Image.open(image_path)
+            if image.mode != 'P':
+                print("Note: Image converted to palette mode (8-bit).")
+                image = image.convert('P')
+
+            palette = image.getpalette() or []
+            if image.mode == 'P' and len(palette) < 256 * 3:
+                palette.extend([255] * ((256 * 3) - len(palette)))
+                image.putpalette(palette)
+        except Exception as e:
+            messagebox.showerror("Error", f"Unable to open image: {e}")
+            return False
+
+        self.image_path = image_path
+        self.image = image
+        self.width, self.height = self.image.size
+        self.root.title(f"D2TM Sprite Editor - {self.image_path}")
+        self.undo_stack.clear()
+        self.redo_stack.clear()
+        self.current_undo_data = None
+        return True
+
     def setup_ui(self):
         """Initializes the user interface."""
+        self.create_menus()
+
         self.main_frame = tk.Frame(self.root)
         self.main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
@@ -96,6 +110,7 @@ class SpriteEditor:
         self.sprite_canvas.bind("<Button-3>", self.on_sprite_right_click)
         
         self.root.bind("<Control-z>", self.undo)
+        self.root.bind("<Control-y>", self.redo)
 
         # Right Zone : Palette
         right_frame = tk.Frame(self.main_frame)
@@ -159,6 +174,45 @@ class SpriteEditor:
 
         save_btn = tk.Button(right_frame, text="Save image", command=self.save_image)
         save_btn.pack(side=tk.BOTTOM, pady=20)
+
+    def create_menus(self):
+        """Create the top menu bar."""
+        menu_bar = tk.Menu(self.root)
+
+        file_menu = tk.Menu(menu_bar, tearoff=0)
+        file_menu.add_command(label="Ouvrir...", command=self.open_image_dialog)
+        file_menu.add_command(label="Sauvegarder...", command=self.save_image)
+        file_menu.add_separator()
+        file_menu.add_command(label="Quitter", command=self.root.destroy)
+        menu_bar.add_cascade(label="Fichier", menu=file_menu)
+
+        edit_menu = tk.Menu(menu_bar, tearoff=0)
+        edit_menu.add_command(label="Annuler", command=self.undo, accelerator="Ctrl+Z")
+        edit_menu.add_command(label="Rétablir", command=self.redo, accelerator="Ctrl+Y")
+        menu_bar.add_cascade(label="Edition", menu=edit_menu)
+
+        palette_menu = tk.Menu(menu_bar, tearoff=0)
+        palette_menu.add_command(label="Remplacer une couleur...", command=self.replace_index_dialog)
+        menu_bar.add_cascade(label="Palette", menu=palette_menu)
+
+        self.root.config(menu=menu_bar)
+
+    def open_image_dialog(self):
+        """Open a PNG file and refresh the editor state."""
+        path = filedialog.askopenfilename(
+            title="Select a PNG sprite",
+            filetypes=[("PNG", "*.png")]
+        )
+        if not path:
+            return
+
+        if not self.load_image(path):
+            return
+
+        self.sprite_canvas.config(scrollregion=(0, 0, self.width * self.zoom, self.height * self.zoom))
+        self.draw_sprite()
+        self.draw_palette()
+        self._update_rgb_entries()
 
     def _get_color_from_palette(self, index):
         """Retrieves the hexadecimal colour from the PIL palette."""
@@ -326,6 +380,26 @@ class SpriteEditor:
             messagebox.showerror("Error", "Indexes must be between 0 and 255.")
             return
 
+        self._replace_index_values(idx_a, idx_b)
+
+    def replace_index_dialog(self):
+        """Replace one palette index by another via menu dialog."""
+        idx_a = simpledialog.askinteger("Palette", "Index à remplacer (A):", minvalue=0, maxvalue=255, parent=self.root)
+        if idx_a is None:
+            return
+
+        idx_b = simpledialog.askinteger("Palette", "Nouvel index (B):", minvalue=0, maxvalue=255, parent=self.root)
+        if idx_b is None:
+            return
+
+        self._replace_index_values(idx_a, idx_b)
+
+    def _replace_index_values(self, idx_a, idx_b):
+        """Internal helper to replace all occurrences of index A by B."""
+        if not (0 <= idx_a <= 255 and 0 <= idx_b <= 255):
+            messagebox.showerror("Error", "Indexes must be between 0 and 255.")
+            return
+
         if idx_a == idx_b:
             return
 
@@ -339,6 +413,7 @@ class SpriteEditor:
 
         if changes:
             self.undo_stack.append(changes)
+            self.redo_stack.clear()
             self.draw_sprite()
 
     def on_palette_click(self, event):
@@ -380,17 +455,34 @@ class SpriteEditor:
         """Closes the current path and adds it to the undo stack."""
         if self.current_undo_data:
             self.undo_stack.append(self.current_undo_data)
+            self.redo_stack.clear()
         self.current_undo_data = None
 
     def undo(self, event=None):
         """Undoes the last trace by restoring pixel by pixel."""
         if self.undo_stack:
             changes = self.undo_stack.pop()
+            redo_changes = {}
             for (x, y), old_index in changes.items():
+                redo_changes[(x, y)] = self.image.getpixel((x, y))
                 self.image.putpixel((x, y), old_index)
                 tag = f"pixel_{x}_{y}"
                 self.sprite_canvas.delete(tag)
                 self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, old_index, tag)
+            self.redo_stack.append(redo_changes)
+
+    def redo(self, event=None):
+        """Reapply the most recently undone change set."""
+        if self.redo_stack:
+            changes = self.redo_stack.pop()
+            undo_changes = {}
+            for (x, y), new_index in changes.items():
+                undo_changes[(x, y)] = self.image.getpixel((x, y))
+                self.image.putpixel((x, y), new_index)
+                tag = f"pixel_{x}_{y}"
+                self.sprite_canvas.delete(tag)
+                self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, new_index, tag)
+            self.undo_stack.append(undo_changes)
 
     def on_sprite_click(self, event):
         """Modify the pixel under the mouse on the sprite."""
