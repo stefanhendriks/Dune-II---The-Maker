@@ -833,9 +833,39 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     log(std::format("(move_to - START) : to cell [{}], iStructureIdToEnter[{}], iUnitIdToPickup[{}] (to attack, if > -1), intent[{}]",
                     iCll, iStructureIdToEnter, iUnitIdToPickup, eUnitActionIntentString(intent)));
 
+    UnitOrder order;
+    order.kind = eUnitOrderKind::MOVE;
     // never send a unit onto the invisible map border, it would sit outside the play area
-    iCll = m_objects->getMapGeometry()->clampCellToPlayableMap(iCll);
-    setGoalCell(iCll);
+    order.goalCell = m_objects->getMapGeometry()->clampCellToPlayableMap(iCll);
+    order.structureToEnter = iStructureIdToEnter;
+    order.unitToPickup = iUnitIdToPickup;
+    order.intent = intent;
+    giveOrder(order);
+}
+
+void cUnit::giveOrder(const UnitOrder &order)
+{
+    m_orders.replace(order);
+    carryOutCurrentOrder();
+}
+
+void cUnit::carryOutCurrentOrder()
+{
+    std::optional<UnitOrder> order = m_orders.current();
+    if (!order) return;
+
+    switch (order->kind) {
+        case eUnitOrderKind::MOVE:
+            carryOutMoveOrder(*order);
+            break;
+        case eUnitOrderKind::ATTACK:
+            break; // not given through the queue yet
+    }
+}
+
+void cUnit::carryOutMoveOrder(const UnitOrder &order)
+{
+    setGoalCell(order.goalCell);
     m_stayAtGoalCell = false;
     if (iStructureID > -1) {
         unitWillNoLongerBeInteractingWithStructure();
@@ -846,16 +876,16 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
         tellCarryAllThatWouldPickMeUpToForgetAboutMe();
     }
 
-    iStructureID = iStructureIdToEnter;
+    iStructureID = order.structureToEnter;
 
-    if (iStructureIdToEnter > -1) {
-        cAbstractStructure *pStructure = m_objects->getStructure(iStructureIdToEnter);
+    if (order.structureToEnter > -1) {
+        cAbstractStructure *pStructure = m_objects->getStructure(order.structureToEnter);
         if (!pStructure->hasUnitHeadingTowards() && !pStructure->hasUnitWithin()) {
             pStructure->unitHeadsTowardsStructure(iID);
         }
     }
 
-    iUnitID = iUnitIdToPickup;
+    iUnitID = order.unitToPickup;
 
     combat.iAttackStructure = -1;
     combat.iAttackCell = -1;
@@ -866,7 +896,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     }
 
     setAction(eActionType::MOVE);
-    this->intent = intent;
+    intent = order.intent;
 
     forgetAboutCurrentPathAndPrepareToCreateNewOne();
 
@@ -3876,6 +3906,14 @@ void cUnit::setAction(eActionType action)
 {
     log(std::format("setAction() from {} to {}", eActionTypeString(m_action), eActionTypeString(action)));
     m_action = action;
+
+    // back on guard: the unit is done with (or gave up) its order
+    if (action == eActionType::GUARD) {
+        std::optional<UnitOrder> order = m_orders.current();
+        if (order && order->kind == eUnitOrderKind::MOVE) {
+            m_orders.completeCurrent();
+        }
+    }
 }
 
 void cUnit::retreatToMapEdge()
