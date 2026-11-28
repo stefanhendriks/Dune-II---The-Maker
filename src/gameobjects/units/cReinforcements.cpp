@@ -241,7 +241,8 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* 
     if (!carryall) return;
 
     Logger::info(COMP_UNITS, "cReinforcements", "REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}", iTpe, iPlr, carryall->getCell(), iCll);
-    carryall->carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
+    carryall->loadNewUnit(iTpe);
+    carryall->giveOrders({DropUnitOrder{.cell = iCll}, LeaveMapOrder{}});
 }
 
 void rescueUnitWithCarryAll(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int unitId, int dropCell)

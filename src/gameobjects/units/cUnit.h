@@ -472,6 +472,11 @@ public:
 
     void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
 
+    // a carry-all: it carries a new unit of this type (set down by a DropUnitOrder)
+    void loadNewUnit(int unitType);
+    // replaces the unit's orders with these, carried out one after the other
+    void giveOrders(std::initializer_list<QueuedOrder> orders);
+
     // a Carry-All bringing a new unit: the new unit drives to this cell after the drop
     void setCellNewUnitMovesTo(int cell) {
         m_newUnitMoveToCell = cell;
@@ -669,8 +674,16 @@ private:
 
     void giveOrder(const QueuedOrder &order);   // replaces the unit's orders with this one and carries it out
     void carryOutCurrentOrder();
+    void completeCurrentOrder();   // the current order is done (or abandoned), carry out the next one
+    [[nodiscard]] bool canCarryOut(const QueuedOrder &order) const;
     void carryOutUnitOrder(const UnitOrder &order);
+    void carryOutDropOrder(const DropUnitOrder &order);
     void carryOutLeaveMapOrder();
+
+    // a carry-all or frigate: carries a new unit or a picked up unit
+    [[nodiscard]] bool isCarryingSomething() const;
+    // a carry-all or frigate: busy picking up or bringing a unit
+    [[nodiscard]] bool isTransferring() const;
     void carryOutMoveOrder(const UnitOrder &order);
     void carryOutAttackOrder(const UnitOrder &order);
     void carryOutTransferOrder(const UnitOrder &order);
