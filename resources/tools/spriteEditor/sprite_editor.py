@@ -160,9 +160,6 @@ class SpriteEditor:
         )
         self.zoom_slider.pack(side=tk.LEFT, padx=5)
 
-        save_btn = tk.Button(right_frame, text="Save image", command=self.save_image)
-        save_btn.pack(side=tk.BOTTOM, pady=20)
-
     def create_menus(self):
         """Create the top menu bar."""
         menu_bar = tk.Menu(self.root)
