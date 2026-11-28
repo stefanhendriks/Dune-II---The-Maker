@@ -260,9 +260,47 @@ class SpriteEditor:
             tags=f"selection_{x}_{y}"
         )
 
-    def _is_ctrl_pressed(self, event):
-        """Return True when CTRL is held during a mouse event."""
-        return bool(event.state & 0x0004)
+    def _is_shift_pressed(self, event):
+        """Return True when SHIFT is held during a mouse event."""
+        return bool(event.state & 0x0001)
+
+    def select_connected_cells(self, start_x, start_y):
+        """Select all 8-connected cells sharing the same palette index."""
+        if not (0 <= start_x < self.width and 0 <= start_y < self.height):
+            return
+
+        target_index = self.image.getpixel((start_x, start_y))
+        queue = deque([(start_x, start_y)])
+        visited = {(start_x, start_y)}
+        added = False
+
+        while queue:
+            x, y = queue.popleft()
+            if self.image.getpixel((x, y)) != target_index:
+                continue
+
+            if (x, y) not in self.selected_cells:
+                self.selected_cells.add((x, y))
+                added = True
+
+            for dy in (-1, 0, 1):
+                for dx in (-1, 0, 1):
+                    if dx == 0 and dy == 0:
+                        continue
+
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < self.width and 0 <= ny < self.height and (nx, ny) not in visited:
+                        visited.add((nx, ny))
+                        queue.append((nx, ny))
+
+        if added:
+            self.draw_sprite()
+
+    def clear_selection(self, event=None):
+        """Clear all selected cells and redraw the sprite."""
+        if self.selected_cells:
+            self.selected_cells.clear()
+            self.draw_sprite()
 
     def on_scroll_h(self, *args):
         """Manage horizontal scrolling and redraw visible pixels."""
@@ -518,7 +556,7 @@ class SpriteEditor:
 
     def on_sprite_press(self, event):
         """Starts recording a new track for the history."""
-        if self._is_ctrl_pressed(event):
+        if self._is_shift_pressed(event):
             self.current_undo_data = None
             self.on_sprite_click(event)
             return
@@ -568,10 +606,8 @@ class SpriteEditor:
         x, y = int(canvas_x // self.zoom), int(canvas_y // self.zoom)
         
         if 0 <= x < self.width and 0 <= y < self.height:
-            if self._is_ctrl_pressed(event):
-                if (x, y) not in self.selected_cells:
-                    self.selected_cells.add((x, y))
-                    self._draw_selection_border(x, y)
+            if self._is_shift_pressed(event):
+                self.select_connected_cells(x, y)
                 return
 
             old_index = self.image.getpixel((x, y))
