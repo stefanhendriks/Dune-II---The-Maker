@@ -17,6 +17,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/controls/test_sMouseEvent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/drawers/test_CreditsMath.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/test_GameStateMachine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/game/test_KillDeathRatio.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/game/test_cTimeCounter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_cHousesInfoDifficulty.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_cPlayerNotification.cpp
