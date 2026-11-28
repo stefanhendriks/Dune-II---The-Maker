@@ -165,6 +165,7 @@ class SpriteEditor:
         palette_menu = tk.Menu(menu_bar, tearoff=0)
         palette_menu.add_command(label="Modifier couleur...", command=self.edit_palette_color_by_index_dialog)
         palette_menu.add_command(label="Remplacer une couleur...", command=self.replace_index_dialog)
+        palette_menu.add_command(label="Inverser palette...", command=self.swap_index_dialog)
         menu_bar.add_cascade(label="Palette", menu=palette_menu)
 
         self.root.config(menu=menu_bar)
@@ -409,6 +410,75 @@ class SpriteEditor:
                 if pixels[x, y] == idx_a:
                     changes[(x, y)] = idx_a
                     self.image.putpixel((x, y), idx_b)
+
+        if changes:
+            self.undo_stack.append(changes)
+            self.redo_stack.clear()
+            self.draw_sprite()
+
+    def swap_index_dialog(self):
+        """Open a dialog to swap two palette indexes in the sprite."""
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Inverser palette")
+        dialog.resizable(False, False)
+        dialog.transient(self.root)
+
+        dialog.update_idletasks()
+        try:
+            dialog.wait_visibility()
+            dialog.grab_set()
+        except tk.TclError:
+            pass
+
+        form = tk.Frame(dialog, padx=12, pady=12)
+        form.pack(fill=tk.BOTH, expand=True)
+
+        tk.Label(form, text="Palette A (0-255):").grid(row=0, column=0, sticky="w", pady=(0, 6))
+        a_entry = tk.Entry(form, width=6)
+        a_entry.grid(row=0, column=1, sticky="w", padx=(8, 0), pady=(0, 6))
+
+        tk.Label(form, text="Palette B (0-255):").grid(row=1, column=0, sticky="w")
+        b_entry = tk.Entry(form, width=6)
+        b_entry.grid(row=1, column=1, sticky="w", padx=(8, 0))
+
+        def apply_swap():
+            try:
+                idx_a = int(a_entry.get())
+                idx_b = int(b_entry.get())
+            except ValueError:
+                messagebox.showerror("Error", "A and B must be integers (0-255).", parent=dialog)
+                return
+
+            self._swap_index_values(idx_a, idx_b)
+            dialog.destroy()
+
+        action_row = tk.Frame(form)
+        action_row.grid(row=2, column=0, columnspan=2, sticky="e", pady=(12, 0))
+        tk.Button(action_row, text="Inverser", command=apply_swap).pack(side=tk.LEFT)
+        tk.Button(action_row, text="Annuler", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
+
+        a_entry.focus_set()
+
+    def _swap_index_values(self, idx_a, idx_b):
+        """Internal helper to swap all occurrences of index A and B."""
+        if not (0 <= idx_a <= 255 and 0 <= idx_b <= 255):
+            messagebox.showerror("Error", "Indexes must be between 0 and 255.")
+            return
+
+        if idx_a == idx_b:
+            return
+
+        changes = {}
+        pixels = self.image.load()
+        for y in range(self.height):
+            for x in range(self.width):
+                current = pixels[x, y]
+                if current == idx_a:
+                    changes[(x, y)] = idx_a
+                    self.image.putpixel((x, y), idx_b)
+                elif current == idx_b:
+                    changes[(x, y)] = idx_b
+                    self.image.putpixel((x, y), idx_a)
 
         if changes:
             self.undo_stack.append(changes)
