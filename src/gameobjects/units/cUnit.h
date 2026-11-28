@@ -48,14 +48,6 @@ class cMap;
 class MapGeometry;
 class cPathFinder;
 
-enum class eTransferType {
-    NONE,                               // nothing to transfer
-    NEW_STAY,                           // bring a new unit, and let the carryall stay
-    NEW_LEAVE,                          // bring a new unit, and let the carryall go back (and die)
-    PICKUP,                             // carry an existing unit, bring to new location
-    DIE,                                // will die when reaching goal-cell (added for proper animation)
-};
-
 enum class eActionType {
     GUARD,                              // on guard (scanning for enemy activity)
     MOVE,                               // moving
@@ -665,11 +657,13 @@ private:
 
     void setAction(eActionType action);
     void setGoalCell(int goalCell);
+    void setTransferType(eTransferType transferType);
 
     void giveOrder(const UnitOrder &order);   // replaces the unit's orders with this one and carries it out
     void carryOutCurrentOrder();
     void carryOutMoveOrder(const UnitOrder &order);
     void carryOutAttackOrder(const UnitOrder &order);
+    void carryOutTransferOrder(const UnitOrder &order);
 
     static int carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects);
 };

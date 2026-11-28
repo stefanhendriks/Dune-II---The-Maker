@@ -17,9 +17,18 @@
 
 #include "include/enums/CombatEnums.h"
 
+enum class eTransferType {
+    NONE,                               // nothing to transfer
+    NEW_STAY,                           // bring a new unit, and let the carryall stay
+    NEW_LEAVE,                          // bring a new unit, and let the carryall go back (and die)
+    PICKUP,                             // carry an existing unit, bring to new location
+    DIE,                                // will die when reaching goal-cell (added for proper animation)
+};
+
 enum class eUnitOrderKind {
     MOVE,       // drive to goalCell, optionally to enter a structure or pick up a unit
     ATTACK,     // attack a unit, structure or cell
+    TRANSFER,   // carry-all: pick up unitToPickup, or bring a new unit of newUnitType, to goalCell
 };
 
 /**
@@ -40,4 +49,8 @@ struct UnitOrder {
     int attackStructure = -1;
     int attackCell = -1;
     bool chaseWhenOutOfRange = true;
+
+    // TRANSFER
+    eTransferType transferType = eTransferType::NONE;
+    int newUnitType = -1;
 };

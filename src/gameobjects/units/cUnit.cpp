@@ -873,6 +873,9 @@ void cUnit::carryOutCurrentOrder()
         case eUnitOrderKind::ATTACK:
             carryOutAttackOrder(*order);
             break;
+        case eUnitOrderKind::TRANSFER:
+            carryOutTransferOrder(*order);
+            break;
     }
 }
 
@@ -1549,7 +1552,7 @@ void cUnit::thinkFast_move_airUnit()
 
                             iUnitID = -1;         // reset this
                             iTempHitPoints = -1; // reset this
-                            m_transferType = eTransferType::NONE; // done
+                            setTransferType(eTransferType::NONE); // done
 
                             // make it enter the structure instantly
                             if (structureUnitWantsToEnter) {
@@ -1581,7 +1584,7 @@ void cUnit::thinkFast_move_airUnit()
                 }
             }
             else {
-                m_transferType = eTransferType::NONE; // unit is not valid?
+                setTransferType(eTransferType::NONE); // unit is not valid?
                 return;
             }
         }
@@ -1596,7 +1599,7 @@ void cUnit::thinkFast_move_airUnit()
 
                 if (iStrucId > -1) {
                     setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
-                    m_transferType = eTransferType::DIE;
+                    setTransferType(eTransferType::DIE);
 
                     m_objects->getStructure(iStrucId)->setFrame(4); // show package on this structure
                     m_objects->getStructure(iStrucId)->setAnimating(true); // keep animating
@@ -1652,7 +1655,7 @@ void cUnit::thinkFast_move_airUnit()
 
                 // depending on transfertype...
                 if (m_transferType == eTransferType::NEW_LEAVE) {
-                    m_transferType = eTransferType::DIE;
+                    setTransferType(eTransferType::DIE);
 
                     // find a new border cell close to us... to die
                     setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
@@ -1660,7 +1663,7 @@ void cUnit::thinkFast_move_airUnit()
                 }
                 else if (m_transferType == eTransferType::NEW_STAY) {
                     // reset transfertype:
-                    m_transferType = eTransferType::NONE;
+                    setTransferType(eTransferType::NONE);
                     return;
                 }
 
@@ -1843,7 +1846,7 @@ void cUnit::forgetAboutUnitToPickUp()  // forget about this
         }
     }
     setGoalCell(position.iCell);
-    m_transferType = eTransferType::NONE;
+    setTransferType(eTransferType::NONE);
     iUnitID = -1;
 }
 
@@ -1887,49 +1890,62 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
     if (m_transferType != eTransferType::NONE)
         return; // we cannot do multiple things at a time!!
 
-    if (transferType == eTransferType::NEW_STAY || transferType == eTransferType::NEW_LEAVE) {
+    bool bringsNewUnit = transferType == eTransferType::NEW_STAY || transferType == eTransferType::NEW_LEAVE;
+    bool picksUpUnit = transferType == eTransferType::PICKUP && iuID > -1 && m_objects->getUnit(iuID)->isValid();
+    if (!bringsNewUnit && !picksUpUnit) return;
+
+    UnitOrder order;
+    order.kind = eUnitOrderKind::TRANSFER;
+    order.transferType = transferType;
+    order.goalCell = iBring;
+    order.unitToPickup = iuID;
+    order.newUnitType = iTpe;
+    giveOrder(order);
+}
+
+void cUnit::carryOutTransferOrder(const UnitOrder &order)
+{
+    if (order.transferType == eTransferType::NEW_STAY || order.transferType == eTransferType::NEW_LEAVE) {
         // bring a new unit, depending on the transferType the carryall who brings this will be
         // removed after he brought the unit...
 
         // when iTranfer is 0 or 2, the unit is just created by REINFORCE() and this function
         // sets the target and such.
 
-        m_transferType = transferType;
+        m_transferType = order.transferType;
 
         // Go to this:
-        setGoalCell(iBring);
+        setGoalCell(order.goalCell);
         iBringTarget = movement.iGoalCell;
 
         // unit we carry is none
         iUnitID = -1;
 
         // the unit type...
-        iNewUnitType = iTpe;
+        iNewUnitType = order.newUnitType;
 
         bPickedUp = false;
         // DONE!
     }
-    else if (transferType == eTransferType::PICKUP && iuID > -1) {
+    else if (order.transferType == eTransferType::PICKUP) {
         // the carryall must pickup the unit, and then bring it to the iBring stuff
-        cUnit *pUnit = m_objects->getUnit(iuID);
-        if (pUnit->isValid()) {
-            m_transferType = transferType;
+        cUnit *pUnit = m_objects->getUnit(order.unitToPickup);
+        m_transferType = order.transferType;
 
-            setGoalCell(pUnit->position.iCell); // first go to the target to pick it up
+        setGoalCell(pUnit->position.iCell); // first go to the target to pick it up
 
-            iNewUnitType = -1;
+        iNewUnitType = -1;
 
-            // where to bring it to
-            iBringTarget = iBring; // bring
+        // where to bring it to
+        iBringTarget = order.goalCell; // bring
 
-            bPickedUp = false;
+        bPickedUp = false;
 
-            // which unit do we intent to pick up?
-            iUnitID = iuID;
+        // which unit do we intent to pick up?
+        iUnitID = order.unitToPickup;
 
-            // let the unit know we intent to pick it up
-            pUnit->willBePickedUpBy = iID;
-        }
+        // let the unit know we intent to pick it up
+        pUnit->willBePickedUpBy = iID;
     }
 }
 
@@ -3929,9 +3945,22 @@ void cUnit::setAction(eActionType action)
     }
 }
 
+void cUnit::setTransferType(eTransferType transferType)
+{
+    m_transferType = transferType;
+
+    // no longer picking up or bringing a unit: the carry-all is done with (or gave up) its transfer order
+    if (transferType == eTransferType::NONE || transferType == eTransferType::DIE) {
+        std::optional<UnitOrder> order = m_orders.current();
+        if (order && order->kind == eUnitOrderKind::TRANSFER) {
+            m_orders.completeCurrent();
+        }
+    }
+}
+
 void cUnit::retreatToMapEdge()
 {
-    m_transferType = eTransferType::DIE;
+    setTransferType(eTransferType::DIE);
     setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
 }
 
