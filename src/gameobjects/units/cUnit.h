@@ -473,9 +473,9 @@ public:
     // replaces the unit's orders with these, carried out one after the other
     void giveOrders(std::initializer_list<QueuedOrder> orders);
 
-    // this Carry-All leaves the map once its transfer is done or cancelled, instead of staying
-    void leaveMapAfterTransfer() {
-        m_leavesMapAfterTransfer = true;
+    // this Carry-All leaves the map once its transfer is done or cancelled (a LeaveMapOrder is queued), instead of staying
+    [[nodiscard]] bool leavesMapAfterTransfer() const {
+        return m_orders.contains<LeaveMapOrder>();
     }
 
     // a ground unit that can reach fewer than 2 cells gets flown out by a new Carry-All
@@ -566,7 +566,6 @@ private:
 
     bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
 
-    bool m_leavesMapAfterTransfer; // a Carry-All that flies off the map once its transfer is done or cancelled
 
     int unitsEaten; // worm related
 

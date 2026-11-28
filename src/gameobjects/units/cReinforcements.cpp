@@ -252,8 +252,7 @@ void rescueUnitWithCarryAll(cGameObjectContext* objects, cInfoContext* infos, cE
     if (!carryall) return;
 
     Logger::info(COMP_UNITS, "cReinforcements", "Rescue: carryall {} brings boxed in unit {} of player {} from cell {} to cell {}", carryall->iID, unitId, unit->iPlayer, unit->getCell(), dropCell);
-    carryall->carryAll_transferUnitTo(unitId, dropCell);
-    carryall->leaveMapAfterTransfer();
+    carryall->giveOrders({PickupUnitOrder{.unitId = unitId}, DropUnitOrder{.cell = dropCell}, LeaveMapOrder{}});
 }
 
 void deliverNewUnitNearStructure(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, cAbstractStructure *structure, int unitType, bool isReinforcement)

@@ -123,7 +123,6 @@ void cUnit::init(int i)
 
     // Carry-All specific
     m_transferType = eTransferType::NONE;
-    m_leavesMapAfterTransfer = false;
     // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
 
@@ -1192,7 +1191,7 @@ bool cUnit::isAwaitingRescue()
 {
     if (willBePickedUpBy < 0) return false;
     cUnit *carryAll = m_objects->getUnit(willBePickedUpBy);
-    return carryAll->isValid() && carryAll->m_leavesMapAfterTransfer;
+    return carryAll->isValid() && carryAll->leavesMapAfterTransfer();
 }
 
 bool cUnit::isBoxedIn()
@@ -1591,7 +1590,7 @@ void cUnit::thinkFast_move_airUnit()
                         // check if its valid for this unit...
                         if (!m_map->occupied(position.iCell, iUnitID) && isWithinMapBoundaries) {
                             // valid structure (a rescue only frees the unit, it does not bring it to a structure)
-                            cAbstractStructure *structureUnitWantsToEnter = m_leavesMapAfterTransfer ? nullptr : unitToPickupOrDrop.getStructureUnitWantsToEnter();
+                            cAbstractStructure *structureUnitWantsToEnter = leavesMapAfterTransfer() ? nullptr : unitToPickupOrDrop.getStructureUnitWantsToEnter();
 
                             if (structureUnitWantsToEnter) {
                                 bool isAttemptingDeployingAtStructure = m_map->getCellIdStructuresLayer(position.iCell) == structureUnitWantsToEnter->getStructureId();
@@ -1620,7 +1619,7 @@ void cUnit::thinkFast_move_airUnit()
                             }
 
                             // a rescued unit carries on with its order (a goal elsewhere than where it was picked up)
-                            bool keepOrder = m_leavesMapAfterTransfer && unitToPickupOrDrop.movement.iGoalCell != unitToPickupOrDrop.position.iCell;
+                            bool keepOrder = leavesMapAfterTransfer() && unitToPickupOrDrop.movement.iGoalCell != unitToPickupOrDrop.position.iCell;
 
                             // dump it here (unload from carry-all)
                             unitToPickupOrDrop.setCell(position.iCell);
@@ -1766,7 +1765,7 @@ void cUnit::thinkFast_move_airUnit()
         }
 
         // transfer done or cancelled
-        if (m_leavesMapAfterTransfer) {
+        if (leavesMapAfterTransfer()) {
             retreatToMapEdge();
             return;
         }
@@ -4198,8 +4197,7 @@ int cUnit::carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects)
         if (cUnit->iPlayer != iPlayer) continue;
         if (cUnit->iType != CARRYALL) continue; // skip non-carry-all units
         if (cUnit->isTransferring()) continue; // skip busy carry-alls
-        if (cUnit->m_orders.contains<LeaveMapOrder>()) continue; // leaving the map
-        if (cUnit->m_leavesMapAfterTransfer) continue; // about to leave the map
+        if (cUnit->leavesMapAfterTransfer()) continue; // leaving the map, now or after its transfer
         return i;
     }
 
