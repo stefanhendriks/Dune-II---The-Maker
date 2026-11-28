@@ -129,25 +129,6 @@ class SpriteEditor:
 
         self.selected_label = tk.Label(right_frame, text=f"Index selection : {self.current_color_index}")
         self.selected_label.pack(pady=10)
-        
-        # RGB modification fields
-        rgb_frame = tk.Frame(right_frame)
-        rgb_frame.pack(pady=5)
-        
-        tk.Label(rgb_frame, text="R:").grid(row=0, column=0)
-        self.r_entry = tk.Entry(rgb_frame, width=5)
-        self.r_entry.grid(row=0, column=1, padx=2)
-
-        tk.Label(rgb_frame, text="G:").grid(row=1, column=0)
-        self.g_entry = tk.Entry(rgb_frame, width=5)
-        self.g_entry.grid(row=1, column=1, padx=2)
-
-        tk.Label(rgb_frame, text="B:").grid(row=2, column=0)
-        self.b_entry = tk.Entry(rgb_frame, width=5)
-        self.b_entry.grid(row=2, column=1, padx=2)
-        
-        self.apply_color_btn = tk.Button(rgb_frame, text="Apply", command=self.update_palette_color)
-        self.apply_color_btn.grid(row=0, column=2, rowspan=3, padx=10)
 
         # Zoom control
         zoom_frame = tk.Frame(right_frame)
@@ -376,62 +357,13 @@ class SpriteEditor:
         """Checks if the index belongs to the reserved ranges (Team Colours)."""
         return any(start <= index <= end for start, end in self.PROTECTED_RANGES)
 
-    def _set_entry_value(self, entry, value, state=tk.NORMAL):
-        """Utility for updating an input field cleanly."""
-        entry.config(state=tk.NORMAL)
-        entry.delete(0, tk.END)
-        entry.insert(0, str(value))
-        entry.config(state=state)
-
     def _update_rgb_entries(self):
-        """Updates the R, G, B fields with the values ​​of the current index."""
-        palette = self.image.getpalette()
-        if palette:
-            r = palette[self.current_color_index * 3]
-            g = palette[self.current_color_index * 3 + 1]
-            b = palette[self.current_color_index * 3 + 2]
-
-            is_protected = self._is_index_protected(self.current_color_index)
-            state = tk.DISABLED if is_protected else tk.NORMAL
-
-            self._set_entry_value(self.r_entry, r, state)
-            self._set_entry_value(self.g_entry, g, state)
-            self._set_entry_value(self.b_entry, b, state)
-
-            self.apply_color_btn.config(state=state)
-            
-            if is_protected:
-                self.selected_label.config(text=f"Index {self.current_color_index} (Protected - Team Color)")
-            else:
-                self.selected_label.config(text=f"Index Selection : {self.current_color_index}")
-
-    def update_palette_color(self):
-        """Applies the values ​​of the R, G, B inputs to the image palette."""
-        if self._is_index_protected(self.current_color_index):
-            return
-
-        try:
-            r_raw = int(self.r_entry.get())
-            g_raw = int(self.g_entry.get())
-            b_raw = int(self.b_entry.get())
-        except ValueError:
-            messagebox.showerror("Error", "RGB values ​​must be integers.")
-            return
-
-        # Limiter: clamps values ​​between 0 and 255 (more elegant)
-        clamp = lambda n: max(0, min(255, n))
-        r, g, b = map(clamp, [r_raw, g_raw, b_raw])
-
-        # The values ​​are redisplayed (if they have been limited).
-        self._update_rgb_entries()
-
-        palette = list(self.image.getpalette())
-        palette[self.current_color_index * 3] = r
-        palette[self.current_color_index * 3 + 1] = g
-        palette[self.current_color_index * 3 + 2] = b
-        self.image.putpalette(palette)
-        self.draw_palette()
-        self.draw_sprite()
+        """Update label according to selected index and protection state."""
+        is_protected = self._is_index_protected(self.current_color_index)
+        if is_protected:
+            self.selected_label.config(text=f"Index {self.current_color_index} (Protected - Team Color)")
+        else:
+            self.selected_label.config(text=f"Index Selection : {self.current_color_index}")
 
     def replace_index(self):
         """Remplace toutes les occurrences de l'index A par l'index B."""
