@@ -122,7 +122,6 @@ void cUnit::init(int i)
     iStructureID = -1;   // structure ID to attack/bring to (refinery)
 
     // Carry-All specific
-    m_transferType = eTransferType::NONE;
     // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
 
@@ -898,7 +897,7 @@ bool cUnit::isCarryingSomething() const
 
 bool cUnit::isTransferring() const
 {
-    return m_transferType != eTransferType::NONE || m_orders.currentAs<PickupUnitOrder>() || m_orders.currentAs<DropUnitOrder>();
+    return m_orders.currentAs<PickupUnitOrder>() || m_orders.currentAs<DropUnitOrder>();
 }
 
 void cUnit::loadNewUnit(int unitType)
@@ -3977,14 +3976,8 @@ void cUnit::setAction(eActionType action)
     }
 }
 
-void cUnit::setTransferType(eTransferType transferType)
-{
-    m_transferType = transferType;
-}
-
 void cUnit::retreatToMapEdge()
 {
-    setTransferType(eTransferType::NONE);
     giveOrder(LeaveMapOrder{});
 }
 

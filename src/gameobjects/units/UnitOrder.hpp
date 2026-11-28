@@ -19,10 +19,6 @@
 
 #include <variant>
 
-enum class eTransferType {
-    NONE,                               // nothing to transfer
-};
-
 enum class eUnitOrderKind {
     MOVE,       // drive to goalCell, optionally to enter a structure or pick up a unit
     ATTACK,     // attack a unit, structure or cell

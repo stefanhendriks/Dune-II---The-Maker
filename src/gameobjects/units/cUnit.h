@@ -171,12 +171,6 @@ public:
     int iHarvestCellMemory; // remembers the last spice cell this harvester was working on
     bool m_stayAtGoalCell;  // ordered by the player to stop at a cell: a harvester does not look for spice by itself there
 
-    // Carry-All specific
-    // -1 = none, 0 = new (and stay), 1 = carrying existing unit , 2 = new (and leave)
-    // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
-    // iTempHitPoints = hp of unit when transfertype = 1
-    eTransferType m_transferType;
-
     int iNewUnitType;	// new unit that will be brought, will be this type
     int lastDroppedOffCell; // last cell where we dropepd off a unit
 
@@ -547,10 +541,10 @@ private:
     eActionType m_action;
     eUnitActionIntent intent;
 
-    // The orders this unit was given, the front one is carried out now. Nothing reads it yet (#1823), and it can lag
-    // behind the unit's own state: a move or attack order only leaves when the unit falls back to guard (code that sets
-    // the action directly does not touch it), a transfer order only when the carry-all's transfer ends (a move_to in
-    // between replaces it). Check the order against the unit's state before acting on current().
+    // The orders this unit was given, the front one is carried out now. A carry-all or frigate follows its pickup, drop
+    // and leave-map orders (#1825). A move or attack order can lag behind the unit's own state: it only leaves when the
+    // unit falls back to guard (code that sets the action directly does not touch it). Check such an order against the
+    // unit's state before acting on it.
     UnitOrderQueue m_orders;
 
     int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
@@ -659,7 +653,6 @@ private:
 
     void setAction(eActionType action);
     void setGoalCell(int goalCell);
-    void setTransferType(eTransferType transferType);
 
     void giveOrder(const QueuedOrder &order);   // replaces the unit's orders with this one and carries it out
     void carryOutCurrentOrder();
