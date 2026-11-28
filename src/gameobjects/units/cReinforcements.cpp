@@ -16,6 +16,7 @@
 #include "gameobjects/map/cMap.h"
 #include "cReinforcements.h"
 #include "gameobjects/units/cUnits.h"
+#include "gameobjects/structures/cAbstractStructure.h"
 #include "utils/common.h"
 #include "utils/Log.h"
 #include "gameobjects/players/cPlayer.h"
@@ -252,4 +253,21 @@ void rescueUnitWithCarryAll(cGameObjectContext* objects, cInfoContext* infos, cE
     Logger::info(COMP_UNITS, "cReinforcements", "Rescue: carryall {} brings boxed in unit {} of player {} from cell {} to cell {}", carryall->iID, unitId, unit->iPlayer, unit->getCell(), dropCell);
     carryall->carryAll_transferUnitTo(unitId, dropCell);
     carryall->leaveMapAfterTransfer();
+}
+
+void deliverNewUnitNearStructure(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, cAbstractStructure *structure, int unitType, bool isReinforcement)
+{
+    // set the unit down on a free cell near the structure, never at the rally point itself (else walling in a
+    // factory would airlift its units anywhere); the unit drives to the rally point by itself
+    int dropCell = cUnit::findFreeCellToSetDown(objects->getMap(), *objects->getMapGeometry(), structure->getCell(), unitType, infos->getUnitInfo(unitType).infantry);
+    if (dropCell < 0) {
+        dropCell = structure->getCell(); // the carry-all looks for a nearby drop cell itself
+    }
+
+    cUnit *carryall = spawnCarryAllAtBorder(objects, infos, eventEmitter, structure->getPlayer()->getId(), dropCell, -1, isReinforcement);
+    if (!carryall) return;
+
+    Logger::info(COMP_UNITS, "cReinforcements", "Bringing unit type {} of boxed in structure {} to cell {}, then to rally point {}", unitType, structure->getStructureId(), dropCell, structure->getRallyPoint());
+    carryall->carryall_order(-1, eTransferType::NEW_LEAVE, dropCell, unitType);
+    carryall->setCellNewUnitMovesTo(structure->getRallyPoint());
 }
