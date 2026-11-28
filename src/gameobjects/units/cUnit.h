@@ -158,8 +158,7 @@ public:
 
     // carryall stuff
     bool bCarryMe;		// carry this unit when moving it around?
-    int  iCarryAll;		// any carry-all that will pickup this unit... so this unit knows
-    // it should wait when moving, etc, etc
+    int  iCarryAll;		// the carry-all that carries this unit (-1 = none), set when it is picked up
 
     sCombat combat;
 
@@ -518,6 +517,11 @@ public:
     std::string getHarvesterStatusForMessageBar();
 
     bool isHidden();
+
+    // inside a carry-all (picked up, not yet dropped)
+    [[nodiscard]] bool isCarried() const {
+        return iCarryAll > -1;
+    }
 
     bool isAlive() {
         return isValid() && !isDead() && !isHidden();
