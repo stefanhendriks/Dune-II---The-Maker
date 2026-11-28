@@ -1480,6 +1480,14 @@ void cUnit::thinkFast_move_airUnit()
                         }
                     } // is the unit to pick up, not yet picked up yet?
                 } // has the aircraft (this) not yet picked up unit?
+                else if (unitToPickupOrDrop.iCarryAll != iID) {
+                    // the slot no longer holds the unit this carry-all picked up (it was freed and given to another
+                    // unit, #1830): there is nothing to drop, carry on
+                    log("The unit I carried is gone, nothing to drop");
+                    iUnitID = -1;
+                    setTransferType(eTransferType::NONE);
+                    return;
+                }
                 else {
                     // picked up unit! yay, we are at the destination where we had to
                     // bring it... w00t
