@@ -481,6 +481,11 @@ public:
     void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
 
     // this Carry-All leaves the map once its transfer is done or cancelled, instead of staying
+    // a Carry-All bringing a new unit: the new unit drives to this cell after the drop
+    void setCellNewUnitMovesTo(int cell) {
+        m_newUnitMoveToCell = cell;
+    }
+
     void leaveMapAfterTransfer() {
         m_leavesMapAfterTransfer = true;
     }
@@ -563,6 +568,7 @@ private:
     bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
 
     bool m_leavesMapAfterTransfer; // a Carry-All that flies off the map once its transfer is done or cancelled
+    int m_newUnitMoveToCell; // a Carry-All bringing a new unit: the cell that unit drives to after the drop (-1 = none)
 
     int unitsEaten; // worm related
 

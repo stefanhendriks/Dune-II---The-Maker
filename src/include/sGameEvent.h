@@ -37,6 +37,7 @@ struct DeployUnitEvent {
     bool bOnStart = false;
     bool isReinforcement = false;
     float hpPercentage = 1.0F;
+    int moveToCell = -1;  // when > -1 the new unit drives there
 };
 
 // GAME_EVENT_SPECIAL_LAUNCH

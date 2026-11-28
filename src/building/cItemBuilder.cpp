@@ -477,11 +477,7 @@ void cItemBuilder::deployUnit(cBuildingListItem *item, int buildId) const
 
         cAbstractStructure *pStructureToDeploy = m_services->objects->getStructures()[structureToDeployUnit];
         if (pStructureToDeploy && pStructureToDeploy->isValid()) {
-            int cellToDeploy = m_services->objects->getStructures()[structureToDeployUnit]->getCell();
-            if (pStructureToDeploy->getRallyPoint() > -1) {
-                cellToDeploy = pStructureToDeploy->getRallyPoint();
-            }
-            REINFORCE(m_services->objects, m_services->info, m_eventEmitter, m_player->getId(), buildIdToProduce, cellToDeploy, -1, false);
+            deliverNewUnitNearStructure(m_services->objects, m_services->info, m_eventEmitter, pStructureToDeploy, buildIdToProduce, false);
         }
     }
 }

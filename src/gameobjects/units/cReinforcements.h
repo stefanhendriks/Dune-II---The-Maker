@@ -20,6 +20,7 @@
 class cGameObjectContext;
 class cInfoContext;
 class cEventEmitter;
+class cAbstractStructure;
 struct sGameServices;
 
 class cReinforcement {
@@ -79,3 +80,9 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* 
  * A new carryAll of the unit's player flies in, picks up the unit, drops it at dropCell and leaves the map.
  */
 void rescueUnitWithCarryAll(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int unitId, int dropCell);
+
+/**
+ * A new carryAll brings a new unit of a structure that has no free cell around it (boxed in) to a free cell nearby.
+ * The new unit then drives to the structure's rally point, if it has one.
+ */
+void deliverNewUnitNearStructure(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, cAbstractStructure *structure, int unitType, bool isReinforcement);

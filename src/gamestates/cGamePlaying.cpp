@@ -848,6 +848,9 @@ void cGamePlaying::onEventCreateUnit(const DeployUnitEvent &event)
     }
     else {
         Logger::info(COMP_GAME, "onEventCreateUnit", "Successfully created unit of type {} at cell {} for player {}, id={}", event.unitType, event.iCell, event.iPlayer, id);
+        if (event.moveToCell > -1) {
+            m_objects->getUnit(id)->move_to(event.moveToCell, -1, -1, INTENT_MOVE);
+        }
     }
 }
 

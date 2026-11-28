@@ -128,6 +128,7 @@ void cUnit::init(int i)
 
     iBringTarget = -1;    // Where to bring the carried unit (when iUnitIDWithinStructure > -1)
     iNewUnitType = -1;    // new unit that will be brought, will be this type
+    m_newUnitMoveToCell = -1;
     bPickedUp = false;    // carry-all/frigate: picked up the unit? (TODO: change this into states!)
     willBePickedUpBy = -1;// ID of the carry-all that will pick up this unit
 
@@ -1595,7 +1596,8 @@ void cUnit::thinkFast_move_airUnit()
                             .unitType = iNewUnitType,
                             .iPlayer = getPlayer()->getId(),
                             .bOnStart = true,
-                            .isReinforcement = isReinforcement
+                            .isReinforcement = isReinforcement,
+                            .moveToCell = m_newUnitMoveToCell
                         }
                     };
                     m_eventEmitter->emit(event);
