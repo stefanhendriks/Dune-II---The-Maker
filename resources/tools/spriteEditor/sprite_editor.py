@@ -158,14 +158,14 @@ class SpriteEditor:
         menu_bar.add_cascade(label="Fichier", menu=file_menu)
 
         edit_menu = tk.Menu(menu_bar, tearoff=0)
-        edit_menu.add_command(label="Annuler", command=self.undo, accelerator="Ctrl+Z")
-        edit_menu.add_command(label="Rétablir", command=self.redo, accelerator="Ctrl+Y")
-        menu_bar.add_cascade(label="Edition", menu=edit_menu)
+        edit_menu.add_command(label="Undo", command=self.undo, accelerator="Ctrl+Z")
+        edit_menu.add_command(label="Redo", command=self.redo, accelerator="Ctrl+Y")
+        menu_bar.add_cascade(label="Edit", menu=edit_menu)
 
         palette_menu = tk.Menu(menu_bar, tearoff=0)
-        palette_menu.add_command(label="Modifier couleur...", command=self.edit_palette_color_by_index_dialog)
-        palette_menu.add_command(label="Remplacer une couleur...", command=self.replace_index_dialog)
-        palette_menu.add_command(label="Inverser palette...", command=self.swap_index_dialog)
+        palette_menu.add_command(label="Edit color...", command=self.edit_palette_color_by_index_dialog)
+        palette_menu.add_command(label="Replace color...", command=self.replace_index_dialog)
+        palette_menu.add_command(label="Swap palette indexes...", command=self.swap_index_dialog)
         menu_bar.add_cascade(label="Palette", menu=palette_menu)
 
         self.root.config(menu=menu_bar)
@@ -277,7 +277,7 @@ class SpriteEditor:
         self.draw_sprite()
 
     def on_zoom_change(self, val):
-        """Met à jour le zoom et redessine le sprite."""
+        """Update zoom level and redraw the sprite."""
         self.zoom = int(val)
         # Mettre à jour la scrollregion avec le nouveau zoom
         self.sprite_canvas.config(scrollregion=(0, 0, self.width * self.zoom, self.height * self.zoom))
@@ -352,9 +352,9 @@ class SpriteEditor:
             self.selected_label.config(text=f"Index Selection : {self.current_color_index}")
 
     def replace_index_dialog(self):
-        """Open a single-page dialog to replace one color index by another."""
+        """Open a single-page dialog to replace one color index with another."""
         dialog = tk.Toplevel(self.root)
-        dialog.title("Remplacement de couleur")
+        dialog.title("Replace color")
         dialog.resizable(False, False)
         dialog.transient(self.root)
 
@@ -368,11 +368,11 @@ class SpriteEditor:
         form = tk.Frame(dialog, padx=12, pady=12)
         form.pack(fill=tk.BOTH, expand=True)
 
-        tk.Label(form, text="Ancienne couleur (0-255):").grid(row=0, column=0, sticky="w", pady=(0, 6))
+        tk.Label(form, text="Old color (0-255):").grid(row=0, column=0, sticky="w", pady=(0, 6))
         old_entry = tk.Entry(form, width=6)
         old_entry.grid(row=0, column=1, sticky="w", padx=(8, 0), pady=(0, 6))
 
-        tk.Label(form, text="Nouvelle couleur (0-255):").grid(row=1, column=0, sticky="w")
+        tk.Label(form, text="New color (0-255):").grid(row=1, column=0, sticky="w")
         new_entry = tk.Entry(form, width=6)
         new_entry.grid(row=1, column=1, sticky="w", padx=(8, 0))
 
@@ -389,8 +389,8 @@ class SpriteEditor:
 
         action_row = tk.Frame(form)
         action_row.grid(row=2, column=0, columnspan=2, sticky="e", pady=(12, 0))
-        tk.Button(action_row, text="Changer tout", command=apply_replace).pack(side=tk.LEFT)
-        tk.Button(action_row, text="Annuler", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
+        tk.Button(action_row, text="Replace all", command=apply_replace).pack(side=tk.LEFT)
+        tk.Button(action_row, text="Cancel", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
 
         old_entry.focus_set()
 
@@ -419,7 +419,7 @@ class SpriteEditor:
     def swap_index_dialog(self):
         """Open a dialog to swap two palette indexes in the sprite."""
         dialog = tk.Toplevel(self.root)
-        dialog.title("Inverser palette")
+        dialog.title("Swap palette indexes")
         dialog.resizable(False, False)
         dialog.transient(self.root)
 
@@ -454,8 +454,8 @@ class SpriteEditor:
 
         action_row = tk.Frame(form)
         action_row.grid(row=2, column=0, columnspan=2, sticky="e", pady=(12, 0))
-        tk.Button(action_row, text="Inverser", command=apply_swap).pack(side=tk.LEFT)
-        tk.Button(action_row, text="Annuler", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
+        tk.Button(action_row, text="Swap", command=apply_swap).pack(side=tk.LEFT)
+        tk.Button(action_row, text="Cancel", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
 
         a_entry.focus_set()
 
@@ -523,8 +523,8 @@ class SpriteEditor:
     def edit_palette_color_by_index_dialog(self):
         """Ask for a palette index, then open RGB editor for this index."""
         index = simpledialog.askinteger(
-            "Modifier couleur",
-            "Numéro de couleur (1-255):",
+            "Edit color",
+            "Color index (1-255):",
             parent=self.root,
             minvalue=1,
             maxvalue=255
@@ -557,7 +557,7 @@ class SpriteEditor:
         b = palette[index * 3 + 2]
 
         dialog = tk.Toplevel(self.root)
-        dialog.title(f"Modifier couleur index {index}")
+        dialog.title(f"Edit color index {index}")
         dialog.resizable(False, False)
         dialog.transient(self.root)
 
@@ -607,8 +607,8 @@ class SpriteEditor:
 
         action_row = tk.Frame(form)
         action_row.grid(row=4, column=0, columnspan=2, sticky="e", pady=(12, 0))
-        tk.Button(action_row, text="Appliquer", command=apply_rgb).pack(side=tk.LEFT)
-        tk.Button(action_row, text="Annuler", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
+        tk.Button(action_row, text="Apply", command=apply_rgb).pack(side=tk.LEFT)
+        tk.Button(action_row, text="Cancel", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
 
         r_entry.focus_set()
 
@@ -643,7 +643,7 @@ class SpriteEditor:
                 
             # On récupère l'index directement depuis l'image PIL
             self.current_color_index = index
-            self.selected_label.config(text=f"Index sélectionné : {self.current_color_index}")
+            self.selected_label.config(text=f"Selected index: {self.current_color_index}")
             self.draw_palette()
             self._update_rgb_entries()
 
