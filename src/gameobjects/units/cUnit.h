@@ -560,7 +560,6 @@ private:
 
     bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
 
-
     int unitsEaten; // worm related
 
     bool isSaboteur();
