@@ -667,7 +667,7 @@ private:
     void setGoalCell(int goalCell);
     void setTransferType(eTransferType transferType);
 
-    void giveOrder(const UnitOrder &order);   // replaces the unit's orders with this one and carries it out
+    void giveOrder(const QueuedOrder &order);   // replaces the unit's orders with this one and carries it out
     void carryOutCurrentOrder();
     void carryOutMoveOrder(const UnitOrder &order);
     void carryOutAttackOrder(const UnitOrder &order);

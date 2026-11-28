@@ -855,7 +855,7 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
     giveOrder(order);
 }
 
-void cUnit::giveOrder(const UnitOrder &order)
+void cUnit::giveOrder(const QueuedOrder &order)
 {
     m_orders.replace(order);
     carryOutCurrentOrder();
@@ -863,19 +863,23 @@ void cUnit::giveOrder(const UnitOrder &order)
 
 void cUnit::carryOutCurrentOrder()
 {
-    std::optional<UnitOrder> order = m_orders.current();
-    if (!order) return;
+    const QueuedOrder *current = m_orders.current();
+    if (!current) return;
 
-    switch (order->kind) {
-        case eUnitOrderKind::MOVE:
-            carryOutMoveOrder(*order);
-            break;
-        case eUnitOrderKind::ATTACK:
-            carryOutAttackOrder(*order);
-            break;
-        case eUnitOrderKind::TRANSFER:
-            carryOutTransferOrder(*order);
-            break;
+    // a copy: carrying out an order may change the queue
+    if (const UnitOrder *unitOrder = std::get_if<UnitOrder>(current)) {
+        UnitOrder order = *unitOrder;
+        switch (order.kind) {
+            case eUnitOrderKind::MOVE:
+                carryOutMoveOrder(order);
+                break;
+            case eUnitOrderKind::ATTACK:
+                carryOutAttackOrder(order);
+                break;
+            case eUnitOrderKind::TRANSFER:
+                carryOutTransferOrder(order);
+                break;
+        }
     }
 }
 
@@ -3954,7 +3958,7 @@ void cUnit::setAction(eActionType action)
 
     // back on guard: the unit is done with (or gave up) its order
     if (action == eActionType::GUARD) {
-        std::optional<UnitOrder> order = m_orders.current();
+        const UnitOrder *order = m_orders.currentAs<UnitOrder>();
         if (order && (order->kind == eUnitOrderKind::MOVE || order->kind == eUnitOrderKind::ATTACK)) {
             m_orders.completeCurrent();
         }
@@ -3967,7 +3971,7 @@ void cUnit::setTransferType(eTransferType transferType)
 
     // no longer picking up or bringing a unit: the carry-all is done with (or gave up) its transfer order
     if (transferType == eTransferType::NONE || transferType == eTransferType::DIE) {
-        std::optional<UnitOrder> order = m_orders.current();
+        const UnitOrder *order = m_orders.currentAs<UnitOrder>();
         if (order && order->kind == eUnitOrderKind::TRANSFER) {
             m_orders.completeCurrent();
         }
