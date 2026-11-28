@@ -480,12 +480,12 @@ public:
 
     void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
 
-    // this Carry-All leaves the map once its transfer is done or cancelled, instead of staying
     // a Carry-All bringing a new unit: the new unit drives to this cell after the drop
     void setCellNewUnitMovesTo(int cell) {
         m_newUnitMoveToCell = cell;
     }
 
+    // this Carry-All leaves the map once its transfer is done or cancelled, instead of staying
     void leaveMapAfterTransfer() {
         m_leavesMapAfterTransfer = true;
     }
