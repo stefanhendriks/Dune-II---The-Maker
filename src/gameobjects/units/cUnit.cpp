@@ -839,7 +839,10 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
         unitWillNoLongerBeInteractingWithStructure();
     }
 
-    tellCarryAllThatWouldPickMeUpToForgetAboutMe();
+    // a rescue carry-all keeps coming: this unit cannot drive away, it carries out this order after the drop
+    if (!isAwaitingRescue()) {
+        tellCarryAllThatWouldPickMeUpToForgetAboutMe();
+    }
 
     iStructureID = iStructureIdToEnter;
 
@@ -1013,27 +1016,43 @@ void cUnit::think()
     thinkNormal_rescueWhenBoxedIn();
 }
 
+std::function<bool(int)> cUnit::canEnterCellPredicate()
+{
+    const bool infantry = isInfantryUnit();
+    cAbstractStructure *structureToEnter = getStructureUnitWantsToEnter();
+    const int structureToEnterId = structureToEnter ? structureToEnter->getStructureId() : -1;
+
+    // terrain and structures box a unit in, other units do not (they can move away)
+    return [this, infantry, structureToEnterId](int cell) {
+        bool passable = infantry ? m_map->isCellPassableFoot(cell) : m_map->isCellPassable(cell);
+        if (!passable) return false;
+        int structureId = m_map->getCellIdStructuresLayer(cell);
+        return structureId < 0 || structureId == structureToEnterId;
+    };
+}
+
+bool cUnit::isAwaitingRescue()
+{
+    if (willBePickedUpBy < 0) return false;
+    cUnit *carryAll = m_objects->getUnit(willBePickedUpBy);
+    return carryAll->isValid() && carryAll->m_leavesMapAfterTransfer;
+}
+
+bool cUnit::isBoxedIn()
+{
+    return BoxedInCells::isBoxedIn(*m_objects->getMapGeometry(), position.iCell, canEnterCellPredicate());
+}
+
 void cUnit::thinkNormal_rescueWhenBoxedIn()
 {
     if (!isAlive()) return; // dead, or hidden (inside a structure or carried by a carry-all)
     if (isAirbornUnit() || isSandworm()) return;
     if (willBePickedUpBy > -1) return; // a carry-all is already on its way
     if (isMovingBetweenCells()) return;
+    if (!isBoxedIn()) return;
 
     const MapGeometry &geometry = *m_objects->getMapGeometry();
-    const bool infantry = isInfantryUnit();
-    cAbstractStructure *structureToEnter = getStructureUnitWantsToEnter();
-    const int structureToEnterId = structureToEnter ? structureToEnter->getStructureId() : -1;
-
-    // terrain and structures box a unit in, other units do not (they can move away)
-    auto canEnter = [this, infantry, structureToEnterId](int cell) {
-        bool passable = infantry ? m_map->isCellPassableFoot(cell) : m_map->isCellPassable(cell);
-        if (!passable) return false;
-        int structureId = m_map->getCellIdStructuresLayer(cell);
-        return structureId < 0 || structureId == structureToEnterId;
-    };
-
-    if (!BoxedInCells::isBoxedIn(geometry, position.iCell, canEnter)) return;
+    auto canEnter = canEnterCellPredicate();
 
     // a cell the unit could move to, which is not boxed in itself (or it would need another rescue)
     auto isUsable = [this, &geometry, &canEnter](int cell) {
@@ -1442,9 +1461,17 @@ void cUnit::thinkFast_move_airUnit()
                                 } // attempts to unload above structure
                             }
 
+                            // a rescued unit carries on with its order (a goal elsewhere than where it was picked up)
+                            bool keepOrder = m_leavesMapAfterTransfer && unitToPickupOrDrop.movement.iGoalCell != unitToPickupOrDrop.position.iCell;
+
                             // dump it here (unload from carry-all)
                             unitToPickupOrDrop.setCell(position.iCell);
-                            unitToPickupOrDrop.setGoalCell(position.iCell);
+                            if (keepOrder) {
+                                unitToPickupOrDrop.forgetAboutCurrentPathAndPrepareToCreateNewOne(0);
+                            }
+                            else {
+                                unitToPickupOrDrop.setGoalCell(position.iCell);
+                            }
                             unitToPickupOrDrop.updateCellXAndY(); // update cellx and celly
                             m_map->cellSetIdForLayer(position.iCell, MAPID_UNITS, iUnitID);
 
@@ -2488,6 +2515,12 @@ void cUnit::thinkFast_move()
                 log(std::format("Create path ... result = {}", iResult));
 
                 // On fail:
+                if (iResult < 0 && isBoxedIn()) {
+                    // keep the order: a carry-all rescues this unit, after which it carries on
+                    movewaitTimer.reset(100);
+                    return;
+                }
+
                 if (iResult < 0) {
                     // simply failed
                     if (iResult == -1) {
