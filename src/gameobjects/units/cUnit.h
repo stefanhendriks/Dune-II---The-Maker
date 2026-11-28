@@ -44,6 +44,7 @@ class cScreenShake;
 class cEventEmitter;
 class cMapCamera;
 class cMap;
+class MapGeometry;
 class cPathFinder;
 
 enum class eTransferType {
@@ -489,6 +490,9 @@ public:
     // true when terrain and structures leave this unit fewer than 2 cells to move to
     bool isBoxedIn();
     std::function<bool(int)> canEnterCellPredicate();
+    // a random cell of the closest free cells around fromCell where a unit of this type can be set down
+    // without being boxed in again; -1 when there is none
+    static int findFreeCellToSetDown(cMap *map, const MapGeometry &geometry, int fromCell, int unitType, bool infantry, int structureToEnterId = -1);
     // a rescue carry-all is on its way to pick this unit up
     bool isAwaitingRescue();
 

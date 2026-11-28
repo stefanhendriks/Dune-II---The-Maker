@@ -1016,19 +1016,35 @@ void cUnit::think()
     thinkNormal_rescueWhenBoxedIn();
 }
 
-std::function<bool(int)> cUnit::canEnterCellPredicate()
+// terrain and structures box a unit in, other units do not (they can move away)
+static std::function<bool(int)> canEnterCell(cMap *map, bool infantry, int structureToEnterId)
 {
-    const bool infantry = isInfantryUnit();
-    cAbstractStructure *structureToEnter = getStructureUnitWantsToEnter();
-    const int structureToEnterId = structureToEnter ? structureToEnter->getStructureId() : -1;
-
-    // terrain and structures box a unit in, other units do not (they can move away)
-    return [this, infantry, structureToEnterId](int cell) {
-        bool passable = infantry ? m_map->isCellPassableFoot(cell) : m_map->isCellPassable(cell);
+    return [map, infantry, structureToEnterId](int cell) {
+        bool passable = infantry ? map->isCellPassableFoot(cell) : map->isCellPassable(cell);
         if (!passable) return false;
-        int structureId = m_map->getCellIdStructuresLayer(cell);
+        int structureId = map->getCellIdStructuresLayer(cell);
         return structureId < 0 || structureId == structureToEnterId;
     };
+}
+
+std::function<bool(int)> cUnit::canEnterCellPredicate()
+{
+    cAbstractStructure *structureToEnter = getStructureUnitWantsToEnter();
+    return canEnterCell(m_map, isInfantryUnit(), structureToEnter ? structureToEnter->getStructureId() : -1);
+}
+
+int cUnit::findFreeCellToSetDown(cMap *map, const MapGeometry &geometry, int fromCell, int unitType, bool infantry, int structureToEnterId)
+{
+    auto canEnter = canEnterCell(map, infantry, structureToEnterId);
+
+    // a cell the unit could move to, which is not boxed in itself (or it would need another rescue)
+    auto isUsable = [map, unitType, &geometry, &canEnter](int cell) {
+        return map->canDeployUnitTypeAtCell(cell, unitType) && !BoxedInCells::isBoxedIn(geometry, cell, canEnter);
+    };
+
+    std::vector<int> cells = BoxedInCells::findClosestUsableCells(geometry, fromCell, isUsable);
+    if (cells.empty()) return -1;
+    return cells[RNG::rnd(static_cast<int>(cells.size()))];
 }
 
 bool cUnit::isAwaitingRescue()
@@ -1051,18 +1067,12 @@ void cUnit::thinkNormal_rescueWhenBoxedIn()
     if (isMovingBetweenCells()) return;
     if (!isBoxedIn()) return;
 
-    const MapGeometry &geometry = *m_objects->getMapGeometry();
-    auto canEnter = canEnterCellPredicate();
+    cAbstractStructure *structureToEnter = getStructureUnitWantsToEnter();
+    int dropCell = findFreeCellToSetDown(m_map, *m_objects->getMapGeometry(), position.iCell, iType, isInfantryUnit(),
+                                         structureToEnter ? structureToEnter->getStructureId() : -1);
+    if (dropCell < 0) return;
 
-    // a cell the unit could move to, which is not boxed in itself (or it would need another rescue)
-    auto isUsable = [this, &geometry, &canEnter](int cell) {
-        return m_map->canDeployUnitTypeAtCell(cell, iType) && !BoxedInCells::isBoxedIn(geometry, cell, canEnter);
-    };
-
-    std::vector<int> cells = BoxedInCells::findClosestUsableCells(geometry, position.iCell, isUsable);
-    if (cells.empty()) return;
-
-    rescueUnitWithCarryAll(m_objects, m_infos, m_eventEmitter, iID, cells[RNG::rnd(static_cast<int>(cells.size()))]);
+    rescueUnitWithCarryAll(m_objects, m_infos, m_eventEmitter, iID, dropCell);
 }
 
 void cUnit::thinkActionAgnostic()
