@@ -430,9 +430,20 @@ class SpriteEditor:
                 messagebox.showerror("Error", f"Error on saving : {e}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python3 sprite_editor.py <image.png>")
-        sys.exit(1)
     root = tk.Tk()
-    app = SpriteEditor(root, sys.argv[1])
+
+    if len(sys.argv) >= 2:
+        image_path = sys.argv[1]
+    else:
+        root.withdraw()
+        image_path = filedialog.askopenfilename(
+            title="Select a PNG sprite",
+            filetypes=[("PNG", "*.png")]
+        )
+        if not image_path:
+            root.destroy()
+            sys.exit(0)
+        root.deiconify()
+
+    app = SpriteEditor(root, image_path)
     root.mainloop()
