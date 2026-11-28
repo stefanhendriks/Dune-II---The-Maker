@@ -114,6 +114,7 @@ class SpriteEditor:
         
         self.root.bind("<Control-z>", self.undo)
         self.root.bind("<Control-y>", self.redo)
+        self.root.bind("<Escape>", self.clear_selection)
 
         # Right Zone : Palette
         right_frame = tk.Frame(self.main_frame)
