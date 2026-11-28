@@ -477,11 +477,6 @@ public:
     // replaces the unit's orders with these, carried out one after the other
     void giveOrders(std::initializer_list<QueuedOrder> orders);
 
-    // a Carry-All bringing a new unit: the new unit drives to this cell after the drop
-    void setCellNewUnitMovesTo(int cell) {
-        m_newUnitMoveToCell = cell;
-    }
-
     // this Carry-All leaves the map once its transfer is done or cancelled, instead of staying
     void leaveMapAfterTransfer() {
         m_leavesMapAfterTransfer = true;
@@ -576,7 +571,6 @@ private:
     bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
 
     bool m_leavesMapAfterTransfer; // a Carry-All that flies off the map once its transfer is done or cancelled
-    int m_newUnitMoveToCell; // a Carry-All bringing a new unit: the cell that unit drives to after the drop (-1 = none)
 
     int unitsEaten; // worm related
 

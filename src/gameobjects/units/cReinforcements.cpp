@@ -269,6 +269,6 @@ void deliverNewUnitNearStructure(cGameObjectContext* objects, cInfoContext* info
     if (!carryall) return;
 
     Logger::info(COMP_UNITS, "cReinforcements", "Bringing unit type {} of boxed in structure {} to cell {}, then to rally point {}", unitType, structure->getStructureId(), dropCell, structure->getRallyPoint());
-    carryall->carryall_order(-1, eTransferType::NEW_LEAVE, dropCell, unitType);
-    carryall->setCellNewUnitMovesTo(structure->getRallyPoint());
+    carryall->loadNewUnit(unitType);
+    carryall->giveOrders({DropUnitOrder{.cell = dropCell, .unitMoveToCell = structure->getRallyPoint()}, LeaveMapOrder{}});
 }
