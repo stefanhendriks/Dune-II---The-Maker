@@ -2,7 +2,7 @@ import sys
 import os
 from collections import deque
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog, simpledialog
 from PIL import Image
 
 class SpriteEditor:
@@ -197,6 +197,7 @@ class SpriteEditor:
         menu_bar.add_cascade(label="Edition", menu=edit_menu)
 
         palette_menu = tk.Menu(menu_bar, tearoff=0)
+        palette_menu.add_command(label="Modifier couleur...", command=self.edit_palette_color_by_index_dialog)
         palette_menu.add_command(label="Remplacer une couleur...", command=self.replace_index_dialog)
         menu_bar.add_cascade(label="Palette", menu=palette_menu)
 
@@ -530,6 +531,37 @@ class SpriteEditor:
             self.redo_stack.clear()
             self.draw_sprite()
 
+    def _select_palette_index(self, index):
+        """Select one palette index and refresh related UI fields."""
+        self.current_color_index = index
+        self.selected_label.config(text=f"Index selection : {self.current_color_index}")
+        self.draw_palette()
+        self._update_rgb_entries()
+
+    def _edit_palette_color_at_index(self, index):
+        """Shared entry point to edit one palette color by index."""
+        if not (0 <= index <= 255):
+            return
+        if index == 0:
+            return
+
+        self._select_palette_index(index)
+        self._open_palette_rgb_dialog(index)
+
+    def edit_palette_color_by_index_dialog(self):
+        """Ask for a palette index, then open RGB editor for this index."""
+        index = simpledialog.askinteger(
+            "Modifier couleur",
+            "Numéro de couleur (1-255):",
+            parent=self.root,
+            minvalue=1,
+            maxvalue=255
+        )
+        if index is None:
+            return
+
+        self._edit_palette_color_at_index(index)
+
     def _set_palette_rgb(self, index, r, g, b):
         """Update one palette index RGB value."""
         palette = list(self.image.getpalette())
@@ -615,26 +647,16 @@ class SpriteEditor:
             new_index = row * 8 + col
             if new_index == 0:
                 return # L'index 0 (souvent transparence) n'est pas sélectionnable
-            
-            self.current_color_index = new_index
-            self.selected_label.config(text=f"Index selection : {self.current_color_index}")
+
+            self._select_palette_index(new_index)
             self.apply_color_to_selection(new_index)
-            self.draw_palette()
-            self._update_rgb_entries()
 
     def on_palette_right_click(self, event):
         """Open RGB edit dialog for the palette color under mouse."""
         col, row = event.x // self.PALETTE_CELL_SIZE, event.y // self.PALETTE_CELL_SIZE
         if 0 <= col < 8 and 0 <= row < 32:
             index = row * 8 + col
-            if index == 0:
-                return
-
-            self.current_color_index = index
-            self.selected_label.config(text=f"Index selection : {self.current_color_index}")
-            self.draw_palette()
-            self._update_rgb_entries()
-            self._open_palette_rgb_dialog(index)
+            self._edit_palette_color_at_index(index)
 
     def on_sprite_right_click(self, event):
         """Retrieves the colour index of the pixel under the mouse (Eyedropper)."""
