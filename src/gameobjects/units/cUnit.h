@@ -177,7 +177,6 @@ public:
     // iTempHitPoints = hp of unit when transfertype = 1
     eTransferType m_transferType;
 
-    int iBringTarget;	// Where to bring the carried unit (when iUnitIDWithinStructure > -1)
     int iNewUnitType;	// new unit that will be brought, will be this type
     int lastDroppedOffCell; // last cell where we dropepd off a unit
 
@@ -288,9 +287,6 @@ public:
     cAbstractStructure *findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(int structureType);
     cAbstractStructure *findClosestAvailableStructureType(int structureType);
     cAbstractStructure *findClosestStructureType(int structureType);
-
-    // carryall-functions:
-    void carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe);
 
     cTimer moveTimer;         // movement timer
     cTimer movewaitTimer;     // wait for move think...
@@ -671,6 +667,7 @@ private:
     void completeCurrentOrder();   // the current order is done (or abandoned), carry out the next one
     [[nodiscard]] bool canCarryOut(const QueuedOrder &order) const;
     void carryOutUnitOrder(const UnitOrder &order);
+    void carryOutPickupOrder(const PickupUnitOrder &order);
     void carryOutDropOrder(const DropUnitOrder &order);
     void carryOutLeaveMapOrder();
 
@@ -680,7 +677,6 @@ private:
     [[nodiscard]] bool isTransferring() const;
     void carryOutMoveOrder(const UnitOrder &order);
     void carryOutAttackOrder(const UnitOrder &order);
-    void carryOutTransferOrder(const UnitOrder &order);
 
     static int carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects);
 };

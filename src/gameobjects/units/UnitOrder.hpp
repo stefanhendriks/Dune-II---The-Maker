@@ -21,13 +21,11 @@
 
 enum class eTransferType {
     NONE,                               // nothing to transfer
-    PICKUP,                             // carry an existing unit, bring to new location
 };
 
 enum class eUnitOrderKind {
     MOVE,       // drive to goalCell, optionally to enter a structure or pick up a unit
     ATTACK,     // attack a unit, structure or cell
-    TRANSFER,   // carry-all: pick up unitToPickup, or bring a new unit of newUnitType, to goalCell
 };
 
 /**
@@ -48,10 +46,6 @@ struct UnitOrder {
     int attackStructure = -1;
     int attackCell = -1;
     bool chaseWhenOutOfRange = true;
-
-    // TRANSFER
-    eTransferType transferType = eTransferType::NONE;
-    int newUnitType = -1;
 };
 
 // carry-all: fly to unitId and pick it up
