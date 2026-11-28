@@ -857,6 +857,13 @@ void cUnit::move_to(int iCll, int iStructureIdToEnter, int iUnitIdToPickup, eUni
 
 void cUnit::giveOrder(const QueuedOrder &order)
 {
+    // a unit leaving the map stays leaving: it carries out a move or attack it gets (ie, an ornithopter of a
+    // defeated player that picks a target), and is removed at the next cell it reaches
+    if (m_orders.currentAs<LeaveMapOrder>() && std::holds_alternative<UnitOrder>(order)) {
+        carryOutUnitOrder(std::get<UnitOrder>(order));
+        return;
+    }
+
     m_orders.replace(order);
     carryOutCurrentOrder();
 }
@@ -868,19 +875,31 @@ void cUnit::carryOutCurrentOrder()
 
     // a copy: carrying out an order may change the queue
     if (const UnitOrder *unitOrder = std::get_if<UnitOrder>(current)) {
-        UnitOrder order = *unitOrder;
-        switch (order.kind) {
-            case eUnitOrderKind::MOVE:
-                carryOutMoveOrder(order);
-                break;
-            case eUnitOrderKind::ATTACK:
-                carryOutAttackOrder(order);
-                break;
-            case eUnitOrderKind::TRANSFER:
-                carryOutTransferOrder(order);
-                break;
-        }
+        carryOutUnitOrder(UnitOrder(*unitOrder));
     }
+    else if (std::holds_alternative<LeaveMapOrder>(*current)) {
+        carryOutLeaveMapOrder();
+    }
+}
+
+void cUnit::carryOutUnitOrder(const UnitOrder &order)
+{
+    switch (order.kind) {
+        case eUnitOrderKind::MOVE:
+            carryOutMoveOrder(order);
+            break;
+        case eUnitOrderKind::ATTACK:
+            carryOutAttackOrder(order);
+            break;
+        case eUnitOrderKind::TRANSFER:
+            carryOutTransferOrder(order);
+            break;
+    }
+}
+
+void cUnit::carryOutLeaveMapOrder()
+{
+    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
 }
 
 void cUnit::carryOutMoveOrder(const UnitOrder &order)
@@ -1415,7 +1434,7 @@ void cUnit::thinkFast_move_airUnit()
         bool isWithinMapBoundaries = m_objects->getMapGeometry()->isWithinBoundaries(position.iCellX, position.iCellY);
 
         // reinforcement stuff happens here...
-        if (m_transferType == eTransferType::DIE) {
+        if (m_orders.currentAs<LeaveMapOrder>()) {
             // kill (probably reached border or something)
             die(false, false);
             return;
@@ -1612,8 +1631,7 @@ void cUnit::thinkFast_move_airUnit()
                 int iStrucId = m_map->getCellIdStructuresLayer(position.iCell);
 
                 if (iStrucId > -1) {
-                    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
-                    setTransferType(eTransferType::DIE);
+                    retreatToMapEdge();
 
                     m_objects->getStructure(iStrucId)->setFrame(4); // show package on this structure
                     m_objects->getStructure(iStrucId)->setAnimating(true); // keep animating
@@ -1669,10 +1687,7 @@ void cUnit::thinkFast_move_airUnit()
 
                 // depending on transfertype...
                 if (m_transferType == eTransferType::NEW_LEAVE) {
-                    setTransferType(eTransferType::DIE);
-
-                    // find a new border cell close to us... to die
-                    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
+                    retreatToMapEdge();
                     return;
                 }
                 else if (m_transferType == eTransferType::NEW_STAY) {
@@ -1713,7 +1728,7 @@ void cUnit::thinkFast_move_airUnit()
     int goalCellY = m_objects->getMapGeometry()->getCellY(movement.iGoalCell);
 
     // use this when picking something up
-    if (iUnitID > -1 || (m_transferType != eTransferType::DIE && m_transferType != eTransferType::NONE)) {
+    if (iUnitID > -1 || m_transferType != eTransferType::NONE) {
         int iLength = ABS_length(position.iCellX, position.iCellY, goalCellX, goalCellY);
 
         if (iType != FRIGATE) {
@@ -1859,8 +1874,11 @@ void cUnit::forgetAboutUnitToPickUp()  // forget about this
             pUnit->willBePickedUpBy = -1;
         }
     }
-    setGoalCell(position.iCell);
-    setTransferType(eTransferType::NONE);
+    // a carry-all that is leaving the map keeps leaving
+    if (!m_orders.currentAs<LeaveMapOrder>()) {
+        setGoalCell(position.iCell);
+        setTransferType(eTransferType::NONE);
+    }
     iUnitID = -1;
 }
 
@@ -1901,7 +1919,7 @@ int cUnit::findNewDropLocation(int unitTypeToDrop, int cell) const
 //
 void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int iTpe)
 {
-    if (m_transferType != eTransferType::NONE)
+    if (m_transferType != eTransferType::NONE || m_orders.contains<LeaveMapOrder>())
         return; // we cannot do multiple things at a time!!
 
     bool bringsNewUnit = transferType == eTransferType::NEW_STAY || transferType == eTransferType::NEW_LEAVE;
@@ -3970,7 +3988,7 @@ void cUnit::setTransferType(eTransferType transferType)
     m_transferType = transferType;
 
     // no longer picking up or bringing a unit: the carry-all is done with (or gave up) its transfer order
-    if (transferType == eTransferType::NONE || transferType == eTransferType::DIE) {
+    if (transferType == eTransferType::NONE) {
         const UnitOrder *order = m_orders.currentAs<UnitOrder>();
         if (order && order->kind == eUnitOrderKind::TRANSFER) {
             m_orders.completeCurrent();
@@ -3980,8 +3998,8 @@ void cUnit::setTransferType(eTransferType transferType)
 
 void cUnit::retreatToMapEdge()
 {
-    setTransferType(eTransferType::DIE);
-    setGoalCell(iFindCloseBorderCell(position.iCell, m_objects));
+    setTransferType(eTransferType::NONE);
+    giveOrder(LeaveMapOrder{});
 }
 
 void cUnit::retreatToNearbyBase()
@@ -4193,6 +4211,7 @@ int cUnit::carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects)
         if (cUnit->iPlayer != iPlayer) continue;
         if (cUnit->iType != CARRYALL) continue; // skip non-carry-all units
         if (cUnit->m_transferType != eTransferType::NONE) continue; // skip busy carry-alls
+        if (cUnit->m_orders.contains<LeaveMapOrder>()) continue; // leaving the map
         if (cUnit->m_leavesMapAfterTransfer) continue; // about to leave the map
         return i;
     }

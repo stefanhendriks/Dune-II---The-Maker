@@ -669,6 +669,8 @@ private:
 
     void giveOrder(const QueuedOrder &order);   // replaces the unit's orders with this one and carries it out
     void carryOutCurrentOrder();
+    void carryOutUnitOrder(const UnitOrder &order);
+    void carryOutLeaveMapOrder();
     void carryOutMoveOrder(const UnitOrder &order);
     void carryOutAttackOrder(const UnitOrder &order);
     void carryOutTransferOrder(const UnitOrder &order);

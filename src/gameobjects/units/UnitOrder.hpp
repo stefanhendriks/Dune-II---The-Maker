@@ -24,7 +24,6 @@ enum class eTransferType {
     NEW_STAY,                           // bring a new unit, and let the carryall stay
     NEW_LEAVE,                          // bring a new unit, and let the carryall go back (and die)
     PICKUP,                             // carry an existing unit, bring to new location
-    DIE,                                // will die when reaching goal-cell (added for proper animation)
 };
 
 enum class eUnitOrderKind {
