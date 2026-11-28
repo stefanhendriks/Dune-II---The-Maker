@@ -176,17 +176,11 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* 
 }
 
 /**
- * Spawns a carryAll that brings a unit (part of a reinforcement) to the map.
+ * Spawns a carryAll at the map border close to iStart (or iCll when iStart < 0), facing iCll.
+ * Returns nullptr when no carryAll could be created.
  */
-void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
+static cUnit *spawnCarryAllAtBorder(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iPlr, int iCll, int iStart, bool isReinforcement)
 {
-    // handle invalid arguments
-    if (iPlr < 0 || iTpe < 0)
-        return;
-
-    if (objects->getMapGeometry()->isValidCell(iCll) == false)
-        return;
-
     if (iStart < 0)
         iStart = iCll;
 
@@ -202,20 +196,18 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* 
 
     if (iStartCell < 0) {
         Logger::error(COMP_UNITS, "cReinforcements", "Could not figure a startcell");
-        return;
+        return nullptr;
     }
-
-    Logger::info(COMP_UNITS, "cReinforcements", "REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}", iTpe, iPlr, iStartCell, iCll);
 
     // STEP 2: create carryall
     int iUnit = cUnits::unitCreate(objects, infos, eventEmitter, iStartCell, CARRYALL, iPlr, true, isReinforcement, 1.0f, true);
     if (iUnit < 0) {
         // cannot create carry-all!
         Logger::error(COMP_UNITS, "cReinforcements", "Cannot create CARRYALL unit");
-        return;
+        return nullptr;
     }
 
-    // STEP 3: assign order to carryall
+    // STEP 3: face the carryall towards its target
     int iCellX = objects->getMapGeometry()->getCellX(iStartCell);
     int iCellY = objects->getMapGeometry()->getCellY(iStartCell);
     int cx = objects->getMapGeometry()->getCellX(iCll);
@@ -229,6 +221,35 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* 
     carryall->rendering.iBodyFacing = f;
     carryall->rendering.iHeadShouldFace = f;
     carryall->rendering.iHeadFacing = f;
+    return carryall;
+}
 
+/**
+ * Spawns a carryAll that brings a unit (part of a reinforcement) to the map.
+ */
+void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement)
+{
+    // handle invalid arguments
+    if (iPlr < 0 || iTpe < 0)
+        return;
+
+    if (objects->getMapGeometry()->isValidCell(iCll) == false)
+        return;
+
+    cUnit *carryall = spawnCarryAllAtBorder(objects, infos, eventEmitter, iPlr, iCll, iStart, isReinforcement);
+    if (!carryall) return;
+
+    Logger::info(COMP_UNITS, "cReinforcements", "REINFORCE: Bringing unit type {} for player {}. Starting from cell {}, going to cell {}", iTpe, iPlr, carryall->getCell(), iCll);
     carryall->carryall_order(-1, eTransferType::NEW_LEAVE, iCll, iTpe);
+}
+
+void rescueUnitWithCarryAll(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int unitId, int dropCell)
+{
+    cUnit *unit = objects->getUnit(unitId);
+    cUnit *carryall = spawnCarryAllAtBorder(objects, infos, eventEmitter, unit->iPlayer, unit->getCell(), -1, true);
+    if (!carryall) return;
+
+    Logger::info(COMP_UNITS, "cReinforcements", "Rescue: carryall {} brings boxed in unit {} of player {} from cell {} to cell {}", carryall->iID, unitId, unit->iPlayer, unit->getCell(), dropCell);
+    carryall->carryAll_transferUnitTo(unitId, dropCell);
+    carryall->leaveMapAfterTransfer();
 }

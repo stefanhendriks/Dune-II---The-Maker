@@ -28,8 +28,10 @@
 #include "gameobjects/map/cMapCamera.h"
 #include "gameobjects/map/cMapEditor.h"
 #include "gameobjects/map/MapGeometry.hpp"
+#include "gameobjects/map/BoxedInCells.hpp"
 #include "gameobjects/players/cPlayer.h"
 #include "gameobjects/players/cPlayers.h"
+#include "gameobjects/units/cReinforcements.h"
 #include "utils/cSoundPlayer.h"
 #include "utils/RNG.hpp"
 #include <format>
@@ -120,6 +122,7 @@ void cUnit::init(int i)
 
     // Carry-All specific
     m_transferType = eTransferType::NONE;
+    m_leavesMapAfterTransfer = false;
     // iUnitIDWithinStructure = unit we CARRY (when TransferType == 1)
     // iTempHitPoints = hp of unit when transfertype = 1
 
@@ -1006,6 +1009,41 @@ void cUnit::think()
     if (m_action == eActionType::ATTACK_CHASE || m_action == eActionType::ATTACK) {
         think_attack();
     }
+
+    thinkNormal_rescueWhenBoxedIn();
+}
+
+void cUnit::thinkNormal_rescueWhenBoxedIn()
+{
+    if (!isAlive()) return; // dead, or hidden (inside a structure or carried by a carry-all)
+    if (isAirbornUnit() || isSandworm()) return;
+    if (willBePickedUpBy > -1) return; // a carry-all is already on its way
+    if (isMovingBetweenCells()) return;
+
+    const MapGeometry &geometry = *m_objects->getMapGeometry();
+    const bool infantry = isInfantryUnit();
+    cAbstractStructure *structureToEnter = getStructureUnitWantsToEnter();
+    const int structureToEnterId = structureToEnter ? structureToEnter->getStructureId() : -1;
+
+    // terrain and structures box a unit in, other units do not (they can move away)
+    auto canEnter = [this, infantry, structureToEnterId](int cell) {
+        bool passable = infantry ? m_map->isCellPassableFoot(cell) : m_map->isCellPassable(cell);
+        if (!passable) return false;
+        int structureId = m_map->getCellIdStructuresLayer(cell);
+        return structureId < 0 || structureId == structureToEnterId;
+    };
+
+    if (!BoxedInCells::isBoxedIn(geometry, position.iCell, canEnter)) return;
+
+    // a cell the unit could move to, which is not boxed in itself (or it would need another rescue)
+    auto isUsable = [this, &geometry, &canEnter](int cell) {
+        return m_map->canDeployUnitTypeAtCell(cell, iType) && !BoxedInCells::isBoxedIn(geometry, cell, canEnter);
+    };
+
+    std::vector<int> cells = BoxedInCells::findClosestUsableCells(geometry, position.iCell, isUsable);
+    if (cells.empty()) return;
+
+    rescueUnitWithCarryAll(m_objects, m_infos, m_eventEmitter, iID, cells[RNG::rnd(static_cast<int>(cells.size()))]);
 }
 
 void cUnit::thinkActionAgnostic()
@@ -1373,8 +1411,8 @@ void cUnit::thinkFast_move_airUnit()
 
                         // check if its valid for this unit...
                         if (!m_map->occupied(position.iCell, iUnitID) && isWithinMapBoundaries) {
-                            // valid structure
-                            cAbstractStructure *structureUnitWantsToEnter = unitToPickupOrDrop.getStructureUnitWantsToEnter();
+                            // valid structure (a rescue only frees the unit, it does not bring it to a structure)
+                            cAbstractStructure *structureUnitWantsToEnter = m_leavesMapAfterTransfer ? nullptr : unitToPickupOrDrop.getStructureUnitWantsToEnter();
 
                             if (structureUnitWantsToEnter) {
                                 bool isAttemptingDeployingAtStructure = m_map->getCellIdStructuresLayer(position.iCell) == structureUnitWantsToEnter->getStructureId();
@@ -1550,6 +1588,12 @@ void cUnit::thinkFast_move_airUnit()
                 setGoalCell(findNewDropLocation(iNewUnitType, position.iCell));
                 return;
             }
+        }
+
+        // transfer done or cancelled
+        if (m_leavesMapAfterTransfer) {
+            retreatToMapEdge();
+            return;
         }
 
         // move randomly
@@ -4003,6 +4047,7 @@ int cUnit::carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects)
         if (cUnit->iPlayer != iPlayer) continue;
         if (cUnit->iType != CARRYALL) continue; // skip non-carry-all units
         if (cUnit->m_transferType != eTransferType::NONE) continue; // skip busy carry-alls
+        if (cUnit->m_leavesMapAfterTransfer) continue; // about to leave the map
         return i;
     }
 
