@@ -889,7 +889,8 @@ bool cUnit::canCarryOut(const QueuedOrder &order) const
 
 bool cUnit::isCarryingSomething() const
 {
-    return iNewUnitType > -1 || (iUnitID > -1 && bPickedUp);
+    // a frigate always carries a package (for the starport)
+    return iNewUnitType > -1 || (iUnitID > -1 && bPickedUp) || iType == FRIGATE;
 }
 
 bool cUnit::isTransferring() const
@@ -1282,11 +1283,9 @@ cAbstractStructure *cUnit::findClosestStructureType(int structureType)
 void cUnit::think_carryAll()  // A carry-all has something when:
 {
 // - it carries a unit (iUnitIDWithinStructure > -1)
-// - it has the flag eTransferType::NEW_
+// - it brings a new unit (a DropUnitOrder is current)
 
-    if ((m_transferType == eTransferType::NEW_STAY ||
-            m_transferType == eTransferType::NEW_LEAVE ||
-            m_transferType == eTransferType::PICKUP) || iUnitID > -1 || m_orders.currentAs<DropUnitOrder>()) {
+    if (m_transferType == eTransferType::PICKUP || iUnitID > -1 || m_orders.currentAs<DropUnitOrder>()) {
 
         // when picking up a unit.. only draw when picked up
         if (m_transferType == eTransferType::PICKUP && bPickedUp)
@@ -1671,8 +1670,40 @@ void cUnit::thinkFast_move_airUnit()
             }
         }
 
-        // set down the new unit this carry-all brings
+        // set down the new unit this carry-all brings, or the package a frigate brings to a starport
         if (const DropUnitOrder *dropOrder = m_orders.currentAs<DropUnitOrder>(); dropOrder && iUnitID < 0) {
+            if (iType == FRIGATE) {
+                int iStrucId = m_map->getCellIdStructuresLayer(position.iCell);
+
+                if (iStrucId > -1) {
+                    m_objects->getStructure(iStrucId)->setFrame(4); // show package on this structure
+                    m_objects->getStructure(iStrucId)->setAnimating(true); // keep animating
+                    cStarPort *starport = dynamic_cast<cStarPort *>(m_objects->getStructure(iStrucId));
+                    if (starport) {
+                        starport->setFrigateDroppedPackage(true);
+                    }
+
+                    // dropped the package: carry out the next order (leave the map)
+                    completeCurrentOrder();
+                }
+                else {
+                    // we don't expect this to go wrong :/
+                    cAbstractStructure *starport = findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(STARPORT);
+
+                    // find closest Starport to deliver next (Starport got mid-way destroyed)
+                    if (!starport) {
+                        // not found, die
+                        die(true, false);
+                    }
+                    else {
+                        setGoalCell(starport->getCell());
+                        starport->setUnitIdHeadingTowards(iID);
+                    }
+                }
+
+                return; // override for frigates
+            }
+
             int unitMoveToCell = dropOrder->unitMoveToCell;
             bool canDeployAtCell = m_map->occupied(position.iCell, iID) == false;
 
@@ -1708,89 +1739,6 @@ void cUnit::thinkFast_move_airUnit()
             updateCellXAndY();
             setGoalCell(findNewDropLocation(iNewUnitType, position.iCell));
             return;
-        }
-
-        // transfer is to create a new unit
-        if (m_transferType == eTransferType::NEW_LEAVE ||
-                m_transferType == eTransferType::NEW_STAY) {
-            // bring a new unit
-
-            if (iType == FRIGATE) {
-                int iStrucId = m_map->getCellIdStructuresLayer(position.iCell);
-
-                if (iStrucId > -1) {
-                    retreatToMapEdge();
-
-                    m_objects->getStructure(iStrucId)->setFrame(4); // show package on this structure
-                    m_objects->getStructure(iStrucId)->setAnimating(true); // keep animating
-                    cStarPort *starport = dynamic_cast<cStarPort *>(m_objects->getStructure(iStrucId));
-                    if (starport) {
-                        starport->setFrigateDroppedPackage(true);
-                    }
-                }
-                else {
-                    // we don't expect this to go wrong :/
-                    cAbstractStructure *starport = findClosestAvailableStructureTypeWhereNoUnitIsHeadingTo(STARPORT);
-
-                    // find closest Starport to deliver next (Starport got mid-way destroyed)
-                    if (!starport) {
-                        // not found, die
-                        die(true, false);
-                    }
-                    else {
-                        setGoalCell(starport->getCell());
-                        starport->setUnitIdHeadingTowards(iID);
-                    }
-                }
-
-                return; // override for frigates
-            }
-
-            bool canDeployAtCell = m_map->occupied(position.iCell, iID) == false;
-
-            if (iNewUnitType > -1) {
-                canDeployAtCell = m_map->canDeployUnitAtCell(position.iCell, iID);
-            }
-
-            // first check if this cell is clear
-            if (canDeployAtCell && isWithinMapBoundaries) {
-                // drop unit
-                if (iNewUnitType > -1) {
-                    const s_GameEvent event {
-                        .eventType = eGameEventType::GAME_EVENT_CREATE_UNIT,
-                        .data = DeployUnitEvent {
-                            .iCell = position.iCell,
-                            .unitType = iNewUnitType,
-                            .iPlayer = getPlayer()->getId(),
-                            .bOnStart = true,
-                            .isReinforcement = isReinforcement,
-                            .moveToCell = -1
-                        }
-                    };
-                    m_eventEmitter->emit(event);
-                }
-
-                // now make sure this carry-all will not be drawn as having a unit:
-                iNewUnitType = -1;
-
-                // depending on transfertype...
-                if (m_transferType == eTransferType::NEW_LEAVE) {
-                    retreatToMapEdge();
-                    return;
-                }
-                else if (m_transferType == eTransferType::NEW_STAY) {
-                    // reset transfertype:
-                    setTransferType(eTransferType::NONE);
-                    return;
-                }
-
-            }
-            else {
-                // find a new spot for delivery
-                updateCellXAndY();
-                setGoalCell(findNewDropLocation(iNewUnitType, position.iCell));
-                return;
-            }
         }
 
         // transfer done or cancelled
@@ -2010,10 +1958,9 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
     if (isTransferring() || m_orders.contains<LeaveMapOrder>())
         return; // we cannot do multiple things at a time!!
 
-    bool bringsNewUnit = transferType == eTransferType::NEW_STAY || transferType == eTransferType::NEW_LEAVE;
     bool picksUpUnit = transferType == eTransferType::PICKUP && iuID > -1 && m_objects->getUnit(iuID)->isValid() &&
                        !m_objects->getUnit(iuID)->isCarried();
-    if (!bringsNewUnit && !picksUpUnit) return;
+    if (!picksUpUnit) return;
 
     UnitOrder order;
     order.kind = eUnitOrderKind::TRANSFER;
@@ -2026,29 +1973,7 @@ void cUnit::carryall_order(int iuID, eTransferType transferType, int iBring, int
 
 void cUnit::carryOutTransferOrder(const UnitOrder &order)
 {
-    if (order.transferType == eTransferType::NEW_STAY || order.transferType == eTransferType::NEW_LEAVE) {
-        // bring a new unit, depending on the transferType the carryall who brings this will be
-        // removed after he brought the unit...
-
-        // when iTranfer is 0 or 2, the unit is just created by REINFORCE() and this function
-        // sets the target and such.
-
-        m_transferType = order.transferType;
-
-        // Go to this:
-        setGoalCell(order.goalCell);
-        iBringTarget = movement.iGoalCell;
-
-        // unit we carry is none
-        iUnitID = -1;
-
-        // the unit type...
-        iNewUnitType = order.newUnitType;
-
-        bPickedUp = false;
-        // DONE!
-    }
-    else if (order.transferType == eTransferType::PICKUP) {
+    if (order.transferType == eTransferType::PICKUP) {
         // the carryall must pickup the unit, and then bring it to the iBring stuff
         cUnit *pUnit = m_objects->getUnit(order.unitToPickup);
         m_transferType = order.transferType;

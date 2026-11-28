@@ -310,8 +310,8 @@ void cOrderProcesser::sendFrigate()
             m_objects->getUnit(unitId)->rendering.iHeadShouldFace = f;
             m_objects->getUnit(unitId)->rendering.iHeadFacing = f;
 
-            // STEP 3: assign order to frigate (use carryall order function)
-            m_objects->getUnit(unitId)->carryall_order(-1, eTransferType::NEW_LEAVE, destinationCell, -1);
+            // STEP 3: the frigate drops its package at the starport, then leaves the map
+            m_objects->getUnit(unitId)->giveOrders({DropUnitOrder{.cell = destinationCell}, LeaveMapOrder{}});
             m_unitIdOfFrigateSent = unitId;
             m_frigateSent = true;
         }
