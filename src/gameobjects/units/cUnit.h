@@ -23,6 +23,7 @@
 #include "gameobjects/units/cUnitInfos.h"
 #include "utils/cRectangle.h"
 #include "gameobjects/units/cTimer.h"
+#include "gameobjects/units/UnitOrderQueue.hpp"
 
 #include <array>
 #include <functional>
@@ -553,6 +554,8 @@ private:
 
     eActionType m_action;
     eUnitActionIntent intent;
+
+    UnitOrderQueue m_orders; // the orders this unit was given, the front one is carried out now
 
     int iTempHitPoints; // temp hold back for 'reinforced' / 'dumping' and 'repairing' units
 

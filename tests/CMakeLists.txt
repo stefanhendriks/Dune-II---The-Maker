@@ -20,6 +20,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/game/test_cTimeCounter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_cHousesInfoDifficulty.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_cPlayerNotification.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_UnitOrderQueue.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_BoxedInCells.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_FogMemory.cpp

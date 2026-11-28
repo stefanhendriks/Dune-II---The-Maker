@@ -108,6 +108,7 @@ void cUnit::init(int i)
 
     m_action = eActionType::GUARD;
     intent = INTENT_NONE;
+    m_orders.clear();
 
     combat.iAttackUnit = -1;      // attacking unit id
     combat.iAttackStructure = -1; // attack structure id
