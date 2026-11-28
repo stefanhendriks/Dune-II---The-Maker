@@ -125,6 +125,7 @@ class SpriteEditor:
         self.palette_canvas = tk.Canvas(right_frame, width=8 * self.PALETTE_CELL_SIZE, height=32 * self.PALETTE_CELL_SIZE, bg="white")
         self.palette_canvas.pack()
         self.palette_canvas.bind("<Button-1>", self.on_palette_click)
+        self.palette_canvas.bind("<Button-3>", self.on_palette_right_click)
 
         self.selected_label = tk.Label(right_frame, text=f"Index selection : {self.current_color_index}")
         self.selected_label.pack(pady=10)
@@ -452,7 +453,13 @@ class SpriteEditor:
         dialog.title("Remplacement de couleur")
         dialog.resizable(False, False)
         dialog.transient(self.root)
-        dialog.grab_set()
+
+        dialog.update_idletasks()
+        try:
+            dialog.wait_visibility()
+            dialog.grab_set()
+        except tk.TclError:
+            pass
 
         form = tk.Frame(dialog, padx=12, pady=12)
         form.pack(fill=tk.BOTH, expand=True)
@@ -523,6 +530,84 @@ class SpriteEditor:
             self.redo_stack.clear()
             self.draw_sprite()
 
+    def _set_palette_rgb(self, index, r, g, b):
+        """Update one palette index RGB value."""
+        palette = list(self.image.getpalette())
+        palette[index * 3] = r
+        palette[index * 3 + 1] = g
+        palette[index * 3 + 2] = b
+        self.image.putpalette(palette)
+        self.draw_palette()
+        self.draw_sprite()
+        self._update_rgb_entries()
+
+    def _open_palette_rgb_dialog(self, index):
+        """Open a dialog to edit RGB components for one palette index."""
+        if self._is_index_protected(index):
+            messagebox.showwarning("Palette", "This colour index is protected (Team Color).")
+            return
+
+        palette = self.image.getpalette()
+        r = palette[index * 3]
+        g = palette[index * 3 + 1]
+        b = palette[index * 3 + 2]
+
+        dialog = tk.Toplevel(self.root)
+        dialog.title(f"Modifier couleur index {index}")
+        dialog.resizable(False, False)
+        dialog.transient(self.root)
+
+        # Ensure the window is mapped before grabbing focus, otherwise Tk can fail.
+        dialog.update_idletasks()
+        try:
+            dialog.wait_visibility()
+            dialog.grab_set()
+        except tk.TclError:
+            pass
+
+        form = tk.Frame(dialog, padx=12, pady=12)
+        form.pack(fill=tk.BOTH, expand=True)
+
+        tk.Label(form, text=f"Index: {index}").grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 8))
+
+        tk.Label(form, text="R:").grid(row=1, column=0, sticky="w")
+        r_entry = tk.Entry(form, width=6)
+        r_entry.grid(row=1, column=1, sticky="w", padx=(8, 0))
+        r_entry.insert(0, str(r))
+
+        tk.Label(form, text="G:").grid(row=2, column=0, sticky="w")
+        g_entry = tk.Entry(form, width=6)
+        g_entry.grid(row=2, column=1, sticky="w", padx=(8, 0))
+        g_entry.insert(0, str(g))
+
+        tk.Label(form, text="B:").grid(row=3, column=0, sticky="w")
+        b_entry = tk.Entry(form, width=6)
+        b_entry.grid(row=3, column=1, sticky="w", padx=(8, 0))
+        b_entry.insert(0, str(b))
+
+        def apply_rgb():
+            try:
+                new_r = int(r_entry.get())
+                new_g = int(g_entry.get())
+                new_b = int(b_entry.get())
+            except ValueError:
+                messagebox.showerror("Error", "RGB values must be integers.", parent=dialog)
+                return
+
+            if not (0 <= new_r <= 255 and 0 <= new_g <= 255 and 0 <= new_b <= 255):
+                messagebox.showerror("Error", "RGB values must be between 0 and 255.", parent=dialog)
+                return
+
+            self._set_palette_rgb(index, new_r, new_g, new_b)
+            dialog.destroy()
+
+        action_row = tk.Frame(form)
+        action_row.grid(row=4, column=0, columnspan=2, sticky="e", pady=(12, 0))
+        tk.Button(action_row, text="Appliquer", command=apply_rgb).pack(side=tk.LEFT)
+        tk.Button(action_row, text="Annuler", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
+
+        r_entry.focus_set()
+
     def on_palette_click(self, event):
         """Select a colour from the palette."""
         col, row = event.x // self.PALETTE_CELL_SIZE, event.y // self.PALETTE_CELL_SIZE
@@ -536,6 +621,20 @@ class SpriteEditor:
             self.apply_color_to_selection(new_index)
             self.draw_palette()
             self._update_rgb_entries()
+
+    def on_palette_right_click(self, event):
+        """Open RGB edit dialog for the palette color under mouse."""
+        col, row = event.x // self.PALETTE_CELL_SIZE, event.y // self.PALETTE_CELL_SIZE
+        if 0 <= col < 8 and 0 <= row < 32:
+            index = row * 8 + col
+            if index == 0:
+                return
+
+            self.current_color_index = index
+            self.selected_label.config(text=f"Index selection : {self.current_color_index}")
+            self.draw_palette()
+            self._update_rgb_entries()
+            self._open_palette_rgb_dialog(index)
 
     def on_sprite_right_click(self, event):
         """Retrieves the colour index of the pixel under the mouse (Eyedropper)."""
