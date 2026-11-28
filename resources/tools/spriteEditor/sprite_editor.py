@@ -33,11 +33,13 @@ class SpriteEditor:
         self.undo_stack = []
         self.redo_stack = []
         self.current_undo_data = None
+        self.has_unsaved_changes = False
 
         if not self.load_image(image_path):
             sys.exit(1)
         
         self.setup_ui()
+        self.root.protocol("WM_DELETE_WINDOW", self.on_exit)
         self.draw_sprite()
         self.draw_palette()
         self._update_rgb_entries()
@@ -71,6 +73,7 @@ class SpriteEditor:
         self.redo_stack.clear()
         self.selected_cells.clear()
         self.current_undo_data = None
+        self.has_unsaved_changes = False
         return True
 
     def _resolve_absolute_path(self, path):
@@ -168,7 +171,7 @@ class SpriteEditor:
         file_menu.add_command(label="Ouvrir...", command=self.open_image_dialog)
         file_menu.add_command(label="Sauvegarder...", command=self.save_image)
         file_menu.add_separator()
-        file_menu.add_command(label="Quitter", command=self.root.destroy)
+        file_menu.add_command(label="Quitter", command=self.on_exit)
         menu_bar.add_cascade(label="Fichier", menu=file_menu)
 
         edit_menu = tk.Menu(menu_bar, tearoff=0)
@@ -186,6 +189,9 @@ class SpriteEditor:
 
     def open_image_dialog(self):
         """Open a PNG file and refresh the editor state."""
+        if not self._confirm_save_if_needed("opening another file"):
+            return
+
         self._ensure_valid_working_directory()
 
         path = filedialog.askopenfilename(
@@ -203,6 +209,30 @@ class SpriteEditor:
         self.draw_sprite()
         self.draw_palette()
         self._update_rgb_entries()
+
+    def _mark_dirty(self):
+        """Mark document as modified."""
+        self.has_unsaved_changes = True
+
+    def _confirm_save_if_needed(self, action_text):
+        """Ask to save if there are unsaved edits. Returns True if action can continue."""
+        if not self.has_unsaved_changes:
+            return True
+
+        answer = messagebox.askyesnocancel(
+            "Unsaved changes",
+            f"You have unsaved changes. Save before {action_text}?"
+        )
+        if answer is None:
+            return False
+        if answer:
+            return self.save_image()
+        return True
+
+    def on_exit(self):
+        """Close the application with unsaved-changes protection."""
+        if self._confirm_save_if_needed("quitting"):
+            self.root.destroy()
 
     def _get_dialog_initial_dir(self):
         """Return a stable existing directory for file dialogs."""
@@ -450,6 +480,7 @@ class SpriteEditor:
             self.undo_stack.append(changes)
             self.redo_stack.clear()
             self.draw_sprite()
+            self._mark_dirty()
 
     def swap_index_dialog(self):
         """Open a dialog to swap two palette indexes in the sprite."""
@@ -519,6 +550,7 @@ class SpriteEditor:
             self.undo_stack.append(changes)
             self.redo_stack.clear()
             self.draw_sprite()
+            self._mark_dirty()
 
     def apply_color_to_selection(self, new_index):
         """Apply the selected palette index to all selected cells."""
@@ -537,6 +569,7 @@ class SpriteEditor:
             self.undo_stack.append(changes)
             self.redo_stack.clear()
             self.draw_sprite()
+            self._mark_dirty()
 
     def _select_palette_index(self, index):
         """Select one palette index and refresh related UI fields."""
@@ -572,6 +605,12 @@ class SpriteEditor:
     def _set_palette_rgb(self, index, r, g, b):
         """Update one palette index RGB value."""
         palette = list(self.image.getpalette())
+        old_r = palette[index * 3]
+        old_g = palette[index * 3 + 1]
+        old_b = palette[index * 3 + 2]
+        if (old_r, old_g, old_b) == (r, g, b):
+            return
+
         palette[index * 3] = r
         palette[index * 3 + 1] = g
         palette[index * 3 + 2] = b
@@ -579,6 +618,7 @@ class SpriteEditor:
         self.draw_palette()
         self.draw_sprite()
         self._update_rgb_entries()
+        self._mark_dirty()
 
     def _open_palette_rgb_dialog(self, index):
         """Open a dialog to edit RGB components for one palette index."""
@@ -697,6 +737,7 @@ class SpriteEditor:
         if self.current_undo_data:
             self.undo_stack.append(self.current_undo_data)
             self.redo_stack.clear()
+            self._mark_dirty()
         self.current_undo_data = None
 
     def undo(self, event=None):
@@ -753,7 +794,7 @@ class SpriteEditor:
             self._draw_pixel_to_canvas(self.sprite_canvas, x, y, self.zoom, self.current_color_index, tag)
 
     def save_image(self):
-        """Save the modified image."""
+        """Save the modified image. Returns True when the image is saved."""
         ext = ".png"
 
         self._ensure_valid_working_directory()
@@ -765,15 +806,20 @@ class SpriteEditor:
             filetypes=[("PNG", "*.png")]
         )
         
-        if path:
-            # The self.image object is maintained in 'P' (Palette) mode.
-            # Pillow therefore automatically saves in 8 bits indexed with the current palette.
-            try:
-                self.image.info["transparency"] = 223
-                self.image.save(path)
-                messagebox.showinfo("Success", f"Image saved in 8-bit indexed format in:\n{path}")
-            except Exception as e:
-                messagebox.showerror("Error", f"Error on saving : {e}")
+        if not path:
+            return False
+
+        # The self.image object is maintained in 'P' (Palette) mode.
+        # Pillow therefore automatically saves in 8 bits indexed with the current palette.
+        try:
+            self.image.info["transparency"] = 223
+            self.image.save(path)
+            self.has_unsaved_changes = False
+            messagebox.showinfo("Success", f"Image saved in 8-bit indexed format in:\n{path}")
+            return True
+        except Exception as e:
+            messagebox.showerror("Error", f"Error on saving : {e}")
+            return False
 
 if __name__ == "__main__":
     root = tk.Tk()
