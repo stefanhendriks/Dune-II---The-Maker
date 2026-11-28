@@ -22,6 +22,7 @@ class SpriteEditor:
         self.root.geometry(self.SCREEN_SIZE)
 
         self.image_path = image_path
+        self.image_abs_path = image_path
         self.image = None
         self.width = 0
         self.height = 0
@@ -62,6 +63,7 @@ class SpriteEditor:
             return False
 
         self.image_path = image_path
+        self.image_abs_path = self._resolve_absolute_path(image_path)
         self.image = image
         self.width, self.height = self.image.size
         self.root.title(f"D2TM Sprite Editor - {self.image_path}")
@@ -70,6 +72,18 @@ class SpriteEditor:
         self.selected_cells.clear()
         self.current_undo_data = None
         return True
+
+    def _resolve_absolute_path(self, path):
+        """Resolve to an absolute path without relying on a valid current directory."""
+        if os.path.isabs(path):
+            return os.path.normpath(path)
+
+        try:
+            base_dir = os.getcwd()
+        except FileNotFoundError:
+            base_dir = os.path.dirname(os.path.realpath(__file__))
+
+        return os.path.normpath(os.path.join(base_dir, path))
 
     def setup_ui(self):
         """Initializes the user interface."""
@@ -172,8 +186,11 @@ class SpriteEditor:
 
     def open_image_dialog(self):
         """Open a PNG file and refresh the editor state."""
+        self._ensure_valid_working_directory()
+
         path = filedialog.askopenfilename(
             title="Select a PNG sprite",
+            initialdir=self._get_dialog_initial_dir(),
             filetypes=[("PNG", "*.png")]
         )
         if not path:
@@ -186,6 +203,24 @@ class SpriteEditor:
         self.draw_sprite()
         self.draw_palette()
         self._update_rgb_entries()
+
+    def _get_dialog_initial_dir(self):
+        """Return a stable existing directory for file dialogs."""
+        image_dir = os.path.dirname(self.image_abs_path)
+        if os.path.isdir(image_dir):
+            return image_dir
+        return os.path.dirname(os.path.realpath(__file__))
+
+    def _ensure_valid_working_directory(self):
+        """Guarantee cwd exists before invoking Tk file dialogs."""
+        try:
+            os.getcwd()
+            return
+        except FileNotFoundError:
+            pass
+
+        fallback_dir = self._get_dialog_initial_dir()
+        os.chdir(fallback_dir)
 
     def _get_color_from_palette(self, index):
         """Retrieves the hexadecimal colour from the PIL palette."""
@@ -721,8 +756,11 @@ class SpriteEditor:
         """Save the modified image."""
         ext = ".png"
 
+        self._ensure_valid_working_directory()
+
         path = filedialog.asksaveasfilename(
             initialfile=os.path.basename(self.image_path),
+            initialdir=self._get_dialog_initial_dir(),
             defaultextension=ext,
             filetypes=[("PNG", "*.png")]
         )
