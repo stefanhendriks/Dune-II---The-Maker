@@ -70,6 +70,7 @@ set(D2TM_SOURCES
     gameobjects/map/cSeedMapGenerator.cpp
     gameobjects/map/SeedMapLoader.cpp
     gameobjects/map/MapGeometry.cpp
+    gameobjects/map/BoxedInCells.cpp
     gameobjects/mentat/AbstractMentat.cpp
     gameobjects/mentat/AtreidesMentat.cpp
     gameobjects/mentat/BeneMentat.cpp

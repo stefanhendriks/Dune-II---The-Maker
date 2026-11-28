@@ -21,6 +21,7 @@ set(TEST_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_cHousesInfoDifficulty.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gameobjects/test_cPlayerNotification.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_MapGeometry.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/map/test_BoxedInCells.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_FogMemory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_cSeedMapGenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/map/test_cPreviewMapsSave.cpp
@@ -73,6 +74,7 @@ set(TEST_SOURCES
     ${CMAKE_SOURCE_DIR}/src/gameobjects/players/cPlayerNotification.cpp
     ${CMAKE_SOURCE_DIR}/src/utils/cHandleArgument.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/MapGeometry.cpp
+    ${CMAKE_SOURCE_DIR}/src/gameobjects/map/BoxedInCells.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/cSeedMap.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/cSeedMapGenerator.cpp
     ${CMAKE_SOURCE_DIR}/src/gameobjects/map/cPreviewMaps.cpp
