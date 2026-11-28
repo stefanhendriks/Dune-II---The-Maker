@@ -669,6 +669,7 @@ private:
     void giveOrder(const UnitOrder &order);   // replaces the unit's orders with this one and carries it out
     void carryOutCurrentOrder();
     void carryOutMoveOrder(const UnitOrder &order);
+    void carryOutAttackOrder(const UnitOrder &order);
 
     static int carryallFreeForTransfer(int iPlayer, cGameObjectContext* objects);
 };

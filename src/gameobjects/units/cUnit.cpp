@@ -762,12 +762,24 @@ void cUnit::attack(int goalCell, int unitId, int structureId, int attackCell, bo
         return;
     }
 
-    setAction(chaseWhenOutOfRange ? eActionType::ATTACK_CHASE : eActionType::ATTACK);
+    UnitOrder order;
+    order.kind = eUnitOrderKind::ATTACK;
+    order.goalCell = goalCell;
+    order.attackUnit = unitId;
+    order.attackStructure = structureId;
+    order.attackCell = attackCell;
+    order.chaseWhenOutOfRange = chaseWhenOutOfRange;
+    giveOrder(order);
+}
+
+void cUnit::carryOutAttackOrder(const UnitOrder &order)
+{
+    setAction(order.chaseWhenOutOfRange ? eActionType::ATTACK_CHASE : eActionType::ATTACK);
     intent = eUnitActionIntent::INTENT_NONE; // no longer heading towards a structure (ie, to repair)
-    setGoalCell(goalCell);
-    combat.iAttackStructure = structureId;
-    combat.iAttackUnit = unitId;
-    combat.iAttackCell = attackCell;
+    setGoalCell(order.goalCell);
+    combat.iAttackStructure = order.attackStructure;
+    combat.iAttackUnit = order.attackUnit;
+    combat.iAttackCell = order.attackCell;
     forgetAboutCurrentPathAndPrepareToCreateNewOne(RNG::rnd(5));
 }
 
@@ -859,7 +871,8 @@ void cUnit::carryOutCurrentOrder()
             carryOutMoveOrder(*order);
             break;
         case eUnitOrderKind::ATTACK:
-            break; // not given through the queue yet
+            carryOutAttackOrder(*order);
+            break;
     }
 }
 
@@ -3910,7 +3923,7 @@ void cUnit::setAction(eActionType action)
     // back on guard: the unit is done with (or gave up) its order
     if (action == eActionType::GUARD) {
         std::optional<UnitOrder> order = m_orders.current();
-        if (order && order->kind == eUnitOrderKind::MOVE) {
+        if (order && (order->kind == eUnitOrderKind::MOVE || order->kind == eUnitOrderKind::ATTACK)) {
             m_orders.completeCurrent();
         }
     }
