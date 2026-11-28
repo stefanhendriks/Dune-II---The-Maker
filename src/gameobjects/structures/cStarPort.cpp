@@ -114,18 +114,8 @@ void cStarPort::think_deploy()
                     }
                 }
                 else {
-                    // could not find cell to deploy to, reinforce it
-                    if (rallyPoint > -1) {
-                        cellToDeployTo = rallyPoint;
-                    }
-
-                    if (cellToDeployTo < 0) {
-                        // in this case, the structure has nothing around it free, but nor a rally point is set
-                        // assume that the cell to drop is the location of the structure itself
-                        cellToDeployTo = getCell();
-                    }
-                    int cellAtBorderOfMap = m_objects->getMap()->findCloseMapBorderCellRelativelyToDestinationCel(cellToDeployTo);
-                    REINFORCE(m_objects, m_info, m_eventEmitter, iPlayer, item->getBuildId(), cellToDeployTo, cellAtBorderOfMap);
+                    // could not find cell to deploy to: a carry-all sets it down nearby, then it drives to the rally point
+                    deliverNewUnitNearStructure(m_objects, m_info, m_eventEmitter, this, item->getBuildId(), true);
                 }
             }
             else {
