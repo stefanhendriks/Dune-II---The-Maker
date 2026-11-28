@@ -74,3 +74,8 @@ void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* 
  * than a 'real' reinforcement.
  */
 void REINFORCE(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int iPlr, int iTpe, int iCll, int iStart, bool isReinforcement);
+
+/**
+ * A new carryAll of the unit's player flies in, picks up the unit, drops it at dropCell and leaves the map.
+ */
+void rescueUnitWithCarryAll(cGameObjectContext* objects, cInfoContext* infos, cEventEmitter* eventEmitter, int unitId, int dropCell);

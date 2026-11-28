@@ -478,6 +478,14 @@ public:
 
     void carryAll_transferUnitTo(int unitIdToTransfer, int destinationCell);
 
+    // this Carry-All leaves the map once its transfer is done or cancelled, instead of staying
+    void leaveMapAfterTransfer() {
+        m_leavesMapAfterTransfer = true;
+    }
+
+    // a ground unit that can reach fewer than 2 cells gets flown out by a new Carry-All
+    void thinkNormal_rescueWhenBoxedIn();
+
     void hideUnit();
 
     void actionGuard();
@@ -543,6 +551,8 @@ private:
     int iHitPoints;     // hitpoints of unit
 
     bool isReinforcement; // is this a 'real' reinforcement or not? (applies to Carry-All only)
+
+    bool m_leavesMapAfterTransfer; // a Carry-All that flies off the map once its transfer is done or cancelled
 
     int unitsEaten; // worm related
 
