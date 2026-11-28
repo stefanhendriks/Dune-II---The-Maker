@@ -1,7 +1,7 @@
 import sys
 import os
 import tkinter as tk
-from tkinter import messagebox, filedialog, simpledialog
+from tkinter import messagebox, filedialog
 from PIL import Image
 
 class SpriteEditor:
@@ -383,16 +383,41 @@ class SpriteEditor:
         self._replace_index_values(idx_a, idx_b)
 
     def replace_index_dialog(self):
-        """Replace one palette index by another via menu dialog."""
-        idx_a = simpledialog.askinteger("Palette", "Index à remplacer (A):", minvalue=0, maxvalue=255, parent=self.root)
-        if idx_a is None:
-            return
+        """Open a single-page dialog to replace one color index by another."""
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Remplacement de couleur")
+        dialog.resizable(False, False)
+        dialog.transient(self.root)
+        dialog.grab_set()
 
-        idx_b = simpledialog.askinteger("Palette", "Nouvel index (B):", minvalue=0, maxvalue=255, parent=self.root)
-        if idx_b is None:
-            return
+        form = tk.Frame(dialog, padx=12, pady=12)
+        form.pack(fill=tk.BOTH, expand=True)
 
-        self._replace_index_values(idx_a, idx_b)
+        tk.Label(form, text="Ancienne couleur (0-255):").grid(row=0, column=0, sticky="w", pady=(0, 6))
+        old_entry = tk.Entry(form, width=6)
+        old_entry.grid(row=0, column=1, sticky="w", padx=(8, 0), pady=(0, 6))
+
+        tk.Label(form, text="Nouvelle couleur (0-255):").grid(row=1, column=0, sticky="w")
+        new_entry = tk.Entry(form, width=6)
+        new_entry.grid(row=1, column=1, sticky="w", padx=(8, 0))
+
+        def apply_replace():
+            try:
+                idx_a = int(old_entry.get())
+                idx_b = int(new_entry.get())
+            except ValueError:
+                messagebox.showerror("Error", "A and B must be integers (0-255).", parent=dialog)
+                return
+
+            self._replace_index_values(idx_a, idx_b)
+            dialog.destroy()
+
+        action_row = tk.Frame(form)
+        action_row.grid(row=2, column=0, columnspan=2, sticky="e", pady=(12, 0))
+        tk.Button(action_row, text="Changer tout", command=apply_replace).pack(side=tk.LEFT)
+        tk.Button(action_row, text="Annuler", command=dialog.destroy).pack(side=tk.LEFT, padx=(8, 0))
+
+        old_entry.focus_set()
 
     def _replace_index_values(self, idx_a, idx_b):
         """Internal helper to replace all occurrences of index A by B."""
